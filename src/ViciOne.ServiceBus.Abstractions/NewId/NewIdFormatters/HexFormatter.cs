@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.NewIdFormatters
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
+
+namespace ViciOne.ServiceBus.NewIdFormatters;
+
+public class HexFormatter :
+    INewIdFormatter
 {
-    using System.Diagnostics;
-    using System.Runtime.CompilerServices;
-    using System;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Intrinsics;
-    using System.Runtime.Intrinsics.X86;
+    readonly uint _alpha;
+    const uint LowerCaseUInt = 0x2020U;
 
-
-    public class HexFormatter :
-        INewIdFormatter
+    public HexFormatter(bool upperCase = false)
     {
-        readonly uint _alpha;
-        const uint LowerCaseUInt = 0x2020U;
+        _alpha = upperCase ? 0 : LowerCaseUInt;
+    }
 
-        public HexFormatter(bool upperCase = false)
+    public unsafe string Format(in byte[] bytes)
+    {
+        Debug.Assert(bytes.Length == 16);
+
+        if (Avx2.IsSupported && BitConverter.IsLittleEndian)
         {
-            _alpha = upperCase ? 0 : LowerCaseUInt;
-        }
-
-        public unsafe string Format(in byte[] bytes)
-        {
-            Debug.Assert(bytes.Length == 16);
-
-            if (Avx2.IsSupported && BitConverter.IsLittleEndian)
+            var isUpperCase = _alpha != LowerCaseUInt;
+            return string.Create(32, (bytes, isUpperCase), (span, state) =>
             {
-                var isUpperCase = _alpha != LowerCaseUInt;
-                return string.Create(32, (bytes, isUpperCase), (span, state) =>
-                {
-                    var (bytes, isUpper) = state;
+                var (bytes, isUpper) = state;
 
-                    var inputVec = MemoryMarshal.Read<Vector128<byte>>(bytes);
-                    var hexVec = IntrinsicsHelper.EncodeBytesHex(inputVec, isUpper);
+                var inputVec = MemoryMarshal.Read<Vector128<byte>>(bytes);
+                var hexVec = IntrinsicsHelper.EncodeBytesHex(inputVec, isUpper);
 
-                    var byteSpan = MemoryMarshal.Cast<char, byte>(span);
-                    IntrinsicsHelper.Vector256ToCharUtf16(hexVec, byteSpan);
-                });
-            }
-            var result = stackalloc char[32];
-
-            for (int pos = 0; pos < bytes.Length; pos++)
-            {
-                HexToChar(bytes[pos], result, pos * 2, _alpha);
-            }
-
-            return new string(result, 0, 32);
+                var byteSpan = MemoryMarshal.Cast<char, byte>(span);
+                IntrinsicsHelper.Vector256ToCharUtf16(hexVec, byteSpan);
+            });
         }
+        var result = stackalloc char[32];
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
+        for (int pos = 0; pos < bytes.Length; pos++)
         {
-            uint difference = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU) - 0x8989U;
-            uint packedResult = ((((uint)(-(int)difference) & 0x7070U) >> 4) + difference + 0xB9B9U) | (uint)casing;
-
-            buffer[startingIndex + 1] = (char)(packedResult & 0xFF);
-            buffer[startingIndex] = (char)(packedResult >> 8);
+            HexToChar(bytes[pos], result, pos * 2, _alpha);
         }
+
+        return new string(result, 0, 32);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
+    {
+        uint difference = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU) - 0x8989U;
+        uint packedResult = ((((uint)(-(int)difference) & 0x7070U) >> 4) + difference + 0xB9B9U) | (uint)casing;
+
+        buffer[startingIndex + 1] = (char)(packedResult & 0xFF);
+        buffer[startingIndex] = (char)(packedResult >> 8);
     }
 }

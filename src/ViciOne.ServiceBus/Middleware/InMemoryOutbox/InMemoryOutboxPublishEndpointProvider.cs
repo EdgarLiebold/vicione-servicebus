@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
+public class InMemoryOutboxPublishEndpointProvider :
+    IPublishEndpointProvider
 {
-    using System.Threading.Tasks;
+    readonly OutboxContext _outboxContext;
+    readonly IPublishEndpointProvider _publishEndpointProvider;
 
-
-    public class InMemoryOutboxPublishEndpointProvider :
-        IPublishEndpointProvider
+    public InMemoryOutboxPublishEndpointProvider(OutboxContext outboxContext, IPublishEndpointProvider publishEndpointProvider)
     {
-        readonly OutboxContext _outboxContext;
-        readonly IPublishEndpointProvider _publishEndpointProvider;
+        _outboxContext = outboxContext;
+        _publishEndpointProvider = publishEndpointProvider;
+    }
 
-        public InMemoryOutboxPublishEndpointProvider(OutboxContext outboxContext, IPublishEndpointProvider publishEndpointProvider)
-        {
-            _outboxContext = outboxContext;
-            _publishEndpointProvider = publishEndpointProvider;
-        }
+    public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
+    {
+        return _publishEndpointProvider.ConnectPublishObserver(observer);
+    }
 
-        public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
-        {
-            return _publishEndpointProvider.ConnectPublishObserver(observer);
-        }
+    public async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+        where T : class
+    {
+        var endpoint = await _publishEndpointProvider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
 
-        public async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
-            where T : class
-        {
-            var endpoint = await _publishEndpointProvider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
-
-            return new OutboxSendEndpoint(_outboxContext, endpoint);
-        }
+        return new OutboxSendEndpoint(_outboxContext, endpoint);
     }
 }

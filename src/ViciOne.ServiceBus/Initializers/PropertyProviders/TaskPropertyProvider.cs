@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyProviders
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
+
+public class TaskPropertyProvider<TInput, TProperty> :
+    IPropertyProvider<TInput, Task<TProperty>>
+    where TInput : class
 {
-    using System.Threading.Tasks;
-    using Util;
+    readonly IPropertyProvider<TInput, TProperty> _provider;
 
-
-    public class TaskPropertyProvider<TInput, TProperty> :
-        IPropertyProvider<TInput, Task<TProperty>>
-        where TInput : class
+    public TaskPropertyProvider(IPropertyProvider<TInput, TProperty> provider)
     {
-        readonly IPropertyProvider<TInput, TProperty> _provider;
+        _provider = provider;
+    }
 
-        public TaskPropertyProvider(IPropertyProvider<TInput, TProperty> provider)
-        {
-            _provider = provider;
-        }
-
-        public Task<Task<TProperty>> GetProperty<T>(InitializeContext<T, TInput> context)
-            where T : class
-        {
-            return Task.FromResult(context.HasInput
-                ? _provider.GetProperty(context)
-                : TaskResults.Default<TProperty>());
-        }
+    public Task<Task<TProperty>> GetProperty<T>(InitializeContext<T, TInput> context)
+        where T : class
+    {
+        return Task.FromResult(context.HasInput
+            ? _provider.GetProperty(context)
+            : TaskResults.Default<TProperty>());
     }
 }

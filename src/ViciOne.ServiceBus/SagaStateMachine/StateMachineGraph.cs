@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+[Serializable]
+public class StateMachineGraph
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly Edge[] _edges;
+    readonly Vertex[] _vertices;
 
-
-    [Serializable]
-    public class StateMachineGraph
+    public StateMachineGraph(IEnumerable<Vertex> vertices, IEnumerable<Edge> edges)
     {
-        readonly Edge[] _edges;
-        readonly Vertex[] _vertices;
-
-        public StateMachineGraph(IEnumerable<Vertex> vertices, IEnumerable<Edge> edges)
-        {
-            _vertices = vertices.ToArray();
-            _edges = edges.ToArray();
-        }
-
-        public IEnumerable<Vertex> Vertices => _vertices;
-
-        public IEnumerable<Edge> Edges => _edges;
+        _vertices = vertices.ToArray();
+        _edges = edges.ToArray();
     }
+
+    public IEnumerable<Vertex> Vertices => _vertices;
+
+    public IEnumerable<Edge> Edges => _edges;
 }

@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.Mediator.Contexts
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Clients;
+
+namespace ViciOne.ServiceBus.Mediator.Contexts;
+
+public class MediatorRequestSendEndpoint<TRequest> :
+    RequestSendEndpoint<TRequest>
+    where TRequest : class
 {
-    using System.Threading.Tasks;
-    using Clients;
+    readonly ISendEndpoint _endpoint;
 
-
-    public class MediatorRequestSendEndpoint<TRequest> :
-        RequestSendEndpoint<TRequest>
-        where TRequest : class
+    public MediatorRequestSendEndpoint(ISendEndpoint endpoint, ConsumeContext? consumeContext)
+        : base(consumeContext)
     {
-        readonly ISendEndpoint _endpoint;
+        _endpoint = endpoint;
+    }
 
-        public MediatorRequestSendEndpoint(ISendEndpoint endpoint, ConsumeContext consumeContext)
-            : base(consumeContext)
-        {
-            _endpoint = endpoint;
-        }
-
-        protected override Task<ISendEndpoint> GetSendEndpoint()
-        {
-            return Task.FromResult(_endpoint);
-        }
+    protected override Task<ISendEndpoint> GetSendEndpoint()
+    {
+        return Task.FromResult(_endpoint);
     }
 }

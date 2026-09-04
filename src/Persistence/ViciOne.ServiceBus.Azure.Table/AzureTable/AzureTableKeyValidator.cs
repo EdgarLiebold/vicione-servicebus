@@ -1,7 +1,7 @@
-namespace ViciOne.ServiceBus.AzureTable;
-
 using System;
 using System.Linq;
+
+namespace ViciOne.ServiceBus.AzureTable;
 
 internal static class AzureTableKeyValidator
 {

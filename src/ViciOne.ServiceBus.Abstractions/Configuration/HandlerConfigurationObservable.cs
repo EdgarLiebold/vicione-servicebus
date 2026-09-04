@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class HandlerConfigurationObservable :
+    Connectable<IHandlerConfigurationObserver>,
+    IHandlerConfigurationObserver
 {
-    using System;
-    using Util;
-
-
-    public class HandlerConfigurationObservable :
-        Connectable<IHandlerConfigurationObserver>,
-        IHandlerConfigurationObserver
+    public void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
+        where TMessage : class
     {
-        public void HandlerConfigured<TMessage>(IHandlerConfigurator<TMessage> configurator)
-            where TMessage : class
-        {
-            ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(configurator);
 
-            ForEach(observer => observer.HandlerConfigured(configurator));
-        }
+        ForEach(observer => observer.HandlerConfigured(configurator));
     }
 }

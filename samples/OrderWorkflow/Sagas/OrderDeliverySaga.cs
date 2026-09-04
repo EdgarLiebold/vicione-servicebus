@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Sagas;
+using ViciOne.ServiceBus.Samples.OrderWorkflow.Contracts;
 
-using Contracts;
+namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Sagas;
 
 public sealed class OrderDeliverySaga :
     ISaga,

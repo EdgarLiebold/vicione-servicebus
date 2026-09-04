@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ILatestConfigurator<T>
+    where T : class, PipeContext
 {
-    public interface ILatestConfigurator<T>
-        where T : class, PipeContext
-    {
-        LatestFilterCreated<T> Created { set; }
-    }
+    LatestFilterCreated<T> Created { set; }
 }

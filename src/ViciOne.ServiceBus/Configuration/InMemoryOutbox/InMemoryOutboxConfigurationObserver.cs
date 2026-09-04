@@ -1,74 +1,72 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InMemoryOutboxConfigurationObserver :
+    ConfigurationObserver,
+    IMessageConfigurationObserver
 {
-    using System;
+    readonly Action<IOutboxConfigurator> _configure;
+    readonly ISetScopedConsumeContext _setter;
 
-
-    public class InMemoryOutboxConfigurationObserver :
-        ConfigurationObserver,
-        IMessageConfigurationObserver
+    public InMemoryOutboxConfigurationObserver(IRegistrationContext context, IConsumePipeConfigurator configurator, Action<IOutboxConfigurator> configure)
+        : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
     {
-        readonly Action<IOutboxConfigurator> _configure;
-        readonly ISetScopedConsumeContext _setter;
+    }
 
-        public InMemoryOutboxConfigurationObserver(IRegistrationContext context, IConsumePipeConfigurator configurator, Action<IOutboxConfigurator> configure)
-            : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
-        {
-        }
+    public InMemoryOutboxConfigurationObserver(ISetScopedConsumeContext setter, IConsumePipeConfigurator configurator,
+        Action<IOutboxConfigurator> configure)
+        : base(configurator)
+    {
+        _setter = setter;
+        _configure = configure;
 
-        public InMemoryOutboxConfigurationObserver(ISetScopedConsumeContext setter, IConsumePipeConfigurator configurator,
-            Action<IOutboxConfigurator> configure)
-            : base(configurator)
-        {
-            _setter = setter;
-            _configure = configure;
+        Connect(this);
+    }
 
-            Connect(this);
-        }
+    public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
+        where TMessage : class
+    {
+        var specification = new InMemoryOutboxSpecification<TMessage>(_setter);
 
-        public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
-            where TMessage : class
-        {
-            var specification = new InMemoryOutboxSpecification<TMessage>(_setter);
+        _configure?.Invoke(specification);
 
-            _configure?.Invoke(specification);
+        configurator.AddPipeSpecification(specification);
+    }
 
-            configurator.AddPipeSpecification(specification);
-        }
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    {
+        var specification = new InMemoryOutboxSpecification<TMessage>.Batch(_setter);
 
-        public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
-        {
-            var specification = new InMemoryOutboxSpecification<TMessage>.Batch(_setter);
+        _configure?.Invoke(specification);
 
-            _configure?.Invoke(specification);
+        configurator.Message(m => m.AddPipeSpecification(specification));
+    }
 
-            configurator.Message(m => m.AddPipeSpecification(specification));
-        }
+    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+    {
+        var specification = new InMemoryExecuteContextOutboxSpecification<TArguments>(_setter);
 
-        public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-        {
-            var specification = new InMemoryExecuteContextOutboxSpecification<TArguments>(_setter);
+        _configure?.Invoke(specification);
 
-            _configure?.Invoke(specification);
+        configurator.Arguments(x => x.AddPipeSpecification(specification));
+    }
 
-            configurator.Arguments(x => x.AddPipeSpecification(specification));
-        }
+    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+    {
+        var specification = new InMemoryExecuteContextOutboxSpecification<TArguments>(_setter);
 
-        public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        {
-            var specification = new InMemoryExecuteContextOutboxSpecification<TArguments>(_setter);
+        _configure?.Invoke(specification);
 
-            _configure?.Invoke(specification);
+        configurator.Arguments(x => x.AddPipeSpecification(specification));
+    }
 
-            configurator.Arguments(x => x.AddPipeSpecification(specification));
-        }
+    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+    {
+        var specification = new InMemoryCompensateContextOutboxSpecification<TLog>(_setter);
 
-        public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        {
-            var specification = new InMemoryCompensateContextOutboxSpecification<TLog>(_setter);
+        _configure?.Invoke(specification);
 
-            _configure?.Invoke(specification);
-
-            configurator.Log(x => x.AddPipeSpecification(specification));
-        }
+        configurator.Log(x => x.AddPipeSpecification(specification));
     }
 }

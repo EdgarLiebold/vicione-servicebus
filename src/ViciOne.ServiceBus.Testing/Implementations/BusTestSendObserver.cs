@@ -1,51 +1,49 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class BusTestSendObserver :
+    InactivityTestObserver,
+    ISendObserver
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly SentMessageList _messages;
 
-
-    public class BusTestSendObserver :
-        InactivityTestObserver,
-        ISendObserver
+    public BusTestSendObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted = default)
+        : this(timeout, inactivityTimout, testCompleted, TimeProvider.System)
     {
-        readonly SentMessageList _messages;
+    }
 
-        public BusTestSendObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted = default)
-            : this(timeout, inactivityTimout, testCompleted, TimeProvider.System)
-        {
-        }
+    public BusTestSendObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted, TimeProvider timeProvider)
+        : base(timeProvider)
+    {
+        _messages = new SentMessageList(timeout, testCompleted, timeProvider);
 
-        public BusTestSendObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted, TimeProvider timeProvider)
-            : base(timeProvider)
-        {
-            _messages = new SentMessageList(timeout, testCompleted, timeProvider);
+        StartTimer(inactivityTimout);
+    }
 
-            StartTimer(inactivityTimout);
-        }
+    public ISentMessageList Messages => _messages;
 
-        public ISentMessageList Messages => _messages;
+    public Task PreSend<T>(SendContext<T> context)
+        where T : class
+    {
+        return RestartTimer();
+    }
 
-        public Task PreSend<T>(SendContext<T> context)
-            where T : class
-        {
-            return RestartTimer();
-        }
+    public Task PostSend<T>(SendContext<T> context)
+        where T : class
+    {
+        _messages.Add(context);
 
-        public Task PostSend<T>(SendContext<T> context)
-            where T : class
-        {
-            _messages.Add(context);
+        return RestartTimer(false);
+    }
 
-            return RestartTimer(false);
-        }
+    public Task SendFault<T>(SendContext<T> context, Exception exception)
+        where T : class
+    {
+        _messages.Add(context, exception);
 
-        public Task SendFault<T>(SendContext<T> context, Exception exception)
-            where T : class
-        {
-            _messages.Add(context, exception);
-
-            return RestartTimer(false);
-        }
+        return RestartTimer(false);
     }
 }

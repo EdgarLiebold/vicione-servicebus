@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga;
-
 using System.Reflection;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
@@ -8,6 +6,8 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DynamoDbIntegration.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga;
 
 public sealed class DynamoDbSagaRepositoryConfigurationTests
 {

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqQueueEndpointConfigurator :
+    IActiveMqQueueConfigurator
 {
-    public interface IActiveMqQueueEndpointConfigurator :
-        IActiveMqQueueConfigurator
-    {
-    }
 }

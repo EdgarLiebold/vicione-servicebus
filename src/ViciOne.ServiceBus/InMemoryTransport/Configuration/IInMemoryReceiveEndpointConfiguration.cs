@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public interface IInMemoryReceiveEndpointConfiguration :
+    IReceiveEndpointConfiguration,
+    IInMemoryEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Transports;
+    IInMemoryReceiveEndpointConfigurator Configurator { get; }
 
-
-    public interface IInMemoryReceiveEndpointConfiguration :
-        IReceiveEndpointConfiguration,
-        IInMemoryEndpointConfiguration
-    {
-        IInMemoryReceiveEndpointConfigurator Configurator { get; }
-
-        void Build(IHost host);
-    }
+    void Build(IHost host);
 }

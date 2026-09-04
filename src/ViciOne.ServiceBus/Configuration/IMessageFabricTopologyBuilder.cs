@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Transports.Fabric;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IMessageFabricTopologyBuilder
 {
-    using Transports.Fabric;
+    void ExchangeBind(string source, string destination, string? routingKey);
 
+    void QueueBind(string source, string destination);
 
-    public interface IMessageFabricTopologyBuilder
-    {
-        void ExchangeBind(string source, string destination, string routingKey);
+    void ExchangeDeclare(string name, ExchangeType exchangeType);
 
-        void QueueBind(string source, string destination);
-
-        void ExchangeDeclare(string name, ExchangeType exchangeType);
-
-        void QueueDeclare(string name);
-    }
+    void QueueDeclare(string name);
 }

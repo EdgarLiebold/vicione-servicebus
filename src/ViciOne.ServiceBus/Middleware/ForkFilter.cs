@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Forks a single pipe into two pipes, which are executed concurrently
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+public class ForkFilter<TContext> :
+    IFilter<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IPipe<TContext> _pipe;
 
-
-    /// <summary>
-    /// Forks a single pipe into two pipes, which are executed concurrently
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public class ForkFilter<TContext> :
-        IFilter<TContext>
-        where TContext : class, PipeContext
+    public ForkFilter(IPipe<TContext> pipe)
     {
-        readonly IPipe<TContext> _pipe;
+        _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));
+    }
 
-        public ForkFilter(IPipe<TContext> pipe)
-        {
-            _pipe = pipe ?? throw new ArgumentNullException(nameof(pipe));
-        }
+    Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    {
+        return Task.WhenAll(_pipe.Send(context), next.Send(context));
+    }
 
-        Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
-        {
-            return Task.WhenAll(_pipe.Send(context), next.Send(context));
-        }
-
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("fork");
-            _pipe.Probe(scope);
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("fork");
+        _pipe.Probe(scope);
     }
 }

@@ -20,7 +20,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Build;
 /// see the same conditional-compilation branches as the compiler. Neither path writes into the
 /// checkout. Results are cached per project, explicit configuration and target because evaluation
 /// costs seconds, several rules revisit the same projects, and source-layout validation traverses
-/// the complete native test-project set.
+/// the complete repository test-project set.
 /// </para>
 /// </remarks>
 internal static class MsBuildEvaluation
@@ -30,7 +30,7 @@ internal static class MsBuildEvaluation
     private static readonly TimeSpan Budget = TimeSpan.FromMinutes(3);
 
     private const string Properties =
-        "Configuration;TargetPath;AssemblyName;TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;DebugType;_DebugSymbolsProduced;LangVersion;DefineConstants;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;ViciOnePackageConsumer;UserSecretsId";
+        "Configuration;TargetPath;AssemblyName;TargetFramework;RootNamespace;IsTestProject;IsPackable;IsTestingPlatformApplication;UseMicrosoftTestingPlatformRunner;OutputType;InvariantGlobalization;DebugType;_DebugSymbolsProduced;LangVersion;DefineConstants;ArtifactsPath;ArtifactsProjectName;MSBuildProjectExtensionsPath;ViciOneProjectIdentity;ViciOneNativeTestTree;ViciOnePackageConsumer;UserSecretsId";
 
     private const string Items =
         "Compile;Using;PackageReference;ProjectReference;Content;ViciOneForbiddenNativeTestPackage";
@@ -204,8 +204,8 @@ internal static class MsBuildEvaluation
 /// Resolves the .NET host that is actually running this test.
 /// </summary>
 /// <remarks>
-/// Spawning a bare <c>dotnet</c> from PATH could evaluate with a different SDK than the current test
-/// process. <c>DOTNET_HOST_PATH</c> is the host the current build and test run were started with; the
+/// Spawning a bare <c>dotnet</c> from PATH could evaluate with a different SDK than the current
+/// process. <c>DOTNET_HOST_PATH</c> identifies the host that launched the process; the
 /// runtime directory is the same host's installation and is used only when the variable is absent.
 /// </remarks>
 internal static class DotNetHost

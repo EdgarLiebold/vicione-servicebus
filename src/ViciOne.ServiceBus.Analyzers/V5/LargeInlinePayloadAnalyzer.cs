@@ -1,7 +1,3 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,6 +5,10 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+
+#nullable enable
+
+namespace ViciOne.ServiceBus.Analyzers.V5;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class LargeInlinePayloadAnalyzer : DiagnosticAnalyzer

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System;
 using System.Collections.Generic;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Configuration;
-using Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsBusFactoryConfigurator :
     BusFactoryConfigurator,

@@ -1,20 +1,18 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public interface IRequestResponseSettings
 {
-    using System;
+    long MessageCount { get; }
 
+    int ConcurrencyLimit { get; }
 
-    public interface IRequestResponseSettings
-    {
-        long MessageCount { get; }
+    ushort PrefetchCount { get; }
 
-        int ConcurrencyLimit { get; }
+    bool Durable { get; }
 
-        ushort PrefetchCount { get; }
+    int Clients { get; }
 
-        bool Durable { get; }
-
-        int Clients { get; }
-
-        TimeSpan RequestTimeout { get; }
-    }
+    TimeSpan RequestTimeout { get; }
 }

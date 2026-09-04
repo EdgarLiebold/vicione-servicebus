@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System;
-using AmazonSqsTransport;
+using ViciOne.ServiceBus.AmazonSqsTransport;
 
+namespace ViciOne.ServiceBus;
 
 public interface IAmazonSqsBusTopology :
     IBusTopology

@@ -1,106 +1,104 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using ViciOne.ServiceBus.Payloads;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class ScopePipeContext
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
-    using Payloads;
+    readonly PipeContext _context;
+    IPayloadCache? _payloadCache;
 
-
-    public class ScopePipeContext
+    /// <summary>
+    /// A pipe using the parent scope cancellationToken
+    /// </summary>
+    /// <param name="context"></param>
+    protected ScopePipeContext(PipeContext context)
     {
-        readonly PipeContext _context;
-        IPayloadCache? _payloadCache;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
-        /// <summary>
-        /// A pipe using the parent scope cancellationToken
-        /// </summary>
-        /// <param name="context"></param>
-        protected ScopePipeContext(PipeContext context)
+    /// <summary>
+    /// A pipe using the parent scope cancellationToken
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="payloads">Loads the payload cache with the specified objects</param>
+    protected ScopePipeContext(PipeContext context, params object[]? payloads)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+
+        if (payloads != null && payloads.Length > 0)
+            _payloadCache = new ListPayloadCache(payloads);
+    }
+
+    public virtual CancellationToken CancellationToken => _context.CancellationToken;
+
+    IPayloadCache PayloadCache
+    {
+        get
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            if (_payloadCache != null)
+                return _payloadCache;
+
+            while (Volatile.Read(ref _payloadCache) == null)
+                Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
+
+            return _payloadCache!;
+        }
+    }
+
+    public virtual bool HasPayloadType(Type payloadType)
+    {
+        return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
+    }
+
+    public virtual bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
+        where T : class
+    {
+        if (this is T context)
+        {
+            payload = context;
+            return true;
         }
 
-        /// <summary>
-        /// A pipe using the parent scope cancellationToken
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="payloads">Loads the payload cache with the specified objects</param>
-        protected ScopePipeContext(PipeContext context, params object[]? payloads)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+        return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
+    }
 
-            if (payloads != null && payloads.Length > 0)
-                _payloadCache = new ListPayloadCache(payloads);
-        }
+    public virtual T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
+        where T : class
+    {
+        if (this is T context)
+            return context;
 
-        public virtual CancellationToken CancellationToken => _context.CancellationToken;
+        if (PayloadCache.TryGetPayload<T>(out var payload))
+            return payload!;
 
-        IPayloadCache PayloadCache
-        {
-            get
-            {
-                if (_payloadCache != null)
-                    return _payloadCache;
+        if (_context.TryGetPayload(out payload))
+            return payload!;
 
-                while (Volatile.Read(ref _payloadCache) == null)
-                    Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
+        return PayloadCache.GetOrAddPayload(payloadFactory);
+    }
 
-                return _payloadCache!;
-            }
-        }
+    public virtual T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
+        where T : class
+    {
+        if (this is T context)
+            return context;
 
-        public virtual bool HasPayloadType(Type payloadType)
-        {
-            return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
-        }
-
-        public virtual bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
-            where T : class
-        {
-            if (this is T context)
-            {
-                payload = context;
-                return true;
-            }
-
-            return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
-        }
-
-        public virtual T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-            where T : class
-        {
-            if (this is T context)
-                return context;
-
-            if (PayloadCache.TryGetPayload<T>(out var payload))
-                return payload!;
-
-            if (_context.TryGetPayload(out payload))
-                return payload!;
-
-            return PayloadCache.GetOrAddPayload(payloadFactory);
-        }
-
-        public virtual T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-            where T : class
-        {
-            if (this is T context)
-                return context;
-
-            if (PayloadCache.TryGetPayload<T>(out var payload))
-                return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
-
-            if (_context.TryGetPayload(out payload))
-            {
-                T Add()
-                {
-                    return updateFactory(payload!);
-                }
-
-                return PayloadCache.AddOrUpdatePayload(Add, updateFactory);
-            }
-
+        if (PayloadCache.TryGetPayload<T>(out var payload))
             return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
+
+        if (_context.TryGetPayload(out payload))
+        {
+            T Add()
+            {
+                return updateFactory(payload!);
+            }
+
+            return PayloadCache.AddOrUpdatePayload(Add, updateFactory);
         }
+
+        return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
     }
 }

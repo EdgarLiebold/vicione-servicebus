@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Serialization.JsonConverters;
-
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 
 public class CustomMessageTypeJsonConverter<T> :
     JsonConverter<T>

@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+/// <summary>
+/// A handle to an active transport
+/// </summary>
+public interface ReceiveTransportHandle
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-
-
     /// <summary>
-    /// A handle to an active transport
+    /// Stop the transport, releasing any resources associated with the endpoint
     /// </summary>
-    public interface ReceiveTransportHandle
-    {
-        /// <summary>
-        /// Stop the transport, releasing any resources associated with the endpoint
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task Stop(CancellationToken cancellationToken = default);
-    }
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task Stop(CancellationToken cancellationToken = default);
 }

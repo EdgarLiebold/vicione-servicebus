@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ScopedSendEndpoint :
+    SendEndpointProxy
 {
-    using System;
-    using Transports;
+    readonly IServiceProvider _scope;
 
-
-    public class ScopedSendEndpoint :
-        SendEndpointProxy
+    public ScopedSendEndpoint(ISendEndpoint endpoint, IServiceProvider scope)
+        : base(endpoint)
     {
-        readonly IServiceProvider _scope;
+        _scope = scope;
+    }
 
-        public ScopedSendEndpoint(ISendEndpoint endpoint, IServiceProvider scope)
-            : base(endpoint)
-        {
-            _scope = scope;
-        }
-
-        protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
-        {
-            return new ScopedSendPipeAdapter<T>(_scope, pipe);
-        }
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    {
+        return new ScopedSendPipeAdapter<T>(_scope, pipe);
     }
 }

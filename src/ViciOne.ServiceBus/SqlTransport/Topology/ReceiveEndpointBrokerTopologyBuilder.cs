@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.SqlTransport.Topology
-{
-    public class ReceiveEndpointBrokerTopologyBuilder :
-        BrokerTopologyBuilder,
-        IReceiveEndpointBrokerTopologyBuilder
-    {
-        public ReceiveEndpointBrokerTopologyBuilder(ReceiveSettings settings)
-        {
-            Queue = CreateQueue(settings.QueueName, settings.AutoDeleteOnIdle, settings.MaxDeliveryCount);
-        }
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
-        public QueueHandle Queue { get; }
+public class ReceiveEndpointBrokerTopologyBuilder :
+    BrokerTopologyBuilder,
+    IReceiveEndpointBrokerTopologyBuilder
+{
+    public ReceiveEndpointBrokerTopologyBuilder(ReceiveSettings settings)
+    {
+        Queue = CreateQueue(settings.QueueName, settings.AutoDeleteOnIdle, settings.MaxDeliveryCount);
     }
+
+    public QueueHandle Queue { get; }
 }

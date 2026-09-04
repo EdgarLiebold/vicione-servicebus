@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IExecuteActivityScopeContext<out TActivity, out TArguments> :
+    IAsyncDisposable
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System;
+    ExecuteActivityContext<TActivity, TArguments> Context { get; }
 
-
-    public interface IExecuteActivityScopeContext<out TActivity, out TArguments> :
-        IAsyncDisposable
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        ExecuteActivityContext<TActivity, TArguments> Context { get; }
-
-        T GetService<T>()
-            where T : class;
-    }
+    T GetService<T>()
+        where T : class;
 }

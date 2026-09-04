@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class SharedClientContext :
+    ProxyPipeContext,
+    ClientContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
-    using ViciOne.ServiceBus.Middleware;
+    readonly ClientContext _context;
 
-
-    public class SharedClientContext :
-        ProxyPipeContext,
-        ClientContext
+    public SharedClientContext(ClientContext context, CancellationToken cancellationToken)
+        : base(context)
     {
-        readonly ClientContext _context;
+        CancellationToken = cancellationToken;
+        _context = context;
+    }
 
-        public SharedClientContext(ClientContext context, CancellationToken cancellationToken)
-            : base(context)
-        {
-            CancellationToken = cancellationToken;
-            _context = context;
-        }
+    public override CancellationToken CancellationToken { get; }
 
-        public override CancellationToken CancellationToken { get; }
+    public ConnectionContext ConnectionContext => _context.ConnectionContext;
 
-        public ConnectionContext ConnectionContext => _context.ConnectionContext;
+    public Uri InputAddress => _context.InputAddress;
 
-        public Uri InputAddress => _context.InputAddress;
+    public string EntityPath => _context.EntityPath;
 
-        public string EntityPath => _context.EntityPath;
+    public bool IsClosedOrClosing => _context.IsClosedOrClosing;
 
-        public bool IsClosedOrClosing => _context.IsClosedOrClosing;
+    public void OnMessageAsync(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+        Func<ProcessErrorEventArgs, Task> exceptionHandler)
+    {
+        _context.OnMessageAsync(callback, exceptionHandler);
+    }
 
-        public void OnMessageAsync(Func<ProcessMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
-            Func<ProcessErrorEventArgs, Task> exceptionHandler)
-        {
-            _context.OnMessageAsync(callback, exceptionHandler);
-        }
+    public void OnSessionAsync(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
+        Func<ProcessErrorEventArgs, Task> exceptionHandler)
+    {
+        _context.OnSessionAsync(callback, exceptionHandler);
+    }
 
-        public void OnSessionAsync(Func<ProcessSessionMessageEventArgs, ServiceBusReceivedMessage, CancellationToken, Task> callback,
-            Func<ProcessErrorEventArgs, Task> exceptionHandler)
-        {
-            _context.OnSessionAsync(callback, exceptionHandler);
-        }
+    public Task StartAsync()
+    {
+        return _context.StartAsync();
+    }
 
-        public Task StartAsync()
-        {
-            return _context.StartAsync();
-        }
+    public Task ShutdownAsync()
+    {
+        return _context.ShutdownAsync();
+    }
 
-        public Task ShutdownAsync()
-        {
-            return _context.ShutdownAsync();
-        }
+    public Task CloseAsync()
+    {
+        return _context.CloseAsync();
+    }
 
-        public Task CloseAsync()
-        {
-            return _context.CloseAsync();
-        }
-
-        public Task NotifyFaulted(Exception exception, string entityPath)
-        {
-            return _context.NotifyFaulted(exception, entityPath);
-        }
+    public Task NotifyFaulted(Exception exception, string entityPath)
+    {
+        return _context.NotifyFaulted(exception, entityPath);
     }
 }

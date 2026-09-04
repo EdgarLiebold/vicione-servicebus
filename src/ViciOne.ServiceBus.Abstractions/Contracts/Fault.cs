@@ -1,56 +1,54 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// A faulted message, published when a message consumer fails to process the message
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface Fault<out T> :
+    Fault
 {
-    using System;
+    /// <summary>
+    /// The message that faulted
+    /// </summary>
+    T Message { get; }
+}
 
+
+/// <summary>
+/// Published (or sent, if part of a request/response conversation) when a fault occurs during message
+/// processing
+/// </summary>
+public interface Fault
+{
+    /// <summary>
+    /// Identifies the fault that was generated
+    /// </summary>
+    Guid FaultId { get; }
 
     /// <summary>
-    /// A faulted message, published when a message consumer fails to process the message
+    /// The messageId that faulted
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface Fault<out T> :
-        Fault
-    {
-        /// <summary>
-        /// The message that faulted
-        /// </summary>
-        T Message { get; }
-    }
-
+    Guid? FaultedMessageId { get; }
 
     /// <summary>
-    /// Published (or sent, if part of a request/response conversation) when a fault occurs during message
-    /// processing
+    /// When the fault was produced
     /// </summary>
-    public interface Fault
-    {
-        /// <summary>
-        /// Identifies the fault that was generated
-        /// </summary>
-        Guid FaultId { get; }
+    DateTime Timestamp { get; }
 
-        /// <summary>
-        /// The messageId that faulted
-        /// </summary>
-        Guid? FaultedMessageId { get; }
+    /// <summary>
+    /// The exception information that occurred
+    /// </summary>
+    ExceptionInfo[] Exceptions { get; }
 
-        /// <summary>
-        /// When the fault was produced
-        /// </summary>
-        DateTime Timestamp { get; }
+    /// <summary>
+    /// The host information was the fault occurred
+    /// </summary>
+    HostInfo Host { get; }
 
-        /// <summary>
-        /// The exception information that occurred
-        /// </summary>
-        ExceptionInfo[] Exceptions { get; }
-
-        /// <summary>
-        /// The host information was the fault occurred
-        /// </summary>
-        HostInfo Host { get; }
-
-        /// <summary>
-        /// The faulted message supported types, from the original message envelope
-        /// </summary>
-        string[] FaultMessageTypes { get; }
-    }
+    /// <summary>
+    /// The faulted message supported types, from the original message envelope
+    /// </summary>
+    string[] FaultMessageTypes { get; }
 }

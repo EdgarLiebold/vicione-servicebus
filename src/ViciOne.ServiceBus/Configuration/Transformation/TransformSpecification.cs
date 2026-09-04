@@ -1,104 +1,102 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.Conventions;
+using ViciOne.ServiceBus.Initializers.Factories;
+using ViciOne.ServiceBus.Initializers.PropertyInitializers;
+using ViciOne.ServiceBus.Initializers.PropertyProviders;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transformation;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public abstract class TransformSpecification<TMessage> :
+    ITransformConfigurator<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Initializers;
-    using Initializers.Conventions;
-    using Initializers.Factories;
-    using Initializers.PropertyInitializers;
-    using Initializers.PropertyProviders;
-    using Internals;
-    using Transformation;
+    readonly MessageTransformConvention<TMessage> _convention;
 
-
-    public abstract class TransformSpecification<TMessage> :
-        ITransformConfigurator<TMessage>
-        where TMessage : class
+    protected TransformSpecification()
     {
-        readonly MessageTransformConvention<TMessage> _convention;
+        _convention = new MessageTransformConvention<TMessage>();
+    }
 
-        protected TransformSpecification()
+    public int Count => _convention.Count;
+
+    public bool Replace { get; set; }
+
+    public void Default<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression)
+    {
+        Set(propertyExpression, (TProperty)default);
+    }
+
+    public void Set<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression, TProperty value)
+    {
+        var propertyInfo = propertyExpression.GetPropertyInfo();
+
+        var valueProvider = new ConstantPropertyProvider<TMessage, TProperty>(value);
+
+        var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(valueProvider, propertyInfo);
+
+        _convention.Add(propertyInfo.Name, initializer);
+    }
+
+    public void Set<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression,
+        Func<TransformPropertyContext<TProperty, TMessage>, TProperty> valueProvider)
+    {
+        var propertyInfo = propertyExpression.GetPropertyInfo();
+
+        var inputValueProvider = new InputPropertyProvider<TMessage, TProperty>(propertyInfo);
+
+        Task<TProperty> PropertyProvider(TransformPropertyContext<TProperty, TMessage> context)
         {
-            _convention = new MessageTransformConvention<TMessage>();
+            return Task.FromResult(valueProvider(context));
         }
 
-        public int Count => _convention.Count;
+        var propertyProvider = new DelegatePropertyProvider<TMessage, TProperty>(inputValueProvider, PropertyProvider);
 
-        public bool Replace { get; set; }
+        var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
 
-        public void Default<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression)
-        {
-            Set(propertyExpression, (TProperty)default);
-        }
+        _convention.Add(propertyInfo.Name, initializer);
+    }
 
-        public void Set<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression, TProperty value)
-        {
-            var propertyInfo = propertyExpression.GetPropertyInfo();
+    public void Set<TProperty>(PropertyInfo propertyInfo, IPropertyProvider<TMessage, TProperty> propertyProvider)
+    {
+        var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
 
-            var valueProvider = new ConstantPropertyProvider<TMessage, TProperty>(value);
+        _convention.Add(propertyInfo.Name, initializer);
+    }
 
-            var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(valueProvider, propertyInfo);
+    public void Transform<TProperty>(PropertyInfo propertyInfo, IPropertyProvider<TMessage, TProperty> propertyProvider)
+    {
+        var initializer = new TransformPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
 
-            _convention.Add(propertyInfo.Name, initializer);
-        }
+        _convention.Add(propertyInfo.Name, initializer);
+    }
 
-        public void Set<TProperty>(Expression<Func<TMessage, TProperty>> propertyExpression,
-            Func<TransformPropertyContext<TProperty, TMessage>, TProperty> valueProvider)
-        {
-            var propertyInfo = propertyExpression.GetPropertyInfo();
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
 
-            var inputValueProvider = new InputPropertyProvider<TMessage, TProperty>(propertyInfo);
-
-            Task<TProperty> PropertyProvider(TransformPropertyContext<TProperty, TMessage> context)
-            {
-                return Task.FromResult(valueProvider(context));
-            }
-
-            var propertyProvider = new DelegatePropertyProvider<TMessage, TProperty>(inputValueProvider, PropertyProvider);
-
-            var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
-
-            _convention.Add(propertyInfo.Name, initializer);
-        }
-
-        public void Set<TProperty>(PropertyInfo propertyInfo, IPropertyProvider<TMessage, TProperty> propertyProvider)
-        {
-            var initializer = new ProviderPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
-
-            _convention.Add(propertyInfo.Name, initializer);
-        }
-
-        public void Transform<TProperty>(PropertyInfo propertyInfo, IPropertyProvider<TMessage, TProperty> propertyProvider)
-        {
-            var initializer = new TransformPropertyInitializer<TMessage, TMessage, TProperty>(propertyProvider, propertyInfo);
-
-            _convention.Add(propertyInfo.Name, initializer);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
-
-        protected IMessageInitializer<TMessage> Build()
-        {
-            IMessageFactory<TMessage> messageFactory = null;
-            IEnumerable<IInitializerConvention> conventions = Enumerable.Repeat<IInitializerConvention>(_convention, 1);
-            if (Replace)
-                messageFactory = new ReplaceMessageFactory<TMessage>();
-            else
-                conventions = conventions.Concat(MessageInitializer.Conventions);
+    protected IMessageInitializer<TMessage> Build()
+    {
+        IMessageFactory<TMessage> messageFactory = null;
+        IEnumerable<IInitializerConvention> conventions = Enumerable.Repeat<IInitializerConvention>(_convention, 1);
+        if (Replace)
+            messageFactory = new ReplaceMessageFactory<TMessage>();
+        else
+            conventions = conventions.Concat(MessageInitializer.Conventions);
 
 
-            var initializerFactory = new MessageInitializerFactory<TMessage, TMessage>(messageFactory, conventions.ToArray());
+        var initializerFactory = new MessageInitializerFactory<TMessage, TMessage>(messageFactory, conventions.ToArray());
 
-            IMessageInitializer<TMessage> messageInitializer = initializerFactory.CreateMessageInitializer();
+        IMessageInitializer<TMessage> messageInitializer = initializerFactory.CreateMessageInitializer();
 
-            return messageInitializer;
-        }
+        return messageInitializer;
     }
 }

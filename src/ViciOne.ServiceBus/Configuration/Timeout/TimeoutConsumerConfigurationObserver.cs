@@ -1,33 +1,31 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+internal sealed class TimeoutConsumerConfigurationObserver<TConsumer> :
+    IConsumerConfigurationObserver
+    where TConsumer : class
 {
-    using System;
+    readonly IConsumerConfigurator<TConsumer> _configurator;
+    readonly Action<ITimeoutConfigurator> _configure;
 
-
-    internal sealed class TimeoutConsumerConfigurationObserver<TConsumer> :
-        IConsumerConfigurationObserver
-        where TConsumer : class
+    public TimeoutConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, Action<ITimeoutConfigurator> configure)
     {
-        readonly IConsumerConfigurator<TConsumer> _configurator;
-        readonly Action<ITimeoutConfigurator> _configure;
+        _configurator = configurator;
+        _configure = configure;
+    }
 
-        public TimeoutConsumerConfigurationObserver(IConsumerConfigurator<TConsumer> configurator, Action<ITimeoutConfigurator> configure)
-        {
-            _configurator = configurator;
-            _configure = configure;
-        }
+    void IConsumerConfigurationObserver.ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
+    {
+    }
 
-        void IConsumerConfigurationObserver.ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
-        {
-        }
+    void IConsumerConfigurationObserver.ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
+    {
+        var specification = new TimeoutSpecification<TMessage>();
 
-        void IConsumerConfigurationObserver.ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
-        {
-            var specification = new TimeoutSpecification<TMessage>();
+        _configure(specification);
 
-            _configure(specification);
-
-            _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
-        }
+        _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
     }
 }

@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Util.Scanning
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Util.Scanning;
+
+public class TypeQuery
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly TypeClassification _classification;
 
+    public readonly Func<Type, bool> Filter;
 
-    public class TypeQuery
+    public TypeQuery(TypeClassification classification, Func<Type, bool> filter = null)
     {
-        readonly TypeClassification _classification;
+        Filter = filter ?? (t => true);
+        _classification = classification;
+    }
 
-        public readonly Func<Type, bool> Filter;
-
-        public TypeQuery(TypeClassification classification, Func<Type, bool> filter = null)
-        {
-            Filter = filter ?? (t => true);
-            _classification = classification;
-        }
-
-        public IEnumerable<Type> Find(AssemblyScanTypeInfo assembly)
-        {
-            return assembly.FindTypes(_classification).Where(Filter);
-        }
+    public IEnumerable<Type> Find(AssemblyScanTypeInfo assembly)
+    {
+        return assembly.FindTypes(_classification).Where(Filter);
     }
 }

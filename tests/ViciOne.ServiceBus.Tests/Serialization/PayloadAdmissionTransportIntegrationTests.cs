@@ -6,8 +6,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.Serialization;
-using ViciOne.ServiceBus.Tests.InternalAccess.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Serialization;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Serialization;

@@ -1,84 +1,82 @@
+using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Text.Json;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public class SystemTextJsonObjectMessageBody :
+    MessageBody
 {
-    using System;
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Text.Json;
+    readonly JsonSerializerOptions _options;
+    readonly object _value;
+    byte[]? _bytes;
+    string? _string;
 
-
-    public class SystemTextJsonObjectMessageBody :
-        MessageBody
+    public SystemTextJsonObjectMessageBody(object value, JsonSerializerOptions options)
     {
-        readonly JsonSerializerOptions _options;
-        readonly object _value;
-        byte[]? _bytes;
-        string? _string;
+        _value = value;
+        _options = options;
+    }
 
-        public SystemTextJsonObjectMessageBody(object value, JsonSerializerOptions options)
+    /// <summary>
+    /// The number of bytes this body transmits, which is by definition the length of what
+    /// <see cref="GetBytes" /> returns, whichever accessor ran first. Answering from whichever
+    /// representation happened to exist reported a character count after a string read and nothing
+    /// at all before the first read, so the same body gave three different answers.
+    /// </summary>
+    public long? Length => GetBytes().LongLength;
+
+    public Stream GetStream()
+    {
+        return new MemoryStream(GetBytes(), false);
+    }
+
+    public byte[] GetBytes()
+    {
+        if (_bytes != null)
+            return _bytes;
+
+        if (_string != null)
         {
-            _value = value;
-            _options = options;
+            _bytes = Encoding.UTF8.GetBytes(_string);
+            return _bytes;
         }
 
-        /// <summary>
-        /// The number of bytes this body transmits, which is by definition the length of what
-        /// <see cref="GetBytes" /> returns, whichever accessor ran first. Answering from whichever
-        /// representation happened to exist reported a character count after a string read and nothing
-        /// at all before the first read, so the same body gave three different answers.
-        /// </summary>
-        public long? Length => GetBytes().LongLength;
-
-        public Stream GetStream()
+        try
         {
-            return new MemoryStream(GetBytes(), false);
+            _bytes = JsonSerializer.SerializeToUtf8Bytes(_value, _options);
+
+            return _bytes;
+        }
+        catch (Exception ex)
+        {
+            throw new SerializationException("Failed to serialize message", ex);
+        }
+    }
+
+    public string GetString()
+    {
+        if (_string != null)
+            return _string;
+
+        if (_bytes != null)
+        {
+            _string = Encoding.UTF8.GetString(_bytes);
+            return _string;
         }
 
-        public byte[] GetBytes()
+        try
         {
-            if (_bytes != null)
-                return _bytes;
+            _string = JsonSerializer.Serialize(_value, _options);
 
-            if (_string != null)
-            {
-                _bytes = Encoding.UTF8.GetBytes(_string);
-                return _bytes;
-            }
-
-            try
-            {
-                _bytes = JsonSerializer.SerializeToUtf8Bytes(_value, _options);
-
-                return _bytes;
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to serialize message", ex);
-            }
+            return _string;
         }
-
-        public string GetString()
+        catch (Exception ex)
         {
-            if (_string != null)
-                return _string;
-
-            if (_bytes != null)
-            {
-                _string = Encoding.UTF8.GetString(_bytes);
-                return _string;
-            }
-
-            try
-            {
-                _string = JsonSerializer.Serialize(_value, _options);
-
-                return _string;
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to serialize message", ex);
-            }
+            throw new SerializationException("Failed to serialize message", ex);
         }
     }
 }

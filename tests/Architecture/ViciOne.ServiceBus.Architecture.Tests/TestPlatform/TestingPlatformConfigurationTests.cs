@@ -21,7 +21,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.TestPlatform;
 /// </remarks>
 public sealed class TestingPlatformConfigurationTests
 {
-    private const int ExpectedUnitTestFloor = 3490;
+    private const int ExpectedUnitTestFloor = 3496;
     private const int ExpectedLocalIntegrationTestFloor = 326;
     private const int ExpectedSqlServerLocalIntegrationTestFloor = 60;
     private const int ExpectedAzureServiceBusLocalIntegrationTestFloor = 24;
@@ -112,6 +112,7 @@ public sealed class TestingPlatformConfigurationTests
         string[] commandOwners =
         [
             Path.Combine(RepositoryLayout.Root, "README.md"),
+            Path.Combine(RepositoryLayout.Root, "CONTRIBUTING.md"),
             Path.Combine(RepositoryLayout.Root, "docs", "build.md"),
             Path.Combine(RepositoryLayout.Root, ".github", "workflows", "native-tests.yml"),
         ];

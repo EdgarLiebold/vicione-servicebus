@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.EventHubIntegration;
-
 using ViciOne.ServiceBus.Caching;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.EventHubIntegration;
 
 public sealed class EventHubProducerCacheTests
 {

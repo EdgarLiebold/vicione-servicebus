@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
-using Util;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus;
 
 public static class AmazonSqsPublishTopologyConfigurationExtensions
 {

@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus.Topology
+namespace ViciOne.ServiceBus.Topology;
+
+public class DefaultErrorQueueNameFormatter :
+    IErrorQueueNameFormatter
 {
-    public class DefaultErrorQueueNameFormatter :
-        IErrorQueueNameFormatter
+    const string ErrorQueueSuffix = "_error";
+
+    public static readonly IErrorQueueNameFormatter Instance = new DefaultErrorQueueNameFormatter();
+
+    public string FormatErrorQueueName(string queueName)
     {
-        const string ErrorQueueSuffix = "_error";
-
-        public static readonly IErrorQueueNameFormatter Instance = new DefaultErrorQueueNameFormatter();
-
-        public string FormatErrorQueueName(string queueName)
-        {
-            return queueName + ErrorQueueSuffix;
-        }
+        return queueName + ErrorQueueSuffix;
     }
 }

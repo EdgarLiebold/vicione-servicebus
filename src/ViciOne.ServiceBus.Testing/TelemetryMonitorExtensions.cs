@@ -1,11 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Testing;
-
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Testing;
 
 public static class TelemetryMonitorExtensions
 {

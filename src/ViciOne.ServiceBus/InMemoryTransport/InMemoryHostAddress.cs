@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Diagnostics;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus;
+
+[DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+public readonly struct InMemoryHostAddress
 {
-    using System;
-    using System.Diagnostics;
-    using Internals;
+    const string InMemorySchema = "loopback";
 
+    public readonly string Scheme;
+    public readonly string Host;
+    public readonly string VirtualHost;
 
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public readonly struct InMemoryHostAddress
+    public InMemoryHostAddress(Uri address)
     {
-        const string InMemorySchema = "loopback";
+        Scheme = default;
+        Host = default;
+        VirtualHost = default;
 
-        public readonly string Scheme;
-        public readonly string Host;
-        public readonly string VirtualHost;
-
-        public InMemoryHostAddress(Uri address)
+        var scheme = address.Scheme.ToLowerInvariant();
+        switch (scheme)
         {
-            Scheme = default;
-            Host = default;
-            VirtualHost = default;
+            case InMemorySchema:
+                ParseLeft(address, out Scheme, out Host, out VirtualHost);
+                break;
 
-            var scheme = address.Scheme.ToLowerInvariant();
-            switch (scheme)
-            {
-                case InMemorySchema:
-                    ParseLeft(address, out Scheme, out Host, out VirtualHost);
-                    break;
-
-                default:
-                    throw new ArgumentException($"The address scheme is not supported: {address.Scheme}", nameof(address));
-            }
+            default:
+                throw new ArgumentException($"The address scheme is not supported: {address.Scheme}", nameof(address));
         }
-
-        static void ParseLeft(Uri address, out string scheme, out string host, out string virtualHost)
-        {
-            scheme = address.Scheme;
-            host = address.Host;
-            virtualHost = address.ParseHostPath();
-        }
-
-        public static implicit operator Uri(in InMemoryHostAddress address)
-        {
-            var builder = new UriBuilder
-            {
-                Scheme = address.Scheme,
-                Host = address.Host,
-                Path = address.VirtualHost == "/"
-                    ? "/"
-                    : $"/{Uri.EscapeDataString(address.VirtualHost)}"
-            };
-
-            return builder.Uri;
-        }
-
-        Uri DebuggerDisplay => this;
     }
+
+    static void ParseLeft(Uri address, out string scheme, out string host, out string virtualHost)
+    {
+        scheme = address.Scheme;
+        host = address.Host;
+        virtualHost = address.ParseHostPath();
+    }
+
+    public static implicit operator Uri(in InMemoryHostAddress address)
+    {
+        var builder = new UriBuilder
+        {
+            Scheme = address.Scheme,
+            Host = address.Host,
+            Path = address.VirtualHost == "/"
+                ? "/"
+                : $"/{Uri.EscapeDataString(address.VirtualHost)}"
+        };
+
+        return builder.Uri;
+    }
+
+    Uri DebuggerDisplay => this;
 }

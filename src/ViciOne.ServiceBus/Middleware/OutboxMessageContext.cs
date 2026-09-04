@@ -1,23 +1,21 @@
+using System;
+using System.Collections.Generic;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Middleware
+namespace ViciOne.ServiceBus.Middleware;
+
+public interface OutboxMessageContext :
+    MessageContext
 {
-    using System;
-    using System.Collections.Generic;
+    long SequenceNumber { get; }
 
+    new Guid MessageId { get; }
 
-    public interface OutboxMessageContext :
-        MessageContext
-    {
-        long SequenceNumber { get; }
+    string ContentType { get; }
 
-        new Guid MessageId { get; }
+    string MessageType { get; }
 
-        string ContentType { get; }
+    string Body { get; }
 
-        string MessageType { get; }
-
-        string Body { get; }
-
-        IReadOnlyDictionary<string, object> Properties { get; }
-    }
+    IReadOnlyDictionary<string, object> Properties { get; }
 }

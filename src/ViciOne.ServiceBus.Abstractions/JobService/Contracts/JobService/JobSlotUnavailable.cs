@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobSlotUnavailable
 {
-    using System;
-
-
-    public interface JobSlotUnavailable
-    {
-        Guid JobId { get; }
-    }
+    Guid JobId { get; }
 }

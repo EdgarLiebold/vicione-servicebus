@@ -1,47 +1,45 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+class RegistrationFilter :
+    IRegistrationFilter
 {
-    using System;
-    using Configuration;
+    readonly CompositeFilter<Type> _filter;
 
-
-    class RegistrationFilter :
-        IRegistrationFilter
+    public RegistrationFilter(CompositeFilter<Type> filter)
     {
-        readonly CompositeFilter<Type> _filter;
+        _filter = filter;
+    }
 
-        public RegistrationFilter(CompositeFilter<Type> filter)
-        {
-            _filter = filter;
-        }
+    public bool Matches(IConsumerRegistration registration)
+    {
+        return _filter.Matches(registration.Type);
+    }
 
-        public bool Matches(IConsumerRegistration registration)
-        {
-            return _filter.Matches(registration.Type);
-        }
+    public bool Matches(ISagaRegistration registration)
+    {
+        return _filter.Matches(registration.Type);
+    }
 
-        public bool Matches(ISagaRegistration registration)
-        {
-            return _filter.Matches(registration.Type);
-        }
+    public bool Matches(IExecuteActivityRegistration registration)
+    {
+        return _filter.Matches(registration.Type);
+    }
 
-        public bool Matches(IExecuteActivityRegistration registration)
-        {
-            return _filter.Matches(registration.Type);
-        }
+    public bool Matches(IActivityRegistration registration)
+    {
+        return _filter.Matches(registration.Type);
+    }
 
-        public bool Matches(IActivityRegistration registration)
-        {
-            return _filter.Matches(registration.Type);
-        }
+    public bool Matches(IFutureRegistration registration)
+    {
+        return _filter.Matches(registration.Type);
+    }
 
-        public bool Matches(IFutureRegistration registration)
-        {
-            return _filter.Matches(registration.Type);
-        }
-
-        public bool Matches(IEndpointRegistration registration)
-        {
-            return _filter.Matches(registration.Type);
-        }
+    public bool Matches(IEndpointRegistration registration)
+    {
+        return _filter.Matches(registration.Type);
     }
 }

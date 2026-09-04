@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class DelegateSessionIdFormatter<TMessage> :
+    IMessageSessionIdFormatter<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly Func<SendContext<TMessage>, string> _formatter;
 
-
-    public class DelegateSessionIdFormatter<TMessage> :
-        IMessageSessionIdFormatter<TMessage>
-        where TMessage : class
+    public DelegateSessionIdFormatter(Func<SendContext<TMessage>, string> formatter)
     {
-        readonly Func<SendContext<TMessage>, string> _formatter;
+        _formatter = formatter;
+    }
 
-        public DelegateSessionIdFormatter(Func<SendContext<TMessage>, string> formatter)
-        {
-            _formatter = formatter;
-        }
-
-        public string FormatSessionId(SendContext<TMessage> context)
-        {
-            return _formatter(context) ?? "";
-        }
+    public string FormatSessionId(SendContext<TMessage> context)
+    {
+        return _formatter(context) ?? "";
     }
 }

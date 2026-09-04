@@ -1,14 +1,13 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Clients;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
-using Internals;
-using Util;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Util;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Clients;
 
 public class ClientRequestHandle<TRequest> :
     RequestHandle<TRequest>,

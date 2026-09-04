@@ -1,17 +1,16 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Agents;
-using Configuration;
-using Internals;
-using Transports;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>

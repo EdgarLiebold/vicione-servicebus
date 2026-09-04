@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IDeadLetterQueueNameFormatter
 {
-    public interface IDeadLetterQueueNameFormatter
-    {
-        string FormatDeadLetterQueueName(string queueName);
-    }
+    string FormatDeadLetterQueueName(string queueName);
 }

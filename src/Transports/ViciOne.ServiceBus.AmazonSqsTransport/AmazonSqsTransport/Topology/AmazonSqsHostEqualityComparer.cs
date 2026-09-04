@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System;
 using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public sealed class AmazonSqsHostEqualityComparer :
     IEqualityComparer<AmazonSqsHostSettings>

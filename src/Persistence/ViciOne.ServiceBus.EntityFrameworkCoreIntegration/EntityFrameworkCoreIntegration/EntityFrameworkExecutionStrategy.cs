@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -8,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 internal static class EntityFrameworkExecutionStrategy
 {

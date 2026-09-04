@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public interface IBrokerTopologyBuilder
 {

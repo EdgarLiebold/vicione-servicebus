@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
-
 using System.Reflection;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 /// <summary>
 /// Creates the minimal real consume-context boundary needed by in-memory-outbox tests. The factory
 /// supplies transport plumbing only; product checkpoints, rollback decisions and assertions remain
@@ -79,23 +78,23 @@ public static class InMemoryOutboxTestContextFactory
                 case "HasPayloadType":
                     return _payloads.ContainsKey((Type)args![0]!);
                 case "TryGetPayload":
-                {
-                    Type payloadType = targetMethod.GetGenericArguments()[0];
-                    bool found = _payloads.TryGetValue(payloadType, out object? payload);
-                    args![0] = payload;
-                    return found;
-                }
+                    {
+                        Type payloadType = targetMethod.GetGenericArguments()[0];
+                        bool found = _payloads.TryGetValue(payloadType, out object? payload);
+                        args![0] = payload;
+                        return found;
+                    }
                 case "AddOrUpdatePayload":
-                {
-                    Type payloadType = targetMethod.GetGenericArguments()[0];
-                    var add = (Delegate)args![0]!;
-                    var update = (Delegate)args[1]!;
-                    object payload = _payloads.TryGetValue(payloadType, out object? existing)
-                        ? update.DynamicInvoke(existing)!
-                        : add.DynamicInvoke()!;
-                    _payloads[payloadType] = payload;
-                    return payload;
-                }
+                    {
+                        Type payloadType = targetMethod.GetGenericArguments()[0];
+                        var add = (Delegate)args![0]!;
+                        var update = (Delegate)args[1]!;
+                        object payload = _payloads.TryGetValue(payloadType, out object? existing)
+                            ? update.DynamicInvoke(existing)!
+                            : add.DynamicInvoke()!;
+                        _payloads[payloadType] = payload;
+                        return payload;
+                    }
                 default:
                     throw new NotSupportedException(targetMethod.Name);
             }

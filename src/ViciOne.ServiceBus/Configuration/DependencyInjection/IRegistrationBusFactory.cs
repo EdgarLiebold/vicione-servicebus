@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus;
+
+public interface IRegistrationBusFactory
 {
-    using System.Collections.Generic;
-    using Configuration;
-    using Transports;
-
-
-    public interface IRegistrationBusFactory
-    {
-        IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName);
-    }
+    IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName);
 }

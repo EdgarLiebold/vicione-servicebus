@@ -1,67 +1,65 @@
-namespace ViciOne.ServiceBus.MessageData.PropertyProviders
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
+
+public class GetMessageDataPropertyProvider<TInput, TValue> :
+    IPropertyProvider<TInput, MessageData<TValue>>
+    where TInput : class
 {
-    using System.Threading.Tasks;
-    using Initializers;
-    using Util;
-    using Values;
+    readonly IPropertyProvider<TInput, MessageData<TValue>> _inputProvider;
+    readonly IMessageDataReader<TValue> _reader;
+    readonly IMessageDataRepository _repository;
 
-
-    public class GetMessageDataPropertyProvider<TInput, TValue> :
-        IPropertyProvider<TInput, MessageData<TValue>>
-        where TInput : class
+    public GetMessageDataPropertyProvider(IPropertyProvider<TInput, MessageData<TValue>> inputProvider, IMessageDataRepository repository = default)
     {
-        readonly IPropertyProvider<TInput, MessageData<TValue>> _inputProvider;
-        readonly IMessageDataReader<TValue> _reader;
-        readonly IMessageDataRepository _repository;
+        _repository = repository;
+        _inputProvider = inputProvider;
 
-        public GetMessageDataPropertyProvider(IPropertyProvider<TInput, MessageData<TValue>> inputProvider, IMessageDataRepository repository = default)
+        _reader = MessageDataReaderFactory.CreateReader<TValue>();
+    }
+
+    public Task<MessageData<TValue>> GetProperty<T>(InitializeContext<T, TInput> context)
+        where T : class
+    {
+        if (!context.HasInput)
+            return TaskResults.Default<MessageData<TValue>>();
+
+        Task<MessageData<TValue>> inputTask = _inputProvider.GetProperty(context);
+        if (inputTask.IsCompleted)
         {
-            _repository = repository;
-            _inputProvider = inputProvider;
+            MessageData<TValue> messageData = inputTask.Result;
+            if (messageData is IInlineMessageData)
+                return Task.FromResult(messageData);
 
-            _reader = MessageDataReaderFactory.CreateReader<TValue>();
-        }
-
-        public Task<MessageData<TValue>> GetProperty<T>(InitializeContext<T, TInput> context)
-            where T : class
-        {
-            if (!context.HasInput)
-                return TaskResults.Default<MessageData<TValue>>();
-
-            Task<MessageData<TValue>> inputTask = _inputProvider.GetProperty(context);
-            if (inputTask.IsCompleted)
+            if (messageData is { HasValue: true } && messageData.Address != null)
             {
-                MessageData<TValue> messageData = inputTask.Result;
-                if (messageData is IInlineMessageData)
-                    return Task.FromResult(messageData);
-
-                if (messageData is { HasValue: true } && messageData.Address != null)
-                {
-                    var repository = _repository;
-                    if (repository != null || context.TryGetPayload(out repository))
-                        return Task.FromResult(_reader.GetMessageData(repository, messageData.Address, context.CancellationToken));
-                }
-
-                return Task.FromResult(EmptyMessageData<TValue>.Instance);
+                var repository = _repository;
+                if (repository != null || context.TryGetPayload(out repository))
+                    return Task.FromResult(_reader.GetMessageData(repository, messageData.Address, context.CancellationToken));
             }
 
-            async Task<MessageData<TValue>> GetPropertyAsync()
+            return Task.FromResult(EmptyMessageData<TValue>.Instance);
+        }
+
+        async Task<MessageData<TValue>> GetPropertyAsync()
+        {
+            MessageData<TValue> messageData = await inputTask.ConfigureAwait(false);
+            if (messageData is IInlineMessageData)
+                return messageData;
+
+            if (messageData?.Address != null)
             {
-                MessageData<TValue> messageData = await inputTask.ConfigureAwait(false);
-                if (messageData is IInlineMessageData)
-                    return messageData;
-
-                if (messageData?.Address != null)
-                {
-                    var repository = _repository;
-                    if (repository != null || context.TryGetPayload(out repository))
-                        return _reader.GetMessageData(repository, messageData.Address, context.CancellationToken);
-                }
-
-                return EmptyMessageData<TValue>.Instance;
+                var repository = _repository;
+                if (repository != null || context.TryGetPayload(out repository))
+                    return _reader.GetMessageData(repository, messageData.Address, context.CancellationToken);
             }
 
-            return GetPropertyAsync();
+            return EmptyMessageData<TValue>.Instance;
         }
+
+        return GetPropertyAsync();
     }
 }

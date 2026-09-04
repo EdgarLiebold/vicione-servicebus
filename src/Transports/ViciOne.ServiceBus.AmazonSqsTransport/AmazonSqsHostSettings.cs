@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using Amazon;
 using Amazon.Runtime;
-using AmazonSqsTransport;
-using Transports;
+using ViciOne.ServiceBus.AmazonSqsTransport;
+using ViciOne.ServiceBus.Transports;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Immutable settings for an Amazon SQS host produced by the typed host configurator.
 /// </summary>

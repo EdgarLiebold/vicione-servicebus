@@ -17,7 +17,7 @@ public sealed class StringMessageBodyTests
 {
     /// <summary>
     /// Four characters, seven UTF-8 bytes: LATIN SMALL LETTER A, LATIN SMALL LETTER A WITH DIAERESIS,
-    /// HIRAGANA LETTER A, LATIN SMALL LETTER B. Written as escapes because this cohort asserts exact
+    /// HIRAGANA LETTER A, LATIN SMALL LETTER B. Written as escapes because this test asserts exact
     /// bytes, and an escape cannot be changed by whatever encoding a tool decides this file has.
     /// </summary>
     private const string NonAsciiText = "a\u00E4\u3042b";

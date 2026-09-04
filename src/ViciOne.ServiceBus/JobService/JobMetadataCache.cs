@@ -1,80 +1,78 @@
-namespace ViciOne.ServiceBus.JobService
+using System;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace ViciOne.ServiceBus.JobService;
+
+public static class JobMetadataCache<TConsumer, TJob>
+    where TConsumer : class
+    where TJob : class
 {
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
-
-
-    public static class JobMetadataCache<TConsumer, TJob>
-        where TConsumer : class
-        where TJob : class
+    public static Guid GenerateJobTypeId(string queueName)
     {
-        public static Guid GenerateJobTypeId(string queueName)
-        {
-            var key = GenerateJobTypeName(queueName);
+        var key = GenerateJobTypeName(queueName);
 
-            return JobMetadataCache.GenerateHashGuid(key);
-        }
-
-        public static string GenerateJobTypeName(string queueName)
-        {
-            var consumerTypeName = TypeCache<TConsumer>.ShortName;
-            var jobTypeName = TypeCache<TJob>.ShortName;
-
-            var name = $"{consumerTypeName}:{jobTypeName}:{queueName}";
-
-            return name;
-        }
+        return JobMetadataCache.GenerateHashGuid(key);
     }
 
-
-    public static class JobMetadataCache<TJob>
-        where TJob : class
+    public static string GenerateJobTypeName(string queueName)
     {
-        public static Guid GenerateRecurringJobId(string jobName)
-        {
-            var key = GenerateJobTypeName(jobName);
+        var consumerTypeName = TypeCache<TConsumer>.ShortName;
+        var jobTypeName = TypeCache<TJob>.ShortName;
 
-            return JobMetadataCache.GenerateHashGuid(key);
-        }
+        var name = $"{consumerTypeName}:{jobTypeName}:{queueName}";
 
-        public static string GenerateJobTypeName(string jobName)
-        {
-            var jobTypeName = TypeCache<TJob>.ShortName;
+        return name;
+    }
+}
 
-            var name = $"{jobTypeName}:{jobName}";
 
-            return name;
-        }
+public static class JobMetadataCache<TJob>
+    where TJob : class
+{
+    public static Guid GenerateRecurringJobId(string jobName)
+    {
+        var key = GenerateJobTypeName(jobName);
+
+        return JobMetadataCache.GenerateHashGuid(key);
     }
 
-
-    static class JobMetadataCache
+    public static string GenerateJobTypeName(string jobName)
     {
-        static bool? _fipsMode;
+        var jobTypeName = TypeCache<TJob>.ShortName;
 
-        public static bool IsFipsMode =>
-            CryptoConfig.AllowOnlyFipsAlgorithms ||
-            (_fipsMode ??= bool.TryParse(Environment.GetEnvironmentVariable("VICIONE_SERVICEBUS_FIPS_ENABLE"), out var fipsMode) && fipsMode);
+        var name = $"{jobTypeName}:{jobName}";
 
-        public static Guid GenerateHashGuid(string key)
+        return name;
+    }
+}
+
+
+static class JobMetadataCache
+{
+    static bool? _fipsMode;
+
+    public static bool IsFipsMode =>
+        CryptoConfig.AllowOnlyFipsAlgorithms ||
+        (_fipsMode ??= bool.TryParse(Environment.GetEnvironmentVariable("VICIONE_SERVICEBUS_FIPS_ENABLE"), out var fipsMode) && fipsMode);
+
+    public static Guid GenerateHashGuid(string key)
+    {
+        if (IsFipsMode)
         {
-            if (IsFipsMode)
-            {
-                using var hasher = SHA256.Create();
+            using var hasher = SHA256.Create();
 
-                var data = hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
+            var data = hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
 
-                return new Guid(new ReadOnlySpan<byte>(data, 0, 16).ToArray());
-            }
-            else
-            {
-                using var hasher = MD5.Create();
+            return new Guid(new ReadOnlySpan<byte>(data, 0, 16).ToArray());
+        }
+        else
+        {
+            using var hasher = MD5.Create();
 
-                var data = hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
+            var data = hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
 
-                return new Guid(data);
-            }
+            return new Guid(data);
         }
     }
 }

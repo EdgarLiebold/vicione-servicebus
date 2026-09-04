@@ -1,102 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public abstract class ConfigurationSqlHostSettings :
+    SqlHostSettings
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
+    readonly Lazy<Uri> _hostAddress;
 
-
-    public abstract class ConfigurationSqlHostSettings :
-        SqlHostSettings
+    protected ConfigurationSqlHostSettings(Uri address)
+        : this()
     {
-        readonly Lazy<Uri> _hostAddress;
+        var hostAddress = new SqlHostAddress(address);
 
-        protected ConfigurationSqlHostSettings(Uri address)
-            : this()
+        Host = hostAddress.Host;
+        if (address.Port != -1)
+            Port = address.Port;
+
+        if (!string.IsNullOrWhiteSpace(address.UserInfo))
         {
-            var hostAddress = new SqlHostAddress(address);
+            var parts = address.UserInfo.Split(':');
+            Username = UriDecode(parts[0]);
 
-            Host = hostAddress.Host;
-            if (address.Port != -1)
-                Port = address.Port;
-
-            if (!string.IsNullOrWhiteSpace(address.UserInfo))
-            {
-                var parts = address.UserInfo.Split(':');
-                Username = UriDecode(parts[0]);
-
-                if (parts.Length >= 2)
-                    Password = UriDecode(parts[1]);
-            }
-
-            VirtualHost = hostAddress.VirtualHost;
-            Area = hostAddress.Area;
+            if (parts.Length >= 2)
+                Password = UriDecode(parts[1]);
         }
 
-        protected ConfigurationSqlHostSettings()
-        {
-            VirtualHost = "/";
+        VirtualHost = hostAddress.VirtualHost;
+        Area = hostAddress.Area;
+    }
 
-            IsolationLevel = IsolationLevel.RepeatableRead;
+    protected ConfigurationSqlHostSettings()
+    {
+        VirtualHost = "/";
 
-            ConnectionLimit = 10;
+        IsolationLevel = IsolationLevel.RepeatableRead;
 
-            _hostAddress = new Lazy<Uri>(FormatHostAddress);
+        ConnectionLimit = 10;
 
-            MaintenanceEnabled = true;
-            MaintenanceInterval = TimeSpan.FromSeconds(5);
-            QueueCleanupInterval = TimeSpan.FromMinutes(1);
-            MaintenanceBatchSize = 10000;
-        }
+        _hostAddress = new Lazy<Uri>(FormatHostAddress);
 
-        public string? Host { get; set; }
-        public string? InstanceName { get; set; }
-        public int? Port { get; set; }
-        public string? Database { get; set; }
-        public string? Schema { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        MaintenanceEnabled = true;
+        MaintenanceInterval = TimeSpan.FromSeconds(5);
+        QueueCleanupInterval = TimeSpan.FromMinutes(1);
+        MaintenanceBatchSize = 10000;
+    }
 
-        public IsolationLevel IsolationLevel { get; set; }
+    public string? Host { get; set; }
+    public string? InstanceName { get; set; }
+    public int? Port { get; set; }
+    public string? Database { get; set; }
+    public string? Schema { get; set; }
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 
-        public int ConnectionLimit { get; set; }
+    public IsolationLevel IsolationLevel { get; set; }
 
-        public bool MaintenanceEnabled { get; set; }
-        public TimeSpan MaintenanceInterval { get; set; }
-        public TimeSpan QueueCleanupInterval { get; set; }
-        public int MaintenanceBatchSize { get; set; }
+    public int ConnectionLimit { get; set; }
 
-        public string? ConnectionTag { get; set; }
+    public bool MaintenanceEnabled { get; set; }
+    public TimeSpan MaintenanceInterval { get; set; }
+    public TimeSpan QueueCleanupInterval { get; set; }
+    public int MaintenanceBatchSize { get; set; }
 
-        public string? VirtualHost { get; set; }
-        public string? Area { get; set; }
+    public string? ConnectionTag { get; set; }
 
-        public abstract ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
+    public string? VirtualHost { get; set; }
+    public string? Area { get; set; }
 
-        public Uri HostAddress => _hostAddress.Value;
+    public abstract ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration configuration);
 
-        public virtual IEnumerable<ValidationResult> Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Host))
-                yield return this.Failure("Host", "Host must be specified");
+    public Uri HostAddress => _hostAddress.Value;
 
-            if(ConnectionLimit < 1)
-                yield return this.Failure("ConnectionLimit", "must be >= 1");
-        }
+    public virtual IEnumerable<ValidationResult> Validate()
+    {
+        if (string.IsNullOrWhiteSpace(Host))
+            yield return this.Failure("Host", "Host must be specified");
 
-        static string UriDecode(string uri)
-        {
-            return Uri.UnescapeDataString(uri.Replace("+", "%2B"));
-        }
+        if (ConnectionLimit < 1)
+            yield return this.Failure("ConnectionLimit", "must be >= 1");
+    }
 
-        Uri FormatHostAddress()
-        {
-            if (string.IsNullOrWhiteSpace(Host))
-                throw new ConfigurationException("Host cannot be empty");
-            if (string.IsNullOrWhiteSpace(VirtualHost))
-                throw new ConfigurationException("Domain cannot be empty");
+    static string UriDecode(string uri)
+    {
+        return Uri.UnescapeDataString(uri.Replace("+", "%2B"));
+    }
 
-            return new SqlHostAddress(Host!, InstanceName, Port, VirtualHost!, Area);
-        }
+    Uri FormatHostAddress()
+    {
+        if (string.IsNullOrWhiteSpace(Host))
+            throw new ConfigurationException("Host cannot be empty");
+        if (string.IsNullOrWhiteSpace(VirtualHost))
+            throw new ConfigurationException("Domain cannot be empty");
+
+        return new SqlHostAddress(Host!, InstanceName, Port, VirtualHost!, Area);
     }
 }

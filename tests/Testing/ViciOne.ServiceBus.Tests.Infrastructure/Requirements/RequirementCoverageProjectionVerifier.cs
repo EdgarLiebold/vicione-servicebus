@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 /// metadata that a test assembly compiled into itself.
 /// </summary>
 /// <remarks>
-/// The comparison lives here, beside the attribute it reads, because more than one executable cohort
+/// The comparison lives here, beside the attribute it reads, because more than one executable test project
 /// now makes it. A second copy would be a second definition of what "covered" means, and the two
 /// would drift silently: both would stay green while disagreeing about the same projection.
 /// <para>
@@ -250,7 +250,7 @@ public static class RequirementCoverageProjectionVerifier
     {
         foreach (var entry in entries)
         {
-            // Ordinal, exact: a projection that names another assembly describes another cohort, and
+            // Ordinal, exact: a projection that names another assembly describes another test project, and
             // looking its type up in this one would answer a question nobody asked.
             if (!string.Equals(assemblyName, entry.TestAssembly, StringComparison.Ordinal))
             {

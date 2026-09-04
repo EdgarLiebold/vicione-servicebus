@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus;
+
+public interface ExecutionResult
 {
-    using System;
-    using System.Threading.Tasks;
+    Task Evaluate();
 
-
-    public interface ExecutionResult
-    {
-        Task Evaluate();
-
-        bool IsFaulted(out Exception exception);
-    }
+    bool IsFaulted(out Exception exception);
 }

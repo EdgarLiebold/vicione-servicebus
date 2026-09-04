@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Mediator
+namespace ViciOne.ServiceBus.Mediator;
+
+public interface IScopedMediator :
+    IMediator
 {
-    public interface IScopedMediator :
-        IMediator
-    {
-    }
 }

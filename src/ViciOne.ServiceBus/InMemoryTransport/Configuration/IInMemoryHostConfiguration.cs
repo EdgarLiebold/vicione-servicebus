@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public interface IInMemoryHostConfiguration :
+    IHostConfiguration,
+    IReceiveConfigurator<IInMemoryReceiveEndpointConfigurator>
 {
-    using System;
-    using ViciOne.ServiceBus.Configuration;
+    /// <summary>
+    /// Set the host's base address
+    /// </summary>
+    Uri BaseAddress { set; }
 
+    IInMemoryHostConfigurator Configurator { get; }
 
-    public interface IInMemoryHostConfiguration :
-        IHostConfiguration,
-        IReceiveConfigurator<IInMemoryReceiveEndpointConfigurator>
-    {
-        /// <summary>
-        /// Set the host's base address
-        /// </summary>
-        Uri BaseAddress { set; }
+    IInMemoryTransportProvider TransportProvider { get; }
 
-        IInMemoryHostConfigurator Configurator { get; }
+    int QueueCapacity { get; }
 
-        IInMemoryTransportProvider TransportProvider { get; }
+    new IInMemoryBusTopology Topology { get; }
 
-        int QueueCapacity { get; }
+    void ApplyEndpointDefinition(IInMemoryReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
-        new IInMemoryBusTopology Topology { get; }
+    IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
+        Action<IInMemoryReceiveEndpointConfigurator> configure = null);
 
-        void ApplyEndpointDefinition(IInMemoryReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
-
-        IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-            Action<IInMemoryReceiveEndpointConfigurator> configure = null);
-
-        IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, IInMemoryEndpointConfiguration endpointConfiguration,
-            Action<IInMemoryReceiveEndpointConfigurator> configure = null);
-    }
+    IInMemoryReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, IInMemoryEndpointConfiguration endpointConfiguration,
+        Action<IInMemoryReceiveEndpointConfigurator> configure = null);
 }

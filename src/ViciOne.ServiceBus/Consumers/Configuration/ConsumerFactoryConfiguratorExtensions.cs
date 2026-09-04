@@ -1,52 +1,50 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public static class ConsumerFactoryConfiguratorExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Internals;
-
-
-    public static class ConsumerFactoryConfiguratorExtensions
+    public static IEnumerable<ValidationResult> ValidateConsumer<TConsumer>(this ISpecification configurator)
+        where TConsumer : class
     {
-        public static IEnumerable<ValidationResult> ValidateConsumer<TConsumer>(this ISpecification configurator)
-            where TConsumer : class
+        if (!typeof(TConsumer).ImplementsInterface<IConsumer>())
         {
-            if (!typeof(TConsumer).ImplementsInterface<IConsumer>())
-            {
-                yield return configurator.Warning("Consumer",
-                    $"The consumer class {TypeCache<TConsumer>.ShortName} does not implement any IConsumer interfaces");
-            }
-
-            IEnumerable<ValidationResult> warningForMessages = ConsumerMetadataCache<TConsumer>
-                .ConsumerTypes
-                .Where(x => !x.MessageType.IsInterface)
-                .Where(x => !HasProtectedDefaultConstructor(x.MessageType))
-                .Select(x =>
-                    $"The {TypeCache.GetShortName(x.MessageType)} message should have a public or protected default constructor."
-                    + " Without an available constructor, ViciOne.ServiceBus will initialize new message instances"
-                    + " without calling a constructor, which can lead to unpredictable behavior if the message"
-                    + " depends upon logic in the constructor to be executed.")
-                .Select(message => configurator.Warning("Message", message));
-
-            foreach (var message in warningForMessages)
-                yield return message;
+            yield return configurator.Warning("Consumer",
+                $"The consumer class {TypeCache<TConsumer>.ShortName} does not implement any IConsumer interfaces");
         }
 
-        public static IEnumerable<ValidationResult> Validate<TConsumer>(this IConsumerFactory<TConsumer> consumerFactory)
-            where TConsumer : class
-        {
-            if (consumerFactory == null)
-                yield return ValidationResultExtensions.Failure(null, "UseConsumerFactory", "must not be null");
+        IEnumerable<ValidationResult> warningForMessages = ConsumerMetadataCache<TConsumer>
+            .ConsumerTypes
+            .Where(x => !x.MessageType.IsInterface)
+            .Where(x => !HasProtectedDefaultConstructor(x.MessageType))
+            .Select(x =>
+                $"The {TypeCache.GetShortName(x.MessageType)} message should have a public or protected default constructor."
+                + " Without an available constructor, ViciOne.ServiceBus will initialize new message instances"
+                + " without calling a constructor, which can lead to unpredictable behavior if the message"
+                + " depends upon logic in the constructor to be executed.")
+            .Select(message => configurator.Warning("Message", message));
 
-            foreach (var result in ValidateConsumer<TConsumer>(null))
-                yield return result;
-        }
+        foreach (var message in warningForMessages)
+            yield return message;
+    }
 
-        static bool HasProtectedDefaultConstructor(Type type)
-        {
-            return type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Any(constructorInfo => !constructorInfo.GetParameters().Any());
-        }
+    public static IEnumerable<ValidationResult> Validate<TConsumer>(this IConsumerFactory<TConsumer> consumerFactory)
+        where TConsumer : class
+    {
+        if (consumerFactory == null)
+            yield return ValidationResultExtensions.Failure(null, "UseConsumerFactory", "must not be null");
+
+        foreach (var result in ValidateConsumer<TConsumer>(null))
+            yield return result;
+    }
+
+    static bool HasProtectedDefaultConstructor(Type type)
+    {
+        return type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            .Any(constructorInfo => !constructorInfo.GetParameters().Any());
     }
 }

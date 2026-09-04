@@ -1,77 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public class SqlConsumeTopology :
+    ConsumeTopology,
+    ISqlConsumeTopologyConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
+    readonly ISqlPublishTopology _publishTopology;
+    readonly List<ISqlConsumeTopologySpecification> _specifications;
 
-
-    public class SqlConsumeTopology :
-        ConsumeTopology,
-        ISqlConsumeTopologyConfigurator
+    public SqlConsumeTopology(ISqlPublishTopology publishTopology)
+        : base(255)
     {
-        readonly ISqlPublishTopology _publishTopology;
-        readonly List<ISqlConsumeTopologySpecification> _specifications;
+        _publishTopology = publishTopology;
 
-        public SqlConsumeTopology(ISqlPublishTopology publishTopology)
-            : base(255)
-        {
-            _publishTopology = publishTopology;
+        _specifications = new List<ISqlConsumeTopologySpecification>();
+    }
 
-            _specifications = new List<ISqlConsumeTopologySpecification>();
-        }
+    ISqlMessageConsumeTopology<T> ISqlConsumeTopology.GetMessageTopology<T>()
+    {
+        return (ISqlMessageConsumeTopology<T>)base.GetMessageTopology<T>();
+    }
 
-        ISqlMessageConsumeTopology<T> ISqlConsumeTopology.GetMessageTopology<T>()
-        {
-            return (ISqlMessageConsumeTopology<T>)base.GetMessageTopology<T>();
-        }
+    public void AddSpecification(ISqlConsumeTopologySpecification specification)
+    {
+        if (specification == null)
+            throw new ArgumentNullException(nameof(specification));
 
-        public void AddSpecification(ISqlConsumeTopologySpecification specification)
-        {
-            if (specification == null)
-                throw new ArgumentNullException(nameof(specification));
+        _specifications.Add(specification);
+    }
 
-            _specifications.Add(specification);
-        }
+    ISqlMessageConsumeTopologyConfigurator<T> ISqlConsumeTopologyConfigurator.GetMessageTopology<T>()
+    {
+        return (ISqlMessageConsumeTopologyConfigurator<T>)base.GetMessageTopology<T>();
+    }
 
-        ISqlMessageConsumeTopologyConfigurator<T> ISqlConsumeTopologyConfigurator.GetMessageTopology<T>()
-        {
-            return (ISqlMessageConsumeTopologyConfigurator<T>)base.GetMessageTopology<T>();
-        }
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
 
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
+        ForEach<IDbMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
+    }
 
-            ForEach<IDbMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
-        }
+    public void Subscribe(string topicName, Action<ISqlTopicSubscriptionConfigurator>? configure = null)
+    {
+        if (string.IsNullOrWhiteSpace(topicName))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(topicName));
 
-        public void Subscribe(string topicName, Action<ISqlTopicSubscriptionConfigurator>? configure = null)
-        {
-            if (string.IsNullOrWhiteSpace(topicName))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(topicName));
+        var specification = new QueueSubscriptionConsumeTopologySpecification(topicName);
 
-            var specification = new QueueSubscriptionConsumeTopologySpecification(topicName);
+        configure?.Invoke(specification);
 
-            configure?.Invoke(specification);
+        _specifications.Add(specification);
+    }
 
-            _specifications.Add(specification);
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
+    }
 
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
-        }
+    protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
+    {
+        var messageTopology = new SqlMessageConsumeTopology<T>(_publishTopology.GetMessageTopology<T>());
 
-        protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
-        {
-            var messageTopology = new SqlMessageConsumeTopology<T>(_publishTopology.GetMessageTopology<T>());
+        OnMessageTopologyCreated(messageTopology);
 
-            OnMessageTopologyCreated(messageTopology);
-
-            return messageTopology;
-        }
+        return messageTopology;
     }
 }

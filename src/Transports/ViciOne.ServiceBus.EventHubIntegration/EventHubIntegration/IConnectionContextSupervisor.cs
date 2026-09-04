@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface IConnectionContextSupervisor :
+    ITransportSupervisor<ConnectionContext>
 {
-    using Transports;
-
-
-    public interface IConnectionContextSupervisor :
-        ITransportSupervisor<ConnectionContext>
-    {
-    }
 }

@@ -1,58 +1,56 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+public class ActiveMqMessageLatencyTransport :
+    IMessageLatencyTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    readonly ActiveMqHostSettings _hostSettings;
+    readonly IMessageLatencySettings _settings;
+    IBusControl _busControl;
+    Uri _targetAddress;
+    ISendEndpoint _targetEndpoint;
 
-
-    public class ActiveMqMessageLatencyTransport :
-        IMessageLatencyTransport
+    public ActiveMqMessageLatencyTransport(ActiveMqHostSettings hostSettings, IMessageLatencySettings settings)
     {
-        readonly ActiveMqHostSettings _hostSettings;
-        readonly IMessageLatencySettings _settings;
-        IBusControl _busControl;
-        Uri _targetAddress;
-        ISendEndpoint _targetEndpoint;
+        _hostSettings = hostSettings;
+        _settings = settings;
+    }
 
-        public ActiveMqMessageLatencyTransport(ActiveMqHostSettings hostSettings, IMessageLatencySettings settings)
-        {
-            _hostSettings = hostSettings;
-            _settings = settings;
-        }
+    public Task Send(LatencyTestMessage message)
+    {
+        return _targetEndpoint.Send(message);
+    }
 
-        public Task Send(LatencyTestMessage message)
+    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    {
+        _busControl = Bus.Factory.CreateUsingActiveMq(x =>
         {
-            return _targetEndpoint.Send(message);
-        }
+            x.Host(_hostSettings);
 
-        public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
-        {
-            _busControl = Bus.Factory.CreateUsingActiveMq(x =>
+            x.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
             {
-                x.Host(_hostSettings);
+                e.Durable = _settings.Durable;
+                e.PrefetchCount = _settings.PrefetchCount;
 
-                x.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
-                {
-                    e.Durable = _settings.Durable;
-                    e.PrefetchCount = _settings.PrefetchCount;
+                if (_settings.ConcurrencyLimit > 0)
+                    e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
 
-                    if (_settings.ConcurrencyLimit > 0)
-                        e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
+                callback(e);
 
-                    callback(e);
-
-                    _targetAddress = e.InputAddress;
-                });
+                _targetAddress = e.InputAddress;
             });
+        });
 
-            await _busControl.StartAsync();
+        await _busControl.StartAsync();
 
-            _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
-        }
+        _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
+    }
 
-        public async ValueTask DisposeAsync()
-        {
-            await _busControl.StopAsync();
-        }
+    public async ValueTask DisposeAsync()
+    {
+        await _busControl.StopAsync();
     }
 }

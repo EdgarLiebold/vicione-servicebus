@@ -1,81 +1,79 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.NewIdFormatters;
+using ViciOne.ServiceBus.NewIdParsers;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus;
+
+public readonly struct FutureLocation
 {
-    using System;
-    using Internals;
-    using NewIdFormatters;
-    using NewIdParsers;
-    using Transports;
+    public readonly Uri Address;
+    public readonly Guid Id;
 
-
-    public readonly struct FutureLocation
+    public FutureLocation(Uri location)
     {
-        public readonly Uri Address;
-        public readonly Guid Id;
+        ArgumentNullException.ThrowIfNull(location);
+        if (!location.IsAbsoluteUri)
+            throw CreateInvalidLocationException(location);
 
-        public FutureLocation(Uri location)
+        string value;
+        bool hasValue;
+        try
         {
-            ArgumentNullException.ThrowIfNull(location);
-            if (!location.IsAbsoluteUri)
-                throw CreateInvalidLocationException(location);
-
-            string value;
-            bool hasValue;
-            try
-            {
-                hasValue = location.TryGetValueFromQueryString("id", out value);
-            }
-            catch (InvalidOperationException exception)
-            {
-                throw CreateInvalidLocationException(location, exception);
-            }
-
-            if (!hasValue || string.IsNullOrWhiteSpace(value))
-                throw CreateInvalidLocationException(location);
-
-            try
-            {
-                var parsedId = IdParser.Parse(value);
-                Id = parsedId.ToGuid();
-            }
-            catch (ArgumentException exception)
-            {
-                throw CreateInvalidLocationException(location, exception);
-            }
-
-            Address = new Uri(location.GetLeftPart(UriPartial.Path));
+            hasValue = location.TryGetValueFromQueryString("id", out value);
+        }
+        catch (InvalidOperationException exception)
+        {
+            throw CreateInvalidLocationException(location, exception);
         }
 
-        public FutureLocation(Guid id, Uri address)
+        if (!hasValue || string.IsNullOrWhiteSpace(value))
+            throw CreateInvalidLocationException(location);
+
+        try
         {
-            ArgumentNullException.ThrowIfNull(address);
-            if (!address.IsAbsoluteUri)
-                throw new ArgumentException("Address must be an absolute URI.", nameof(address));
-
-            var endpointName = address.GetEndpointName();
-            if (string.IsNullOrWhiteSpace(endpointName))
-                throw new ArgumentException("Address must contain an endpoint name.", nameof(address));
-
-            Id = id;
-            Address = new Uri($"queue:{endpointName}");
+            var parsedId = IdParser.Parse(value);
+            Id = parsedId.ToGuid();
+        }
+        catch (ArgumentException exception)
+        {
+            throw CreateInvalidLocationException(location, exception);
         }
 
-        public static implicit operator Uri(FutureLocation location)
-        {
-            var newId = location.Id.ToNewId();
-            var id = newId.ToString(IdFormatter);
+        Address = new Uri(location.GetLeftPart(UriPartial.Path));
+    }
 
-            return new UriBuilder(location.Address) { Query = $"id={id}" }.Uri;
-        }
+    public FutureLocation(Guid id, Uri address)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+        if (!address.IsAbsoluteUri)
+            throw new ArgumentException("Address must be an absolute URI.", nameof(address));
 
-        static readonly INewIdFormatter IdFormatter = new ZBase32Formatter();
-        static readonly INewIdParser IdParser = new ZBase32Parser(true);
+        var endpointName = address.GetEndpointName();
+        if (string.IsNullOrWhiteSpace(endpointName))
+            throw new ArgumentException("Address must contain an endpoint name.", nameof(address));
 
-        static FormatException CreateInvalidLocationException(Uri location, Exception innerException = null)
-        {
-            var message = $"Location format invalid: {location}";
-            return innerException == null
-                ? new FormatException(message)
-                : new FormatException(message, innerException);
-        }
+        Id = id;
+        Address = new Uri($"queue:{endpointName}");
+    }
+
+    public static implicit operator Uri(FutureLocation location)
+    {
+        var newId = location.Id.ToNewId();
+        var id = newId.ToString(IdFormatter);
+
+        return new UriBuilder(location.Address) { Query = $"id={id}" }.Uri;
+    }
+
+    static readonly INewIdFormatter IdFormatter = new ZBase32Formatter();
+    static readonly INewIdParser IdParser = new ZBase32Parser(true);
+
+    static FormatException CreateInvalidLocationException(Uri location, Exception innerException = null)
+    {
+        var message = $"Location format invalid: {location}";
+        return innerException == null
+            ? new FormatException(message)
+            : new FormatException(message, innerException);
     }
 }

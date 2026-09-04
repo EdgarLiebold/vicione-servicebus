@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.SignalR.Scoping
+using Microsoft.AspNetCore.SignalR;
+
+namespace ViciOne.ServiceBus.SignalR.Scoping;
+
+public interface IHubLifetimeScopeProvider
 {
-    using Microsoft.AspNetCore.SignalR;
-
-
-    public interface IHubLifetimeScopeProvider
-    {
-        IHubLifetimeScope<THub> CreateScope<THub>()
-            where THub : Hub;
-    }
+    IHubLifetimeScope<THub> CreateScope<THub>()
+        where THub : Hub;
 }

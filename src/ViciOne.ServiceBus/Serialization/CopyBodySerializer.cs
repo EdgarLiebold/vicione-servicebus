@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus.Serialization
+using System.Net.Mime;
+
+namespace ViciOne.ServiceBus.Serialization;
+
+/// <summary>
+/// Copies the body of the receive context to the send context unmodified
+/// </summary>
+public class CopyBodySerializer :
+    IMessageSerializer
 {
-    using System.Net.Mime;
+    readonly MessageBody _body;
 
-
-    /// <summary>
-    /// Copies the body of the receive context to the send context unmodified
-    /// </summary>
-    public class CopyBodySerializer :
-        IMessageSerializer
+    public CopyBodySerializer(ContentType contentType, MessageBody body)
     {
-        readonly MessageBody _body;
+        _body = body;
 
-        public CopyBodySerializer(ContentType contentType, MessageBody body)
-        {
-            _body = body;
+        ContentType = contentType;
+    }
 
-            ContentType = contentType;
-        }
+    public ContentType ContentType { get; }
 
-        public ContentType ContentType { get; }
-
-        public MessageBody GetMessageBody<T>(SendContext<T> context)
-            where T : class
-        {
-            return _body;
-        }
+    public MessageBody GetMessageBody<T>(SendContext<T> context)
+        where T : class
+    {
+        return _body;
     }
 }

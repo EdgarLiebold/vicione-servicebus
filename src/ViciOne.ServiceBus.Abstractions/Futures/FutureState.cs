@@ -1,133 +1,130 @@
-#nullable disable
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus;
+
+public class FutureState :
+    SagaStateMachineInstance,
+    ISagaVersion
 {
-    using System;
-    using System.Collections.Generic;
+    Dictionary<Guid, FutureMessage>? _faults;
+    HashSet<Guid>? _pending;
+    Dictionary<Guid, FutureMessage>? _results;
+    HashSet<FutureSubscription>? _subscriptions;
+    Dictionary<string, object>? _variables;
 
+    public int CurrentState { get; set; }
 
-    public class FutureState :
-        SagaStateMachineInstance,
-        ISagaVersion
+    public DateTime Created { get; set; }
+    public DateTime? Completed { get; set; }
+    public DateTime? Faulted { get; set; }
+
+    public Uri Location { get; set; } = null!;
+
+    public FutureMessage Command { get; set; } = null!;
+
+    public HashSet<Guid> Pending
     {
-        Dictionary<Guid, FutureMessage> _faults;
-        HashSet<Guid> _pending;
-        Dictionary<Guid, FutureMessage> _results;
-        HashSet<FutureSubscription> _subscriptions;
-        Dictionary<string, object> _variables;
-
-        public int CurrentState { get; set; }
-
-        public DateTime Created { get; set; }
-        public DateTime? Completed { get; set; }
-        public DateTime? Faulted { get; set; }
-
-        public Uri Location { get; set; }
-
-        public FutureMessage Command { get; set; }
-
-        public HashSet<Guid> Pending
+        get
         {
-            get
-            {
-                if (_pending != null)
-                    return _pending;
-
-                lock (this)
-                    _pending ??= new HashSet<Guid>();
-
+            if (_pending != null)
                 return _pending;
-            }
-            set => _pending = value;
+
+            lock (this)
+                _pending ??= new HashSet<Guid>();
+
+            return _pending;
         }
+        set => _pending = value;
+    }
 
-        public HashSet<FutureSubscription> Subscriptions
+    public HashSet<FutureSubscription> Subscriptions
+    {
+        get
         {
-            get
-            {
-                if (_subscriptions != null)
-                    return _subscriptions;
-
-                lock (this)
-                    _subscriptions ??= new HashSet<FutureSubscription>(FutureSubscription.Comparer);
-
+            if (_subscriptions != null)
                 return _subscriptions;
-            }
-            set => _subscriptions = value;
+
+            lock (this)
+                _subscriptions ??= new HashSet<FutureSubscription>(FutureSubscription.Comparer);
+
+            return _subscriptions;
         }
+        set => _subscriptions = value;
+    }
 
-        public Dictionary<string, object> Variables
+    public Dictionary<string, object> Variables
+    {
+        get
         {
-            get
-            {
-                if (_variables != null)
-                    return _variables;
-
-                lock (this)
-                    _variables ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
+            if (_variables != null)
                 return _variables;
-            }
-            set => _variables = value != null ? new Dictionary<string, object>(value, StringComparer.OrdinalIgnoreCase) : null;
+
+            lock (this)
+                _variables ??= new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+            return _variables;
         }
+        set => _variables = value != null ? new Dictionary<string, object>(value, StringComparer.OrdinalIgnoreCase) : null;
+    }
 
-        public Dictionary<Guid, FutureMessage> Results
+    public Dictionary<Guid, FutureMessage> Results
+    {
+        get
         {
-            get
-            {
-                if (_results != null)
-                    return _results;
-
-                lock (this)
-                    _results ??= new Dictionary<Guid, FutureMessage>();
-
+            if (_results != null)
                 return _results;
-            }
-            set => _results = value;
+
+            lock (this)
+                _results ??= new Dictionary<Guid, FutureMessage>();
+
+            return _results;
         }
+        set => _results = value;
+    }
 
-        public Dictionary<Guid, FutureMessage> Faults
+    public Dictionary<Guid, FutureMessage> Faults
+    {
+        get
         {
-            get
-            {
-                if (_faults != null)
-                    return _faults;
-
-                lock (this)
-                    _faults ??= new Dictionary<Guid, FutureMessage>();
-
+            if (_faults != null)
                 return _faults;
-            }
-            set => _faults = value;
+
+            lock (this)
+                _faults ??= new Dictionary<Guid, FutureMessage>();
+
+            return _faults;
         }
+        set => _faults = value;
+    }
 
-        public byte[] RowVersion { get; set; }
-        public int Version { get; set; }
+    public byte[] RowVersion { get; set; } = null!;
+    public int Version { get; set; }
 
-        public Guid CorrelationId { get; set; }
+    public Guid CorrelationId { get; set; }
 
-        public bool HasSubscriptions()
-        {
-            return _subscriptions != null && _subscriptions.Count > 0;
-        }
+    public bool HasSubscriptions()
+    {
+        return _subscriptions != null && _subscriptions.Count > 0;
+    }
 
-        public bool HasVariables()
-        {
-            return _variables != null && _variables.Count > 0;
-        }
+    public bool HasVariables()
+    {
+        return _variables != null && _variables.Count > 0;
+    }
 
-        public bool HasResults()
-        {
-            return _results != null && _results.Count > 0;
-        }
+    public bool HasResults()
+    {
+        return _results != null && _results.Count > 0;
+    }
 
-        public bool HasFaults()
-        {
-            return _faults != null && _faults.Count > 0;
-        }
+    public bool HasFaults()
+    {
+        return _faults != null && _faults.Count > 0;
+    }
 
-        public bool HasPending()
-        {
-            return _pending != null && _pending.Count > 0;
-        }
+    public bool HasPending()
+    {
+        return _pending != null && _pending.Count > 0;
     }
 }

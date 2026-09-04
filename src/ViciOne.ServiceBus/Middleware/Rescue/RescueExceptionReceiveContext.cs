@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Middleware.Rescue
+using System;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.Middleware.Rescue;
+
+public class RescueExceptionReceiveContext :
+    ReceiveContextProxy,
+    ExceptionReceiveContext
 {
-    using System;
-    using Context;
-    using Events;
-    using Serialization;
+    readonly DictionarySendHeaders _headers;
+    ExceptionInfo _exceptionInfo;
 
-
-    public class RescueExceptionReceiveContext :
-        ReceiveContextProxy,
-        ExceptionReceiveContext
+    public RescueExceptionReceiveContext(ReceiveContext context, Exception exception)
+        : base(context)
     {
-        readonly DictionarySendHeaders _headers;
-        ExceptionInfo _exceptionInfo;
+        Exception = exception;
+        ExceptionTimestamp = DateTime.UtcNow;
 
-        public RescueExceptionReceiveContext(ReceiveContext context, Exception exception)
-            : base(context)
-        {
-            Exception = exception;
-            ExceptionTimestamp = DateTime.UtcNow;
+        _headers = new DictionarySendHeaders();
 
-            _headers = new DictionarySendHeaders();
-
-            _headers.SetExceptionHeaders(this);
-        }
-
-        public Exception Exception { get; }
-        public DateTime ExceptionTimestamp { get; }
-
-        public ExceptionInfo ExceptionInfo
-        {
-            get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
-        }
-
-        public SendHeaders ExceptionHeaders => _headers;
+        _headers.SetExceptionHeaders(this);
     }
+
+    public Exception Exception { get; }
+    public DateTime ExceptionTimestamp { get; }
+
+    public ExceptionInfo ExceptionInfo
+    {
+        get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
+    }
+
+    public SendHeaders ExceptionHeaders => _headers;
 }

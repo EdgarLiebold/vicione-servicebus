@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IActivityObserverConnector
 {
-    public interface IActivityObserverConnector
-    {
-        ConnectHandle ConnectActivityObserver(IActivityObserver observer);
-    }
+    ConnectHandle ConnectActivityObserver(IActivityObserver observer);
 }

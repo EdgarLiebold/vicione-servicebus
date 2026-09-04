@@ -1,39 +1,37 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Splits a context item off the pipe and carries it out-of-band to be merged
+/// once the next filter has completed
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class SagaSplitFilter<TSaga, TMessage> :
+    IFilter<SagaConsumeContext<TSaga, TMessage>>
+    where TMessage : class
+    where TSaga : class, ISaga
 {
-    using System.Threading.Tasks;
+    readonly IFilter<SagaConsumeContext<TSaga>> _next;
 
-
-    /// <summary>
-    /// Splits a context item off the pipe and carries it out-of-band to be merged
-    /// once the next filter has completed
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class SagaSplitFilter<TSaga, TMessage> :
-        IFilter<SagaConsumeContext<TSaga, TMessage>>
-        where TMessage : class
-        where TSaga : class, ISaga
+    public SagaSplitFilter(IFilter<SagaConsumeContext<TSaga>> next)
     {
-        readonly IFilter<SagaConsumeContext<TSaga>> _next;
+        _next = next;
+    }
 
-        public SagaSplitFilter(IFilter<SagaConsumeContext<TSaga>> next)
-        {
-            _next = next;
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("split");
+        scope.Set(new { SagaType = TypeCache<TSaga>.ShortName });
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("split");
-            scope.Set(new { SagaType = TypeCache<TSaga>.ShortName });
+        _next.Probe(scope);
+    }
 
-            _next.Probe(scope);
-        }
+    public Task Send(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    {
+        var mergePipe = new SagaMergePipe<TSaga, TMessage>(next);
 
-        public Task Send(SagaConsumeContext<TSaga, TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
-        {
-            var mergePipe = new SagaMergePipe<TSaga, TMessage>(next);
-
-            return _next.Send(context, mergePipe);
-        }
+        return _next.Send(context, mergePipe);
     }
 }

@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface INewIdGenerator
 {
-    using System;
+    NewId Next();
 
+    ArraySegment<NewId> Next(NewId[] ids, int index, int count);
 
-    public interface INewIdGenerator
-    {
-        NewId Next();
+    Guid NextGuid();
 
-        ArraySegment<NewId> Next(NewId[] ids, int index, int count);
+    ArraySegment<Guid> NextGuid(Guid[] ids, int index, int count);
 
-        Guid NextGuid();
+    ArraySegment<Guid> NextSequentialGuid(Guid[] ids, int index, int count);
 
-        ArraySegment<Guid> NextGuid(Guid[] ids, int index, int count);
-
-        ArraySegment<Guid> NextSequentialGuid(Guid[] ids, int index, int count);
-
-        Guid NextSequentialGuid();
-    }
+    Guid NextSequentialGuid();
 }

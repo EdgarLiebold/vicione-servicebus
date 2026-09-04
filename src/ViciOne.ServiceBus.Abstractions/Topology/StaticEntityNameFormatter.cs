@@ -1,19 +1,18 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public class StaticEntityNameFormatter<TMessage> :
+    IMessageEntityNameFormatter<TMessage>
+    where TMessage : class
 {
-    public class StaticEntityNameFormatter<TMessage> :
-        IMessageEntityNameFormatter<TMessage>
-        where TMessage : class
+    readonly string _entityName;
+
+    public StaticEntityNameFormatter(string entityName)
     {
-        readonly string _entityName;
+        _entityName = entityName;
+    }
 
-        public StaticEntityNameFormatter(string entityName)
-        {
-            _entityName = entityName;
-        }
-
-        string IMessageEntityNameFormatter<TMessage>.FormatEntityName()
-        {
-            return _entityName;
-        }
+    string IMessageEntityNameFormatter<TMessage>.FormatEntityName()
+    {
+        return _entityName;
     }
 }

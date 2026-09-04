@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class EntityFrameworkSagaRepositoryRegistrationProvider :
+    ISagaRepositoryRegistrationProvider
 {
-    using System;
+    readonly Action<IEntityFrameworkSagaRepositoryConfigurator> _configure;
 
-
-    public class EntityFrameworkSagaRepositoryRegistrationProvider :
-        ISagaRepositoryRegistrationProvider
+    public EntityFrameworkSagaRepositoryRegistrationProvider(Action<IEntityFrameworkSagaRepositoryConfigurator> configure)
     {
-        readonly Action<IEntityFrameworkSagaRepositoryConfigurator> _configure;
+        _configure = configure;
+    }
 
-        public EntityFrameworkSagaRepositoryRegistrationProvider(Action<IEntityFrameworkSagaRepositoryConfigurator> configure)
-        {
-            _configure = configure;
-        }
-
-        public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga
-        {
-            configurator.EntityFrameworkRepository(r => _configure?.Invoke(r));
-        }
+    public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+        where TSaga : class, ISaga
+    {
+        configurator.EntityFrameworkRepository(r => _configure?.Invoke(r));
     }
 }

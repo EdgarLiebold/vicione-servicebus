@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IRabbitMqMessageConsumeTopology<TMessage> :
+    IMessageConsumeTopology<TMessage>
+    where TMessage : class
 {
-    public interface IRabbitMqMessageConsumeTopology<TMessage> :
-        IMessageConsumeTopology<TMessage>
-        where TMessage : class
-    {
-    }
 }

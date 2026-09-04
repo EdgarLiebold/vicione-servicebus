@@ -1,45 +1,43 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.AzureServiceBusTransport;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ServiceBusSubscriptionEndpointBuilder :
+    ReceiveEndpointBuilder
 {
-    using AzureServiceBusTransport;
-    using AzureServiceBusTransport.Configuration;
-    using AzureServiceBusTransport.Topology;
+    readonly IServiceBusSubscriptionEndpointConfiguration _configuration;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
 
-
-    public class ServiceBusSubscriptionEndpointBuilder :
-        ReceiveEndpointBuilder
+    public ServiceBusSubscriptionEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusSubscriptionEndpointConfiguration configuration)
+        : base(configuration)
     {
-        readonly IServiceBusSubscriptionEndpointConfiguration _configuration;
-        readonly IServiceBusHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+    }
 
-        public ServiceBusSubscriptionEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusSubscriptionEndpointConfiguration configuration)
-            : base(configuration)
-        {
-            _hostConfiguration = hostConfiguration;
-            _configuration = configuration;
-        }
+    public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        var topologyLayout = BuildTopology(_configuration.Settings);
 
-        public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
-        {
-            var topologyLayout = BuildTopology(_configuration.Settings);
+        return new ServiceBusEntityReceiveEndpointContext(_hostConfiguration, _configuration, topologyLayout, ClientContextFactory);
+    }
 
-            return new ServiceBusEntityReceiveEndpointContext(_hostConfiguration, _configuration, topologyLayout, ClientContextFactory);
-        }
+    static BrokerTopology BuildTopology(SubscriptionSettings settings)
+    {
+        var topologyBuilder = new SubscriptionEndpointBrokerTopologyBuilder();
 
-        static BrokerTopology BuildTopology(SubscriptionSettings settings)
-        {
-            var topologyBuilder = new SubscriptionEndpointBrokerTopologyBuilder();
+        topologyBuilder.Topic = topologyBuilder.CreateTopic(settings.CreateTopicOptions);
 
-            topologyBuilder.Topic = topologyBuilder.CreateTopic(settings.CreateTopicOptions);
+        topologyBuilder.CreateSubscription(topologyBuilder.Topic, settings.CreateSubscriptionOptions, settings.Rule, settings.Filter);
 
-            topologyBuilder.CreateSubscription(topologyBuilder.Topic, settings.CreateSubscriptionOptions, settings.Rule, settings.Filter);
+        return topologyBuilder.BuildBrokerTopology();
+    }
 
-            return topologyBuilder.BuildBrokerTopology();
-        }
-
-        IClientContextSupervisor ClientContextFactory()
-        {
-            return _hostConfiguration.ConnectionContextSupervisor
-                .CreateClientContextSupervisor(supervisor => new SubscriptionClientContextFactory(supervisor, _configuration.Settings));
-        }
+    IClientContextSupervisor ClientContextFactory()
+    {
+        return _hostConfiguration.ConnectionContextSupervisor
+            .CreateClientContextSupervisor(supervisor => new SubscriptionClientContextFactory(supervisor, _configuration.Settings));
     }
 }

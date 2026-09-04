@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ObserverConfigurator<TMessage> :
+    IObserverConfigurator<TMessage>,
+    IReceiveEndpointSpecification
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly IPipeSpecification<ConsumeContext<TMessage>> _handlerConfigurator;
+    readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _pipeConfigurator;
 
-
-    public class ObserverConfigurator<TMessage> :
-        IObserverConfigurator<TMessage>,
-        IReceiveEndpointSpecification
-        where TMessage : class
+    public ObserverConfigurator(IObserver<ConsumeContext<TMessage>> observer)
     {
-        readonly IPipeSpecification<ConsumeContext<TMessage>> _handlerConfigurator;
-        readonly IBuildPipeConfigurator<ConsumeContext<TMessage>> _pipeConfigurator;
+        _pipeConfigurator = new PipeConfigurator<ConsumeContext<TMessage>>();
+        _handlerConfigurator = new ObserverPipeSpecification<TMessage>(observer);
+    }
 
-        public ObserverConfigurator(IObserver<ConsumeContext<TMessage>> observer)
-        {
-            _pipeConfigurator = new PipeConfigurator<ConsumeContext<TMessage>>();
-            _handlerConfigurator = new ObserverPipeSpecification<TMessage>(observer);
-        }
+    public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
+    {
+        _pipeConfigurator.AddPipeSpecification(specification);
+    }
 
-        public void AddPipeSpecification(IPipeSpecification<ConsumeContext<TMessage>> specification)
-        {
-            _pipeConfigurator.AddPipeSpecification(specification);
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _handlerConfigurator.Validate().Concat(_pipeConfigurator.Validate());
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            return _handlerConfigurator.Validate().Concat(_pipeConfigurator.Validate());
-        }
+    public void Configure(IReceiveEndpointBuilder builder)
+    {
+        _pipeConfigurator.AddPipeSpecification(_handlerConfigurator);
 
-        public void Configure(IReceiveEndpointBuilder builder)
-        {
-            _pipeConfigurator.AddPipeSpecification(_handlerConfigurator);
+        IPipe<ConsumeContext<TMessage>> pipe = _pipeConfigurator.Build();
 
-            IPipe<ConsumeContext<TMessage>> pipe = _pipeConfigurator.Build();
-
-            builder.ConnectConsumePipe(pipe);
-        }
+        builder.ConnectConsumePipe(pipe);
     }
 }

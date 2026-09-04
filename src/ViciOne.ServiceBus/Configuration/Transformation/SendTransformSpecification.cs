@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SendTransformSpecification<TMessage> :
+    TransformSpecification<TMessage>,
+    ISendTransformSpecification<TMessage>
+    where TMessage : class
 {
-    using Initializers;
-    using Middleware;
-
-
-    public class SendTransformSpecification<TMessage> :
-        TransformSpecification<TMessage>,
-        ISendTransformSpecification<TMessage>
-        where TMessage : class
+    void IPipeSpecification<SendContext<TMessage>>.Apply(IPipeBuilder<SendContext<TMessage>> builder)
     {
-        void IPipeSpecification<SendContext<TMessage>>.Apply(IPipeBuilder<SendContext<TMessage>> builder)
-        {
-            IMessageInitializer<TMessage> initializer = Build();
+        IMessageInitializer<TMessage> initializer = Build();
 
-            builder.AddFilter(new TransformFilter<TMessage>(initializer));
-        }
+        builder.AddFilter(new TransformFilter<TMessage>(initializer));
     }
 }

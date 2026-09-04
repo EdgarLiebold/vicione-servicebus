@@ -1,29 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RoutingKeySendTopologyConvention :
+    IRoutingKeySendTopologyConvention
 {
-    public class RoutingKeySendTopologyConvention :
-        IRoutingKeySendTopologyConvention
+    readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
+
+    public RoutingKeySendTopologyConvention()
     {
-        readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
+        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(IRoutingKeyMessageSendTopologyConvention<>), new Factory());
+    }
 
-        public RoutingKeySendTopologyConvention()
+    public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+        where T : class
+    {
+        return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
+    }
+
+
+    class Factory :
+        IConventionTypeFactory<IMessageSendTopologyConvention>
+    {
+        IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
         {
-            _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(IRoutingKeyMessageSendTopologyConvention<>), new Factory());
-        }
-
-        public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
-            where T : class
-        {
-            return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
-        }
-
-
-        class Factory :
-            IConventionTypeFactory<IMessageSendTopologyConvention>
-        {
-            IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
-            {
-                return new RoutingKeyMessageSendTopologyConvention<T>(null);
-            }
+            return new RoutingKeyMessageSendTopologyConvention<T>(null);
         }
     }
 }

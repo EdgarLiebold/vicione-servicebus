@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Used to identify a message as correlated so that the CorrelationId can be returned
+/// </summary>
+/// <typeparam name="TKey">The type of the CorrelationId used</typeparam>
+public interface CorrelatedBy<out TKey>
 {
     /// <summary>
-    /// Used to identify a message as correlated so that the CorrelationId can be returned
+    /// Returns the CorrelationId for the message
     /// </summary>
-    /// <typeparam name="TKey">The type of the CorrelationId used</typeparam>
-    public interface CorrelatedBy<out TKey>
-    {
-        /// <summary>
-        /// Returns the CorrelationId for the message
-        /// </summary>
-        TKey CorrelationId { get; }
-    }
+    TKey CorrelationId { get; }
 }

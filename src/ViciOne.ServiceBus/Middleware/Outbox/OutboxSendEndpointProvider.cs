@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Middleware.Outbox
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware.Outbox;
+
+public class OutboxSendEndpointProvider :
+    ISendEndpointProvider,
+    IMessageRouteProvider
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly OutboxSendContext _outboxContext;
+    readonly ISendEndpointProvider _sendEndpointProvider;
 
-
-    public class OutboxSendEndpointProvider :
-        ISendEndpointProvider,
-        IMessageRouteProvider
+    public OutboxSendEndpointProvider(OutboxSendContext outboxContext, ISendEndpointProvider sendEndpointProvider)
     {
-        readonly OutboxSendContext _outboxContext;
-        readonly ISendEndpointProvider _sendEndpointProvider;
+        _outboxContext = outboxContext;
+        _sendEndpointProvider = sendEndpointProvider;
+    }
 
-        public OutboxSendEndpointProvider(OutboxSendContext outboxContext, ISendEndpointProvider sendEndpointProvider)
-        {
-            _outboxContext = outboxContext;
-            _sendEndpointProvider = sendEndpointProvider;
-        }
+    public ConnectHandle ConnectSendObserver(ISendObserver observer)
+    {
+        return _sendEndpointProvider.ConnectSendObserver(observer);
+    }
 
-        public ConnectHandle ConnectSendObserver(ISendObserver observer)
-        {
-            return _sendEndpointProvider.ConnectSendObserver(observer);
-        }
+    IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_sendEndpointProvider);
 
-        IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_sendEndpointProvider);
+    public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    {
+        var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
 
-        public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
-        {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
-
-            return new OutboxSendEndpoint(_outboxContext, endpoint);
-        }
+        return new OutboxSendEndpoint(_outboxContext, endpoint);
     }
 }

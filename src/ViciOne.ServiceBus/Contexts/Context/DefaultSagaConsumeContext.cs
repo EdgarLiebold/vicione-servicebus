@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Context;
+
+public class DefaultSagaConsumeContext<TSaga, TMessage> :
+    ConsumeContextScope<TMessage>,
+    SagaConsumeContext<TSaga, TMessage>
+    where TMessage : class
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
-
-
-    public class DefaultSagaConsumeContext<TSaga, TMessage> :
-        ConsumeContextScope<TMessage>,
-        SagaConsumeContext<TSaga, TMessage>
-        where TMessage : class
-        where TSaga : class, ISaga
+    public DefaultSagaConsumeContext(ConsumeContext<TMessage> context, TSaga instance)
+        : base(context)
     {
-        public DefaultSagaConsumeContext(ConsumeContext<TMessage> context, TSaga instance)
-            : base(context)
-        {
-            Saga = instance;
-        }
+        Saga = instance;
+    }
 
-        public override Guid? CorrelationId => Saga.CorrelationId;
+    public override Guid? CorrelationId => Saga.CorrelationId;
 
-        public TSaga Saga { get; }
-        public bool IsCompleted { get; private set; }
+    public TSaga Saga { get; }
+    public bool IsCompleted { get; private set; }
 
-        public Task SetCompleted()
-        {
-            IsCompleted = true;
+    public Task SetCompleted()
+    {
+        IsCompleted = true;
 
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

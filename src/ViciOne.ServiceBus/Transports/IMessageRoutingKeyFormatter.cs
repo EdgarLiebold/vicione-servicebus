@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IMessageRoutingKeyFormatter<in TMessage>
+    where TMessage : class
 {
-    public interface IMessageRoutingKeyFormatter<in TMessage>
-        where TMessage : class
-    {
-        string FormatRoutingKey(SendContext<TMessage> context);
-    }
+    string FormatRoutingKey(SendContext<TMessage> context);
 }

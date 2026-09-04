@@ -1,73 +1,71 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class MessagePublishPipeSplitFilterSpecification<TMessage, T> :
+    ISpecificationPipeSpecification<PublishContext<TMessage>>
+    where TMessage : class
+    where T : class
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly ISpecificationPipeSpecification<PublishContext<T>> _specification;
 
-
-    public class MessagePublishPipeSplitFilterSpecification<TMessage, T> :
-        ISpecificationPipeSpecification<PublishContext<TMessage>>
-        where TMessage : class
-        where T : class
+    public MessagePublishPipeSplitFilterSpecification(ISpecificationPipeSpecification<PublishContext<T>> specification)
     {
-        readonly ISpecificationPipeSpecification<PublishContext<T>> _specification;
+        _specification = specification;
+    }
 
-        public MessagePublishPipeSplitFilterSpecification(ISpecificationPipeSpecification<PublishContext<T>> specification)
+    public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
+    {
+        var splitBuilder = new Builder(builder);
+
+        _specification.Apply(splitBuilder);
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
+
+
+    class Builder :
+        ISpecificationPipeBuilder<PublishContext<T>>
+    {
+        readonly ISpecificationPipeBuilder<PublishContext<TMessage>> _builder;
+
+        public Builder(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
         {
-            _specification = specification;
+            _builder = builder;
         }
 
-        public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
+        public void AddFilter(IFilter<PublishContext<T>> filter)
         {
-            var splitBuilder = new Builder(builder);
+            var splitFilter = new SplitFilter<PublishContext<TMessage>, PublishContext<T>>(filter, ContextProvider, InputContextProvider);
 
-            _specification.Apply(splitBuilder);
+            _builder.AddFilter(splitFilter);
         }
 
-        public IEnumerable<ValidationResult> Validate()
+        public bool IsDelegated => _builder.IsDelegated;
+        public bool IsImplemented => _builder.IsImplemented;
+
+        public ISpecificationPipeBuilder<PublishContext<T>> CreateDelegatedBuilder()
         {
-            yield break;
+            return new PipeConfigurator<PublishContext<T>>.ChildSpecificationPipeBuilder(this, IsImplemented, true);
         }
 
-
-        class Builder :
-            ISpecificationPipeBuilder<PublishContext<T>>
+        public ISpecificationPipeBuilder<PublishContext<T>> CreateImplementedBuilder()
         {
-            readonly ISpecificationPipeBuilder<PublishContext<TMessage>> _builder;
+            return new PipeConfigurator<PublishContext<T>>.ChildSpecificationPipeBuilder(this, true, IsDelegated);
+        }
 
-            public Builder(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
-            {
-                _builder = builder;
-            }
+        PublishContext<TMessage> ContextProvider(PublishContext<TMessage> context, PublishContext<T> splitContext)
+        {
+            return context;
+        }
 
-            public void AddFilter(IFilter<PublishContext<T>> filter)
-            {
-                var splitFilter = new SplitFilter<PublishContext<TMessage>, PublishContext<T>>(filter, ContextProvider, InputContextProvider);
-
-                _builder.AddFilter(splitFilter);
-            }
-
-            public bool IsDelegated => _builder.IsDelegated;
-            public bool IsImplemented => _builder.IsImplemented;
-
-            public ISpecificationPipeBuilder<PublishContext<T>> CreateDelegatedBuilder()
-            {
-                return new PipeConfigurator<PublishContext<T>>.ChildSpecificationPipeBuilder(this, IsImplemented, true);
-            }
-
-            public ISpecificationPipeBuilder<PublishContext<T>> CreateImplementedBuilder()
-            {
-                return new PipeConfigurator<PublishContext<T>>.ChildSpecificationPipeBuilder(this, true, IsDelegated);
-            }
-
-            PublishContext<TMessage> ContextProvider(PublishContext<TMessage> context, PublishContext<T> splitContext)
-            {
-                return context;
-            }
-
-            static PublishContext<T> InputContextProvider(PublishContext<TMessage> context)
-            {
-                return (PublishContext<T>)context;
-            }
+        static PublishContext<T> InputContextProvider(PublishContext<TMessage> context)
+        {
+            return (PublishContext<T>)context;
         }
     }
 }

@@ -1,34 +1,32 @@
+using System.Collections.Generic;
+using ViciOne.ServiceBus.SqlTransport.Topology;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+/// <summary>
+/// Used to bind an exchange to the sending
+/// </summary>
+public class TopicSubscriptionPublishTopologySpecification :
+    SqlTopicSubscriptionConfigurator,
+    ISqlPublishTopologySpecification
 {
-    using System.Collections.Generic;
-    using Topology;
-
-
-    /// <summary>
-    /// Used to bind an exchange to the sending
-    /// </summary>
-    public class TopicSubscriptionPublishTopologySpecification :
-        SqlTopicSubscriptionConfigurator,
-        ISqlPublishTopologySpecification
+    public TopicSubscriptionPublishTopologySpecification(string topicName, SqlSubscriptionType subscriptionType = SqlSubscriptionType.All,
+        string? routingKey = null)
+        : base(topicName, subscriptionType, routingKey)
     {
-        public TopicSubscriptionPublishTopologySpecification(string topicName, SqlSubscriptionType subscriptionType = SqlSubscriptionType.All,
-            string? routingKey = null)
-            : base(topicName, subscriptionType, routingKey)
-        {
-        }
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
 
-        public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
-        {
-            var exchangeHandle = builder.CreateTopic(TopicName);
+    public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
+    {
+        var exchangeHandle = builder.CreateTopic(TopicName);
 
-            if (builder.Topic != null)
-                builder.CreateTopicSubscription(builder.Topic, exchangeHandle, SubscriptionType, RoutingKey);
-        }
+        if (builder.Topic != null)
+            builder.CreateTopicSubscription(builder.Topic, exchangeHandle, SubscriptionType, RoutingKey);
     }
 }

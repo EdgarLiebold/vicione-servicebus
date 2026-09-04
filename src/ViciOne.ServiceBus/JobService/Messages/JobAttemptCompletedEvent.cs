@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService.Messages;
-
 using System;
 using System.Collections.Generic;
-using Contracts.JobService;
+using ViciOne.ServiceBus.Contracts.JobService;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService.Messages;
 
 public class JobAttemptCompletedEvent :
     JobAttemptCompleted

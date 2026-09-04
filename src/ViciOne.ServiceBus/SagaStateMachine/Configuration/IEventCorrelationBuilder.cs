@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IEventCorrelationBuilder
 {
-    public interface IEventCorrelationBuilder
-    {
-        EventCorrelation Build();
-    }
+    EventCorrelation Build();
 }

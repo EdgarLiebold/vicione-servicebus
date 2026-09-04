@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus;
+
+public partial class ViciOneServiceBusStateMachine<TInstance>
+    where TInstance : class, SagaStateMachineInstance
 {
-    using System;
-    using System.Collections.Generic;
-
-
-    public partial class ViciOneServiceBusStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+    public class UncorrelatedEventCorrelation<TData> :
+        EventCorrelation<TInstance, TData>
+        where TData : class
     {
-        public class UncorrelatedEventCorrelation<TData> :
-            EventCorrelation<TInstance, TData>
-            where TData : class
+        public UncorrelatedEventCorrelation(Event<TData> @event)
         {
-            public UncorrelatedEventCorrelation(Event<TData> @event)
-            {
-                Event = @event;
-            }
+            Event = @event;
+        }
 
-            public SagaFilterFactory<TInstance, TData> FilterFactory => null;
+        public SagaFilterFactory<TInstance, TData> FilterFactory => null;
 
-            public Event<TData> Event { get; }
+        public Event<TData> Event { get; }
 
-            Type EventCorrelation.DataType => typeof(TData);
+        Type EventCorrelation.DataType => typeof(TData);
 
-            public bool ConfigureConsumeTopology => false;
+        public bool ConfigureConsumeTopology => false;
 
-            public IFilter<ConsumeContext<TData>> MessageFilter => null;
+        public IFilter<ConsumeContext<TData>> MessageFilter => null;
 
-            public ISagaPolicy<TInstance, TData> Policy => null;
+        public ISagaPolicy<TInstance, TData> Policy => null;
 
-            public IEnumerable<ValidationResult> Validate()
-            {
-                yield return this.Failure(Event.Name, "Correlation", "was not specified");
-            }
+        public IEnumerable<ValidationResult> Validate()
+        {
+            yield return this.Failure(Event.Name, "Correlation", "was not specified");
         }
     }
 }

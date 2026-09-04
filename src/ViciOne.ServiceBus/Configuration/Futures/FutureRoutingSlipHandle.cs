@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Courier.Contracts;
+
+namespace ViciOne.ServiceBus;
+
+public interface FutureRoutingSlipHandle
 {
-    using Courier.Contracts;
+    /// <summary>
+    /// The fault state machine event
+    /// </summary>
+    Event<RoutingSlipFaulted> Faulted { get; }
 
-
-    public interface FutureRoutingSlipHandle
-    {
-        /// <summary>
-        /// The fault state machine event
-        /// </summary>
-        Event<RoutingSlipFaulted> Faulted { get; }
-
-        /// <summary>
-        /// The response state machine event
-        /// </summary>
-        Event<RoutingSlipCompleted> Completed { get; }
-    }
+    /// <summary>
+    /// The response state machine event
+    /// </summary>
+    Event<RoutingSlipCompleted> Completed { get; }
 }

@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Initializers.HeaderInitializers
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
+
+/// <summary>
+/// Set a header to a constant value from the input
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TInput"></typeparam>
+public class SetStringHeaderInitializer<TMessage, TInput> :
+    IHeaderInitializer<TMessage, TInput>
+    where TMessage : class
+    where TInput : class
 {
-    using System;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly string _headerName;
+    readonly IReadProperty<TInput, string> _inputProperty;
 
-
-    /// <summary>
-    /// Set a header to a constant value from the input
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <typeparam name="TInput"></typeparam>
-    public class SetStringHeaderInitializer<TMessage, TInput> :
-        IHeaderInitializer<TMessage, TInput>
-        where TMessage : class
-        where TInput : class
+    public SetStringHeaderInitializer(string headerName, PropertyInfo propertyInfo)
     {
-        readonly string _headerName;
-        readonly IReadProperty<TInput, string> _inputProperty;
+        if (headerName == null)
+            throw new ArgumentNullException(nameof(headerName));
 
-        public SetStringHeaderInitializer(string headerName, PropertyInfo propertyInfo)
-        {
-            if (headerName == null)
-                throw new ArgumentNullException(nameof(headerName));
+        _headerName = headerName;
 
-            _headerName = headerName;
+        _inputProperty = ReadPropertyCache<TInput>.GetProperty<string>(propertyInfo);
+    }
 
-            _inputProperty = ReadPropertyCache<TInput>.GetProperty<string>(propertyInfo);
-        }
+    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    {
+        var inputPropertyValue = _inputProperty.Get(context.Input);
 
-        public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
-        {
-            var inputPropertyValue = _inputProperty.Get(context.Input);
+        sendContext.Headers.Set(_headerName, inputPropertyValue);
 
-            sendContext.Headers.Set(_headerName, inputPropertyValue);
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

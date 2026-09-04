@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class TransportReadyFilter<T> :
+    IFilter<T>
+    where T : class, PipeContext
 {
-    using System.Threading.Tasks;
-    using Transports;
+    readonly ReceiveEndpointContext _context;
 
-
-    public class TransportReadyFilter<T> :
-        IFilter<T>
-        where T : class, PipeContext
+    public TransportReadyFilter(ReceiveEndpointContext context)
     {
-        readonly ReceiveEndpointContext _context;
+        _context = context;
+    }
 
-        public TransportReadyFilter(ReceiveEndpointContext context)
-        {
-            _context = context;
-        }
+    public async Task Send(T context, IPipe<T> next)
+    {
+        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
 
-        public async Task Send(T context, IPipe<T> next)
-        {
-            await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        var agent = new Agent();
+        agent.SetReady();
 
-            var agent = new Agent();
-            agent.SetReady();
+        _context.AddConsumeAgent(agent);
 
-            _context.AddConsumeAgent(agent);
+        await next.Send(context).ConfigureAwait(false);
 
-            await next.Send(context).ConfigureAwait(false);
+        await agent.Completed.ConfigureAwait(false);
+    }
 
-            await agent.Completed.ConfigureAwait(false);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("transportReady");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("transportReady");
     }
 }

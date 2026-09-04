@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+/// <summary>
+/// Represents a boolean condition
+/// </summary>
+public interface ICondition
 {
-    /// <summary>
-    /// Represents a boolean condition
-    /// </summary>
-    public interface ICondition
-    {
-        bool IsMet { get; }
-    }
+    bool IsMet { get; }
 }

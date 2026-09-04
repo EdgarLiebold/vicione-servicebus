@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IGroupKeyProvider<in TMessage, TKey>
+    where TMessage : class
 {
-    public interface IGroupKeyProvider<in TMessage, TKey>
-        where TMessage : class
-    {
-        bool TryGetKey(ConsumeContext<TMessage> context, out TKey key);
-    }
+    bool TryGetKey(ConsumeContext<TMessage> context, out TKey key);
 }

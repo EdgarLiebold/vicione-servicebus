@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Contracts
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport.Contracts;
+
+/// <summary>
+/// Published/Returned when the prefetch count of a receive endpoint is updated
+/// </summary>
+public interface PrefetchCountUpdated
+{
+    /// <summary>
+    /// The time the prefetch count was updated
+    /// </summary>
+    DateTime Timestamp { get; }
 
     /// <summary>
-    /// Published/Returned when the prefetch count of a receive endpoint is updated
+    /// The name of the queue that was updated
     /// </summary>
-    public interface PrefetchCountUpdated
-    {
-        /// <summary>
-        /// The time the prefetch count was updated
-        /// </summary>
-        DateTime Timestamp { get; }
+    string QueueName { get; }
 
-        /// <summary>
-        /// The name of the queue that was updated
-        /// </summary>
-        string QueueName { get; }
-
-        /// <summary>
-        /// The new prefetch count of the receive endpoint
-        /// </summary>
-        ushort PrefetchCount { get; }
-    }
+    /// <summary>
+    /// The new prefetch count of the receive endpoint
+    /// </summary>
+    ushort PrefetchCount { get; }
 }

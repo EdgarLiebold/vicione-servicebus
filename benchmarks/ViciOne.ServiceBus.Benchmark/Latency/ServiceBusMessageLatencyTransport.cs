@@ -1,78 +1,76 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+class ServiceBusMessageLatencyTransport :
+    IMessageLatencyTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    readonly ServiceBusHostSettings _hostSettings;
+    readonly IMessageLatencySettings _settings;
+    readonly bool _split;
+    IBusControl _busControl;
+    IBusControl _outboundBus;
+    Uri _targetAddress;
+    ISendEndpoint _targetEndpoint;
 
-
-    class ServiceBusMessageLatencyTransport :
-        IMessageLatencyTransport
+    public ServiceBusMessageLatencyTransport(ServiceBusOptionSet hostSettings, IMessageLatencySettings settings)
     {
-        readonly ServiceBusHostSettings _hostSettings;
-        readonly IMessageLatencySettings _settings;
-        readonly bool _split;
-        IBusControl _busControl;
-        IBusControl _outboundBus;
-        Uri _targetAddress;
-        ISendEndpoint _targetEndpoint;
+        _hostSettings = hostSettings;
+        _settings = settings;
 
-        public ServiceBusMessageLatencyTransport(ServiceBusOptionSet hostSettings, IMessageLatencySettings settings)
+        _split = hostSettings.Split;
+    }
+
+    public Task Send(LatencyTestMessage message)
+    {
+        return _targetEndpoint.Send(message);
+    }
+
+    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    {
+        _busControl = Bus.Factory.CreateUsingAzureServiceBus(x =>
         {
-            _hostSettings = hostSettings;
-            _settings = settings;
+            x.Host(_hostSettings);
 
-            _split = hostSettings.Split;
-        }
-
-        public Task Send(LatencyTestMessage message)
-        {
-            return _targetEndpoint.Send(message);
-        }
-
-        public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
-        {
-            _busControl = Bus.Factory.CreateUsingAzureServiceBus(x =>
+            x.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
             {
-                x.Host(_hostSettings);
+                e.PrefetchCount = _settings.PrefetchCount;
 
-                x.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
-                {
-                    e.PrefetchCount = _settings.PrefetchCount;
+                if (_settings.ConcurrencyLimit > 0)
+                    e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
 
-                    if (_settings.ConcurrencyLimit > 0)
-                        e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
+                callback(e);
 
-                    callback(e);
-
-                    _targetAddress = e.InputAddress;
-                });
-
-                x.PrefetchCount = _settings.PrefetchCount;
+                _targetAddress = e.InputAddress;
             });
 
-            await _busControl.StartAsync();
+            x.PrefetchCount = _settings.PrefetchCount;
+        });
 
-            if (_split)
-            {
-                _outboundBus = Bus.Factory.CreateUsingAzureServiceBus(x =>
-                {
-                    x.Host(_hostSettings);
-                });
+        await _busControl.StartAsync();
 
-                await _outboundBus.StartAsync();
-
-                _targetEndpoint = await _outboundBus.GetSendEndpoint(_targetAddress);
-            }
-            else
-                _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
-        }
-
-        public async ValueTask DisposeAsync()
+        if (_split)
         {
-            await _busControl.StopAsync();
+            _outboundBus = Bus.Factory.CreateUsingAzureServiceBus(x =>
+            {
+                x.Host(_hostSettings);
+            });
 
-            if (_outboundBus != null)
-                await _outboundBus.StopAsync();
+            await _outboundBus.StartAsync();
+
+            _targetEndpoint = await _outboundBus.GetSendEndpoint(_targetAddress);
         }
+        else
+            _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _busControl.StopAsync();
+
+        if (_outboundBus != null)
+            await _outboundBus.StopAsync();
     }
 }

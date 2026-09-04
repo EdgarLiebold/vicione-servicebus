@@ -1,79 +1,77 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class QueueBindingEntity :
+    ExchangeToQueueBinding,
+    QueueBindingHandle
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly ExchangeEntity _exchange;
+    readonly QueueEntity _queue;
 
-
-    public class QueueBindingEntity :
-        ExchangeToQueueBinding,
-        QueueBindingHandle
+    public QueueBindingEntity(long id, ExchangeEntity exchange, QueueEntity queue, string routingKey, IDictionary<string, object> arguments)
     {
-        readonly ExchangeEntity _exchange;
-        readonly QueueEntity _queue;
+        Id = id;
+        RoutingKey = routingKey;
+        Arguments = arguments ?? new Dictionary<string, object>();
+        _exchange = exchange;
+        _queue = queue;
+    }
 
-        public QueueBindingEntity(long id, ExchangeEntity exchange, QueueEntity queue, string routingKey, IDictionary<string, object> arguments)
+    public static IEqualityComparer<QueueBindingEntity> EntityComparer { get; } = new QueueBindingEntityEqualityComparer();
+
+    public Exchange Source => _exchange.Exchange;
+    public Queue Destination => _queue.Queue;
+    public string RoutingKey { get; }
+    public IDictionary<string, object> Arguments { get; }
+
+    public long Id { get; }
+    public ExchangeToQueueBinding Binding => this;
+
+    public override string ToString()
+    {
+        return string.Join(", ",
+            new[]
+            {
+                $"source: {Source.ExchangeName}",
+                $"destination: {Destination.QueueName}",
+                string.IsNullOrWhiteSpace(RoutingKey) ? "" : $"routing-key: {RoutingKey}",
+                string.Join(", ", Arguments.Select(x => $"{x.Key}: {x.Value}"))
+            }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    }
+
+
+    sealed class QueueBindingEntityEqualityComparer : IEqualityComparer<QueueBindingEntity>
+    {
+        public bool Equals(QueueBindingEntity x, QueueBindingEntity y)
         {
-            Id = id;
-            RoutingKey = routingKey;
-            Arguments = arguments ?? new Dictionary<string, object>();
-            _exchange = exchange;
-            _queue = queue;
+            if (ReferenceEquals(x, y))
+                return true;
+            if (ReferenceEquals(x, null))
+                return false;
+            if (ReferenceEquals(y, null))
+                return false;
+            if (x.GetType() != y.GetType())
+                return false;
+            return x._exchange.Equals(y._exchange) && x._queue.Equals(y._queue) && string.Equals(x.RoutingKey, y.RoutingKey)
+                && x.Arguments.All(a => y.Arguments.TryGetValue(a.Key, out var value) && a.Value.Equals(value));
         }
 
-        public static IEqualityComparer<QueueBindingEntity> EntityComparer { get; } = new QueueBindingEntityEqualityComparer();
-
-        public Exchange Source => _exchange.Exchange;
-        public Queue Destination => _queue.Queue;
-        public string RoutingKey { get; }
-        public IDictionary<string, object> Arguments { get; }
-
-        public long Id { get; }
-        public ExchangeToQueueBinding Binding => this;
-
-        public override string ToString()
+        public int GetHashCode(QueueBindingEntity obj)
         {
-            return string.Join(", ",
-                new[]
-                {
-                    $"source: {Source.ExchangeName}",
-                    $"destination: {Destination.QueueName}",
-                    string.IsNullOrWhiteSpace(RoutingKey) ? "" : $"routing-key: {RoutingKey}",
-                    string.Join(", ", Arguments.Select(x => $"{x.Key}: {x.Value}"))
-                }.Where(x => !string.IsNullOrWhiteSpace(x)));
-        }
-
-
-        sealed class QueueBindingEntityEqualityComparer : IEqualityComparer<QueueBindingEntity>
-        {
-            public bool Equals(QueueBindingEntity x, QueueBindingEntity y)
+            unchecked
             {
-                if (ReferenceEquals(x, y))
-                    return true;
-                if (ReferenceEquals(x, null))
-                    return false;
-                if (ReferenceEquals(y, null))
-                    return false;
-                if (x.GetType() != y.GetType())
-                    return false;
-                return x._exchange.Equals(y._exchange) && x._queue.Equals(y._queue) && string.Equals(x.RoutingKey, y.RoutingKey)
-                    && x.Arguments.All(a => y.Arguments.TryGetValue(a.Key, out var value) && a.Value.Equals(value));
-            }
-
-            public int GetHashCode(QueueBindingEntity obj)
-            {
-                unchecked
+                var hashCode = obj._exchange.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj._queue.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.RoutingKey.GetHashCode();
+                foreach (KeyValuePair<string, object> keyValuePair in obj.Arguments)
                 {
-                    var hashCode = obj._exchange.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj._queue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.RoutingKey.GetHashCode();
-                    foreach (KeyValuePair<string, object> keyValuePair in obj.Arguments)
-                    {
-                        hashCode = (hashCode * 397) ^ keyValuePair.Key.GetHashCode();
-                        hashCode = (hashCode * 397) ^ keyValuePair.Value.GetHashCode();
-                    }
-
-                    return hashCode;
+                    hashCode = (hashCode * 397) ^ keyValuePair.Key.GetHashCode();
+                    hashCode = (hashCode * 397) ^ keyValuePair.Value.GetHashCode();
                 }
+
+                return hashCode;
             }
         }
     }

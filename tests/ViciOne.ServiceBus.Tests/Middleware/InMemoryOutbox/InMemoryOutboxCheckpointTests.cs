@@ -13,6 +13,82 @@ namespace ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox;
 
 public sealed class InMemoryOutboxCheckpointTests
 {
+    private static readonly AsyncLocal<string?> AmbientValue = new();
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT", "suppressed-execution-context-still-drains")]
+    public async Task SuppressedExecutionContext_StillExecutesTheDeferredMethod()
+    {
+        var methods = new InMemoryOutboxDeferredMethodCollection();
+        string? observedAmbientValue = "not-invoked";
+        var invocationCount = 0;
+
+        using (ExecutionContext.SuppressFlow())
+        {
+            Task registration = methods.Add(() =>
+            {
+                Interlocked.Increment(ref invocationCount);
+                observedAmbientValue = AmbientValue.Value;
+                return Task.CompletedTask;
+            });
+            Assert.True(registration.IsCompletedSuccessfully);
+        }
+
+        string? originalAmbientValue = AmbientValue.Value;
+        try
+        {
+            AmbientValue.Value = "drain-context";
+            await methods.Execute(concurrent: false);
+            await methods.Execute(concurrent: false);
+        }
+        finally
+        {
+            AmbientValue.Value = originalAmbientValue;
+        }
+
+        Assert.Null(observedAmbientValue);
+        Assert.Equal(1, invocationCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT", "deferred-method-is-one-shot")]
+    public async Task RepeatedDrain_ExecutesANormallyCapturedDeferredMethodOnce()
+    {
+        var methods = new InMemoryOutboxDeferredMethodCollection();
+        var invocationCount = 0;
+
+        await methods.Add(() =>
+        {
+            Interlocked.Increment(ref invocationCount);
+            return Task.CompletedTask;
+        });
+
+        await methods.Execute(concurrent: false);
+        Assert.Equal(0, InMemoryOutboxCheckpointDriver.GetPendingMethodCount(methods));
+        await methods.Execute(concurrent: false);
+
+        Assert.Equal(1, invocationCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT", "disposed-method-never-runs")]
+    public async Task DisposedDeferredMethod_DoesNotExecute()
+    {
+        var invocationCount = 0;
+        var method = new InMemoryOutboxDeferredMethod(
+            ExecutionContext.Capture(),
+            () =>
+            {
+                Interlocked.Increment(ref invocationCount);
+                return Task.CompletedTask;
+            });
+
+        method.Dispose();
+        await method.Run();
+
+        Assert.Equal(0, invocationCount);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT", "foreign-checkpoint-is-rejected")]
     public async Task CheckpointFromAnotherOutbox_IsRejectedWithoutDiscardingItsActions()

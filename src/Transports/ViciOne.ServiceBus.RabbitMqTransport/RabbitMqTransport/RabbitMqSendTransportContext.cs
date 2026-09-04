@@ -1,262 +1,260 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using RabbitMQ.Client;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.RabbitMqTransport.Middleware;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport;
+
+public class RabbitMqSendTransportContext :
+    BaseSendTransportContext,
+    SendTransportContext<ChannelContext>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Configuration;
-    using Internals;
-    using Logging;
-    using Middleware;
-    using RabbitMQ.Client;
-    using Transports;
+    readonly ConfigureRabbitMqTopologyFilter<SendSettings> _configureTopologyFilter;
+    readonly IPipe<ChannelContext> _delayConfigureTopologyPipe;
+    readonly string _delayExchange;
+    readonly string _exchange;
 
+    readonly IRabbitMqHostConfiguration _hostConfiguration;
+    readonly IChannelContextSupervisor _supervisor;
 
-    public class RabbitMqSendTransportContext :
-        BaseSendTransportContext,
-        SendTransportContext<ChannelContext>
+    public RabbitMqSendTransportContext(IRabbitMqHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
+        IChannelContextSupervisor supervisor,
+        ConfigureRabbitMqTopologyFilter<SendSettings> configureTopologyFilter, string exchange,
+        IPipe<ChannelContext> delayConfigureTopologyPipe, string delayExchange)
+        : base(hostConfiguration, receiveEndpointContext.Serialization)
     {
-        readonly ConfigureRabbitMqTopologyFilter<SendSettings> _configureTopologyFilter;
-        readonly IPipe<ChannelContext> _delayConfigureTopologyPipe;
-        readonly string _delayExchange;
-        readonly string _exchange;
+        _hostConfiguration = hostConfiguration;
+        _supervisor = supervisor;
 
-        readonly IRabbitMqHostConfiguration _hostConfiguration;
-        readonly IChannelContextSupervisor _supervisor;
+        _configureTopologyFilter = configureTopologyFilter;
+        _exchange = exchange;
 
-        public RabbitMqSendTransportContext(IRabbitMqHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
-            IChannelContextSupervisor supervisor,
-            ConfigureRabbitMqTopologyFilter<SendSettings> configureTopologyFilter, string exchange,
-            IPipe<ChannelContext> delayConfigureTopologyPipe, string delayExchange)
-            : base(hostConfiguration, receiveEndpointContext.Serialization)
+        _delayConfigureTopologyPipe = delayConfigureTopologyPipe;
+        _delayExchange = delayExchange;
+    }
+
+    public override string EntityName => _exchange;
+    public override string ActivitySystem => "rabbitmq";
+
+    public Task Send(IPipe<ChannelContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        _supervisor.Probe(context);
+    }
+
+    public override IEnumerable<IAgent> GetAgentHandles()
+    {
+        return [_supervisor];
+    }
+
+    public async Task<SendContext<T>> CreateSendContext<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
+        CancellationToken cancellationToken)
+        where T : class
+    {
+        var properties = new BasicProperties();
+
+        var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
+
+        await pipe.Send(sendContext).ConfigureAwait(false);
+
+        CopyIncomingPropertiesIfPresent(sendContext);
+
+        if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
+            throw new TransportException(sendContext.DestinationAddress, "RoutingKey must be specified when sending to reply-to address");
+
+        return sendContext;
+    }
+
+    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+        where T : class
+    {
+        var properties = new BasicProperties();
+
+        var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
+
+        await pipe.Send(sendContext).ConfigureAwait(false);
+
+        CopyIncomingPropertiesIfPresent(sendContext);
+
+        if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
+            throw new TransportException(sendContext.DestinationAddress, "RoutingKey must be specified when sending to reply-to address");
+
+        return sendContext;
+    }
+
+    public async Task Send<T>(ChannelContext transportContext, SendContext<T> sendContext)
+        where T : class
+    {
+        RabbitMqMessageSendContext<T> context = sendContext as RabbitMqMessageSendContext<T>
+            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+
+        sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+        OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext =
+            await _configureTopologyFilter.Configure(transportContext, sendContext.CancellationToken).ConfigureAwait(false);
+
+        sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+        var exchange = context.Exchange;
+        if (exchange.Equals(RabbitMqExchangeNames.ReplyTo))
+            exchange = "";
+
+        var body = context.Body.GetBytes();
+
+        if (context.TryGetPayload(out PublishContext publishContext))
+            context.Mandatory = context.Mandatory || publishContext.Mandatory;
+
+        context.BasicProperties.Headers ??= new Dictionary<string, object>();
+
+        context.BasicProperties.ContentType = context.ContentType?.ToString();
+
+        SetHeaders(context.BasicProperties.Headers, context.Headers);
+
+        context.BasicProperties.Persistent = context.Durable;
+
+        if (context.MessageId.HasValue)
+            context.BasicProperties.MessageId = context.MessageId.ToString();
+
+        if (context.CorrelationId.HasValue)
+            context.BasicProperties.CorrelationId = context.CorrelationId.ToString();
+
+        if (context.TimeToLive.HasValue)
         {
-            _hostConfiguration = hostConfiguration;
-            _supervisor = supervisor;
-
-            _configureTopologyFilter = configureTopologyFilter;
-            _exchange = exchange;
-
-            _delayConfigureTopologyPipe = delayConfigureTopologyPipe;
-            _delayExchange = delayExchange;
+            context.BasicProperties.Expiration =
+                (context.TimeToLive > TimeSpan.Zero ? context.TimeToLive.Value : TimeSpan.FromSeconds(1))
+                .TotalMilliseconds
+                .ToString("F0", CultureInfo.InvariantCulture);
         }
 
-        public override string EntityName => _exchange;
-        public override string ActivitySystem => "rabbitmq";
+        if (context.RequestId.HasValue && context.ResponseAddress.IsReplyToAddress())
+            context.BasicProperties.ReplyTo ??= RabbitMqExchangeNames.ReplyTo;
 
-        public Task Send(IPipe<ChannelContext> pipe, CancellationToken cancellationToken = default)
+        var delay = context.Delay?.TotalMilliseconds;
+        if (delay > 0 && exchange != "")
         {
-            return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+            await _delayConfigureTopologyPipe.Send(transportContext).ConfigureAwait(false);
+            context.SetTransportHeader("x-delay", (long)delay.Value);
+
+            exchange = _delayExchange;
         }
 
-        public void Probe(ProbeContext context)
+        var routingKey = context.RoutingKey ?? "";
+
+        if (Activity.Current?.IsAllDataRequested ?? false)
         {
-            _supervisor.Probe(context);
+            if (!string.IsNullOrEmpty(routingKey))
+                Activity.Current.SetTag(DiagnosticHeaders.Messaging.RabbitMq.RoutingKey, routingKey);
         }
 
-        public override IEnumerable<IAgent> GetAgentHandles()
+        var publishTask = transportContext.BasicPublishAsync(exchange, routingKey, context.Mandatory, context.BasicProperties, body,
+            context.AwaitAck, sendContext.CancellationToken);
+
+        try
         {
-            return [_supervisor];
+            await publishTask.OrCanceled(context.CancellationToken).ConfigureAwait(false);
         }
-
-        public async Task<SendContext<T>> CreateSendContext<T>(ChannelContext context, T message, IPipe<SendContext<T>> pipe,
-            CancellationToken cancellationToken)
-            where T : class
+        catch (OperationCanceledException)
         {
-            var properties = new BasicProperties();
-
-            var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
-
-            await pipe.Send(sendContext).ConfigureAwait(false);
-
-            CopyIncomingPropertiesIfPresent(sendContext);
-
-            if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
-                throw new TransportException(sendContext.DestinationAddress, "RoutingKey must be specified when sending to reply-to address");
-
-            return sendContext;
+            throw;
         }
-
-        public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
-            where T : class
+        catch (Exception)
         {
-            var properties = new BasicProperties();
-
-            var sendContext = new RabbitMqMessageSendContext<T>(properties, _exchange, message, cancellationToken);
-
-            await pipe.Send(sendContext).ConfigureAwait(false);
-
-            CopyIncomingPropertiesIfPresent(sendContext);
-
-            if (sendContext.Exchange.Equals(RabbitMqExchangeNames.ReplyTo) && string.IsNullOrWhiteSpace(sendContext.RoutingKey))
-                throw new TransportException(sendContext.DestinationAddress, "RoutingKey must be specified when sending to reply-to address");
-
-            return sendContext;
+            oneTimeContext.Evict();
+            transportContext.ConnectionContext.TopologyEntityCache.Invalidate();
+            throw;
         }
+    }
 
-        public async Task Send<T>(ChannelContext transportContext, SendContext<T> sendContext)
-            where T : class
+    static void SetHeaders(IDictionary<string, object> dictionary, SendHeaders headers)
+    {
+        foreach (KeyValuePair<string, object> header in headers.GetAll())
         {
-            RabbitMqMessageSendContext<T> context = sendContext as RabbitMqMessageSendContext<T>
-                ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
-
-            sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-            OneTimeContext<ConfigureTopologyContext<SendSettings>> oneTimeContext =
-                await _configureTopologyFilter.Configure(transportContext, sendContext.CancellationToken).ConfigureAwait(false);
-
-            sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-            var exchange = context.Exchange;
-            if (exchange.Equals(RabbitMqExchangeNames.ReplyTo))
-                exchange = "";
-
-            var body = context.Body.GetBytes();
-
-            if (context.TryGetPayload(out PublishContext publishContext))
-                context.Mandatory = context.Mandatory || publishContext.Mandatory;
-
-            context.BasicProperties.Headers ??= new Dictionary<string, object>();
-
-            context.BasicProperties.ContentType = context.ContentType?.ToString();
-
-            SetHeaders(context.BasicProperties.Headers, context.Headers);
-
-            context.BasicProperties.Persistent = context.Durable;
-
-            if (context.MessageId.HasValue)
-                context.BasicProperties.MessageId = context.MessageId.ToString();
-
-            if (context.CorrelationId.HasValue)
-                context.BasicProperties.CorrelationId = context.CorrelationId.ToString();
-
-            if (context.TimeToLive.HasValue)
+            if (header.Value == null)
             {
-                context.BasicProperties.Expiration =
-                    (context.TimeToLive > TimeSpan.Zero ? context.TimeToLive.Value : TimeSpan.FromSeconds(1))
-                    .TotalMilliseconds
-                    .ToString("F0", CultureInfo.InvariantCulture);
+                dictionary.Remove(header.Key);
+
+                continue;
             }
 
-            if (context.RequestId.HasValue && context.ResponseAddress.IsReplyToAddress())
-                context.BasicProperties.ReplyTo ??= RabbitMqExchangeNames.ReplyTo;
+            if (header.Key is RabbitMqHeaders.Exchange or RabbitMqHeaders.RoutingKey or RabbitMqHeaders.DeliveryTag or RabbitMqHeaders.ConsumerTag)
+                continue;
 
-            var delay = context.Delay?.TotalMilliseconds;
-            if (delay > 0 && exchange != "")
+            if (dictionary.ContainsKey(header.Key))
+                continue;
+
+            switch (header.Value)
             {
-                await _delayConfigureTopologyPipe.Send(transportContext).ConfigureAwait(false);
-                context.SetTransportHeader("x-delay", (long)delay.Value);
+                case DateTimeOffset value:
+                    dictionary.SetAmqpTimestamp(header.Key, value.UtcDateTime);
+                    break;
 
-                exchange = _delayExchange;
-            }
+                case DateTime value:
+                    if (value.Kind == DateTimeKind.Local)
+                        value = value.ToUniversalTime();
+                    dictionary.SetAmqpTimestamp(header.Key, value);
+                    break;
 
-            var routingKey = context.RoutingKey ?? "";
+                case Guid value:
+                    dictionary[header.Key] = value.ToString("D");
+                    break;
 
-            if (Activity.Current?.IsAllDataRequested ?? false)
-            {
-                if (!string.IsNullOrEmpty(routingKey))
-                    Activity.Current.SetTag(DiagnosticHeaders.Messaging.RabbitMq.RoutingKey, routingKey);
-            }
+                case string value when header.Key == "CC" || header.Key == "BCC":
+                    dictionary[header.Key] = new[] { value };
+                    break;
 
-            var publishTask = transportContext.BasicPublishAsync(exchange, routingKey, context.Mandatory, context.BasicProperties, body,
-                context.AwaitAck, sendContext.CancellationToken);
+                case IEnumerable<string> strings when header.Key == "CC" || header.Key == "BCC":
+                    dictionary[header.Key] = strings.ToArray();
+                    break;
 
-            try
-            {
-                await publishTask.OrCanceled(context.CancellationToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                oneTimeContext.Evict();
-                transportContext.ConnectionContext.TopologyEntityCache.Invalidate();
-                throw;
+                case Uri value:
+                    dictionary[header.Key] = value.ToString();
+                    break;
+
+                case string value:
+                    dictionary[header.Key] = value;
+                    break;
+
+                case bool value when value:
+                    dictionary[header.Key] = bool.TrueString;
+                    break;
+
+                case IFormattable formatValue:
+                    if (header.Value.GetType().IsValueType)
+                        dictionary[header.Key] = header.Value;
+                    else
+                        dictionary[header.Key] = formatValue.ToString();
+                    break;
             }
         }
+    }
 
-        static void SetHeaders(IDictionary<string, object> dictionary, SendHeaders headers)
+    static void CopyIncomingPropertiesIfPresent<T>(RabbitMqSendContext<T> context)
+        where T : class
+    {
+        if (context.TryGetPayload<ConsumeContext>(out var consumeContext)
+            && consumeContext.TryGetPayload<RabbitMqBasicConsumeContext>(out var basicConsumeContext))
         {
-            foreach (KeyValuePair<string, object> header in headers.GetAll())
+            if (context.BasicProperties.IsPriorityPresent() == false)
             {
-                if (header.Value == null)
-                {
-                    dictionary.Remove(header.Key);
-
-                    continue;
-                }
-
-                if (header.Key is RabbitMqHeaders.Exchange or RabbitMqHeaders.RoutingKey or RabbitMqHeaders.DeliveryTag or RabbitMqHeaders.ConsumerTag)
-                    continue;
-
-                if (dictionary.ContainsKey(header.Key))
-                    continue;
-
-                switch (header.Value)
-                {
-                    case DateTimeOffset value:
-                        dictionary.SetAmqpTimestamp(header.Key, value.UtcDateTime);
-                        break;
-
-                    case DateTime value:
-                        if (value.Kind == DateTimeKind.Local)
-                            value = value.ToUniversalTime();
-                        dictionary.SetAmqpTimestamp(header.Key, value);
-                        break;
-
-                    case Guid value:
-                        dictionary[header.Key] = value.ToString("D");
-                        break;
-
-                    case string value when header.Key == "CC" || header.Key == "BCC":
-                        dictionary[header.Key] = new[] { value };
-                        break;
-
-                    case IEnumerable<string> strings when header.Key == "CC" || header.Key == "BCC":
-                        dictionary[header.Key] = strings.ToArray();
-                        break;
-
-                    case Uri value:
-                        dictionary[header.Key] = value.ToString();
-                        break;
-
-                    case string value:
-                        dictionary[header.Key] = value;
-                        break;
-
-                    case bool value when value:
-                        dictionary[header.Key] = bool.TrueString;
-                        break;
-
-                    case IFormattable formatValue:
-                        if (header.Value.GetType().IsValueType)
-                            dictionary[header.Key] = header.Value;
-                        else
-                            dictionary[header.Key] = formatValue.ToString();
-                        break;
-                }
+                if (basicConsumeContext.Properties.IsPriorityPresent())
+                    context.TrySetPriority(basicConsumeContext.Properties.Priority);
             }
-        }
 
-        static void CopyIncomingPropertiesIfPresent<T>(RabbitMqSendContext<T> context)
-            where T : class
-        {
-            if (context.TryGetPayload<ConsumeContext>(out var consumeContext)
-                && consumeContext.TryGetPayload<RabbitMqBasicConsumeContext>(out var basicConsumeContext))
-            {
-                if (context.BasicProperties.IsPriorityPresent() == false)
-                {
-                    if (basicConsumeContext.Properties.IsPriorityPresent())
-                        context.TrySetPriority(basicConsumeContext.Properties.Priority);
-                }
-
-                if (!string.IsNullOrWhiteSpace(basicConsumeContext.Properties.ReplyTo) && context.ResponseAddress.IsReplyToAddress())
-                    context.BasicProperties.ReplyTo = basicConsumeContext.Properties.ReplyTo;
-            }
+            if (!string.IsNullOrWhiteSpace(basicConsumeContext.Properties.ReplyTo) && context.ResponseAddress.IsReplyToAddress())
+                context.BasicProperties.ReplyTo = basicConsumeContext.Properties.ReplyTo;
         }
     }
 }

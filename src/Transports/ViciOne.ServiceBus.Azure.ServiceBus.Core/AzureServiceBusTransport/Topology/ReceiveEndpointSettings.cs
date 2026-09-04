@@ -1,45 +1,43 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using System;
+using System.Collections.Generic;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class ReceiveEndpointSettings :
+    BaseClientSettings,
+    ReceiveSettings
 {
-    using System;
-    using System.Collections.Generic;
-    using Azure.Messaging.ServiceBus.Administration;
-    using Configuration;
+    readonly ServiceBusQueueConfigurator _queueConfigurator;
 
-
-    public class ReceiveEndpointSettings :
-        BaseClientSettings,
-        ReceiveSettings
+    public ReceiveEndpointSettings(IServiceBusEndpointConfiguration endpointConfiguration, string queueName, ServiceBusQueueConfigurator queueConfigurator)
+        : base(endpointConfiguration, queueConfigurator)
     {
-        readonly ServiceBusQueueConfigurator _queueConfigurator;
+        _queueConfigurator = queueConfigurator;
 
-        public ReceiveEndpointSettings(IServiceBusEndpointConfiguration endpointConfiguration, string queueName, ServiceBusQueueConfigurator queueConfigurator)
-            : base(endpointConfiguration, queueConfigurator)
-        {
-            _queueConfigurator = queueConfigurator;
+        Name = queueName;
+    }
 
-            Name = queueName;
-        }
+    public IServiceBusQueueConfigurator QueueConfigurator => _queueConfigurator;
 
-        public IServiceBusQueueConfigurator QueueConfigurator => _queueConfigurator;
+    public override bool RequiresSession => _queueConfigurator.RequiresSession ?? false;
 
-        public override bool RequiresSession => _queueConfigurator.RequiresSession ?? false;
+    public bool RemoveSubscriptions { get; set; }
+    public override int MaxConcurrentSessions => _queueConfigurator.MaxConcurrentSessions ?? MaxConcurrentCalls;
+    public override int MaxConcurrentCallsPerSession => _queueConfigurator.MaxConcurrentCallsPerSession ?? Defaults.MaxConcurrentCallsPerSessions;
 
-        public bool RemoveSubscriptions { get; set; }
-        public override int MaxConcurrentSessions => _queueConfigurator.MaxConcurrentSessions ?? MaxConcurrentCalls;
-        public override int MaxConcurrentCallsPerSession => _queueConfigurator.MaxConcurrentCallsPerSession ?? Defaults.MaxConcurrentCallsPerSessions;
+    public override string Path => _queueConfigurator.FullPath;
 
-        public override string Path => _queueConfigurator.FullPath;
+    public CreateQueueOptions GetCreateQueueOptions()
+    {
+        return _queueConfigurator.GetCreateQueueOptions();
+    }
 
-        public CreateQueueOptions GetCreateQueueOptions()
-        {
-            return _queueConfigurator.GetCreateQueueOptions();
-        }
-
-        protected override IEnumerable<string> GetQueryStringOptions()
-        {
-            if (_queueConfigurator.AutoDeleteOnIdle.HasValue && _queueConfigurator.AutoDeleteOnIdle.Value > TimeSpan.Zero
-                && _queueConfigurator.AutoDeleteOnIdle.Value != Defaults.AutoDeleteOnIdle)
-                yield return $"autodelete={_queueConfigurator.AutoDeleteOnIdle.Value.TotalSeconds}";
-        }
+    protected override IEnumerable<string> GetQueryStringOptions()
+    {
+        if (_queueConfigurator.AutoDeleteOnIdle.HasValue && _queueConfigurator.AutoDeleteOnIdle.Value > TimeSpan.Zero
+            && _queueConfigurator.AutoDeleteOnIdle.Value != Defaults.AutoDeleteOnIdle)
+            yield return $"autodelete={_queueConfigurator.AutoDeleteOnIdle.Value.TotalSeconds}";
     }
 }

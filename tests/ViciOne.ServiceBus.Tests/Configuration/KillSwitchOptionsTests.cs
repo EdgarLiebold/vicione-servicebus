@@ -2,8 +2,8 @@ using System.Reflection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Logging;
-using ViciOne.ServiceBus.Tests.InternalAccess.KillSwitch;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.KillSwitch;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Configuration;

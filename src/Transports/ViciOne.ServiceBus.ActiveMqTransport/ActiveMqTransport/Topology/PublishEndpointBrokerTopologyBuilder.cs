@@ -1,19 +1,47 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public class PublishEndpointBrokerTopologyBuilder :
+    BrokerTopologyBuilder,
+    IPublishEndpointBrokerTopologyBuilder
 {
-    public class PublishEndpointBrokerTopologyBuilder :
-        BrokerTopologyBuilder,
+    readonly PublishBrokerTopologyOptions _options;
+
+    public PublishEndpointBrokerTopologyBuilder(PublishBrokerTopologyOptions options = PublishBrokerTopologyOptions.FlattenHierarchy)
+    {
+        _options = options;
+    }
+
+    /// <summary>
+    /// The exchange to which the published message is sent
+    /// </summary>
+    public TopicHandle Topic { get; set; }
+
+    public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
+    {
+        if (_options.HasFlag(PublishBrokerTopologyOptions.MaintainHierarchy))
+            return new ImplementedBuilder(this, _options);
+
+        return this;
+    }
+
+    public BrokerTopology BuildBrokerTopology()
+    {
+        return new ActiveMqBrokerTopology(Topics, Queues, Consumers);
+    }
+
+
+    class ImplementedBuilder :
         IPublishEndpointBrokerTopologyBuilder
     {
+        readonly IPublishEndpointBrokerTopologyBuilder _builder;
         readonly PublishBrokerTopologyOptions _options;
 
-        public PublishEndpointBrokerTopologyBuilder(PublishBrokerTopologyOptions options = PublishBrokerTopologyOptions.FlattenHierarchy)
+        public ImplementedBuilder(IPublishEndpointBrokerTopologyBuilder builder, PublishBrokerTopologyOptions options)
         {
+            _builder = builder;
             _options = options;
         }
 
-        /// <summary>
-        /// The exchange to which the published message is sent
-        /// </summary>
         public TopicHandle Topic { get; set; }
 
         public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
@@ -24,48 +52,19 @@ namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
             return this;
         }
 
-        public BrokerTopology BuildBrokerTopology()
+        public TopicHandle CreateTopic(string name, bool durable, bool autoDelete)
         {
-            return new ActiveMqBrokerTopology(Topics, Queues, Consumers);
+            return _builder.CreateTopic(name, durable, autoDelete);
         }
 
-
-        class ImplementedBuilder :
-            IPublishEndpointBrokerTopologyBuilder
+        public QueueHandle CreateQueue(string name, bool durable, bool autoDelete)
         {
-            readonly IPublishEndpointBrokerTopologyBuilder _builder;
-            readonly PublishBrokerTopologyOptions _options;
+            return _builder.CreateQueue(name, durable, autoDelete);
+        }
 
-            public ImplementedBuilder(IPublishEndpointBrokerTopologyBuilder builder, PublishBrokerTopologyOptions options)
-            {
-                _builder = builder;
-                _options = options;
-            }
-
-            public TopicHandle Topic { get; set; }
-
-            public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
-            {
-                if (_options.HasFlag(PublishBrokerTopologyOptions.MaintainHierarchy))
-                    return new ImplementedBuilder(this, _options);
-
-                return this;
-            }
-
-            public TopicHandle CreateTopic(string name, bool durable, bool autoDelete)
-            {
-                return _builder.CreateTopic(name, durable, autoDelete);
-            }
-
-            public QueueHandle CreateQueue(string name, bool durable, bool autoDelete)
-            {
-                return _builder.CreateQueue(name, durable, autoDelete);
-            }
-
-            public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle queue, string selector, string consumerName = null, bool shared = false)
-            {
-                return _builder.BindConsumer(topic, queue, selector, consumerName, shared);
-            }
+        public ConsumerHandle BindConsumer(TopicHandle topic, QueueHandle queue, string selector, string consumerName = null, bool shared = false)
+        {
+            return _builder.BindConsumer(topic, queue, selector, consumerName, shared);
         }
     }
 }

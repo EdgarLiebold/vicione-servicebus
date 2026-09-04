@@ -1,89 +1,87 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System.Threading;
+using System.Threading.Tasks;
+using Apache.NMS;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class SharedSessionContext :
+    ProxyPipeContext,
+    SessionContext
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Apache.NMS;
-    using ViciOne.ServiceBus.Middleware;
-    using Topology;
+    readonly SessionContext _context;
 
-
-    public class SharedSessionContext :
-        ProxyPipeContext,
-        SessionContext
+    public SharedSessionContext(SessionContext context, CancellationToken cancellationToken)
+        : base(context)
     {
-        readonly SessionContext _context;
+        _context = context;
+        CancellationToken = cancellationToken;
+    }
 
-        public SharedSessionContext(SessionContext context, CancellationToken cancellationToken)
-            : base(context)
-        {
-            _context = context;
-            CancellationToken = cancellationToken;
-        }
+    public override CancellationToken CancellationToken { get; }
 
-        public override CancellationToken CancellationToken { get; }
+    public ISession Session => _context.Session;
+    public ConnectionContext ConnectionContext => _context.ConnectionContext;
 
-        public ISession Session => _context.Session;
-        public ConnectionContext ConnectionContext => _context.ConnectionContext;
+    public Task<ITopic> GetTopic(Topic topic)
+    {
+        return _context.GetTopic(topic);
+    }
 
-        public Task<ITopic> GetTopic(Topic topic)
-        {
-            return _context.GetTopic(topic);
-        }
+    public Task EnsureTopicExists(Topic topic)
+    {
+        return _context.EnsureTopicExists(topic);
+    }
 
-        public Task EnsureTopicExists(Topic topic)
-        {
-            return _context.EnsureTopicExists(topic);
-        }
+    public Task<IQueue> GetQueue(Queue queue)
+    {
+        return _context.GetQueue(queue);
+    }
 
-        public Task<IQueue> GetQueue(Queue queue)
-        {
-            return _context.GetQueue(queue);
-        }
+    public Task<IDestination> GetDestination(string destinationName, DestinationType destinationType)
+    {
+        return _context.GetDestination(destinationName, destinationType);
+    }
 
-        public Task<IDestination> GetDestination(string destinationName, DestinationType destinationType)
-        {
-            return _context.GetDestination(destinationName, destinationType);
-        }
+    public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
+        bool shared = false, bool durable = true)
+    {
+        return _context.CreateMessageConsumer(destination, selector, noLocal, consumerName, shared, durable);
+    }
 
-        public Task<IMessageConsumer> CreateMessageConsumer(IDestination destination, string selector, bool noLocal, string consumerName = null,
-            bool shared = false, bool durable = true)
-        {
-            return _context.CreateMessageConsumer(destination, selector, noLocal, consumerName, shared, durable);
-        }
+    public Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
+    {
+        return _context.SendAsync(destination, message, cancellationToken);
+    }
 
-        public Task SendAsync(IDestination destination, IMessage message, CancellationToken cancellationToken)
-        {
-            return _context.SendAsync(destination, message, cancellationToken);
-        }
+    public IBytesMessage CreateBytesMessage(byte[] content)
+    {
+        return _context.CreateBytesMessage(content);
+    }
 
-        public IBytesMessage CreateBytesMessage(byte[] content)
-        {
-            return _context.CreateBytesMessage(content);
-        }
+    public Task DeleteTopic(string topicName)
+    {
+        return _context.DeleteTopic(topicName);
+    }
 
-        public Task DeleteTopic(string topicName)
-        {
-            return _context.DeleteTopic(topicName);
-        }
+    public Task DeleteQueue(string queueName)
+    {
+        return _context.DeleteQueue(queueName);
+    }
 
-        public Task DeleteQueue(string queueName)
-        {
-            return _context.DeleteQueue(queueName);
-        }
+    public IDestination GetTemporaryDestination(string name)
+    {
+        return _context.GetTemporaryDestination(name);
+    }
 
-        public IDestination GetTemporaryDestination(string name)
-        {
-            return _context.GetTemporaryDestination(name);
-        }
+    public ITextMessage CreateTextMessage(string content)
+    {
+        return _context.CreateTextMessage(content);
+    }
 
-        public ITextMessage CreateTextMessage(string content)
-        {
-            return _context.CreateTextMessage(content);
-        }
-
-        public IMessage CreateMessage()
-        {
-            return _context.CreateMessage();
-        }
+    public IMessage CreateMessage()
+    {
+        return _context.CreateMessage();
     }
 }

@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +8,7 @@ using Amazon.Auth.AccessControlPolicy;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class QueueInfo :
     IAsyncDisposable,
@@ -96,7 +95,6 @@ public class QueueInfo :
             if (QueueHasTopicPermission(policy, topicArn, sqsQueueArn))
                 return false;
 
-#pragma warning disable 618
             var statement = policy.Statements.FirstOrDefault(x => x.Effect == Statement.StatementEffect.Allow
                 && x.Actions.Any(a => a.ActionName.Equals(SendMessageIAMActionName, StringComparison.Ordinal))
                 && x.Resources.Any(a => a.Id.Equals(sqsQueueArn, StringComparison.OrdinalIgnoreCase))
@@ -111,8 +109,6 @@ public class QueueInfo :
                 statement.Principals.Add(new Principal("Service", "sns.amazonaws.com"));
                 policy.Statements.Add(statement);
             }
-#pragma warning restore 618
-
             var condition = statement.Conditions.FirstOrDefault(x =>
                 string.Equals(ConditionFactory.SOURCE_ARN_CONDITION_KEY, x.ConditionKey, StringComparison.Ordinal) &&
                 x.Type.Equals(ConditionFactory.ArnComparisonType.ArnLike.ToString(), StringComparison.Ordinal));

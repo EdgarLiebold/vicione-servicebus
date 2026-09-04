@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using ViciOne.ServiceBus.Courier.Contracts;
+
+namespace ViciOne.ServiceBus.Context;
+
+public abstract class CourierContextProxy :
+    ConsumeContextProxy<RoutingSlip>,
+    CourierContext
 {
-    using System;
-    using Courier.Contracts;
+    readonly CourierContext _courierContext;
 
-
-    public abstract class CourierContextProxy :
-        ConsumeContextProxy<RoutingSlip>,
-        CourierContext
+    protected CourierContextProxy(CourierContext courierContext)
+        : base(courierContext)
     {
-        readonly CourierContext _courierContext;
-
-        protected CourierContextProxy(CourierContext courierContext)
-            : base(courierContext)
-        {
-            _courierContext = courierContext;
-        }
-
-        DateTime CourierContext.Timestamp => _courierContext.Timestamp;
-        TimeSpan CourierContext.Elapsed => _courierContext.Elapsed;
-        Guid CourierContext.TrackingNumber => _courierContext.TrackingNumber;
-        Guid CourierContext.ExecutionId => _courierContext.ExecutionId;
-        string CourierContext.ActivityName => _courierContext.ActivityName;
+        _courierContext = courierContext;
     }
+
+    DateTime CourierContext.Timestamp => _courierContext.Timestamp;
+    TimeSpan CourierContext.Elapsed => _courierContext.Elapsed;
+    Guid CourierContext.TrackingNumber => _courierContext.TrackingNumber;
+    Guid CourierContext.ExecutionId => _courierContext.ExecutionId;
+    string CourierContext.ActivityName => _courierContext.ActivityName;
 }

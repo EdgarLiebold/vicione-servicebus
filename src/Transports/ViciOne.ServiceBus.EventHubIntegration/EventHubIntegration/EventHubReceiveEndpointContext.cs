@@ -1,80 +1,78 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.EventHubIntegration.Configuration;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class EventHubReceiveEndpointContext :
+    BaseReceiveEndpointContext,
+    IEventHubReceiveEndpointContext
 {
-    using System;
-    using System.Threading.Tasks;
-    using Azure.Messaging.EventHubs;
-    using Azure.Messaging.EventHubs.Processor;
-    using Configuration;
-    using ViciOne.ServiceBus.Configuration;
-    using Transports;
-    using Util;
+    readonly IBusInstance _busInstance;
+    readonly Recycle<IProcessorContextSupervisor> _contextSupervisor;
 
-
-    public class EventHubReceiveEndpointContext :
-        BaseReceiveEndpointContext,
-        IEventHubReceiveEndpointContext
+    public EventHubReceiveEndpointContext(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
+        IReceiveEndpointConfiguration endpointConfiguration,
+        Func<EventProcessorClient> clientFactory,
+        Func<PartitionClosingEventArgs, Task> partitionClosingHandler,
+        Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler)
+        : base(busInstance.HostConfiguration, endpointConfiguration)
     {
-        readonly IBusInstance _busInstance;
-        readonly Recycle<IProcessorContextSupervisor> _contextSupervisor;
+        _busInstance = busInstance;
+        _contextSupervisor = new Recycle<IProcessorContextSupervisor>(() =>
+            new ProcessorContextSupervisor(hostConfiguration.ConnectionContextSupervisor, busInstance.HostConfiguration, clientFactory,
+                partitionClosingHandler, partitionInitializingHandler));
+    }
 
-        public EventHubReceiveEndpointContext(IEventHubHostConfiguration hostConfiguration, IBusInstance busInstance,
-            IReceiveEndpointConfiguration endpointConfiguration,
-            Func<EventProcessorClient> clientFactory,
-            Func<PartitionClosingEventArgs, Task> partitionClosingHandler,
-            Func<PartitionInitializingEventArgs, Task> partitionInitializingHandler)
-            : base(busInstance.HostConfiguration, endpointConfiguration)
-        {
-            _busInstance = busInstance;
-            _contextSupervisor = new Recycle<IProcessorContextSupervisor>(() =>
-                new ProcessorContextSupervisor(hostConfiguration.ConnectionContextSupervisor, busInstance.HostConfiguration, clientFactory,
-                    partitionClosingHandler, partitionInitializingHandler));
-        }
+    public override void AddSendAgent(IAgent agent)
+    {
+        _contextSupervisor.Supervisor.AddSendAgent(agent);
+    }
 
-        public override void AddSendAgent(IAgent agent)
-        {
-            _contextSupervisor.Supervisor.AddSendAgent(agent);
-        }
+    public override void AddConsumeAgent(IAgent agent)
+    {
+        _contextSupervisor.Supervisor.AddConsumeAgent(agent);
+    }
 
-        public override void AddConsumeAgent(IAgent agent)
-        {
-            _contextSupervisor.Supervisor.AddConsumeAgent(agent);
-        }
+    public override Exception ConvertException(Exception exception, string message)
+    {
+        return new EventHubConnectionException(message, exception);
+    }
 
-        public override Exception ConvertException(Exception exception, string message)
-        {
-            return new EventHubConnectionException(message, exception);
-        }
+    public IProcessorContextSupervisor ContextSupervisor => _contextSupervisor.Supervisor;
 
-        public IProcessorContextSupervisor ContextSupervisor => _contextSupervisor.Supervisor;
+    protected override ISendTransportProvider CreateSendTransportProvider()
+    {
+        throw new NotSupportedException();
+    }
 
-        protected override ISendTransportProvider CreateSendTransportProvider()
-        {
-            throw new NotSupportedException();
-        }
+    protected override IPublishTransportProvider CreatePublishTransportProvider()
+    {
+        throw new NotSupportedException();
+    }
 
-        protected override IPublishTransportProvider CreatePublishTransportProvider()
-        {
-            throw new NotSupportedException();
-        }
+    protected override IPublishEndpointProvider CreatePublishEndpointProvider()
+    {
+        return _busInstance.Bus;
+    }
 
-        protected override IPublishEndpointProvider CreatePublishEndpointProvider()
-        {
-            return _busInstance.Bus;
-        }
+    protected override ISendEndpointProvider CreateSendEndpointProvider()
+    {
+        return _busInstance.Bus;
+    }
 
-        protected override ISendEndpointProvider CreateSendEndpointProvider()
-        {
-            return _busInstance.Bus;
-        }
+    protected override ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
+    {
+        return default;
+    }
 
-        protected override ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
-        {
-            return default;
-        }
-
-        protected override ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
-        {
-            return default;
-        }
+    protected override ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
+    {
+        return default;
     }
 }

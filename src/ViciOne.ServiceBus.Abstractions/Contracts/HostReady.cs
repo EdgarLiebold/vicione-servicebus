@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface HostReady
 {
-    using System;
+    /// <summary>
+    /// The Host address
+    /// </summary>
+    Uri HostAddress { get; }
 
+    /// <summary>
+    /// The receive endpoints that were started on the host
+    /// </summary>
+    ReceiveEndpointReady[] ReceiveEndpoints { get; }
 
-    public interface HostReady
-    {
-        /// <summary>
-        /// The Host address
-        /// </summary>
-        Uri HostAddress { get; }
-
-        /// <summary>
-        /// The receive endpoints that were started on the host
-        /// </summary>
-        ReceiveEndpointReady[] ReceiveEndpoints { get; }
-
-        /// <summary>
-        /// The riders that were started on the host
-        /// </summary>
-        RiderReady[] Riders { get; }
-    }
+    /// <summary>
+    /// The riders that were started on the host
+    /// </summary>
+    RiderReady[] Riders { get; }
 }

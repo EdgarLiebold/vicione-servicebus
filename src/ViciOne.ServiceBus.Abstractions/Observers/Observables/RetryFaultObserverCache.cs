@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Observables
+using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Observables;
+
+public class RetryFaultObserverCache
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Threading.Tasks;
+    readonly ConcurrentDictionary<Type, Lazy<IRetryFaultObserver>> _types = new ConcurrentDictionary<Type, Lazy<IRetryFaultObserver>>();
 
+    IRetryFaultObserver this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
 
-    public class RetryFaultObserverCache
+    public static Task RetryFault(IRetryObserver observer, RetryContext context, Type contextType)
     {
-        readonly ConcurrentDictionary<Type, Lazy<IRetryFaultObserver>> _types = new ConcurrentDictionary<Type, Lazy<IRetryFaultObserver>>();
+        return Cached.Converters.Value[contextType].RetryFault(observer, context);
+    }
 
-        IRetryFaultObserver this[Type type] => _types.GetOrAdd(type, CreateTypeConverter).Value;
+    static Lazy<IRetryFaultObserver> CreateTypeConverter(Type type)
+    {
+        return new Lazy<IRetryFaultObserver>(() => CreateConverter(type));
+    }
 
-        public static Task RetryFault(IRetryObserver observer, RetryContext context, Type contextType)
+    static IRetryFaultObserver CreateConverter(Type type)
+    {
+        var converterType = typeof(RetryFaultObserver<>).MakeGenericType(type);
+
+        return Activator.CreateInstance(converterType) as IRetryFaultObserver
+            ?? throw new InvalidOperationException("Failed to create Retry Fault Observer");
+    }
+
+
+    interface IRetryFaultObserver
+    {
+        Task RetryFault(IRetryObserver observer, RetryContext context);
+    }
+
+
+    class RetryFaultObserver<T> :
+        IRetryFaultObserver
+        where T : class, PipeContext
+    {
+        public Task RetryFault(IRetryObserver observer, RetryContext context)
         {
-            return Cached.Converters.Value[contextType].RetryFault(observer, context);
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            return observer.RetryFault((RetryContext<T>)context);
         }
-
-        static Lazy<IRetryFaultObserver> CreateTypeConverter(Type type)
-        {
-            return new Lazy<IRetryFaultObserver>(() => CreateConverter(type));
-        }
-
-        static IRetryFaultObserver CreateConverter(Type type)
-        {
-            var converterType = typeof(RetryFaultObserver<>).MakeGenericType(type);
-
-            return Activator.CreateInstance(converterType) as IRetryFaultObserver
-                ?? throw new InvalidOperationException("Failed to create Retry Fault Observer");
-        }
+    }
 
 
-        interface IRetryFaultObserver
-        {
-            Task RetryFault(IRetryObserver observer, RetryContext context);
-        }
-
-
-        class RetryFaultObserver<T> :
-            IRetryFaultObserver
-            where T : class, PipeContext
-        {
-            public Task RetryFault(IRetryObserver observer, RetryContext context)
-            {
-                if (context == null)
-                    throw new ArgumentNullException(nameof(context));
-
-                return observer.RetryFault((RetryContext<T>)context);
-            }
-        }
-
-
-        static class Cached
-        {
-            internal static readonly Lazy<RetryFaultObserverCache> Converters = new Lazy<RetryFaultObserverCache>(() => new RetryFaultObserverCache());
-        }
+    static class Cached
+    {
+        internal static readonly Lazy<RetryFaultObserverCache> Converters = new Lazy<RetryFaultObserverCache>(() => new RetryFaultObserverCache());
     }
 }

@@ -1,13 +1,13 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
-
-using Amazon.SimpleNotificationService;
-using Amazon.SimpleNotificationService.Model;
+using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Amazon.Runtime;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class AmazonSqsLocalStack : IAsyncDisposable
 {

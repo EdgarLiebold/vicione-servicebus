@@ -1,11 +1,10 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus;
 /// <summary>One immutable bounded page of payload-free quarantine evidence.</summary>
 public sealed class DurableSendQuarantinePage
 {

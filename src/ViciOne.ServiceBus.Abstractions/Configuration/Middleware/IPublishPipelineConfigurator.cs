@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IPublishPipelineConfigurator
 {
-    using System;
-
-
-    public interface IPublishPipelineConfigurator
-    {
-        /// <summary>
-        /// Configure the Publish pipeline
-        /// </summary>
-        /// <param name="callback"></param>
-        void ConfigurePublish(Action<IPublishPipeConfigurator> callback);
-    }
+    /// <summary>
+    /// Configure the Publish pipeline
+    /// </summary>
+    /// <param name="callback"></param>
+    void ConfigurePublish(Action<IPublishPipeConfigurator> callback);
 }

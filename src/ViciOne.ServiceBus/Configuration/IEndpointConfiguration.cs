@@ -1,23 +1,22 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IEndpointConfiguration :
+    IConsumePipeConfigurator,
+    ISendPipelineConfigurator,
+    IPublishPipelineConfigurator,
+    IReceivePipelineConfigurator,
+    ISpecification
 {
-    public interface IEndpointConfiguration :
-        IConsumePipeConfigurator,
-        ISendPipelineConfigurator,
-        IPublishPipelineConfigurator,
-        IReceivePipelineConfigurator,
-        ISpecification
-    {
-        bool IsBusEndpoint { get; }
+    bool IsBusEndpoint { get; }
 
-        IConsumePipeConfiguration Consume { get; }
-        ISendPipeConfiguration Send { get; }
-        IPublishPipeConfiguration Publish { get; }
-        IReceivePipeConfiguration Receive { get; }
+    IConsumePipeConfiguration Consume { get; }
+    ISendPipeConfiguration Send { get; }
+    IPublishPipeConfiguration Publish { get; }
+    IReceivePipeConfiguration Receive { get; }
 
-        ITopologyConfiguration Topology { get; }
+    ITopologyConfiguration Topology { get; }
 
-        ISerializationConfiguration Serialization { get; }
+    ISerializationConfiguration Serialization { get; }
 
-        ITransportConfiguration Transport { get; }
-    }
+    ITransportConfiguration Transport { get; }
 }

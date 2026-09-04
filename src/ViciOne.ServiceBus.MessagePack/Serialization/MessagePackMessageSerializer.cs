@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Collections.Generic;
 using System.Net.Mime;
-using Initializers;
-using Initializers.TypeConverters;
-using Internals;
 using MessagePack;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.TypeConverters;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.Serialization;
 
 public class MessagePackMessageSerializer :
     IMessageSerializer,

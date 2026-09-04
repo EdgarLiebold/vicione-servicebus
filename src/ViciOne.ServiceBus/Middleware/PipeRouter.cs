@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.Middleware
+namespace ViciOne.ServiceBus.Middleware;
+
+public class PipeRouter :
+    DynamicRouter<PipeContext>,
+    IPipeRouter
 {
-    public class PipeRouter :
-        DynamicRouter<PipeContext>,
-        IPipeRouter
+    public PipeRouter()
+        : base(new PipeContextConverterFactory())
     {
-        public PipeRouter()
-            : base(new PipeContextConverterFactory())
-        {
-        }
     }
 }

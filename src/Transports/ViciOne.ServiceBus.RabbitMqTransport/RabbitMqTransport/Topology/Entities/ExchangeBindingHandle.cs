@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public interface ExchangeBindingHandle :
+    EntityHandle
 {
-    using ViciOne.ServiceBus.Topology;
-
-
-    public interface ExchangeBindingHandle :
-        EntityHandle
-    {
-        ExchangeToExchangeBinding Binding { get; }
-    }
+    ExchangeToExchangeBinding Binding { get; }
 }

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IPublishTopologyConfigurationObserverConnector
 {
-    public interface IPublishTopologyConfigurationObserverConnector
-    {
-        ConnectHandle ConnectPublishTopologyConfigurationObserver(IPublishTopologyConfigurationObserver observer);
-    }
+    ConnectHandle ConnectPublishTopologyConfigurationObserver(IPublishTopologyConfigurationObserver observer);
 }

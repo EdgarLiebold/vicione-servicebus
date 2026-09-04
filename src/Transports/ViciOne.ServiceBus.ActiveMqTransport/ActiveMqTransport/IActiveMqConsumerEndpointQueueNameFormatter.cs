@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public interface IActiveMqConsumerEndpointQueueNameFormatter
 {
-    public interface IActiveMqConsumerEndpointQueueNameFormatter
-    {
-        public string Format(string topic, string endpointName);
-    }
+    public string Format(string topic, string endpointName);
 }

@@ -1,65 +1,63 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Clients
+namespace ViciOne.ServiceBus.Clients;
+
+public class ReceiveEndpointClientFactoryContext :
+    ClientFactoryContext
 {
-    using System;
+    readonly HostReceiveEndpointHandle _handle;
+    readonly IReceiveEndpoint _receiveEndpoint;
 
-
-    public class ReceiveEndpointClientFactoryContext :
-        ClientFactoryContext
+    public ReceiveEndpointClientFactoryContext(
+        HostReceiveEndpointHandle handle,
+        RequestTimeout defaultTimeout = default,
+        TimeProvider? timeProvider = null)
     {
-        readonly HostReceiveEndpointHandle _handle;
-        readonly IReceiveEndpoint _receiveEndpoint;
+        _handle = handle;
+        _receiveEndpoint = handle.ReceiveEndpoint;
 
-        public ReceiveEndpointClientFactoryContext(
-            HostReceiveEndpointHandle handle,
-            RequestTimeout defaultTimeout = default,
-            TimeProvider? timeProvider = null)
-        {
-            _handle = handle;
-            _receiveEndpoint = handle.ReceiveEndpoint;
+        ResponseAddress = _receiveEndpoint.InputAddress;
 
-            ResponseAddress = _receiveEndpoint.InputAddress;
-
-            DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
-            TimeProvider = timeProvider ?? TimeProvider.System;
-        }
-
-        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
-            where T : class
-        {
-            return _receiveEndpoint.ConnectConsumePipe(pipe);
-        }
-
-        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-            where T : class
-        {
-            return _receiveEndpoint.ConnectConsumePipe(pipe, options);
-        }
-
-        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
-            where T : class
-        {
-            return _receiveEndpoint.ConnectRequestPipe(requestId, pipe);
-        }
-
-        public Uri ResponseAddress { get; }
-
-        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
-            where T : class
-        {
-            return new ReceiveEndpointPublishRequestSendEndpoint<T>(_handle, consumeContext);
-        }
-
-        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
-            where T : class
-        {
-            return new ReceiveEndpointSendRequestSendEndpoint<T>(_handle, destinationAddress, consumeContext);
-        }
-
-        public RequestTimeout DefaultTimeout { get; }
-
-        public IMessageRouteTable MessageRoutes => EndpointConvention.GetMessageRoutes(_receiveEndpoint);
-
-        public TimeProvider TimeProvider { get; }
+        DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
+        TimeProvider = timeProvider ?? TimeProvider.System;
     }
+
+    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+        where T : class
+    {
+        return _receiveEndpoint.ConnectConsumePipe(pipe);
+    }
+
+    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+        where T : class
+    {
+        return _receiveEndpoint.ConnectConsumePipe(pipe, options);
+    }
+
+    public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+        where T : class
+    {
+        return _receiveEndpoint.ConnectRequestPipe(requestId, pipe);
+    }
+
+    public Uri ResponseAddress { get; }
+
+    public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+        where T : class
+    {
+        return new ReceiveEndpointPublishRequestSendEndpoint<T>(_handle, consumeContext);
+    }
+
+    public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+        where T : class
+    {
+        return new ReceiveEndpointSendRequestSendEndpoint<T>(_handle, destinationAddress, consumeContext);
+    }
+
+    public RequestTimeout DefaultTimeout { get; }
+
+    public IMessageRouteTable MessageRoutes => EndpointConvention.GetMessageRoutes(_receiveEndpoint);
+
+    public TimeProvider TimeProvider { get; }
 }

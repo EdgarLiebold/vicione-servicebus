@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.SignalR.Configuration.Definitions
+using Microsoft.AspNetCore.SignalR;
+using ViciOne.ServiceBus.SignalR.Consumers;
+
+namespace ViciOne.ServiceBus.SignalR.Configuration.Definitions;
+
+public class UserConsumerDefinition<THub> :
+    ConsumerDefinition<UserConsumer<THub>>
+    where THub : Hub
 {
-    using Consumers;
-    using Microsoft.AspNetCore.SignalR;
-
-
-    public class UserConsumerDefinition<THub> :
-        ConsumerDefinition<UserConsumer<THub>>
-        where THub : Hub
+    public UserConsumerDefinition(HubConsumerDefinition<THub> endpointDefinition)
     {
-        public UserConsumerDefinition(HubConsumerDefinition<THub> endpointDefinition)
-        {
-            EndpointDefinition = endpointDefinition;
-        }
+        EndpointDefinition = endpointDefinition;
     }
 }

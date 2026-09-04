@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+
+public interface ConfigureTopologyContext<T>
+    where T : class
 {
-    public interface ConfigureTopologyContext<T>
-        where T : class
-    {
-    }
 }

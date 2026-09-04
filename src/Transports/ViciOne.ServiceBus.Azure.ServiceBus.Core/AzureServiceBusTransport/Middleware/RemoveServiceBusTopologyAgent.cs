@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+
+public sealed class RemoveServiceBusTopologyAgent :
+    Agent
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus.Middleware;
-    using Topology;
+    readonly BrokerTopology _brokerTopology;
+    readonly ConnectionContext _context;
 
-
-    public sealed class RemoveServiceBusTopologyAgent :
-        Agent
+    public RemoveServiceBusTopologyAgent(ConnectionContext context, BrokerTopology brokerTopology)
     {
-        readonly BrokerTopology _brokerTopology;
-        readonly ConnectionContext _context;
+        _brokerTopology = brokerTopology;
+        _context = context;
 
-        public RemoveServiceBusTopologyAgent(ConnectionContext context, BrokerTopology brokerTopology)
+        SetReady();
+    }
+
+    protected override async Task StopAgent(StopContext context)
+    {
+        try
         {
-            _brokerTopology = brokerTopology;
-            _context = context;
-
-            SetReady();
+            await RemoveSubscriptions(_context).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            LogContext.Warning?.Log(ex, "Failed to remove one or more subscriptions from the endpoint.");
         }
 
-        protected override async Task StopAgent(StopContext context)
-        {
-            try
-            {
-                await RemoveSubscriptions(_context).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                LogContext.Warning?.Log(ex, "Failed to remove one or more subscriptions from the endpoint.");
-            }
+        await base.StopAgent(context);
+    }
 
-            await base.StopAgent(context);
-        }
+    async Task RemoveSubscriptions(ConnectionContext context)
+    {
+        await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => Delete(context, subscription))).ConfigureAwait(false);
+    }
 
-        async Task RemoveSubscriptions(ConnectionContext context)
-        {
-            await Task.WhenAll(_brokerTopology.QueueSubscriptions.Select(subscription => Delete(context, subscription))).ConfigureAwait(false);
-        }
-
-        static Task Delete(ConnectionContext context, QueueSubscription subscription)
-        {
-            return context.DeleteTopicSubscription(subscription.Subscription.CreateSubscriptionOptions, context.CancellationToken);
-        }
+    static Task Delete(ConnectionContext context, QueueSubscription subscription)
+    {
+        return context.DeleteTopicSubscription(subscription.Subscription.CreateSubscriptionOptions, context.CancellationToken);
     }
 }

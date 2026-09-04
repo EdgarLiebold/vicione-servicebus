@@ -1,61 +1,59 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using System;
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class QueueSendSettings :
+    SendSettings,
+    IServiceBusEntityConfigurator
 {
-    using System;
-    using Azure.Messaging.ServiceBus.Administration;
+    readonly CreateQueueOptions _createQueueOptions;
 
-
-    public class QueueSendSettings :
-        SendSettings,
-        IServiceBusEntityConfigurator
+    public QueueSendSettings(CreateQueueOptions createQueueOptions)
     {
-        readonly CreateQueueOptions _createQueueOptions;
+        _createQueueOptions = createQueueOptions;
+    }
 
-        public QueueSendSettings(CreateQueueOptions createQueueOptions)
+    public TimeSpan? AutoDeleteOnIdle
+    {
+        set
         {
-            _createQueueOptions = createQueueOptions;
+            if (value.HasValue)
+                _createQueueOptions.AutoDeleteOnIdle = value.Value;
         }
+    }
 
-        public TimeSpan? AutoDeleteOnIdle
+    public TimeSpan? DefaultMessageTimeToLive
+    {
+        set
         {
-            set
-            {
-                if (value.HasValue)
-                    _createQueueOptions.AutoDeleteOnIdle = value.Value;
-            }
+            if (value.HasValue)
+                _createQueueOptions.DefaultMessageTimeToLive = value.Value;
         }
+    }
 
-        public TimeSpan? DefaultMessageTimeToLive
+    public bool? EnableBatchedOperations
+    {
+        set
         {
-            set
-            {
-                if (value.HasValue)
-                    _createQueueOptions.DefaultMessageTimeToLive = value.Value;
-            }
+            if (value.HasValue)
+                _createQueueOptions.EnableBatchedOperations = value.Value;
         }
+    }
 
-        public bool? EnableBatchedOperations
-        {
-            set
-            {
-                if (value.HasValue)
-                    _createQueueOptions.EnableBatchedOperations = value.Value;
-            }
-        }
+    public string UserMetadata
+    {
+        set => _createQueueOptions.UserMetadata = value;
+    }
 
-        public string UserMetadata
-        {
-            set => _createQueueOptions.UserMetadata = value;
-        }
+    public string EntityPath => _createQueueOptions.Name;
 
-        public string EntityPath => _createQueueOptions.Name;
+    public BrokerTopology GetBrokerTopology()
+    {
+        var builder = new SendEndpointBrokerTopologyBuilder();
 
-        public BrokerTopology GetBrokerTopology()
-        {
-            var builder = new SendEndpointBrokerTopologyBuilder();
+        builder.Queue = builder.CreateQueue(_createQueueOptions);
 
-            builder.Queue = builder.CreateQueue(_createQueueOptions);
-
-            return builder.BuildBrokerTopology();
-        }
+        return builder.BuildBrokerTopology();
     }
 }

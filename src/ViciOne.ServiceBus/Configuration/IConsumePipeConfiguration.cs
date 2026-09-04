@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IConsumePipeConfiguration
 {
-    public interface IConsumePipeConfiguration
-    {
-        IConsumePipeSpecification Specification { get; }
-        IConsumePipeConfigurator Configurator { get; }
-    }
+    IConsumePipeSpecification Specification { get; }
+    IConsumePipeConfigurator Configurator { get; }
 }

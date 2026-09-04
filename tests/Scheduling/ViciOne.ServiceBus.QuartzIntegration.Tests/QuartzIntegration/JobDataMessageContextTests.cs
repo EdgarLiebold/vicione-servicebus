@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Quartz;
-using Quartz.Impl;
 using Quartz.Extensibility;
+using Quartz.Impl;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

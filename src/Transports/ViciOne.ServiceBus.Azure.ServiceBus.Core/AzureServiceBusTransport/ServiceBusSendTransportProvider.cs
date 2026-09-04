@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusSendTransportProvider :
+    ISendTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
+    readonly ReceiveEndpointContext _context;
 
-
-    public class ServiceBusSendTransportProvider :
-        ISendTransportProvider
+    public ServiceBusSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ReceiveEndpointContext context)
     {
-        readonly IConnectionContextSupervisor _connectionContextSupervisor;
-        readonly ReceiveEndpointContext _context;
+        _connectionContextSupervisor = connectionContextSupervisor;
+        _context = context;
+    }
 
-        public ServiceBusSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ReceiveEndpointContext context)
-        {
-            _connectionContextSupervisor = connectionContextSupervisor;
-            _context = context;
-        }
+    public Uri NormalizeAddress(Uri address)
+    {
+        return _connectionContextSupervisor.NormalizeAddress(address);
+    }
 
-        public Uri NormalizeAddress(Uri address)
-        {
-            return _connectionContextSupervisor.NormalizeAddress(address);
-        }
-
-        Task<ISendTransport> ISendTransportProvider.GetSendTransport(Uri address)
-        {
-            return _connectionContextSupervisor.CreateSendTransport(_context, address);
-        }
+    Task<ISendTransport> ISendTransportProvider.GetSendTransport(Uri address)
+    {
+        return _connectionContextSupervisor.CreateSendTransport(_context, address);
     }
 }

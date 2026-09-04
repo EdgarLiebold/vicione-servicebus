@@ -1,74 +1,72 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOneServiceBusBenchmark.BusOutbox;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+public class AmazonSqsMessageLatencyTransport :
+    IMessageLatencyTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using BusOutbox;
-    using ViciOne.ServiceBus;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly AmazonSqsHostSettings _hostSettings;
+    readonly IMessageLatencySettings _settings;
+    Uri _targetAddress;
+    ISendEndpoint _targetEndpoint;
+    ServiceProvider _provider;
+    AsyncServiceScope _scope;
 
-
-    public class AmazonSqsMessageLatencyTransport :
-        IMessageLatencyTransport
+    public AmazonSqsMessageLatencyTransport(AmazonSqsHostSettings hostSettings, IMessageLatencySettings settings)
     {
-        readonly AmazonSqsHostSettings _hostSettings;
-        readonly IMessageLatencySettings _settings;
-        Uri _targetAddress;
-        ISendEndpoint _targetEndpoint;
-        ServiceProvider _provider;
-        AsyncServiceScope _scope;
+        _hostSettings = hostSettings;
+        _settings = settings;
+    }
 
-        public AmazonSqsMessageLatencyTransport(AmazonSqsHostSettings hostSettings, IMessageLatencySettings settings)
-        {
-            _hostSettings = hostSettings;
-            _settings = settings;
-        }
+    public Task Send(LatencyTestMessage message)
+    {
+        return _targetEndpoint.Send(message);
+    }
 
-        public Task Send(LatencyTestMessage message)
-        {
-            return _targetEndpoint.Send(message);
-        }
+    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    {
+        _provider = new ServiceCollection()
+            .AddTextLogger(Console.Out)
+            .AddSingleton(reportConsumerMetric)
+            .AddViciOneServiceBus(x =>
+            {
+                x.AddConsumer<MessageLatencyConsumer>();
 
-        public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
-        {
-            _provider = new ServiceCollection()
-                .AddTextLogger(Console.Out)
-                .AddSingleton(reportConsumerMetric)
-                .AddViciOneServiceBus(x =>
+                x.UsingAmazonSqs((context, cfg) =>
                 {
-                    x.AddConsumer<MessageLatencyConsumer>();
+                    cfg.Host(_hostSettings);
 
-                    x.UsingAmazonSqs((context, cfg) =>
+                    cfg.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
                     {
-                        cfg.Host(_hostSettings);
+                        e.Durable = _settings.Durable;
+                        e.PrefetchCount = _settings.PrefetchCount;
 
-                        cfg.ReceiveEndpoint("latency_consumer" + (_settings.Durable ? "" : "_express"), e =>
-                        {
-                            e.Durable = _settings.Durable;
-                            e.PrefetchCount = _settings.PrefetchCount;
+                        if (_settings.ConcurrencyLimit > 0)
+                            e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
 
-                            if (_settings.ConcurrencyLimit > 0)
-                                e.ConcurrentMessageLimit = _settings.ConcurrencyLimit;
+                        callback(e);
 
-                            callback(e);
-
-                            _targetAddress = e.InputAddress;
-                        });
+                        _targetAddress = e.InputAddress;
                     });
-                })
-                .BuildServiceProvider(true);
+                });
+            })
+            .BuildServiceProvider(true);
 
-            await _provider.StartHostedServices();
+        await _provider.StartHostedServices();
 
-            _scope = _provider.CreateAsyncScope();
+        _scope = _provider.CreateAsyncScope();
 
-            _targetEndpoint = await _scope.ServiceProvider.GetRequiredService<ISendEndpointProvider>().GetSendEndpoint(_targetAddress);
-        }
+        _targetEndpoint = await _scope.ServiceProvider.GetRequiredService<ISendEndpointProvider>().GetSendEndpoint(_targetAddress);
+    }
 
-        public async ValueTask DisposeAsync()
-        {
-            await _scope.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        await _scope.DisposeAsync();
 
-            await _provider.StopHostedServices();
-        }
+        await _provider.StopHostedServices();
     }
 }

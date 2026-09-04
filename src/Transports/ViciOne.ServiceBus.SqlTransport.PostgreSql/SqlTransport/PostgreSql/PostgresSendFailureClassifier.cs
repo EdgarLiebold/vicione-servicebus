@@ -1,9 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
-
 using System;
 using Npgsql;
 
+#nullable enable
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 /// <summary>
 /// Classifies PostgreSQL send failures from Npgsql's typed transient contract.
 /// </summary>

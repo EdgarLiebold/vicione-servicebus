@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class RequestIdTeeFilter<TMessage> :
+    TeeFilter<ConsumeContext<TMessage>>,
+    IRequestIdTeeFilter<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly Lazy<IKeyPipeConnector<TMessage, Guid>> _keyConnections;
 
-
-    public class RequestIdTeeFilter<TMessage> :
-        TeeFilter<ConsumeContext<TMessage>>,
-        IRequestIdTeeFilter<TMessage>
-        where TMessage : class
+    public RequestIdTeeFilter()
     {
-        readonly Lazy<IKeyPipeConnector<TMessage, Guid>> _keyConnections;
+        _keyConnections = new Lazy<IKeyPipeConnector<TMessage, Guid>>(ConnectKeyFilter);
+    }
 
-        public RequestIdTeeFilter()
-        {
-            _keyConnections = new Lazy<IKeyPipeConnector<TMessage, Guid>>(ConnectKeyFilter);
-        }
+    public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
+    {
+        return _keyConnections.Value.ConnectPipe(key, pipe);
+    }
 
-        public ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe)
-        {
-            return _keyConnections.Value.ConnectPipe(key, pipe);
-        }
+    RequestIdFilter<TMessage> ConnectKeyFilter()
+    {
+        var filter = new RequestIdFilter<TMessage>();
 
-        RequestIdFilter<TMessage> ConnectKeyFilter()
-        {
-            var filter = new RequestIdFilter<TMessage>();
+        ConnectPipe(filter.ToPipe());
 
-            ConnectPipe(filter.ToPipe());
-
-            return filter;
-        }
+        return filter;
     }
 }

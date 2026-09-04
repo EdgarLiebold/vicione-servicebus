@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+public class JobAttemptSagaMap :
+    SagaClassMap<JobAttemptSaga>
 {
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    readonly bool _optimistic;
 
-
-    public class JobAttemptSagaMap :
-        SagaClassMap<JobAttemptSaga>
+    public JobAttemptSagaMap(bool optimistic)
     {
-        readonly bool _optimistic;
+        _optimistic = optimistic;
+    }
 
-        public JobAttemptSagaMap(bool optimistic)
+    protected override void Configure(EntityTypeBuilder<JobAttemptSaga> entity, ModelBuilder model)
+    {
+        entity.OptOutOfEntityFrameworkConventions();
+
+        entity.Property(x => x.CurrentState);
+
+        entity.Ignore(x => x.Version);
+
+        if (_optimistic)
         {
-            _optimistic = optimistic;
+            entity.Property(x => x.RowVersion)
+                .IsRowVersion();
         }
+        else
+            entity.Ignore(x => x.RowVersion);
 
-        protected override void Configure(EntityTypeBuilder<JobAttemptSaga> entity, ModelBuilder model)
+        entity.Property(x => x.JobId);
+        entity.HasOne<JobSaga>().WithMany()
+            .HasForeignKey(x => x.JobId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.Property(x => x.RetryAttempt);
+
+        entity.HasIndex(x => new
         {
-            entity.OptOutOfEntityFrameworkConventions();
+            x.JobId,
+            x.RetryAttempt
+        }).IsUnique().HasFilter(null);
 
-            entity.Property(x => x.CurrentState);
+        entity.Property(x => x.ServiceAddress);
 
-            entity.Ignore(x => x.Version);
+        entity.Property(x => x.InstanceAddress);
 
-            if (_optimistic)
-            {
-                entity.Property(x => x.RowVersion)
-                    .IsRowVersion();
-            }
-            else
-                entity.Ignore(x => x.RowVersion);
+        entity.Property(x => x.Started);
 
-            entity.Property(x => x.JobId);
-            entity.HasOne<JobSaga>().WithMany()
-                .HasForeignKey(x => x.JobId)
-                .OnDelete(DeleteBehavior.Cascade);
+        entity.Property(x => x.Faulted);
 
-            entity.Property(x => x.RetryAttempt);
-
-            entity.HasIndex(x => new
-            {
-                x.JobId,
-                x.RetryAttempt
-            }).IsUnique().HasFilter(null);
-
-            entity.Property(x => x.ServiceAddress);
-
-            entity.Property(x => x.InstanceAddress);
-
-            entity.Property(x => x.Started);
-
-            entity.Property(x => x.Faulted);
-
-            entity.Property(x => x.StatusCheckTokenId);
-        }
+        entity.Property(x => x.StatusCheckTokenId);
     }
 }

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection;
-
 using System.Reflection;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
+namespace ViciOne.ServiceBus.Abstractions.Tests.Metadata.Reflection;
 
 public sealed class ReadOnlyPropertyTests
 {

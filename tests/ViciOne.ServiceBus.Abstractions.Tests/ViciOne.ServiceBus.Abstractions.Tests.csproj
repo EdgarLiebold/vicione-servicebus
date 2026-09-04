@@ -2,6 +2,8 @@
   <Import Project="../../signing.props" />
 
   <PropertyGroup>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!-- Microsoft Testing Platform test projects are executables: the artifact starts, runs the
          tests and owns the process exit code. -->
     <OutputType>Exe</OutputType>
@@ -19,13 +21,13 @@
   <ItemGroup>
     <!-- The single test entry package. It brings discovery, assertions and the Microsoft Testing
          Platform v2 entry point; nothing else here may bring a runner, an adapter or a logger.
-         This cohort needs no architecture library: it observes product behaviour, not structure. -->
+         This project needs no architecture library: it observes product behaviour, not structure. -->
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The one product owner this cohort mirrors. The reference is what makes the type anchors in
+    <!-- The one product owner this project mirrors. The reference is what makes the type anchors in
          the contract test compile-verified: if one of the five message bodies is renamed or removed,
          this project stops compiling instead of silently asserting against a stale name list.
          ViciOne.ServiceBus is deliberately absent - the bodies under test are declared here, and a

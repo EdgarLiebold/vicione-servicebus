@@ -1,72 +1,70 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public class JobConsumerOptions :
+    IOptions,
+    ISpecification
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-
-
-    public class JobConsumerOptions :
-        IOptions,
-        ISpecification
+    public JobConsumerOptions()
     {
-        public JobConsumerOptions()
-        {
-            HeartbeatInterval = TimeSpan.FromMinutes(1);
-            RejectedJobDelay = TimeSpan.FromSeconds(3);
-            TimeProvider = TimeProvider.System;
-        }
+        HeartbeatInterval = TimeSpan.FromMinutes(1);
+        RejectedJobDelay = TimeSpan.FromSeconds(3);
+        TimeProvider = TimeProvider.System;
+    }
 
-        public TimeSpan HeartbeatInterval { get; set; }
-        public TimeSpan RejectedJobDelay { get; set; }
-        public TimeProvider TimeProvider { get; set; }
+    public TimeSpan HeartbeatInterval { get; set; }
+    public TimeSpan RejectedJobDelay { get; set; }
+    public TimeProvider TimeProvider { get; set; }
 
-        IEnumerable<ValidationResult> ISpecification.Validate()
-        {
-            if (HeartbeatInterval <= TimeSpan.Zero)
-                yield return this.Failure("JobConsumerOptions", "HeartbeatInterval", "Must be > 0");
-            if (RejectedJobDelay <= TimeSpan.Zero)
-                yield return this.Failure("JobConsumerOptions", "RejectedJobDelay", "Must be > 0");
-            if (TimeProvider == null)
-                yield return this.Failure("JobConsumerOptions", "TimeProvider", "Must not be null");
-        }
+    IEnumerable<ValidationResult> ISpecification.Validate()
+    {
+        if (HeartbeatInterval <= TimeSpan.Zero)
+            yield return this.Failure("JobConsumerOptions", "HeartbeatInterval", "Must be > 0");
+        if (RejectedJobDelay <= TimeSpan.Zero)
+            yield return this.Failure("JobConsumerOptions", "RejectedJobDelay", "Must be > 0");
+        if (TimeProvider == null)
+            yield return this.Failure("JobConsumerOptions", "TimeProvider", "Must not be null");
+    }
 
-        public JobConsumerOptions SetHeartbeatInterval(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
-        {
-            var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
+    public JobConsumerOptions SetHeartbeatInterval(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
+    {
+        var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
 
-            HeartbeatInterval = value;
+        HeartbeatInterval = value;
 
-            return this;
-        }
+        return this;
+    }
 
-        public JobConsumerOptions SetHeartbeatInterval(TimeSpan interval)
-        {
-            HeartbeatInterval = interval;
+    public JobConsumerOptions SetHeartbeatInterval(TimeSpan interval)
+    {
+        HeartbeatInterval = interval;
 
-            return this;
-        }
+        return this;
+    }
 
-        public JobConsumerOptions SetRejectedJobDelay(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
-        {
-            var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
+    public JobConsumerOptions SetRejectedJobDelay(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
+    {
+        var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
 
-            RejectedJobDelay = value;
+        RejectedJobDelay = value;
 
-            return this;
-        }
+        return this;
+    }
 
-        public JobConsumerOptions SetRejectedJobDelay(TimeSpan interval)
-        {
-            RejectedJobDelay = interval;
+    public JobConsumerOptions SetRejectedJobDelay(TimeSpan interval)
+    {
+        RejectedJobDelay = interval;
 
-            return this;
-        }
+        return this;
+    }
 
-        public JobConsumerOptions SetTimeProvider(TimeProvider timeProvider)
-        {
-            TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+    public JobConsumerOptions SetTimeProvider(TimeProvider timeProvider)
+    {
+        TimeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
 
-            return this;
-        }
+        return this;
     }
 }

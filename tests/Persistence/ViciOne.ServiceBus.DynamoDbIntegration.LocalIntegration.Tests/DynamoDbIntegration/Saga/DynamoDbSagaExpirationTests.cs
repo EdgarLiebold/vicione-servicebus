@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.DynamoDbIntegration.Saga;
-
 using Amazon.DynamoDBv2.Model;
 using ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.DynamoDbIntegration.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.DynamoDbIntegration.Saga;
 
 public sealed class DynamoDbSagaExpirationTests
 {

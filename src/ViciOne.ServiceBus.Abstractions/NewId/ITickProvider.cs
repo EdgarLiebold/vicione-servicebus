@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ITickProvider
 {
-    public interface ITickProvider
-    {
-        long Ticks { get; }
-    }
+    long Ticks { get; }
 }

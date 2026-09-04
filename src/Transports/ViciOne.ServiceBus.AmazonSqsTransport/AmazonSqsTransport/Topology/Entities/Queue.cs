@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System.Collections.Generic;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 /// <summary>
 /// The queue details used to declare the queue to AmazonSQS
 /// </summary>

@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.Batching
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Batching;
+
+public interface IBatchCollector<TMessage> :
+    IAsyncDisposable,
+    IProbeSite
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
+    Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context);
 
-
-    public interface IBatchCollector<TMessage> :
-        IAsyncDisposable,
-        IProbeSite
-        where TMessage : class
-    {
-        Task<BatchConsumer<TMessage>> Collect(ConsumeContext<TMessage> context);
-
-        /// <summary>
-        /// Complete the consumer, since it's already completed, to clear the dictionary if it matches
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="consumer"></param>
-        Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer);
-    }
+    /// <summary>
+    /// Complete the consumer, since it's already completed, to clear the dictionary if it matches
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="consumer"></param>
+    Task Complete(ConsumeContext<TMessage> context, BatchConsumer<TMessage> consumer);
 }

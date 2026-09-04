@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>Raised when a serialized payload crosses a configured admission boundary.</summary>
 public sealed class PayloadAdmissionException : Exception
 {

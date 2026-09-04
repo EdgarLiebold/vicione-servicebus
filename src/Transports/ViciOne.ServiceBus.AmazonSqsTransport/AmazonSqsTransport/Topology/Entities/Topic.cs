@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System.Collections.Generic;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 /// <summary>
 /// The exchange details used to declare the exchange to AmazonSQS
 /// </summary>

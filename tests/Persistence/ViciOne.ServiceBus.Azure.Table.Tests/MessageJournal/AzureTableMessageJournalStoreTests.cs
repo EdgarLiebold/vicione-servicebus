@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal;
-
 using global::Azure;
 using global::Azure.Core;
 using global::Azure.Data.Tables;
@@ -8,6 +6,8 @@ using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal;
 
 public sealed class AzureTableMessageJournalStoreTests
 {
@@ -113,12 +113,12 @@ public sealed class AzureTableMessageJournalStoreTests
 
         public IReadOnlyList<TableTransactionAction>? SubmittedActions { get; private set; }
 
-        public override Task<Response<T>> GetEntityAsync<T>(
+        public override Task<global::Azure.Response<T>> GetEntityAsync<T>(
             string partitionKey,
             string rowKey,
             IEnumerable<string>? select = null,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(Response.FromValue((T)(object)lease, _response));
+            Task.FromResult(global::Azure.Response.FromValue((T)(object)lease, _response));
 
         public override AsyncPageable<T> QueryAsync<T>(
             string? filter = null,
@@ -128,22 +128,22 @@ public sealed class AzureTableMessageJournalStoreTests
             AsyncPageable<T>.FromPages(
                 [Page<T>.FromValues(records.Cast<T>().ToArray(), continuationToken: null, _response)]);
 
-        public override Task<Response<IReadOnlyList<Response>>> SubmitTransactionAsync(
+        public override Task<global::Azure.Response<IReadOnlyList<global::Azure.Response>>> SubmitTransactionAsync(
             IEnumerable<TableTransactionAction> transactionActions,
             CancellationToken cancellationToken = default)
         {
             SubmitCallCount++;
             SubmittedActions = transactionActions.ToArray();
-            return Task.FromResult(Response.FromValue<IReadOnlyList<Response>>([], _response));
+            return Task.FromResult(global::Azure.Response.FromValue<IReadOnlyList<global::Azure.Response>>([], _response));
         }
 
-        public override Task<Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
+        public override Task<global::Azure.Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
         {
             IndividualWriteCallCount++;
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
 
-        public override Task<Response> UpdateEntityAsync<T>(
+        public override Task<global::Azure.Response> UpdateEntityAsync<T>(
             T entity,
             ETag ifMatch,
             TableUpdateMode mode = TableUpdateMode.Merge,
@@ -153,7 +153,7 @@ public sealed class AzureTableMessageJournalStoreTests
             throw new InvalidOperationException("Journal append must not split the transaction into individual writes.");
         }
 
-        public override Task<Response> DeleteEntityAsync(
+        public override Task<global::Azure.Response> DeleteEntityAsync(
             string partitionKey,
             string rowKey,
             ETag ifMatch = default,
@@ -164,7 +164,7 @@ public sealed class AzureTableMessageJournalStoreTests
         }
     }
 
-    private sealed class StubResponse : Response
+    private sealed class StubResponse : global::Azure.Response
     {
         public override int Status => 200;
 

@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public interface IInMemoryHost :
+    IHost<IInMemoryReceiveEndpointConfigurator>
 {
-    using Transports;
-
-
-    public interface IInMemoryHost :
-        IHost<IInMemoryReceiveEndpointConfigurator>
-    {
-        IInMemoryDelayProvider DelayProvider { get; }
-    }
+    IInMemoryDelayProvider DelayProvider { get; }
 }

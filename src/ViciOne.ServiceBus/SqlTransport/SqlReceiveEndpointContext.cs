@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.SqlTransport
+using ViciOne.ServiceBus.SqlTransport.Topology;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public interface SqlReceiveEndpointContext :
+    ReceiveEndpointContext
 {
-    using Topology;
-    using Transports;
+    IClientContextSupervisor ClientContextSupervisor { get; }
 
-
-    public interface SqlReceiveEndpointContext :
-        ReceiveEndpointContext
-    {
-        IClientContextSupervisor ClientContextSupervisor { get; }
-
-        BrokerTopology BrokerTopology { get; }
-    }
+    BrokerTopology BrokerTopology { get; }
 }

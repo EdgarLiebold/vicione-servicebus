@@ -1,70 +1,68 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class FaultedUnscheduleActivity<TSaga> :
+    IStateMachineActivity<TSaga>
+    where TSaga : class, SagaStateMachineInstance
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Schedule<TSaga> _schedule;
 
-
-    public class FaultedUnscheduleActivity<TSaga> :
-        IStateMachineActivity<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+    public FaultedUnscheduleActivity(Schedule<TSaga> schedule)
     {
-        readonly Schedule<TSaga> _schedule;
+        _schedule = schedule;
+    }
 
-        public FaultedUnscheduleActivity(Schedule<TSaga> schedule)
+    public void Accept(StateMachineVisitor inspector)
+    {
+        inspector.Visit(this);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("unschedule-faulted");
+    }
+
+    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    {
+        return next.Execute(context);
+    }
+
+    public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+        where T : class
+    {
+        return next.Execute(context);
+    }
+
+    public async Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+        where TException : Exception
+    {
+        await Faulted(context).ConfigureAwait(false);
+
+        await next.Faulted(context).ConfigureAwait(false);
+    }
+
+    public async Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+        where T : class
+        where TException : Exception
+    {
+        await Faulted(context).ConfigureAwait(false);
+
+        await next.Faulted(context).ConfigureAwait(false);
+    }
+
+    async Task Faulted(SagaConsumeContext<TSaga> context)
+    {
+        var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+
+        Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
+        if (previousTokenId.HasValue)
         {
-            _schedule = schedule;
-        }
+            await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
+                .ConfigureAwait(false);
 
-        public void Accept(StateMachineVisitor inspector)
-        {
-            inspector.Visit(this);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("unschedule-faulted");
-        }
-
-        public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
-        {
-            return next.Execute(context);
-        }
-
-        public Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
-            where T : class
-        {
-            return next.Execute(context);
-        }
-
-        public async Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
-            where TException : Exception
-        {
-            await Faulted(context).ConfigureAwait(false);
-
-            await next.Faulted(context).ConfigureAwait(false);
-        }
-
-        public async Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
-            where T : class
-            where TException : Exception
-        {
-            await Faulted(context).ConfigureAwait(false);
-
-            await next.Faulted(context).ConfigureAwait(false);
-        }
-
-        async Task Faulted(SagaConsumeContext<TSaga> context)
-        {
-            var schedulerContext = context.GetPayload<MessageSchedulerContext>();
-
-            Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
-            if (previousTokenId.HasValue)
-            {
-                await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
-                    .ConfigureAwait(false);
-
-                _schedule.SetTokenId(context.Saga, null);
-            }
+            _schedule.SetTokenId(context.Saga, null);
         }
     }
 }

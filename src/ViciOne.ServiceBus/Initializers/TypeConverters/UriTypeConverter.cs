@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.Initializers.TypeConverters
+using System;
+
+namespace ViciOne.ServiceBus.Initializers.TypeConverters;
+
+public class UriTypeConverter :
+    ITypeConverter<string, Uri>,
+    ITypeConverter<Uri, string>,
+    ITypeConverter<Uri, object>
 {
-    using System;
-
-
-    public class UriTypeConverter :
-        ITypeConverter<string, Uri>,
-        ITypeConverter<Uri, string>,
-        ITypeConverter<Uri, object>
+    public bool TryConvert(Uri input, out string result)
     {
-        public bool TryConvert(Uri input, out string result)
-        {
-            result = input?.ToString();
+        result = input?.ToString();
 
+        return true;
+    }
+
+    public bool TryConvert(object input, out Uri result)
+    {
+        switch (input)
+        {
+            case Uri uri:
+                result = uri;
+                return true;
+
+            case string text when !string.IsNullOrWhiteSpace(text):
+                try
+                {
+                    result = new Uri(text);
+                    return true;
+                }
+                catch (FormatException)
+                {
+                    result = default;
+                    return false;
+                }
+
+            default:
+                result = default;
+                return false;
+        }
+    }
+
+    public bool TryConvert(string input, out Uri result)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            result = null;
             return true;
         }
 
-        public bool TryConvert(object input, out Uri result)
+        try
         {
-            switch (input)
-            {
-                case Uri uri:
-                    result = uri;
-                    return true;
+            result = new Uri(input);
 
-                case string text when !string.IsNullOrWhiteSpace(text):
-                    try
-                    {
-                        result = new Uri(text);
-                        return true;
-                    }
-                    catch (FormatException)
-                    {
-                        result = default;
-                        return false;
-                    }
-
-                default:
-                    result = default;
-                    return false;
-            }
+            return true;
         }
-
-        public bool TryConvert(string input, out Uri result)
+        catch (FormatException)
         {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                result = null;
-                return true;
-            }
-
-            try
-            {
-                result = new Uri(input);
-
-                return true;
-            }
-            catch (FormatException)
-            {
-                result = default;
-                return false;
-            }
+            result = default;
+            return false;
         }
     }
 }

@@ -1055,7 +1055,7 @@ future cohorts as complete.
 - The complete SQS/SNS, DynamoDB and Amazon S3 product/test boundary and all 111 selected R0 rows are
   read. The exact carrier projection contains 101 locally executable replacements, nine explicit
   External-pending real-AWS proofs and one PO-superseded raw-secret API row. It is stored in
-  `.testagent/aws-native-obligation-map.tsv` and has no missing, duplicate or extra obligation ID.
+  `evidence/native-tests/obligation-maps/aws-native-obligation-map.tsv` and has no missing, duplicate or extra obligation ID.
 - The Greenfield decisions are fixed before implementation: credentials are AWS-SDK-chain or an
   explicit `AWSCredentials` object, never public raw secret strings; LocalStack is test-owned; and
   ViciOne's distinct `_error`/`_skipped` transports reject a simultaneous native receive-queue
@@ -1081,7 +1081,7 @@ future cohorts as complete.
   DynamoDB and S3 each have separate UnitArchitecture and LocalIntegration owners. No NUnit, VSTest,
   adapter or framework-specific ArchUnit package enters any new closure. The projects are structural
   owners only at this checkpoint; no empty project is counted as a test result or AWS behavior proof.
-- The repeatable local execution diagnosis is now durable in `.testagent/research.md`: an MTP
+- The repeatable local execution diagnosis is now durable in `evidence/native-tests/obligation-maps/research.md`: an MTP
   NamedPipe `SocketException (13)` and process-tree tests denied `ps` are sandbox boundary failures;
   identical commands pass outside that boundary. Restore network stalls are handled the same way,
   without modifying tests, runner selection or package truth.
@@ -1183,7 +1183,7 @@ future cohorts as complete.
   retired and one PO-superseded. Real AWS was not executed. The correction is not accepted until its
   separate evidence child is committed and remotely backed up, architecture binds both hashes, and
   two independent static read-only reviews return PASS.
-- The local execution diagnosis is now durable in `.testagent/research.md`: restricted-sandbox
+- The local execution diagnosis is now durable in `evidence/native-tests/obligation-maps/research.md`: restricted-sandbox
   NamedPipe/process boundaries and orphaned MSBuild nodes caused silent tooling stalls. The unchanged
   tests pass outside that boundary after targeted build-server shutdown with an isolated CLI home,
   disabled node reuse/shared compilation and the explicit MTP profile. No assertion, package or
@@ -1646,7 +1646,7 @@ future cohorts as complete.
   Engineering Release builds finish with zero warnings/errors.
 - The first fresh-worktree Unit run exposed missing generated MTP props for six not-yet-restored
   LocalIntegration projects. After the required locked LocalIntegration restore, the unchanged
-  architecture test and complete Unit profile passed. `.testagent/research.md` retains this distinct
+  architecture test and complete Unit profile passed. `evidence/native-tests/obligation-maps/research.md` retains this distinct
   build-state diagnosis; no test or product rule was weakened.
 - This remains a technical candidate, not acceptance. Exact one-cause mutations, generated
   CHANGELIST, a separate evidence child, remote backup, two independent read-only PASS reviews and
@@ -2549,7 +2549,7 @@ future cohorts as complete.
 - Technical `0f5ea86d52319807dd438149a8d7bb4636247a5e`, tree
   `c0b95d43cea74ea53c36e2795d7dfd5322f7f5f2`, closes the final 65 inherited core-project
   identities: 55 executing obligations and ten support-only retired identities. The complete
-  terminal map is `.testagent/core-final-legacy-project-native-obligation-map.tsv`.
+  terminal map is `evidence/native-tests/obligation-maps/core-final-legacy-project-native-obligation-map.tsv`.
 - All 65 tracked paths of `tests/ViciOne.ServiceBus.Tests` are deleted atomically and the directory is
   absent. The inherited verification model now classifies core as `NATIVE_TEST_ESTATE`; its obsolete
   `core-unit` model selection and workflow job are removed. The frozen historical expected list is

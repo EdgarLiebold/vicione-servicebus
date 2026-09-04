@@ -1,92 +1,90 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
-    using Configuration;
+using System;
+using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Extensions for subscribing object instances.
+/// </summary>
+public static class InstanceExtensions
+{
+    /// <summary>
+    /// Subscribes an object instance to the bus
+    /// </summary>
+    /// <param name="configurator">
+    /// Service Bus Service Configurator
+    /// - the item that is passed as a parameter to
+    /// the action that is calling the configurator.
+    /// </param>
+    /// <param name="instance">The instance to subscribe.</param>
+    /// <returns>An instance subscription configurator.</returns>
+    public static void Instance(this IReceiveEndpointConfigurator configurator, object instance)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(instance);
+
+        var instanceConfigurator = new InstanceConfigurator(instance);
+
+        configurator.AddEndpointSpecification(instanceConfigurator);
+    }
 
     /// <summary>
-    /// Extensions for subscribing object instances.
+    /// Connects any consumers for the object to the message dispatcher
     /// </summary>
-    public static class InstanceExtensions
+    /// <param name="connector">The service bus to configure</param>
+    /// <param name="instance"></param>
+    /// <returns>
+    /// The unsubscribe action that can be called to unsubscribe the instance
+    /// passed as an argument.
+    /// </returns>
+    public static ConnectHandle ConnectInstance(this IConsumePipeConnector connector, object instance)
     {
-        /// <summary>
-        /// Subscribes an object instance to the bus
-        /// </summary>
-        /// <param name="configurator">
-        /// Service Bus Service Configurator
-        /// - the item that is passed as a parameter to
-        /// the action that is calling the configurator.
-        /// </param>
-        /// <param name="instance">The instance to subscribe.</param>
-        /// <returns>An instance subscription configurator.</returns>
-        public static void Instance(this IReceiveEndpointConfigurator configurator, object instance)
-        {
-            ArgumentNullException.ThrowIfNull(configurator);
-            ArgumentNullException.ThrowIfNull(instance);
+        ArgumentNullException.ThrowIfNull(connector);
+        ArgumentNullException.ThrowIfNull(instance);
 
-            var instanceConfigurator = new InstanceConfigurator(instance);
+        return InstanceConnectorCache.GetInstanceConnector(instance.GetType()).ConnectInstance(connector, instance);
+    }
 
-            configurator.AddEndpointSpecification(instanceConfigurator);
-        }
+    /// <summary>
+    /// Subscribes an object instance to the bus
+    /// </summary>
+    /// <param name="configurator">
+    /// Service Bus Service Configurator
+    /// - the item that is passed as a parameter to
+    /// the action that is calling the configurator.
+    /// </param>
+    /// <param name="instance">The instance to subscribe.</param>
+    /// <param name="configure">Configure the instance</param>
+    /// <returns>An instance subscription configurator.</returns>
+    public static void Instance<T>(this IReceiveEndpointConfigurator configurator, T instance, Action<IInstanceConfigurator<T>> configure = null)
+        where T : class, IConsumer
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(instance);
 
-        /// <summary>
-        /// Connects any consumers for the object to the message dispatcher
-        /// </summary>
-        /// <param name="connector">The service bus to configure</param>
-        /// <param name="instance"></param>
-        /// <returns>
-        /// The unsubscribe action that can be called to unsubscribe the instance
-        /// passed as an argument.
-        /// </returns>
-        public static ConnectHandle ConnectInstance(this IConsumePipeConnector connector, object instance)
-        {
-            ArgumentNullException.ThrowIfNull(connector);
-            ArgumentNullException.ThrowIfNull(instance);
+        var instanceConfigurator = new InstanceConfigurator<T>(instance, configurator);
 
-            return InstanceConnectorCache.GetInstanceConnector(instance.GetType()).ConnectInstance(connector, instance);
-        }
+        configure?.Invoke(instanceConfigurator);
 
-        /// <summary>
-        /// Subscribes an object instance to the bus
-        /// </summary>
-        /// <param name="configurator">
-        /// Service Bus Service Configurator
-        /// - the item that is passed as a parameter to
-        /// the action that is calling the configurator.
-        /// </param>
-        /// <param name="instance">The instance to subscribe.</param>
-        /// <param name="configure">Configure the instance</param>
-        /// <returns>An instance subscription configurator.</returns>
-        public static void Instance<T>(this IReceiveEndpointConfigurator configurator, T instance, Action<IInstanceConfigurator<T>> configure = null)
-            where T : class, IConsumer
-        {
-            ArgumentNullException.ThrowIfNull(configurator);
-            ArgumentNullException.ThrowIfNull(instance);
+        configurator.AddEndpointSpecification(instanceConfigurator);
+    }
 
-            var instanceConfigurator = new InstanceConfigurator<T>(instance, configurator);
+    /// <summary>
+    /// Connects any consumers for the object to the message dispatcher
+    /// </summary>
+    /// <typeparam name="T">The consumer type</typeparam>
+    /// <param name="connector">The service bus instance to call this method on.</param>
+    /// <param name="instance">The instance to subscribe.</param>
+    /// <returns>
+    /// The unsubscribe action that can be called to unsubscribe the instance
+    /// passed as an argument.
+    /// </returns>
+    public static ConnectHandle ConnectInstance<T>(this IConsumePipeConnector connector, T instance)
+        where T : class, IConsumer
+    {
+        ArgumentNullException.ThrowIfNull(connector);
+        ArgumentNullException.ThrowIfNull(instance);
 
-            configure?.Invoke(instanceConfigurator);
-
-            configurator.AddEndpointSpecification(instanceConfigurator);
-        }
-
-        /// <summary>
-        /// Connects any consumers for the object to the message dispatcher
-        /// </summary>
-        /// <typeparam name="T">The consumer type</typeparam>
-        /// <param name="connector">The service bus instance to call this method on.</param>
-        /// <param name="instance">The instance to subscribe.</param>
-        /// <returns>
-        /// The unsubscribe action that can be called to unsubscribe the instance
-        /// passed as an argument.
-        /// </returns>
-        public static ConnectHandle ConnectInstance<T>(this IConsumePipeConnector connector, T instance)
-            where T : class, IConsumer
-        {
-            ArgumentNullException.ThrowIfNull(connector);
-            ArgumentNullException.ThrowIfNull(instance);
-
-            return InstanceConnectorCache<T>.Connector.ConnectInstance(connector, instance);
-        }
+        return InstanceConnectorCache<T>.Connector.ConnectInstance(connector, instance);
     }
 }

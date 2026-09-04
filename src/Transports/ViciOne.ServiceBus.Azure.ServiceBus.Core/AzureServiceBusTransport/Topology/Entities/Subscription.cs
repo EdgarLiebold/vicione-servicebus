@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+/// <summary>
+/// A subscription, as defined
+/// </summary>
+public interface Subscription
 {
-    using Azure.Messaging.ServiceBus.Administration;
+    CreateSubscriptionOptions CreateSubscriptionOptions { get; }
 
+    TopicHandle Topic { get; }
 
-    /// <summary>
-    /// A subscription, as defined
-    /// </summary>
-    public interface Subscription
-    {
-        CreateSubscriptionOptions CreateSubscriptionOptions { get; }
+    CreateRuleOptions Rule { get; }
 
-        TopicHandle Topic { get; }
-
-        CreateRuleOptions Rule { get; }
-
-        RuleFilter Filter { get; }
-    }
+    RuleFilter Filter { get; }
 }

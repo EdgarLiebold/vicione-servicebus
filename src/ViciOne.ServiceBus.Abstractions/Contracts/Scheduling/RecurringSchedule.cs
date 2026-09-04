@@ -1,46 +1,44 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public interface RecurringSchedule
 {
-    using System;
+    /// <summary>
+    /// The timezone of the schedule
+    /// </summary>
+    string TimeZoneId { get; }
 
+    /// <summary>
+    /// The time the recurring schedule is enabled
+    /// </summary>
+    DateTimeOffset StartTime { get; }
 
-    public interface RecurringSchedule
-    {
-        /// <summary>
-        /// The timezone of the schedule
-        /// </summary>
-        string TimeZoneId { get; }
+    /// <summary>
+    /// The time the recurring schedule is disabled
+    /// If null then the job is repeated forever
+    /// </summary>
+    DateTimeOffset? EndTime { get; }
 
-        /// <summary>
-        /// The time the recurring schedule is enabled
-        /// </summary>
-        DateTimeOffset StartTime { get; }
+    /// <summary>
+    /// A unique name that identifies this schedule.
+    /// </summary>
+    string ScheduleId { get; }
 
-        /// <summary>
-        /// The time the recurring schedule is disabled
-        /// If null then the job is repeated forever
-        /// </summary>
-        DateTimeOffset? EndTime { get; }
+    /// <summary>
+    /// A
+    /// </summary>
+    string ScheduleGroup { get; }
 
-        /// <summary>
-        /// A unique name that identifies this schedule.
-        /// </summary>
-        string ScheduleId { get; }
+    /// <summary>
+    /// The Cron Schedule Expression in Cron Syntax
+    /// </summary>
+    string CronExpression { get; }
 
-        /// <summary>
-        /// A
-        /// </summary>
-        string ScheduleGroup { get; }
+    /// <summary>
+    /// Schedule description
+    /// </summary>
+    string Description { get; }
 
-        /// <summary>
-        /// The Cron Schedule Expression in Cron Syntax
-        /// </summary>
-        string CronExpression { get; }
-
-        /// <summary>
-        /// Schedule description
-        /// </summary>
-        string Description { get; }
-
-        MissedEventPolicy MisfirePolicy { get; }
-    }
+    MissedEventPolicy MisfirePolicy { get; }
 }

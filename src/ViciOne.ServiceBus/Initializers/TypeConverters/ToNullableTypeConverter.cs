@@ -1,38 +1,37 @@
-namespace ViciOne.ServiceBus.Initializers.TypeConverters
+namespace ViciOne.ServiceBus.Initializers.TypeConverters;
+
+public class ToNullableTypeConverter<T> :
+    ITypeConverter<T?, T>
+    where T : struct
 {
-    public class ToNullableTypeConverter<T> :
-        ITypeConverter<T?, T>
-        where T : struct
+    public bool TryConvert(T input, out T? result)
     {
-        public bool TryConvert(T input, out T? result)
-        {
-            result = input;
-            return true;
-        }
+        result = input;
+        return true;
+    }
+}
+
+
+public class ToNullableTypeConverter<T, TInput> :
+    ITypeConverter<T?, TInput>
+    where T : struct
+{
+    readonly ITypeConverter<T, TInput> _typeConverter;
+
+    public ToNullableTypeConverter(ITypeConverter<T, TInput> typeConverter)
+    {
+        _typeConverter = typeConverter;
     }
 
-
-    public class ToNullableTypeConverter<T, TInput> :
-        ITypeConverter<T?, TInput>
-        where T : struct
+    public bool TryConvert(TInput input, out T? result)
     {
-        readonly ITypeConverter<T, TInput> _typeConverter;
-
-        public ToNullableTypeConverter(ITypeConverter<T, TInput> typeConverter)
+        if (_typeConverter.TryConvert(input, out var intermediateValue))
         {
-            _typeConverter = typeConverter;
+            result = intermediateValue;
+            return true;
         }
 
-        public bool TryConvert(TInput input, out T? result)
-        {
-            if (_typeConverter.TryConvert(input, out var intermediateValue))
-            {
-                result = intermediateValue;
-                return true;
-            }
-
-            result = default;
-            return false;
-        }
+        result = default;
+        return false;
     }
 }

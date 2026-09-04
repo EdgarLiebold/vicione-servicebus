@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PartitionMessageSpecification<T> :
+    IPipeSpecification<ConsumeContext<T>>
+    where T : class
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IPartitioner _partitioner;
+    PartitionKeyProvider<ConsumeContext<T>> _keyProvider;
 
-
-    public class PartitionMessageSpecification<T> :
-        IPipeSpecification<ConsumeContext<T>>
-        where T : class
+    public PartitionMessageSpecification(IPartitioner partitioner)
     {
-        readonly IPartitioner _partitioner;
-        PartitionKeyProvider<ConsumeContext<T>> _keyProvider;
+        _partitioner = partitioner;
+    }
 
-        public PartitionMessageSpecification(IPartitioner partitioner)
+    public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
+    {
+        if (_keyProvider == null)
+            throw new ConfigurationException($"The partition key provider was not found for message type: {TypeCache<T>.ShortName}");
+
+        builder.AddFilter(new PartitionFilter<ConsumeContext<T>>(_keyProvider, _partitioner));
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (GlobalTopology.Send.GetMessageTopology<T>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<T> convention)
+            && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<T> messageCorrelationId))
         {
-            _partitioner = partitioner;
+            _keyProvider = context => messageCorrelationId.TryGetCorrelationId(context.Message, out var correlationId)
+                ? correlationId.ToByteArray()
+                : default(Guid).ToByteArray();
         }
-
-        public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
-        {
-            if (_keyProvider == null)
-                throw new ConfigurationException($"The partition key provider was not found for message type: {TypeCache<T>.ShortName}");
-
-            builder.AddFilter(new PartitionFilter<ConsumeContext<T>>(_keyProvider, _partitioner));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (GlobalTopology.Send.GetMessageTopology<T>().TryGetConvention(out ICorrelationIdMessageSendTopologyConvention<T> convention)
-                && convention.TryGetMessageCorrelationId(out IMessageCorrelationId<T> messageCorrelationId))
-            {
-                _keyProvider = context => messageCorrelationId.TryGetCorrelationId(context.Message, out var correlationId)
-                    ? correlationId.ToByteArray()
-                    : default(Guid).ToByteArray();
-            }
-            else
-                yield return this.Failure("Partition", TypeCache<T>.ShortName, "A CorrelationId convention for this message type was not found.");
-        }
+        else
+            yield return this.Failure("Partition", TypeCache<T>.ShortName, "A CorrelationId convention for this message type was not found.");
     }
 }

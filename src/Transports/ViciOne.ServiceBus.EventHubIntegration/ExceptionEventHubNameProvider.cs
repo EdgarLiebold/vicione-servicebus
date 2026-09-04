@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
+using System;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Return the name of the event hub
+/// </summary>
+/// <typeparam name="TInstance"></typeparam>
+/// <typeparam name="TException"></typeparam>
+/// <typeparam name="TData"></typeparam>
+/// <param name="context"></param>
+/// <returns></returns>
+public delegate string ExceptionEventHubNameProvider<TInstance, in TData, in TException>(BehaviorExceptionContext<TInstance, TData, TException> context)
+    where TException : Exception
+    where TData : class
+    where TInstance : class, SagaStateMachineInstance;
 
 
-    /// <summary>
-    /// Return the name of the event hub
-    /// </summary>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <typeparam name="TData"></typeparam>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    public delegate string ExceptionEventHubNameProvider<TInstance, in TData, in TException>(BehaviorExceptionContext<TInstance, TData, TException> context)
-        where TException : Exception
-        where TData : class
-        where TInstance : class, SagaStateMachineInstance;
-
-
-    /// <summary>
-    /// Return the name of the event hub
-    /// </summary>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TException"></typeparam>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    public delegate string ExceptionEventHubNameProvider<TInstance, in TException>(BehaviorExceptionContext<TInstance, TException> context)
-        where TException : Exception
-        where TInstance : class, SagaStateMachineInstance;
-}
+/// <summary>
+/// Return the name of the event hub
+/// </summary>
+/// <typeparam name="TInstance"></typeparam>
+/// <typeparam name="TException"></typeparam>
+/// <param name="context"></param>
+/// <returns></returns>
+public delegate string ExceptionEventHubNameProvider<TInstance, in TException>(BehaviorExceptionContext<TInstance, TException> context)
+    where TException : Exception
+    where TInstance : class, SagaStateMachineInstance;

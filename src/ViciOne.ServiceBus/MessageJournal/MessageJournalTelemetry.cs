@@ -1,13 +1,13 @@
-#nullable enable
-namespace ViciOne.ServiceBus.MessageJournal;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Threading;
-using Metadata;
-using Monitoring;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Monitoring;
+
+#nullable enable
+namespace ViciOne.ServiceBus.MessageJournal;
 
 internal static class MessageJournalTelemetry
 {

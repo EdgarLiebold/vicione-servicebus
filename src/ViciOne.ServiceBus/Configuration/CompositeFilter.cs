@@ -1,25 +1,24 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CompositeFilter<T>
 {
-    public class CompositeFilter<T>
+    readonly CompositePredicate<T> _excludes = new CompositePredicate<T>();
+    readonly CompositePredicate<T> _includes = new CompositePredicate<T>();
+
+    public CompositePredicate<T> Includes
     {
-        readonly CompositePredicate<T> _excludes = new CompositePredicate<T>();
-        readonly CompositePredicate<T> _includes = new CompositePredicate<T>();
+        get => _includes;
+        set { }
+    }
 
-        public CompositePredicate<T> Includes
-        {
-            get => _includes;
-            set { }
-        }
+    public CompositePredicate<T> Excludes
+    {
+        get => _excludes;
+        set { }
+    }
 
-        public CompositePredicate<T> Excludes
-        {
-            get => _excludes;
-            set { }
-        }
-
-        public bool Matches(T target)
-        {
-            return Includes.MatchesAny(target) && Excludes.DoesNotMatcheAny(target);
-        }
+    public bool Matches(T target)
+    {
+        return Includes.MatchesAny(target) && Excludes.DoesNotMatcheAny(target);
     }
 }

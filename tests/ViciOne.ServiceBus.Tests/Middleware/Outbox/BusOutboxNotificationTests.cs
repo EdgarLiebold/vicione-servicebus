@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.Tests.Middleware.Outbox;
-
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.Middleware.Outbox;
 
 public sealed class BusOutboxNotificationTests
 {

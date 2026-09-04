@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CorrelatedByEventCorrelationBuilder<TInstance, TData> :
+    IEventCorrelationBuilder
+    where TData : class, CorrelatedBy<Guid>
+    where TInstance : class, SagaStateMachineInstance
 {
-    using System;
+    readonly StateMachineInterfaceType<TInstance, TData>.ViciOneServiceBusEventCorrelationConfigurator _configurator;
 
-
-    public class CorrelatedByEventCorrelationBuilder<TInstance, TData> :
-        IEventCorrelationBuilder
-        where TData : class, CorrelatedBy<Guid>
-        where TInstance : class, SagaStateMachineInstance
+    public CorrelatedByEventCorrelationBuilder(SagaStateMachine<TInstance> machine, Event<TData> @event)
     {
-        readonly StateMachineInterfaceType<TInstance, TData>.ViciOneServiceBusEventCorrelationConfigurator _configurator;
+        var configurator = new StateMachineInterfaceType<TInstance, TData>.ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
+        configurator.CorrelateById(x => x.Message.CorrelationId);
 
-        public CorrelatedByEventCorrelationBuilder(SagaStateMachine<TInstance> machine, Event<TData> @event)
-        {
-            var configurator = new StateMachineInterfaceType<TInstance, TData>.ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
-            configurator.CorrelateById(x => x.Message.CorrelationId);
+        _configurator = configurator;
+    }
 
-            _configurator = configurator;
-        }
-
-        public EventCorrelation Build()
-        {
-            return _configurator.Build();
-        }
+    public EventCorrelation Build()
+    {
+        return _configurator.Build();
     }
 }

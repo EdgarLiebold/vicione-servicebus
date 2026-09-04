@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IDispatchMetrics
 {
-    public interface IDispatchMetrics
-    {
-        int ActiveDispatchCount { get; }
-        long DispatchCount { get; }
-        int MaxConcurrentDispatchCount { get; }
+    int ActiveDispatchCount { get; }
+    long DispatchCount { get; }
+    int MaxConcurrentDispatchCount { get; }
 
-        event ZeroActiveDispatchHandler ZeroActivity;
+    event ZeroActiveDispatchHandler ZeroActivity;
 
-        DeliveryMetrics GetMetrics();
-    }
+    DeliveryMetrics GetMetrics();
 }

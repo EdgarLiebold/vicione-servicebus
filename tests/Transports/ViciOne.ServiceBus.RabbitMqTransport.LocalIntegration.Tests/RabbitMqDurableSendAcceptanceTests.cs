@@ -1,13 +1,13 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests;
-
 using System.Net.Mime;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+#nullable enable
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests;
 
 public sealed class RabbitMqDurableSendAcceptanceTests
 {

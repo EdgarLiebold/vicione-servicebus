@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.Collections.Frozen;
 
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>Immutable diagnostic-sensitivity metadata for one runtime message type.</summary>
 public sealed record MessageSensitivityDescriptor
 {

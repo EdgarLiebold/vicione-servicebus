@@ -1,11 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
-using Configuration;
-using RetryPolicies;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.RetryPolicies;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Provides the canonical bounded policy for technical message retry and redelivery.
 /// </summary>

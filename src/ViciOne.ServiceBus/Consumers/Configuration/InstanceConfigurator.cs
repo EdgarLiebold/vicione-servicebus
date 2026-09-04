@@ -1,140 +1,138 @@
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Internals;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InstanceConfigurator :
+    IInstanceConfigurator,
+    IReceiveEndpointSpecification
 {
-    using System;
-    using System.Collections.Generic;
-    using Internals;
+    readonly object _instance;
 
-
-    public class InstanceConfigurator :
-        IInstanceConfigurator,
-        IReceiveEndpointSpecification
+    public InstanceConfigurator(object instance)
     {
-        readonly object _instance;
+        if (instance == null)
+            throw new ArgumentNullException(nameof(instance));
 
-        public InstanceConfigurator(object instance)
-        {
-            if (instance == null)
-                throw new ArgumentNullException(nameof(instance));
-
-            _instance = instance;
-        }
-
-        public void Configure(IReceiveEndpointBuilder builder)
-        {
-            ArgumentNullException.ThrowIfNull(builder);
-
-            InstanceConnectorCache.GetInstanceConnector(_instance.GetType()).ConnectInstance(builder, _instance);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (!_instance.GetType().ImplementsInterface<IConsumer>())
-                yield return this.Warning($"The instance of {TypeCache.GetShortName(_instance.GetType())} does not implement any consumer interfaces");
-        }
+        _instance = instance;
     }
 
-
-    public class InstanceConfigurator<TInstance> :
-        IInstanceConfigurator<TInstance>,
-        IReceiveEndpointSpecification
-        where TInstance : class, IConsumer
+    public void Configure(IReceiveEndpointBuilder builder)
     {
-        readonly TInstance _instance;
-        readonly IConsumerSpecification<TInstance> _specification;
+        ArgumentNullException.ThrowIfNull(builder);
 
-        public InstanceConfigurator(TInstance instance, IConsumerConfigurationObserver observer)
-        {
-            _instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            ArgumentNullException.ThrowIfNull(observer);
+        InstanceConnectorCache.GetInstanceConnector(_instance.GetType()).ConnectInstance(builder, _instance);
+    }
 
-            _specification = ConsumerConnectorCache<TInstance>.Connector.CreateConsumerSpecification<TInstance>();
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (!_instance.GetType().ImplementsInterface<IConsumer>())
+            yield return this.Warning($"The instance of {TypeCache.GetShortName(_instance.GetType())} does not implement any consumer interfaces");
+    }
+}
 
-            _specification.ConnectConsumerConfigurationObserver(observer);
-        }
 
-        public void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure)
-            where T : class
-        {
-            IConsumerMessageSpecification<TInstance, T> specification = _specification.GetMessageSpecification<T>();
+public class InstanceConfigurator<TInstance> :
+    IInstanceConfigurator<TInstance>,
+    IReceiveEndpointSpecification
+    where TInstance : class, IConsumer
+{
+    readonly TInstance _instance;
+    readonly IConsumerSpecification<TInstance> _specification;
 
-            configure?.Invoke(specification);
-        }
+    public InstanceConfigurator(TInstance instance, IConsumerConfigurationObserver observer)
+    {
+        _instance = instance ?? throw new ArgumentNullException(nameof(instance));
+        ArgumentNullException.ThrowIfNull(observer);
 
-        public void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TInstance, T>>? configure)
-            where T : class
-        {
-            IConsumerMessageSpecification<TInstance, T> specification = _specification.GetMessageSpecification<T>();
+        _specification = ConsumerConnectorCache<TInstance>.Connector.CreateConsumerSpecification<TInstance>();
 
-            configure?.Invoke(specification);
-        }
+        _specification.ConnectConsumerConfigurationObserver(observer);
+    }
 
-        public T Options<T>(Action<T>? configure = null)
-            where T : IOptions, new()
-        {
-            return _specification.Options(configure);
-        }
+    public void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure)
+        where T : class
+    {
+        IConsumerMessageSpecification<TInstance, T> specification = _specification.GetMessageSpecification<T>();
 
-        public T Options<T>(T options, Action<T>? configure = null)
-            where T : IOptions
-        {
-            return _specification.Options(options, configure);
-        }
+        configure?.Invoke(specification);
+    }
 
-        public bool TryGetOptions<T>(out T options)
-            where T : IOptions
-        {
-            return _specification.TryGetOptions(out options);
-        }
+    public void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TInstance, T>>? configure)
+        where T : class
+    {
+        IConsumerMessageSpecification<TInstance, T> specification = _specification.GetMessageSpecification<T>();
 
-        public IEnumerable<T> SelectOptions<T>()
-            where T : class
-        {
-            return _specification.SelectOptions<T>();
-        }
+        configure?.Invoke(specification);
+    }
 
-        public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TInstance>> specification)
-        {
-            ArgumentNullException.ThrowIfNull(specification);
+    public T Options<T>(Action<T>? configure = null)
+        where T : IOptions, new()
+    {
+        return _specification.Options(configure);
+    }
 
-            _specification.AddPipeSpecification(specification);
-        }
+    public T Options<T>(T options, Action<T>? configure = null)
+        where T : IOptions
+    {
+        return _specification.Options(options, configure);
+    }
 
-        public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
-        {
-            return _specification.ConnectConsumerConfigurationObserver(observer);
-        }
+    public bool TryGetOptions<T>(out T options)
+        where T : IOptions
+    {
+        return _specification.TryGetOptions(out options);
+    }
 
-        public int? ConcurrentMessageLimit
-        {
-            set => _specification.ConcurrentMessageLimit = value;
-        }
+    public IEnumerable<T> SelectOptions<T>()
+        where T : class
+    {
+        return _specification.SelectOptions<T>();
+    }
 
-        public ConsumerConcurrencyPolicy ConcurrencyPolicy
-        {
-            set => _specification.ConcurrencyPolicy = value;
-        }
+    public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TInstance>> specification)
+    {
+        ArgumentNullException.ThrowIfNull(specification);
 
-        public void UsePartitionedConcurrency<TMessage, TKey>(
-            int partitionCount,
-            ConsumerPartitionKeySelector<TMessage, TKey> selector,
-            IEqualityComparer<TKey>? comparer = null)
-            where TMessage : class
-            where TKey : notnull
-        {
-            _specification.UsePartitionedConcurrency(partitionCount, selector, comparer);
-        }
+        _specification.AddPipeSpecification(specification);
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            return _specification.Validate();
-        }
+    public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
+    {
+        return _specification.ConnectConsumerConfigurationObserver(observer);
+    }
 
-        public void Configure(IReceiveEndpointBuilder builder)
-        {
-            ArgumentNullException.ThrowIfNull(builder);
+    public int? ConcurrentMessageLimit
+    {
+        set => _specification.ConcurrentMessageLimit = value;
+    }
 
-            InstanceConnectorCache<TInstance>.Connector.ConnectInstance(builder, _instance, _specification);
-        }
+    public ConsumerConcurrencyPolicy ConcurrencyPolicy
+    {
+        set => _specification.ConcurrencyPolicy = value;
+    }
+
+    public void UsePartitionedConcurrency<TMessage, TKey>(
+        int partitionCount,
+        ConsumerPartitionKeySelector<TMessage, TKey> selector,
+        IEqualityComparer<TKey>? comparer = null)
+        where TMessage : class
+        where TKey : notnull
+    {
+        _specification.UsePartitionedConcurrency(partitionCount, selector, comparer);
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _specification.Validate();
+    }
+
+    public void Configure(IReceiveEndpointBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        InstanceConnectorCache<TInstance>.Connector.ConnectInstance(builder, _instance, _specification);
     }
 }

@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface ReceiveEndpointFaulted :
+    ReceiveEndpointEvent
 {
-    using System;
-
-
-    public interface ReceiveEndpointFaulted :
-        ReceiveEndpointEvent
-    {
-        Exception Exception { get; }
-        bool IsTerminal { get; }
-    }
+    Exception Exception { get; }
+    bool IsTerminal { get; }
 }

@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Adds a fork to the pipe
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+public class InterceptPipeSpecification<TContext> :
+    IPipeSpecification<TContext>
+    where TContext : class, PipeContext
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IPipe<TContext> _pipe;
 
-
-    /// <summary>
-    /// Adds a fork to the pipe
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public class InterceptPipeSpecification<TContext> :
-        IPipeSpecification<TContext>
-        where TContext : class, PipeContext
+    public InterceptPipeSpecification(IPipe<TContext> pipe)
     {
-        readonly IPipe<TContext> _pipe;
+        _pipe = pipe;
+    }
 
-        public InterceptPipeSpecification(IPipe<TContext> pipe)
-        {
-            _pipe = pipe;
-        }
+    public void Apply(IPipeBuilder<TContext> builder)
+    {
+        builder.AddFilter(new InterceptFilter<TContext>(_pipe));
+    }
 
-        public void Apply(IPipeBuilder<TContext> builder)
-        {
-            builder.AddFilter(new InterceptFilter<TContext>(_pipe));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_pipe == null)
-                yield return this.Failure("Pipe", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_pipe == null)
+            yield return this.Failure("Pipe", "must not be null");
     }
 }

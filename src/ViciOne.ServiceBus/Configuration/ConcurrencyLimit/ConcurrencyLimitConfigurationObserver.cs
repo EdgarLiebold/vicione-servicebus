@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Adds a concurrency limit filter for each message type configured on the consume pipe
+/// </summary>
+public class ConcurrencyLimitConfigurationObserver :
+    ConfigurationObserver,
+    IMessageConfigurationObserver
 {
-    using Middleware;
-
-
-    /// <summary>
-    /// Adds a concurrency limit filter for each message type configured on the consume pipe
-    /// </summary>
-    public class ConcurrencyLimitConfigurationObserver :
-        ConfigurationObserver,
-        IMessageConfigurationObserver
+    public ConcurrencyLimitConfigurationObserver(IConsumePipeConfigurator configurator, int concurrentMessageLimit, string id = null)
+        : base(configurator)
     {
-        public ConcurrencyLimitConfigurationObserver(IConsumePipeConfigurator configurator, int concurrentMessageLimit, string id = null)
-            : base(configurator)
-        {
-            Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
+        Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
 
-            Connect(this);
-        }
+        Connect(this);
+    }
 
-        public IConcurrencyLimiter Limiter { get; }
+    public IConcurrencyLimiter Limiter { get; }
 
-        public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
-            where TMessage : class
-        {
-            var specification = new ConcurrencyLimitConsumePipeSpecification<TMessage>(Limiter);
+    public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
+        where TMessage : class
+    {
+        var specification = new ConcurrencyLimitConsumePipeSpecification<TMessage>(Limiter);
 
-            configurator.AddPipeSpecification(specification);
-        }
+        configurator.AddPipeSpecification(specification);
     }
 }

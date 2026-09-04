@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IEndpointConfigurationObserver
 {
-    public interface IEndpointConfigurationObserver
-    {
-        /// <summary>
-        /// Called when an endpoint is configured
-        /// </summary>
-        /// <typeparam name="T">The receive endpoint configurator type</typeparam>
-        /// <param name="configurator"></param>
-        void EndpointConfigured<T>(T configurator)
-            where T : IReceiveEndpointConfigurator;
-    }
+    /// <summary>
+    /// Called when an endpoint is configured
+    /// </summary>
+    /// <typeparam name="T">The receive endpoint configurator type</typeparam>
+    /// <param name="configurator"></param>
+    void EndpointConfigured<T>(T configurator)
+        where T : IReceiveEndpointConfigurator;
 }

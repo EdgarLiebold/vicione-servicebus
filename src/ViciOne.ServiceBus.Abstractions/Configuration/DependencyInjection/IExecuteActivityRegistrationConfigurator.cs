@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
+    IExecuteActivityRegistrationConfigurator
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System;
+}
 
 
-    public interface IExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
-        IExecuteActivityRegistrationConfigurator
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-    }
-
-
-    public interface IExecuteActivityRegistrationConfigurator
-    {
-        void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
-        void ExcludeFromConfigureEndpoints();
-    }
+public interface IExecuteActivityRegistrationConfigurator
+{
+    void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
+    void ExcludeFromConfigureEndpoints();
 }

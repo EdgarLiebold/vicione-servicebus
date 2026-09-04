@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.Analyzers
+using System;
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace ViciOne.ServiceBus.Analyzers;
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class AsyncMethodAnalyzer :
+    DiagnosticAnalyzer
 {
-    using System;
-    using System.Collections.Immutable;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Diagnostics;
+    public const string MissingAwaitRuleId = "ViciOneServiceBus0001";
 
+    const string Category = "Usage";
 
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class AsyncMethodAnalyzer :
-        DiagnosticAnalyzer
+    static readonly DiagnosticDescriptor MissingAwaitRule = new DiagnosticDescriptor(MissingAwaitRuleId,
+        "ViciOne.ServiceBus method is not awaited or captured",
+        "Method {0} is not awaited or captured and may result in message loss",
+        Category, DiagnosticSeverity.Warning, true,
+        "ViciOne.ServiceBus method is not awaited or captured.");
+
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MissingAwaitRule);
+
+    public override void Initialize(AnalysisContext context)
     {
-        public const string MissingAwaitRuleId = "ViciOneServiceBus0001";
+        if (context == null)
+            throw new ArgumentNullException(nameof(context));
 
-        const string Category = "Usage";
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
 
-        static readonly DiagnosticDescriptor MissingAwaitRule = new DiagnosticDescriptor(MissingAwaitRuleId,
-            "ViciOne.ServiceBus method is not awaited or captured",
-            "Method {0} is not awaited or captured and may result in message loss",
-            Category, DiagnosticSeverity.Warning, true,
-            "ViciOne.ServiceBus method is not awaited or captured.");
+        context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
+    }
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(MissingAwaitRule);
+    static void AnalyzeNode(SyntaxNodeAnalysisContext context)
+    {
+        var invocationExpression = (InvocationExpressionSyntax)context.Node;
 
-        public override void Initialize(AnalysisContext context)
+        var symbol = context.SemanticModel.GetSymbolInfo(invocationExpression);
+        if (symbol.Symbol?.Kind == SymbolKind.Method)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            var methodSymbol = (IMethodSymbol)symbol.Symbol;
 
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-            context.EnableConcurrentExecution();
-
-            context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.InvocationExpression);
-        }
-
-        static void AnalyzeNode(SyntaxNodeAnalysisContext context)
-        {
-            var invocationExpression = (InvocationExpressionSyntax)context.Node;
-
-            var symbol = context.SemanticModel.GetSymbolInfo(invocationExpression);
-            if (symbol.Symbol?.Kind == SymbolKind.Method)
+            if (methodSymbol.IsProducerMethod(out _) && methodSymbol.ReturnsTask())
             {
-                var methodSymbol = (IMethodSymbol)symbol.Symbol;
-
-                if (methodSymbol.IsProducerMethod(out _) && methodSymbol.ReturnsTask())
+                if (invocationExpression.Parent is ExpressionStatementSyntax)
                 {
-                    if (invocationExpression.Parent is ExpressionStatementSyntax)
-                    {
-                        context.ReportDiagnostic(Diagnostic.Create(MissingAwaitRule, invocationExpression.GetLocation(),
-                            SymbolDisplay.ToDisplayString(methodSymbol,
-                                SymbolDisplayFormat.CSharpShortErrorMessageFormat.WithParameterOptions(SymbolDisplayParameterOptions.None))));
-                    }
+                    context.ReportDiagnostic(Diagnostic.Create(MissingAwaitRule, invocationExpression.GetLocation(),
+                        SymbolDisplay.ToDisplayString(methodSymbol,
+                            SymbolDisplayFormat.CSharpShortErrorMessageFormat.WithParameterOptions(SymbolDisplayParameterOptions.None))));
                 }
             }
         }

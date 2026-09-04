@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IRegistrationRiderFactory<in TRider>
+    where TRider : IRider
 {
-    using Configuration;
-    using Transports;
-
-
-    public interface IRegistrationRiderFactory<in TRider>
-        where TRider : IRider
-    {
-        IBusInstanceSpecification CreateRider(IRiderRegistrationContext context);
-    }
+    IBusInstanceSpecification CreateRider(IRiderRegistrationContext context);
 }

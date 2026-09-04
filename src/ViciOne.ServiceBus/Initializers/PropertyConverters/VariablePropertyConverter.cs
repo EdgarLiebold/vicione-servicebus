@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyConverters
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
+
+public class VariablePropertyConverter<TResult, TVariable> :
+    IPropertyConverter<TResult, TVariable>
+    where TVariable : class, IInitializerVariable<TResult>
 {
-    using System.Threading.Tasks;
-    using Util;
-
-
-    public class VariablePropertyConverter<TResult, TVariable> :
-        IPropertyConverter<TResult, TVariable>
-        where TVariable : class, IInitializerVariable<TResult>
+    public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
+        where T : class
     {
-        public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
-            where T : class
-        {
-            return input?.GetValue(context) ?? TaskResults.Default<TResult>();
-        }
+        return input?.GetValue(context) ?? TaskResults.Default<TResult>();
+    }
+}
+
+
+public class VariablePropertyConverter<TResult, TVariable, TValue> :
+    IPropertyConverter<TResult, TVariable>
+    where TVariable : class, IInitializerVariable<TValue>
+{
+    readonly IPropertyConverter<TResult, TValue> _propertyConverter;
+
+    public VariablePropertyConverter(IPropertyConverter<TResult, TValue> propertyConverter)
+    {
+        _propertyConverter = propertyConverter;
     }
 
-
-    public class VariablePropertyConverter<TResult, TVariable, TValue> :
-        IPropertyConverter<TResult, TVariable>
-        where TVariable : class, IInitializerVariable<TValue>
+    public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
+        where T : class
     {
-        readonly IPropertyConverter<TResult, TValue> _propertyConverter;
+        if (input == default)
+            return default;
 
-        public VariablePropertyConverter(IPropertyConverter<TResult, TValue> propertyConverter)
+        Task<TValue> inputTask = input.GetValue(context);
+        if (inputTask.Status == TaskStatus.RanToCompletion)
+            return _propertyConverter.Convert(context, inputTask.Result);
+
+        async Task<TResult> ConvertAsync()
         {
-            _propertyConverter = propertyConverter;
+            var value = await inputTask.ConfigureAwait(false);
+
+            Task<TResult> convertTask = _propertyConverter.Convert(context, value);
+            if (convertTask.Status == TaskStatus.RanToCompletion)
+                return convertTask.Result;
+
+            return await convertTask.ConfigureAwait(false);
         }
 
-        public Task<TResult> Convert<T>(InitializeContext<T> context, TVariable input)
-            where T : class
-        {
-            if (input == default)
-                return default;
-
-            Task<TValue> inputTask = input.GetValue(context);
-            if (inputTask.Status == TaskStatus.RanToCompletion)
-                return _propertyConverter.Convert(context, inputTask.Result);
-
-            async Task<TResult> ConvertAsync()
-            {
-                var value = await inputTask.ConfigureAwait(false);
-
-                Task<TResult> convertTask = _propertyConverter.Convert(context, value);
-                if (convertTask.Status == TaskStatus.RanToCompletion)
-                    return convertTask.Result;
-
-                return await convertTask.ConfigureAwait(false);
-            }
-
-            return ConvertAsync();
-        }
+        return ConvertAsync();
     }
 }

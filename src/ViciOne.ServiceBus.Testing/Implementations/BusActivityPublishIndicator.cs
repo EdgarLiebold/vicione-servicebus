@@ -1,94 +1,92 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+/// <summary>
+/// An activity indicator for publish endpoints. Utilizes a timer that restarts on publish activity.
+/// </summary>
+public class BusActivityPublishIndicator : BaseBusActivityIndicatorConnectable,
+    IDisposable,
+    ISignalResource,
+    IPublishObserver
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Util;
+    readonly RollingTimer _receiveIdleTimer;
+    readonly ISignalResource _signalResource;
+    int _activityStarted;
 
-
-    /// <summary>
-    /// An activity indicator for publish endpoints. Utilizes a timer that restarts on publish activity.
-    /// </summary>
-    public class BusActivityPublishIndicator : BaseBusActivityIndicatorConnectable,
-        IDisposable,
-        ISignalResource,
-        IPublishObserver
+    public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
+        : this(signalResource, receiveIdleTimeout, TimeProvider.System)
     {
-        readonly RollingTimer _receiveIdleTimer;
-        readonly ISignalResource _signalResource;
-        int _activityStarted;
+    }
 
-        public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout)
-            : this(signalResource, receiveIdleTimeout, TimeProvider.System)
-        {
-        }
+    public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
+    {
+        _signalResource = signalResource;
+        _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
+    }
 
-        public BusActivityPublishIndicator(ISignalResource signalResource, TimeSpan receiveIdleTimeout, TimeProvider timeProvider)
-        {
-            _signalResource = signalResource;
-            _receiveIdleTimer = new RollingTimer(SignalInactivity, receiveIdleTimeout, null, timeProvider);
-        }
+    public BusActivityPublishIndicator(ISignalResource signalResource)
+        :
+        this(signalResource, TimeSpan.FromSeconds(5))
+    {
+    }
 
-        public BusActivityPublishIndicator(ISignalResource signalResource)
-            :
-            this(signalResource, TimeSpan.FromSeconds(5))
-        {
-        }
+    public BusActivityPublishIndicator(TimeSpan receiveIdleTimeout)
+        :
+        this(null, receiveIdleTimeout)
+    {
+    }
 
-        public BusActivityPublishIndicator(TimeSpan receiveIdleTimeout)
-            :
-            this(null, receiveIdleTimeout)
-        {
-        }
+    public BusActivityPublishIndicator()
+        :
+        this(null)
+    {
+    }
 
-        public BusActivityPublishIndicator()
-            :
-            this(null)
-        {
-        }
+    public override bool IsMet =>
+        _receiveIdleTimer.Triggered ||
+        Interlocked.CompareExchange(ref _activityStarted, int.MinValue, int.MinValue) == 0;
 
-        public override bool IsMet =>
-            _receiveIdleTimer.Triggered ||
-            Interlocked.CompareExchange(ref _activityStarted, int.MinValue, int.MinValue) == 0;
+    public void Signal()
+    {
+        SignalInactivity(null);
+    }
 
-        public void Signal()
-        {
-            SignalInactivity(null);
-        }
+    public void Dispose()
+    {
+        _receiveIdleTimer.Dispose();
+    }
 
-        public void Dispose()
-        {
-            _receiveIdleTimer.Dispose();
-        }
+    public Task PrePublish<T>(PublishContext<T> context)
+        where T : class
+    {
+        Interlocked.CompareExchange(ref _activityStarted, 1, 0);
+        _receiveIdleTimer.Restart();
+        return Task.CompletedTask;
+    }
 
-        public Task PrePublish<T>(PublishContext<T> context)
-            where T : class
-        {
-            Interlocked.CompareExchange(ref _activityStarted, 1, 0);
-            _receiveIdleTimer.Restart();
-            return Task.CompletedTask;
-        }
+    public Task PostPublish<T>(PublishContext<T> context)
+        where T : class
+    {
+        _receiveIdleTimer.Restart();
+        return Task.CompletedTask;
+    }
 
-        public Task PostPublish<T>(PublishContext<T> context)
-            where T : class
-        {
-            _receiveIdleTimer.Restart();
-            return Task.CompletedTask;
-        }
+    public Task PublishFault<T>(PublishContext<T> context, Exception exception)
+        where T : class
+    {
+        _receiveIdleTimer.Restart();
+        return Task.CompletedTask;
+    }
 
-        public Task PublishFault<T>(PublishContext<T> context, Exception exception)
-            where T : class
-        {
-            _receiveIdleTimer.Restart();
-            return Task.CompletedTask;
-        }
-
-        void SignalInactivity(object state)
-        {
-            _signalResource?.Signal();
-            ConditionUpdated();
-            Interlocked.CompareExchange(ref _activityStarted, 0, 1);
-            _receiveIdleTimer.Stop();
-        }
+    void SignalInactivity(object state)
+    {
+        _signalResource?.Signal();
+        ConditionUpdated();
+        Interlocked.CompareExchange(ref _activityStarted, 0, 1);
+        _receiveIdleTimer.Stop();
     }
 }

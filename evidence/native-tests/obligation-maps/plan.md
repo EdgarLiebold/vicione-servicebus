@@ -1680,7 +1680,7 @@ source-derived gaps in the complete Azure Table product path.
 Work from accepted product commit `427894348e992551c8d2ae15095c416d2cc1b329`, tree
 `ae33fd04f6a3957b00ccb4ee59889d91383678e5`, under architecture assignment
 `PO-2026-08-27-02`. The immutable R0 input is the 111-row set projected in
-`.testagent/aws-native-obligation-map.tsv`. This plan and the research section above must be committed,
+`evidence/native-tests/obligation-maps/aws-native-obligation-map.tsv`. This plan and the research section above must be committed,
 pushed and hash-bound by the architecture order before the first product or test edit.
 
 1. Extend the one existing test configuration and fixture pipeline rather than creating AWS-specific
@@ -1797,7 +1797,7 @@ acceptance; the real-AWS External boundary and the 111-row inherited disposition
 
 Baseline: product commit `9195e5fcde26b5a525d00fe716fcc7c21256f5c1`, tree
 `e3310be174e31fa3a999c8dd4d4bc08e535b0ab7`. The exact 113-row inherited projection is
-`.testagent/activemq-native-obligation-map.tsv`. Research, this plan and that table must be committed,
+`evidence/native-tests/obligation-maps/activemq-native-obligation-map.tsv`. Research, this plan and that table must be committed,
 hashed and bound by the Lead architecture order before the first product or test edit.
 
 1. Extend the existing typed test configuration with two explicit resources, `ActiveMq` and
@@ -1881,7 +1881,7 @@ hashed and bound by the Lead architecture order before the first product or test
 
 Work from accepted commit `b198d26bc311dd8946006534ebddd8d5282e8006`, tree
 `c25e20f35cf493e906cd7688f6320d91f09004d3`. Before the first product or test edit, commit this plan,
-the research section above and `.testagent/transactional-bus-obligation-map.tsv`, push the checkpoint
+the research section above and `evidence/native-tests/obligation-maps/transactional-bus-obligation-map.tsv`, push the checkpoint
 and bind their hashes plus the exact scope in the Lead architecture order.
 
 1. Replace `ITransactionalBus` with two truthful Greenfield capabilities:
@@ -2019,7 +2019,7 @@ Acceptance checklist to concrete test owners:
 
 ## Diagnostics native closure execution plan
 
-1. Bind `OBL-R0-SML-0222..0265` in `.testagent/diagnostics-native-obligation-map.tsv` to 44 unique
+1. Bind `OBL-R0-SML-0222..0265` in `evidence/native-tests/obligation-maps/diagnostics-native-obligation-map.tsv` to 44 unique
    source-mirrored xUnit carriers: 11 command-line, 10 ledger, 11 observation-boundary and 12
    result-delivery/cancellation cases. The five inherited verdict Theory rows remain five separately
    attributable executable cases.

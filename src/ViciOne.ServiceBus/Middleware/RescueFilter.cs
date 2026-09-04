@@ -1,67 +1,65 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Rescue catches an exception, and if the exception matches the exception filter,
+/// passes control to the rescue pipe.
+/// </summary>
+/// <typeparam name="TContext">The context type</typeparam>
+/// <typeparam name="TRescueContext"></typeparam>
+public class RescueFilter<TContext, TRescueContext> :
+    IFilter<TContext>
+    where TContext : class, PipeContext
+    where TRescueContext : class, PipeContext
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    readonly IExceptionFilter _exceptionFilter;
+    readonly RescueContextFactory<TContext, TRescueContext> _rescueContextFactory;
+    readonly IPipe<TRescueContext> _rescuePipe;
 
-
-    /// <summary>
-    /// Rescue catches an exception, and if the exception matches the exception filter,
-    /// passes control to the rescue pipe.
-    /// </summary>
-    /// <typeparam name="TContext">The context type</typeparam>
-    /// <typeparam name="TRescueContext"></typeparam>
-    public class RescueFilter<TContext, TRescueContext> :
-        IFilter<TContext>
-        where TContext : class, PipeContext
-        where TRescueContext : class, PipeContext
+    public RescueFilter(IPipe<TRescueContext> rescuePipe, IExceptionFilter exceptionFilter,
+        RescueContextFactory<TContext, TRescueContext> rescueContextFactory)
     {
-        readonly IExceptionFilter _exceptionFilter;
-        readonly RescueContextFactory<TContext, TRescueContext> _rescueContextFactory;
-        readonly IPipe<TRescueContext> _rescuePipe;
+        _rescuePipe = rescuePipe ?? throw new ArgumentNullException(nameof(rescuePipe));
+        _exceptionFilter = exceptionFilter ?? throw new ArgumentNullException(nameof(exceptionFilter));
+        _rescueContextFactory = rescueContextFactory ?? throw new ArgumentNullException(nameof(rescueContextFactory));
+    }
 
-        public RescueFilter(IPipe<TRescueContext> rescuePipe, IExceptionFilter exceptionFilter,
-            RescueContextFactory<TContext, TRescueContext> rescueContextFactory)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("rescue");
+
+        _rescuePipe.Probe(scope);
+    }
+
+    [DebuggerNonUserCode]
+    async Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    {
+        try
         {
-            _rescuePipe = rescuePipe ?? throw new ArgumentNullException(nameof(rescuePipe));
-            _exceptionFilter = exceptionFilter ?? throw new ArgumentNullException(nameof(exceptionFilter));
-            _rescueContextFactory = rescueContextFactory ?? throw new ArgumentNullException(nameof(rescueContextFactory));
+            await next.Send(context).ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        catch (AggregateException ex)
         {
-            var scope = context.CreateFilterScope("rescue");
+            if (!_exceptionFilter.Match(ex.GetBaseException()))
+                throw;
 
-            _rescuePipe.Probe(scope);
+            var rescueContext = _rescueContextFactory(context, ex)
+                ?? throw new InvalidOperationException("The rescue context factory returned null.");
+
+            await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
         }
-
-        [DebuggerNonUserCode]
-        async Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+        catch (Exception ex)
         {
-            try
-            {
-                await next.Send(context).ConfigureAwait(false);
-            }
-            catch (AggregateException ex)
-            {
-                if (!_exceptionFilter.Match(ex.GetBaseException()))
-                    throw;
+            if (!_exceptionFilter.Match(ex))
+                throw;
 
-                var rescueContext = _rescueContextFactory(context, ex)
-                    ?? throw new InvalidOperationException("The rescue context factory returned null.");
+            var rescueContext = _rescueContextFactory(context, ex)
+                ?? throw new InvalidOperationException("The rescue context factory returned null.");
 
-                await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                if (!_exceptionFilter.Match(ex))
-                    throw;
-
-                var rescueContext = _rescueContextFactory(context, ex)
-                    ?? throw new InvalidOperationException("The rescue context factory returned null.");
-
-                await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
-            }
+            await _rescuePipe.Send(rescueContext).ConfigureAwait(false);
         }
     }
 }

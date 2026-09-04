@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Used to visit the state machine structure, so it can be displayed, etc.
+/// </summary>
+public interface IVisitable :
+    IProbeSite
 {
     /// <summary>
-    /// Used to visit the state machine structure, so it can be displayed, etc.
+    /// A visitable site can accept the visitor and pass control to internal elements
     /// </summary>
-    public interface IVisitable :
-        IProbeSite
-    {
-        /// <summary>
-        /// A visitable site can accept the visitor and pass control to internal elements
-        /// </summary>
-        /// <param name="visitor"></param>
-        void Accept(StateMachineVisitor visitor);
-    }
+    /// <param name="visitor"></param>
+    void Accept(StateMachineVisitor visitor);
 }

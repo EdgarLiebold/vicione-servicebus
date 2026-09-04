@@ -1,47 +1,45 @@
-namespace ViciOne.ServiceBus.Saga
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Logging;
+
+namespace ViciOne.ServiceBus.Saga;
+
+/// <summary>
+/// Creates a saga instance using the default factory method
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class FactoryMethodSagaFactory<TSaga, TMessage> :
+    ISagaFactory<TSaga, TMessage>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System.Threading.Tasks;
-    using Context;
-    using Logging;
+    readonly SagaFactoryMethod<TSaga, TMessage> _factoryMethod;
 
-
-    /// <summary>
-    /// Creates a saga instance using the default factory method
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class FactoryMethodSagaFactory<TSaga, TMessage> :
-        ISagaFactory<TSaga, TMessage>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public FactoryMethodSagaFactory(SagaFactoryMethod<TSaga, TMessage> factoryMethod)
     {
-        readonly SagaFactoryMethod<TSaga, TMessage> _factoryMethod;
+        _factoryMethod = factoryMethod;
+    }
 
-        public FactoryMethodSagaFactory(SagaFactoryMethod<TSaga, TMessage> factoryMethod)
-        {
-            _factoryMethod = factoryMethod;
-        }
+    public TSaga Create(ConsumeContext<TMessage> context)
+    {
+        if (!context.CorrelationId.HasValue)
+            throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
 
-        public TSaga Create(ConsumeContext<TMessage> context)
-        {
-            if (!context.CorrelationId.HasValue)
-                throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
+        return _factoryMethod(context);
+    }
 
-            return _factoryMethod(context);
-        }
+    public Task Send(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    {
+        if (!context.CorrelationId.HasValue)
+            throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
 
-        public Task Send(ConsumeContext<TMessage> context, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
-        {
-            if (!context.CorrelationId.HasValue)
-                throw new SagaException("The correlationId was not present and the saga could not be created", typeof(TSaga), typeof(TMessage));
+        var instance = _factoryMethod(context);
 
-            var instance = _factoryMethod(context);
+        var proxy = new DefaultSagaConsumeContext<TSaga, TMessage>(context, instance);
 
-            var proxy = new DefaultSagaConsumeContext<TSaga, TMessage>(context, instance);
+        proxy.LogCreated();
 
-            proxy.LogCreated();
-
-            return next.Send(proxy);
-        }
+        return next.Send(proxy);
     }
 }

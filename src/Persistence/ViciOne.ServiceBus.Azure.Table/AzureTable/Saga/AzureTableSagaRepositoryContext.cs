@@ -1,211 +1,209 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure;
+using Azure.Data.Tables;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.AzureTable.Saga;
+
+public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
+    ConsumeContextScope<TMessage>,
+    SagaRepositoryContext<TSaga, TMessage>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure;
-    using Azure.Data.Tables;
-    using Context;
-    using Logging;
-    using ViciOne.ServiceBus.Saga;
-    using Middleware;
+    readonly ConsumeContext<TMessage> _consumeContext;
+    readonly DatabaseContext<TSaga> _context;
+    readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
 
-
-    public class AzureTableSagaRepositoryContext<TSaga, TMessage> :
-        ConsumeContextScope<TMessage>,
-        SagaRepositoryContext<TSaga, TMessage>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public AzureTableSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
+        ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
+        : base(RequireConsumeContext(consumeContext))
     {
-        readonly ConsumeContext<TMessage> _consumeContext;
-        readonly DatabaseContext<TSaga> _context;
-        readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(factory);
 
-        public AzureTableSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
-            ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
-            : base(RequireConsumeContext(consumeContext))
+        _context = context;
+        _consumeContext = consumeContext;
+        _factory = factory;
+    }
+
+    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    {
+        return _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
+    }
+
+    public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+
+        try
         {
-            ArgumentNullException.ThrowIfNull(context);
-            ArgumentNullException.ThrowIfNull(factory);
+            (Task<Azure.Response> insert, var entity) = TableInsert(instance);
+            await insert.ConfigureAwait(false);
+            _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
 
-            _context = context;
-            _consumeContext = consumeContext;
-            _factory = factory;
+            return await CreateSagaConsumeContext(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+        catch (RequestFailedException exception) when (exception.Status == 409)
         {
-            return _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
-        }
-
-        public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
-        {
-            ArgumentNullException.ThrowIfNull(instance);
-
-            try
-            {
-                (Task<Response> insert, var entity) = TableInsert(instance);
-                await insert.ConfigureAwait(false);
-                _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
-
-                return await CreateSagaConsumeContext(entity, SagaConsumeContextMode.Insert).ConfigureAwait(false);
-            }
-            catch (RequestFailedException exception) when (exception.Status == 409)
-            {
-                _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
-                return default;
-            }
-        }
-
-        public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
-        {
-            var (partitionKey, rowKey) = _context.Format(correlationId);
-
-            NullableResponse<TableEntity> result = await _context.Table
-                .GetEntityIfExistsAsync<TableEntity>(
-                    partitionKey,
-                    rowKey,
-                    cancellationToken: CancellationToken)
-                .ConfigureAwait(false);
-
-            if (result.HasValue)
-                return await CreateSagaConsumeContext(new TableEntity(result.Value), SagaConsumeContextMode.Load).ConfigureAwait(false);
-
+            _consumeContext.LogInsertFault<TSaga, TMessage>(exception, instance.CorrelationId);
             return default;
-        }
-
-        public Task Save(SagaConsumeContext<TSaga> context)
-        {
-            (Task<Response> insert, _) = TableInsert(context.Saga);
-            return insert;
-        }
-
-        public async Task Update(SagaConsumeContext<TSaga> context)
-        {
-            var instance = context.Saga;
-
-            try
-            {
-                var eTag = context.GetPayload<SagaETag>();
-                IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
-                var entity = new TableEntity(dict) { ETag = new ETag(eTag.ETag) };
-                (entity.PartitionKey, entity.RowKey) = _context.Format(instance.CorrelationId);
-
-                await _context.Table.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace, context.CancellationToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-                when (context.CancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (RequestFailedException exception) when (exception.Status == 412)
-            {
-                throw new ConcurrencyException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
-            }
-            catch (Exception exception)
-            {
-                throw new SagaException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
-            }
-        }
-
-        public async Task Delete(SagaConsumeContext<TSaga> context)
-        {
-            var instance = context.Saga;
-            try
-            {
-                var (partitionKey, rowKey) = _context.Format(instance.CorrelationId);
-                var eTag = context.GetPayload<SagaETag>();
-                await _context.Table
-                    .DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken)
-                    .ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-                when (context.CancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (RequestFailedException exception) when (exception.Status == 412)
-            {
-                throw new ConcurrencyException("Saga delete failed", typeof(TSaga), instance.CorrelationId, exception);
-            }
-            catch (Exception exception)
-            {
-                throw new SagaException("Saga delete failed", typeof(TSaga), instance.CorrelationId, exception);
-            }
-        }
-
-        public Task Discard(SagaConsumeContext<TSaga> context)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task Undo(SagaConsumeContext<TSaga> context)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
-            where T : class
-        {
-            return _factory.CreateSagaConsumeContext(_context, consumeContext, instance, mode);
-        }
-
-        (Task<Response>, TableEntity) TableInsert(TSaga instance)
-        {
-            IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
-            var entity = new TableEntity(dict);
-            (entity.PartitionKey, entity.RowKey) = _context.Format(instance.CorrelationId);
-
-            return (_context.Table.AddEntityAsync(entity, CancellationToken), entity);
-        }
-
-        static ConsumeContext<TMessage> RequireConsumeContext(ConsumeContext<TMessage> consumeContext)
-        {
-            ArgumentNullException.ThrowIfNull(consumeContext);
-            return consumeContext;
-        }
-
-        async Task<SagaConsumeContext<TSaga, TMessage>> CreateSagaConsumeContext(TableEntity entity, SagaConsumeContextMode mode)
-        {
-            var instance = _context.Converter.GetObject(entity);
-
-            SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, mode)
-                .ConfigureAwait(false);
-
-            var eTag = new SagaETag(entity.ETag.ToString());
-
-            sagaConsumeContext.AddOrUpdatePayload(() => eTag, _ => eTag);
-
-            return sagaConsumeContext;
         }
     }
 
-
-    sealed class AzureTableLoadSagaRepositoryContext<TSaga> :
-        BasePipeContext,
-        LoadSagaRepositoryContext<TSaga>
-        where TSaga : class, ISaga
+    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
     {
-        readonly DatabaseContext<TSaga> _context;
+        var (partitionKey, rowKey) = _context.Format(correlationId);
 
-        public AzureTableLoadSagaRepositoryContext(DatabaseContext<TSaga> context, CancellationToken cancellationToken)
-            : base(cancellationToken)
+        NullableResponse<TableEntity> result = await _context.Table
+            .GetEntityIfExistsAsync<TableEntity>(
+                partitionKey,
+                rowKey,
+                cancellationToken: CancellationToken)
+            .ConfigureAwait(false);
+
+        if (result.HasValue)
+            return await CreateSagaConsumeContext(new TableEntity(result.Value), SagaConsumeContextMode.Load).ConfigureAwait(false);
+
+        return default;
+    }
+
+    public Task Save(SagaConsumeContext<TSaga> context)
+    {
+        (Task<Azure.Response> insert, _) = TableInsert(context.Saga);
+        return insert;
+    }
+
+    public async Task Update(SagaConsumeContext<TSaga> context)
+    {
+        var instance = context.Saga;
+
+        try
         {
-            ArgumentNullException.ThrowIfNull(context);
-            _context = context;
-        }
+            var eTag = context.GetPayload<SagaETag>();
+            IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
+            var entity = new TableEntity(dict) { ETag = new ETag(eTag.ETag) };
+            (entity.PartitionKey, entity.RowKey) = _context.Format(instance.CorrelationId);
 
-        public async Task<TSaga> Load(Guid correlationId)
+            await _context.Table.UpdateEntityAsync(entity, entity.ETag, TableUpdateMode.Replace, context.CancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+            when (context.CancellationToken.IsCancellationRequested)
         {
-            var (partitionKey, rowKey) = _context.Format(correlationId);
-
-            NullableResponse<TableEntity> result = await _context.Table
-                .GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken).ConfigureAwait(false);
-
-            return result.HasValue
-                ? _context.Converter.GetObject(new TableEntity(result.Value))
-                : default;
+            throw;
         }
+        catch (RequestFailedException exception) when (exception.Status == 412)
+        {
+            throw new ConcurrencyException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
+        }
+        catch (Exception exception)
+        {
+            throw new SagaException("Saga update failed", typeof(TSaga), instance.CorrelationId, exception);
+        }
+    }
+
+    public async Task Delete(SagaConsumeContext<TSaga> context)
+    {
+        var instance = context.Saga;
+        try
+        {
+            var (partitionKey, rowKey) = _context.Format(instance.CorrelationId);
+            var eTag = context.GetPayload<SagaETag>();
+            await _context.Table
+                .DeleteEntityAsync(partitionKey, rowKey, new ETag(eTag.ETag), context.CancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+            when (context.CancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (RequestFailedException exception) when (exception.Status == 412)
+        {
+            throw new ConcurrencyException("Saga delete failed", typeof(TSaga), instance.CorrelationId, exception);
+        }
+        catch (Exception exception)
+        {
+            throw new SagaException("Saga delete failed", typeof(TSaga), instance.CorrelationId, exception);
+        }
+    }
+
+    public Task Discard(SagaConsumeContext<TSaga> context)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task Undo(SagaConsumeContext<TSaga> context)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+        where T : class
+    {
+        return _factory.CreateSagaConsumeContext(_context, consumeContext, instance, mode);
+    }
+
+    (Task<Azure.Response>, TableEntity) TableInsert(TSaga instance)
+    {
+        IDictionary<string, object> dict = _context.Converter.GetDictionary(instance);
+        var entity = new TableEntity(dict);
+        (entity.PartitionKey, entity.RowKey) = _context.Format(instance.CorrelationId);
+
+        return (_context.Table.AddEntityAsync(entity, CancellationToken), entity);
+    }
+
+    static ConsumeContext<TMessage> RequireConsumeContext(ConsumeContext<TMessage> consumeContext)
+    {
+        ArgumentNullException.ThrowIfNull(consumeContext);
+        return consumeContext;
+    }
+
+    async Task<SagaConsumeContext<TSaga, TMessage>> CreateSagaConsumeContext(TableEntity entity, SagaConsumeContextMode mode)
+    {
+        var instance = _context.Converter.GetObject(entity);
+
+        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, mode)
+            .ConfigureAwait(false);
+
+        var eTag = new SagaETag(entity.ETag.ToString());
+
+        sagaConsumeContext.AddOrUpdatePayload(() => eTag, _ => eTag);
+
+        return sagaConsumeContext;
+    }
+}
+
+
+sealed class AzureTableLoadSagaRepositoryContext<TSaga> :
+    BasePipeContext,
+    LoadSagaRepositoryContext<TSaga>
+    where TSaga : class, ISaga
+{
+    readonly DatabaseContext<TSaga> _context;
+
+    public AzureTableLoadSagaRepositoryContext(DatabaseContext<TSaga> context, CancellationToken cancellationToken)
+        : base(cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        _context = context;
+    }
+
+    public async Task<TSaga> Load(Guid correlationId)
+    {
+        var (partitionKey, rowKey) = _context.Format(correlationId);
+
+        NullableResponse<TableEntity> result = await _context.Table
+            .GetEntityIfExistsAsync<TableEntity>(partitionKey, rowKey, cancellationToken: CancellationToken).ConfigureAwait(false);
+
+        return result.HasValue
+            ? _context.Converter.GetObject(new TableEntity(result.Value))
+            : default;
     }
 }

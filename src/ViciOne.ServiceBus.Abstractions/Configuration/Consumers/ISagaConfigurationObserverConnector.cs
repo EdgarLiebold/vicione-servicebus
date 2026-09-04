@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus
+using System.ComponentModel;
+
+namespace ViciOne.ServiceBus;
+
+public interface ISagaConfigurationObserverConnector
 {
-    using System.ComponentModel;
-
-
-    public interface ISagaConfigurationObserverConnector
-    {
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        ConnectHandle ConnectSagaConfigurationObserver(ISagaConfigurationObserver observer);
-    }
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    ConnectHandle ConnectSagaConfigurationObserver(ISagaConfigurationObserver observer);
 }

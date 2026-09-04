@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+class BusFactorySelector :
+    IBusFactorySelector
 {
-    class BusFactorySelector :
-        IBusFactorySelector
-    {
-    }
 }

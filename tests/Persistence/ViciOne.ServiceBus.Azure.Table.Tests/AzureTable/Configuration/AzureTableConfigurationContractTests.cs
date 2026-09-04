@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Configuration;
-
+using System.Reflection;
 using global::Azure.Data.Tables;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using ViciOne.ServiceBus.AzureTable;
 using ViciOne.ServiceBus.AzureTable.Saga;
 using ViciOne.ServiceBus.Configuration;
@@ -10,6 +8,8 @@ using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Configuration;
 
 public sealed class AzureTableConfigurationContractTests
 {
@@ -118,7 +118,7 @@ public sealed class AzureTableConfigurationContractTests
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             configurator.Register(null!)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
-            AzureTableRepositoryRegistrationExtensions.AzureTableRepository<ConfigurationSaga>(null!, null)).ParamName);
+            AzureTableRepositoryRegistrationExtensions.AzureTableRepository<ConfigurationSaga>(null!, null!)).ParamName);
         Assert.Equal("configurator", Assert.Throws<ArgumentNullException>(() =>
             AzureTableRepositoryRegistrationExtensions.AzureTableRepository(
                 (IJobSagaRegistrationConfigurator)null!,

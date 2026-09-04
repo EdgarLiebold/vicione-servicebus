@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Transports.Fabric;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IMessageFabricPublishTopologyBuilder :
+    IMessageFabricTopologyBuilder
 {
-    using Transports.Fabric;
+    string ExchangeName { get; set; }
+    ExchangeType ExchangeType { get; set; }
 
-
-    public interface IMessageFabricPublishTopologyBuilder :
-        IMessageFabricTopologyBuilder
-    {
-        string ExchangeName { get; set; }
-        ExchangeType ExchangeType { get; set; }
-
-        IMessageFabricPublishTopologyBuilder CreateImplementedBuilder();
-    }
+    IMessageFabricPublishTopologyBuilder CreateImplementedBuilder();
 }

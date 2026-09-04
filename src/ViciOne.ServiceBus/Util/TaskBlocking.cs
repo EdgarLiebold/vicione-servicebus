@@ -1,14 +1,12 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Util;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Util;
 /// <summary>
-/// Explicit synchronous boundary for legacy/synchronous host APIs. Product code should prefer async
+/// Explicit synchronous boundary for synchronous host APIs. Product code should prefer async
 /// end-to-end; callers of this type deliberately accept blocking and must not rely on a blocked
 /// synchronization context for completion.
 /// </summary>

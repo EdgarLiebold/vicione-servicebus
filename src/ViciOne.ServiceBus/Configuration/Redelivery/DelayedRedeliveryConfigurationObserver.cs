@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DelayedRedeliveryConfigurationObserver :
+    ScheduledRedeliveryConfigurationObserver
 {
-    using System;
-
-
-    public class DelayedRedeliveryConfigurationObserver :
-        ScheduledRedeliveryConfigurationObserver
+    public DelayedRedeliveryConfigurationObserver(IConsumePipeConfigurator configurator, Action<IRedeliveryConfigurator> configure)
+        : base(configurator, configure)
     {
-        public DelayedRedeliveryConfigurationObserver(IConsumePipeConfigurator configurator, Action<IRedeliveryConfigurator> configure)
-            : base(configurator, configure)
-        {
-        }
+    }
 
-        protected override IRedeliveryPipeSpecification AddRedeliveryPipeSpecification<TMessage>(IConsumePipeConfigurator configurator)
-        {
-            var redeliverySpecification = new DelayedRedeliveryPipeSpecification<TMessage>();
+    protected override IRedeliveryPipeSpecification AddRedeliveryPipeSpecification<TMessage>(IConsumePipeConfigurator configurator)
+    {
+        var redeliverySpecification = new DelayedRedeliveryPipeSpecification<TMessage>();
 
-            configurator.AddPipeSpecification(redeliverySpecification);
+        configurator.AddPipeSpecification(redeliverySpecification);
 
-            return redeliverySpecification;
-        }
+        return redeliverySpecification;
     }
 }

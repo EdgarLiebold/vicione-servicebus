@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class TopicSendSettings :
+    SendSettings
 {
-    using Azure.Messaging.ServiceBus.Administration;
+    readonly BrokerTopology _brokerTopology;
+    readonly CreateTopicOptions _createTopicOptions;
 
-
-    public class TopicSendSettings :
-        SendSettings
+    public TopicSendSettings(CreateTopicOptions createTopicOptions, BrokerTopology brokerTopology)
     {
-        readonly BrokerTopology _brokerTopology;
-        readonly CreateTopicOptions _createTopicOptions;
+        _createTopicOptions = createTopicOptions;
+        _brokerTopology = brokerTopology;
+    }
 
-        public TopicSendSettings(CreateTopicOptions createTopicOptions, BrokerTopology brokerTopology)
-        {
-            _createTopicOptions = createTopicOptions;
-            _brokerTopology = brokerTopology;
-        }
+    public string EntityPath => _createTopicOptions.Name;
 
-        public string EntityPath => _createTopicOptions.Name;
-
-        public BrokerTopology GetBrokerTopology()
-        {
-            return _brokerTopology;
-        }
+    public BrokerTopology GetBrokerTopology()
+    {
+        return _brokerTopology;
     }
 }

@@ -1,27 +1,26 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+
+/// <summary>
+/// Creates a message session receiver
+/// </summary>
+public class MessageSessionReceiverFilter :
+    MessageReceiverFilter
 {
-    /// <summary>
-    /// Creates a message session receiver
-    /// </summary>
-    public class MessageSessionReceiverFilter :
-        MessageReceiverFilter
+    public MessageSessionReceiverFilter(ServiceBusReceiveEndpointContext context)
+        : base(context)
     {
-        public MessageSessionReceiverFilter(ServiceBusReceiveEndpointContext context)
-            : base(context)
-        {
-        }
+    }
 
-        public override void Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("messageSessionReceiver");
-            scope.Add("type", "brokeredMessage");
+    public override void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("messageSessionReceiver");
+        scope.Add("type", "brokeredMessage");
 
-            Context.ReceivePipe.Probe(scope);
-        }
+        Context.ReceivePipe.Probe(scope);
+    }
 
-        protected override IReceiver CreateMessageReceiver(ClientContext context)
-        {
-            return new SessionReceiver(context, Context);
-        }
+    protected override IReceiver CreateMessageReceiver(ClientContext context)
+    {
+        return new SessionReceiver(context, Context);
     }
 }

@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
-
 using Microsoft.Data.SqlClient;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 
 internal static class SqlServerTransportInspection
 {

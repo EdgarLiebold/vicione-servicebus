@@ -1,189 +1,187 @@
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Observables;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public abstract class BaseReceiveEndpointContext :
+    BasePipeContext,
+    ReceiveEndpointContext
 {
-    using System;
-    using System.Threading.Tasks;
-    using Configuration;
-    using Logging;
-    using Middleware;
-    using Observables;
+    readonly ReceiveEndpointObservable _endpointObservers;
+    readonly IHostConfiguration _hostConfiguration;
+    readonly PublishObservable _publishObservers;
+    readonly Lazy<IPublishPipe> _publishPipe;
+    readonly IPublishTopologyConfigurator _publishTopology;
+    readonly ReceiveObservable _receiveObservers;
+    readonly Lazy<IReceivePipe> _receivePipe;
+    readonly SendObservable _sendObservers;
+    readonly Lazy<ISendPipe> _sendPipe;
+    readonly ReceiveTransportObservable _transportObservers;
 
+    Lazy<IPublishEndpointProvider> _publishEndpointProvider;
+    Lazy<IPublishTransportProvider> _publishTransportProvider;
+    Lazy<ISendEndpointProvider> _sendEndpointProvider;
+    Lazy<ISendTransportProvider> _sendTransportProvider;
 
-    public abstract class BaseReceiveEndpointContext :
-        BasePipeContext,
-        ReceiveEndpointContext
+    protected BaseReceiveEndpointContext(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration configuration)
     {
-        readonly ReceiveEndpointObservable _endpointObservers;
-        readonly IHostConfiguration _hostConfiguration;
-        readonly PublishObservable _publishObservers;
-        readonly Lazy<IPublishPipe> _publishPipe;
-        readonly IPublishTopologyConfigurator _publishTopology;
-        readonly ReceiveObservable _receiveObservers;
-        readonly Lazy<IReceivePipe> _receivePipe;
-        readonly SendObservable _sendObservers;
-        readonly Lazy<ISendPipe> _sendPipe;
-        readonly ReceiveTransportObservable _transportObservers;
+        _hostConfiguration = hostConfiguration;
 
-        Lazy<IPublishEndpointProvider> _publishEndpointProvider;
-        Lazy<IPublishTransportProvider> _publishTransportProvider;
-        Lazy<ISendEndpointProvider> _sendEndpointProvider;
-        Lazy<ISendTransportProvider> _sendTransportProvider;
+        InputAddress = configuration.InputAddress;
+        HostAddress = configuration.HostAddress;
+        PublishFaults = configuration.PublishFaults;
+        PrefetchCount = configuration.PrefetchCount;
+        ConcurrentMessageLimit = configuration.ConcurrentMessageLimit;
 
-        protected BaseReceiveEndpointContext(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration configuration)
-        {
-            _hostConfiguration = hostConfiguration;
+        IsBusEndpoint = configuration.IsBusEndpoint;
 
-            InputAddress = configuration.InputAddress;
-            HostAddress = configuration.HostAddress;
-            PublishFaults = configuration.PublishFaults;
-            PrefetchCount = configuration.PrefetchCount;
-            ConcurrentMessageLimit = configuration.ConcurrentMessageLimit;
+        _publishTopology = configuration.Topology.Publish;
 
-            IsBusEndpoint = configuration.IsBusEndpoint;
+        _sendObservers = new SendObservable();
+        _publishObservers = new PublishObservable();
 
-            _publishTopology = configuration.Topology.Publish;
+        _endpointObservers = configuration.EndpointObservers;
+        _receiveObservers = configuration.ReceiveObservers;
+        _transportObservers = configuration.TransportObservers;
 
-            _sendObservers = new SendObservable();
-            _publishObservers = new PublishObservable();
+        DependenciesReady = configuration.DependenciesReady;
+        DependentsCompleted = configuration.DependentsCompleted;
 
-            _endpointObservers = configuration.EndpointObservers;
-            _receiveObservers = configuration.ReceiveObservers;
-            _transportObservers = configuration.TransportObservers;
+        Serialization = configuration.Serialization.CreateSerializerCollection();
 
-            DependenciesReady = configuration.DependenciesReady;
-            DependentsCompleted = configuration.DependentsCompleted;
+        _sendPipe = new Lazy<ISendPipe>(() => configuration.Send.CreatePipe());
+        _publishPipe = new Lazy<IPublishPipe>(() => configuration.Publish.CreatePipe());
+        _receivePipe = new Lazy<IReceivePipe>(configuration.CreateReceivePipe);
 
-            Serialization = configuration.Serialization.CreateSerializerCollection();
+        _sendTransportProvider = new Lazy<ISendTransportProvider>(CreateSendTransportProvider);
+        _publishTransportProvider = new Lazy<IPublishTransportProvider>(CreatePublishTransportProvider);
 
-            _sendPipe = new Lazy<ISendPipe>(() => configuration.Send.CreatePipe());
-            _publishPipe = new Lazy<IPublishPipe>(() => configuration.Publish.CreatePipe());
-            _receivePipe = new Lazy<IReceivePipe>(configuration.CreateReceivePipe);
+        _sendEndpointProvider = new Lazy<ISendEndpointProvider>(CreateSendEndpointProvider);
+        _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(CreatePublishEndpointProvider);
 
-            _sendTransportProvider = new Lazy<ISendTransportProvider>(CreateSendTransportProvider);
-            _publishTransportProvider = new Lazy<IPublishTransportProvider>(CreatePublishTransportProvider);
-
-            _sendEndpointProvider = new Lazy<ISendEndpointProvider>(CreateSendEndpointProvider);
-            _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(CreatePublishEndpointProvider);
-
-            hostConfiguration.ConnectReceiveEndpointContext(this);
-        }
-
-        Uri HostAddress { get; }
-
-        public bool IsBusEndpoint { get; }
-
-        public IReceiveObserver ReceiveObservers => _receiveObservers;
-
-        public IReceiveTransportObserver TransportObservers => _transportObservers;
-
-        public IReceiveEndpointObserver EndpointObservers => _endpointObservers;
-
-        public IMessageRouteTable MessageRoutes => _hostConfiguration.BusConfiguration.MessageRoutes;
-
-        public ConnectHandle ConnectSendObserver(ISendObserver observer)
-        {
-            return _sendObservers.Connect(observer);
-        }
-
-        public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
-        {
-            return _publishObservers.Connect(observer);
-        }
-
-        public ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer)
-        {
-            return _transportObservers.Connect(observer);
-        }
-
-        public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
-        {
-            return _receiveObservers.Connect(observer);
-        }
-
-        public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
-        {
-            return _endpointObservers.Connect(observer);
-        }
-
-        public TimeSpan? ConsumerStopTimeout => _hostConfiguration.ConsumerStopTimeout;
-        public TimeSpan? StopTimeout => _hostConfiguration.StopTimeout;
-
-        public Uri InputAddress { get; }
-
-        public Task DependenciesReady { get; }
-        public Task DependentsCompleted { get; }
-
-        public bool PublishFaults { get; }
-
-        public int PrefetchCount { get; }
-        public int? ConcurrentMessageLimit { get; }
-
-        public ILogContext LogContext => _hostConfiguration.ReceiveLogContext ?? throw new InvalidOperationException("ReceiveLogContext should not be null");
-
-        public IPublishTopology Publish => _publishTopology;
-
-        public IReceivePipe ReceivePipe => _receivePipe.Value;
-
-        public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
-
-        public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
-
-        public IReceivePipeDispatcher CreateReceivePipeDispatcher()
-        {
-            return new ReceivePipeDispatcher(_receivePipe.Value, _receiveObservers, _hostConfiguration, InputAddress);
-        }
-
-        public async ValueTask ResetAsync()
-        {
-            ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
-            IPublishEndpointProvider? publishEndpointProvider = _publishEndpointProvider.IsValueCreated ? _publishEndpointProvider.Value : null;
-
-            if (sendEndpointProvider is not null)
-                await ReleaseSendEndpointProviderAsync(sendEndpointProvider).ConfigureAwait(false);
-
-            if (publishEndpointProvider is not null && !ReferenceEquals(publishEndpointProvider, sendEndpointProvider))
-                await ReleasePublishEndpointProviderAsync(publishEndpointProvider).ConfigureAwait(false);
-
-            _sendTransportProvider = new Lazy<ISendTransportProvider>(CreateSendTransportProvider);
-            _publishTransportProvider = new Lazy<IPublishTransportProvider>(CreatePublishTransportProvider);
-
-            _sendEndpointProvider = new Lazy<ISendEndpointProvider>(CreateSendEndpointProvider);
-            _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(CreatePublishEndpointProvider);
-        }
-
-        protected virtual ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
-        {
-            return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
-        }
-
-        protected virtual ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
-        {
-            return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
-        }
-
-        public abstract void AddSendAgent(IAgent agent);
-        public abstract void AddConsumeAgent(IAgent agent);
-
-        public virtual void Probe(ProbeContext context)
-        {
-        }
-
-        public abstract Exception ConvertException(Exception exception, string message);
-
-        public ISerialization Serialization { get; }
-
-        protected virtual ISendEndpointProvider CreateSendEndpointProvider()
-        {
-            return new SendEndpointProvider(_sendTransportProvider.Value, _sendObservers, this, _sendPipe.Value);
-        }
-
-        protected virtual IPublishEndpointProvider CreatePublishEndpointProvider()
-        {
-            return new PublishEndpointProvider(_publishTransportProvider.Value, HostAddress, _publishObservers, this, _publishPipe.Value, _publishTopology);
-        }
-
-        protected abstract ISendTransportProvider CreateSendTransportProvider();
-
-        protected abstract IPublishTransportProvider CreatePublishTransportProvider();
+        hostConfiguration.ConnectReceiveEndpointContext(this);
     }
+
+    Uri HostAddress { get; }
+
+    public bool IsBusEndpoint { get; }
+
+    public IReceiveObserver ReceiveObservers => _receiveObservers;
+
+    public IReceiveTransportObserver TransportObservers => _transportObservers;
+
+    public IReceiveEndpointObserver EndpointObservers => _endpointObservers;
+
+    public IMessageRouteTable MessageRoutes => _hostConfiguration.BusConfiguration.MessageRoutes;
+
+    public ConnectHandle ConnectSendObserver(ISendObserver observer)
+    {
+        return _sendObservers.Connect(observer);
+    }
+
+    public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
+    {
+        return _publishObservers.Connect(observer);
+    }
+
+    public ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer)
+    {
+        return _transportObservers.Connect(observer);
+    }
+
+    public ConnectHandle ConnectReceiveObserver(IReceiveObserver observer)
+    {
+        return _receiveObservers.Connect(observer);
+    }
+
+    public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
+    {
+        return _endpointObservers.Connect(observer);
+    }
+
+    public TimeSpan? ConsumerStopTimeout => _hostConfiguration.ConsumerStopTimeout;
+    public TimeSpan? StopTimeout => _hostConfiguration.StopTimeout;
+
+    public Uri InputAddress { get; }
+
+    public Task DependenciesReady { get; }
+    public Task DependentsCompleted { get; }
+
+    public bool PublishFaults { get; }
+
+    public int PrefetchCount { get; }
+    public int? ConcurrentMessageLimit { get; }
+
+    public ILogContext LogContext => _hostConfiguration.ReceiveLogContext ?? throw new InvalidOperationException("ReceiveLogContext should not be null");
+
+    public IPublishTopology Publish => _publishTopology;
+
+    public IReceivePipe ReceivePipe => _receivePipe.Value;
+
+    public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
+
+    public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
+
+    public IReceivePipeDispatcher CreateReceivePipeDispatcher()
+    {
+        return new ReceivePipeDispatcher(_receivePipe.Value, _receiveObservers, _hostConfiguration, InputAddress);
+    }
+
+    public async ValueTask ResetAsync()
+    {
+        ISendEndpointProvider? sendEndpointProvider = _sendEndpointProvider.IsValueCreated ? _sendEndpointProvider.Value : null;
+        IPublishEndpointProvider? publishEndpointProvider = _publishEndpointProvider.IsValueCreated ? _publishEndpointProvider.Value : null;
+
+        if (sendEndpointProvider is not null)
+            await ReleaseSendEndpointProviderAsync(sendEndpointProvider).ConfigureAwait(false);
+
+        if (publishEndpointProvider is not null && !ReferenceEquals(publishEndpointProvider, sendEndpointProvider))
+            await ReleasePublishEndpointProviderAsync(publishEndpointProvider).ConfigureAwait(false);
+
+        _sendTransportProvider = new Lazy<ISendTransportProvider>(CreateSendTransportProvider);
+        _publishTransportProvider = new Lazy<IPublishTransportProvider>(CreatePublishTransportProvider);
+
+        _sendEndpointProvider = new Lazy<ISendEndpointProvider>(CreateSendEndpointProvider);
+        _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(CreatePublishEndpointProvider);
+    }
+
+    protected virtual ValueTask ReleaseSendEndpointProviderAsync(ISendEndpointProvider provider)
+    {
+        return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
+    }
+
+    protected virtual ValueTask ReleasePublishEndpointProviderAsync(IPublishEndpointProvider provider)
+    {
+        return provider is IAsyncDisposable disposable ? disposable.DisposeAsync() : default;
+    }
+
+    public abstract void AddSendAgent(IAgent agent);
+    public abstract void AddConsumeAgent(IAgent agent);
+
+    public virtual void Probe(ProbeContext context)
+    {
+    }
+
+    public abstract Exception ConvertException(Exception exception, string message);
+
+    public ISerialization Serialization { get; }
+
+    protected virtual ISendEndpointProvider CreateSendEndpointProvider()
+    {
+        return new SendEndpointProvider(_sendTransportProvider.Value, _sendObservers, this, _sendPipe.Value);
+    }
+
+    protected virtual IPublishEndpointProvider CreatePublishEndpointProvider()
+    {
+        return new PublishEndpointProvider(_publishTransportProvider.Value, HostAddress, _publishObservers, this, _publishPipe.Value, _publishTopology);
+    }
+
+    protected abstract ISendTransportProvider CreateSendTransportProvider();
+
+    protected abstract IPublishTransportProvider CreatePublishTransportProvider();
 }

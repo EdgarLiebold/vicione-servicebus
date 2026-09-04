@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface ReceiveSettings
 {
-    using System;
-
-
-    public interface ReceiveSettings
-    {
-        string ConsumerGroup { get; }
-        string ContainerName { get; }
-        string EventHubName { get; }
-        ushort CheckpointMessageLimit { get; }
-        ushort CheckpointMessageCount { get; }
-        int PrefetchCount { get; }
-        TimeSpan CheckpointInterval { get; }
-        int ConcurrentMessageLimit { get; }
-        int ConcurrentDeliveryLimit { get; }
-    }
+    string ConsumerGroup { get; }
+    string ContainerName { get; }
+    string EventHubName { get; }
+    ushort CheckpointMessageLimit { get; }
+    ushort CheckpointMessageCount { get; }
+    int PrefetchCount { get; }
+    TimeSpan CheckpointInterval { get; }
+    int ConcurrentMessageLimit { get; }
+    int ConcurrentDeliveryLimit { get; }
 }

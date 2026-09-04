@@ -1,11 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
-using Configuration;
-using Transports.Components;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports.Components;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public static class KillSwitchConfigurationExtensions
 {

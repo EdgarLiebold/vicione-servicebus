@@ -1,63 +1,61 @@
+using System;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IHostConfiguration :
+    IEndpointConfigurationObserverConnector,
+    IReceiveObserverConnector,
+    IConsumeObserverConnector,
+    IPublishObserverConnector,
+    ISendObserverConnector,
+    ISpecification
 {
-    using System;
-    using Logging;
-    using Transports;
+    IBusConfiguration BusConfiguration { get; }
 
+    Uri HostAddress { get; }
 
-    public interface IHostConfiguration :
-        IEndpointConfigurationObserverConnector,
-        IReceiveObserverConnector,
-        IConsumeObserverConnector,
-        IPublishObserverConnector,
-        ISendObserverConnector,
-        ISpecification
-    {
-        IBusConfiguration BusConfiguration { get; }
+    /// <summary>
+    /// If true, only the broker topology will be deployed
+    /// </summary>
+    bool DeployTopologyOnly { get; set; }
 
-        Uri HostAddress { get; }
+    /// <summary>
+    /// If true, the publish topology will be deployed at startup
+    /// </summary>
+    bool DeployPublishTopology { get; set; }
 
-        /// <summary>
-        /// If true, only the broker topology will be deployed
-        /// </summary>
-        bool DeployTopologyOnly { get; set; }
+    ISendObserver SendObservers { get; }
 
-        /// <summary>
-        /// If true, the publish topology will be deployed at startup
-        /// </summary>
-        bool DeployPublishTopology { get; set; }
+    ILogContext? LogContext { get; set; }
+    ILogContext? ReceiveLogContext { get; }
+    ILogContext? SendLogContext { get; }
 
-        ISendObserver SendObservers { get; }
+    IBusTopology Topology { get; }
 
-        ILogContext? LogContext { get; set; }
-        ILogContext? ReceiveLogContext { get; }
-        ILogContext? SendLogContext { get; }
+    IRetryPolicy ReceiveTransportRetryPolicy { get; }
 
-        IBusTopology Topology { get; }
+    IRetryPolicy SendTransportRetryPolicy { get; }
 
-        IRetryPolicy ReceiveTransportRetryPolicy { get; }
+    TimeSpan? ConsumerStopTimeout { get; set; }
+    TimeSpan? StopTimeout { get; set; }
 
-        IRetryPolicy SendTransportRetryPolicy { get; }
+    /// <summary>
+    /// Create a receive endpoint configuration
+    /// </summary>
+    /// <param name="queueName"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure = null);
 
-        TimeSpan? ConsumerStopTimeout { get; set; }
-        TimeSpan? StopTimeout { get; set; }
+    /// <summary>
+    /// Called by the base ReceiveEndpointContext constructor so that the observer collections are connected to the bus observer
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    ConnectHandle ConnectReceiveEndpointContext(ReceiveEndpointContext context);
 
-        /// <summary>
-        /// Create a receive endpoint configuration
-        /// </summary>
-        /// <param name="queueName"></param>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        IReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName, Action<IReceiveEndpointConfigurator>? configure = null);
-
-        /// <summary>
-        /// Called by the base ReceiveEndpointContext constructor so that the observer collections are connected to the bus observer
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        ConnectHandle ConnectReceiveEndpointContext(ReceiveEndpointContext context);
-
-        IHost Build();
-    }
+    IHost Build();
 }

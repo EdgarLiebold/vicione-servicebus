@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+static class AzureServiceBusTransportPropertyNames
 {
-    static class AzureServiceBusTransportPropertyNames
-    {
-        public const string PartitionKey = "ASB-PartitionKey";
-        public const string SessionId = "ASB-SessionId";
-        public const string ReplyToSessionId = "ASB-ReplyToSessionId";
-        public const string ReplyTo = "ASB-ReplyTo";
-        public const string Label = "ASB-Label";
-    }
+    public const string PartitionKey = "ASB-PartitionKey";
+    public const string SessionId = "ASB-SessionId";
+    public const string ReplyToSessionId = "ASB-ReplyToSessionId";
+    public const string ReplyTo = "ASB-ReplyTo";
+    public const string Label = "ASB-Label";
 }

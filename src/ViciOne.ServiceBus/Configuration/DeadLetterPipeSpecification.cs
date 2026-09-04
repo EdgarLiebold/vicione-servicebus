@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DeadLetterPipeSpecification :
+    IPipeSpecification<ReceiveContext>
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IPipe<ReceiveContext> _deadLetterPipe;
 
-
-    public class DeadLetterPipeSpecification :
-        IPipeSpecification<ReceiveContext>
+    public DeadLetterPipeSpecification(IPipe<ReceiveContext> deadLetterPipe)
     {
-        readonly IPipe<ReceiveContext> _deadLetterPipe;
+        _deadLetterPipe = deadLetterPipe;
+    }
 
-        public DeadLetterPipeSpecification(IPipe<ReceiveContext> deadLetterPipe)
-        {
-            _deadLetterPipe = deadLetterPipe;
-        }
+    public void Apply(IPipeBuilder<ReceiveContext> builder)
+    {
+        builder.AddFilter(new DeadLetterFilter(_deadLetterPipe));
+    }
 
-        public void Apply(IPipeBuilder<ReceiveContext> builder)
-        {
-            builder.AddFilter(new DeadLetterFilter(_deadLetterPipe));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_deadLetterPipe == null)
-                yield return this.Failure("RescuePipe", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_deadLetterPipe == null)
+            yield return this.Failure("RescuePipe", "must not be null");
     }
 }

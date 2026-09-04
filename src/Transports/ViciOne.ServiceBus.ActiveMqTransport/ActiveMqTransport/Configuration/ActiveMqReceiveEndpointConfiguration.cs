@@ -1,154 +1,152 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.ActiveMqTransport.Middleware;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public class ActiveMqReceiveEndpointConfiguration :
+    ReceiveEndpointConfiguration,
+    IActiveMqReceiveEndpointConfiguration,
+    IActiveMqReceiveEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using ViciOne.ServiceBus.Configuration;
-    using ViciOne.ServiceBus.Middleware;
-    using Middleware;
-    using Topology;
-    using Transports;
-    using Util;
+    readonly IActiveMqEndpointConfiguration _endpointConfiguration;
+    readonly IActiveMqHostConfiguration _hostConfiguration;
+    readonly Lazy<Uri> _inputAddress;
+    readonly IBuildPipeConfigurator<SessionContext> _sessionConfigurator;
+    readonly ActiveMqQueueReceiveSettings _settings;
 
-
-    public class ActiveMqReceiveEndpointConfiguration :
-        ReceiveEndpointConfiguration,
-        IActiveMqReceiveEndpointConfiguration,
-        IActiveMqReceiveEndpointConfigurator
+    public ActiveMqReceiveEndpointConfiguration(IActiveMqHostConfiguration hostConfiguration, ActiveMqQueueReceiveSettings settings,
+        IActiveMqEndpointConfiguration endpointConfiguration)
+        : base(hostConfiguration, endpointConfiguration)
     {
-        readonly IActiveMqEndpointConfiguration _endpointConfiguration;
-        readonly IActiveMqHostConfiguration _hostConfiguration;
-        readonly Lazy<Uri> _inputAddress;
-        readonly IBuildPipeConfigurator<SessionContext> _sessionConfigurator;
-        readonly ActiveMqQueueReceiveSettings _settings;
+        _settings = settings;
 
-        public ActiveMqReceiveEndpointConfiguration(IActiveMqHostConfiguration hostConfiguration, ActiveMqQueueReceiveSettings settings,
-            IActiveMqEndpointConfiguration endpointConfiguration)
-            : base(hostConfiguration, endpointConfiguration)
+        _hostConfiguration = hostConfiguration;
+        _endpointConfiguration = endpointConfiguration;
+
+        _sessionConfigurator = new PipeConfigurator<SessionContext>();
+
+        _inputAddress = new Lazy<Uri>(FormatInputAddress);
+    }
+
+    public ReceiveSettings Settings => _settings;
+    public override Uri HostAddress => _hostConfiguration.HostAddress;
+    public override Uri InputAddress => _inputAddress.Value;
+    IActiveMqTopologyConfiguration IActiveMqEndpointConfiguration.Topology => _endpointConfiguration.Topology;
+
+    public override ReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        return CreateActiveMqReceiveEndpointContext();
+    }
+
+    public void Build(IHost host)
+    {
+        var context = CreateActiveMqReceiveEndpointContext();
+
+        _sessionConfigurator.UseFilter(new ConfigureActiveMqTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology, context));
+
+        if (_hostConfiguration.DeployTopologyOnly)
+            _sessionConfigurator.UseFilter(new TransportReadyFilter<SessionContext>(context));
+        else
         {
-            _settings = settings;
-
-            _hostConfiguration = hostConfiguration;
-            _endpointConfiguration = endpointConfiguration;
-
-            _sessionConfigurator = new PipeConfigurator<SessionContext>();
-
-            _inputAddress = new Lazy<Uri>(FormatInputAddress);
+            _sessionConfigurator.UseFilter(new ReceiveEndpointDependencyFilter<SessionContext>(context));
+            _sessionConfigurator.UseFilter(new ActiveMqConsumerFilter(context));
         }
 
-        public ReceiveSettings Settings => _settings;
-        public override Uri HostAddress => _hostConfiguration.HostAddress;
-        public override Uri InputAddress => _inputAddress.Value;
-        IActiveMqTopologyConfiguration IActiveMqEndpointConfiguration.Topology => _endpointConfiguration.Topology;
+        IPipe<SessionContext> sessionPipe = _sessionConfigurator.Build();
 
-        public override ReceiveEndpointContext CreateReceiveEndpointContext()
+        var transport = new ReceiveTransport<SessionContext>(_hostConfiguration, context,
+            () => context.SessionContextSupervisor, sessionPipe);
+
+        if (IsBusEndpoint && _hostConfiguration.DeployPublishTopology)
         {
-            return CreateActiveMqReceiveEndpointContext();
+            var publishTopology = _hostConfiguration.Topology.PublishTopology;
+
+            var brokerTopology = publishTopology.GetPublishBrokerTopology();
+
+            transport.PreStartPipe = new ConfigureActiveMqTopologyFilter<IPublishTopology>(publishTopology, brokerTopology, context).ToPipe();
         }
 
-        public void Build(IHost host)
+        var receiveEndpoint = new ReceiveEndpoint(transport, context);
+
+        var queueName = _settings.EntityName ?? NewId.Next().ToString(FormatUtil.Formatter);
+
+        host.AddReceiveEndpoint(queueName, receiveEndpoint);
+
+        ReceiveEndpoint = receiveEndpoint;
+    }
+
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        var queueName = $"{_settings.EntityName}";
+
+        if (!ActiveMqEntityNameValidator.Validator.IsValidEntityName(_settings.EntityName))
+            yield return this.Failure(queueName, "must be a valid queue name");
+
+        foreach (var result in base.Validate())
+            yield return result.WithParentKey(queueName);
+    }
+
+    public bool Durable
+    {
+        set
         {
-            var context = CreateActiveMqReceiveEndpointContext();
+            _settings.Durable = value;
 
-            _sessionConfigurator.UseFilter(new ConfigureActiveMqTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology, context));
-
-            if (_hostConfiguration.DeployTopologyOnly)
-                _sessionConfigurator.UseFilter(new TransportReadyFilter<SessionContext>(context));
-            else
-            {
-                _sessionConfigurator.UseFilter(new ReceiveEndpointDependencyFilter<SessionContext>(context));
-                _sessionConfigurator.UseFilter(new ActiveMqConsumerFilter(context));
-            }
-
-            IPipe<SessionContext> sessionPipe = _sessionConfigurator.Build();
-
-            var transport = new ReceiveTransport<SessionContext>(_hostConfiguration, context,
-                () => context.SessionContextSupervisor, sessionPipe);
-
-            if (IsBusEndpoint && _hostConfiguration.DeployPublishTopology)
-            {
-                var publishTopology = _hostConfiguration.Topology.PublishTopology;
-
-                var brokerTopology = publishTopology.GetPublishBrokerTopology();
-
-                transport.PreStartPipe = new ConfigureActiveMqTopologyFilter<IPublishTopology>(publishTopology, brokerTopology, context).ToPipe();
-            }
-
-            var receiveEndpoint = new ReceiveEndpoint(transport, context);
-
-            var queueName = _settings.EntityName ?? NewId.Next().ToString(FormatUtil.Formatter);
-
-            host.AddReceiveEndpoint(queueName, receiveEndpoint);
-
-            ReceiveEndpoint = receiveEndpoint;
+            Changed("Durable");
         }
+    }
 
-        public override IEnumerable<ValidationResult> Validate()
+    public bool AutoDelete
+    {
+        set
         {
-            var queueName = $"{_settings.EntityName}";
+            _settings.AutoDelete = value;
 
-            if (!ActiveMqEntityNameValidator.Validator.IsValidEntityName(_settings.EntityName))
-                yield return this.Failure(queueName, "must be a valid queue name");
-
-            foreach (var result in base.Validate())
-                yield return result.WithParentKey(queueName);
+            Changed("AutoDelete");
         }
+    }
 
-        public bool Durable
-        {
-            set
-            {
-                _settings.Durable = value;
+    public void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator> configure = null)
+    {
+        if (topicName == null)
+            throw new ArgumentNullException(nameof(topicName));
 
-                Changed("Durable");
-            }
-        }
+        _endpointConfiguration.Topology.Consume.Bind(topicName, configure);
+    }
 
-        public bool AutoDelete
-        {
-            set
-            {
-                _settings.AutoDelete = value;
+    public void Bind<T>(Action<IActiveMqTopicBindingConfigurator> configure = null)
+        where T : class
+    {
+        _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(configure);
+    }
 
-                Changed("AutoDelete");
-            }
-        }
+    public void ConfigureSession(Action<IPipeConfigurator<SessionContext>> configure)
+    {
+        configure?.Invoke(_sessionConfigurator);
+    }
 
-        public void Bind(string topicName, Action<IActiveMqTopicBindingConfigurator> configure = null)
-        {
-            if (topicName == null)
-                throw new ArgumentNullException(nameof(topicName));
+    ActiveMqReceiveEndpointContext CreateActiveMqReceiveEndpointContext()
+    {
+        var builder = new ActiveMqReceiveEndpointBuilder(_hostConfiguration, this);
 
-            _endpointConfiguration.Topology.Consume.Bind(topicName, configure);
-        }
+        ApplySpecifications(builder);
 
-        public void Bind<T>(Action<IActiveMqTopicBindingConfigurator> configure = null)
-            where T : class
-        {
-            _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(configure);
-        }
+        return builder.CreateReceiveEndpointContext();
+    }
 
-        public void ConfigureSession(Action<IPipeConfigurator<SessionContext>> configure)
-        {
-            configure?.Invoke(_sessionConfigurator);
-        }
+    Uri FormatInputAddress()
+    {
+        return _settings.GetInputAddress(_hostConfiguration.HostAddress);
+    }
 
-        ActiveMqReceiveEndpointContext CreateActiveMqReceiveEndpointContext()
-        {
-            var builder = new ActiveMqReceiveEndpointBuilder(_hostConfiguration, this);
-
-            ApplySpecifications(builder);
-
-            return builder.CreateReceiveEndpointContext();
-        }
-
-        Uri FormatInputAddress()
-        {
-            return _settings.GetInputAddress(_hostConfiguration.HostAddress);
-        }
-
-        protected override bool IsAlreadyConfigured()
-        {
-            return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
-        }
+    protected override bool IsAlreadyConfigured()
+    {
+        return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
     }
 }

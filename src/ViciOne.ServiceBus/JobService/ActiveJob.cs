@@ -1,10 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Active Jobs are allocated a concurrency slot, and are valid until the deadline is reached, after
 /// which they may be automatically released.

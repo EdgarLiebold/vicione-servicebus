@@ -1,39 +1,37 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class ExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
+    IExecuteActivityRegistrationConfigurator<TActivity, TArguments>
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System;
-    using Configuration;
+    readonly IRegistrationConfigurator _configurator;
+    readonly IExecuteActivityRegistration _registration;
 
-
-    public class ExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
-        IExecuteActivityRegistrationConfigurator<TActivity, TArguments>
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
+    public ExecuteActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IExecuteActivityRegistration registration)
     {
-        readonly IRegistrationConfigurator _configurator;
-        readonly IExecuteActivityRegistration _registration;
+        _configurator = configurator;
+        _registration = registration;
+    }
 
-        public ExecuteActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IExecuteActivityRegistration registration)
-        {
-            _configurator = configurator;
-            _registration = registration;
-        }
+    public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
+    {
+        if (!_registration.IncludeInConfigureEndpoints)
+            throw new ConfigurationException("ExecuteActivity is excluded from ConfigureEndpoints");
 
-        public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
-        {
-            if (!_registration.IncludeInConfigureEndpoints)
-                throw new ConfigurationException("ExecuteActivity is excluded from ConfigureEndpoints");
+        var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
 
-            var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
+        configure?.Invoke(configurator);
 
-            configure?.Invoke(configurator);
+        _configurator.AddEndpoint<ExecuteActivityEndpointDefinition<TActivity, TArguments>, IExecuteActivity<TArguments>>(_registration,
+            configurator.Settings);
+    }
 
-            _configurator.AddEndpoint<ExecuteActivityEndpointDefinition<TActivity, TArguments>, IExecuteActivity<TArguments>>(_registration,
-                configurator.Settings);
-        }
-
-        public void ExcludeFromConfigureEndpoints()
-        {
-            _registration.IncludeInConfigureEndpoints = false;
-        }
+    public void ExcludeFromConfigureEndpoints()
+    {
+        _registration.IncludeInConfigureEndpoints = false;
     }
 }

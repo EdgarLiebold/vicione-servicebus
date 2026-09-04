@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IPublishTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-
-
-    public interface IPublishTransportProvider
-    {
-        Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
-            where T : class;
-    }
+    Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+        where T : class;
 }

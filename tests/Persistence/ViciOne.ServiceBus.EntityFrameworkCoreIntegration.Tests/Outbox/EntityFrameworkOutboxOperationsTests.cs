@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
-
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 
 public sealed class EntityFrameworkOutboxOperationsTests
 {

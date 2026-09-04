@@ -1,8 +1,8 @@
+using System;
+using ViciOne.ServiceBus.Logging;
+
 #nullable enable
 namespace ViciOne.ServiceBus;
-
-using System;
-using Logging;
 
 public static class InstrumentationConfigurationExtensions
 {

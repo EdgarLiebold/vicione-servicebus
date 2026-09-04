@@ -1,15 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Internals
+namespace ViciOne.ServiceBus.Internals;
+
+internal interface IReadPropertyCache<T>
+    where T : class
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Reflection;
-
-
-    internal interface IReadPropertyCache<T>
-        where T : class
-    {
-        IReadProperty<T, TProperty> GetProperty<TProperty>(string? name);
-        IReadProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo);
-        bool TryGetProperty<TProperty>(string name, [NotNullWhen(true)] out IReadProperty<T, TProperty>? property);
-    }
+    IReadProperty<T, TProperty> GetProperty<TProperty>(string? name);
+    IReadProperty<T, TProperty> GetProperty<TProperty>(PropertyInfo? propertyInfo);
+    bool TryGetProperty<TProperty>(string name, [NotNullWhen(true)] out IReadProperty<T, TProperty>? property);
 }

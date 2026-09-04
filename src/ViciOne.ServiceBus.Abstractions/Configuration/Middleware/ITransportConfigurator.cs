@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus
-{
-    public interface ITransportConfigurator
-    {
-        int PrefetchCount { set; }
+namespace ViciOne.ServiceBus;
 
-        int? ConcurrentMessageLimit { set; }
-    }
+public interface ITransportConfigurator
+{
+    int PrefetchCount { set; }
+
+    int? ConcurrentMessageLimit { set; }
 }

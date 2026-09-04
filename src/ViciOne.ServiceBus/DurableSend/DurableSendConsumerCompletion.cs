@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.DurableSend;
-
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Diagnostics;
 
+namespace ViciOne.ServiceBus.DurableSend;
 /// <summary>Process-local, generation-fenced completion capability handed to a volatile transport adapter for one dispatch.</summary>
 internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumerCompletion
     where TBus : class, IBus

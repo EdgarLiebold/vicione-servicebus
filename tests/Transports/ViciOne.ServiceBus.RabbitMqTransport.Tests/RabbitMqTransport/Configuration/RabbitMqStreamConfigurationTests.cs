@@ -6,6 +6,28 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Configura
 public sealed class RabbitMqStreamConfigurationTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-STREAM", "subsecond-max-age-removes-invalid-argument")]
+    public void MaxAgeBelowBrokerGranularity_RemovesAnExistingQueueArgument()
+    {
+        global::ViciOne.ServiceBus.RabbitMqTransport.Configuration.RabbitMqReceiveSettings? settings = null;
+
+        _ = Bus.Factory.CreateUsingRabbitMq(configurator => configurator.ReceiveEndpoint("stream-max-age", endpoint =>
+        {
+            endpoint.Stream("native-reader", stream =>
+            {
+                stream.MaxAge = TimeSpan.FromDays(14);
+                stream.MaxAge = TimeSpan.FromMilliseconds(999);
+            });
+            settings = Assert.IsType<global::ViciOne.ServiceBus.RabbitMqTransport.Configuration.RabbitMqReceiveSettings>(
+                Assert.IsType<global::ViciOne.ServiceBus.RabbitMqTransport.Configuration.RabbitMqReceiveEndpointConfiguration>(endpoint).Settings);
+        }));
+
+        global::ViciOne.ServiceBus.RabbitMqTransport.Configuration.RabbitMqReceiveSettings actual =
+            Assert.IsType<global::ViciOne.ServiceBus.RabbitMqTransport.Configuration.RabbitMqReceiveSettings>(settings);
+        Assert.False(actual.QueueArguments.ContainsKey("x-max-age"));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RABBITMQ-NATIVE-STREAM", "stream-settings-project-before-provider-start")]
     public void Stream_ProjectsTheExactQueueAndConsumerArgumentsBeforeTheBrokerStarts()
     {

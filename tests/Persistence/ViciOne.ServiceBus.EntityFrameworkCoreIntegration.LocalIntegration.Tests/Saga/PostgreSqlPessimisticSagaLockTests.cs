@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Saga;
-
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -7,6 +5,8 @@ using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.I
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Saga;
 
 public sealed class PostgreSqlPessimisticSagaLockTests
 {

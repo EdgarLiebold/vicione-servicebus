@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.QuartzIntegration
+using System;
+using Quartz;
+
+namespace ViciOne.ServiceBus.QuartzIntegration;
+
+internal readonly record struct QuartzHostedServiceSettings(TimeSpan? StartDelay, bool WaitForJobsToComplete)
 {
-    using System;
-    using Quartz;
-
-
-    internal readonly record struct QuartzHostedServiceSettings(TimeSpan? StartDelay, bool WaitForJobsToComplete)
+    public static QuartzHostedServiceSettings From(QuartzHostedServiceOptions options)
     {
-        public static QuartzHostedServiceSettings From(QuartzHostedServiceOptions options)
-        {
-            ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(options);
 
-            return new QuartzHostedServiceSettings(options.StartDelay, options.WaitForJobsToComplete);
-        }
+        return new QuartzHostedServiceSettings(options.StartDelay, options.WaitForJobsToComplete);
     }
 }

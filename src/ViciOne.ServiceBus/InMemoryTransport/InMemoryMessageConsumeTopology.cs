@@ -1,54 +1,52 @@
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Transports.Fabric;
+
 #nullable enable
-namespace ViciOne.ServiceBus.InMemoryTransport
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public class InMemoryMessageConsumeTopology<TMessage> :
+    MessageConsumeTopology<TMessage>,
+    IInMemoryMessageConsumeTopologyConfigurator<TMessage>,
+    IInMemoryMessageConsumeTopologyConfigurator
+    where TMessage : class
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
-    using ViciOne.ServiceBus.Configuration;
-    using Transports.Fabric;
+    readonly IMessageTopology<TMessage> _messageTopology;
+    readonly IInMemoryPublishTopology _publishTopology;
+    readonly List<IInMemoryConsumeTopologySpecification> _specifications;
 
-
-    public class InMemoryMessageConsumeTopology<TMessage> :
-        MessageConsumeTopology<TMessage>,
-        IInMemoryMessageConsumeTopologyConfigurator<TMessage>,
-        IInMemoryMessageConsumeTopologyConfigurator
-        where TMessage : class
+    public InMemoryMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IInMemoryPublishTopologyConfigurator publishTopology)
     {
-        readonly IMessageTopology<TMessage> _messageTopology;
-        readonly IInMemoryPublishTopology _publishTopology;
-        readonly List<IInMemoryConsumeTopologySpecification> _specifications;
+        _messageTopology = messageTopology;
+        _publishTopology = publishTopology;
+        _specifications = new List<IInMemoryConsumeTopologySpecification>();
+    }
 
-        public InMemoryMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IInMemoryPublishTopologyConfigurator publishTopology)
+    public void Apply(IMessageFabricConsumeTopologyBuilder builder)
+    {
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
+    }
+
+    public void Bind(ExchangeType? exchangeType, string? routingKey = default)
+    {
+        if (!IsBindableMessageType)
         {
-            _messageTopology = messageTopology;
-            _publishTopology = publishTopology;
-            _specifications = new List<IInMemoryConsumeTopologySpecification>();
+            _specifications.Add(new InvalidInMemoryConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a bindable message type"));
+            return;
         }
 
-        public void Apply(IMessageFabricConsumeTopologyBuilder builder)
-        {
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
-        }
+        var bindExchangeType = exchangeType ?? _publishTopology.GetMessageTopology<TMessage>().ExchangeType;
 
-        public void Bind(ExchangeType? exchangeType, string? routingKey = default)
-        {
-            if (!IsBindableMessageType)
-            {
-                _specifications.Add(new InvalidInMemoryConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a bindable message type"));
-                return;
-            }
+        var specification = new ExchangeBindingConsumeTopologySpecification(_messageTopology.EntityName, bindExchangeType, routingKey);
 
-            var bindExchangeType = exchangeType ?? _publishTopology.GetMessageTopology<TMessage>().ExchangeType;
+        _specifications.Add(specification);
+    }
 
-            var specification = new ExchangeBindingConsumeTopologySpecification(_messageTopology.EntityName, bindExchangeType, routingKey);
-
-            _specifications.Add(specification);
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 }

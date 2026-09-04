@@ -1,218 +1,216 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using ViciOne.ServiceBus.Logging;
+
+namespace ViciOne.ServiceBus;
+
+public static class LogContext
 {
-    using System;
-    using System.Threading;
-    using Logging;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Abstractions;
+    static readonly AsyncLocal<ILogContext> _current;
 
-
-    public static class LogContext
+    static LogContext()
     {
-        static readonly AsyncLocal<ILogContext> _current;
+        _current = new AsyncLocal<ILogContext>();
+    }
 
-        static LogContext()
+    public static EnabledLogger? Critical => Current?.Critical;
+    public static EnabledLogger? Debug => Current?.Debug;
+    public static EnabledLogger? Error => Current?.Error;
+    public static EnabledLogger? Info => Current?.Info;
+    public static EnabledLogger? Trace => Current?.Trace;
+    public static EnabledLogger? Warning => Current?.Warning;
+
+    /// <summary>
+    /// Gets or sets the current operation (Activity) for the current thread.  This flows
+    /// across async calls.
+    /// </summary>
+    public static ILogContext Current
+    {
+        get => _current.Value;
+        set => _current.Value = value;
+    }
+
+    public static void ConfigureCurrentLogContext(ILoggerFactory loggerFactory = null)
+    {
+        Current = new BusLogContext(loggerFactory ?? NullLoggerFactory.Instance);
+    }
+
+    /// <summary>
+    /// Configure the current <see cref="LogContext" /> using the specified <paramref name="logger" />, which will be
+    /// used for all log output.
+    /// </summary>
+    /// <param name="logger">An existing logger</param>
+    public static void ConfigureCurrentLogContext(ILogger logger)
+    {
+        Current = new BusLogContext(new SingleLoggerFactory(logger));
+    }
+
+    public static ILogContext CreateLogContext(string categoryName)
+    {
+        var current = Current ??= CreateDefaultLogContext();
+        var created = current.CreateLogContext(categoryName);
+
+        LogContextInstrumentationExtensions.CopyInstrumentation(current, created);
+        return created;
+    }
+
+    /// <summary>
+    /// If <see cref="Current"/> is not null or the null logger, configure the current LogContext
+    /// using the specified service provider.
+    /// </summary>
+    /// <param name="provider"></param>
+    public static void ConfigureCurrentLogContextIfNull(IServiceProvider provider)
+    {
+        if (Current == null || Current.Logger is NullLogger)
         {
-            _current = new AsyncLocal<ILogContext>();
+            var loggerFactory = provider.GetService<ILoggerFactory>();
+            if (loggerFactory != null)
+                ConfigureCurrentLogContext(loggerFactory);
+            else if (Current == null)
+                ConfigureCurrentLogContext();
         }
 
-        public static EnabledLogger? Critical => Current?.Critical;
-        public static EnabledLogger? Debug => Current?.Debug;
-        public static EnabledLogger? Error => Current?.Error;
-        public static EnabledLogger? Info => Current?.Info;
-        public static EnabledLogger? Trace => Current?.Trace;
-        public static EnabledLogger? Warning => Current?.Warning;
+        LogContextInstrumentationExtensions.TryConfigure(provider);
+    }
 
-        /// <summary>
-        /// Gets or sets the current operation (Activity) for the current thread.  This flows
-        /// across async calls.
-        /// </summary>
-        public static ILogContext Current
+    public static void SetCurrentIfNull(ILogContext? context)
+    {
+        Current ??= context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public static LogMessage<T1> Define<T1>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, Exception> logAction = LoggerMessage.Define<T1>(logLevel, default, formatString);
+
+        void Log(T1 arg1, Exception exception)
         {
-            get => _current.Value;
-            set => _current.Value = value;
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Logger, arg1, exception);
         }
 
-        public static void ConfigureCurrentLogContext(ILoggerFactory loggerFactory = null)
+        return Log;
+    }
+
+    public static LogMessage<T1, T2> Define<T1, T2>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, Exception> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, Exception exception)
         {
-            Current = new BusLogContext(loggerFactory ?? NullLoggerFactory.Instance);
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Logger, arg1, arg2, exception);
         }
 
-        /// <summary>
-        /// Configure the current <see cref="LogContext" /> using the specified <paramref name="logger" />, which will be
-        /// used for all log output.
-        /// </summary>
-        /// <param name="logger">An existing logger</param>
-        public static void ConfigureCurrentLogContext(ILogger logger)
+        return Log;
+    }
+
+    public static LogMessage<T1, T2> DefineMessage<T1, T2>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, Exception> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, Exception exception)
         {
-            Current = new BusLogContext(new SingleLoggerFactory(logger));
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Messages.Logger, arg1, arg2, exception);
         }
 
-        public static ILogContext CreateLogContext(string categoryName)
-        {
-            var current = Current ??= CreateDefaultLogContext();
-            var created = current.CreateLogContext(categoryName);
+        return Log;
+    }
 
-            LogContextInstrumentationExtensions.CopyInstrumentation(current, created);
-            return created;
+    public static LogMessage<T1, T2, T3> Define<T1, T2, T3>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, T3, Exception> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, T3 arg3, Exception exception)
+        {
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Logger, arg1, arg2, arg3, exception);
         }
 
-        /// <summary>
-        /// If <see cref="Current"/> is not null or the null logger, configure the current LogContext
-        /// using the specified service provider.
-        /// </summary>
-        /// <param name="provider"></param>
-        public static void ConfigureCurrentLogContextIfNull(IServiceProvider provider)
-        {
-            if (Current == null || Current.Logger is NullLogger)
-            {
-                var loggerFactory = provider.GetService<ILoggerFactory>();
-                if (loggerFactory != null)
-                    ConfigureCurrentLogContext(loggerFactory);
-                else if (Current == null)
-                    ConfigureCurrentLogContext();
-            }
+        return Log;
+    }
 
-            LogContextInstrumentationExtensions.TryConfigure(provider);
+    public static LogMessage<T1, T2, T3> DefineMessage<T1, T2, T3>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, T3, Exception> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, T3 arg3, Exception exception)
+        {
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Messages.Logger, arg1, arg2, arg3, exception);
         }
 
-        public static void SetCurrentIfNull(ILogContext context)
+        return Log;
+    }
+
+    public static LogMessage<T1, T2, T3, T4> Define<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, T3, T4, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception exception)
         {
-            Current ??= context ?? throw new ArgumentNullException(nameof(context));
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Logger, arg1, arg2, arg3, arg4, exception);
         }
 
-        public static LogMessage<T1> Define<T1>(LogLevel logLevel, string formatString)
+        return Log;
+    }
+
+    public static LogMessage<T1, T2, T3, T4> DefineMessage<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, T3, T4, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception exception)
         {
-            Action<ILogger, T1, Exception> logAction = LoggerMessage.Define<T1>(logLevel, default, formatString);
-
-            void Log(T1 arg1, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Logger, arg1, exception);
-            }
-
-            return Log;
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Messages.Logger, arg1, arg2, arg3, arg4, exception);
         }
 
-        public static LogMessage<T1, T2> Define<T1, T2>(LogLevel logLevel, string formatString)
+        return Log;
+    }
+
+    public static LogMessage<T1, T2, T3, T4, T5> Define<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, T3, T4, T5, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception exception)
         {
-            Action<ILogger, T1, T2, Exception> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Logger, arg1, arg2, exception);
-            }
-
-            return Log;
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Logger, arg1, arg2, arg3, arg4, arg5, exception);
         }
 
-        public static LogMessage<T1, T2> DefineMessage<T1, T2>(LogLevel logLevel, string formatString)
+        return Log;
+    }
+
+    public static LogMessage<T1, T2, T3, T4, T5> DefineMessage<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
+    {
+        Action<ILogger, T1, T2, T3, T4, T5, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
+
+        void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception exception)
         {
-            Action<ILogger, T1, T2, Exception> logAction = LoggerMessage.Define<T1, T2>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Messages.Logger, arg1, arg2, exception);
-            }
-
-            return Log;
+            var logContext = Current;
+            if (logContext != null)
+                logAction(logContext.Messages.Logger, arg1, arg2, arg3, arg4, arg5, exception);
         }
 
-        public static LogMessage<T1, T2, T3> Define<T1, T2, T3>(LogLevel logLevel, string formatString)
-        {
-            Action<ILogger, T1, T2, T3, Exception> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
+        return Log;
+    }
 
-            void Log(T1 arg1, T2 arg2, T3 arg3, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Logger, arg1, arg2, arg3, exception);
-            }
+    static ILogContext CreateDefaultLogContext()
+    {
+        var loggerFactory = NullLoggerFactory.Instance;
 
-            return Log;
-        }
-
-        public static LogMessage<T1, T2, T3> DefineMessage<T1, T2, T3>(LogLevel logLevel, string formatString)
-        {
-            Action<ILogger, T1, T2, T3, Exception> logAction = LoggerMessage.Define<T1, T2, T3>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, T3 arg3, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Messages.Logger, arg1, arg2, arg3, exception);
-            }
-
-            return Log;
-        }
-
-        public static LogMessage<T1, T2, T3, T4> Define<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
-        {
-            Action<ILogger, T1, T2, T3, T4, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Logger, arg1, arg2, arg3, arg4, exception);
-            }
-
-            return Log;
-        }
-
-        public static LogMessage<T1, T2, T3, T4> DefineMessage<T1, T2, T3, T4>(LogLevel logLevel, string formatString)
-        {
-            Action<ILogger, T1, T2, T3, T4, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Messages.Logger, arg1, arg2, arg3, arg4, exception);
-            }
-
-            return Log;
-        }
-
-        public static LogMessage<T1, T2, T3, T4, T5> Define<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
-        {
-            Action<ILogger, T1, T2, T3, T4, T5, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Logger, arg1, arg2, arg3, arg4, arg5, exception);
-            }
-
-            return Log;
-        }
-
-        public static LogMessage<T1, T2, T3, T4, T5> DefineMessage<T1, T2, T3, T4, T5>(LogLevel logLevel, string formatString)
-        {
-            Action<ILogger, T1, T2, T3, T4, T5, Exception> logAction = LoggerMessage.Define<T1, T2, T3, T4, T5>(logLevel, default, formatString);
-
-            void Log(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Exception exception)
-            {
-                var logContext = Current;
-                if (logContext != null)
-                    logAction(logContext.Messages.Logger, arg1, arg2, arg3, arg4, arg5, exception);
-            }
-
-            return Log;
-        }
-
-        static ILogContext CreateDefaultLogContext()
-        {
-            var loggerFactory = NullLoggerFactory.Instance;
-
-            return new BusLogContext(loggerFactory);
-        }
+        return new BusLogContext(loggerFactory);
     }
 }

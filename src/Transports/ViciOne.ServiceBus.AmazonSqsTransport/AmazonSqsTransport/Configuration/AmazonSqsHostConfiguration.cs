@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Configuration;
-using Topology;
-using Transports;
-using Util;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsHostConfiguration :
     BaseHostConfiguration<IAmazonSqsReceiveEndpointConfiguration, IAmazonSqsReceiveEndpointConfigurator>,

@@ -1,47 +1,45 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+[Serializable]
+public class ScheduleMessageCommand<T> :
+    ScheduleMessage
+    where T : class
 {
-    using System;
-
-
-    [Serializable]
-    public class ScheduleMessageCommand<T> :
-        ScheduleMessage
-        where T : class
+    public ScheduleMessageCommand()
     {
-        public ScheduleMessageCommand()
-        {
-        }
-
-        public ScheduleMessageCommand(DateTime scheduledTime, Uri destination, T payload, Guid tokenId)
-        {
-            TokenId = tokenId;
-
-            ScheduledTime = scheduledTime.Kind == DateTimeKind.Local
-                ? scheduledTime.ToUniversalTime()
-                : scheduledTime;
-
-            Destination = destination;
-            Payload = payload;
-
-            PayloadType = MessageTypeCache<T>.MessageTypeNames;
-        }
-
-        public Guid TokenId { get; set; }
-        public DateTime ScheduledTime { get; set; }
-        public string[] PayloadType { get; set; }
-        public Uri Destination { get; set; }
-        public object Payload { get; set; }
     }
 
-
-    [Serializable]
-    public class ScheduleMessageCommand :
-        ScheduleMessage
+    public ScheduleMessageCommand(DateTime scheduledTime, Uri destination, T payload, Guid tokenId)
     {
-        public Guid TokenId { get; set; }
-        public DateTime ScheduledTime { get; set; }
-        public string[] PayloadType { get; set; }
-        public Uri Destination { get; set; }
-        public object Payload { get; set; }
+        TokenId = tokenId;
+
+        ScheduledTime = scheduledTime.Kind == DateTimeKind.Local
+            ? scheduledTime.ToUniversalTime()
+            : scheduledTime;
+
+        Destination = destination;
+        Payload = payload;
+
+        PayloadType = MessageTypeCache<T>.MessageTypeNames;
     }
+
+    public Guid TokenId { get; set; }
+    public DateTime ScheduledTime { get; set; }
+    public string[] PayloadType { get; set; }
+    public Uri Destination { get; set; }
+    public object Payload { get; set; }
+}
+
+
+[Serializable]
+public class ScheduleMessageCommand :
+    ScheduleMessage
+{
+    public Guid TokenId { get; set; }
+    public DateTime ScheduledTime { get; set; }
+    public string[] PayloadType { get; set; }
+    public Uri Destination { get; set; }
+    public object Payload { get; set; }
 }

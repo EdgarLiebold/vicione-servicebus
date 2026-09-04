@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class GroupKeyProvider<TMessage, TKey> :
+    IGroupKeyProvider<TMessage, TKey>
+    where TMessage : class
+    where TKey : class
 {
-    using System;
+    readonly Func<ConsumeContext<TMessage>, TKey> _provider;
 
-
-    public class GroupKeyProvider<TMessage, TKey> :
-        IGroupKeyProvider<TMessage, TKey>
-        where TMessage : class
-        where TKey : class
+    public GroupKeyProvider(Func<ConsumeContext<TMessage>, TKey> provider)
     {
-        readonly Func<ConsumeContext<TMessage>, TKey> _provider;
+        _provider = provider;
+    }
 
-        public GroupKeyProvider(Func<ConsumeContext<TMessage>, TKey> provider)
-        {
-            _provider = provider;
-        }
+    public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
+    {
+        key = _provider(context);
 
-        public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
-        {
-            key = _provider(context);
-
-            return key != null;
-        }
+        return key != null;
     }
 }

@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class PartitionCheckpointData
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.EventHubs.Processor;
-    using Checkpoints;
+    readonly CancellationTokenSource _cancellationTokenSource;
+    readonly ICheckpointer _checkpointer;
+    readonly PendingConfirmationCollection _pending;
 
-
-    public class PartitionCheckpointData
+    public PartitionCheckpointData(ReceiveSettings settings, PendingConfirmationCollection pending)
     {
-        readonly CancellationTokenSource _cancellationTokenSource;
-        readonly ICheckpointer _checkpointer;
-        readonly PendingConfirmationCollection _pending;
+        _cancellationTokenSource = new CancellationTokenSource();
+        _checkpointer = new BatchCheckpointer(settings, _cancellationTokenSource.Token);
+        _pending = pending;
+    }
 
-        public PartitionCheckpointData(ReceiveSettings settings, PendingConfirmationCollection pending)
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-            _checkpointer = new BatchCheckpointer(settings, _cancellationTokenSource.Token);
-            _pending = pending;
-        }
+    public Task Pending(ProcessEventArgs eventArgs)
+    {
+        var pendingConfirmation = _pending.Add(eventArgs);
+        return _checkpointer.Pending(pendingConfirmation);
+    }
 
-        public Task Pending(ProcessEventArgs eventArgs)
-        {
-            var pendingConfirmation = _pending.Add(eventArgs);
-            return _checkpointer.Pending(pendingConfirmation);
-        }
-
-        public async Task Close(PartitionClosingEventArgs args)
-        {
-            if (args.Reason != ProcessingStoppedReason.Shutdown)
-                _cancellationTokenSource.Cancel();
-
-            await _checkpointer.DisposeAsync().ConfigureAwait(false);
-
-            LogContext.Info?.Log("Partition: {PartitionId} was closed, reason: {Reason}", args.PartitionId, args.Reason);
-
+    public async Task Close(PartitionClosingEventArgs args)
+    {
+        if (args.Reason != ProcessingStoppedReason.Shutdown)
             _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
+
+        await _checkpointer.DisposeAsync().ConfigureAwait(false);
+
+        LogContext.Info?.Log("Partition: {PartitionId} was closed, reason: {Reason}", args.PartitionId, args.Reason);
+
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
     }
 }

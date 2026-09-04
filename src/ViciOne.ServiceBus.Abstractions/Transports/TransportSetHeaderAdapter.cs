@@ -1,71 +1,69 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class TransportSetHeaderAdapter<TValueType> :
+    ITransportSetHeaderAdapter<TValueType>
 {
-    using System;
-    using System.Collections.Generic;
+    readonly IHeaderValueConverter<TValueType> _converter;
+    readonly TransportHeaderOptions _options;
 
-
-    public class TransportSetHeaderAdapter<TValueType> :
-        ITransportSetHeaderAdapter<TValueType>
+    public TransportSetHeaderAdapter(IHeaderValueConverter<TValueType> converter, TransportHeaderOptions options = TransportHeaderOptions.Default)
     {
-        readonly IHeaderValueConverter<TValueType> _converter;
-        readonly TransportHeaderOptions _options;
+        _converter = converter;
+        _options = options;
+    }
 
-        public TransportSetHeaderAdapter(IHeaderValueConverter<TValueType> converter, TransportHeaderOptions options = TransportHeaderOptions.Default)
+    public void Set(IDictionary<string, TValueType> dictionary, in HeaderValue headerValue)
+    {
+        switch (headerValue.Value)
         {
-            _converter = converter;
-            _options = options;
+            case null:
+                if (dictionary.ContainsKey(headerValue.Key))
+                    dictionary.Remove(headerValue.Key);
+                break;
+
+            default:
+                if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out HeaderValue<TValueType> result))
+                    dictionary[result.Key] = result.Value;
+                break;
         }
+    }
 
-        public void Set(IDictionary<string, TValueType> dictionary, in HeaderValue headerValue)
+    public void Set<T>(IDictionary<string, TValueType> dictionary, in HeaderValue<T> headerValue)
+    {
+        switch (headerValue.Value)
         {
-            switch (headerValue.Value)
-            {
-                case null:
-                    if (dictionary.ContainsKey(headerValue.Key))
-                        dictionary.Remove(headerValue.Key);
-                    break;
+            case null:
+            case string s when string.IsNullOrWhiteSpace(s):
+                if (dictionary.ContainsKey(headerValue.Key))
+                    dictionary.Remove(headerValue.Key);
+                break;
 
-                default:
-                    if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out HeaderValue<TValueType> result))
-                        dictionary[result.Key] = result.Value;
-                    break;
-            }
+            default:
+                if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out HeaderValue<TValueType> result))
+                    dictionary[result.Key] = result.Value;
+                break;
         }
+    }
 
-        public void Set<T>(IDictionary<string, TValueType> dictionary, in HeaderValue<T> headerValue)
+    bool IsHeaderIncluded(string key)
+    {
+        if (key.StartsWith(MessageHeaders.Host.Prefix, StringComparison.Ordinal))
+            return _options.HasFlag(TransportHeaderOptions.IncludeHost);
+
+        if (key.Equals(MessageHeaders.FaultInputAddress))
+            return true;
+
+        if (key.StartsWith(MessageHeaders.FaultPrefix, StringComparison.Ordinal))
         {
-            switch (headerValue.Value)
-            {
-                case null:
-                case string s when string.IsNullOrWhiteSpace(s):
-                    if (dictionary.ContainsKey(headerValue.Key))
-                        dictionary.Remove(headerValue.Key);
-                    break;
-
-                default:
-                    if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out HeaderValue<TValueType> result))
-                        dictionary[result.Key] = result.Value;
-                    break;
-            }
-        }
-
-        bool IsHeaderIncluded(string key)
-        {
-            if (key.StartsWith(MessageHeaders.Host.Prefix, StringComparison.Ordinal))
-                return _options.HasFlag(TransportHeaderOptions.IncludeHost);
-
-            if (key.Equals(MessageHeaders.FaultInputAddress))
+            if (_options.HasFlag(TransportHeaderOptions.IncludeFaultDetail))
                 return true;
 
-            if (key.StartsWith(MessageHeaders.FaultPrefix, StringComparison.Ordinal))
-            {
-                if (_options.HasFlag(TransportHeaderOptions.IncludeFaultDetail))
-                    return true;
-
-                return _options.HasFlag(TransportHeaderOptions.IncludeFaultMessage) && key.Equals(MessageHeaders.FaultMessage);
-            }
-
-            return true;
+            return _options.HasFlag(TransportHeaderOptions.IncludeFaultMessage) && key.Equals(MessageHeaders.FaultMessage);
         }
+
+        return true;
     }
 }

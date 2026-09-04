@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Discard the error instead of moving it to the error transport.
+/// </summary>
+public class DiscardErrorTransportFilter :
+    IFilter<ExceptionReceiveContext>
 {
-    using System.Threading.Tasks;
-
-
-    /// <summary>
-    /// Discard the error instead of moving it to the error transport.
-    /// </summary>
-    public class DiscardErrorTransportFilter :
-        IFilter<ExceptionReceiveContext>
+    void IProbeSite.Probe(ProbeContext context)
     {
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("discardFault");
-        }
+        context.CreateFilterScope("discardFault");
+    }
 
-        Task IFilter<ExceptionReceiveContext>.Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
-        {
-            return next.Send(context);
-        }
+    Task IFilter<ExceptionReceiveContext>.Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
+    {
+        return next.Send(context);
     }
 }

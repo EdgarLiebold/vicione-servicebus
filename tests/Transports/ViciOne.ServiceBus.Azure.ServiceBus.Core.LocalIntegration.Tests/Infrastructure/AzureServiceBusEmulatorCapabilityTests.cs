@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.Infrastructure;
-
 using global::Azure.Messaging.ServiceBus;
 using global::Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.Infrastructure;
 
 public sealed class AzureServiceBusEmulatorCapabilityTests
 {

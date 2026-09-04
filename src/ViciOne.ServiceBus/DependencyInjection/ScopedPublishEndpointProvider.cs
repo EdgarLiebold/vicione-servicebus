@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ScopedPublishEndpointProvider :
+    IPublishEndpointProvider
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IPublishEndpointProvider _provider;
+    readonly IServiceProvider _serviceProvider;
 
-
-    public class ScopedPublishEndpointProvider :
-        IPublishEndpointProvider
+    public ScopedPublishEndpointProvider(IPublishEndpointProvider provider, IServiceProvider serviceProvider)
     {
-        readonly IPublishEndpointProvider _provider;
-        readonly IServiceProvider _serviceProvider;
+        _provider = provider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public ScopedPublishEndpointProvider(IPublishEndpointProvider provider, IServiceProvider serviceProvider)
-        {
-            _provider = provider;
-            _serviceProvider = serviceProvider;
-        }
+    ConnectHandle IPublishObserverConnector.ConnectPublishObserver(IPublishObserver observer)
+    {
+        return _provider.ConnectPublishObserver(observer);
+    }
 
-        ConnectHandle IPublishObserverConnector.ConnectPublishObserver(IPublishObserver observer)
-        {
-            return _provider.ConnectPublishObserver(observer);
-        }
+    async Task<ISendEndpoint> IPublishEndpointProvider.GetPublishSendEndpoint<T>()
+        where T : class
+    {
+        var endpoint = await _provider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
 
-        async Task<ISendEndpoint> IPublishEndpointProvider.GetPublishSendEndpoint<T>()
-            where T : class
-        {
-            var endpoint = await _provider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
-
-            return new ScopedSendEndpoint(endpoint, _serviceProvider);
-        }
+        return new ScopedSendEndpoint(endpoint, _serviceProvider);
     }
 }

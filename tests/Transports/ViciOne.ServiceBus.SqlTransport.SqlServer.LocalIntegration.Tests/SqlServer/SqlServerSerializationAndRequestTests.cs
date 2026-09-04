@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
-
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
 
 public sealed class SqlServerSerializationAndRequestTests
 {

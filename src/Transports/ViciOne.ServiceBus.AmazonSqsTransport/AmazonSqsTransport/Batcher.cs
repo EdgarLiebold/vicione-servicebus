@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Util;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public abstract class Batcher<TEntry> :
     IBatcher<TEntry>

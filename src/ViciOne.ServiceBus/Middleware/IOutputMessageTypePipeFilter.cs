@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public interface IConsumeContextOutputMessageTypeFilter<out TMessage> :
+    IFilter<ConsumeContext>,
+    IPipeConnector<ConsumeContext<TMessage>>,
+    IConsumeMessageObserverConnector<TMessage>
+    where TMessage : class
 {
-    using System;
-
-
-    public interface IConsumeContextOutputMessageTypeFilter<out TMessage> :
-        IFilter<ConsumeContext>,
-        IPipeConnector<ConsumeContext<TMessage>>,
-        IConsumeMessageObserverConnector<TMessage>
-        where TMessage : class
-    {
-        ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe);
-    }
+    ConnectHandle ConnectPipe(Guid key, IPipe<ConsumeContext<TMessage>> pipe);
 }

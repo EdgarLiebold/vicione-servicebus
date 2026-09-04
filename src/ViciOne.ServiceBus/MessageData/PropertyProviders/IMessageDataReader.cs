@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.MessageData.PropertyProviders
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
+
+public interface IMessageDataReader<T>
 {
-    using System;
-    using System.Threading;
-
-
-    public interface IMessageDataReader<T>
-    {
-        MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken);
-    }
+    MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken);
 }

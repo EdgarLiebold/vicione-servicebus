@@ -1,101 +1,99 @@
+using System;
+using RabbitMQ.Client;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IRabbitMqHostConfigurator
 {
-    using System;
-    using RabbitMQ.Client;
+    /// <summary>
+    /// Enables RabbitMQ publish acknowledgement, so that the Task returned from Send/Publish
+    /// is not completed until the message has been confirmed by the broker.
+    /// </summary>
+    bool PublisherConfirmation { set; }
 
+    RefreshConnectionFactoryCallback OnRefreshConnectionFactory { set; }
 
-    public interface IRabbitMqHostConfigurator
-    {
-        /// <summary>
-        /// Enables RabbitMQ publish acknowledgement, so that the Task returned from Send/Publish
-        /// is not completed until the message has been confirmed by the broker.
-        /// </summary>
-        bool PublisherConfirmation { set; }
+    /// <summary>
+    /// Sets the credential provider, overriding the default username/password credentials
+    /// </summary>
+    ICredentialsProvider CredentialsProvider { set; }
 
-        RefreshConnectionFactoryCallback OnRefreshConnectionFactory { set; }
+    /// <summary>
+    /// Configure the use of SSL to connection to RabbitMQ
+    /// </summary>
+    /// <param name="configure"></param>
+    void UseSsl(Action<IRabbitMqSslConfigurator>? configure = null);
 
-        /// <summary>
-        /// Sets the credential provider, overriding the default username/password credentials
-        /// </summary>
-        ICredentialsProvider CredentialsProvider { set; }
+    /// <summary>
+    /// Specifies the heartbeat interval, in seconds, used to maintain the connection to RabbitMQ.
+    /// Setting this value to zero will disable heartbeats, allowing the connection to timeout
+    /// after an inactivity period.
+    /// </summary>
+    /// <param name="requestedHeartbeat"></param>
+    void Heartbeat(ushort requestedHeartbeat);
 
-        /// <summary>
-        /// Configure the use of SSL to connection to RabbitMQ
-        /// </summary>
-        /// <param name="configure"></param>
-        void UseSsl(Action<IRabbitMqSslConfigurator>? configure = null);
+    /// <summary>
+    /// Specifies the heartbeat interval, used to maintain the connection to RabbitMQ.
+    /// Setting this value to TimeSpan.Zero will disable heartbeats, allowing the connection to timeout
+    /// after an inactivity period.
+    /// </summary>
+    void Heartbeat(TimeSpan timeSpan);
 
-        /// <summary>
-        /// Specifies the heartbeat interval, in seconds, used to maintain the connection to RabbitMQ.
-        /// Setting this value to zero will disable heartbeats, allowing the connection to timeout
-        /// after an inactivity period.
-        /// </summary>
-        /// <param name="requestedHeartbeat"></param>
-        void Heartbeat(ushort requestedHeartbeat);
+    /// <summary>
+    /// Sets the username for the connection to RabbitMQ
+    /// </summary>
+    /// <param name="username"></param>
+    void Username(string username);
 
-        /// <summary>
-        /// Specifies the heartbeat interval, used to maintain the connection to RabbitMQ.
-        /// Setting this value to TimeSpan.Zero will disable heartbeats, allowing the connection to timeout
-        /// after an inactivity period.
-        /// </summary>
-        void Heartbeat(TimeSpan timeSpan);
+    /// <summary>
+    /// Sets the password for the connection to RabbitMQ
+    /// </summary>
+    /// <param name="password"></param>
+    void Password(string password);
 
-        /// <summary>
-        /// Sets the username for the connection to RabbitMQ
-        /// </summary>
-        /// <param name="username"></param>
-        void Username(string username);
+    /// <summary>
+    /// Configure a RabbitMQ High-Availability cluster which will cycle hosts when connections are interrupted.
+    /// </summary>
+    /// <param name="configureCluster">The cluster configuration</param>
+    void UseCluster(Action<IRabbitMqClusterConfigurator> configureCluster);
 
-        /// <summary>
-        /// Sets the password for the connection to RabbitMQ
-        /// </summary>
-        /// <param name="password"></param>
-        void Password(string password);
+    /// <summary>
+    /// Set the maximum number of channels allowed for the connection
+    /// </summary>
+    /// <param name="value"></param>
+    void RequestedChannelMax(ushort value);
 
-        /// <summary>
-        /// Configure a RabbitMQ High-Availability cluster which will cycle hosts when connections are interrupted.
-        /// </summary>
-        /// <param name="configureCluster">The cluster configuration</param>
-        void UseCluster(Action<IRabbitMqClusterConfigurator> configureCluster);
+    /// <summary>
+    /// Set the request frame max for the connection
+    /// </summary>
+    /// <param name="value"></param>
+    void RequestedFrameMax(uint value);
 
-        /// <summary>
-        /// Set the maximum number of channels allowed for the connection
-        /// </summary>
-        /// <param name="value"></param>
-        void RequestedChannelMax(ushort value);
+    /// <summary>
+    /// The requested connection timeout, in milliseconds
+    /// </summary>
+    /// <param name="milliseconds"></param>
+    void RequestedConnectionTimeout(int milliseconds);
 
-        /// <summary>
-        /// Set the request frame max for the connection
-        /// </summary>
-        /// <param name="value"></param>
-        void RequestedFrameMax(uint value);
+    /// <summary>
+    /// The requested connection timeout
+    /// </summary>
+    void RequestedConnectionTimeout(TimeSpan timeSpan);
 
-        /// <summary>
-        /// The requested connection timeout, in milliseconds
-        /// </summary>
-        /// <param name="milliseconds"></param>
-        void RequestedConnectionTimeout(int milliseconds);
+    /// <summary>
+    /// Sets the continuation timeout for command communication with RabbitMQ
+    /// </summary>
+    /// <param name="timeout"></param>
+    void ContinuationTimeout(TimeSpan timeout);
 
-        /// <summary>
-        /// The requested connection timeout
-        /// </summary>
-        void RequestedConnectionTimeout(TimeSpan timeSpan);
+    /// <summary>
+    /// Configure the Max message size for RabbitMQ.Client
+    /// </summary>
+    void MaxMessageSize(uint maxMessageSize);
 
-        /// <summary>
-        /// Sets the continuation timeout for command communication with RabbitMQ
-        /// </summary>
-        /// <param name="timeout"></param>
-        void ContinuationTimeout(TimeSpan timeout);
-
-        /// <summary>
-        /// Configure the Max message size for RabbitMQ.Client
-        /// </summary>
-        void MaxMessageSize(uint maxMessageSize);
-
-        /// <summary>
-        /// Sets the connection name for the connection to RabbitMQ
-        /// </summary>
-        void ConnectionName(string? connectionName);
-    }
+    /// <summary>
+    /// Sets the connection name for the connection to RabbitMQ
+    /// </summary>
+    void ConnectionName(string? connectionName);
 }

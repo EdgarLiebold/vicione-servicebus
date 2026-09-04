@@ -1,9 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
-
 using System;
 using RabbitMQ.Client;
 
+#nullable enable
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
 
 public class RabbitMqStreamConfigurator :
     IRabbitMqStreamConfigurator
@@ -17,7 +16,7 @@ public class RabbitMqStreamConfigurator :
 
     public long MaxLength
     {
-        set => _settings.QueueArguments[Headers.XMaxLengthInBytes] = value;
+        set => _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxLengthInBytes] = value;
     }
 
     public TimeSpan MaxAge
@@ -34,13 +33,16 @@ public class RabbitMqStreamConfigurator :
             else if (value.TotalSeconds >= 1)
                 text = $"{value.TotalSeconds:F0}s";
 
-            _settings.QueueArguments[Headers.XMaxAge] = text;
+            if (text == null)
+                _settings.QueueArguments.Remove(RabbitMQ.Client.Headers.XMaxAge);
+            else
+                _settings.QueueArguments[RabbitMQ.Client.Headers.XMaxAge] = text;
         }
     }
 
     public long MaxSegmentSize
     {
-        set => _settings.QueueArguments[Headers.XStreamMaxSegmentSizeInBytes] = value;
+        set => _settings.QueueArguments[RabbitMQ.Client.Headers.XStreamMaxSegmentSizeInBytes] = value;
     }
 
     public string Filter
@@ -50,7 +52,7 @@ public class RabbitMqStreamConfigurator :
 
     public void FromOffset(long offset)
     {
-        _settings.ConsumeArguments[Headers.XStreamOffset] = offset;
+        _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = offset;
     }
 
     public void FromTimestamp(DateTime timestamp)
@@ -58,17 +60,17 @@ public class RabbitMqStreamConfigurator :
         if (timestamp.Kind == DateTimeKind.Local)
             timestamp = timestamp.ToUniversalTime();
 
-        _settings.ConsumeArguments.SetAmqpTimestamp(Headers.XStreamOffset, timestamp);
+        _settings.ConsumeArguments.SetAmqpTimestamp(RabbitMQ.Client.Headers.XStreamOffset, timestamp);
     }
 
     public void FromFirst()
     {
-        _settings.ConsumeArguments[Headers.XStreamOffset] = "first";
+        _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = "first";
     }
 
     public void FromLast()
     {
-        _settings.ConsumeArguments[Headers.XStreamOffset] = "last";
+        _settings.ConsumeArguments[RabbitMQ.Client.Headers.XStreamOffset] = "last";
     }
 
     public string Reference

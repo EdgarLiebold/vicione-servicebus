@@ -1,6 +1,5 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface ConfigureTopologyContext
 {
-    public interface ConfigureTopologyContext
-    {
-    }
 }

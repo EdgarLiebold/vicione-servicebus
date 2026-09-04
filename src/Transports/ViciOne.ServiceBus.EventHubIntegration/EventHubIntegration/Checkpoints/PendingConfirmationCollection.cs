@@ -1,67 +1,65 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using Azure.Messaging.EventHubs.Processor;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
+
+public class PendingConfirmationCollection :
+    IDisposable
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Threading;
-    using Azure.Messaging.EventHubs.Processor;
+    readonly CancellationToken _cancellationToken;
+    readonly ConcurrentDictionary<PartitionOffset, IPendingConfirmation> _confirmations;
+    readonly CancellationTokenRegistration? _registration;
 
-
-    public class PendingConfirmationCollection :
-        IDisposable
+    public PendingConfirmationCollection(CancellationToken cancellationToken)
     {
-        readonly CancellationToken _cancellationToken;
-        readonly ConcurrentDictionary<PartitionOffset, IPendingConfirmation> _confirmations;
-        readonly CancellationTokenRegistration? _registration;
+        _cancellationToken = cancellationToken;
+        _confirmations = new ConcurrentDictionary<PartitionOffset, IPendingConfirmation>();
 
-        public PendingConfirmationCollection(CancellationToken cancellationToken)
+        if (cancellationToken.CanBeCanceled)
+            _registration = cancellationToken.Register(Cancel);
+    }
+
+    public void Dispose()
+    {
+        _registration?.Dispose();
+    }
+
+    public IPendingConfirmation Add(ProcessEventArgs eventArgs)
+    {
+        _cancellationToken.ThrowIfCancellationRequested();
+
+        var pendingConfirmation = new PendingConfirmation(eventArgs);
+        return _confirmations.AddOrUpdate(eventArgs, key => pendingConfirmation, (key, existing) =>
         {
-            _cancellationToken = cancellationToken;
-            _confirmations = new ConcurrentDictionary<PartitionOffset, IPendingConfirmation>();
+            existing.Faulted($"Duplicate key: {key} on EventHub: {eventArgs.Partition.EventHubName}");
 
-            if (cancellationToken.CanBeCanceled)
-                _registration = cancellationToken.Register(Cancel);
-        }
+            return pendingConfirmation;
+        });
+    }
 
-        public void Dispose()
-        {
-            _registration?.Dispose();
-        }
+    public void Faulted(PartitionOffset partitionOffset, Exception exception)
+    {
+        if (_confirmations.TryRemove(partitionOffset, out var confirmation))
+            confirmation.Faulted(exception);
+    }
 
-        public IPendingConfirmation Add(ProcessEventArgs eventArgs)
-        {
-            _cancellationToken.ThrowIfCancellationRequested();
+    public void Complete(PartitionOffset partitionOffset)
+    {
+        if (_confirmations.TryRemove(partitionOffset, out var confirmation))
+            confirmation.Complete();
+    }
 
-            var pendingConfirmation = new PendingConfirmation(eventArgs);
-            return _confirmations.AddOrUpdate(eventArgs, key => pendingConfirmation, (key, existing) =>
-            {
-                existing.Faulted($"Duplicate key: {key} on EventHub: {eventArgs.Partition.EventHubName}");
+    public void Canceled(PartitionOffset partitionOffset, CancellationToken cancellationToken)
+    {
+        if (_confirmations.TryRemove(partitionOffset, out var confirmation))
+            confirmation.Canceled(cancellationToken);
+    }
 
-                return pendingConfirmation;
-            });
-        }
-
-        public void Faulted(PartitionOffset partitionOffset, Exception exception)
-        {
-            if (_confirmations.TryRemove(partitionOffset, out var confirmation))
-                confirmation.Faulted(exception);
-        }
-
-        public void Complete(PartitionOffset partitionOffset)
-        {
-            if (_confirmations.TryRemove(partitionOffset, out var confirmation))
-                confirmation.Complete();
-        }
-
-        public void Canceled(PartitionOffset partitionOffset, CancellationToken cancellationToken)
-        {
-            if (_confirmations.TryRemove(partitionOffset, out var confirmation))
-                confirmation.Canceled(cancellationToken);
-        }
-
-        void Cancel()
-        {
-            foreach (var partitionOffset in _confirmations.Keys)
-                Canceled(partitionOffset, _cancellationToken);
-        }
+    void Cancel()
+    {
+        foreach (var partitionOffset in _confirmations.Keys)
+            Canceled(partitionOffset, _cancellationToken);
     }
 }

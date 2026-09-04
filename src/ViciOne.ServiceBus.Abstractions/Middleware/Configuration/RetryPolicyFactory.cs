@@ -1,4 +1,3 @@
-namespace ViciOne.ServiceBus.Configuration
-{
-    public delegate IRetryPolicy RetryPolicyFactory(IExceptionFilter filter);
-}
+namespace ViciOne.ServiceBus.Configuration;
+
+public delegate IRetryPolicy RetryPolicyFactory(IExceptionFilter filter);

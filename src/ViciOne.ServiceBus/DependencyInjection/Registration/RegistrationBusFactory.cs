@@ -1,86 +1,84 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class RegistrationBusFactory :
+    IRegistrationBusFactory
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-    using Transports;
+    readonly Func<IBusRegistrationContext, IBusControl> _configure;
 
-
-    public class RegistrationBusFactory :
-        IRegistrationBusFactory
+    public RegistrationBusFactory(Func<IBusRegistrationContext, IBusControl> configure)
     {
-        readonly Func<IBusRegistrationContext, IBusControl> _configure;
+        _configure = configure ?? throw new ArgumentNullException(nameof(configure));
+    }
 
-        public RegistrationBusFactory(Func<IBusRegistrationContext, IBusControl> configure)
+    public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
+    {
+        LogContext.ConfigureCurrentLogContextIfNull(context);
+
+        var busControl = _configure(context);
+
+        return new DefaultBusInstance(busControl, context);
+    }
+
+
+    class DefaultBusInstance :
+        IBusInstance
+    {
+        const string RiderExceptionMessage =
+            "Riders could be only used with Microsoft DI or Autofac using 'SetBusFactory' method (UsingTransport extensions).";
+
+        readonly IBusRegistrationContext _busRegistrationContext;
+
+        public DefaultBusInstance(IBusControl busControl, IBusRegistrationContext busRegistrationContext)
         {
-            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
+            _busRegistrationContext = busRegistrationContext;
+            BusControl = busControl;
         }
 
-        public IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
+        public string Name => "vicione-servicebus-bus";
+        public Type InstanceType => typeof(IBus);
+        public IBus Bus => BusControl;
+        public IBusControl BusControl { get; }
+
+        public IHostConfiguration HostConfiguration => default;
+
+        public void Connect<TRider>(IRiderControl riderControl)
+            where TRider : IRider
         {
-            LogContext.ConfigureCurrentLogContextIfNull(context);
-
-            var busControl = _configure(context);
-
-            return new DefaultBusInstance(busControl, context);
+            throw new ConfigurationException(RiderExceptionMessage);
         }
 
-
-        class DefaultBusInstance :
-            IBusInstance
+        public TRider GetRider<TRider>()
+            where TRider : IRider
         {
-            const string RiderExceptionMessage =
-                "Riders could be only used with Microsoft DI or Autofac using 'SetBusFactory' method (UsingTransport extensions).";
+            throw new ConfigurationException(RiderExceptionMessage);
+        }
 
-            readonly IBusRegistrationContext _busRegistrationContext;
-
-            public DefaultBusInstance(IBusControl busControl, IBusRegistrationContext busRegistrationContext)
+        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        {
+            return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
             {
-                _busRegistrationContext = busRegistrationContext;
-                BusControl = busControl;
-            }
+                _busRegistrationContext.GetConfigureReceiveEndpoints()
+                    .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
 
-            public string Name => "vicione-servicebus-bus";
-            public Type InstanceType => typeof(IBus);
-            public IBus Bus => BusControl;
-            public IBusControl BusControl { get; }
+                configure?.Invoke(_busRegistrationContext, configurator);
+            });
+        }
 
-            public IHostConfiguration HostConfiguration => default;
-
-            public void Connect<TRider>(IRiderControl riderControl)
-                where TRider : IRider
+        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
+            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+        {
+            return BusControl.ConnectReceiveEndpoint(queueName, configurator =>
             {
-                throw new ConfigurationException(RiderExceptionMessage);
-            }
+                _busRegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
 
-            public TRider GetRider<TRider>()
-                where TRider : IRider
-            {
-                throw new ConfigurationException(RiderExceptionMessage);
-            }
-
-            public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-                Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
-            {
-                return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
-                {
-                    _busRegistrationContext.GetConfigureReceiveEndpoints()
-                        .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
-
-                    configure?.Invoke(_busRegistrationContext, configurator);
-                });
-            }
-
-            public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-                Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
-            {
-                return BusControl.ConnectReceiveEndpoint(queueName, configurator =>
-                {
-                    _busRegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
-
-                    configure?.Invoke(_busRegistrationContext, configurator);
-                });
-            }
+                configure?.Invoke(_busRegistrationContext, configurator);
+            });
         }
     }
 }

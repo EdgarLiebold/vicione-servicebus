@@ -1,62 +1,60 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Middleware
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure;
+using Azure.Storage.Blobs;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Middleware;
+
+public class EventHubBlobContainerFactoryFilter :
+    IFilter<ProcessorContext>
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure;
-    using Azure.Storage.Blobs;
+    readonly BlobContainerClient _blockClient;
 
-
-    public class EventHubBlobContainerFactoryFilter :
-        IFilter<ProcessorContext>
+    public EventHubBlobContainerFactoryFilter(BlobContainerClient blockClient)
     {
-        readonly BlobContainerClient _blockClient;
+        _blockClient = blockClient;
+    }
 
-        public EventHubBlobContainerFactoryFilter(BlobContainerClient blockClient)
+    public async Task Send(ProcessorContext context, IPipe<ProcessorContext> next)
+    {
+        OneTimeContext<EventHubBlobContainerFactoryFilter> oneTimeContext = await context
+            .OneTimeSetup<EventHubBlobContainerFactoryFilter>(() => CreateBlobIfNotExistsAsync(context.CancellationToken))
+            .ConfigureAwait(false);
+
+        try
         {
-            _blockClient = blockClient;
+            await next.Send(context).ConfigureAwait(false);
         }
-
-        public async Task Send(ProcessorContext context, IPipe<ProcessorContext> next)
+        catch (Exception)
         {
-            OneTimeContext<EventHubBlobContainerFactoryFilter> oneTimeContext = await context
-                .OneTimeSetup<EventHubBlobContainerFactoryFilter>(() => CreateBlobIfNotExistsAsync(context.CancellationToken))
-                .ConfigureAwait(false);
-
-            try
-            {
-                await next.Send(context).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                oneTimeContext.Evict();
-                throw;
-            }
+            oneTimeContext.Evict();
+            throw;
         }
+    }
 
-        public void Probe(ProbeContext context)
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("configureTopology");
+        scope.Add("Uri", _blockClient.Uri);
+        scope.Add("Name", _blockClient.Name);
+    }
+
+    async Task<bool> CreateBlobIfNotExistsAsync(CancellationToken cancellationToken = default)
+    {
+        Azure.Response<bool> exists = await _blockClient.ExistsAsync(cancellationToken).ConfigureAwait(false);
+        if (exists.Value)
+            return true;
+
+        try
         {
-            var scope = context.CreateFilterScope("configureTopology");
-            scope.Add("Uri", _blockClient.Uri);
-            scope.Add("Name", _blockClient.Name);
+            await _blockClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return true;
         }
-
-        async Task<bool> CreateBlobIfNotExistsAsync(CancellationToken cancellationToken = default)
+        catch (RequestFailedException exception)
         {
-            Response<bool> exists = await _blockClient.ExistsAsync(cancellationToken).ConfigureAwait(false);
-            if (exists.Value)
-                return true;
-
-            try
-            {
-                await _blockClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-                return true;
-            }
-            catch (RequestFailedException exception)
-            {
-                LogContext.Warning?.Log(exception, "Azure Blob Container does not exist: {Address}", _blockClient.Uri);
-                return false;
-            }
+            LogContext.Warning?.Log(exception, "Azure Blob Container does not exist: {Address}", _blockClient.Uri);
+            return false;
         }
     }
 }

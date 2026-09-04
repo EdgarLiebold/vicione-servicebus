@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.Initializers
+using System;
+using ViciOne.ServiceBus.Initializers.Factories;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus.Initializers;
+
+public static class MessageFactoryCache<TMessage>
+    where TMessage : class
 {
-    using System;
-    using Factories;
-    using Metadata;
+    public static IMessageFactory<TMessage> Factory => Cached.MessageFactory.Value;
 
 
-    public static class MessageFactoryCache<TMessage>
-        where TMessage : class
+    static class Cached
     {
-        public static IMessageFactory<TMessage> Factory => Cached.MessageFactory.Value;
+        internal static readonly Lazy<IMessageFactory<TMessage>> MessageFactory = new Lazy<IMessageFactory<TMessage>>(CreateMessageFactory);
 
-
-        static class Cached
+        static IMessageFactory<TMessage> CreateMessageFactory()
         {
-            internal static readonly Lazy<IMessageFactory<TMessage>> MessageFactory = new Lazy<IMessageFactory<TMessage>>(CreateMessageFactory);
+            if (!MessageTypeCache<TMessage>.IsValidMessageType)
+                throw new ArgumentException(MessageTypeCache<TMessage>.InvalidMessageTypeReason, nameof(TMessage));
 
-            static IMessageFactory<TMessage> CreateMessageFactory()
-            {
-                if (!MessageTypeCache<TMessage>.IsValidMessageType)
-                    throw new ArgumentException(MessageTypeCache<TMessage>.InvalidMessageTypeReason, nameof(TMessage));
+            var implementationType = typeof(TMessage);
+            if (typeof(TMessage).IsInterface)
+                implementationType = TypeMetadataCache<TMessage>.ImplementationType;
 
-                var implementationType = typeof(TMessage);
-                if (typeof(TMessage).IsInterface)
-                    implementationType = TypeMetadataCache<TMessage>.ImplementationType;
+            Type[] parameterTypes = Type.EmptyTypes;
+            if (implementationType.GetConstructor(parameterTypes) == null)
+                throw new ArgumentException("No default constructor available for message type", nameof(TMessage));
 
-                Type[] parameterTypes = Type.EmptyTypes;
-                if (implementationType.GetConstructor(parameterTypes) == null)
-                    throw new ArgumentException("No default constructor available for message type", nameof(TMessage));
-
-                return (IMessageFactory<TMessage>)Activator.CreateInstance(typeof(DynamicMessageFactory<,>).MakeGenericType(typeof(TMessage),
-                    implementationType));
-            }
+            return (IMessageFactory<TMessage>)Activator.CreateInstance(typeof(DynamicMessageFactory<,>).MakeGenericType(typeof(TMessage),
+                implementationType));
         }
     }
 }

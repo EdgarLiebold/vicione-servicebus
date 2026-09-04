@@ -1,62 +1,61 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class IgnoreEventActivityBinder<TInstance> :
+    IActivityBinder<TInstance>
+    where TInstance : class, SagaStateMachineInstance
 {
-    public class IgnoreEventActivityBinder<TInstance> :
-        IActivityBinder<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+    public IgnoreEventActivityBinder(Event @event)
     {
-        public IgnoreEventActivityBinder(Event @event)
-        {
-            Event = @event;
-        }
-
-        public Event Event { get; }
-
-        public bool IsStateTransitionEvent(State state)
-        {
-            return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
-                || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
-        }
-
-        public void Bind(State<TInstance> state)
-        {
-            state.Ignore(Event);
-        }
-
-        public void Bind(IBehaviorBuilder<TInstance> builder)
-        {
-        }
+        Event = @event;
     }
 
+    public Event Event { get; }
 
-    public class IgnoreEventActivityBinder<TInstance, TData> :
-        IActivityBinder<TInstance>
-        where TInstance : class, SagaStateMachineInstance
-        where TData : class
+    public bool IsStateTransitionEvent(State state)
     {
-        readonly Event<TData> _event;
-        readonly StateMachineCondition<TInstance, TData> _filter;
+        return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
+            || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
+    }
 
-        public IgnoreEventActivityBinder(Event<TData> @event, StateMachineCondition<TInstance, TData> filter)
-        {
-            _event = @event;
-            _filter = filter;
-        }
+    public void Bind(State<TInstance> state)
+    {
+        state.Ignore(Event);
+    }
 
-        public Event Event => _event;
+    public void Bind(IBehaviorBuilder<TInstance> builder)
+    {
+    }
+}
 
-        public bool IsStateTransitionEvent(State state)
-        {
-            return Equals(_event, state.Enter) || Equals(_event, state.BeforeEnter)
-                || Equals(_event, state.AfterLeave) || Equals(_event, state.Leave);
-        }
 
-        public void Bind(State<TInstance> state)
-        {
-            state.Ignore(_event, _filter);
-        }
+public class IgnoreEventActivityBinder<TInstance, TData> :
+    IActivityBinder<TInstance>
+    where TInstance : class, SagaStateMachineInstance
+    where TData : class
+{
+    readonly Event<TData> _event;
+    readonly StateMachineCondition<TInstance, TData> _filter;
 
-        public void Bind(IBehaviorBuilder<TInstance> builder)
-        {
-        }
+    public IgnoreEventActivityBinder(Event<TData> @event, StateMachineCondition<TInstance, TData> filter)
+    {
+        _event = @event;
+        _filter = filter;
+    }
+
+    public Event Event => _event;
+
+    public bool IsStateTransitionEvent(State state)
+    {
+        return Equals(_event, state.Enter) || Equals(_event, state.BeforeEnter)
+            || Equals(_event, state.AfterLeave) || Equals(_event, state.Leave);
+    }
+
+    public void Bind(State<TInstance> state)
+    {
+        state.Ignore(_event, _filter);
+    }
+
+    public void Bind(IBehaviorBuilder<TInstance> builder)
+    {
     }
 }

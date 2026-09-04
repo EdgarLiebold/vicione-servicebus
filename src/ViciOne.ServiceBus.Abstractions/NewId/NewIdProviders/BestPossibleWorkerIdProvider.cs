@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.NewIdProviders
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.NewIdProviders;
+
+public class BestPossibleWorkerIdProvider :
+    IWorkerIdProvider
 {
-    using System;
-    using System.Collections.Generic;
-
-
-    public class BestPossibleWorkerIdProvider :
-        IWorkerIdProvider
+    public byte[] GetWorkerId(int index)
     {
-        public byte[] GetWorkerId(int index)
+        var exceptions = new List<Exception>();
+
+        try
         {
-            var exceptions = new List<Exception>();
-
-            try
-            {
-                return new NetworkAddressWorkerIdProvider().GetWorkerId(index);
-            }
-            catch (Exception ex)
-            {
-                exceptions.Add(ex);
-            }
-
-            try
-            {
-                return new HostNameHashWorkerIdProvider().GetWorkerId(index);
-            }
-            catch (Exception ex)
-            {
-                exceptions.Add(ex);
-            }
-
-            throw new AggregateException(exceptions);
+            return new NetworkAddressWorkerIdProvider().GetWorkerId(index);
         }
+        catch (Exception ex)
+        {
+            exceptions.Add(ex);
+        }
+
+        try
+        {
+            return new HostNameHashWorkerIdProvider().GetWorkerId(index);
+        }
+        catch (Exception ex)
+        {
+            exceptions.Add(ex);
+        }
+
+        throw new AggregateException(exceptions);
     }
 }

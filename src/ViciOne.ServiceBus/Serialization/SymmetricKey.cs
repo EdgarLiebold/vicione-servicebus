@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Serialization
-{
-    public interface SymmetricKey
-    {
-        byte[] Key { get; }
+namespace ViciOne.ServiceBus.Serialization;
 
-        byte[] IV { get; }
-    }
+public interface SymmetricKey
+{
+    byte[] Key { get; }
+
+    byte[] IV { get; }
 }

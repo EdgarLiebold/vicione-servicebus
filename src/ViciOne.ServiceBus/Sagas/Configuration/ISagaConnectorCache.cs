@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISagaConnectorCache
 {
-    public interface ISagaConnectorCache
-    {
-        ISagaConnector Connector { get; }
-    }
+    ISagaConnector Connector { get; }
 }

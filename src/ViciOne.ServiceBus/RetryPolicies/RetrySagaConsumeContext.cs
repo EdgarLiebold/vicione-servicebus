@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class RetrySagaConsumeContext<TSaga> :
+    RetryConsumeContext,
+    SagaConsumeContext<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly SagaConsumeContext<TSaga> _context;
 
-
-    public class RetrySagaConsumeContext<TSaga> :
-        RetryConsumeContext,
-        SagaConsumeContext<TSaga>
-        where TSaga : class, ISaga
+    public RetrySagaConsumeContext(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+        : base(context, retryPolicy, retryContext)
     {
-        readonly SagaConsumeContext<TSaga> _context;
+        _context = context;
+    }
 
-        public RetrySagaConsumeContext(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-            : base(context, retryPolicy, retryContext)
-        {
-            _context = context;
-        }
+    public TSaga Saga => _context.Saga;
 
-        public TSaga Saga => _context.Saga;
+    Task SagaConsumeContext<TSaga>.SetCompleted()
+    {
+        return _context.SetCompleted();
+    }
 
-        Task SagaConsumeContext<TSaga>.SetCompleted()
-        {
-            return _context.SetCompleted();
-        }
+    public bool IsCompleted => _context.IsCompleted;
 
-        public bool IsCompleted => _context.IsCompleted;
-
-        public override TContext CreateNext<TContext>(RetryContext retryContext)
-        {
-            return new RetrySagaConsumeContext<TSaga>(_context, RetryPolicy, retryContext) as TContext
-                ?? throw new ArgumentException($"The context type is not valid: {TypeCache<TContext>.ShortName}");
-        }
+    public override TContext CreateNext<TContext>(RetryContext retryContext)
+    {
+        return new RetrySagaConsumeContext<TSaga>(_context, RetryPolicy, retryContext) as TContext
+            ?? throw new ArgumentException($"The context type is not valid: {TypeCache<TContext>.ShortName}");
     }
 }

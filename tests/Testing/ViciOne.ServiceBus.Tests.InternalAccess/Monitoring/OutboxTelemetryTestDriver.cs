@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
-
 using ViciOne.ServiceBus.Logging;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
 
 public static class OutboxTelemetryTestDriver
 {

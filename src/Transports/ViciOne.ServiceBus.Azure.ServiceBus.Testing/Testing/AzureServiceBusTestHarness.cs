@@ -1,115 +1,113 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Azure;
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public class AzureServiceBusTestHarness :
+    BusTestHarness
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Azure;
-    using Azure.Messaging.ServiceBus.Administration;
+    Uri _inputQueueAddress;
 
-
-    public class AzureServiceBusTestHarness :
-        BusTestHarness
+    public AzureServiceBusTestHarness(Uri serviceUri, AzureNamedKeyCredential namedKeyCredential, string inputQueueName = null)
     {
-        Uri _inputQueueAddress;
+        if (serviceUri == null)
+            throw new ArgumentNullException(nameof(serviceUri));
 
-        public AzureServiceBusTestHarness(Uri serviceUri, AzureNamedKeyCredential namedKeyCredential, string inputQueueName = null)
+        HostAddress = serviceUri;
+        NamedKeyCredential = namedKeyCredential;
+
+        InputQueueName = inputQueueName ?? "input_queue";
+
+        ConfigureMessageScheduler = true;
+    }
+
+    public AzureNamedKeyCredential NamedKeyCredential { get; }
+    public override string InputQueueName { get; }
+    public bool ConfigureMessageScheduler { get; set; }
+
+    public override Uri InputQueueAddress => _inputQueueAddress;
+    public Uri HostAddress { get; }
+
+    public event Action<IServiceBusBusFactoryConfigurator> OnConfigureServiceBusBus;
+    public event Action<IServiceBusReceiveEndpointConfigurator> OnConfigureServiceBusReceiveEndpoint;
+
+    protected virtual void ConfigureServiceBusBus(IServiceBusBusFactoryConfigurator configurator)
+    {
+        OnConfigureServiceBusBus?.Invoke(configurator);
+    }
+
+    protected virtual void ConfigureServiceBusReceiveEndpoint(IServiceBusReceiveEndpointConfigurator configurator)
+    {
+        OnConfigureServiceBusReceiveEndpoint?.Invoke(configurator);
+    }
+
+    public override async Task Clean()
+    {
+        var managementClient = CreateManagementClient();
+
+        AsyncPageable<TopicProperties> pageableTopics = managementClient.GetTopicsAsync();
+        IList<TopicProperties> topics = await pageableTopics.ToListAsync();
+        while (topics.Count > 0)
         {
-            if (serviceUri == null)
-                throw new ArgumentNullException(nameof(serviceUri));
+            foreach (var topic in topics)
+                await managementClient.DeleteTopicAsync(topic.Name);
 
-            HostAddress = serviceUri;
-            NamedKeyCredential = namedKeyCredential;
+            await Task.Delay(500);
 
-            InputQueueName = inputQueueName ?? "input_queue";
-
-            ConfigureMessageScheduler = true;
+            topics = await managementClient.GetTopicsAsync().ToListAsync();
         }
 
-        public AzureNamedKeyCredential NamedKeyCredential { get; }
-        public override string InputQueueName { get; }
-        public bool ConfigureMessageScheduler { get; set; }
-
-        public override Uri InputQueueAddress => _inputQueueAddress;
-        public Uri HostAddress { get; }
-
-        public event Action<IServiceBusBusFactoryConfigurator> OnConfigureServiceBusBus;
-        public event Action<IServiceBusReceiveEndpointConfigurator> OnConfigureServiceBusReceiveEndpoint;
-
-        protected virtual void ConfigureServiceBusBus(IServiceBusBusFactoryConfigurator configurator)
+        AsyncPageable<QueueProperties> pageableQueues = managementClient.GetQueuesAsync();
+        IList<QueueProperties> queues = await pageableQueues.ToListAsync();
+        while (queues.Count > 0)
         {
-            OnConfigureServiceBusBus?.Invoke(configurator);
+            foreach (var queue in queues)
+                await managementClient.DeleteQueueAsync(queue.Name);
+
+            await Task.Delay(500);
+
+            queues = await managementClient.GetQueuesAsync().ToListAsync();
         }
+    }
 
-        protected virtual void ConfigureServiceBusReceiveEndpoint(IServiceBusReceiveEndpointConfigurator configurator)
+    ServiceBusAdministrationClient CreateManagementClient()
+    {
+        var endpoint = new UriBuilder(HostAddress) { Path = "" }.Uri.ToString();
+
+        return new ServiceBusAdministrationClient(endpoint, NamedKeyCredential);
+    }
+
+    protected override async Task<IBusControl> CreateBus()
+    {
+        return ViciOne.ServiceBus.Bus.Factory.CreateUsingAzureServiceBus(x =>
         {
-            OnConfigureServiceBusReceiveEndpoint?.Invoke(configurator);
-        }
-
-        public override async Task Clean()
-        {
-            var managementClient = CreateManagementClient();
-
-            AsyncPageable<TopicProperties> pageableTopics = managementClient.GetTopicsAsync();
-            IList<TopicProperties> topics = await pageableTopics.ToListAsync();
-            while (topics.Count > 0)
+            x.Host(HostAddress, h =>
             {
-                foreach (var topic in topics)
-                    await managementClient.DeleteTopicAsync(topic.Name);
-
-                await Task.Delay(500);
-
-                topics = await managementClient.GetTopicsAsync().ToListAsync();
-            }
-
-            AsyncPageable<QueueProperties> pageableQueues = managementClient.GetQueuesAsync();
-            IList<QueueProperties> queues = await pageableQueues.ToListAsync();
-            while (queues.Count > 0)
-            {
-                foreach (var queue in queues)
-                    await managementClient.DeleteQueueAsync(queue.Name);
-
-                await Task.Delay(500);
-
-                queues = await managementClient.GetQueuesAsync().ToListAsync();
-            }
-        }
-
-        ServiceBusAdministrationClient CreateManagementClient()
-        {
-            var endpoint = new UriBuilder(HostAddress) { Path = "" }.Uri.ToString();
-
-            return new ServiceBusAdministrationClient(endpoint, NamedKeyCredential);
-        }
-
-        protected override async Task<IBusControl> CreateBus()
-        {
-            return ViciOne.ServiceBus.Bus.Factory.CreateUsingAzureServiceBus(x =>
-            {
-                x.Host(HostAddress, h =>
+                h.NamedKey(s =>
                 {
-                    h.NamedKey(s =>
-                    {
-                        s.NamedKeyCredential = NamedKeyCredential;
-                    });
-                });
-
-                ConfigureBus(x);
-
-                ConfigureServiceBusBus(x);
-
-                if (ConfigureMessageScheduler)
-                    x.UseServiceBusMessageScheduler();
-
-                x.ReceiveEndpoint(InputQueueName, e =>
-                {
-                    ConfigureReceiveEndpoint(e);
-
-                    ConfigureServiceBusReceiveEndpoint(e);
-
-                    _inputQueueAddress = e.InputAddress;
+                    s.NamedKeyCredential = NamedKeyCredential;
                 });
             });
-        }
+
+            ConfigureBus(x);
+
+            ConfigureServiceBusBus(x);
+
+            if (ConfigureMessageScheduler)
+                x.UseServiceBusMessageScheduler();
+
+            x.ReceiveEndpoint(InputQueueName, e =>
+            {
+                ConfigureReceiveEndpoint(e);
+
+                ConfigureServiceBusReceiveEndpoint(e);
+
+                _inputQueueAddress = e.InputAddress;
+            });
+        });
     }
 }

@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.Events
+using System;
+
+namespace ViciOne.ServiceBus.Events;
+
+public class ReceiveEndpointCompletedEvent :
+    ReceiveEndpointCompleted
 {
-    using System;
+    readonly ReceiveTransportCompleted _completed;
 
-
-    public class ReceiveEndpointCompletedEvent :
-        ReceiveEndpointCompleted
+    public ReceiveEndpointCompletedEvent(ReceiveTransportCompleted completed, IReceiveEndpoint receiveEndpoint)
     {
-        readonly ReceiveTransportCompleted _completed;
-
-        public ReceiveEndpointCompletedEvent(ReceiveTransportCompleted completed, IReceiveEndpoint receiveEndpoint)
-        {
-            _completed = completed;
-            ReceiveEndpoint = receiveEndpoint;
-        }
-
-        public Uri InputAddress => _completed.InputAddress;
-        public long DeliveryCount => _completed.DeliveryCount;
-        public long ConcurrentDeliveryCount => _completed.ConcurrentDeliveryCount;
-
-        public IReceiveEndpoint ReceiveEndpoint { get; }
+        _completed = completed;
+        ReceiveEndpoint = receiveEndpoint;
     }
+
+    public Uri InputAddress => _completed.InputAddress;
+    public long DeliveryCount => _completed.DeliveryCount;
+    public long ConcurrentDeliveryCount => _completed.ConcurrentDeliveryCount;
+
+    public IReceiveEndpoint ReceiveEndpoint { get; }
 }

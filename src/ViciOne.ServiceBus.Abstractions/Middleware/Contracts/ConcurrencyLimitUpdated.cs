@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Contracts
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus.Contracts;
+
+/// <summary>
+/// Published when the concurrency limit of a filter is updated.
+/// </summary>
+public interface ConcurrencyLimitUpdated
+{
+    /// <summary>
+    /// The actual time at which the adjustment was applied
+    /// </summary>
+    DateTime Timestamp { get; }
 
     /// <summary>
-    /// Published when the concurrency limit of a filter is updated.
+    /// The identifier that was adjusted
     /// </summary>
-    public interface ConcurrencyLimitUpdated
-    {
-        /// <summary>
-        /// The actual time at which the adjustment was applied
-        /// </summary>
-        DateTime Timestamp { get; }
+    string Id { get; }
 
-        /// <summary>
-        /// The identifier that was adjusted
-        /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// The current concurrency limit value
-        /// </summary>
-        int ConcurrencyLimit { get; }
-    }
+    /// <summary>
+    /// The current concurrency limit value
+    /// </summary>
+    int ConcurrencyLimit { get; }
 }

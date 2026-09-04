@@ -1,122 +1,120 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Identity;
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ConnectionContextFactory :
+    IPipeContextFactory<ConnectionContext>
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Agents;
-    using Azure.Identity;
-    using Azure.Messaging.ServiceBus;
-    using Azure.Messaging.ServiceBus.Administration;
-    using Configuration;
-    using Internals;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
 
-
-    public class ConnectionContextFactory :
-        IPipeContextFactory<ConnectionContext>
+    public ConnectionContextFactory(IServiceBusHostConfiguration hostConfiguration)
     {
-        readonly IServiceBusHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+    }
 
-        public ConnectionContextFactory(IServiceBusHostConfiguration hostConfiguration)
+    IPipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateContext(ISupervisor supervisor)
+    {
+        Task<ConnectionContext> context = Task.Run(() => CreateConnection(supervisor), supervisor.Stopped);
+
+        IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
+
+        return contextHandle;
+    }
+
+    IActivePipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateActiveContext(ISupervisor supervisor,
+        PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
+    {
+        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+    }
+
+    async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> context, CancellationToken cancellationToken)
+    {
+        return context.IsCompletedSuccessfully()
+            ? new SharedConnectionContext(context.Result, cancellationToken)
+            : new SharedConnectionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+    }
+
+    async Task<ConnectionContext> CreateConnection(ISupervisor supervisor)
+    {
+        var endpoint = new UriBuilder(_hostConfiguration.HostAddress) { Path = "" }.Uri.Host;
+
+        if (supervisor.Stopping.IsCancellationRequested)
+            throw new ServiceBusConnectionException($"The connection is stopping and cannot be used: {endpoint}");
+
+        var settings = _hostConfiguration.Settings;
+
+        var client = settings.ServiceBusClient;
+        var managementClient = settings.ServiceBusAdministrationClient;
+
+        var clientOptions = new ServiceBusClientOptions
         {
-            _hostConfiguration = hostConfiguration;
-        }
-
-        IPipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateContext(ISupervisor supervisor)
-        {
-            Task<ConnectionContext> context = Task.Run(() => CreateConnection(supervisor), supervisor.Stopped);
-
-            IPipeContextAgent<ConnectionContext> contextHandle = supervisor.AddContext(context);
-
-            return contextHandle;
-        }
-
-        IActivePipeContextAgent<ConnectionContext> IPipeContextFactory<ConnectionContext>.CreateActiveContext(ISupervisor supervisor,
-            PipeContextHandle<ConnectionContext> context, CancellationToken cancellationToken)
-        {
-            return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
-        }
-
-        async Task<ConnectionContext> CreateSharedConnection(Task<ConnectionContext> context, CancellationToken cancellationToken)
-        {
-            return context.IsCompletedSuccessfully()
-                ? new SharedConnectionContext(context.Result, cancellationToken)
-                : new SharedConnectionContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
-        }
-
-        async Task<ConnectionContext> CreateConnection(ISupervisor supervisor)
-        {
-            var endpoint = new UriBuilder(_hostConfiguration.HostAddress) { Path = "" }.Uri.Host;
-
-            if (supervisor.Stopping.IsCancellationRequested)
-                throw new ServiceBusConnectionException($"The connection is stopping and cannot be used: {endpoint}");
-
-            var settings = _hostConfiguration.Settings;
-
-            var client = settings.ServiceBusClient;
-            var managementClient = settings.ServiceBusAdministrationClient;
-
-            var clientOptions = new ServiceBusClientOptions
+            TransportType = settings.TransportType,
+            RetryOptions = new ServiceBusRetryOptions
             {
-                TransportType = settings.TransportType,
-                RetryOptions = new ServiceBusRetryOptions
-                {
-                    MaxRetries = settings.RetryLimit,
-                    Mode = ServiceBusRetryMode.Exponential,
-                    MaxDelay = settings.RetryMaxBackoff,
-                },
-                EnableCrossEntityTransactions = false,
-            };
+                MaxRetries = settings.RetryLimit,
+                Mode = ServiceBusRetryMode.Exponential,
+                MaxDelay = settings.RetryMaxBackoff,
+            },
+            EnableCrossEntityTransactions = false,
+        };
 
-            var managementOptions = new ServiceBusAdministrationClientOptions
+        var managementOptions = new ServiceBusAdministrationClientOptions
+        {
+            Retry =
             {
-                Retry =
-                {
-                    MaxRetries = settings.RetryLimit,
-                    Mode = Azure.Core.RetryMode.Exponential,
-                    MaxDelay = settings.RetryMaxBackoff
-                }
-            };
-
-            if (settings.TokenCredential != null)
-            {
-                client ??= new ServiceBusClient(endpoint, settings.TokenCredential, clientOptions);
-                managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.TokenCredential, managementOptions);
+                MaxRetries = settings.RetryLimit,
+                Mode = Azure.Core.RetryMode.Exponential,
+                MaxDelay = settings.RetryMaxBackoff
             }
-            else if (settings.NamedKeyCredential != null)
+        };
+
+        if (settings.TokenCredential != null)
+        {
+            client ??= new ServiceBusClient(endpoint, settings.TokenCredential, clientOptions);
+            managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.TokenCredential, managementOptions);
+        }
+        else if (settings.NamedKeyCredential != null)
+        {
+            client ??= new ServiceBusClient(endpoint, settings.NamedKeyCredential, clientOptions);
+            managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.NamedKeyCredential, managementOptions);
+        }
+        else if (settings.SasCredential != null)
+        {
+            client ??= new ServiceBusClient(endpoint, settings.SasCredential, clientOptions);
+            managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.SasCredential, managementOptions);
+        }
+        else
+        {
+            if (settings.ConnectionString != null && HasSharedAccess(settings.ConnectionString))
             {
-                client ??= new ServiceBusClient(endpoint, settings.NamedKeyCredential, clientOptions);
-                managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.NamedKeyCredential, managementOptions);
-            }
-            else if (settings.SasCredential != null)
-            {
-                client ??= new ServiceBusClient(endpoint, settings.SasCredential, clientOptions);
-                managementClient ??= new ServiceBusAdministrationClient(endpoint, settings.SasCredential, managementOptions);
+                client ??= new ServiceBusClient(settings.ConnectionString, clientOptions);
+                managementClient ??= new ServiceBusAdministrationClient(settings.ConnectionString, managementOptions);
             }
             else
             {
-                if (settings.ConnectionString != null && HasSharedAccess(settings.ConnectionString))
-                {
-                    client ??= new ServiceBusClient(settings.ConnectionString, clientOptions);
-                    managementClient ??= new ServiceBusAdministrationClient(settings.ConnectionString, managementOptions);
-                }
-                else
-                {
-                    var defaultAzureCredential = new DefaultAzureCredential();
+                var defaultAzureCredential = new DefaultAzureCredential();
 
-                    client ??= new ServiceBusClient(endpoint, defaultAzureCredential, clientOptions);
-                    managementClient ??= new ServiceBusAdministrationClient(endpoint, defaultAzureCredential, managementOptions);
-                }
+                client ??= new ServiceBusClient(endpoint, defaultAzureCredential, clientOptions);
+                managementClient ??= new ServiceBusAdministrationClient(endpoint, defaultAzureCredential, managementOptions);
             }
-
-            return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped);
         }
 
-        static bool HasSharedAccess(string connectionString)
-        {
-            var connectionStringProperties = ServiceBusConnectionStringProperties.Parse(connectionString);
+        return new ServiceBusConnectionContext(client, managementClient, supervisor.Stopped);
+    }
 
-            return !string.IsNullOrEmpty(connectionStringProperties.SharedAccessKeyName)
-                && !string.IsNullOrEmpty(connectionStringProperties.SharedAccessKey) || !string.IsNullOrEmpty(connectionStringProperties.SharedAccessSignature);
-        }
+    static bool HasSharedAccess(string connectionString)
+    {
+        var connectionStringProperties = ServiceBusConnectionStringProperties.Parse(connectionString);
+
+        return !string.IsNullOrEmpty(connectionStringProperties.SharedAccessKeyName)
+            && !string.IsNullOrEmpty(connectionStringProperties.SharedAccessKey) || !string.IsNullOrEmpty(connectionStringProperties.SharedAccessSignature);
     }
 }

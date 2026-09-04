@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
-
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
 /// <summary>
 /// Maps the provider-neutral message-journal record to its explicitly selected table.
 /// </summary>

@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class ServiceBusEndpointEntityConfigurator :
+    ServiceBusEntityConfigurator,
+    IServiceBusEndpointEntityConfigurator
 {
-    using System;
+    public bool? EnableDeadLetteringOnMessageExpiration { get; set; }
 
+    public string ForwardDeadLetteredMessagesTo { get; set; }
 
-    public class ServiceBusEndpointEntityConfigurator :
-        ServiceBusEntityConfigurator,
-        IServiceBusEndpointEntityConfigurator
-    {
-        public bool? EnableDeadLetteringOnMessageExpiration { get; set; }
+    public TimeSpan? LockDuration { get; set; }
 
-        public string ForwardDeadLetteredMessagesTo { get; set; }
+    public int? MaxDeliveryCount { get; set; }
 
-        public TimeSpan? LockDuration { get; set; }
+    public bool? RequiresSession { get; set; }
 
-        public int? MaxDeliveryCount { get; set; }
-
-        public bool? RequiresSession { get; set; }
-
-        public int? MaxConcurrentSessions { get; set; }
-        public int? MaxConcurrentCallsPerSession { get; set; }
-    }
+    public int? MaxConcurrentSessions { get; set; }
+    public int? MaxConcurrentCallsPerSession { get; set; }
 }

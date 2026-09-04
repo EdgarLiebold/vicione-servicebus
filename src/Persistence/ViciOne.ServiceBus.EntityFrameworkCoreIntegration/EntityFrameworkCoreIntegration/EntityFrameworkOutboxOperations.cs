@@ -1,15 +1,14 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Middleware.Outbox;
-using ProviderAbstractions;
+using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 internal sealed class EntityFrameworkOutboxOperations<TBus, TDbContext> : IEntityFrameworkOutboxOperations<TBus, TDbContext>
     where TBus : class, IBus

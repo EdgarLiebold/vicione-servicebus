@@ -1,56 +1,54 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+using System;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public class ActiveMqSendTopology :
+    SendTopology,
+    IActiveMqSendTopologyConfigurator
 {
-    using System;
-    using ViciOne.ServiceBus.Topology;
+    public Action<IActiveMqQueueConfigurator> ConfigureErrorSettings { get; set; }
+    public Action<IActiveMqQueueConfigurator> ConfigureDeadLetterSettings { get; set; }
 
-
-    public class ActiveMqSendTopology :
-        SendTopology,
-        IActiveMqSendTopologyConfigurator
+    IActiveMqMessageSendTopologyConfigurator<T> IActiveMqSendTopology.GetMessageTopology<T>()
     {
-        public Action<IActiveMqQueueConfigurator> ConfigureErrorSettings { get; set; }
-        public Action<IActiveMqQueueConfigurator> ConfigureDeadLetterSettings { get; set; }
+        IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-        IActiveMqMessageSendTopologyConfigurator<T> IActiveMqSendTopology.GetMessageTopology<T>()
-        {
-            IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
+        return configurator as IActiveMqMessageSendTopologyConfigurator<T>;
+    }
 
-            return configurator as IActiveMqMessageSendTopologyConfigurator<T>;
-        }
+    public SendSettings GetSendSettings(ActiveMqEndpointAddress address)
+    {
+        if (address.Type == ActiveMqEndpointAddress.AddressType.Queue)
+            return new ActiveMqQueueSendSettings(address);
 
-        public SendSettings GetSendSettings(ActiveMqEndpointAddress address)
-        {
-            if (address.Type == ActiveMqEndpointAddress.AddressType.Queue)
-                return new ActiveMqQueueSendSettings(address);
+        return new ActiveMqTopicSendSettings(address);
+    }
 
-            return new ActiveMqTopicSendSettings(address);
-        }
+    public ErrorSettings GetErrorSettings(EntitySettings settings)
+    {
+        var errorSettings = new ActiveMqErrorSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.EntityName));
 
-        public ErrorSettings GetErrorSettings(EntitySettings settings)
-        {
-            var errorSettings = new ActiveMqErrorSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.EntityName));
+        ConfigureErrorSettings?.Invoke(errorSettings);
 
-            ConfigureErrorSettings?.Invoke(errorSettings);
+        return errorSettings;
+    }
 
-            return errorSettings;
-        }
+    public DeadLetterSettings GetDeadLetterSettings(EntitySettings settings)
+    {
+        var deadLetterSetting = new ActiveMqDeadLetterSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.EntityName));
 
-        public DeadLetterSettings GetDeadLetterSettings(EntitySettings settings)
-        {
-            var deadLetterSetting = new ActiveMqDeadLetterSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.EntityName));
+        ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
 
-            ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
+        return deadLetterSetting;
+    }
 
-            return deadLetterSetting;
-        }
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    {
+        var messageTopology = new ActiveMqMessageSendTopology<T>();
 
-        protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
-        {
-            var messageTopology = new ActiveMqMessageSendTopology<T>();
+        OnMessageTopologyCreated(messageTopology);
 
-            OnMessageTopologyCreated(messageTopology);
-
-            return messageTopology;
-        }
+        return messageTopology;
     }
 }

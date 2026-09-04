@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Internals;
-using Transports;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class AmazonSqsHeaderProvider :
     IHeaderProvider

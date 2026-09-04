@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System.Collections.Generic;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Configures a queue/exchange pair in AmazonSQS
 /// </summary>

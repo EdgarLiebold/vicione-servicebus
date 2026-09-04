@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.Middleware.Rescue
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Events;
+
+namespace ViciOne.ServiceBus.Middleware.Rescue;
+
+public class RescueExceptionSagaConsumeContext<TSaga> :
+    ConsumeContextProxy,
+    ExceptionSagaConsumeContext<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
-    using Context;
-    using Events;
+    readonly SagaConsumeContext<TSaga> _context;
+    ExceptionInfo _exceptionInfo;
 
-
-    public class RescueExceptionSagaConsumeContext<TSaga> :
-        ConsumeContextProxy,
-        ExceptionSagaConsumeContext<TSaga>
-        where TSaga : class, ISaga
+    public RescueExceptionSagaConsumeContext(SagaConsumeContext<TSaga> context, Exception exception)
+        : base(context)
     {
-        readonly SagaConsumeContext<TSaga> _context;
-        ExceptionInfo _exceptionInfo;
+        _context = context;
+        Exception = exception;
+    }
 
-        public RescueExceptionSagaConsumeContext(SagaConsumeContext<TSaga> context, Exception exception)
-            : base(context)
-        {
-            _context = context;
-            Exception = exception;
-        }
+    public TSaga Saga => _context.Saga;
 
-        public TSaga Saga => _context.Saga;
+    public Task SetCompleted()
+    {
+        return _context.SetCompleted();
+    }
 
-        public Task SetCompleted()
-        {
-            return _context.SetCompleted();
-        }
+    public bool IsCompleted => _context.IsCompleted;
 
-        public bool IsCompleted => _context.IsCompleted;
+    public Exception Exception { get; }
 
-        public Exception Exception { get; }
-
-        public ExceptionInfo ExceptionInfo
-        {
-            get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
-        }
+    public ExceptionInfo ExceptionInfo
+    {
+        get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
     }
 }

@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface IReceiver :
+    IAgent,
+    DeliveryMetrics
 {
-    using Transports;
-
-
-    public interface IReceiver :
-        IAgent,
-        DeliveryMetrics
-    {
-        void Start();
-    }
+    void Start();
 }

@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System.Text;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public static class ActiveMqHostSettingsExtensions
 {
-    using System.Text;
-
-
-    public static class ActiveMqHostSettingsExtensions
+    public static string ToDescription(this ActiveMqHostSettings settings)
     {
-        public static string ToDescription(this ActiveMqHostSettings settings)
-        {
-            var sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-            if (!string.IsNullOrWhiteSpace(settings.Username))
-                sb.Append(settings.Username).Append('@');
+        if (!string.IsNullOrWhiteSpace(settings.Username))
+            sb.Append(settings.Username).Append('@');
 
-            sb.Append(settings.Host);
+        sb.Append(settings.Host);
 
-            if (settings.Port != -1)
-                sb.Append(':').Append(settings.Port);
+        if (settings.Port != -1)
+            sb.Append(':').Append(settings.Port);
 
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

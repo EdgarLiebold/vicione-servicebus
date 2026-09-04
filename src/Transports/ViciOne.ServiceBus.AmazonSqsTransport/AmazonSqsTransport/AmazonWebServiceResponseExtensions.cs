@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Net;
 using Amazon.Runtime;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public static class AmazonWebServiceResponseExtensions
 {

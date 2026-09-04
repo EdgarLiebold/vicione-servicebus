@@ -1,98 +1,96 @@
-namespace ViciOne.ServiceBus.Util.Scanning
+using System;
+using System.Reflection;
+
+namespace ViciOne.ServiceBus.Util.Scanning;
+
+public interface IAssemblyScanner
 {
-    using System;
-    using System.Reflection;
+    /// <summary>
+    /// Optional user-supplied diagnostic description of this scanning operation
+    /// </summary>
+    string Description { get; set; }
 
+    /// <summary>
+    /// Add an Assembly to the scanning operation
+    /// </summary>
+    /// <param name="assembly"></param>
+    void Assembly(Assembly assembly);
 
-    public interface IAssemblyScanner
-    {
-        /// <summary>
-        /// Optional user-supplied diagnostic description of this scanning operation
-        /// </summary>
-        string Description { get; set; }
+    /// <summary>
+    /// Add an Assembly by name to the scanning operation
+    /// </summary>
+    /// <param name="assemblyName"></param>
+    void Assembly(string assemblyName);
 
-        /// <summary>
-        /// Add an Assembly to the scanning operation
-        /// </summary>
-        /// <param name="assembly"></param>
-        void Assembly(Assembly assembly);
+    /// <summary>
+    /// Add the Assembly that contains type T to the scanning operation
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    void AssemblyContainingType<T>();
 
-        /// <summary>
-        /// Add an Assembly by name to the scanning operation
-        /// </summary>
-        /// <param name="assemblyName"></param>
-        void Assembly(string assemblyName);
+    /// <summary>
+    /// Add the Assembly that contains type to the scanning operation
+    /// </summary>
+    /// <param name="type"></param>
+    void AssemblyContainingType(Type type);
 
-        /// <summary>
-        /// Add the Assembly that contains type T to the scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void AssemblyContainingType<T>();
+    /// <summary>
+    /// Exclude types that match the Predicate from being scanned
+    /// </summary>
+    /// <param name="exclude"></param>
+    void Exclude(Func<Type, bool> exclude);
 
-        /// <summary>
-        /// Add the Assembly that contains type to the scanning operation
-        /// </summary>
-        /// <param name="type"></param>
-        void AssemblyContainingType(Type type);
+    /// <summary>
+    /// Exclude all types in this nameSpace or its children from the scanning operation
+    /// </summary>
+    /// <param name="nameSpace"></param>
+    void ExcludeNamespace(string nameSpace);
 
-        /// <summary>
-        /// Exclude types that match the Predicate from being scanned
-        /// </summary>
-        /// <param name="exclude"></param>
-        void Exclude(Func<Type, bool> exclude);
+    /// <summary>
+    /// Exclude all types in this nameSpace or its children from the scanning operation
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    void ExcludeNamespaceContainingType<T>();
 
-        /// <summary>
-        /// Exclude all types in this nameSpace or its children from the scanning operation
-        /// </summary>
-        /// <param name="nameSpace"></param>
-        void ExcludeNamespace(string nameSpace);
+    /// <summary>
+    /// Only include types matching the Predicate in the scanning operation. You can
+    /// use multiple Include() calls in a single scanning operation
+    /// </summary>
+    /// <param name="predicate"></param>
+    void Include(Func<Type, bool> predicate);
 
-        /// <summary>
-        /// Exclude all types in this nameSpace or its children from the scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void ExcludeNamespaceContainingType<T>();
+    /// <summary>
+    /// Only include types from this nameSpace or its children in the scanning operation.  You can
+    /// use multiple Include() calls in a single scanning operation
+    /// </summary>
+    /// <param name="nameSpace"></param>
+    void IncludeNamespace(string nameSpace);
 
-        /// <summary>
-        /// Only include types matching the Predicate in the scanning operation. You can
-        /// use multiple Include() calls in a single scanning operation
-        /// </summary>
-        /// <param name="predicate"></param>
-        void Include(Func<Type, bool> predicate);
+    /// <summary>
+    /// Only include types from this nameSpace or its children in the scanning operation.  You can
+    /// use multiple Include() calls in a single scanning operation
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    void IncludeNamespaceContainingType<T>();
 
-        /// <summary>
-        /// Only include types from this nameSpace or its children in the scanning operation.  You can
-        /// use multiple Include() calls in a single scanning operation
-        /// </summary>
-        /// <param name="nameSpace"></param>
-        void IncludeNamespace(string nameSpace);
+    /// <summary>
+    /// Exclude this specific type from the scanning operation
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    void ExcludeType<T>();
 
-        /// <summary>
-        /// Only include types from this nameSpace or its children in the scanning operation.  You can
-        /// use multiple Include() calls in a single scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void IncludeNamespaceContainingType<T>();
+    void TheCallingAssembly();
 
-        /// <summary>
-        /// Exclude this specific type from the scanning operation
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void ExcludeType<T>();
+    void AssembliesFromApplicationBaseDirectory();
 
-        void TheCallingAssembly();
+    void AssembliesAndExecutablesFromPath(string path);
+    void AssembliesFromPath(string path);
 
-        void AssembliesFromApplicationBaseDirectory();
+    void AssembliesAndExecutablesFromPath(string path, Func<Assembly, bool> assemblyFilter);
 
-        void AssembliesAndExecutablesFromPath(string path);
-        void AssembliesFromPath(string path);
-
-        void AssembliesAndExecutablesFromPath(string path, Func<Assembly, bool> assemblyFilter);
-
-        void AssembliesFromPath(string path, Func<Assembly, bool> assemblyFilter);
-        void ExcludeFileNameStartsWith(params string[] startsWith);
-        void IncludeFileNameStartsWith(params string[] startsWith);
-        void AssembliesAndExecutablesFromApplicationBaseDirectory();
-        TypeSet ScanForTypes();
-    }
+    void AssembliesFromPath(string path, Func<Assembly, bool> assemblyFilter);
+    void ExcludeFileNameStartsWith(params string[] startsWith);
+    void IncludeFileNameStartsWith(params string[] startsWith);
+    void AssembliesAndExecutablesFromApplicationBaseDirectory();
+    TypeSet ScanForTypes();
 }

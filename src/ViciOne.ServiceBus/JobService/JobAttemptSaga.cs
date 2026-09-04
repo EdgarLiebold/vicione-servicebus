@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Each attempt to run a job is tracked by this state
+/// </summary>
+public class JobAttemptSaga :
+    SagaStateMachineInstance,
+    ISagaVersion
 {
-    using System;
+    public int CurrentState { get; set; }
 
+    public Guid JobId { get; set; }
+    public int RetryAttempt { get; set; }
+    public Uri ServiceAddress { get; set; }
 
-    /// <summary>
-    /// Each attempt to run a job is tracked by this state
-    /// </summary>
-    public class JobAttemptSaga :
-        SagaStateMachineInstance,
-        ISagaVersion
-    {
-        public int CurrentState { get; set; }
+    public Uri InstanceAddress { get; set; }
 
-        public Guid JobId { get; set; }
-        public int RetryAttempt { get; set; }
-        public Uri ServiceAddress { get; set; }
+    public DateTime? Started { get; set; }
+    public DateTime? Faulted { get; set; }
 
-        public Uri InstanceAddress { get; set; }
+    public Guid? StatusCheckTokenId { get; set; }
 
-        public DateTime? Started { get; set; }
-        public DateTime? Faulted { get; set; }
+    public byte[] RowVersion { get; set; }
 
-        public Guid? StatusCheckTokenId { get; set; }
+    public int Version { get; set; }
 
-        public byte[] RowVersion { get; set; }
-
-        public int Version { get; set; }
-
-        // AttemptId
-        public Guid CorrelationId { get; set; }
-    }
+    // AttemptId
+    public Guid CorrelationId { get; set; }
 }

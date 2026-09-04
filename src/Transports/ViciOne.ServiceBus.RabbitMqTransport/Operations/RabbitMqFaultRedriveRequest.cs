@@ -1,9 +1,7 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Defines one bounded operational redrive from a receive endpoint's error queue back to the endpoint.
 /// </summary>

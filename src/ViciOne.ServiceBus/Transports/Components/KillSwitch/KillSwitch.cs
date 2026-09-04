@@ -1,12 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Transports.Components;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Logging;
+using ViciOne.ServiceBus.Logging;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Transports.Components;
 /// <summary>
 /// Owns the complete pause-and-restart lifecycle for one receive endpoint. Configuration is immutable,
 /// observations and transitions share one synchronization boundary, and exactly one recovery operation

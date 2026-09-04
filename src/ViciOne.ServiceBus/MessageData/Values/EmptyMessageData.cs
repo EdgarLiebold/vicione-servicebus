@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.MessageData.Values
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.MessageData.Values;
+
+public class EmptyMessageData<T> :
+    MessageData<T>
 {
-    using System;
-    using System.Threading.Tasks;
+    public static readonly MessageData<T> Instance = new EmptyMessageData<T>();
 
-
-    public class EmptyMessageData<T> :
-        MessageData<T>
+    EmptyMessageData()
     {
-        public static readonly MessageData<T> Instance = new EmptyMessageData<T>();
+    }
 
-        EmptyMessageData()
-        {
-        }
+    public Uri Address => throw new MessageDataException("The message data is empty");
 
-        public Uri Address => throw new MessageDataException("The message data is empty");
+    public bool HasValue => false;
 
-        public bool HasValue => false;
+    public Task<T> Value => NoValue();
 
-        public Task<T> Value => NoValue();
-
-        static Task<T> NoValue()
-        {
-            throw new MessageDataException("The message data is empty");
-        }
+    static Task<T> NoValue()
+    {
+        throw new MessageDataException("The message data is empty");
     }
 }

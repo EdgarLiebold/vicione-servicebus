@@ -1,90 +1,88 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Mediator;
+
+namespace ViciOne.ServiceBus;
+
+public static class MediatorConfigurationExtensions
 {
-    using System;
-    using Configuration;
-    using InMemoryTransport.Configuration;
-    using Mediator;
-
-
-    public static class MediatorConfigurationExtensions
+    /// <summary>
+    /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
+    /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
+    /// </summary>
+    /// <param name="selector"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IMediator CreateMediator(this IBusFactorySelector selector, Action<IMediatorConfigurator> configure)
     {
-        /// <summary>
-        /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
-        /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static IMediator CreateMediator(this IBusFactorySelector selector, Action<IMediatorConfigurator> configure)
-        {
-            return CreateMediator(selector, null, configure);
-        }
+        return CreateMediator(selector, null, configure);
+    }
 
-        /// <summary>
-        /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
-        /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <param name="configure"></param>
-        /// <param name="baseAddress"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static IMediator CreateMediator(this IBusFactorySelector selector, Uri baseAddress, Action<IMediatorConfigurator> configure)
-        {
-            return CreateMediator(selector, baseAddress, configure, TimeProvider.System);
-        }
+    /// <summary>
+    /// Create a mediator, which sends messages to consumers, handlers, and sagas. Messages are dispatched to the consumers asynchronously.
+    /// Consumers are not directly coupled to the sender. Can be used entirely in-memory without a broker.
+    /// </summary>
+    /// <param name="selector"></param>
+    /// <param name="configure"></param>
+    /// <param name="baseAddress"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IMediator CreateMediator(this IBusFactorySelector selector, Uri? baseAddress, Action<IMediatorConfigurator> configure)
+    {
+        return CreateMediator(selector, baseAddress, configure, TimeProvider.System);
+    }
 
-        /// <summary>
-        /// Create a mediator using an explicit standard .NET time source for request deadlines.
-        /// </summary>
-        /// <param name="selector"></param>
-        /// <param name="baseAddress"></param>
-        /// <param name="configure"></param>
-        /// <param name="timeProvider"></param>
-        /// <returns></returns>
-        public static IMediator CreateMediator(
-            this IBusFactorySelector selector,
-            Uri baseAddress,
-            Action<IMediatorConfigurator> configure,
-            TimeProvider timeProvider)
-        {
-            if (configure == null)
-                throw new ArgumentNullException(nameof(configure));
-            if (timeProvider == null)
-                throw new ArgumentNullException(nameof(timeProvider));
+    /// <summary>
+    /// Create a mediator using an explicit standard .NET time source for request deadlines.
+    /// </summary>
+    /// <param name="selector"></param>
+    /// <param name="baseAddress"></param>
+    /// <param name="configure"></param>
+    /// <param name="timeProvider"></param>
+    /// <returns></returns>
+    public static IMediator CreateMediator(
+        this IBusFactorySelector selector,
+        Uri? baseAddress,
+        Action<IMediatorConfigurator> configure,
+        TimeProvider timeProvider)
+    {
+        if (configure == null)
+            throw new ArgumentNullException(nameof(configure));
+        if (timeProvider == null)
+            throw new ArgumentNullException(nameof(timeProvider));
 
-            baseAddress ??= new Uri("loopback://localhost/");
-            var topologyConfiguration = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
-            var busConfiguration = new InMemoryBusConfiguration(topologyConfiguration, baseAddress);
+        baseAddress ??= new Uri("loopback://localhost/");
+        var topologyConfiguration = new InMemoryTopologyConfiguration(InMemoryBus.CreateMessageTopology());
+        var busConfiguration = new InMemoryBusConfiguration(topologyConfiguration, baseAddress);
 
-            if (LogContext.Current != null)
-                busConfiguration.HostConfiguration.LogContext = LogContext.Current;
+        if (LogContext.Current != null)
+            busConfiguration.HostConfiguration.LogContext = LogContext.Current;
 
-            var endpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("mediator");
+        var endpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("mediator");
 
-            var configurator = new MediatorConfiguration(busConfiguration.HostConfiguration, endpointConfiguration);
+        var configurator = new MediatorConfiguration(busConfiguration.HostConfiguration, endpointConfiguration);
 
-            configure(configurator);
+        configure(configurator);
 
-            var mediatorDispatcher = configurator.Build();
+        var mediatorDispatcher = configurator.Build();
 
-            var responseEndpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("response");
-            var responseConfigurator = new ReceivePipeDispatcherConfiguration(busConfiguration.HostConfiguration, responseEndpointConfiguration);
+        var responseEndpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("response");
+        var responseConfigurator = new ReceivePipeDispatcherConfiguration(busConfiguration.HostConfiguration, responseEndpointConfiguration);
 
-            configurator = new MediatorConfiguration(busConfiguration.HostConfiguration, responseEndpointConfiguration);
+        configurator = new MediatorConfiguration(busConfiguration.HostConfiguration, responseEndpointConfiguration);
 
-            configure(configurator);
+        configure(configurator);
 
-            var responseDispatcher = responseConfigurator.Build();
+        var responseDispatcher = responseConfigurator.Build();
 
-            return new ViciOneServiceBusMediator(
-                LogContext.Current,
-                endpointConfiguration,
-                mediatorDispatcher,
-                responseEndpointConfiguration,
-                responseDispatcher,
-                timeProvider);
-        }
+        return new ViciOneServiceBusMediator(
+            LogContext.Current,
+            endpointConfiguration,
+            mediatorDispatcher,
+            responseEndpointConfiguration,
+            responseDispatcher,
+            timeProvider);
     }
 }

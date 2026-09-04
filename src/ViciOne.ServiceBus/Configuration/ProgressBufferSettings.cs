@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Specifies the settings for the progress buffer, which defers updating the job progress until the
 /// thresholds (steps or duration) have been reached.

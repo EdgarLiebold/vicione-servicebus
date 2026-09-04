@@ -1,71 +1,69 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Linq;
+using ViciOne.ServiceBus.AzureServiceBusTransport;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ServiceBusReceiveEndpointBuilder :
+    ReceiveEndpointBuilder
 {
-    using System;
-    using System.Linq;
-    using AzureServiceBusTransport;
-    using AzureServiceBusTransport.Configuration;
-    using AzureServiceBusTransport.Topology;
+    static readonly char[] Separator = { '/' };
+    readonly IServiceBusReceiveEndpointConfiguration _configuration;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
 
-
-    public class ServiceBusReceiveEndpointBuilder :
-        ReceiveEndpointBuilder
+    public ServiceBusReceiveEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusReceiveEndpointConfiguration configuration)
+        : base(configuration)
     {
-        static readonly char[] Separator = { '/' };
-        readonly IServiceBusReceiveEndpointConfiguration _configuration;
-        readonly IServiceBusHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+    }
 
-        public ServiceBusReceiveEndpointBuilder(IServiceBusHostConfiguration hostConfiguration, IServiceBusReceiveEndpointConfiguration configuration)
-            : base(configuration)
+    public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+    {
+        if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
         {
-            _hostConfiguration = hostConfiguration;
-            _configuration = configuration;
-        }
-
-        public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-        {
-            if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
+            IServiceBusMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
+            if (topology.ConfigureConsumeTopology)
             {
-                IServiceBusMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
-                if (topology.ConfigureConsumeTopology)
-                {
-                    var subscriptionName = GenerateSubscriptionName();
-                    topology.Subscribe(subscriptionName);
-                }
+                var subscriptionName = GenerateSubscriptionName();
+                topology.Subscribe(subscriptionName);
             }
-
-            return base.ConnectConsumePipe(pipe, options);
         }
 
-        public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
-        {
-            var topologyLayout = BuildTopology(_configuration.Settings);
+        return base.ConnectConsumePipe(pipe, options);
+    }
 
-            return new ServiceBusEntityReceiveEndpointContext(_hostConfiguration, _configuration, topologyLayout, ClientContextFactory);
-        }
+    public ServiceBusReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        var topologyLayout = BuildTopology(_configuration.Settings);
 
-        string GenerateSubscriptionName()
-        {
-            var subscriptionName = _configuration.Settings.Name.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-            var hostScope = _configuration.HostAddress.AbsolutePath.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+        return new ServiceBusEntityReceiveEndpointContext(_hostConfiguration, _configuration, topologyLayout, ClientContextFactory);
+    }
 
-            return _configuration.Topology.Publish.GenerateSubscriptionName(subscriptionName, hostScope);
-        }
+    string GenerateSubscriptionName()
+    {
+        var subscriptionName = _configuration.Settings.Name.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+        var hostScope = _configuration.HostAddress.AbsolutePath.Split(Separator, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
 
-        BrokerTopology BuildTopology(ReceiveSettings settings)
-        {
-            var topologyBuilder = new ReceiveEndpointBrokerTopologyBuilder();
+        return _configuration.Topology.Publish.GenerateSubscriptionName(subscriptionName, hostScope);
+    }
 
-            topologyBuilder.Queue = topologyBuilder.CreateQueue(settings.GetCreateQueueOptions());
+    BrokerTopology BuildTopology(ReceiveSettings settings)
+    {
+        var topologyBuilder = new ReceiveEndpointBrokerTopologyBuilder();
 
-            _configuration.Topology.Consume.Apply(topologyBuilder);
+        topologyBuilder.Queue = topologyBuilder.CreateQueue(settings.GetCreateQueueOptions());
 
-            return topologyBuilder.BuildBrokerTopology();
-        }
+        _configuration.Topology.Consume.Apply(topologyBuilder);
 
-        IClientContextSupervisor ClientContextFactory()
-        {
-            return _hostConfiguration.ConnectionContextSupervisor
-                .CreateClientContextSupervisor(supervisor => new QueueClientContextFactory(supervisor, _configuration.Settings));
-        }
+        return topologyBuilder.BuildBrokerTopology();
+    }
+
+    IClientContextSupervisor ClientContextFactory()
+    {
+        return _hostConfiguration.ConnectionContextSupervisor
+            .CreateClientContextSupervisor(supervisor => new QueueClientContextFactory(supervisor, _configuration.Settings));
     }
 }

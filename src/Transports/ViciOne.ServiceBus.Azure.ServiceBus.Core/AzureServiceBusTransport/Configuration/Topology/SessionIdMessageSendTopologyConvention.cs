@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class SessionIdMessageSendTopologyConvention<TMessage> :
+    ISessionIdMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Topology;
+    IMessageSessionIdFormatter<TMessage> _formatter;
 
-
-    public class SessionIdMessageSendTopologyConvention<TMessage> :
-        ISessionIdMessageSendTopologyConvention<TMessage>
-        where TMessage : class
+    public SessionIdMessageSendTopologyConvention(ISessionIdFormatter formatter)
     {
-        IMessageSessionIdFormatter<TMessage> _formatter;
+        if (formatter != null)
+            SetFormatter(formatter);
+    }
 
-        public SessionIdMessageSendTopologyConvention(ISessionIdFormatter formatter)
+    public bool TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    {
+        if (_formatter != null)
         {
-            if (formatter != null)
-                SetFormatter(formatter);
+            messageSendTopology = new SetSessionIdMessageSendTopology<TMessage>(_formatter);
+            return true;
         }
 
-        public bool TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
-        {
-            if (_formatter != null)
-            {
-                messageSendTopology = new SetSessionIdMessageSendTopology<TMessage>(_formatter);
-                return true;
-            }
+        messageSendTopology = null;
+        return false;
+    }
 
-            messageSendTopology = null;
-            return false;
-        }
+    public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+        where T : class
+    {
+        convention = this as IMessageSendTopologyConvention<T>;
 
-        public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
-            where T : class
-        {
-            convention = this as IMessageSendTopologyConvention<T>;
+        return convention != null;
+    }
 
-            return convention != null;
-        }
+    public void SetFormatter(ISessionIdFormatter formatter)
+    {
+        _formatter = new MessageSessionIdFormatter<TMessage>(formatter);
+    }
 
-        public void SetFormatter(ISessionIdFormatter formatter)
-        {
-            _formatter = new MessageSessionIdFormatter<TMessage>(formatter);
-        }
-
-        public void SetFormatter(IMessageSessionIdFormatter<TMessage> formatter)
-        {
-            _formatter = formatter;
-        }
+    public void SetFormatter(IMessageSessionIdFormatter<TMessage> formatter)
+    {
+        _formatter = formatter;
     }
 }

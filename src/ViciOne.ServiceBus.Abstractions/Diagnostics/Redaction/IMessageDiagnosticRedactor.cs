@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.ComponentModel;
 
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>Renders bounded values for ServiceBus-owned diagnostics.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public interface IMessageDiagnosticRedactor

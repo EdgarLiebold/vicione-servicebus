@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface JobSagaSettingsConfigurator :
+    JobSagaSettings
 {
-    using System;
-
-
-    public interface JobSagaSettingsConfigurator :
-        JobSagaSettings
-    {
-        new Uri JobAttemptSagaEndpointAddress { set; }
-        new Uri JobSagaEndpointAddress { set; }
-        new Uri JobTypeSagaEndpointAddress { set; }
-    }
+    new Uri JobAttemptSagaEndpointAddress { set; }
+    new Uri JobSagaEndpointAddress { set; }
+    new Uri JobTypeSagaEndpointAddress { set; }
 }

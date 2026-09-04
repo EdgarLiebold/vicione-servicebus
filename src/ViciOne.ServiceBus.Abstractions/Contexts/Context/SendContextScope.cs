@@ -1,120 +1,118 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using ViciOne.ServiceBus.Payloads;
+
+namespace ViciOne.ServiceBus.Context;
+
+public class SendContextScope :
+    SendContextProxy
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
-    using Payloads;
+    readonly PipeContext _context;
+    IPayloadCache? _payloadCache;
 
-
-    public class SendContextScope :
-        SendContextProxy
+    public SendContextScope(SendContext context)
+        : base(context)
     {
-        readonly PipeContext _context;
-        IPayloadCache? _payloadCache;
+        _context = context;
+    }
 
-        public SendContextScope(SendContext context)
-            : base(context)
+    public SendContextScope(SendContext context, params object[] payloads)
+        : base(context)
+    {
+        _context = context;
+
+        _payloadCache = new ListPayloadCache(payloads);
+    }
+
+    public override CancellationToken CancellationToken => _context.CancellationToken;
+
+    IPayloadCache PayloadCache
+    {
+        get
         {
-            _context = context;
+            if (_payloadCache != null)
+                return _payloadCache;
+
+            while (Volatile.Read(ref _payloadCache) == null)
+                Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
+
+            return _payloadCache!;
+        }
+    }
+
+    public override bool HasPayloadType(Type payloadType)
+    {
+        return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
+    }
+
+    public override bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
+        where T : class
+    {
+        if (this is T context)
+        {
+            payload = context;
+            return true;
         }
 
-        public SendContextScope(SendContext context, params object[] payloads)
-            : base(context)
-        {
-            _context = context;
+        return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
+    }
 
-            _payloadCache = new ListPayloadCache(payloads);
-        }
+    public override T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
+    {
+        if (this is T context)
+            return context;
 
-        public override CancellationToken CancellationToken => _context.CancellationToken;
+        if (PayloadCache.TryGetPayload<T>(out var payload))
+            return payload!;
 
-        IPayloadCache PayloadCache
-        {
-            get
-            {
-                if (_payloadCache != null)
-                    return _payloadCache;
+        if (_context.TryGetPayload(out payload))
+            return payload!;
 
-                while (Volatile.Read(ref _payloadCache) == null)
-                    Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
+        return PayloadCache.GetOrAddPayload(payloadFactory);
+    }
 
-                return _payloadCache!;
-            }
-        }
+    public override T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
+    {
+        if (this is T context)
+            return context;
 
-        public override bool HasPayloadType(Type payloadType)
-        {
-            return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
-        }
-
-        public override bool TryGetPayload<T>([NotNullWhen(true)] out T? payload)
-            where T : class
-        {
-            if (this is T context)
-            {
-                payload = context;
-                return true;
-            }
-
-            return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
-        }
-
-        public override T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-        {
-            if (this is T context)
-                return context;
-
-            if (PayloadCache.TryGetPayload<T>(out var payload))
-                return payload!;
-
-            if (_context.TryGetPayload(out payload))
-                return payload!;
-
-            return PayloadCache.GetOrAddPayload(payloadFactory);
-        }
-
-        public override T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-        {
-            if (this is T context)
-                return context;
-
-            if (PayloadCache.TryGetPayload<T>(out var payload))
-                return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
-
-            if (_context.TryGetPayload(out payload))
-            {
-                T Add()
-                {
-                    return updateFactory(payload!);
-                }
-
-                return PayloadCache.AddOrUpdatePayload(Add, updateFactory);
-            }
-
+        if (PayloadCache.TryGetPayload<T>(out var payload))
             return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
+
+        if (_context.TryGetPayload(out payload))
+        {
+            T Add()
+            {
+                return updateFactory(payload!);
+            }
+
+            return PayloadCache.AddOrUpdatePayload(Add, updateFactory);
         }
+
+        return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
     }
+}
 
 
-    public class SendContextScope<TMessage> :
-        SendContextScope,
-        SendContext<TMessage>
-        where TMessage : class
+public class SendContextScope<TMessage> :
+    SendContextScope,
+    SendContext<TMessage>
+    where TMessage : class
+{
+    readonly SendContext<TMessage> _context;
+
+    public SendContextScope(SendContext<TMessage> context)
+        : base(context)
     {
-        readonly SendContext<TMessage> _context;
-
-        public SendContextScope(SendContext<TMessage> context)
-            : base(context)
-        {
-            _context = context;
-        }
-
-        public SendContextScope(SendContext<TMessage> context, params object[] payloads)
-            : base(context, payloads)
-        {
-            _context = context;
-        }
-
-        public TMessage Message => _context.Message;
+        _context = context;
     }
+
+    public SendContextScope(SendContext<TMessage> context, params object[] payloads)
+        : base(context, payloads)
+    {
+        _context = context;
+    }
+
+    public TMessage Message => _context.Message;
 }

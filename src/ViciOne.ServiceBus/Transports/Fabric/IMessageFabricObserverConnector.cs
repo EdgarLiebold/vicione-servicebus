@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public interface IMessageFabricObserverConnector<out TContext>
+    where TContext : class
 {
-    public interface IMessageFabricObserverConnector<out TContext>
-        where TContext : class
-    {
-        ConnectHandle ConnectMessageFabricObserver(IMessageFabricObserver<TContext> observer);
-    }
+    ConnectHandle ConnectMessageFabricObserver(IMessageFabricObserver<TContext> observer);
 }

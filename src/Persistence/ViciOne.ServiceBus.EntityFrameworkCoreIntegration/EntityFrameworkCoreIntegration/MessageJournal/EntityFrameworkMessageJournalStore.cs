@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
-
 using System;
 using System.Data;
 using System.Linq;
@@ -10,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.MessageJournal;
 
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
 /// <summary>
 /// Stores sanitized journal entries in a relational database while enforcing count and age bounds
 /// inside one serializable transaction.

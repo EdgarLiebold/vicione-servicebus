@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public interface IActiveMqReceiveEndpointConfiguration :
+    IReceiveEndpointConfiguration,
+    IActiveMqEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Transports;
+    ReceiveSettings Settings { get; }
 
-
-    public interface IActiveMqReceiveEndpointConfiguration :
-        IReceiveEndpointConfiguration,
-        IActiveMqEndpointConfiguration
-    {
-        ReceiveSettings Settings { get; }
-
-        void Build(IHost host);
-    }
+    void Build(IHost host);
 }

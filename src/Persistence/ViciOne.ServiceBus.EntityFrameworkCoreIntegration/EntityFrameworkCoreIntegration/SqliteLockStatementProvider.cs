@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
-{
-    public class SqliteLockStatementProvider :
-        SqlLockStatementProvider
-    {
-        public SqliteLockStatementProvider()
-            : base(new SqliteLockStatementFormatter())
-        {
-        }
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
-        public SqliteLockStatementProvider(string schemaName)
-            : base(schemaName, new SqliteLockStatementFormatter())
-        {
-        }
+public class SqliteLockStatementProvider :
+    SqlLockStatementProvider
+{
+    public SqliteLockStatementProvider()
+        : base(new SqliteLockStatementFormatter())
+    {
+    }
+
+    public SqliteLockStatementProvider(string schemaName)
+        : base(schemaName, new SqliteLockStatementFormatter())
+    {
     }
 }

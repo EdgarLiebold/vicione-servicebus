@@ -1,67 +1,65 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+internal sealed class TimeoutConfigurationObserver :
+    ConfigurationObserver,
+    IMessageConfigurationObserver
 {
-    using System;
+    readonly Action<ITimeoutConfigurator> _configure;
 
-
-    internal sealed class TimeoutConfigurationObserver :
-        ConfigurationObserver,
-        IMessageConfigurationObserver
+    public TimeoutConfigurationObserver(IConsumePipeConfigurator configurator, Action<ITimeoutConfigurator> configure)
+        : base(configurator)
     {
-        readonly Action<ITimeoutConfigurator> _configure;
+        _configure = configure;
 
-        public TimeoutConfigurationObserver(IConsumePipeConfigurator configurator, Action<ITimeoutConfigurator> configure)
-            : base(configurator)
-        {
-            _configure = configure;
+        Connect(this);
+    }
 
-            Connect(this);
-        }
+    public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
+        where TMessage : class
+    {
+        var specification = new TimeoutSpecification<TMessage>();
 
-        public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
-            where TMessage : class
-        {
-            var specification = new TimeoutSpecification<TMessage>();
+        _configure(specification);
 
-            _configure(specification);
+        configurator.AddPipeSpecification(specification);
+    }
 
-            configurator.AddPipeSpecification(specification);
-        }
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    {
+        var specification = new TimeoutSpecification<Batch<TMessage>>();
 
-        public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
-        {
-            var specification = new TimeoutSpecification<Batch<TMessage>>();
+        _configure(specification);
 
-            _configure(specification);
+        configurator.Message(m => m.AddPipeSpecification(specification));
+    }
 
-            configurator.Message(m => m.AddPipeSpecification(specification));
-        }
+    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+    {
+        var specification = new ExecuteContextTimeoutSpecification<TArguments>();
 
-        public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-        {
-            var specification = new ExecuteContextTimeoutSpecification<TArguments>();
+        _configure(specification);
 
-            _configure(specification);
+        configurator.Arguments(x => x.AddPipeSpecification(specification));
+    }
 
-            configurator.Arguments(x => x.AddPipeSpecification(specification));
-        }
+    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+    {
+        var specification = new ExecuteContextTimeoutSpecification<TArguments>();
 
-        public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        {
-            var specification = new ExecuteContextTimeoutSpecification<TArguments>();
+        _configure(specification);
 
-            _configure(specification);
+        configurator.Arguments(x => x.AddPipeSpecification(specification));
+    }
 
-            configurator.Arguments(x => x.AddPipeSpecification(specification));
-        }
+    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+    {
+        var specification = new CompensateContextTimeoutSpecification<TLog>();
 
-        public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        {
-            var specification = new CompensateContextTimeoutSpecification<TLog>();
+        _configure(specification);
 
-            _configure(specification);
-
-            configurator.Log(x => x.AddPipeSpecification(specification));
-        }
+        configurator.Log(x => x.AddPipeSpecification(specification));
     }
 }

@@ -1,6 +1,6 @@
-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Architecture.Tests.Build;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Dependencies;

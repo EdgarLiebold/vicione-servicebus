@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Collections.Generic;
-using Metadata;
-using ProviderAbstractions;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
-
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// Captures the serializer-independent part of a message envelope. Wire serializers own only the
 /// payload encoding and copy these values into their wire model.

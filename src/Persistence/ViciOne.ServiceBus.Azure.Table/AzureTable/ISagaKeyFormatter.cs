@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.AzureTable
+using System;
+
+namespace ViciOne.ServiceBus.AzureTable;
+
+public interface ISagaKeyFormatter<in TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-
-
-    public interface ISagaKeyFormatter<in TSaga>
-        where TSaga : class, ISaga
-    {
-        (string partitionKey, string rowKey) Format(Guid correlationId);
-    }
+    (string partitionKey, string rowKey) Format(Guid correlationId);
 }

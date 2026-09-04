@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus
+using Azure;
+
+namespace ViciOne.ServiceBus;
+
+public interface IServiceBusNamedKeyTokenProviderConfigurator
 {
-    using Azure;
-
-
-    public interface IServiceBusNamedKeyTokenProviderConfigurator
-    {
-        AzureNamedKeyCredential NamedKeyCredential { set; }
-    }
+    AzureNamedKeyCredential NamedKeyCredential { set; }
 }

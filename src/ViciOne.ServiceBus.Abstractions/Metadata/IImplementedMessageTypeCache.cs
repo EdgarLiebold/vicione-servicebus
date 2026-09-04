@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.Metadata
+namespace ViciOne.ServiceBus.Metadata;
+
+public interface IImplementedMessageTypeCache<TMessage>
+    where TMessage : class
 {
-    public interface IImplementedMessageTypeCache<TMessage>
-        where TMessage : class
-    {
-        /// <summary>
-        /// Invokes the interface for each implemented type of the message
-        /// </summary>
-        /// <param name="implementedMessageType"></param>
-        void EnumerateImplementedTypes(IImplementedMessageType implementedMessageType);
-    }
+    /// <summary>
+    /// Invokes the interface for each implemented type of the message
+    /// </summary>
+    /// <param name="implementedMessageType"></param>
+    void EnumerateImplementedTypes(IImplementedMessageType implementedMessageType);
 }

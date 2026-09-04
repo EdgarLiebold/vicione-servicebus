@@ -1,39 +1,37 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class TypedScopedConsumeContextProvider :
+    ScopedConsumeContextProvider
 {
-    using System;
+    readonly IScopedConsumeContextProvider _global;
 
-
-    public class TypedScopedConsumeContextProvider :
-        ScopedConsumeContextProvider
+    public TypedScopedConsumeContextProvider(IScopedConsumeContextProvider global)
     {
-        readonly IScopedConsumeContextProvider _global;
+        _global = global;
+    }
 
-        public TypedScopedConsumeContextProvider(IScopedConsumeContextProvider global)
+    public override IDisposable PushContext(ConsumeContext context)
+    {
+        return new CombinedDisposable(_global.PushContext(context), base.PushContext(context));
+    }
+
+
+    class CombinedDisposable :
+        IDisposable
+    {
+        readonly IDisposable[] _disposables;
+
+        public CombinedDisposable(params IDisposable[] disposables)
         {
-            _global = global;
+            _disposables = disposables;
         }
 
-        public override IDisposable PushContext(ConsumeContext context)
+        public void Dispose()
         {
-            return new CombinedDisposable(_global.PushContext(context), base.PushContext(context));
-        }
-
-
-        class CombinedDisposable :
-            IDisposable
-        {
-            readonly IDisposable[] _disposables;
-
-            public CombinedDisposable(params IDisposable[] disposables)
-            {
-                _disposables = disposables;
-            }
-
-            public void Dispose()
-            {
-                for (var i = 0; i < _disposables.Length; i++)
-                    _disposables[i].Dispose();
-            }
+            for (var i = 0; i < _disposables.Length; i++)
+                _disposables[i].Dispose();
         }
     }
 }

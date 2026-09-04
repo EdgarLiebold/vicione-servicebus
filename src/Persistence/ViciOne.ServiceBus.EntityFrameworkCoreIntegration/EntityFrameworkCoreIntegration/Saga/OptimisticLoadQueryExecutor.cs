@@ -1,31 +1,29 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 #nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
+
+public class OptimisticLoadQueryExecutor<TSaga> :
+    ILoadQueryExecutor<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
+    readonly Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
 
-
-    public class OptimisticLoadQueryExecutor<TSaga> :
-        ILoadQueryExecutor<TSaga>
-        where TSaga : class, ISaga
+    public OptimisticLoadQueryExecutor(Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
     {
-        readonly Func<IQueryable<TSaga>, IQueryable<TSaga>>? _queryCustomization;
+        _queryCustomization = queryCustomization;
+    }
 
-        public OptimisticLoadQueryExecutor(Func<IQueryable<TSaga>, IQueryable<TSaga>>? queryCustomization = null)
-        {
-            _queryCustomization = queryCustomization;
-        }
+    public Task<TSaga?> Load(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(dbContext);
 
-        public Task<TSaga?> Load(DbContext dbContext, Guid correlationId, CancellationToken cancellationToken)
-        {
-            ArgumentNullException.ThrowIfNull(dbContext);
+        IQueryable<TSaga> queryable = SagaQueryCustomization.Apply(dbContext.Set<TSaga>(), _queryCustomization);
 
-            IQueryable<TSaga> queryable = SagaQueryCustomization.Apply(dbContext.Set<TSaga>(), _queryCustomization);
-
-            return queryable.AsTracking().SingleOrDefaultAsync(x => x.CorrelationId == correlationId, cancellationToken);
-        }
+        return queryable.AsTracking().SingleOrDefaultAsync(x => x.CorrelationId == correlationId, cancellationToken);
     }
 }

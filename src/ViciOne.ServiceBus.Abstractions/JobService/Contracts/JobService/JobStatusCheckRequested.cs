@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+/// <summary>
+/// Signals that the time to supervise a job has expired, and the instance should be checked
+/// </summary>
+public interface JobStatusCheckRequested
+{
+    /// <summary>
+    /// Identifies this attempt to run the job
+    /// </summary>
+    Guid AttemptId { get; }
 
     /// <summary>
-    /// Signals that the time to supervise a job has expired, and the instance should be checked
+    /// Include the jobId for partitioning if available
     /// </summary>
-    public interface JobStatusCheckRequested
-    {
-        /// <summary>
-        /// Identifies this attempt to run the job
-        /// </summary>
-        Guid AttemptId { get; }
-
-        /// <summary>
-        /// Include the jobId for partitioning if available
-        /// </summary>
-        Guid? JobId { get; }
-    }
+    Guid? JobId { get; }
 }

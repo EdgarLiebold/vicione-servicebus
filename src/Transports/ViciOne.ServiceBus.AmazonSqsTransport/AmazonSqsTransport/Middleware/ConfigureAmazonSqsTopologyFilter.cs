@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 /// <summary>
 /// Configures the broker with the supplied topology once the model is created, to ensure
 /// that the exchanges, queues, and bindings for the model are properly configured in AmazonSQS.

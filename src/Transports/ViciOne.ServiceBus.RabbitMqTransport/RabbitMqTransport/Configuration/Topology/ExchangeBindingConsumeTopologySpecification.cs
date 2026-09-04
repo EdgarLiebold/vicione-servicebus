@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+/// <summary>
+/// Used to bind an exchange to the consuming queue's exchange
+/// </summary>
+public class ExchangeBindingConsumeTopologySpecification :
+    RabbitMqExchangeBindingConfigurator,
+    IRabbitMqExchangeToExchangeBindingConfigurator,
+    IRabbitMqConsumeTopologySpecification
 {
-    using System;
-    using System.Collections.Generic;
-    using Topology;
+    readonly List<IRabbitMqConsumeTopologySpecification> _specifications;
 
-
-    /// <summary>
-    /// Used to bind an exchange to the consuming queue's exchange
-    /// </summary>
-    public class ExchangeBindingConsumeTopologySpecification :
-        RabbitMqExchangeBindingConfigurator,
-        IRabbitMqExchangeToExchangeBindingConfigurator,
-        IRabbitMqConsumeTopologySpecification
+    public ExchangeBindingConsumeTopologySpecification(string exchangeName, string exchangeType, bool durable = true, bool autoDelete = false)
+        : base(exchangeName, exchangeType, durable, autoDelete)
     {
-        readonly List<IRabbitMqConsumeTopologySpecification> _specifications;
+        _specifications = new List<IRabbitMqConsumeTopologySpecification>();
+    }
 
-        public ExchangeBindingConsumeTopologySpecification(string exchangeName, string exchangeType, bool durable = true, bool autoDelete = false)
-            : base(exchangeName, exchangeType, durable, autoDelete)
-        {
-            _specifications = new List<IRabbitMqConsumeTopologySpecification>();
-        }
+    public ExchangeBindingConsumeTopologySpecification(Exchange exchange)
+        : base(exchange)
+    {
+        _specifications = new List<IRabbitMqConsumeTopologySpecification>();
+    }
 
-        public ExchangeBindingConsumeTopologySpecification(Exchange exchange)
-            : base(exchange)
-        {
-            _specifications = new List<IRabbitMqConsumeTopologySpecification>();
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
+        var exchangeHandle = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);
 
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-            var exchangeHandle = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);
+        builder.ExchangeBind(exchangeHandle, builder.Exchange, RoutingKey, BindingArguments);
 
-            builder.ExchangeBind(exchangeHandle, builder.Exchange, RoutingKey, BindingArguments);
+        builder.BoundExchange = exchangeHandle;
 
-            builder.BoundExchange = exchangeHandle;
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
+    }
 
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
-        }
+    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> configure)
+    {
+        if (string.IsNullOrWhiteSpace(exchangeName))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));
 
-        public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> configure)
-        {
-            if (string.IsNullOrWhiteSpace(exchangeName))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));
+        var specification =
+            new ExchangeToExchangeBindingConsumeTopologySpecification(exchangeName, ExchangeType, Durable, AutoDelete) { RoutingKey = RoutingKey };
 
-            var specification =
-                new ExchangeToExchangeBindingConsumeTopologySpecification(exchangeName, ExchangeType, Durable, AutoDelete) { RoutingKey = RoutingKey };
+        configure?.Invoke(specification);
 
-            configure?.Invoke(specification);
-
-            _specifications.Add(specification);
-        }
+        _specifications.Add(specification);
     }
 }

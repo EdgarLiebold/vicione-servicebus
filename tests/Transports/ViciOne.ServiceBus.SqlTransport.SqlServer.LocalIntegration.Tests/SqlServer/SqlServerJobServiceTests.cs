@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
-
 using System.Threading.Channels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +7,8 @@ using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastru
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
 
 public sealed class SqlServerJobServiceTests
 {

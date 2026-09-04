@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IEventHubEndpointConnector
 {
-    using System;
-
-
-    public interface IEventHubEndpointConnector
-    {
-        HostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
-            Action<IRiderRegistrationContext, IEventHubReceiveEndpointConfigurator> configure);
-    }
+    HostReceiveEndpointHandle ConnectEventHubEndpoint(string eventHubName, string consumerGroup,
+        Action<IRiderRegistrationContext, IEventHubReceiveEndpointConfigurator> configure);
 }

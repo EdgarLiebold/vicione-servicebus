@@ -1,138 +1,136 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer
+using System;
+using System.Net;
+using System.Text;
+using Microsoft.Data.SqlClient;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
+
+public class SqlServerSqlHostSettings :
+    ConfigurationSqlHostSettings
 {
-    using System;
-    using System.Net;
-    using System.Text;
-    using Configuration;
-    using Microsoft.Data.SqlClient;
+    SqlConnectionStringBuilder? _builder;
 
-
-    public class SqlServerSqlHostSettings :
-        ConfigurationSqlHostSettings
+    public SqlServerSqlHostSettings(Uri hostAddress)
+        : base(hostAddress)
     {
-        SqlConnectionStringBuilder? _builder;
+        var address = new SqlHostAddress(hostAddress);
 
-        public SqlServerSqlHostSettings(Uri hostAddress)
-            : base(hostAddress)
+        Host = address.Host;
+        InstanceName = address.InstanceName;
+    }
+
+    public SqlServerSqlHostSettings(string connectionString)
+    {
+        ConnectionString = connectionString;
+    }
+
+    public SqlServerSqlHostSettings(SqlTransportOptions options)
+    {
+        var builder = SqlServerSqlTransportConnection.CreateBuilder(options);
+
+        ParseDataSource(builder.DataSource);
+
+        Database = builder.InitialCatalog;
+        Schema = options.Schema;
+
+        Username = builder.UserID;
+        Password = builder.Password;
+
+        _builder = builder;
+
+        if (options.ConnectionLimit.HasValue)
+            ConnectionLimit = options.ConnectionLimit.Value;
+
+        MaintenanceEnabled = !options.DisableMaintenance;
+    }
+
+    public string? ConnectionString
+    {
+        set
         {
-            var address = new SqlHostAddress(hostAddress);
-
-            Host = address.Host;
-            InstanceName = address.InstanceName;
-        }
-
-        public SqlServerSqlHostSettings(string connectionString)
-        {
-            ConnectionString = connectionString;
-        }
-
-        public SqlServerSqlHostSettings(SqlTransportOptions options)
-        {
-            var builder = SqlServerSqlTransportConnection.CreateBuilder(options);
+            var builder = new SqlConnectionStringBuilder(value);
 
             ParseDataSource(builder.DataSource);
-
-            Database = builder.InitialCatalog;
-            Schema = options.Schema;
 
             Username = builder.UserID;
             Password = builder.Password;
 
+            Database = builder.InitialCatalog;
+
             _builder = builder;
-
-            if (options.ConnectionLimit.HasValue)
-                ConnectionLimit = options.ConnectionLimit.Value;
-
-            MaintenanceEnabled = !options.DisableMaintenance;
         }
+    }
 
-        public string? ConnectionString
+    public override ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
+    {
+        return new SqlServerConnectionContextFactory(hostConfiguration);
+    }
+
+    public string GetConnectionString()
+    {
+        var builder = _builder ??= new SqlConnectionStringBuilder
         {
-            set
-            {
-                var builder = new SqlConnectionStringBuilder(value);
+            DataSource = FormatDataSource(),
+            UserID = Username,
+            Password = Password,
+            InitialCatalog = Database,
+            TrustServerCertificate = true
+        };
 
-                ParseDataSource(builder.DataSource);
+        return builder.ToString();
+    }
 
-                Username = builder.UserID;
-                Password = builder.Password;
-
-                Database = builder.InitialCatalog;
-
-                _builder = builder;
-            }
-        }
-
-        public override ConnectionContextFactory CreateConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
+    void ParseDataSource(string? source)
+    {
+        var split = source?.Split(',');
+        if (split?.Length == 2)
         {
-            return new SqlServerConnectionContextFactory(hostConfiguration);
+            ParseHost(split[0].Trim());
+            if (int.TryParse(split[1].Trim(), out var port))
+                Port = port;
         }
+        else
+            ParseHost(source);
+    }
 
-        public string GetConnectionString()
+    void ParseHost(string? host)
+    {
+        var hostSegments = host?.Split('\\');
+        if (hostSegments?.Length == 2)
         {
-            var builder = _builder ??= new SqlConnectionStringBuilder
-            {
-                DataSource = FormatDataSource(),
-                UserID = Username,
-                Password = Password,
-                InitialCatalog = Database,
-                TrustServerCertificate = true
-            };
-
-            return builder.ToString();
+            Host = TrimHost(hostSegments[0]);
+            InstanceName = hostSegments[1].Trim();
         }
+        else
+            Host = TrimHost(host);
+    }
 
-        void ParseDataSource(string? source)
-        {
-            var split = source?.Split(',');
-            if (split?.Length == 2)
-            {
-                ParseHost(split[0].Trim());
-                if (int.TryParse(split[1].Trim(), out var port))
-                    Port = port;
-            }
-            else
-                ParseHost(source);
-        }
+    string? TrimHost(string? host)
+    {
+        if (host == null)
+            return null;
 
-        void ParseHost(string? host)
-        {
-            var hostSegments = host?.Split('\\');
-            if (hostSegments?.Length == 2)
-            {
-                Host = TrimHost(hostSegments[0]);
-                InstanceName = hostSegments[1].Trim();
-            }
-            else
-                Host = TrimHost(host);
-        }
+        if (IPAddress.TryParse(host, out var endpoint))
+            return endpoint.ToString();
 
-        string? TrimHost(string? host)
-        {
-            if (host == null)
-                return null;
+        var hostSplit = host.Trim().Split(':');
+        return hostSplit.Length == 1 ? hostSplit[0] : hostSplit[1];
+    }
 
-            if (IPAddress.TryParse(host, out var endpoint))
-                return endpoint.ToString();
+    string? FormatDataSource()
+    {
+        if (string.IsNullOrWhiteSpace(Host))
+            return null;
 
-            var hostSplit = host.Trim().Split(':');
-            return hostSplit.Length == 1 ? hostSplit[0] : hostSplit[1];
-        }
+        var sb = new StringBuilder();
+        sb.Append(Host);
+        if (!string.IsNullOrWhiteSpace(InstanceName))
+            sb.Append('\\').Append(InstanceName);
 
-        string? FormatDataSource()
-        {
-            if (string.IsNullOrWhiteSpace(Host))
-                return null;
+        if (Port.HasValue)
+            sb.Append(',').Append(Port.Value);
 
-            var sb = new StringBuilder();
-            sb.Append(Host);
-            if (!string.IsNullOrWhiteSpace(InstanceName))
-                sb.Append('\\').Append(InstanceName);
-
-            if (Port.HasValue)
-                sb.Append(',').Append(Port.Value);
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

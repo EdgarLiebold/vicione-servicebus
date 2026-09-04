@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public interface IBaseTestHarness :
+    IConsumeObserverConnector,
+    IPublishObserverConnector,
+    ISendObserverConnector
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    TimeSpan TestTimeout { get; set; }
+    TimeSpan TestInactivityTimeout { get; set; }
+    TimeProvider TimeProvider { get; }
+    TestContextSaveMode ContextSaveMode { get; }
+    int MaximumSavedContexts { get; }
 
+    /// <summary>
+    /// CancellationToken that is canceled when the test is being aborted
+    /// </summary>
+    CancellationToken CancellationToken { get; }
 
-    public interface IBaseTestHarness :
-        IConsumeObserverConnector,
-        IPublishObserverConnector,
-        ISendObserverConnector
-    {
-        TimeSpan TestTimeout { get; set; }
-        TimeSpan TestInactivityTimeout { get; set; }
-        TimeProvider TimeProvider { get; }
-        TestContextSaveMode ContextSaveMode { get; }
-        int MaximumSavedContexts { get; }
+    /// <summary>
+    /// CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity
+    /// </summary>
+    CancellationToken InactivityToken { get; }
 
-        /// <summary>
-        /// CancellationToken that is canceled when the test is being aborted
-        /// </summary>
-        CancellationToken CancellationToken { get; }
+    /// <summary>
+    /// Task that is completed when the bus inactivity timeout has elapsed with no bus activity
+    /// </summary>
+    public Task InactivityTask { get; }
 
-        /// <summary>
-        /// CancellationToken that is cancelled when the test inactivity timeout has elapsed with no bus activity
-        /// </summary>
-        CancellationToken InactivityToken { get; }
+    IReceivedMessageList Consumed { get; }
+    IPublishedMessageList Published { get; }
+    ISentMessageList Sent { get; }
 
-        /// <summary>
-        /// Task that is completed when the bus inactivity timeout has elapsed with no bus activity
-        /// </summary>
-        public Task InactivityTask { get; }
+    /// <summary>
+    /// Sets the <see cref="CancellationToken" />, canceling the test execution
+    /// </summary>
+    void Cancel();
 
-        IReceivedMessageList Consumed { get; }
-        IPublishedMessageList Published { get; }
-        ISentMessageList Sent { get; }
-
-        /// <summary>
-        /// Sets the <see cref="CancellationToken" />, canceling the test execution
-        /// </summary>
-        void Cancel();
-
-        /// <summary>
-        /// Force the inactivity task to complete
-        /// </summary>
-        void ForceInactive();
-    }
+    /// <summary>
+    /// Force the inactivity task to complete
+    /// </summary>
+    void ForceInactive();
 }

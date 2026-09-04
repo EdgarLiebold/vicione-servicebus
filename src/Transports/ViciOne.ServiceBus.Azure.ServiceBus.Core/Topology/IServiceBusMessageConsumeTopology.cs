@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IServiceBusMessageConsumeTopology<TMessage> :
+    IMessageConsumeTopology<TMessage>
+    where TMessage : class
 {
-    public interface IServiceBusMessageConsumeTopology<TMessage> :
-        IMessageConsumeTopology<TMessage>
-        where TMessage : class
-    {
-    }
 }

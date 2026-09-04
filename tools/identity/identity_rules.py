@@ -478,16 +478,6 @@ def map_text(
     registry: tuple[FormerIdentityFamily, ...] | None = None,
 ) -> str:
     """Apply the closed, order-sensitive technical identity mapping."""
-    scratch_boundary = ".testagent/"
-    if "*.log*" in text and scratch_boundary not in text:
-        text = text.replace("\r\n", "\n")
-        newline = "\n"
-        text = text.replace(
-            f"*.log*{newline}",
-            f"*.log*{newline}{scratch_boundary}{newline}",
-            1,
-        )
-
     for rule in identity_mapping_rules("text", registry):
         text = _apply_text_mapping_rule(text, rule)
     text = text.replace("ViciOne.ServiceBus. \r\n", "ViciOne.ServiceBus.\r\n")

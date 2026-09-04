@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Util
+using System;
+using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Util;
+
+public static class DisposeAsyncExtensions
 {
-    using System;
-    using System.Runtime.ExceptionServices;
-    using System.Threading.Tasks;
-
-
-    public static class DisposeAsyncExtensions
+    /// <summary>
+    /// Invoke the dispose callback, and then rethrow the exception
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <param name="disposeCallback"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ViciOneServiceBusException"></exception>
+    public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<Task> disposeCallback)
     {
-        /// <summary>
-        /// Invoke the dispose callback, and then rethrow the exception
-        /// </summary>
-        /// <param name="exception"></param>
-        /// <param name="disposeCallback"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="ViciOneServiceBusException"></exception>
-        public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<Task> disposeCallback)
+        var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+
+        async ValueTask<T> Faulted()
         {
-            var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+            await disposeCallback().ConfigureAwait(false);
 
-            async ValueTask<T> Faulted()
-            {
-                await disposeCallback().ConfigureAwait(false);
+            dispatchInfo.Throw();
 
-                dispatchInfo.Throw();
-
-                throw new ViciOneServiceBusException("DisposeAsync", exception);
-            }
-
-            return Faulted();
+            throw new ViciOneServiceBusException("DisposeAsync", exception);
         }
 
-        /// <summary>
-        /// Invoke the dispose callback, and then rethrow the exception
-        /// </summary>
-        /// <param name="exception"></param>
-        /// <param name="disposeCallback"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="ViciOneServiceBusException"></exception>
-        public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<ValueTask> disposeCallback)
+        return Faulted();
+    }
+
+    /// <summary>
+    /// Invoke the dispose callback, and then rethrow the exception
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <param name="disposeCallback"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ViciOneServiceBusException"></exception>
+    public static ValueTask<T> DisposeAsync<T>(this Exception exception, Func<ValueTask> disposeCallback)
+    {
+        var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+
+        async ValueTask<T> Faulted()
         {
-            var dispatchInfo = ExceptionDispatchInfo.Capture(exception.GetBaseException());
+            await disposeCallback().ConfigureAwait(false);
 
-            async ValueTask<T> Faulted()
-            {
-                await disposeCallback().ConfigureAwait(false);
+            dispatchInfo.Throw();
 
-                dispatchInfo.Throw();
-
-                throw new ViciOneServiceBusException("DisposeAsync", exception);
-            }
-
-            return Faulted();
+            throw new ViciOneServiceBusException("DisposeAsync", exception);
         }
+
+        return Faulted();
     }
 }

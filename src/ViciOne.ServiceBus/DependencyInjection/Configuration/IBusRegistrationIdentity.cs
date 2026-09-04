@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+internal interface IBusRegistrationIdentity
 {
-    using System;
+    string BusKey { get; }
+}
 
 
-    internal interface IBusRegistrationIdentity
+internal static class BusRegistrationIdentity
+{
+    internal static string GetKey(Type busType)
     {
-        string BusKey { get; }
-    }
+        ArgumentNullException.ThrowIfNull(busType);
 
-
-    internal static class BusRegistrationIdentity
-    {
-        internal static string GetKey(Type busType)
-        {
-            ArgumentNullException.ThrowIfNull(busType);
-
-            return busType == typeof(IBus)
-                ? "default"
-                : $"{busType.Assembly.GetName().Name ?? "unknown"}:{busType.FullName ?? busType.Name}";
-        }
+        return busType == typeof(IBus)
+            ? "default"
+            : $"{busType.Assembly.GetName().Name ?? "unknown"}:{busType.FullName ?? busType.Name}";
     }
 }

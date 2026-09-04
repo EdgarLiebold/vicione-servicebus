@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class TransportPipeContextSupervisor<T> :
+    PipeContextSupervisor<T>,
+    ITransportSupervisor<T>
+    where T : class, PipeContext
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Agents;
-    using Middleware;
+    readonly ISupervisor _consumeSupervisor;
+    readonly ISupervisor _sendSupervisor;
 
-
-    public class TransportPipeContextSupervisor<T> :
-        PipeContextSupervisor<T>,
-        ITransportSupervisor<T>
-        where T : class, PipeContext
+    protected TransportPipeContextSupervisor(IPipeContextFactory<T> factory)
+        : base(factory)
     {
-        readonly ISupervisor _consumeSupervisor;
-        readonly ISupervisor _sendSupervisor;
+        _consumeSupervisor = new Supervisor();
+        _sendSupervisor = new Supervisor();
+    }
 
-        protected TransportPipeContextSupervisor(IPipeContextFactory<T> factory)
-            : base(factory)
-        {
-            _consumeSupervisor = new Supervisor();
-            _sendSupervisor = new Supervisor();
-        }
+    public CancellationToken ConsumeStopping => _consumeSupervisor.Stopping;
+    public CancellationToken SendStopping => _sendSupervisor.Stopping;
 
-        public CancellationToken ConsumeStopping => _consumeSupervisor.Stopping;
-        public CancellationToken SendStopping => _sendSupervisor.Stopping;
+    public void AddSendAgent<TAgent>(TAgent agent)
+        where TAgent : IAgent
+    {
+        _sendSupervisor.Add(agent);
+    }
 
-        public void AddSendAgent<TAgent>(TAgent agent)
-            where TAgent : IAgent
-        {
-            _sendSupervisor.Add(agent);
-        }
+    public void AddConsumeAgent<TAgent>(TAgent agent)
+        where TAgent : IAgent
+    {
+        _consumeSupervisor.Add(agent);
+    }
 
-        public void AddConsumeAgent<TAgent>(TAgent agent)
-            where TAgent : IAgent
-        {
-            _consumeSupervisor.Add(agent);
-        }
+    protected override async Task StopSupervisor(StopSupervisorContext context)
+    {
+        await _consumeSupervisor.Stop(context).ConfigureAwait(false);
 
-        protected override async Task StopSupervisor(StopSupervisorContext context)
-        {
-            await _consumeSupervisor.Stop(context).ConfigureAwait(false);
+        await _sendSupervisor.Stop(context).ConfigureAwait(false);
 
-            await _sendSupervisor.Stop(context).ConfigureAwait(false);
-
-            await base.StopSupervisor(context).ConfigureAwait(false);
-        }
+        await base.StopSupervisor(context).ConfigureAwait(false);
     }
 }

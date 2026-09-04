@@ -1,69 +1,67 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class MessageFanOutExchange<T> :
+    IMessageExchange<T>
+    where T : class
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Util;
+    readonly Connectable<IMessageSink<T>> _sinks;
 
-
-    public class MessageFanOutExchange<T> :
-        IMessageExchange<T>
-        where T : class
+    public MessageFanOutExchange(string name)
     {
-        readonly Connectable<IMessageSink<T>> _sinks;
+        Name = name;
 
-        public MessageFanOutExchange(string name)
+        _sinks = new Connectable<IMessageSink<T>>();
+    }
+
+    public IEnumerable<IMessageSink<T>> Sinks
+    {
+        get
         {
-            Name = name;
+            var sinks = new List<IMessageSink<T>>();
+            _sinks.ForEach(s => sinks.Add(s));
 
-            _sinks = new Connectable<IMessageSink<T>>();
+            return sinks;
         }
+    }
 
-        public IEnumerable<IMessageSink<T>> Sinks
+    public string Name { get; }
+
+    public Task Deliver(DeliveryContext<T> context)
+    {
+        return _sinks.ForEachAsync(async sink =>
         {
-            get
-            {
-                var sinks = new List<IMessageSink<T>>();
-                _sinks.ForEach(s => sinks.Add(s));
+            if (context.WasAlreadyDelivered(sink))
+                return;
 
-                return sinks;
-            }
-        }
+            await sink.Deliver(context).ConfigureAwait(false);
 
-        public string Name { get; }
+            context.Delivered(sink);
+        });
+    }
 
-        public Task Deliver(DeliveryContext<T> context)
-        {
-            return _sinks.ForEachAsync(async sink =>
-            {
-                if (context.WasAlreadyDelivered(sink))
-                    return;
+    public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)
+    {
+        return _sinks.Connect(sink);
+    }
 
-                await sink.Deliver(context).ConfigureAwait(false);
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("exchange");
+        scope.Add("name", Name);
+        scope.Add("type", "fanOut");
 
-                context.Delivered(sink);
-            });
-        }
+        var sinkScope = scope.CreateScope("sinks");
 
-        public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)
-        {
-            return _sinks.Connect(sink);
-        }
+        _sinks.ForEach(s => s.Probe(sinkScope));
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("exchange");
-            scope.Add("name", Name);
-            scope.Add("type", "fanOut");
-
-            var sinkScope = scope.CreateScope("sinks");
-
-            _sinks.ForEach(s => s.Probe(sinkScope));
-        }
-
-        public override string ToString()
-        {
-            return $"Exchange({Name})";
-        }
+    public override string ToString()
+    {
+        return $"Exchange({Name})";
     }
 }

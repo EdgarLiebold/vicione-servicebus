@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport
+namespace ViciOne.ServiceBus.RabbitMqTransport;
+
+public static class RabbitMqHeaders
 {
-    public static class RabbitMqHeaders
-    {
-        public const string Exchange = "RabbitMQ-ExchangeName";
-        public const string RoutingKey = "RabbitMQ-RoutingKey";
-        public const string DeliveryTag = "RabbitMQ-DeliveryTag";
-        public const string ConsumerTag = "RabbitMQ-ConsumerTag";
-        public const string RedeliveryRoutingKey = "RabbitMQ-Redelivery-RoutingKey";
-    }
+    public const string Exchange = "RabbitMQ-ExchangeName";
+    public const string RoutingKey = "RabbitMQ-RoutingKey";
+    public const string DeliveryTag = "RabbitMQ-DeliveryTag";
+    public const string ConsumerTag = "RabbitMQ-ConsumerTag";
+    public const string RedeliveryRoutingKey = "RabbitMQ-Redelivery-RoutingKey";
 }

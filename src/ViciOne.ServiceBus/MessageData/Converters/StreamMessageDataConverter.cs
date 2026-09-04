@@ -1,17 +1,15 @@
-namespace ViciOne.ServiceBus.MessageData.Converters
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus.MessageData.Converters;
+
+public class StreamMessageDataConverter :
+    IMessageDataConverter<Stream>
 {
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Metadata;
-
-
-    public class StreamMessageDataConverter :
-        IMessageDataConverter<Stream>
+    public Task<Stream> Convert(Stream stream, CancellationToken cancellationToken)
     {
-        public Task<Stream> Convert(Stream stream, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(stream);
-        }
+        return Task.FromResult(stream);
     }
 }

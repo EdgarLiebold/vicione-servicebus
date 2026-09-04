@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus;
 
 public interface CompletedActivityOptions
 {

@@ -1,16 +1,15 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService;
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using Context;
-using Contracts.JobService;
-using Events;
-using Messages;
-using Serialization;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.JobService.Messages;
+using ViciOne.ServiceBus.Serialization;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService;
 
 public class ConsumeJobContext<TJob> :
     ConsumeContextProxy,

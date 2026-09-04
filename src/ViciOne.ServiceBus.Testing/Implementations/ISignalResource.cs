@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+/// <summary>
+/// Represents a resource which may be signaled.
+/// </summary>
+public interface ISignalResource
 {
-    /// <summary>
-    /// Represents a resource which may be signaled.
-    /// </summary>
-    public interface ISignalResource
-    {
-        void Signal();
-    }
+    void Signal();
 }

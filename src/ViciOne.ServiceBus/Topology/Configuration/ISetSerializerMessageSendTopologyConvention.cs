@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Net.Mime;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISetSerializerMessageSendTopologyConvention<TMessage> :
+    IMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using System.Net.Mime;
-
-
-    public interface ISetSerializerMessageSendTopologyConvention<TMessage> :
-        IMessageSendTopologyConvention<TMessage>
-        where TMessage : class
-    {
-        void SetSerializer(ContentType contentType);
-    }
+    void SetSerializer(ContentType contentType);
 }

@@ -1,47 +1,45 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
+using System;
+using Npgsql;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
+
+public class PostgresSqlHostConfigurator :
+    SqlHostConfigurator,
+    IPostgresSqlHostConfigurator
 {
-    using System;
-    using Configuration;
-    using Npgsql;
+    readonly PostgresSqlHostSettings _settings;
 
-
-    public class PostgresSqlHostConfigurator :
-        SqlHostConfigurator,
-        IPostgresSqlHostConfigurator
+    public PostgresSqlHostConfigurator(PostgresSqlHostSettings settings)
+        : base(settings)
     {
-        readonly PostgresSqlHostSettings _settings;
+        _settings = settings;
+    }
 
-        public PostgresSqlHostConfigurator(PostgresSqlHostSettings settings)
-            : base(settings)
-        {
-            _settings = settings;
-        }
+    public PostgresSqlHostConfigurator(Uri hostAddress)
+        : this(new PostgresSqlHostSettings(hostAddress))
+    {
+    }
 
-        public PostgresSqlHostConfigurator(Uri hostAddress)
-            : this(new PostgresSqlHostSettings(hostAddress))
-        {
-        }
+    public PostgresSqlHostConfigurator(SqlTransportOptions options)
+        : this(new PostgresSqlHostSettings(options))
+    {
+    }
 
-        public PostgresSqlHostConfigurator(SqlTransportOptions options)
-            : this(new PostgresSqlHostSettings(options))
-        {
-        }
+    public PostgresSqlHostConfigurator(string connectionString)
+        : this(new PostgresSqlHostSettings(connectionString))
+    {
+    }
 
-        public PostgresSqlHostConfigurator(string connectionString)
-            : this(new PostgresSqlHostSettings(connectionString))
-        {
-        }
+    public PostgresSqlHostConfigurator(NpgsqlDataSource dataSource)
+        : this(new PostgresSqlHostSettings(dataSource))
+    {
+    }
 
-        public PostgresSqlHostConfigurator(NpgsqlDataSource dataSource)
-            : this(new PostgresSqlHostSettings(dataSource))
-        {
-        }
+    public SqlHostSettings Settings => _settings;
 
-        public SqlHostSettings Settings => _settings;
-
-        public override string? ConnectionString
-        {
-            set => _settings.ConnectionString = value;
-        }
+    public override string? ConnectionString
+    {
+        set => _settings.ConnectionString = value;
     }
 }

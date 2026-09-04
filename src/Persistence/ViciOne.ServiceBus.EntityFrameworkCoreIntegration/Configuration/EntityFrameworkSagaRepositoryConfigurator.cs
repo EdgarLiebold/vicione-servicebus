@@ -1,185 +1,183 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
+    IEntityFrameworkSagaRepositoryConfigurator<TSaga>,
+    ISpecification
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Reflection;
-    using EntityFrameworkCoreIntegration;
-    using EntityFrameworkCoreIntegration.Saga;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
-    using Microsoft.EntityFrameworkCore.Infrastructure;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Saga;
+    ConcurrencyMode _concurrencyMode;
+    Action<ISagaRepositoryRegistrationConfigurator<TSaga>> _configureDbContext;
+    IsolationLevel _isolationLevel;
+    ILockStatementProvider _lockStatementProvider;
+    Func<IQueryable<TSaga>, IQueryable<TSaga>> _queryCustomization;
+    bool _isTransactionEnabled = true;
 
-
-    public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
-        IEntityFrameworkSagaRepositoryConfigurator<TSaga>,
-        ISpecification
-        where TSaga : class, ISaga
+    public EntityFrameworkSagaRepositoryConfigurator()
     {
-        ConcurrencyMode _concurrencyMode;
-        Action<ISagaRepositoryRegistrationConfigurator<TSaga>> _configureDbContext;
-        IsolationLevel _isolationLevel;
-        ILockStatementProvider _lockStatementProvider;
-        Func<IQueryable<TSaga>, IQueryable<TSaga>> _queryCustomization;
-        bool _isTransactionEnabled = true;
+        _isolationLevel = IsolationLevel.Serializable;
+        _concurrencyMode = ConcurrencyMode.Pessimistic;
+    }
 
-        public EntityFrameworkSagaRepositoryConfigurator()
+    public IsolationLevel IsolationLevel
+    {
+        set => _isolationLevel = value;
+    }
+
+    public void CustomizeQuery(Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization)
+    {
+        _queryCustomization = queryCustomization ?? throw new ArgumentNullException(nameof(queryCustomization));
+    }
+
+    public ConcurrencyMode ConcurrencyMode
+    {
+        set => SetConcurrencyMode(value);
+    }
+
+    public ILockStatementProvider LockStatementProvider
+    {
+        set => _lockStatementProvider = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    public void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
+        where TContext : DbContext
+        where TImplementation : DbContext, TContext
+    {
+        _configureDbContext = configurator =>
         {
-            _isolationLevel = IsolationLevel.Serializable;
-            _concurrencyMode = ConcurrencyMode.Pessimistic;
-        }
+            AddDbContext<TContext, TImplementation>(configurator, optionsAction);
+        };
+    }
 
-        public IsolationLevel IsolationLevel
+    public void DatabaseFactory(Func<DbContext> databaseFactory)
+    {
+        ArgumentNullException.ThrowIfNull(databaseFactory);
+        DatabaseFactory(_ => databaseFactory);
+    }
+
+    public void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory)
+    {
+        ArgumentNullException.ThrowIfNull(databaseFactory);
+
+        _configureDbContext = configurator =>
         {
-            set => _isolationLevel = value;
-        }
+            configurator.TryAddScoped<ISagaDbContextFactory<TSaga>>(provider => new DelegateSagaDbContextFactory<TSaga>(databaseFactory(provider)));
+        };
+    }
 
-        public void CustomizeQuery(Func<IQueryable<TSaga>, IQueryable<TSaga>> queryCustomization)
+    public void ExistingDbContext<TContext>()
+        where TContext : DbContext
+    {
+        _configureDbContext = configurator =>
         {
-            _queryCustomization = queryCustomization ?? throw new ArgumentNullException(nameof(queryCustomization));
-        }
+            configurator.TryAddScoped<ISagaDbContextFactory<TSaga>, ContainerSagaDbContextFactory<TContext, TSaga>>();
+        };
+    }
 
-        public ConcurrencyMode ConcurrencyMode
-        {
-            set => SetConcurrencyMode(value);
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_configureDbContext == null)
+            yield return this.Failure("DbContext", "must be specified");
 
-        public ILockStatementProvider LockStatementProvider
-        {
-            set => _lockStatementProvider = value ?? throw new ArgumentNullException(nameof(value));
-        }
+        if (_concurrencyMode == ConcurrencyMode.Pessimistic && _lockStatementProvider == null)
+            yield return this.Failure("LockStatementProvider", "must be selected explicitly for pessimistic concurrency");
+    }
 
-        public void AddDbContext<TContext, TImplementation>(Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
-            where TContext : DbContext
-            where TImplementation : DbContext, TContext
-        {
-            _configureDbContext = configurator =>
-            {
-                AddDbContext<TContext, TImplementation>(configurator, optionsAction);
-            };
-        }
+    public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
 
-        public void DatabaseFactory(Func<DbContext> databaseFactory)
-        {
-            ArgumentNullException.ThrowIfNull(databaseFactory);
-            DatabaseFactory(_ => databaseFactory);
-        }
+        _configureDbContext?.Invoke(configurator);
 
-        public void DatabaseFactory(Func<IServiceProvider, Func<DbContext>> databaseFactory)
-        {
-            ArgumentNullException.ThrowIfNull(databaseFactory);
+        ISagaRepositoryLockStrategy<TSaga> lockStrategy = _concurrencyMode == ConcurrencyMode.Optimistic
+            ? CreateOptimisticLockStrategy()
+            : CreatePessimisticLockStrategy();
 
-            _configureDbContext = configurator =>
-            {
-                configurator.TryAddScoped<ISagaDbContextFactory<TSaga>>(provider => new DelegateSagaDbContextFactory<TSaga>(databaseFactory(provider)));
-            };
-        }
+        configurator.TryAddSingleton(_ => lockStrategy);
 
-        public void ExistingDbContext<TContext>()
-            where TContext : DbContext
-        {
-            _configureDbContext = configurator =>
-            {
-                configurator.TryAddScoped<ISagaDbContextFactory<TSaga>, ContainerSagaDbContextFactory<TContext, TSaga>>();
-            };
-        }
+        configurator.RegisterLoadSagaRepository<TSaga, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
+        configurator.RegisterQuerySagaRepository<TSaga, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
+        configurator
+            .RegisterSagaRepository<TSaga, DbContext, SagaConsumeContextFactory<DbContext, TSaga>, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_configureDbContext == null)
-                yield return this.Failure("DbContext", "must be specified");
+    static void AddDbContext<TContext, TImplementation>(IServiceCollection collection,
+        Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
+        where TImplementation : DbContext, TContext
+        where TContext : DbContext
+    {
+        if (optionsAction != null)
+            CheckContextConstructors<TImplementation>();
 
-            if (_concurrencyMode == ConcurrencyMode.Pessimistic && _lockStatementProvider == null)
-                yield return this.Failure("LockStatementProvider", "must be selected explicitly for pessimistic concurrency");
-        }
+        collection.TryAddSingleton(provider => DbContextOptionsFactory(provider, optionsAction));
+        collection.TryAddScoped<DbContextOptions>(provider => provider.GetRequiredService<DbContextOptions<TImplementation>>());
 
-        public void Register(ISagaRepositoryRegistrationConfigurator<TSaga> configurator)
-        {
-            ArgumentNullException.ThrowIfNull(configurator);
+        collection.TryAddScoped<TContext, TImplementation>();
 
-            _configureDbContext?.Invoke(configurator);
+        collection.TryAddScoped<ISagaDbContextFactory<TSaga>, ContainerSagaDbContextFactory<TContext, TSaga>>();
+    }
 
-            ISagaRepositoryLockStrategy<TSaga> lockStrategy = _concurrencyMode == ConcurrencyMode.Optimistic
-                ? CreateOptimisticLockStrategy()
-                : CreatePessimisticLockStrategy();
+    static DbContextOptions<TContext> DbContextOptionsFactory<TContext>(IServiceProvider provider,
+        Action<IServiceProvider, DbContextOptionsBuilder<TContext>> optionsAction)
+        where TContext : DbContext
+    {
+        var builder = new DbContextOptionsBuilder<TContext>(new DbContextOptions<TContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
 
-            configurator.TryAddSingleton(_ => lockStrategy);
+        builder.UseApplicationServiceProvider(provider);
 
-            configurator.RegisterLoadSagaRepository<TSaga, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
-            configurator.RegisterQuerySagaRepository<TSaga, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
-            configurator
-                .RegisterSagaRepository<TSaga, DbContext, SagaConsumeContextFactory<DbContext, TSaga>, EntityFrameworkSagaRepositoryContextFactory<TSaga>>();
-        }
+        optionsAction?.Invoke(provider, builder);
 
-        static void AddDbContext<TContext, TImplementation>(IServiceCollection collection,
-            Action<IServiceProvider, DbContextOptionsBuilder<TImplementation>> optionsAction)
-            where TImplementation : DbContext, TContext
-            where TContext : DbContext
-        {
-            if (optionsAction != null)
-                CheckContextConstructors<TImplementation>();
+        return builder.Options;
+    }
 
-            collection.TryAddSingleton(provider => DbContextOptionsFactory(provider, optionsAction));
-            collection.TryAddScoped<DbContextOptions>(provider => provider.GetRequiredService<DbContextOptions<TImplementation>>());
+    static void CheckContextConstructors<TContext>()
+        where TContext : DbContext
+    {
+        List<ConstructorInfo> declaredConstructors = typeof(TContext).GetTypeInfo().DeclaredConstructors.ToList();
+        if (declaredConstructors.Count == 1 && declaredConstructors[0].GetParameters().Length == 0)
+            throw new ArgumentException(CoreStrings.DbContextMissingConstructor(typeof(TContext).ShortDisplayName()));
+    }
 
-            collection.TryAddScoped<TContext, TImplementation>();
+    ISagaRepositoryLockStrategy<TSaga> CreateOptimisticLockStrategy()
+    {
+        var queryExecutor = new OptimisticLoadQueryExecutor<TSaga>(_queryCustomization);
 
-            collection.TryAddScoped<ISagaDbContextFactory<TSaga>, ContainerSagaDbContextFactory<TContext, TSaga>>();
-        }
+        return new OptimisticSagaRepositoryLockStrategy<TSaga>(queryExecutor, _queryCustomization, _isolationLevel, _isTransactionEnabled);
+    }
 
-        static DbContextOptions<TContext> DbContextOptionsFactory<TContext>(IServiceProvider provider,
-            Action<IServiceProvider, DbContextOptionsBuilder<TContext>> optionsAction)
-            where TContext : DbContext
-        {
-            var builder = new DbContextOptionsBuilder<TContext>(new DbContextOptions<TContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
+    ISagaRepositoryLockStrategy<TSaga> CreatePessimisticLockStrategy()
+    {
+        var statementProvider = _lockStatementProvider
+            ?? throw new ConfigurationException("A lock statement provider must be selected explicitly for pessimistic concurrency.");
 
-            builder.UseApplicationServiceProvider(provider);
+        var queryExecutor = new PessimisticLoadQueryExecutor<TSaga>(statementProvider, _queryCustomization);
 
-            optionsAction?.Invoke(provider, builder);
+        return new PessimisticSagaRepositoryLockStrategy<TSaga>(queryExecutor, _queryCustomization, _isolationLevel);
+    }
 
-            return builder.Options;
-        }
+    public void SetOptimisticConcurrency(bool useTransaction = true)
+    {
+        SetConcurrencyMode(ConcurrencyMode.Optimistic);
+        _isTransactionEnabled = useTransaction;
+    }
 
-        static void CheckContextConstructors<TContext>()
-            where TContext : DbContext
-        {
-            List<ConstructorInfo> declaredConstructors = typeof(TContext).GetTypeInfo().DeclaredConstructors.ToList();
-            if (declaredConstructors.Count == 1 && declaredConstructors[0].GetParameters().Length == 0)
-                throw new ArgumentException(CoreStrings.DbContextMissingConstructor(typeof(TContext).ShortDisplayName()));
-        }
-
-        ISagaRepositoryLockStrategy<TSaga> CreateOptimisticLockStrategy()
-        {
-            var queryExecutor = new OptimisticLoadQueryExecutor<TSaga>(_queryCustomization);
-
-            return new OptimisticSagaRepositoryLockStrategy<TSaga>(queryExecutor, _queryCustomization, _isolationLevel, _isTransactionEnabled);
-        }
-
-        ISagaRepositoryLockStrategy<TSaga> CreatePessimisticLockStrategy()
-        {
-            var statementProvider = _lockStatementProvider
-                ?? throw new ConfigurationException("A lock statement provider must be selected explicitly for pessimistic concurrency.");
-
-            var queryExecutor = new PessimisticLoadQueryExecutor<TSaga>(statementProvider, _queryCustomization);
-
-            return new PessimisticSagaRepositoryLockStrategy<TSaga>(queryExecutor, _queryCustomization, _isolationLevel);
-        }
-
-        public void SetOptimisticConcurrency(bool useTransaction = true)
-        {
-            SetConcurrencyMode(ConcurrencyMode.Optimistic);
-            _isTransactionEnabled = useTransaction;
-        }
-
-        void SetConcurrencyMode(ConcurrencyMode concurrencyMode)
-        {
-            _concurrencyMode = concurrencyMode;
-            if (_concurrencyMode == ConcurrencyMode.Optimistic && _isolationLevel == IsolationLevel.Serializable)
-                _isolationLevel = IsolationLevel.ReadCommitted;
-        }
+    void SetConcurrencyMode(ConcurrencyMode concurrencyMode)
+    {
+        _concurrencyMode = concurrencyMode;
+        if (_concurrencyMode == ConcurrencyMode.Optimistic && _isolationLevel == IsolationLevel.Serializable)
+            _isolationLevel = IsolationLevel.ReadCommitted;
     }
 }

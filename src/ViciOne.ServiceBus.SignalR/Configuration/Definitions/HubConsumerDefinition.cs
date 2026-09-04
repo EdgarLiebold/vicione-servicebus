@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.SignalR.Configuration.Definitions
+using System;
+using System.Globalization;
+using Microsoft.AspNetCore.SignalR;
+using ViciOne.ServiceBus.SignalR.Consumers;
+
+namespace ViciOne.ServiceBus.SignalR.Configuration.Definitions;
+
+public class HubConsumerDefinition<THub> :
+    IEndpointDefinition<AllConsumer<THub>>,
+    IEndpointDefinition<ConnectionConsumer<THub>>,
+    IEndpointDefinition<GroupConsumer<THub>>,
+    IEndpointDefinition<GroupManagementConsumer<THub>>,
+    IEndpointDefinition<UserConsumer<THub>>
+    where THub : Hub
 {
-    using System;
-    using System.Globalization;
-    using Consumers;
-    using Microsoft.AspNetCore.SignalR;
+    readonly Lazy<string> _hubName = new Lazy<string>(() => typeof(THub).Name.ToLower(CultureInfo.InvariantCulture));
 
+    public bool IsTemporary => true;
 
-    public class HubConsumerDefinition<THub> :
-        IEndpointDefinition<AllConsumer<THub>>,
-        IEndpointDefinition<ConnectionConsumer<THub>>,
-        IEndpointDefinition<GroupConsumer<THub>>,
-        IEndpointDefinition<GroupManagementConsumer<THub>>,
-        IEndpointDefinition<UserConsumer<THub>>
-        where THub : Hub
+    public int? PrefetchCount => default;
+
+    public int? ConcurrentMessageLimit => default;
+
+    public bool ConfigureConsumeTopology => true;
+
+    public string GetEndpointName(IEndpointNameFormatter formatter)
     {
-        readonly Lazy<string> _hubName = new Lazy<string>(() => typeof(THub).Name.ToLower(CultureInfo.InvariantCulture));
+        return formatter.TemporaryEndpoint($"signalr_{_hubName.Value}");
+    }
 
-        public bool IsTemporary => true;
-
-        public int? PrefetchCount => default;
-
-        public int? ConcurrentMessageLimit => default;
-
-        public bool ConfigureConsumeTopology => true;
-
-        public string GetEndpointName(IEndpointNameFormatter formatter)
-        {
-            return formatter.TemporaryEndpoint($"signalr_{_hubName.Value}");
-        }
-
-        public void Configure<T>(T configurator, IRegistrationContext context)
-            where T : IReceiveEndpointConfigurator
-        {
-        }
+    public void Configure<T>(T configurator, IRegistrationContext context)
+        where T : IReceiveEndpointConfigurator
+    {
     }
 }

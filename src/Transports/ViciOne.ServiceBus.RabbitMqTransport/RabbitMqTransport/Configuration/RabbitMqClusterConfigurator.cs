@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public class RabbitMqClusterConfigurator :
+    IRabbitMqClusterConfigurator
 {
-    using System.Collections.Generic;
+    readonly List<ClusterNode> _nodes;
+    readonly RabbitMqHostSettings _settings;
 
-
-    public class RabbitMqClusterConfigurator :
-        IRabbitMqClusterConfigurator
+    public RabbitMqClusterConfigurator(RabbitMqHostSettings settings)
     {
-        readonly List<ClusterNode> _nodes;
-        readonly RabbitMqHostSettings _settings;
+        _settings = settings;
+        _nodes = new List<ClusterNode>();
+    }
 
-        public RabbitMqClusterConfigurator(RabbitMqHostSettings settings)
-        {
-            _settings = settings;
-            _nodes = new List<ClusterNode>();
-        }
+    public ClusterNode[] ClusterMembers => _nodes.ToArray();
 
-        public ClusterNode[] ClusterMembers => _nodes.ToArray();
+    public void Node(string nodeAddress)
+    {
+        _nodes.Add(ClusterNode.Parse(nodeAddress));
+    }
 
-        public void Node(string nodeAddress)
-        {
-            _nodes.Add(ClusterNode.Parse(nodeAddress));
-        }
+    public IRabbitMqEndpointResolver GetEndpointResolver()
+    {
+        if (_nodes.Count <= 0)
+            return null;
 
-        public IRabbitMqEndpointResolver GetEndpointResolver()
-        {
-            if (_nodes.Count <= 0)
-                return null;
-
-            return new SequentialEndpointResolver(ClusterMembers, _settings);
-        }
+        return new SequentialEndpointResolver(ClusterMembers, _settings);
     }
 }

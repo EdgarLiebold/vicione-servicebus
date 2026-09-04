@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System;
-using AzureServiceBusTransport;
+using ViciOne.ServiceBus.AzureServiceBusTransport;
 
+namespace ViciOne.ServiceBus;
 
 public class ServiceBusSessionBatchOptions
 {

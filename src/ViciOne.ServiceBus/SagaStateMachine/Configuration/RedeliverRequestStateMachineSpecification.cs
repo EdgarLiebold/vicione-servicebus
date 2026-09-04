@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RedeliverRequestStateMachineSpecification :
+    IRequestStateMachineMissingInstanceConfigurator
 {
-    using System;
+    readonly Action<IMissingInstanceRedeliveryConfigurator> _configure;
 
-
-    public class RedeliverRequestStateMachineSpecification :
-        IRequestStateMachineMissingInstanceConfigurator
+    public RedeliverRequestStateMachineSpecification(Action<IMissingInstanceRedeliveryConfigurator> configure)
     {
-        readonly Action<IMissingInstanceRedeliveryConfigurator> _configure;
+        _configure = configure;
+    }
 
-        public RedeliverRequestStateMachineSpecification(Action<IMissingInstanceRedeliveryConfigurator> configure)
+    public IPipe<ConsumeContext<TMessage>> Apply<TInstance, TMessage>(IMissingInstanceConfigurator<TInstance, TMessage> configurator)
+        where TInstance : SagaStateMachineInstance
+        where TMessage : class
+    {
+        return configurator.Redeliver(r =>
         {
-            _configure = configure;
-        }
+            r.OnRedeliveryLimitReached(x => x.Fault());
 
-        public IPipe<ConsumeContext<TMessage>> Apply<TInstance, TMessage>(IMissingInstanceConfigurator<TInstance, TMessage> configurator)
-            where TInstance : SagaStateMachineInstance
-            where TMessage : class
-        {
-            return configurator.Redeliver(r =>
-            {
-                r.OnRedeliveryLimitReached(x => x.Fault());
-
-                _configure?.Invoke(r);
-            });
-        }
+            _configure?.Invoke(r);
+        });
     }
 }

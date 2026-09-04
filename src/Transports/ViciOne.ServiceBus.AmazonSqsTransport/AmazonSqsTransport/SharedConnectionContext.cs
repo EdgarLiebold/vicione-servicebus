@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Middleware;
-using Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class SharedConnectionContext :
     ProxyPipeContext,

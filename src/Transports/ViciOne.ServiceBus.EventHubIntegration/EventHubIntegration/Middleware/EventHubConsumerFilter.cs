@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Middleware;
+
+public class EventHubConsumerFilter :
+    IFilter<ProcessorContext>
 {
-    using System.Threading.Tasks;
-    using Transports;
+    readonly ReceiveEndpointContext _context;
 
-
-    public class EventHubConsumerFilter :
-        IFilter<ProcessorContext>
+    public EventHubConsumerFilter(ReceiveEndpointContext context)
     {
-        readonly ReceiveEndpointContext _context;
+        _context = context;
+    }
 
-        public EventHubConsumerFilter(ReceiveEndpointContext context)
+    public async Task Send(ProcessorContext context, IPipe<ProcessorContext> next)
+    {
+        var receiveSettings = _context.GetPayload<ReceiveSettings>();
+
+        var receiver = new EventHubDataReceiver(receiveSettings, _context, context);
+
+        await receiver.Ready.ConfigureAwait(false);
+
+        _context.AddConsumeAgent(receiver);
+
+        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+
+        try
         {
-            _context = context;
+            await receiver.Completed.ConfigureAwait(false);
+        }
+        finally
+        {
+            DeliveryMetrics metrics = receiver;
+
+            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
+
+            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
         }
 
-        public async Task Send(ProcessorContext context, IPipe<ProcessorContext> next)
-        {
-            var receiveSettings = _context.GetPayload<ReceiveSettings>();
+        await next.Send(context).ConfigureAwait(false);
+    }
 
-            var receiver = new EventHubDataReceiver(receiveSettings, _context, context);
-
-            await receiver.Ready.ConfigureAwait(false);
-
-            _context.AddConsumeAgent(receiver);
-
-            await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
-
-            try
-            {
-                await receiver.Completed.ConfigureAwait(false);
-            }
-            finally
-            {
-                DeliveryMetrics metrics = receiver;
-
-                await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
-
-                _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
-            }
-
-            await next.Send(context).ConfigureAwait(false);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-        }
+    public void Probe(ProbeContext context)
+    {
     }
 }

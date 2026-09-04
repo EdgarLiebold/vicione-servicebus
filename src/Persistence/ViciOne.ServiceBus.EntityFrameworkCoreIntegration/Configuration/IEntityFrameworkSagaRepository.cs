@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using Microsoft.EntityFrameworkCore;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+namespace ViciOne.ServiceBus;
+
+public interface IEntityFrameworkSagaRepository
 {
-    using EntityFrameworkCoreIntegration;
-    using Microsoft.EntityFrameworkCore;
+    void AddSagaClassMap<TSaga>(ISagaClassMap<TSaga> sagaClassMap)
+        where TSaga : class, ISaga;
 
-
-    public interface IEntityFrameworkSagaRepository
-    {
-        void AddSagaClassMap<TSaga>(ISagaClassMap<TSaga> sagaClassMap)
-            where TSaga : class, ISaga;
-
-        DbContext GetDbContext();
-    }
+    DbContext GetDbContext();
 }

@@ -7,13 +7,13 @@ namespace ViciOne.ServiceBus.Abstractions.Tests.Contexts;
 /// The census of the <see cref="MessageBody" /> contract inside the abstractions assembly.
 /// </summary>
 /// <remarks>
-/// Every other Fact of this cohort states something about one named body. None of them notices a
+/// Every other Fact in this class states something about one named body. None of them notices a
 /// sixth implementation appearing beside them, and a body nobody constructs is a body nobody holds
 /// to the contract. This class is the one that fails when that happens.
 /// <para>
-/// The scope is the abstractions assembly alone, which is the assembly this cohort owns. The core
-/// and MessagePack bodies are declared elsewhere, still carry inherited obligations, and belong to
-/// their own later cohorts; claiming them here would be a completeness claim this project cannot
+/// The scope is the abstractions assembly alone, which is the assembly this project owns. The core
+/// and MessagePack bodies are declared elsewhere, carry their corresponding contracts, and belong to
+/// their own test projects; claiming them here would be a completeness claim this project cannot
 /// keep.
 /// </para>
 /// </remarks>

@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Tests.MessageData.PropertyProviders;
-
 using System.Reflection;
 using System.Text;
 using ViciOne.ServiceBus.Initializers;
@@ -9,6 +7,8 @@ using ViciOne.ServiceBus.MessageData.PropertyProviders;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.MessageData.PropertyProviders;
 
 public sealed class PutMessageDataPropertyProviderTests
 {

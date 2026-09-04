@@ -1,69 +1,67 @@
-namespace ViciOne.ServiceBus.Internals.GraphValidation
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Internals.GraphValidation;
+
+internal class Tarjan<T, TNode>
+    where TNode : Node<T>, ITarjanNodeProperties
+    where T : notnull
 {
-    using System;
-    using System.Collections.Generic;
+    readonly AdjacencyList<T, TNode> _list;
+    readonly Stack<TNode> _stack;
+    int _index;
 
-
-    internal class Tarjan<T, TNode>
-        where TNode : Node<T>, ITarjanNodeProperties
-        where T : notnull
+    public Tarjan(AdjacencyList<T, TNode> list)
     {
-        readonly AdjacencyList<T, TNode> _list;
-        readonly Stack<TNode> _stack;
-        int _index;
+        _list = list;
+        _index = 0;
+        Result = new List<IList<TNode>>();
+        _stack = new Stack<TNode>();
 
-        public Tarjan(AdjacencyList<T, TNode> list)
+        foreach (var node in _list.SourceNodes)
         {
-            _list = list;
-            _index = 0;
-            Result = new List<IList<TNode>>();
-            _stack = new Stack<TNode>();
+            if (node.Index != -1)
+                continue;
 
-            foreach (var node in _list.SourceNodes)
+            Compute(node);
+        }
+    }
+
+    public IList<IList<TNode>> Result { get; }
+
+    void Compute(TNode v)
+    {
+        v.Index = _index;
+        v.LowLink = _index;
+        _index++;
+
+        _stack.Push(v);
+
+        foreach (Edge<T, TNode> edge in _list.GetEdges(v))
+        {
+            var n = edge.Target;
+            if (n.Index == -1)
             {
-                if (node.Index != -1)
-                    continue;
-
-                Compute(node);
+                Compute(n);
+                v.LowLink = Math.Min(v.LowLink, n.LowLink);
             }
+            else if (_stack.Contains(n))
+                v.LowLink = Math.Min(v.LowLink, n.Index);
         }
 
-        public IList<IList<TNode>> Result { get; }
-
-        void Compute(TNode v)
+        if (v.LowLink == v.Index)
         {
-            v.Index = _index;
-            v.LowLink = _index;
-            _index++;
-
-            _stack.Push(v);
-
-            foreach (Edge<T, TNode> edge in _list.GetEdges(v))
+            TNode n;
+            IList<TNode> component = new List<TNode>();
+            do
             {
-                var n = edge.Target;
-                if (n.Index == -1)
-                {
-                    Compute(n);
-                    v.LowLink = Math.Min(v.LowLink, n.LowLink);
-                }
-                else if (_stack.Contains(n))
-                    v.LowLink = Math.Min(v.LowLink, n.Index);
+                n = _stack.Pop();
+                component.Add(n);
             }
+            while (!v.Equals(n));
 
-            if (v.LowLink == v.Index)
-            {
-                TNode n;
-                IList<TNode> component = new List<TNode>();
-                do
-                {
-                    n = _stack.Pop();
-                    component.Add(n);
-                }
-                while (!v.Equals(n));
-
-                if (component.Count != 1 || !v.Equals(component[0]))
-                    Result.Add(component);
-            }
+            if (component.Count != 1 || !v.Equals(component[0]))
+                Result.Add(component);
         }
     }
 }

@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public class InMemoryEndpointConfiguration :
+    EndpointConfiguration,
+    IInMemoryEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    readonly IInMemoryTopologyConfiguration _topologyConfiguration;
 
-
-    public class InMemoryEndpointConfiguration :
-        EndpointConfiguration,
-        IInMemoryEndpointConfiguration
+    protected InMemoryEndpointConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
+        : base(topologyConfiguration)
     {
-        readonly IInMemoryTopologyConfiguration _topologyConfiguration;
+        _topologyConfiguration = topologyConfiguration;
+    }
 
-        protected InMemoryEndpointConfiguration(IInMemoryTopologyConfiguration topologyConfiguration)
-            : base(topologyConfiguration)
-        {
-            _topologyConfiguration = topologyConfiguration;
-        }
+    InMemoryEndpointConfiguration(IInMemoryEndpointConfiguration parentConfiguration, IInMemoryTopologyConfiguration topologyConfiguration,
+        bool isBusEndpoint)
+        : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+    {
+        _topologyConfiguration = topologyConfiguration;
+    }
 
-        InMemoryEndpointConfiguration(IInMemoryEndpointConfiguration parentConfiguration, IInMemoryTopologyConfiguration topologyConfiguration,
-            bool isBusEndpoint)
-            : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
-        {
-            _topologyConfiguration = topologyConfiguration;
-        }
+    IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _topologyConfiguration;
 
-        IInMemoryTopologyConfiguration IInMemoryEndpointConfiguration.Topology => _topologyConfiguration;
+    public IInMemoryEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
+    {
+        var topologyConfiguration = new InMemoryTopologyConfiguration(_topologyConfiguration);
 
-        public IInMemoryEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
-        {
-            var topologyConfiguration = new InMemoryTopologyConfiguration(_topologyConfiguration);
-
-            return new InMemoryEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
-        }
+        return new InMemoryEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
     }
 }

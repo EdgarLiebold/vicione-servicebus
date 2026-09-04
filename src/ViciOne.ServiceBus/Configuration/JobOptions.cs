@@ -1,13 +1,11 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
-using Configuration;
-using Observables;
-using Serialization;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Observables;
+using ViciOne.ServiceBus.Serialization;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// JobOptions contains the options used to configure the job consumer and related components
 /// </summary>

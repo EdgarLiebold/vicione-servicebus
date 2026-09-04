@@ -1,59 +1,57 @@
-namespace ViciOne.ServiceBus.Agents
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Agents;
+
+/// <summary>
+/// An Agent Provocateur that uses a context handle for the activate state of the agent
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+public class ActivePipeContextAgent<TContext> :
+    Agent,
+    IActivePipeContextAgent<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Middleware;
+    static readonly string _caption = $"Active<{typeof(TContext).Name}>";
 
+    readonly ActivePipeContextHandle<TContext> _contextHandle;
 
-    /// <summary>
-    /// An Agent Provocateur that uses a context handle for the activate state of the agent
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public class ActivePipeContextAgent<TContext> :
-        Agent,
-        IActivePipeContextAgent<TContext>
-        where TContext : class, PipeContext
+    public ActivePipeContextAgent(ActivePipeContextHandle<TContext> context)
     {
-        static readonly string _caption = $"Active<{typeof(TContext).Name}>";
+        _contextHandle = context;
 
-        readonly ActivePipeContextHandle<TContext> _contextHandle;
+        context.Context.ContinueWith(SetReady, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
+        context.Context.ContinueWith(SetFaulted, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
+    }
 
-        public ActivePipeContextAgent(ActivePipeContextHandle<TContext> context)
-        {
-            _contextHandle = context;
+    bool PipeContextHandle<TContext>.IsDisposed => _contextHandle.IsDisposed;
 
-            context.Context.ContinueWith(SetReady, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
-            context.Context.ContinueWith(SetFaulted, CancellationToken.None, TaskContinuationOptions.NotOnRanToCompletion, TaskScheduler.Default);
-        }
+    Task<TContext> PipeContextHandle<TContext>.Context => _contextHandle.Context;
 
-        bool PipeContextHandle<TContext>.IsDisposed => _contextHandle.IsDisposed;
+    Task ActivePipeContextHandle<TContext>.Faulted(Exception exception)
+    {
+        return _contextHandle.Faulted(exception);
+    }
 
-        Task<TContext> PipeContextHandle<TContext>.Context => _contextHandle.Context;
+    ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        return _contextHandle.DisposeAsync();
+    }
 
-        Task ActivePipeContextHandle<TContext>.Faulted(Exception exception)
-        {
-            return _contextHandle.Faulted(exception);
-        }
+    /// <inheritdoc />
+    protected override async Task StopAgent(StopContext context)
+    {
+        if (_contextHandle.Context.Status == TaskStatus.RanToCompletion)
+            await _contextHandle.DisposeAsync().ConfigureAwait(false);
 
-        ValueTask IAsyncDisposable.DisposeAsync()
-        {
-            return _contextHandle.DisposeAsync();
-        }
+        SetCompleted(Task.CompletedTask);
+    }
 
-        /// <inheritdoc />
-        protected override async Task StopAgent(StopContext context)
-        {
-            if (_contextHandle.Context.Status == TaskStatus.RanToCompletion)
-                await _contextHandle.DisposeAsync().ConfigureAwait(false);
-
-            SetCompleted(Task.CompletedTask);
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return _caption;
-        }
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return _caption;
     }
 }

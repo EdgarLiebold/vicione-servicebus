@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IConsumerConsumeScopeContext<out TConsumer, out T> :
+    IAsyncDisposable
+    where T : class
+    where TConsumer : class
 {
-    using System;
-
-
-    public interface IConsumerConsumeScopeContext<out TConsumer, out T> :
-        IAsyncDisposable
-        where T : class
-        where TConsumer : class
-    {
-        ConsumerConsumeContext<TConsumer, T> Context { get; }
-    }
+    ConsumerConsumeContext<TConsumer, T> Context { get; }
 }

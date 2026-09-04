@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,9 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Topology;
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 /// <summary>
 /// Owns stable RabbitMQ topology declarations for the lifetime of one connection.
 /// </summary>

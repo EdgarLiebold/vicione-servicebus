@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface ISendContextPipe
 {
-    using System.Threading.Tasks;
-
-
-    public interface ISendContextPipe
-    {
-        Task Send<T>(SendContext<T> context)
-            where T : class;
-    }
+    Task Send<T>(SendContext<T> context)
+        where T : class;
 }

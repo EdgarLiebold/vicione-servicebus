@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Configuration;
-
 using System;
-using Middleware;
-using Transports;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.Configuration;
 
 public class SetPartitionKeyMessageSendTopology<TMessage> :
     IMessageSendTopology<TMessage>

@@ -1,62 +1,60 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class InMemoryTestHarnessBusInstance :
+    IBusInstance
 {
-    using System;
-    using Configuration;
-    using Transports;
+    readonly IBusRegistrationContext _busRegistrationContext;
 
-
-    public class InMemoryTestHarnessBusInstance :
-        IBusInstance
+    public InMemoryTestHarnessBusInstance(InMemoryTestHarness testHarness, IBusRegistrationContext busRegistrationContext)
     {
-        readonly IBusRegistrationContext _busRegistrationContext;
+        _busRegistrationContext = busRegistrationContext;
+        Harness = testHarness;
+    }
 
-        public InMemoryTestHarnessBusInstance(InMemoryTestHarness testHarness, IBusRegistrationContext busRegistrationContext)
+    public InMemoryTestHarness Harness { get; }
+
+    public string Name => "vicione-servicebus-bus";
+    public Type InstanceType => typeof(IBus);
+    public IBus Bus => Harness.Bus;
+    public IBusControl BusControl => Harness.BusControl;
+    public IHostConfiguration HostConfiguration => Harness.HostConfiguration;
+
+    public void Connect<TRider>(IRiderControl riderControl)
+        where TRider : IRider
+    {
+        throw new NotSupportedException();
+    }
+
+    public TRider GetRider<TRider>()
+        where TRider : IRider
+    {
+        throw new NotSupportedException();
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+    {
+        return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
         {
-            _busRegistrationContext = busRegistrationContext;
-            Harness = testHarness;
-        }
+            _busRegistrationContext.GetConfigureReceiveEndpoints()
+                .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
 
-        public InMemoryTestHarness Harness { get; }
+            configure?.Invoke(_busRegistrationContext, configurator);
+        });
+    }
 
-        public string Name => "vicione-servicebus-bus";
-        public Type InstanceType => typeof(IBus);
-        public IBus Bus => Harness.Bus;
-        public IBusControl BusControl => Harness.BusControl;
-        public IHostConfiguration HostConfiguration => Harness.HostConfiguration;
-
-        public void Connect<TRider>(IRiderControl riderControl)
-            where TRider : IRider
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+    {
+        return BusControl.ConnectReceiveEndpoint(queueName, configurator =>
         {
-            throw new NotSupportedException();
-        }
+            _busRegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
 
-        public TRider GetRider<TRider>()
-            where TRider : IRider
-        {
-            throw new NotSupportedException();
-        }
-
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
-        {
-            return BusControl.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
-            {
-                _busRegistrationContext.GetConfigureReceiveEndpoints()
-                    .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
-
-                configure?.Invoke(_busRegistrationContext, configurator);
-            });
-        }
-
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
-        {
-            return BusControl.ConnectReceiveEndpoint(queueName, configurator =>
-            {
-                _busRegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
-
-                configure?.Invoke(_busRegistrationContext, configurator);
-            });
-        }
+            configure?.Invoke(_busRegistrationContext, configurator);
+        });
     }
 }

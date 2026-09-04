@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConfiguratorPipeConnectorSpecification<TContext> :
+    IPipeConfigurator<TContext>,
+    IPipeConnectorSpecification
+    where TContext : class, PipeContext
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IBuildPipeConfigurator<TContext> _configurator;
 
-
-    public class ConfiguratorPipeConnectorSpecification<TContext> :
-        IPipeConfigurator<TContext>,
-        IPipeConnectorSpecification
-        where TContext : class, PipeContext
+    public ConfiguratorPipeConnectorSpecification()
     {
-        readonly IBuildPipeConfigurator<TContext> _configurator;
+        _configurator = new PipeConfigurator<TContext>();
+    }
 
-        public ConfiguratorPipeConnectorSpecification()
-        {
-            _configurator = new PipeConfigurator<TContext>();
-        }
+    public void AddPipeSpecification(IPipeSpecification<TContext> specification)
+    {
+        _configurator.AddPipeSpecification(specification);
+    }
 
-        public void AddPipeSpecification(IPipeSpecification<TContext> specification)
-        {
-            _configurator.AddPipeSpecification(specification);
-        }
+    public void Connect(IPipeConnector connector)
+    {
+        IPipe<TContext> pipe = _configurator.Build();
 
-        public void Connect(IPipeConnector connector)
-        {
-            IPipe<TContext> pipe = _configurator.Build();
+        connector.ConnectPipe(pipe);
+    }
 
-            connector.ConnectPipe(pipe);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            return _configurator.Validate();
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _configurator.Validate();
     }
 }

@@ -1,76 +1,74 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class SendSagaPipe<TSaga, T> :
+    IPipe<SagaRepositoryContext<TSaga, T>>
+    where TSaga : class, ISaga
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Logging;
-    using Saga;
+    readonly Guid _correlationId;
+    readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
+    readonly ISagaPolicy<TSaga, T> _policy;
 
-
-    public class SendSagaPipe<TSaga, T> :
-        IPipe<SagaRepositoryContext<TSaga, T>>
-        where TSaga : class, ISaga
-        where T : class
+    public SendSagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next, Guid correlationId)
     {
-        readonly Guid _correlationId;
-        readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
-        readonly ISagaPolicy<TSaga, T> _policy;
+        _policy = policy;
+        _next = next;
+        _correlationId = correlationId;
+    }
 
-        public SendSagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next, Guid correlationId)
+    public void Probe(ProbeContext context)
+    {
+    }
+
+    public async Task Send(SagaRepositoryContext<TSaga, T> context)
+    {
+        SagaConsumeContext<TSaga, T> sagaConsumeContext = null;
+
+        if (_policy.PreInsertInstance(context, out var instance))
+            sagaConsumeContext = await context.Insert(instance).ConfigureAwait(false);
+
+        sagaConsumeContext ??= await context.Load(_correlationId).ConfigureAwait(false);
+        if (sagaConsumeContext != null)
         {
-            _policy = policy;
-            _next = next;
-            _correlationId = correlationId;
-        }
-
-        public void Probe(ProbeContext context)
-        {
-        }
-
-        public async Task Send(SagaRepositoryContext<TSaga, T> context)
-        {
-            SagaConsumeContext<TSaga, T> sagaConsumeContext = null;
-
-            if (_policy.PreInsertInstance(context, out var instance))
-                sagaConsumeContext = await context.Insert(instance).ConfigureAwait(false);
-
-            sagaConsumeContext ??= await context.Load(_correlationId).ConfigureAwait(false);
-            if (sagaConsumeContext != null)
+            try
             {
-                try
+                sagaConsumeContext.LogUsed();
+
+                await _policy.Existing(sagaConsumeContext, _next).ConfigureAwait(false);
+
+                if (_policy.IsReadOnly)
+                    await context.Undo(sagaConsumeContext).ConfigureAwait(false);
+                else
                 {
-                    sagaConsumeContext.LogUsed();
+                    if (sagaConsumeContext.IsCompleted)
+                    {
+                        await context.Delete(sagaConsumeContext).ConfigureAwait(false);
 
-                    await _policy.Existing(sagaConsumeContext, _next).ConfigureAwait(false);
-
-                    if (_policy.IsReadOnly)
-                        await context.Undo(sagaConsumeContext).ConfigureAwait(false);
+                        sagaConsumeContext.LogRemoved();
+                    }
                     else
-                    {
-                        if (sagaConsumeContext.IsCompleted)
-                        {
-                            await context.Delete(sagaConsumeContext).ConfigureAwait(false);
-
-                            sagaConsumeContext.LogRemoved();
-                        }
-                        else
-                            await context.Update(sagaConsumeContext).ConfigureAwait(false);
-                    }
-                }
-                finally
-                {
-                    switch (sagaConsumeContext)
-                    {
-                        case IAsyncDisposable asyncDisposable:
-                            await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                            break;
-                        case IDisposable disposable:
-                            disposable.Dispose();
-                            break;
-                    }
+                        await context.Update(sagaConsumeContext).ConfigureAwait(false);
                 }
             }
-            else
-                await _policy.Missing(context, new MissingSagaPipe<TSaga, T>(context, _next)).ConfigureAwait(false);
+            finally
+            {
+                switch (sagaConsumeContext)
+                {
+                    case IAsyncDisposable asyncDisposable:
+                        await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                        break;
+                    case IDisposable disposable:
+                        disposable.Dispose();
+                        break;
+                }
+            }
         }
+        else
+            await _policy.Missing(context, new MissingSagaPipe<TSaga, T>(context, _next)).ConfigureAwait(false);
     }
 }

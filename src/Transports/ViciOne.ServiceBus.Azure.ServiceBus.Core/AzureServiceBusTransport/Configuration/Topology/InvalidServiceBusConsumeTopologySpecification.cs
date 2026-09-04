@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class InvalidServiceBusConsumeTopologySpecification :
+    IServiceBusConsumeTopologySpecification
 {
-    using System.Collections.Generic;
-    using Topology;
+    readonly string _key;
+    readonly string _message;
 
-
-    public class InvalidServiceBusConsumeTopologySpecification :
-        IServiceBusConsumeTopologySpecification
+    public InvalidServiceBusConsumeTopologySpecification(string key, string message)
     {
-        readonly string _key;
-        readonly string _message;
+        _key = key;
+        _message = message;
+    }
 
-        public InvalidServiceBusConsumeTopologySpecification(string key, string message)
-        {
-            _key = key;
-            _message = message;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield return this.Failure(_key, _message);
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield return this.Failure(_key, _message);
-        }
-
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-        }
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
     }
 }

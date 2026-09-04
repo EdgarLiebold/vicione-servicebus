@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public interface ScheduleRecurringMessage
 {
-    using System;
+    RecurringSchedule Schedule { get; }
 
+    /// <summary>
+    /// The message types implemented by the message
+    /// </summary>
+    string[] PayloadType { get; }
 
-    public interface ScheduleRecurringMessage
-    {
-        RecurringSchedule Schedule { get; }
+    /// <summary>
+    /// The destination where the message should be sent
+    /// </summary>
+    Uri Destination { get; }
 
-        /// <summary>
-        /// The message types implemented by the message
-        /// </summary>
-        string[] PayloadType { get; }
-
-        /// <summary>
-        /// The destination where the message should be sent
-        /// </summary>
-        Uri Destination { get; }
-
-        /// <summary>
-        /// The actual scheduled message payload
-        /// </summary>
-        object Payload { get; }
-    }
+    /// <summary>
+    /// The actual scheduled message payload
+    /// </summary>
+    object Payload { get; }
 }

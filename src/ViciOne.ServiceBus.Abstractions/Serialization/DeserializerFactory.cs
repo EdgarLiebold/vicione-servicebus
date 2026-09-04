@@ -1,4 +1,3 @@
-namespace ViciOne.ServiceBus
-{
-    public delegate IMessageDeserializer DeserializerFactory();
-}
+namespace ViciOne.ServiceBus;
+
+public delegate IMessageDeserializer DeserializerFactory();

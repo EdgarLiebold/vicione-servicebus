@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+/// <summary>
+/// A service bus namespace which has the appropriate messaging factories available
+/// </summary>
+public interface NamespaceContext :
+    PipeContext
 {
-    /// <summary>
-    /// A service bus namespace which has the appropriate messaging factories available
-    /// </summary>
-    public interface NamespaceContext :
-        PipeContext
-    {
-        ConnectionContext ConnectionContext { get; }
-    }
+    ConnectionContext ConnectionContext { get; }
 }

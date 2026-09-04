@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Topology
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Topology;
+
+public class NamedEntityCollection<TEntity, THandle> :
+    EntityCollection<TEntity, THandle>
+    where TEntity : THandle
+    where THandle : EntityHandle
 {
-    using System;
-    using System.Collections.Generic;
+    readonly IDictionary<TEntity, TEntity> _entityNames;
 
-
-    public class NamedEntityCollection<TEntity, THandle> :
-        EntityCollection<TEntity, THandle>
-        where TEntity : THandle
-        where THandle : EntityHandle
+    public NamedEntityCollection(IEqualityComparer<TEntity> entityComparer, IEqualityComparer<TEntity> nameComparer)
+        : base(entityComparer)
     {
-        readonly IDictionary<TEntity, TEntity> _entityNames;
+        _entityNames = new Dictionary<TEntity, TEntity>(nameComparer);
+    }
 
-        public NamedEntityCollection(IEqualityComparer<TEntity> entityComparer, IEqualityComparer<TEntity> nameComparer)
-            : base(entityComparer)
+    public override THandle GetOrAdd(TEntity entity)
+    {
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
+
+        if (_entityNames.TryGetValue(entity, out var existingEntity))
         {
-            _entityNames = new Dictionary<TEntity, TEntity>(nameComparer);
+            // if it's exactly the same exchange
+            if (Entities.TryGetValue(entity, out existingEntity))
+                return existingEntity;
+
+            throw new ArgumentException($"The {TypeCache<TEntity>.ShortName} entity settings did not match the existing entity");
         }
 
-        public override THandle GetOrAdd(TEntity entity)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+        EntityIds.Add(entity.Id, entity);
+        Entities.Add(entity, entity);
+        _entityNames.Add(entity, entity);
 
-            if (_entityNames.TryGetValue(entity, out var existingEntity))
-            {
-                // if it's exactly the same exchange
-                if (Entities.TryGetValue(entity, out existingEntity))
-                    return existingEntity;
-
-                throw new ArgumentException($"The {TypeCache<TEntity>.ShortName} entity settings did not match the existing entity");
-            }
-
-            EntityIds.Add(entity.Id, entity);
-            Entities.Add(entity, entity);
-            _entityNames.Add(entity, entity);
-
-            return entity;
-        }
+        return entity;
     }
 }

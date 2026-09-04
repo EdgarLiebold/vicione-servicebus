@@ -1,7 +1,7 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
-
 using Npgsql;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
 
 internal static class PostgreSqlTransportInspection
 {

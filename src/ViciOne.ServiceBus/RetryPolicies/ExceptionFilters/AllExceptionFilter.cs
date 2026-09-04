@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters
+using System;
+
+namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
+
+public class AllExceptionFilter :
+    IExceptionFilter
 {
-    using System;
-
-
-    public class AllExceptionFilter :
-        IExceptionFilter
+    void IProbeSite.Probe(ProbeContext context)
     {
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.CreateScope("all");
-        }
+        context.CreateScope("all");
+    }
 
-        bool IExceptionFilter.Match(Exception exception)
-        {
-            return true;
-        }
+    bool IExceptionFilter.Match(Exception exception)
+    {
+        return true;
     }
 }

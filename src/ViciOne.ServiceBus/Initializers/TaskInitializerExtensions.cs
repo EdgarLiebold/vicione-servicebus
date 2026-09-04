@@ -1,9 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Initializers;
-
 using System;
 using System.Threading.Tasks;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Initializers;
 /// <summary>Projects an asynchronous initializer result and applies an optional fallback.</summary>
 public static class TaskInitializerExtensions
 {

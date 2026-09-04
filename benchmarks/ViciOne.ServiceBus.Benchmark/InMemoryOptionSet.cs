@@ -1,24 +1,22 @@
-namespace ViciOneServiceBusBenchmark
+using System;
+using NDesk.Options;
+
+namespace ViciOneServiceBusBenchmark;
+
+public class InMemoryOptionSet :
+    OptionSet
 {
-    using System;
-    using NDesk.Options;
-
-
-    public class InMemoryOptionSet :
-        OptionSet
+    public InMemoryOptionSet()
     {
-        public InMemoryOptionSet()
-        {
-            Add<int>("limit=", "The transport concurrency limit", x => TransportConcurrencyLimit = x);
+        Add<int>("limit=", "The transport concurrency limit", x => TransportConcurrencyLimit = x);
 
-            TransportConcurrencyLimit = Environment.ProcessorCount;
-        }
+        TransportConcurrencyLimit = Environment.ProcessorCount;
+    }
 
-        public int TransportConcurrencyLimit { get; private set; }
+    public int TransportConcurrencyLimit { get; private set; }
 
-        public void ShowOptions()
-        {
-            Console.WriteLine("Transport Concurrency Limit: {0}", TransportConcurrencyLimit);
-        }
+    public void ShowOptions()
+    {
+        Console.WriteLine("Transport Concurrency Limit: {0}", TransportConcurrencyLimit);
     }
 }

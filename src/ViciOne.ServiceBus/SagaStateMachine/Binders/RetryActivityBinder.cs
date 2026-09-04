@@ -1,82 +1,81 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class RetryActivityBinder<TInstance> :
+    IActivityBinder<TInstance>
+    where TInstance : class, SagaStateMachineInstance
 {
-    public class RetryActivityBinder<TInstance> :
-        IActivityBinder<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+    readonly IStateMachineActivity<TInstance> _activity;
+
+    public RetryActivityBinder(Event @event, IRetryPolicy retryPolicy, EventActivities<TInstance> retryActivities)
     {
-        readonly IStateMachineActivity<TInstance> _activity;
+        Event = @event;
 
-        public RetryActivityBinder(Event @event, IRetryPolicy retryPolicy, EventActivities<TInstance> retryActivities)
-        {
-            Event = @event;
+        var builder = new ActivityBehaviorBuilder<TInstance>();
 
-            var builder = new ActivityBehaviorBuilder<TInstance>();
+        foreach (IActivityBinder<TInstance> activity in retryActivities.GetStateActivityBinders())
+            activity.Bind(builder);
 
-            foreach (IActivityBinder<TInstance> activity in retryActivities.GetStateActivityBinders())
-                activity.Bind(builder);
+        IBehavior<TInstance> behavior = builder.Behavior;
 
-            IBehavior<TInstance> behavior = builder.Behavior;
-
-            _activity = new RetryActivity<TInstance>(retryPolicy, behavior);
-        }
-
-        public Event Event { get; }
-
-        public bool IsStateTransitionEvent(State state)
-        {
-            return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
-                || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
-        }
-
-        public void Bind(State<TInstance> state)
-        {
-            state.Bind(Event, _activity);
-        }
-
-        public void Bind(IBehaviorBuilder<TInstance> builder)
-        {
-            builder.Add(_activity);
-        }
+        _activity = new RetryActivity<TInstance>(retryPolicy, behavior);
     }
 
+    public Event Event { get; }
 
-    public class RetryActivityBinder<TInstance, TMessage> :
-        IActivityBinder<TInstance>
-        where TInstance : class, SagaStateMachineInstance
-        where TMessage : class
+    public bool IsStateTransitionEvent(State state)
     {
-        readonly IStateMachineActivity<TInstance> _activity;
+        return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
+            || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
+    }
 
-        public RetryActivityBinder(Event @event, IRetryPolicy retryPolicy, EventActivities<TInstance> retryActivities)
-        {
-            Event = @event;
+    public void Bind(State<TInstance> state)
+    {
+        state.Bind(Event, _activity);
+    }
 
-            var builder = new ActivityBehaviorBuilder<TInstance>();
+    public void Bind(IBehaviorBuilder<TInstance> builder)
+    {
+        builder.Add(_activity);
+    }
+}
 
-            foreach (IActivityBinder<TInstance> activity in retryActivities.GetStateActivityBinders())
-                activity.Bind(builder);
 
-            IBehavior<TInstance> behavior = builder.Behavior;
+public class RetryActivityBinder<TInstance, TMessage> :
+    IActivityBinder<TInstance>
+    where TInstance : class, SagaStateMachineInstance
+    where TMessage : class
+{
+    readonly IStateMachineActivity<TInstance> _activity;
 
-            _activity = new RetryActivity<TInstance, TMessage>(retryPolicy, behavior);
-        }
+    public RetryActivityBinder(Event @event, IRetryPolicy retryPolicy, EventActivities<TInstance> retryActivities)
+    {
+        Event = @event;
 
-        public Event Event { get; }
+        var builder = new ActivityBehaviorBuilder<TInstance>();
 
-        public bool IsStateTransitionEvent(State state)
-        {
-            return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
-                || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
-        }
+        foreach (IActivityBinder<TInstance> activity in retryActivities.GetStateActivityBinders())
+            activity.Bind(builder);
 
-        public void Bind(State<TInstance> state)
-        {
-            state.Bind(Event, _activity);
-        }
+        IBehavior<TInstance> behavior = builder.Behavior;
 
-        public void Bind(IBehaviorBuilder<TInstance> builder)
-        {
-            builder.Add(_activity);
-        }
+        _activity = new RetryActivity<TInstance, TMessage>(retryPolicy, behavior);
+    }
+
+    public Event Event { get; }
+
+    public bool IsStateTransitionEvent(State state)
+    {
+        return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
+            || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
+    }
+
+    public void Bind(State<TInstance> state)
+    {
+        state.Bind(Event, _activity);
+    }
+
+    public void Bind(IBehaviorBuilder<TInstance> builder)
+    {
+        builder.Add(_activity);
     }
 }

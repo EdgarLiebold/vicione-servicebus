@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.JobService.Scheduling;
-
 using System;
 
+namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 readonly struct NextFireTimeCursor
 {

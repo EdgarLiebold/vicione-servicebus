@@ -1,37 +1,36 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Specifies a temporary endpoint, with the prefix "response"
+/// </summary>
+public class TemporaryEndpointDefinition :
+    IEndpointDefinition
 {
-    /// <summary>
-    /// Specifies a temporary endpoint, with the prefix "response"
-    /// </summary>
-    public class TemporaryEndpointDefinition :
-        IEndpointDefinition
+    readonly string _tag;
+    string? _name;
+
+    public TemporaryEndpointDefinition(string? tag = default, int? concurrentMessageLimit = default, int? prefetchCount = default,
+        bool configureConsumeTopology = true)
     {
-        readonly string _tag;
-        string? _name;
+        ConcurrentMessageLimit = concurrentMessageLimit;
+        PrefetchCount = prefetchCount;
+        ConfigureConsumeTopology = configureConsumeTopology;
 
-        public TemporaryEndpointDefinition(string? tag = default, int? concurrentMessageLimit = default, int? prefetchCount = default,
-            bool configureConsumeTopology = true)
-        {
-            ConcurrentMessageLimit = concurrentMessageLimit;
-            PrefetchCount = prefetchCount;
-            ConfigureConsumeTopology = configureConsumeTopology;
+        _tag = tag ?? "endpoint";
+    }
 
-            _tag = tag ?? "endpoint";
-        }
+    public string GetEndpointName(IEndpointNameFormatter formatter)
+    {
+        return _name ??= formatter.TemporaryEndpoint(_tag);
+    }
 
-        public string GetEndpointName(IEndpointNameFormatter formatter)
-        {
-            return _name ??= formatter.TemporaryEndpoint(_tag);
-        }
+    public bool IsTemporary => true;
+    public int? PrefetchCount { get; }
+    public int? ConcurrentMessageLimit { get; }
+    public bool ConfigureConsumeTopology { get; }
 
-        public bool IsTemporary => true;
-        public int? PrefetchCount { get; }
-        public int? ConcurrentMessageLimit { get; }
-        public bool ConfigureConsumeTopology { get; }
-
-        public void Configure<T>(T configurator, IRegistrationContext? context)
-            where T : IReceiveEndpointConfigurator
-        {
-        }
+    public void Configure<T>(T configurator, IRegistrationContext? context)
+        where T : IReceiveEndpointConfigurator
+    {
     }
 }

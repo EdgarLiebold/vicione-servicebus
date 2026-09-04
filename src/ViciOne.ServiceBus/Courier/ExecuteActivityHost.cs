@@ -1,107 +1,105 @@
-namespace ViciOne.ServiceBus.Courier
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Logging;
+
+namespace ViciOne.ServiceBus.Courier;
+
+public class ExecuteActivityHost<TActivity, TArguments> :
+    IFilter<ConsumeContext<RoutingSlip>>
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Contracts;
-    using Logging;
+    readonly Uri _compensateAddress;
+    readonly IPipe<ExecuteContext<TArguments>> _executePipe;
 
-
-    public class ExecuteActivityHost<TActivity, TArguments> :
-        IFilter<ConsumeContext<RoutingSlip>>
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
+    public ExecuteActivityHost(IPipe<ExecuteContext<TArguments>> executePipe, Uri compensateAddress)
     {
-        readonly Uri _compensateAddress;
-        readonly IPipe<ExecuteContext<TArguments>> _executePipe;
+        _executePipe = executePipe;
+        _compensateAddress = compensateAddress;
+    }
 
-        public ExecuteActivityHost(IPipe<ExecuteContext<TArguments>> executePipe, Uri compensateAddress)
+    public async Task Send(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
+    {
+        var timer = Stopwatch.StartNew();
+
+        StartedActivity? activity = LogContext.Current?.StartExecuteActivity<TActivity, TArguments>(context);
+        var instrument = LogContext.Current?.StartActivityExecuteInstrument<TActivity, TArguments>(context);
+
+        try
         {
-            _executePipe = executePipe;
-            _compensateAddress = compensateAddress;
-        }
+            ExecuteContext<TArguments> executeContext = new HostExecuteContext<TArguments>(_compensateAddress, context);
 
-        public async Task Send(ConsumeContext<RoutingSlip> context, IPipe<ConsumeContext<RoutingSlip>> next)
-        {
-            var timer = Stopwatch.StartNew();
-
-            StartedActivity? activity = LogContext.Current?.StartExecuteActivity<TActivity, TArguments>(context);
-            var instrument = LogContext.Current?.StartActivityExecuteInstrument<TActivity, TArguments>(context);
+            LogContext.Debug?.Log("Execute Activity: {TrackingNumber} ({Activity}, {Host})", executeContext.TrackingNumber,
+                TypeCache<TActivity>.ShortName, context.ReceiveContext.InputAddress);
 
             try
             {
-                ExecuteContext<TArguments> executeContext = new HostExecuteContext<TArguments>(_compensateAddress, context);
+                await _executePipe.Send(executeContext).ConfigureAwait(false);
 
-                LogContext.Debug?.Log("Execute Activity: {TrackingNumber} ({Activity}, {Host})", executeContext.TrackingNumber,
-                    TypeCache<TActivity>.ShortName, context.ReceiveContext.InputAddress);
+                var result = executeContext.Result
+                    ?? executeContext.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
 
-                try
-                {
-                    await _executePipe.Send(executeContext).ConfigureAwait(false);
-
-                    var result = executeContext.Result
-                        ?? executeContext.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
-
-                    await result.Evaluate().ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    if (executeContext.Result == null || !executeContext.Result.IsFaulted(out var faultException) || faultException != exception)
-                        executeContext.Result = executeContext.Faulted(exception);
-
-                    await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
-
-                    activity?.AddExceptionEvent(exception);
-                    instrument?.RecordException(exception);
-
-                    await executeContext.Result.Evaluate().ConfigureAwait(false);
-                }
-
-                await context.NotifyConsumed(timer.Elapsed, TypeCache<TActivity>.ShortName).ConfigureAwait(false);
-
-                await next.Send(context).ConfigureAwait(false);
-            }
-            catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                              && !context.CancellationToken.IsCancellationRequested)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(exception);
-
-                instrument?.RecordException(exception);
-
-                throw new ConsumerCanceledException($"The operation was canceled by the activity: {TypeCache<TActivity>.ShortName}");
+                await result.Evaluate().ConfigureAwait(false);
             }
             catch (Exception exception)
             {
+                if (executeContext.Result == null || !executeContext.Result.IsFaulted(out var faultException) || faultException != exception)
+                    executeContext.Result = executeContext.Faulted(exception);
+
                 await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
                 activity?.AddExceptionEvent(exception);
-
                 instrument?.RecordException(exception);
 
-                throw;
+                await executeContext.Result.Evaluate().ConfigureAwait(false);
             }
-            finally
-            {
-                activity?.Stop();
-                instrument?.Complete();
-            }
-        }
 
-        public void Probe(ProbeContext context)
+            await context.NotifyConsumed(timer.Elapsed, TypeCache<TActivity>.ShortName).ConfigureAwait(false);
+
+            await next.Send(context).ConfigureAwait(false);
+        }
+        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
+                                          && !context.CancellationToken.IsCancellationRequested)
         {
-            var scope = context.CreateFilterScope("executeActivity");
-            scope.Set(new
-            {
-                ActivityType = TypeCache<TActivity>.ShortName,
-                ArgumentType = TypeCache<TArguments>.ShortName
-            });
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
 
-            if (_compensateAddress != null)
-                scope.Add("compensateAddress", _compensateAddress);
+            activity?.AddExceptionEvent(exception);
 
-            _executePipe.Probe(scope);
+            instrument?.RecordException(exception);
+
+            throw new ConsumerCanceledException($"The operation was canceled by the activity: {TypeCache<TActivity>.ShortName}");
         }
+        catch (Exception exception)
+        {
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<TActivity>.ShortName, exception).ConfigureAwait(false);
+
+            activity?.AddExceptionEvent(exception);
+
+            instrument?.RecordException(exception);
+
+            throw;
+        }
+        finally
+        {
+            activity?.Stop();
+            instrument?.Complete();
+        }
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("executeActivity");
+        scope.Set(new
+        {
+            ActivityType = TypeCache<TActivity>.ShortName,
+            ArgumentType = TypeCache<TArguments>.ShortName
+        });
+
+        if (_compensateAddress != null)
+            scope.Add("compensateAddress", _compensateAddress);
+
+        _executePipe.Probe(scope);
     }
 }

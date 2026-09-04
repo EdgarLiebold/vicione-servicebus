@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System;
 using System.Text.RegularExpressions;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public class AmazonSnsTopicNameValidator :
     IEntityNameValidator

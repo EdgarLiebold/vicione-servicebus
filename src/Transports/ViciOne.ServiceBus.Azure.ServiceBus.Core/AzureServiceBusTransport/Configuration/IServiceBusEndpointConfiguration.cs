@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public interface IServiceBusEndpointConfiguration :
+    IEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public interface IServiceBusEndpointConfiguration :
-        IEndpointConfiguration
-    {
-        new IServiceBusTopologyConfiguration Topology { get; }
-    }
+    new IServiceBusTopologyConfiguration Topology { get; }
 }

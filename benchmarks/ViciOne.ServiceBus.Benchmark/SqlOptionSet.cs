@@ -1,8 +1,7 @@
-namespace ViciOneServiceBusBenchmark;
-
 using System;
 using NDesk.Options;
 
+namespace ViciOneServiceBusBenchmark;
 
 public class SqlOptionSet :
     OptionSet

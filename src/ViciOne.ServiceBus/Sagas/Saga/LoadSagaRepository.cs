@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Saga;
+
+/// <summary>
+/// The modern query saga repository, which can be used with any storage engine. Leverages the new interfaces for query context.
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+public class LoadSagaRepository<TSaga> :
+    ILoadSagaRepository<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly ILoadSagaRepositoryContextFactory<TSaga> _repositoryContextFactory;
 
-
-    /// <summary>
-    /// The modern query saga repository, which can be used with any storage engine. Leverages the new interfaces for query context.
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    public class LoadSagaRepository<TSaga> :
-        ILoadSagaRepository<TSaga>
-        where TSaga : class, ISaga
+    public LoadSagaRepository(ILoadSagaRepositoryContextFactory<TSaga> repositoryContextFactory)
     {
-        readonly ILoadSagaRepositoryContextFactory<TSaga> _repositoryContextFactory;
+        _repositoryContextFactory = repositoryContextFactory;
+    }
 
-        public LoadSagaRepository(ILoadSagaRepositoryContextFactory<TSaga> repositoryContextFactory)
-        {
-            _repositoryContextFactory = repositoryContextFactory;
-        }
+    public Task<TSaga> Load(Guid correlationId)
+    {
+        return _repositoryContextFactory.Execute(context => context.Load(correlationId));
+    }
 
-        public Task<TSaga> Load(Guid correlationId)
-        {
-            return _repositoryContextFactory.Execute(context => context.Load(correlationId));
-        }
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("loadSagaRepository");
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("loadSagaRepository");
-
-            _repositoryContextFactory.Probe(scope);
-        }
+        _repositoryContextFactory.Probe(scope);
     }
 }

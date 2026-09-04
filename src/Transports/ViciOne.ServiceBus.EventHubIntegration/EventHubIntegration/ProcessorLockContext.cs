@@ -1,91 +1,89 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class ProcessorLockContext :
+    IProcessorLockContext,
+    ProcessorClientBuilderContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.EventHubs;
-    using Azure.Messaging.EventHubs.Processor;
-    using Checkpoints;
-    using Util;
+    readonly ProcessorContext _context;
+    readonly SingleThreadedDictionary<string, PartitionCheckpointData> _data;
+    readonly PendingConfirmationCollection _pending;
+    readonly ReceiveSettings _receiveSettings;
 
-
-    public class ProcessorLockContext :
-        IProcessorLockContext,
-        ProcessorClientBuilderContext
+    public ProcessorLockContext(ProcessorContext context, ReceiveSettings receiveSettings, CancellationToken cancellationToken)
     {
-        readonly ProcessorContext _context;
-        readonly SingleThreadedDictionary<string, PartitionCheckpointData> _data;
-        readonly PendingConfirmationCollection _pending;
-        readonly ReceiveSettings _receiveSettings;
+        _context = context;
+        _receiveSettings = receiveSettings;
+        _pending = new PendingConfirmationCollection(cancellationToken);
+        _data = new SingleThreadedDictionary<string, PartitionCheckpointData>(StringComparer.Ordinal);
 
-        public ProcessorLockContext(ProcessorContext context, ReceiveSettings receiveSettings, CancellationToken cancellationToken)
-        {
-            _context = context;
-            _receiveSettings = receiveSettings;
-            _pending = new PendingConfirmationCollection(cancellationToken);
-            _data = new SingleThreadedDictionary<string, PartitionCheckpointData>(StringComparer.Ordinal);
+        Client = context.GetClient(this);
+    }
 
-            Client = context.GetClient(this);
-        }
+    public EventProcessorClient Client { get; }
 
-        public EventProcessorClient Client { get; }
+    public ValueTask DisposeAsync()
+    {
+        _context.ReleaseClient(this);
 
-        public ValueTask DisposeAsync()
-        {
-            _context.ReleaseClient(this);
+        _pending.Dispose();
 
-            _pending.Dispose();
+        return default;
+    }
 
-            return default;
-        }
+    public Task Pending(ProcessEventArgs eventArgs)
+    {
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public Task Pending(ProcessEventArgs eventArgs)
-        {
-            LogContext.SetCurrentIfNull(_context.LogContext);
+        return _data.TryGetValue(eventArgs.Partition.PartitionId, out var data) ? data.Pending(eventArgs) : Task.CompletedTask;
+    }
 
-            return _data.TryGetValue(eventArgs.Partition.PartitionId, out var data) ? data.Pending(eventArgs) : Task.CompletedTask;
-        }
+    public Task Faulted(ProcessEventArgs eventArgs, Exception exception)
+    {
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public Task Faulted(ProcessEventArgs eventArgs, Exception exception)
-        {
-            LogContext.SetCurrentIfNull(_context.LogContext);
+        _pending.Faulted(eventArgs, exception);
 
-            _pending.Faulted(eventArgs, exception);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public Task Complete(ProcessEventArgs eventArgs)
+    {
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public Task Complete(ProcessEventArgs eventArgs)
-        {
-            LogContext.SetCurrentIfNull(_context.LogContext);
+        _pending.Complete(eventArgs);
 
-            _pending.Complete(eventArgs);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public void Canceled(ProcessEventArgs eventArgs, CancellationToken cancellationToken)
+    {
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public void Canceled(ProcessEventArgs eventArgs, CancellationToken cancellationToken)
-        {
-            LogContext.SetCurrentIfNull(_context.LogContext);
+        _pending.Canceled(eventArgs, cancellationToken);
+    }
 
-            _pending.Canceled(eventArgs, cancellationToken);
-        }
+    public Task OnPartitionInitializing(PartitionInitializingEventArgs eventArgs)
+    {
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public Task OnPartitionInitializing(PartitionInitializingEventArgs eventArgs)
-        {
-            LogContext.SetCurrentIfNull(_context.LogContext);
+        if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))
+            LogContext.Info?.Log("Partition: {PartitionId} was initialized", eventArgs.PartitionId);
 
-            if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))
-                LogContext.Info?.Log("Partition: {PartitionId} was initialized", eventArgs.PartitionId);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public Task OnPartitionClosing(PartitionClosingEventArgs eventArgs)
+    {
+        LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public Task OnPartitionClosing(PartitionClosingEventArgs eventArgs)
-        {
-            LogContext.SetCurrentIfNull(_context.LogContext);
-
-            return _data.TryRemove(eventArgs.PartitionId, out var data) ? data.Close(eventArgs) : Task.CompletedTask;
-        }
+        return _data.TryRemove(eventArgs.PartitionId, out var data) ? data.Close(eventArgs) : Task.CompletedTask;
     }
 }

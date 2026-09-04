@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
-
 using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 
 public static class OutboxConsumerIdentityTestDriver
 {

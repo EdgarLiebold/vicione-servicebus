@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.Futures
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Courier.Contracts;
+
+namespace ViciOne.ServiceBus.Futures;
+
+public class BuildRoutingSlipExecutor<TInput> :
+    IRoutingSlipExecutor<TInput>
+    where TInput : class
 {
-    using System.Threading.Tasks;
-    using Courier.Contracts;
+    readonly BuildItineraryCallback<TInput> _buildItinerary;
 
-
-    public class BuildRoutingSlipExecutor<TInput> :
-        IRoutingSlipExecutor<TInput>
-        where TInput : class
+    public BuildRoutingSlipExecutor(BuildItineraryCallback<TInput> buildItinerary)
     {
-        readonly BuildItineraryCallback<TInput> _buildItinerary;
-
-        public BuildRoutingSlipExecutor(BuildItineraryCallback<TInput> buildItinerary)
-        {
-            _buildItinerary = buildItinerary;
-        }
-
-        public async Task Execute(BehaviorContext<FutureState, TInput> context)
-        {
-            var trackingNumber = NewId.NextGuid();
-
-            var builder = new RoutingSlipBuilder(trackingNumber);
-
-            builder.AddVariable(MessageHeaders.FutureId, context.CorrelationId);
-
-            builder.AddSubscription(context.ReceiveContext.InputAddress, RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);
-
-            await _buildItinerary(context, builder).ConfigureAwait(false);
-
-            var routingSlip = builder.Build();
-
-            await context.Execute(routingSlip).ConfigureAwait(false);
-
-            if (TrackRoutingSlip)
-                context.Saga.Pending.Add(trackingNumber);
-        }
-
-        public bool TrackRoutingSlip { get; set; }
+        _buildItinerary = buildItinerary;
     }
+
+    public async Task Execute(BehaviorContext<FutureState, TInput> context)
+    {
+        var trackingNumber = NewId.NextGuid();
+
+        var builder = new RoutingSlipBuilder(trackingNumber);
+
+        builder.AddVariable(MessageHeaders.FutureId, context.CorrelationId);
+
+        builder.AddSubscription(context.ReceiveContext.InputAddress, RoutingSlipEvents.Completed | RoutingSlipEvents.Faulted);
+
+        await _buildItinerary(context, builder).ConfigureAwait(false);
+
+        var routingSlip = builder.Build();
+
+        await context.Execute(routingSlip).ConfigureAwait(false);
+
+        if (TrackRoutingSlip)
+            context.Saga.Pending.Add(trackingNumber);
+    }
+
+    public bool TrackRoutingSlip { get; set; }
 }

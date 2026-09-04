@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Contracts.JobService;
-
 using System;
 using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.Contracts.JobService;
 
 public interface SaveJobState
 {

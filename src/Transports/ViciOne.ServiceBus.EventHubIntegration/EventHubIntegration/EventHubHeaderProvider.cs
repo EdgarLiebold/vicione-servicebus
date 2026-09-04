@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.EventHubIntegration;
-
 using System;
 using System.Collections.Generic;
 using Azure.Messaging.EventHubs;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.EventHubIntegration;
 
 public class EventHubHeaderProvider :
     IHeaderProvider

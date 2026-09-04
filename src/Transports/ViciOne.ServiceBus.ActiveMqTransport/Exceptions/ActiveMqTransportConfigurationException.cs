@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class ActiveMqTransportConfigurationException :
+    ActiveMqTransportException
 {
-    using System;
-
-
-    [Serializable]
-    public class ActiveMqTransportConfigurationException :
-        ActiveMqTransportException
+    public ActiveMqTransportConfigurationException()
     {
-        public ActiveMqTransportConfigurationException()
-        {
-        }
+    }
 
-        public ActiveMqTransportConfigurationException(string message)
-            : base(message)
-        {
-        }
+    public ActiveMqTransportConfigurationException(string message)
+        : base(message)
+    {
+    }
 
-        public ActiveMqTransportConfigurationException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public ActiveMqTransportConfigurationException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

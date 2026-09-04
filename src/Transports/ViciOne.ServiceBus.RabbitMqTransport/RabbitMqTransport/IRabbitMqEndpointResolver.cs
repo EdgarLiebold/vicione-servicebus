@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport
+using RabbitMQ.Client;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport;
+
+public interface IRabbitMqEndpointResolver :
+    IEndpointResolver
 {
-    using Configuration;
-    using RabbitMQ.Client;
-
-
-    public interface IRabbitMqEndpointResolver :
-        IEndpointResolver
-    {
-        /// <summary>
-        /// Returns the last host selected by the selector
-        /// </summary>
-        ClusterNode LastHost { get; }
-    }
+    /// <summary>
+    /// Returns the last host selected by the selector
+    /// </summary>
+    ClusterNode LastHost { get; }
 }

@@ -1,53 +1,51 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Reflection;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConsumerMessageConnector<TConsumer, TMessage> :
+    IConsumerMessageConnector<TConsumer>
+    where TConsumer : class
+    where TMessage : class
 {
-    using System;
-    using System.Reflection;
-    using Middleware;
+    const ConnectPipeOptions NotConfigureConsumeTopology = ConnectPipeOptions.All & ~ConnectPipeOptions.ConfigureConsumeTopology;
+    readonly IFilter<ConsumerConsumeContext<TConsumer, TMessage>> _consumeFilter;
 
-
-    public class ConsumerMessageConnector<TConsumer, TMessage> :
-        IConsumerMessageConnector<TConsumer>
-        where TConsumer : class
-        where TMessage : class
+    public ConsumerMessageConnector(IFilter<ConsumerConsumeContext<TConsumer, TMessage>> consumeFilter)
     {
-        const ConnectPipeOptions NotConfigureConsumeTopology = ConnectPipeOptions.All & ~ConnectPipeOptions.ConfigureConsumeTopology;
-        readonly IFilter<ConsumerConsumeContext<TConsumer, TMessage>> _consumeFilter;
+        _consumeFilter = consumeFilter;
 
-        public ConsumerMessageConnector(IFilter<ConsumerConsumeContext<TConsumer, TMessage>> consumeFilter)
+        var attribute = typeof(TMessage).GetCustomAttribute<ConfigureConsumeTopologyAttribute>();
+        if (attribute != null)
+            ConfigureConsumeTopology = attribute.ConfigureConsumeTopology;
+    }
+
+    bool ConfigureConsumeTopology { get; } = true;
+
+    public Type MessageType => typeof(TMessage);
+
+    public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
+    {
+        return new ConsumerMessageSpecification<TConsumer, TMessage>();
+    }
+
+    public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
+        IConsumerSpecification<TConsumer> specification)
+    {
+        IConsumerMessageSpecification<TConsumer, TMessage> messageSpecification = specification.GetMessageSpecification<TMessage>();
+
+        IPipe<ConsumerConsumeContext<TConsumer, TMessage>> consumerPipe = messageSpecification.Build(_consumeFilter);
+
+        IPipe<ConsumeContext<TMessage>> messagePipe = messageSpecification.BuildMessagePipe(x =>
         {
-            _consumeFilter = consumeFilter;
+            specification.ConfigureMessagePipe(x);
 
-            var attribute = typeof(TMessage).GetCustomAttribute<ConfigureConsumeTopologyAttribute>();
-            if (attribute != null)
-                ConfigureConsumeTopology = attribute.ConfigureConsumeTopology;
-        }
+            x.UseFilter(new ConsumerMessageFilter<TConsumer, TMessage>(consumerFactory, consumerPipe));
+        });
 
-        bool ConfigureConsumeTopology { get; } = true;
-
-        public Type MessageType => typeof(TMessage);
-
-        public IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification()
-        {
-            return new ConsumerMessageSpecification<TConsumer, TMessage>();
-        }
-
-        public ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
-            IConsumerSpecification<TConsumer> specification)
-        {
-            IConsumerMessageSpecification<TConsumer, TMessage> messageSpecification = specification.GetMessageSpecification<TMessage>();
-
-            IPipe<ConsumerConsumeContext<TConsumer, TMessage>> consumerPipe = messageSpecification.Build(_consumeFilter);
-
-            IPipe<ConsumeContext<TMessage>> messagePipe = messageSpecification.BuildMessagePipe(x =>
-            {
-                specification.ConfigureMessagePipe(x);
-
-                x.UseFilter(new ConsumerMessageFilter<TConsumer, TMessage>(consumerFactory, consumerPipe));
-            });
-
-            return ConfigureConsumeTopology
-                ? consumePipe.ConnectConsumePipe(messagePipe)
-                : consumePipe.ConnectConsumePipe(messagePipe, NotConfigureConsumeTopology);
-        }
+        return ConfigureConsumeTopology
+            ? consumePipe.ConnectConsumePipe(messagePipe)
+            : consumePipe.ConnectConsumePipe(messagePipe, NotConfigureConsumeTopology);
     }
 }

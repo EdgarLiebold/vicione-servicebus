@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
+using Apache.NMS;
+
+namespace ViciOne.ServiceBus;
+
+public interface ActiveMqSendContext<out T> :
+    ActiveMqSendContext,
+    SendContext<T>
+    where T : class
 {
-    using Apache.NMS;
+}
 
 
-    public interface ActiveMqSendContext<out T> :
-        ActiveMqSendContext,
-        SendContext<T>
-        where T : class
-    {
-    }
+public interface ActiveMqSendContext :
+    SendContext
+{
+    MsgPriority? Priority { set; }
+    string GroupId { set; }
+    int? GroupSequence { set; }
 
-
-    public interface ActiveMqSendContext :
-        SendContext
-    {
-        MsgPriority? Priority { set; }
-        string GroupId { set; }
-        int? GroupSequence { set; }
-
-        IDestination ReplyDestination { get; set; }
-    }
+    IDestination ReplyDestination { get; set; }
 }

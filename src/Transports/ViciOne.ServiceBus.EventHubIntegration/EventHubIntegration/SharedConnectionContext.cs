@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System.Threading;
+using Azure.Messaging.EventHubs.Producer;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class SharedConnectionContext :
+    ProxyPipeContext,
+    ConnectionContext
 {
-    using System.Threading;
-    using Azure.Messaging.EventHubs.Producer;
-    using ViciOne.ServiceBus.Middleware;
+    readonly ConnectionContext _context;
 
-
-    public class SharedConnectionContext :
-        ProxyPipeContext,
-        ConnectionContext
+    public SharedConnectionContext(ConnectionContext context, CancellationToken cancellationToken)
+        : base(context)
     {
-        readonly ConnectionContext _context;
+        _context = context;
+        CancellationToken = cancellationToken;
+    }
 
-        public SharedConnectionContext(ConnectionContext context, CancellationToken cancellationToken)
-            : base(context)
-        {
-            _context = context;
-            CancellationToken = cancellationToken;
-        }
+    public override CancellationToken CancellationToken { get; }
 
-        public override CancellationToken CancellationToken { get; }
-
-        public EventHubProducerClient CreateEventHubClient(string eventHubName)
-        {
-            return _context.CreateEventHubClient(eventHubName);
-        }
+    public EventHubProducerClient CreateEventHubClient(string eventHubName)
+    {
+        return _context.CreateEventHubClient(eventHubName);
     }
 }

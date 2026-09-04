@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Diagnostics;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus;
 
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct AmazonSqsHostAddress

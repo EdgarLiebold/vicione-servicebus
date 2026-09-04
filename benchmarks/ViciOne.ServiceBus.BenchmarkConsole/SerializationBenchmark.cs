@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 using BenchmarkDotNet.Attributes;
-using Context;
-using Serialization;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Serialization;
 
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 [MemoryDiagnoser]
 public class SerializationBenchmark
@@ -58,8 +57,8 @@ public class SerializationBenchmark
     }
 
     /// <summary>
-    /// The envelope path a send context takes, which is what the retired serializer performance case
-    /// measured. SerializeObject above measures the object path and is not the same statement.
+    /// Measures the envelope path taken by a send context. <see cref="MessagePack_SerializeObject" />
+    /// measures the object path and therefore exercises a different operation.
     /// </summary>
     [Benchmark]
     public byte[] MessagePack_GetMessageBody()

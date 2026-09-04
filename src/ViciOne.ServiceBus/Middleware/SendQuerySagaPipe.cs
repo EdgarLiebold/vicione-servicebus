@@ -1,82 +1,80 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class SendQuerySagaPipe<TSaga, T> :
+    IPipe<SagaRepositoryQueryContext<TSaga, T>>
+    where TSaga : class, ISaga
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Logging;
-    using Saga;
+    readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
+    readonly ISagaPolicy<TSaga, T> _policy;
 
-
-    public class SendQuerySagaPipe<TSaga, T> :
-        IPipe<SagaRepositoryQueryContext<TSaga, T>>
-        where TSaga : class, ISaga
-        where T : class
+    public SendQuerySagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
     {
-        readonly IPipe<SagaConsumeContext<TSaga, T>> _next;
-        readonly ISagaPolicy<TSaga, T> _policy;
+        _policy = policy;
+        _next = next;
+    }
 
-        public SendQuerySagaPipe(ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
-        {
-            _policy = policy;
-            _next = next;
-        }
+    public void Probe(ProbeContext context)
+    {
+    }
 
-        public void Probe(ProbeContext context)
+    public async Task Send(SagaRepositoryQueryContext<TSaga, T> context)
+    {
+        if (context.Count > 0)
         {
-        }
-
-        public async Task Send(SagaRepositoryQueryContext<TSaga, T> context)
-        {
-            if (context.Count > 0)
+            async Task SendToInstance(Guid correlationId)
             {
-                async Task SendToInstance(Guid correlationId)
+                SagaConsumeContext<TSaga, T> sagaConsumeContext = await context.Load(correlationId).ConfigureAwait(false);
+                if (sagaConsumeContext != null)
                 {
-                    SagaConsumeContext<TSaga, T> sagaConsumeContext = await context.Load(correlationId).ConfigureAwait(false);
-                    if (sagaConsumeContext != null)
+                    sagaConsumeContext.LogUsed();
+
+                    try
                     {
-                        sagaConsumeContext.LogUsed();
+                        await _policy.Existing(sagaConsumeContext, _next).ConfigureAwait(false);
 
-                        try
+                        if (_policy.IsReadOnly)
+                            await context.Undo(sagaConsumeContext).ConfigureAwait(false);
+                        else
                         {
-                            await _policy.Existing(sagaConsumeContext, _next).ConfigureAwait(false);
+                            if (sagaConsumeContext.IsCompleted)
+                            {
+                                await context.Delete(sagaConsumeContext).ConfigureAwait(false);
 
-                            if (_policy.IsReadOnly)
-                                await context.Undo(sagaConsumeContext).ConfigureAwait(false);
+                                sagaConsumeContext.LogRemoved();
+                            }
                             else
-                            {
-                                if (sagaConsumeContext.IsCompleted)
-                                {
-                                    await context.Delete(sagaConsumeContext).ConfigureAwait(false);
-
-                                    sagaConsumeContext.LogRemoved();
-                                }
-                                else
-                                    await context.Update(sagaConsumeContext).ConfigureAwait(false);
-                            }
+                                await context.Update(sagaConsumeContext).ConfigureAwait(false);
                         }
-                        finally
+                    }
+                    finally
+                    {
+                        switch (sagaConsumeContext)
                         {
-                            switch (sagaConsumeContext)
-                            {
-                                case IAsyncDisposable asyncDisposable:
-                                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                                    break;
-                                case IDisposable disposable:
-                                    disposable.Dispose();
-                                    break;
-                            }
+                            case IAsyncDisposable asyncDisposable:
+                                await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                                break;
+                            case IDisposable disposable:
+                                disposable.Dispose();
+                                break;
                         }
                     }
                 }
-
-                foreach (var correlationId in context)
-                    await SendToInstance(correlationId).ConfigureAwait(false);
             }
-            else
-            {
-                var missingPipe = new MissingSagaPipe<TSaga, T>(context, _next);
 
-                await _policy.Missing(context, missingPipe).ConfigureAwait(false);
-            }
+            foreach (var correlationId in context)
+                await SendToInstance(correlationId).ConfigureAwait(false);
+        }
+        else
+        {
+            var missingPipe = new MissingSagaPipe<TSaga, T>(context, _next);
+
+            await _policy.Missing(context, missingPipe).ConfigureAwait(false);
         }
     }
 }

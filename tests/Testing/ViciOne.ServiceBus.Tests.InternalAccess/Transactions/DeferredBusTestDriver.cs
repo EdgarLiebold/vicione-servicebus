@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
-
 using System.Reflection;
 using System.Transactions;
 using ViciOne.ServiceBus.Transactions;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 
 public sealed class BufferedBusTestDriver
 {

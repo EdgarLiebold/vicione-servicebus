@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.DurableSend;
-
 using System.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.DurableSend;
 
 public sealed class EntityFrameworkDurableSendDurabilityTests
 {

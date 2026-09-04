@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Adds the scheduler to the consume context, so that it can be used for message redelivery
+/// </summary>
+public class ScheduleMessageRedeliveryFilter<TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Context;
+    readonly RedeliveryOptions _options;
 
-
-    /// <summary>
-    /// Adds the scheduler to the consume context, so that it can be used for message redelivery
-    /// </summary>
-    public class ScheduleMessageRedeliveryFilter<TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TMessage : class
+    public ScheduleMessageRedeliveryFilter(RedeliveryOptions options)
     {
-        readonly RedeliveryOptions _options;
+        _options = options;
+    }
 
-        public ScheduleMessageRedeliveryFilter(RedeliveryOptions options)
-        {
-            _options = options;
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("scheduleRedeliveryContext");
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("scheduleRedeliveryContext");
-        }
+    [DebuggerNonUserCode]
+    public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        context.GetOrAddPayload<MessageRedeliveryContext>(() => new ScheduleMessageRedeliveryContext<TMessage>(context, _options));
 
-        [DebuggerNonUserCode]
-        public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
-        {
-            context.GetOrAddPayload<MessageRedeliveryContext>(() => new ScheduleMessageRedeliveryContext<TMessage>(context, _options));
-
-            return next.Send(context);
-        }
+        return next.Send(context);
     }
 }

@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public class ServiceInstanceOptions :
+    OptionsSet
 {
-    using Configuration;
-
-
-    public class ServiceInstanceOptions :
-        OptionsSet
+    public ServiceInstanceOptions()
     {
-        public ServiceInstanceOptions()
-        {
-            EndpointNameFormatter = DefaultEndpointNameFormatter.Instance;
-        }
+        EndpointNameFormatter = DefaultEndpointNameFormatter.Instance;
+    }
 
-        public IEndpointNameFormatter EndpointNameFormatter { get; private set; }
+    public IEndpointNameFormatter EndpointNameFormatter { get; private set; }
 
-        /// <summary>
-        /// Enable the job service endpoints, so that <see cref="IJobConsumer{TJob}" /> consumers
-        /// can be configured.
-        /// </summary>
-        public ServiceInstanceOptions EnableJobServiceEndpoints()
-        {
-            Options<JobServiceOptions>();
+    /// <summary>
+    /// Enable the job service endpoints, so that <see cref="IJobConsumer{TJob}" /> consumers
+    /// can be configured.
+    /// </summary>
+    public ServiceInstanceOptions EnableJobServiceEndpoints()
+    {
+        Options<JobServiceOptions>();
 
-            return this;
-        }
+        return this;
+    }
 
-        public ServiceInstanceOptions SetEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter)
-        {
-            EndpointNameFormatter = endpointNameFormatter;
+    public ServiceInstanceOptions SetEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter)
+    {
+        EndpointNameFormatter = endpointNameFormatter;
 
-            return this;
-        }
+        return this;
     }
 }

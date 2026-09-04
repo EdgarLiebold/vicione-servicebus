@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus.Consumer
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Consumer;
+
+public class ObjectConsumerFactory<TConsumer> :
+    IConsumerFactory<TConsumer>
+    where TConsumer : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IConsumerFactory<TConsumer> _delegate;
 
-
-    public class ObjectConsumerFactory<TConsumer> :
-        IConsumerFactory<TConsumer>
-        where TConsumer : class
+    public ObjectConsumerFactory(Func<Type, object> objectFactory)
     {
-        readonly IConsumerFactory<TConsumer> _delegate;
+        _delegate = new DelegateConsumerFactory<TConsumer>(() => (TConsumer)objectFactory(typeof(TConsumer)));
+    }
 
-        public ObjectConsumerFactory(Func<Type, object> objectFactory)
-        {
-            _delegate = new DelegateConsumerFactory<TConsumer>(() => (TConsumer)objectFactory(typeof(TConsumer)));
-        }
+    public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+        where TMessage : class
+    {
+        return _delegate.Send(context, next);
+    }
 
-        public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
-            where TMessage : class
-        {
-            return _delegate.Send(context, next);
-        }
-
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.CreateConsumerFactoryScope<TConsumer>("objectFactory");
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.CreateConsumerFactoryScope<TConsumer>("objectFactory");
     }
 }

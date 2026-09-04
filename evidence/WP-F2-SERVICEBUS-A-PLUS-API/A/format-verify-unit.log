@@ -1,0 +1,4 @@
+command=dotnet format --verify-no-changes ViciOne.ServiceBus.Tests.Unit.slnx --no-restore --verbosity minimal
+exit_code=0
+source_changes=0
+workspace_notice=The workspace loader reported a generic warning; diagnostic inspection identified the build-only analyzer project reference.

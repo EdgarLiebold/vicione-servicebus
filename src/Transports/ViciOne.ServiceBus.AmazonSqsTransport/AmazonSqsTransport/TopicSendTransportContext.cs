@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService.Model;
-using Configuration;
-using Transports;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class TopicSendTransportContext :
     BaseSendTransportContext,
@@ -87,7 +86,7 @@ public class TopicSendTransportContext :
         };
 
         _headerAdapter.Set(request.MessageAttributes, context.Headers);
-        _headerAdapter.Set(request.MessageAttributes, MessageHeaders.ContentType, context.ContentType.ToString());
+        _headerAdapter.Set(request.MessageAttributes, MessageHeaders.ContentType, context.ContentType!.ToString());
         _headerAdapter.Set(request.MessageAttributes, nameof(context.CorrelationId), context.CorrelationId);
 
         if (!string.IsNullOrEmpty(context.DeduplicationId))

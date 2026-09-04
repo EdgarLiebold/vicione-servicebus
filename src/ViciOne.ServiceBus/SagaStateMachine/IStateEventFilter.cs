@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
-{
-    public interface IStateEventFilter<TSaga>
-        where TSaga : class, SagaStateMachineInstance
-    {
-        bool Filter(BehaviorContext<TSaga> context);
+namespace ViciOne.ServiceBus.SagaStateMachine;
 
-        bool Filter<T>(BehaviorContext<TSaga, T> context)
-            where T : class;
-    }
+public interface IStateEventFilter<TSaga>
+    where TSaga : class, SagaStateMachineInstance
+{
+    bool Filter(BehaviorContext<TSaga> context);
+
+    bool Filter<T>(BehaviorContext<TSaga, T> context)
+        where T : class;
 }

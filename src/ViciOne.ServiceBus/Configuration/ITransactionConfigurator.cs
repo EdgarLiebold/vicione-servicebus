@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Transactions;
+
+namespace ViciOne.ServiceBus;
+
+public interface ITransactionConfigurator
 {
-    using System;
-    using System.Transactions;
+    /// <summary>
+    /// Sets the transaction timeout
+    /// </summary>
+    TimeSpan Timeout { set; }
 
-
-    public interface ITransactionConfigurator
-    {
-        /// <summary>
-        /// Sets the transaction timeout
-        /// </summary>
-        TimeSpan Timeout { set; }
-
-        /// <summary>
-        /// Sets the isolation level of the transaction
-        /// </summary>
-        IsolationLevel IsolationLevel { set; }
-    }
+    /// <summary>
+    /// Sets the isolation level of the transaction
+    /// </summary>
+    IsolationLevel IsolationLevel { set; }
 }

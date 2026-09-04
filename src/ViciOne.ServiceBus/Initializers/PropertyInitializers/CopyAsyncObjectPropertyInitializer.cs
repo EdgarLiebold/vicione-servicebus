@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyInitializers
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyInitializers;
+
+public class CopyAsyncObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
+    IPropertyInitializer<TMessage, TInput>
+    where TMessage : class
+    where TInput : class
 {
-    using System;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly IReadProperty<TInput, Task<TInputProperty>> _inputProperty;
+    readonly IWriteProperty<TMessage, object> _messageProperty;
 
-
-    public class CopyAsyncObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
-        IPropertyInitializer<TMessage, TInput>
-        where TMessage : class
-        where TInput : class
+    public CopyAsyncObjectPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
     {
-        readonly IReadProperty<TInput, Task<TInputProperty>> _inputProperty;
-        readonly IWriteProperty<TMessage, object> _messageProperty;
+        if (messagePropertyInfo == null)
+            throw new ArgumentNullException(nameof(messagePropertyInfo));
 
-        public CopyAsyncObjectPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
+        _inputProperty = ReadPropertyCache<TInput>.GetProperty<Task<TInputProperty>>(inputPropertyInfo);
+        _messageProperty = WritePropertyCache<TMessage>.GetProperty<object>(messagePropertyInfo);
+    }
+
+    public Task Apply(InitializeContext<TMessage, TInput> context)
+    {
+        if (!context.HasInput)
+            return Task.CompletedTask;
+
+        Task<TInputProperty> valueTask = _inputProperty.Get(context.Input);
+        if (valueTask.Status == TaskStatus.RanToCompletion)
         {
-            if (messagePropertyInfo == null)
-                throw new ArgumentNullException(nameof(messagePropertyInfo));
+            _messageProperty.Set(context.Message, valueTask.Result);
 
-            _inputProperty = ReadPropertyCache<TInput>.GetProperty<Task<TInputProperty>>(inputPropertyInfo);
-            _messageProperty = WritePropertyCache<TMessage>.GetProperty<object>(messagePropertyInfo);
+            return Task.CompletedTask;
         }
 
-        public Task Apply(InitializeContext<TMessage, TInput> context)
+        async Task SetPropertyAsync()
         {
-            if (!context.HasInput)
-                return Task.CompletedTask;
+            var value = await valueTask.ConfigureAwait(false);
 
-            Task<TInputProperty> valueTask = _inputProperty.Get(context.Input);
-            if (valueTask.Status == TaskStatus.RanToCompletion)
-            {
-                _messageProperty.Set(context.Message, valueTask.Result);
-
-                return Task.CompletedTask;
-            }
-
-            async Task SetPropertyAsync()
-            {
-                var value = await valueTask.ConfigureAwait(false);
-
-                _messageProperty.Set(context.Message, value);
-            }
-
-            return SetPropertyAsync();
+            _messageProperty.Set(context.Message, value);
         }
+
+        return SetPropertyAsync();
     }
 }

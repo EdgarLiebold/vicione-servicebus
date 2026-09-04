@@ -252,6 +252,7 @@
   { "requirementId": "REQ-VSB-MEMORY-MESSAGE-BODY", "variantKey": "accessor-order-and-read-only-stream", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.MemoryMessageBodyTests", "testMethod": "EveryAccessorOrder_ExposesOnlyTheSelectedReadOnlyMemory" },
   { "requirementId": "REQ-VSB-NOT-SUPPORTED-MESSAGE-BODY", "variantKey": "every-member-rejects-access", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.NotSupportedMessageBodyTests", "testMethod": "EveryMember_ThrowsNotSupportedException" },
   { "requirementId": "REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "variantKey": "accessor-order-and-read-only-stream", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonMessageBodyTests", "testMethod": "EveryAccessorOrder_ExposesTheExactReadOnlyEnvelope" },
+  { "requirementId": "REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "variantKey": "wire-header-semantics-survive-nullability", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonMessageBodyTests", "testMethod": "WireHeaders_PreserveComparerNullEntriesAndLiveUpdates" },
   { "requirementId": "REQ-VSB-SYSTEM-TEXT-JSON-OBJECT-BODY", "variantKey": "accessor-order-and-read-only-stream", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonObjectMessageBodyTests", "testMethod": "EveryAccessorOrder_ExposesTheExactReadOnlyJsonObject" },
   { "requirementId": "REQ-VSB-SYSTEM-TEXT-JSON-RAW-BODY", "variantKey": "accessor-order-and-read-only-stream", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonRawMessageBodyTests", "testMethod": "EveryAccessorOrder_ExposesTheExactReadOnlyRawMessage" },
   { "requirementId": "REQ-VSB-SYSTEM-TEXT-JSON-OPTIONS", "variantKey": "compact-equivalent-wire-json", "testAssembly": "ViciOne.ServiceBus.Tests", "testType": "ViciOne.ServiceBus.Tests.Serialization.SystemTextJsonMessageSerializerOptionsTests", "testMethod": "DefaultOptions_ProduceCompactEquivalentJson" },
@@ -2714,6 +2715,27 @@
       "testMethod" : "ConcurrentWaiter_IsRejectedWithoutReplacingTheActiveSignal",
       "testType" : "ViciOne.ServiceBus.Tests.Middleware.Outbox.BusOutboxNotificationTests",
       "variantKey" : "second-waiter-fails-closed"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "SuppressedExecutionContext_StillExecutesTheDeferredMethod",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "suppressed-execution-context-still-drains"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "RepeatedDrain_ExecutesANormallyCapturedDeferredMethodOnce",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "deferred-method-is-one-shot"
+   },
+   {
+      "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "DisposedDeferredMethod_DoesNotExecute",
+      "testType" : "ViciOne.ServiceBus.Tests.Middleware.InMemoryOutbox.InMemoryOutboxCheckpointTests",
+      "variantKey" : "disposed-method-never-runs"
    },
    {
       "requirementId" : "REQ-VSB-INMEMORY-OUTBOX-CHECKPOINT",

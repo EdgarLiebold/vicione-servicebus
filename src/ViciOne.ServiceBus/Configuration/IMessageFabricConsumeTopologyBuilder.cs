@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IMessageFabricConsumeTopologyBuilder :
+    IMessageFabricTopologyBuilder
 {
-    public interface IMessageFabricConsumeTopologyBuilder :
-        IMessageFabricTopologyBuilder
-    {
-        string Exchange { get; set; }
-        string Queue { get; set; }
-    }
+    string Exchange { get; set; }
+    string Queue { get; set; }
 }

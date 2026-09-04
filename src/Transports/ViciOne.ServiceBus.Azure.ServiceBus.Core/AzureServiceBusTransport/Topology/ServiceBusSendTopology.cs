@@ -1,95 +1,93 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using System;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class ServiceBusSendTopology :
+    SendTopology,
+    IServiceBusSendTopologyConfigurator
 {
-    using System;
-    using Azure.Messaging.ServiceBus.Administration;
-    using ViciOne.ServiceBus.Topology;
+    public Action<IServiceBusEntityConfigurator> ConfigureErrorSettings { get; set; }
+    public Action<IServiceBusEntityConfigurator> ConfigureDeadLetterSettings { get; set; }
 
-
-    public class ServiceBusSendTopology :
-        SendTopology,
-        IServiceBusSendTopologyConfigurator
+    IServiceBusMessageSendTopology<T> IServiceBusSendTopology.GetMessageTopology<T>()
     {
-        public Action<IServiceBusEntityConfigurator> ConfigureErrorSettings { get; set; }
-        public Action<IServiceBusEntityConfigurator> ConfigureDeadLetterSettings { get; set; }
+        return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>;
+    }
 
-        IServiceBusMessageSendTopology<T> IServiceBusSendTopology.GetMessageTopology<T>()
+    IServiceBusMessageSendTopologyConfigurator<T> IServiceBusSendTopologyConfigurator.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>;
+    }
+
+    public SendSettings GetSendSettings(ServiceBusEndpointAddress address)
+    {
+        if (address.Type == ServiceBusEndpointAddress.AddressType.Queue)
         {
-            return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>;
+            var createQueueOptions = GetCreateQueueOptions(address);
+
+            return new QueueSendSettings(createQueueOptions);
         }
 
-        IServiceBusMessageSendTopologyConfigurator<T> IServiceBusSendTopologyConfigurator.GetMessageTopology<T>()
-        {
-            return GetMessageTopology<T>() as IServiceBusMessageSendTopologyConfigurator<T>;
-        }
+        var createTopicOptions = GetCreateTopicOptions(address);
 
-        public SendSettings GetSendSettings(ServiceBusEndpointAddress address)
-        {
-            if (address.Type == ServiceBusEndpointAddress.AddressType.Queue)
-            {
-                var createQueueOptions = GetCreateQueueOptions(address);
+        var builder = new BrokerTopologyBuilder();
+        builder.CreateTopic(createTopicOptions);
 
-                return new QueueSendSettings(createQueueOptions);
-            }
+        return new TopicSendSettings(createTopicOptions, builder.BuildBrokerTopology());
+    }
 
-            var createTopicOptions = GetCreateTopicOptions(address);
+    public SendSettings GetErrorSettings(IServiceBusQueueConfigurator configurator)
+    {
+        var createQueueOptions = configurator.GetCreateQueueOptions();
+        createQueueOptions.Name = ErrorQueueNameFormatter.FormatErrorQueueName(createQueueOptions.Name);
 
-            var builder = new BrokerTopologyBuilder();
-            builder.CreateTopic(createTopicOptions);
+        var errorSettings = new QueueSendSettings(createQueueOptions);
 
-            return new TopicSendSettings(createTopicOptions, builder.BuildBrokerTopology());
-        }
+        ConfigureErrorSettings?.Invoke(errorSettings);
 
-        public SendSettings GetErrorSettings(IServiceBusQueueConfigurator configurator)
-        {
-            var createQueueOptions = configurator.GetCreateQueueOptions();
-            createQueueOptions.Name = ErrorQueueNameFormatter.FormatErrorQueueName(createQueueOptions.Name);
+        return errorSettings;
+    }
 
-            var errorSettings = new QueueSendSettings(createQueueOptions);
+    public SendSettings GetDeadLetterSettings(IServiceBusQueueConfigurator configurator)
+    {
+        var createQueueOptions = configurator.GetCreateQueueOptions();
+        createQueueOptions.Name = DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(createQueueOptions.Name);
 
-            ConfigureErrorSettings?.Invoke(errorSettings);
+        var deadLetterSetting = new QueueSendSettings(createQueueOptions);
 
-            return errorSettings;
-        }
+        ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
 
-        public SendSettings GetDeadLetterSettings(IServiceBusQueueConfigurator configurator)
-        {
-            var createQueueOptions = configurator.GetCreateQueueOptions();
-            createQueueOptions.Name = DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(createQueueOptions.Name);
+        return deadLetterSetting;
+    }
 
-            var deadLetterSetting = new QueueSendSettings(createQueueOptions);
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    {
+        var messageTopology = new ServiceBusMessageSendTopology<T>();
 
-            ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
+        OnMessageTopologyCreated(messageTopology);
 
-            return deadLetterSetting;
-        }
+        return messageTopology;
+    }
 
-        protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
-        {
-            var messageTopology = new ServiceBusMessageSendTopology<T>();
+    static CreateQueueOptions GetCreateQueueOptions(ServiceBusEndpointAddress address)
+    {
+        var createQueueOptions = Defaults.GetCreateQueueOptions(address.Path);
 
-            OnMessageTopologyCreated(messageTopology);
+        if (address.AutoDelete.HasValue)
+            createQueueOptions.AutoDeleteOnIdle = address.AutoDelete.Value;
 
-            return messageTopology;
-        }
+        return createQueueOptions;
+    }
 
-        static CreateQueueOptions GetCreateQueueOptions(ServiceBusEndpointAddress address)
-        {
-            var createQueueOptions = Defaults.GetCreateQueueOptions(address.Path);
+    static CreateTopicOptions GetCreateTopicOptions(ServiceBusEndpointAddress address)
+    {
+        var createTopicOptions = Defaults.GetCreateTopicOptions(address.Path);
 
-            if (address.AutoDelete.HasValue)
-                createQueueOptions.AutoDeleteOnIdle = address.AutoDelete.Value;
+        if (address.AutoDelete.HasValue)
+            createTopicOptions.AutoDeleteOnIdle = address.AutoDelete.Value;
 
-            return createQueueOptions;
-        }
-
-        static CreateTopicOptions GetCreateTopicOptions(ServiceBusEndpointAddress address)
-        {
-            var createTopicOptions = Defaults.GetCreateTopicOptions(address.Path);
-
-            if (address.AutoDelete.HasValue)
-                createTopicOptions.AutoDeleteOnIdle = address.AutoDelete.Value;
-
-            return createTopicOptions;
-        }
+        return createTopicOptions;
     }
 }

@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Requirements;
-
 using System.Reflection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Requirements;
 
 public sealed class RequirementCoverageProjectionTests
 {

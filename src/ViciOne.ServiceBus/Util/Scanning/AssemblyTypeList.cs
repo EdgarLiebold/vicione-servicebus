@@ -1,52 +1,50 @@
-namespace ViciOne.ServiceBus.Util.Scanning
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Util.Scanning;
+
+public class AssemblyTypeList
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    public readonly List<Type> Abstract = new List<Type>();
+    public readonly List<Type> Concrete = new List<Type>();
+    public readonly List<Type> Interface = new List<Type>();
 
-
-    public class AssemblyTypeList
+    public IEnumerable<IList<Type>> SelectTypes(TypeClassification classification)
     {
-        public readonly List<Type> Abstract = new List<Type>();
-        public readonly List<Type> Concrete = new List<Type>();
-        public readonly List<Type> Interface = new List<Type>();
+        var interfaces = classification.HasFlag(TypeClassification.Interface);
+        var concretes = classification.HasFlag(TypeClassification.Concrete);
+        var abstracts = classification.HasFlag(TypeClassification.Abstract);
 
-        public IEnumerable<IList<Type>> SelectTypes(TypeClassification classification)
+        if (interfaces || concretes || abstracts)
         {
-            var interfaces = classification.HasFlag(TypeClassification.Interface);
-            var concretes = classification.HasFlag(TypeClassification.Concrete);
-            var abstracts = classification.HasFlag(TypeClassification.Abstract);
-
-            if (interfaces || concretes || abstracts)
-            {
-                if (interfaces)
-                    yield return Interface;
-                if (abstracts)
-                    yield return Abstract;
-                if (concretes)
-                    yield return Concrete;
-            }
-            else
-            {
+            if (interfaces)
                 yield return Interface;
+            if (abstracts)
                 yield return Abstract;
+            if (concretes)
                 yield return Concrete;
-            }
         }
-
-        public IEnumerable<Type> AllTypes()
+        else
         {
-            return Interface.Concat(Concrete).Concat(Abstract);
+            yield return Interface;
+            yield return Abstract;
+            yield return Concrete;
         }
+    }
 
-        public void Add(Type type)
-        {
-            if (type.IsInterface)
-                Interface.Add(type);
-            else if (type.IsAbstract)
-                Abstract.Add(type);
-            else if (type.IsClass)
-                Concrete.Add(type);
-        }
+    public IEnumerable<Type> AllTypes()
+    {
+        return Interface.Concat(Concrete).Concat(Abstract);
+    }
+
+    public void Add(Type type)
+    {
+        if (type.IsInterface)
+            Interface.Add(type);
+        else if (type.IsAbstract)
+            Abstract.Add(type);
+        else if (type.IsClass)
+            Concrete.Add(type);
     }
 }

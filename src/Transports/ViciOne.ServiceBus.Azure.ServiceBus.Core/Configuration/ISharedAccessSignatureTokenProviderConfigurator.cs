@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus
+using Azure;
+
+namespace ViciOne.ServiceBus;
+
+public interface ISharedAccessSignatureTokenProviderConfigurator
 {
-    using Azure;
-
-
-    public interface ISharedAccessSignatureTokenProviderConfigurator
-    {
-        AzureSasCredential SasCredential { set; }
-    }
+    AzureSasCredential SasCredential { set; }
 }

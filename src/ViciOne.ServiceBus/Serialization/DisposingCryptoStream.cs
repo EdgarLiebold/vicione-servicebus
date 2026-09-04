@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.Serialization
+using System.IO;
+using System.Security.Cryptography;
+
+namespace ViciOne.ServiceBus.Serialization;
+
+class DisposingCryptoStream :
+    CryptoStream
 {
-    using System.IO;
-    using System.Security.Cryptography;
+    Stream _stream;
+    ICryptoTransform _transform;
 
-
-    class DisposingCryptoStream :
-        CryptoStream
+    internal DisposingCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode)
+        : base(stream, transform, mode)
     {
-        Stream _stream;
-        ICryptoTransform _transform;
+        _stream = stream;
+        _transform = transform;
+    }
 
-        internal DisposingCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode)
-            : base(stream, transform, mode)
+    protected override void Dispose(bool disposing)
+    {
+        if (!disposing)
+            return;
+
+        if (!HasFlushedFinalBlock)
+            FlushFinalBlock();
+
+        base.Dispose(true);
+
+        if (_stream != null)
         {
-            _stream = stream;
-            _transform = transform;
+            _stream.Dispose();
+            _stream = null;
         }
 
-        protected override void Dispose(bool disposing)
+        if (_transform != null)
         {
-            if (!disposing)
-                return;
-
-            if (!HasFlushedFinalBlock)
-                FlushFinalBlock();
-
-            base.Dispose(true);
-
-            if (_stream != null)
-            {
-                _stream.Dispose();
-                _stream = null;
-            }
-
-            if (_transform != null)
-            {
-                _transform.Dispose();
-                _transform = null;
-            }
+            _transform.Dispose();
+            _transform = null;
         }
     }
 }

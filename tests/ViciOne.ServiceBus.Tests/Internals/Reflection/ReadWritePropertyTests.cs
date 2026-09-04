@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Tests.Internals.Reflection;
-
 using System.Reflection;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Internals;
 using Xunit;
 
+namespace ViciOne.ServiceBus.Tests.Internals.Reflection;
 
 public sealed class ReadWritePropertyTests
 {

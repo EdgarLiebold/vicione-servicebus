@@ -1,19 +1,17 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public class MessageMetric
 {
-    using System;
-
-
-    public class MessageMetric
+    public MessageMetric(Guid messageId, long requestLatency, long consumeLatency)
     {
-        public MessageMetric(Guid messageId, long requestLatency, long consumeLatency)
-        {
-            MessageId = messageId;
-            RequestLatency = requestLatency;
-            ConsumeLatency = consumeLatency;
-        }
-
-        public Guid MessageId { get; }
-        public long RequestLatency { get; set; }
-        public long ConsumeLatency { get; set; }
+        MessageId = messageId;
+        RequestLatency = requestLatency;
+        ConsumeLatency = consumeLatency;
     }
+
+    public Guid MessageId { get; }
+    public long RequestLatency { get; set; }
+    public long ConsumeLatency { get; set; }
 }

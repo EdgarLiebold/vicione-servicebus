@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Settings used by the job service sagas
+/// </summary>
+public interface JobSagaSettings
 {
-    using System;
+    Uri JobAttemptSagaEndpointAddress { get; }
+    Uri JobSagaEndpointAddress { get; }
+    Uri JobTypeSagaEndpointAddress { get; }
 
+    TimeSpan StatusCheckInterval { get; }
 
-    /// <summary>
-    /// Settings used by the job service sagas
-    /// </summary>
-    public interface JobSagaSettings
-    {
-        Uri JobAttemptSagaEndpointAddress { get; }
-        Uri JobSagaEndpointAddress { get; }
-        Uri JobTypeSagaEndpointAddress { get; }
+    int SuspectJobRetryCount { get; }
+    TimeSpan? SuspectJobRetryDelay { get; }
 
-        TimeSpan StatusCheckInterval { get; }
+    TimeSpan SlotWaitTime { get; }
 
-        int SuspectJobRetryCount { get; }
-        TimeSpan? SuspectJobRetryDelay { get; }
+    TimeSpan HeartbeatTimeout { get; }
 
-        TimeSpan SlotWaitTime { get; }
+    bool FinalizeCompleted { get; }
 
-        TimeSpan HeartbeatTimeout { get; }
-
-        bool FinalizeCompleted { get; }
-
-        Func<string, TimeZoneInfo> TimeZoneResolver { get; }
-    }
+    Func<string, TimeZoneInfo> TimeZoneResolver { get; }
 }

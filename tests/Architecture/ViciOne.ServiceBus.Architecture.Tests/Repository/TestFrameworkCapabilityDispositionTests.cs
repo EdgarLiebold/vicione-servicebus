@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
-
 using System.Security.Cryptography;
 using System.Text;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 public sealed class TestFrameworkCapabilityDispositionTests
 {
@@ -16,7 +16,9 @@ public sealed class TestFrameworkCapabilityDispositionTests
     {
         string mapPath = Path.Combine(
             RepositoryLayout.Root,
-            ".testagent",
+            "evidence",
+            "native-tests",
+            "obligation-maps",
             "testframework-capability-disposition.tsv");
         string[] lines = File.ReadAllLines(mapPath);
         Assert.Equal("legacyPath\tdisposition\tnativeOwner\tclosureEvidence", lines[0]);

@@ -1,50 +1,48 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Components;
+using ViciOne.ServiceBus.Contracts;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class CompleteRequestActivity :
+    IStateMachineActivity<RequestState, RequestCompleted>
 {
-    using System;
-    using System.Threading.Tasks;
-    using Components;
-    using Contracts;
-
-
-    public class CompleteRequestActivity :
-        IStateMachineActivity<RequestState, RequestCompleted>
+    public void Probe(ProbeContext context)
     {
-        public void Probe(ProbeContext context)
+        context.CreateScope("completeRequest");
+    }
+
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    public async Task Execute(BehaviorContext<RequestState, RequestCompleted> context, IBehavior<RequestState, RequestCompleted> next)
+    {
+        if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
         {
-            context.CreateScope("completeRequest");
+            IPipe<SendContext> pipe = new RequestStateMessagePipe(context, context.Message.Payload, context.Message.PayloadType);
+
+            var endpoint = await context.GetSendEndpoint(context.Saga.ResponseAddress).ConfigureAwait(false);
+
+            var dummyMessage = new CompletedEvent();
+
+            await endpoint.Send(dummyMessage, pipe, context.CancellationToken).ConfigureAwait(false);
         }
 
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        await next.Execute(context).ConfigureAwait(false);
+    }
 
-        public async Task Execute(BehaviorContext<RequestState, RequestCompleted> context, IBehavior<RequestState, RequestCompleted> next)
-        {
-            if (!context.Saga.ExpirationTime.HasValue || context.Saga.ExpirationTime.Value > context.GetTimeProvider().GetUtcNow().UtcDateTime)
-            {
-                IPipe<SendContext> pipe = new RequestStateMessagePipe(context, context.Message.Payload, context.Message.PayloadType);
-
-                var endpoint = await context.GetSendEndpoint(context.Saga.ResponseAddress).ConfigureAwait(false);
-
-                var dummyMessage = new CompletedEvent();
-
-                await endpoint.Send(dummyMessage, pipe, context.CancellationToken).ConfigureAwait(false);
-            }
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<RequestState, RequestCompleted, TException> context,
-            IBehavior<RequestState, RequestCompleted> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
+    public Task Faulted<TException>(BehaviorExceptionContext<RequestState, RequestCompleted, TException> context,
+        IBehavior<RequestState, RequestCompleted> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
+    }
 
 
-        class CompletedEvent
-        {
-        }
+    class CompletedEvent
+    {
     }
 }

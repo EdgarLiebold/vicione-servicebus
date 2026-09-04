@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.ComponentModel;
 
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// Evaluates the exact bytes produced at the bus-owned serialization boundaries.
 /// </summary>

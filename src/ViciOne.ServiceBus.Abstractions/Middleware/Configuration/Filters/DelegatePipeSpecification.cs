@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DelegatePipeSpecification<T> :
+    IPipeSpecification<T>
+    where T : class, PipeContext
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
+    readonly Action<T> _callback;
 
-
-    public class DelegatePipeSpecification<T> :
-        IPipeSpecification<T>
-        where T : class, PipeContext
+    public DelegatePipeSpecification(Action<T> callback)
     {
-        readonly Action<T> _callback;
+        _callback = callback;
+    }
 
-        public DelegatePipeSpecification(Action<T> callback)
-        {
-            _callback = callback;
-        }
+    public void Apply(IPipeBuilder<T> builder)
+    {
+        builder.AddFilter(new DelegateFilter<T>(_callback));
+    }
 
-        public void Apply(IPipeBuilder<T> builder)
-        {
-            builder.AddFilter(new DelegateFilter<T>(_callback));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_callback == null)
-                yield return this.Failure("Callback", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_callback == null)
+            yield return this.Failure("Callback", "must not be null");
     }
 }

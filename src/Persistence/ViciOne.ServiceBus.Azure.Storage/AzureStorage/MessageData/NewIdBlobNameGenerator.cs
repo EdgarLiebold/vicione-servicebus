@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.AzureStorage.MessageData
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.AzureStorage.MessageData;
+
+public class NewIdBlobNameGenerator :
+    IBlobNameGenerator
 {
-    using Util;
-
-
-    public class NewIdBlobNameGenerator :
-        IBlobNameGenerator
+    public string GenerateBlobName()
     {
-        public string GenerateBlobName()
-        {
-            return FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());
-        }
+        return FormatUtil.Formatter.Format(NewId.Next().ToSequentialGuid().ToByteArray());
     }
 }

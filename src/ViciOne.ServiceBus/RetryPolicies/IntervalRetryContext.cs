@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class IntervalRetryContext<TContext> :
+    BaseRetryContext<TContext>,
+    RetryContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
+    readonly IntervalRetryPolicy _policy;
 
-
-    public class IntervalRetryContext<TContext> :
-        BaseRetryContext<TContext>,
-        RetryContext<TContext>
-        where TContext : class, PipeContext
+    public IntervalRetryContext(IntervalRetryPolicy policy, TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
+        : base(context, exception, retryCount, cancellationToken)
     {
-        readonly IntervalRetryPolicy _policy;
+        _policy = policy;
+    }
 
-        public IntervalRetryContext(IntervalRetryPolicy policy, TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
-            : base(context, exception, retryCount, cancellationToken)
-        {
-            _policy = policy;
-        }
+    public override TimeSpan? Delay => _policy.Intervals[RetryCount];
 
-        public override TimeSpan? Delay => _policy.Intervals[RetryCount];
+    bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
+    {
+        retryContext = new IntervalRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
 
-        bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
-        {
-            retryContext = new IntervalRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
-
-            return RetryAttempt < _policy.Intervals.Count && _policy.IsHandled(exception);
-        }
+        return RetryAttempt < _policy.Intervals.Count && _policy.IsHandled(exception);
     }
 }

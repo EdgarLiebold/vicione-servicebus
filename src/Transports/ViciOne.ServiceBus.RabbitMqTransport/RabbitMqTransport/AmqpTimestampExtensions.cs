@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Internals;
 using RabbitMQ.Client;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 
 public static class AmqpTimestampExtensions
 {

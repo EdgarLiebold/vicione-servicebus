@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public interface BrokerTopology :
+    IProbeSite
 {
-    public interface BrokerTopology :
-        IProbeSite
-    {
-        Topic[] Topics { get; }
-        Queue[] Queues { get; }
-        Consumer[] Consumers { get; }
-    }
+    Topic[] Topics { get; }
+    Queue[] Queues { get; }
+    Consumer[] Consumers { get; }
 }

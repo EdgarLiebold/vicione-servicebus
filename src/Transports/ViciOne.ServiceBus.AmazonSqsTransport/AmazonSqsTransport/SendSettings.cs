@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
-using Topology;
-
 
 public interface SendSettings :
     EntitySettings

@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface ISqlSendTopologyConfigurator :
+    ISendTopologyConfigurator,
+    ISqlSendTopology
 {
-    using System;
-
-
-    public interface ISqlSendTopologyConfigurator :
-        ISendTopologyConfigurator,
-        ISqlSendTopology
-    {
-        Action<ISqlQueueConfigurator> ConfigureErrorSettings { set; }
-        Action<ISqlQueueConfigurator> ConfigureDeadLetterSettings { set; }
-    }
+    Action<ISqlQueueConfigurator> ConfigureErrorSettings { set; }
+    Action<ISqlQueueConfigurator> ConfigureDeadLetterSettings { set; }
 }

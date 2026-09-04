@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public interface IBatcher<in TEntry> :
     IAsyncDisposable

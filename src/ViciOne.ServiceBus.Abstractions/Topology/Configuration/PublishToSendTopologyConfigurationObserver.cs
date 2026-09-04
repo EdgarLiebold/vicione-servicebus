@@ -1,119 +1,117 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Diagnostics.CodeAnalysis;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PublishToSendTopologyConfigurationObserver :
+    IPublishTopologyConfigurationObserver
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Middleware;
+    readonly ISendTopology _sendTopology;
 
-
-    public class PublishToSendTopologyConfigurationObserver :
-        IPublishTopologyConfigurationObserver
+    public PublishToSendTopologyConfigurationObserver(ISendTopology sendTopology)
     {
-        readonly ISendTopology _sendTopology;
+        _sendTopology = sendTopology;
+    }
 
-        public PublishToSendTopologyConfigurationObserver(ISendTopology sendTopology)
+    public void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
+        where T : class
+    {
+        IMessageSendTopology<T> messageSendTopology = _sendTopology.GetMessageTopology<T>();
+
+        configurator.AddDelegate(new Proxy<T>(messageSendTopology));
+    }
+
+
+    class Proxy<TMessage> :
+        IMessagePublishTopology<TMessage>
+        where TMessage : class
+    {
+        readonly IMessageSendTopology<TMessage> _topology;
+
+        public Proxy(IMessageSendTopology<TMessage> topology)
         {
-            _sendTopology = sendTopology;
+            _topology = topology;
         }
 
-        public void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
-            where T : class
+        public void Apply(ITopologyPipeBuilder<PublishContext<TMessage>> builder)
         {
-            IMessageSendTopology<T> messageSendTopology = _sendTopology.GetMessageTopology<T>();
+            var sendBuilder = new Builder(builder);
 
-            configurator.AddDelegate(new Proxy<T>(messageSendTopology));
+            _topology.Apply(sendBuilder);
+        }
+
+        public bool Exclude => false;
+
+        public bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
+        {
+            publishAddress = null;
+            return false;
         }
 
 
-        class Proxy<TMessage> :
-            IMessagePublishTopology<TMessage>
-            where TMessage : class
+        class Builder :
+            ITopologyPipeBuilder<SendContext<TMessage>>
         {
-            readonly IMessageSendTopology<TMessage> _topology;
+            readonly ITopologyPipeBuilder<PublishContext<TMessage>> _builder;
 
-            public Proxy(IMessageSendTopology<TMessage> topology)
+            public Builder(ITopologyPipeBuilder<PublishContext<TMessage>> builder)
             {
-                _topology = topology;
+                _builder = builder;
             }
 
-            public void Apply(ITopologyPipeBuilder<PublishContext<TMessage>> builder)
+            public void AddFilter(IFilter<SendContext<TMessage>> filter)
             {
-                var sendBuilder = new Builder(builder);
+                var splitFilter = new SplitFilter<PublishContext<TMessage>, SendContext<TMessage>>(filter, MergeContext, FilterContext);
 
-                _topology.Apply(sendBuilder);
+                _builder.AddFilter(splitFilter);
             }
 
-            public bool Exclude => false;
+            public bool IsDelegated => _builder.IsDelegated;
+            public bool IsImplemented => _builder.IsImplemented;
 
-            public bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
+            public ITopologyPipeBuilder<SendContext<TMessage>> CreateDelegatedBuilder()
             {
-                publishAddress = null;
-                return false;
+                return new ChildBuilder<SendContext<TMessage>>(this, IsImplemented, true);
+            }
+
+            static SendContext<TMessage> FilterContext(PublishContext<TMessage> context)
+            {
+                return context;
+            }
+
+            static PublishContext<TMessage> MergeContext(PublishContext<TMessage> input, SendContext context)
+            {
+                return context.GetPayload<PublishContext<TMessage>>();
             }
 
 
-            class Builder :
-                ITopologyPipeBuilder<SendContext<TMessage>>
+            class ChildBuilder<T> :
+                ITopologyPipeBuilder<T>
+                where T : class, PipeContext
             {
-                readonly ITopologyPipeBuilder<PublishContext<TMessage>> _builder;
+                readonly ITopologyPipeBuilder<T> _builder;
 
-                public Builder(ITopologyPipeBuilder<PublishContext<TMessage>> builder)
+                public ChildBuilder(ITopologyPipeBuilder<T> builder, bool isImplemented, bool isDelegated)
                 {
                     _builder = builder;
+
+                    IsDelegated = isDelegated;
+                    IsImplemented = isImplemented;
                 }
 
-                public void AddFilter(IFilter<SendContext<TMessage>> filter)
+                public void AddFilter(IFilter<T> filter)
                 {
-                    var splitFilter = new SplitFilter<PublishContext<TMessage>, SendContext<TMessage>>(filter, MergeContext, FilterContext);
-
-                    _builder.AddFilter(splitFilter);
+                    _builder.AddFilter(filter);
                 }
 
-                public bool IsDelegated => _builder.IsDelegated;
-                public bool IsImplemented => _builder.IsImplemented;
+                public bool IsDelegated { get; }
 
-                public ITopologyPipeBuilder<SendContext<TMessage>> CreateDelegatedBuilder()
+                public bool IsImplemented { get; }
+
+                public ITopologyPipeBuilder<T> CreateDelegatedBuilder()
                 {
-                    return new ChildBuilder<SendContext<TMessage>>(this, IsImplemented, true);
-                }
-
-                static SendContext<TMessage> FilterContext(PublishContext<TMessage> context)
-                {
-                    return context;
-                }
-
-                static PublishContext<TMessage> MergeContext(PublishContext<TMessage> input, SendContext context)
-                {
-                    return context.GetPayload<PublishContext<TMessage>>();
-                }
-
-
-                class ChildBuilder<T> :
-                    ITopologyPipeBuilder<T>
-                    where T : class, PipeContext
-                {
-                    readonly ITopologyPipeBuilder<T> _builder;
-
-                    public ChildBuilder(ITopologyPipeBuilder<T> builder, bool isImplemented, bool isDelegated)
-                    {
-                        _builder = builder;
-
-                        IsDelegated = isDelegated;
-                        IsImplemented = isImplemented;
-                    }
-
-                    public void AddFilter(IFilter<T> filter)
-                    {
-                        _builder.AddFilter(filter);
-                    }
-
-                    public bool IsDelegated { get; }
-
-                    public bool IsImplemented { get; }
-
-                    public ITopologyPipeBuilder<T> CreateDelegatedBuilder()
-                    {
-                        return new ChildBuilder<T>(this, IsImplemented, true);
-                    }
+                    return new ChildBuilder<T>(this, IsImplemented, true);
                 }
             }
         }

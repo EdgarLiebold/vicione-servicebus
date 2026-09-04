@@ -1,15 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
+    <Nullable>annotations</Nullable>
     <!-- The framework of this project is the consumer surface of the package: an analyzer package
          carries no lib/ folder, so the framework group of its nuspec decides which projects may
          reference it. Directory.Build.targets grants that exception by path; see docs/build.md for
-         the rule and record-0097 for the pack comparison behind it.
+         the rule and its package-content verification.
 
-         No LangVersion and no WarningLevel: EnableDefaultCompileItems is off, this project compiles
-         no source at all, and a compiler setting on a project that compiles nothing says something
-         about a compilation that never happens. -->
+         EnableDefaultCompileItems is off, but the SDK still compiles generated assembly metadata.
+         netstandard2.0 otherwise selects C# 7.3, which cannot accept the repository nullable mode;
+         "latest" follows the installed stable SDK and is not a language-version pin. -->
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
 
     <!-- This project carries no logic. It exists so that the analyzer assembly and the code fix
          assembly, which must not live together, still ship as the one package they always were. -->
@@ -22,8 +27,6 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeSymbols>false</IncludeSymbols>
     <EmbedUntrackedSources>false</EmbedUntrackedSources>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-
     <Authors>Remco Blok, $(Authors)</Authors>
     <PackageTags>ViciOne.ServiceBus</PackageTags>
     <Description>$(Description)</Description>

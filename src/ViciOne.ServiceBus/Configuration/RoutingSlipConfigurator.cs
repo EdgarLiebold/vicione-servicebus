@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Courier.Contracts;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RoutingSlipConfigurator :
+    IRoutingSlipConfigurator,
+    IBuildPipeConfigurator<ConsumeContext<RoutingSlip>>
 {
-    using System.Collections.Generic;
-    using Courier.Contracts;
+    readonly IBuildPipeConfigurator<ConsumeContext<RoutingSlip>> _configurator;
 
-
-    public class RoutingSlipConfigurator :
-        IRoutingSlipConfigurator,
-        IBuildPipeConfigurator<ConsumeContext<RoutingSlip>>
+    public RoutingSlipConfigurator()
     {
-        readonly IBuildPipeConfigurator<ConsumeContext<RoutingSlip>> _configurator;
+        _configurator = new PipeConfigurator<ConsumeContext<RoutingSlip>>();
+    }
 
-        public RoutingSlipConfigurator()
-        {
-            _configurator = new PipeConfigurator<ConsumeContext<RoutingSlip>>();
-        }
+    public IPipe<ConsumeContext<RoutingSlip>> Build()
+    {
+        return _configurator.Build();
+    }
 
-        public IPipe<ConsumeContext<RoutingSlip>> Build()
-        {
-            return _configurator.Build();
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _configurator.Validate();
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            return _configurator.Validate();
-        }
-
-        public void AddPipeSpecification(IPipeSpecification<ConsumeContext<RoutingSlip>> specification)
-        {
-            _configurator.AddPipeSpecification(specification);
-        }
+    public void AddPipeSpecification(IPipeSpecification<ConsumeContext<RoutingSlip>> specification)
+    {
+        _configurator.AddPipeSpecification(specification);
     }
 }

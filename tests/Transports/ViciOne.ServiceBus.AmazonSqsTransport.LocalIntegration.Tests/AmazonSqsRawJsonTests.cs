@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
 using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 public sealed class AmazonSqsRawJsonTests
 {

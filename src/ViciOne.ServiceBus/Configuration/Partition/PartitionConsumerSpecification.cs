@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PartitionConsumerSpecification<TConsumer> :
+    IPipeSpecification<ConsumerConsumeContext<TConsumer>>
+    where TConsumer : class
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
+    readonly PartitionKeyProvider<ConsumerConsumeContext<TConsumer>> _keyProvider;
+    readonly IPartitioner _partitioner;
 
-
-    public class PartitionConsumerSpecification<TConsumer> :
-        IPipeSpecification<ConsumerConsumeContext<TConsumer>>
-        where TConsumer : class
+    public PartitionConsumerSpecification(IPartitioner partitioner, PartitionKeyProvider<ConsumerConsumeContext<TConsumer>> keyProvider)
     {
-        readonly PartitionKeyProvider<ConsumerConsumeContext<TConsumer>> _keyProvider;
-        readonly IPartitioner _partitioner;
+        if (partitioner == null)
+            throw new ArgumentNullException(nameof(partitioner));
+        if (keyProvider == null)
+            throw new ArgumentNullException(nameof(keyProvider));
 
-        public PartitionConsumerSpecification(IPartitioner partitioner, PartitionKeyProvider<ConsumerConsumeContext<TConsumer>> keyProvider)
-        {
-            if (partitioner == null)
-                throw new ArgumentNullException(nameof(partitioner));
-            if (keyProvider == null)
-                throw new ArgumentNullException(nameof(keyProvider));
+        _partitioner = partitioner;
+        _keyProvider = keyProvider;
+    }
 
-            _partitioner = partitioner;
-            _keyProvider = keyProvider;
-        }
+    public void Apply(IPipeBuilder<ConsumerConsumeContext<TConsumer>> builder)
+    {
+        builder.AddFilter(new PartitionFilter<ConsumerConsumeContext<TConsumer>>(_keyProvider, _partitioner));
+    }
 
-        public void Apply(IPipeBuilder<ConsumerConsumeContext<TConsumer>> builder)
-        {
-            builder.AddFilter(new PartitionFilter<ConsumerConsumeContext<TConsumer>>(_keyProvider, _partitioner));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_keyProvider == null)
-                yield return this.Failure("KeyProvider", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_keyProvider == null)
+            yield return this.Failure("KeyProvider", "must not be null");
     }
 }

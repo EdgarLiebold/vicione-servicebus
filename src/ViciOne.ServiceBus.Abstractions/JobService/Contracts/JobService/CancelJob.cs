@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface CancelJob
 {
-    using System;
+    /// <summary>
+    /// The job identifier
+    /// </summary>
+    Guid JobId { get; }
 
-
-    public interface CancelJob
-    {
-        /// <summary>
-        /// The job identifier
-        /// </summary>
-        Guid JobId { get; }
-
-        /// <summary>
-        /// The reason for cancelling the job
-        /// </summary>
-        string? Reason { get; }
-    }
+    /// <summary>
+    /// The reason for cancelling the job
+    /// </summary>
+    string? Reason { get; }
 }

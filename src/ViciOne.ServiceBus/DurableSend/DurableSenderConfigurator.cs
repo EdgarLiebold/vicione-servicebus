@@ -1,11 +1,11 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.DurableSend;
-
 using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.ProviderAbstractions;
+
+#nullable enable
+
+namespace ViciOne.ServiceBus.DurableSend;
 
 internal sealed class DurableSenderConfigurator<TBus> :
     IDurableSenderConfigurator<TBus>,

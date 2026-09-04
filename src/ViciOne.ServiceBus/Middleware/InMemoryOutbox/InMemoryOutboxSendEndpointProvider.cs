@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
+public class InMemoryOutboxSendEndpointProvider :
+    ISendEndpointProvider,
+    IMessageRouteProvider
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly OutboxContext _outboxContext;
+    readonly ISendEndpointProvider _sendEndpointProvider;
 
-
-    public class InMemoryOutboxSendEndpointProvider :
-        ISendEndpointProvider,
-        IMessageRouteProvider
+    public InMemoryOutboxSendEndpointProvider(OutboxContext outboxContext, ISendEndpointProvider sendEndpointProvider)
     {
-        readonly OutboxContext _outboxContext;
-        readonly ISendEndpointProvider _sendEndpointProvider;
+        _outboxContext = outboxContext;
+        _sendEndpointProvider = sendEndpointProvider;
+    }
 
-        public InMemoryOutboxSendEndpointProvider(OutboxContext outboxContext, ISendEndpointProvider sendEndpointProvider)
-        {
-            _outboxContext = outboxContext;
-            _sendEndpointProvider = sendEndpointProvider;
-        }
+    public ConnectHandle ConnectSendObserver(ISendObserver observer)
+    {
+        return _sendEndpointProvider.ConnectSendObserver(observer);
+    }
 
-        public ConnectHandle ConnectSendObserver(ISendObserver observer)
-        {
-            return _sendEndpointProvider.ConnectSendObserver(observer);
-        }
+    IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_sendEndpointProvider);
 
-        IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_sendEndpointProvider);
+    public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
+    {
+        var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
 
-        public async Task<ISendEndpoint> GetSendEndpoint(Uri address)
-        {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(address).ConfigureAwait(false);
-
-            return new OutboxSendEndpoint(_outboxContext, endpoint);
-        }
+        return new OutboxSendEndpoint(_outboxContext, endpoint);
     }
 }

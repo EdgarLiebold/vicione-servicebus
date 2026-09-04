@@ -4,8 +4,6 @@ using Xunit;
 
 // The no-token overloads are part of the public contract exercised here; asynchronous
 // coordination points use the xUnit cancellation token or an explicit bounded timeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.Tests.Caching;
 
 public sealed class ResourceCacheContractTests

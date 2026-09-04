@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqHostConfigurator
 {
-    using System;
-    using System.Collections.Generic;
+    /// <summary>
+    /// Sets the username for the connection to ActiveMQ
+    /// </summary>
+    /// <param name="username"></param>
+    void Username(string username);
 
+    /// <summary>
+    /// Sets the password for the connection to ActiveMQ
+    /// </summary>
+    /// <param name="password"></param>
+    void Password(string password);
 
-    public interface IActiveMqHostConfigurator
-    {
-        /// <summary>
-        /// Sets the username for the connection to ActiveMQ
-        /// </summary>
-        /// <param name="username"></param>
-        void Username(string username);
+    void UseSsl(bool enabled = true);
 
-        /// <summary>
-        /// Sets the password for the connection to ActiveMQ
-        /// </summary>
-        /// <param name="password"></param>
-        void Password(string password);
+    /// <summary>
+    /// Sets a list of hosts to enable the failover transport
+    /// </summary>
+    /// <param name="hosts">Absolute broker endpoints matching the configured protocol and TLS mode.</param>
+    void FailoverHosts(params Uri[] hosts);
 
-        void UseSsl(bool enabled = true);
+    /// <summary>
+    /// Sets options on the underlying NMS transport
+    /// </summary>
+    /// <param name="options"></param>
+    void TransportOptions(IEnumerable<KeyValuePair<string, string>> options);
 
-        /// <summary>
-        /// Sets a list of hosts to enable the failover transport
-        /// </summary>
-        /// <param name="hosts">Absolute broker endpoints matching the configured protocol and TLS mode.</param>
-        void FailoverHosts(params Uri[] hosts);
+    /// <summary>
+    /// </summary>
+    void EnableOptimizeAcknowledge();
 
-        /// <summary>
-        /// Sets options on the underlying NMS transport
-        /// </summary>
-        /// <param name="options"></param>
-        void TransportOptions(IEnumerable<KeyValuePair<string, string>> options);
+    void SetPrefetchPolicy(int limit);
 
-        /// <summary>
-        /// </summary>
-        void EnableOptimizeAcknowledge();
+    void SetQueuePrefetchPolicy(int limit);
 
-        void SetPrefetchPolicy(int limit);
-
-        void SetQueuePrefetchPolicy(int limit);
-
-        /// <summary>
-        /// Previous versions has nms.AsyncSend enabled by default. This can result in message loss,
-        /// so now it's disabled by default. It can be enabled using this method, or by adding <see cref="TransportOptions"/>.
-        /// </summary>
-        void EnableAsyncSend();
-    }
+    /// <summary>
+    /// Enables nms.AsyncSend. It is disabled by default because broker failures can otherwise
+    /// result in message loss. It can also be enabled using <see cref="TransportOptions"/>.
+    /// </summary>
+    void EnableAsyncSend();
 }

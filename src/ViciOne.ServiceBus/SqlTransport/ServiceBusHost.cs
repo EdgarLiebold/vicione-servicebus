@@ -1,78 +1,76 @@
+using System;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public class SqlHost :
+    BaseHost,
+    ISqlHost
 {
-    using System;
-    using Configuration;
-    using Transports;
+    readonly ISqlHostConfiguration _hostConfiguration;
 
-
-    public class SqlHost :
-        BaseHost,
-        ISqlHost
+    public SqlHost(ISqlHostConfiguration hostConfiguration, ISqlBusTopology busTopology)
+        : base(hostConfiguration, busTopology)
     {
-        readonly ISqlHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        Topology = busTopology;
+    }
 
-        public SqlHost(ISqlHostConfiguration hostConfiguration, ISqlBusTopology busTopology)
-            : base(hostConfiguration, busTopology)
+    public new ISqlBusTopology Topology { get; }
+
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
+    {
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+    }
+
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
+    {
+        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
+        Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = null)
+    {
+        var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
+
+        return ConnectReceiveEndpoint(queueName, configurator =>
         {
-            _hostConfiguration = hostConfiguration;
-            Topology = busTopology;
-        }
+            _hostConfiguration.ApplyEndpointDefinition(configurator, definition);
+            configureEndpoint?.Invoke(configurator);
+        });
+    }
 
-        public new ISqlBusTopology Topology { get; }
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator>? configure = null)
+    {
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
-        public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
-            Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
+        var configuration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName, configure);
+
+        configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
+
+        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+
+        configuration.Build(this);
+
+        return ReceiveEndpoints.Start(configuration.Settings.QueueName);
+    }
+
+    protected override void Probe(ProbeContext context)
+    {
+        context.Set(new
         {
-            return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
-        }
+            Type = "Database Transport",
+            _hostConfiguration.HostAddress,
+        });
 
-        public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator>? configureEndpoint = null)
-        {
-            return ConnectReceiveEndpoint(queueName, configureEndpoint);
-        }
+        _hostConfiguration.ConnectionContextSupervisor.Probe(context);
+    }
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter = null,
-            Action<ISqlReceiveEndpointConfigurator>? configureEndpoint = null)
-        {
-            var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
-
-            return ConnectReceiveEndpoint(queueName, configurator =>
-            {
-                _hostConfiguration.ApplyEndpointDefinition(configurator, definition);
-                configureEndpoint?.Invoke(configurator);
-            });
-        }
-
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<ISqlReceiveEndpointConfigurator>? configure = null)
-        {
-            LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
-
-            var configuration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName, configure);
-
-            configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
-
-            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
-
-            configuration.Build(this);
-
-            return ReceiveEndpoints.Start(configuration.Settings.QueueName);
-        }
-
-        protected override void Probe(ProbeContext context)
-        {
-            context.Set(new
-            {
-                Type = "Database Transport",
-                _hostConfiguration.HostAddress,
-            });
-
-            _hostConfiguration.ConnectionContextSupervisor.Probe(context);
-        }
-
-        protected override IAgent[] GetAgentHandles()
-        {
-            return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };
-        }
+    protected override IAgent[] GetAgentHandles()
+    {
+        return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };
     }
 }

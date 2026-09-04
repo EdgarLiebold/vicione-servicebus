@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IDefinition
 {
-    public interface IDefinition
-    {
-        int? ConcurrentMessageLimit { get; }
-    }
+    int? ConcurrentMessageLimit { get; }
 }

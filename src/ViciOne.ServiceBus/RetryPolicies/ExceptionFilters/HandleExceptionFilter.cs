@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters
+using System;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
+
+public class HandleExceptionFilter :
+    IExceptionFilter
 {
-    using System;
-    using System.Linq;
+    readonly Type[] _exceptionTypes;
 
-
-    public class HandleExceptionFilter :
-        IExceptionFilter
+    public HandleExceptionFilter(params Type[] exceptionTypes)
     {
-        readonly Type[] _exceptionTypes;
+        _exceptionTypes = exceptionTypes;
+    }
 
-        public HandleExceptionFilter(params Type[] exceptionTypes)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("selected");
+        scope.Set(new { ExceptionTypes = _exceptionTypes.Select(x => x.Name).ToArray() });
+    }
+
+    bool IExceptionFilter.Match(Exception exception)
+    {
+        for (var i = 0; i < _exceptionTypes.Length; i++)
         {
-            _exceptionTypes = exceptionTypes;
+            if (_exceptionTypes[i].IsInstanceOfType(exception))
+                return true;
         }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("selected");
-            scope.Set(new { ExceptionTypes = _exceptionTypes.Select(x => x.Name).ToArray() });
-        }
-
-        bool IExceptionFilter.Match(Exception exception)
-        {
-            for (var i = 0; i < _exceptionTypes.Length; i++)
-            {
-                if (_exceptionTypes[i].IsInstanceOfType(exception))
-                    return true;
-            }
-
-            return false;
-        }
+        return false;
     }
 }

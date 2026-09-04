@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public interface ConnectionContext :
     PipeContext

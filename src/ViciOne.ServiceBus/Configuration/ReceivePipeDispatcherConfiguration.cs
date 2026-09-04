@@ -1,47 +1,45 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ReceivePipeDispatcherConfiguration :
+    ReceiverConfiguration,
+    IReceiveEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using Transports;
+    readonly IReceiveEndpointConfiguration _endpointConfiguration;
+    readonly IHostConfiguration _hostConfiguration;
 
-
-    public class ReceivePipeDispatcherConfiguration :
-        ReceiverConfiguration,
-        IReceiveEndpointConfigurator
+    public ReceivePipeDispatcherConfiguration(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration endpointConfiguration)
+        : base(endpointConfiguration)
     {
-        readonly IReceiveEndpointConfiguration _endpointConfiguration;
-        readonly IHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        _endpointConfiguration = endpointConfiguration;
+    }
 
-        public ReceivePipeDispatcherConfiguration(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration endpointConfiguration)
-            : base(endpointConfiguration)
+    public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
+    {
+        return _endpointConfiguration.ConnectReceiveEndpointObserver(observer);
+    }
+
+    public IReceivePipeDispatcher Build()
+    {
+        IReadOnlyList<ValidationResult> result = Validate().ThrowIfContainsFailure($"{GetType().Name} configuration is invalid:");
+
+        try
         {
-            _hostConfiguration = hostConfiguration;
-            _endpointConfiguration = endpointConfiguration;
+            var builder = new ReceiveEndpointBuilder(_endpointConfiguration);
+
+            foreach (var specification in Specifications)
+                specification.Configure(builder);
+
+            return new ReceivePipeDispatcher(_endpointConfiguration.CreateReceivePipe(), _endpointConfiguration.ReceiveObservers, _hostConfiguration,
+                _endpointConfiguration.InputAddress);
         }
-
-        public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
+        catch (Exception ex)
         {
-            return _endpointConfiguration.ConnectReceiveEndpointObserver(observer);
-        }
-
-        public IReceivePipeDispatcher Build()
-        {
-            IReadOnlyList<ValidationResult> result = Validate().ThrowIfContainsFailure($"{GetType().Name} configuration is invalid:");
-
-            try
-            {
-                var builder = new ReceiveEndpointBuilder(_endpointConfiguration);
-
-                foreach (var specification in Specifications)
-                    specification.Configure(builder);
-
-                return new ReceivePipeDispatcher(_endpointConfiguration.CreateReceivePipe(), _endpointConfiguration.ReceiveObservers, _hostConfiguration,
-                    _endpointConfiguration.InputAddress);
-            }
-            catch (Exception ex)
-            {
-                throw new ConfigurationException(result, "An exception occurred during mediator creation", ex);
-            }
+            throw new ConfigurationException(result, "An exception occurred during mediator creation", ex);
         }
     }
 }

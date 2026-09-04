@@ -1,10 +1,10 @@
+using System;
+using ViciOne.ServiceBus.MessageJournal;
+using ViciOne.ServiceBus.MessageJournal.Observers;
+using ViciOne.ServiceBus.Util;
+
 #nullable enable
 namespace ViciOne.ServiceBus;
-
-using System;
-using MessageJournal;
-using MessageJournal.Observers;
-using Util;
 
 public static class MessageJournalConfigurationExtensions
 {

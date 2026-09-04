@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer
+using System;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
+
+public class SqlServerSqlHostConfigurator :
+    SqlHostConfigurator,
+    ISqlServerSqlHostConfigurator
 {
-    using System;
-    using Configuration;
+    readonly SqlServerSqlHostSettings _settings;
 
-
-    public class SqlServerSqlHostConfigurator :
-        SqlHostConfigurator,
-        ISqlServerSqlHostConfigurator
+    public SqlServerSqlHostConfigurator(SqlServerSqlHostSettings settings)
+        : base(settings)
     {
-        readonly SqlServerSqlHostSettings _settings;
+        _settings = settings;
+    }
 
-        public SqlServerSqlHostConfigurator(SqlServerSqlHostSettings settings)
-            : base(settings)
-        {
-            _settings = settings;
-        }
+    public SqlServerSqlHostConfigurator(Uri hostAddress)
+        : this(new SqlServerSqlHostSettings(hostAddress))
+    {
+    }
 
-        public SqlServerSqlHostConfigurator(Uri hostAddress)
-            : this(new SqlServerSqlHostSettings(hostAddress))
-        {
-        }
+    public SqlServerSqlHostConfigurator(SqlTransportOptions options)
+        : this(new SqlServerSqlHostSettings(options))
+    {
+    }
 
-        public SqlServerSqlHostConfigurator(SqlTransportOptions options)
-            : this(new SqlServerSqlHostSettings(options))
-        {
-        }
+    public SqlServerSqlHostConfigurator(string connectionString)
+        : this(new SqlServerSqlHostSettings(connectionString))
+    {
+    }
 
-        public SqlServerSqlHostConfigurator(string connectionString)
-            : this(new SqlServerSqlHostSettings(connectionString))
-        {
-        }
+    public SqlHostSettings Settings => _settings;
 
-        public SqlHostSettings Settings => _settings;
-
-        public override string? ConnectionString
-        {
-            set => _settings.ConnectionString = value;
-        }
+    public override string? ConnectionString
+    {
+        set => _settings.ConnectionString = value;
     }
 }

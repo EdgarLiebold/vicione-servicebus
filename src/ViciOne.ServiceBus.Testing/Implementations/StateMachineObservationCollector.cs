@@ -1,9 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Testing.Implementations;
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+#nullable enable
+namespace ViciOne.ServiceBus.Testing.Implementations;
 
 sealed class StateMachineObservationCollector<TInstance> :
     IEventObserver<TInstance>,

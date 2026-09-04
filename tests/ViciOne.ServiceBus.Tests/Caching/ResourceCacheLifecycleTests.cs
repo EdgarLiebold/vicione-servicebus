@@ -4,8 +4,6 @@ using Xunit;
 
 // Disposal cancellation and the no-token overloads are part of the cache contract exercised here;
 // every potentially blocking assertion is independently bounded by OperationTimeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.Tests.Caching;
 
 public sealed class ResourceCacheLifecycleTests
@@ -20,16 +18,16 @@ public sealed class ResourceCacheLifecycleTests
             expirationMode: ResourceCacheExpirationMode.Absolute);
         IResourceCacheIndex<string, TrackedResource> index = cache.AddIndex("id", value => value.Id);
         var value = new TrackedResource("one");
-        await cache.AddAsync(value);
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(40));
-        Assert.Same(value, await index.GetAsync("one"));
+        Assert.Same(value, await index.GetAsync("one", TestContext.Current.CancellationToken));
         value.Use();
         time.Advance(TimeSpan.FromSeconds(21));
 
-        await cache.CleanupExpiredAsync();
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(1, value.AsyncDisposeCount);
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one"));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -39,13 +37,13 @@ public sealed class ResourceCacheLifecycleTests
         IResourceCacheIndex<string, TrackedResource> index = cache.AddIndex("id", value => value.Id);
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult<TrackedResource>(null!)));
+            await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult<TrackedResource>(null!), TestContext.Current.CancellationToken));
 
         Assert.Contains("returned null", exception.Message, StringComparison.Ordinal);
         Assert.Equal(1, cache.Statistics.CreationFaults);
         Assert.Equal(0, cache.Statistics.PendingCreations);
         var expected = new TrackedResource("one");
-        Assert.Same(expected, await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected)));
+        Assert.Same(expected, await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected), TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -55,18 +53,18 @@ public sealed class ResourceCacheLifecycleTests
         IResourceCacheIndex<string, TrackedResource> idIndex = cache.AddIndex("id", value => value.Id);
         IResourceCacheIndex<string, TrackedResource> groupIndex = cache.AddIndex("group", value => value.Group);
         var existing = new TrackedResource("existing", "shared");
-        await cache.AddAsync(existing);
+        await cache.AddAsync(existing, TestContext.Current.CancellationToken);
         var rejected = new TrackedResource("new", "shared");
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await idIndex.GetOrAddAsync("new", (_, _) => ValueTask.FromResult(rejected)));
+            await idIndex.GetOrAddAsync("new", (_, _) => ValueTask.FromResult(rejected), TestContext.Current.CancellationToken));
 
         Assert.Contains("group", exception.Message, StringComparison.Ordinal);
         Assert.Equal(1, rejected.AsyncDisposeCount);
         Assert.Equal(0, existing.AsyncDisposeCount);
-        Assert.Same(existing, await idIndex.GetAsync("existing"));
-        Assert.Same(existing, await groupIndex.GetAsync("shared"));
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await idIndex.GetAsync("new"));
+        Assert.Same(existing, await idIndex.GetAsync("existing", TestContext.Current.CancellationToken));
+        Assert.Same(existing, await groupIndex.GetAsync("shared", TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await idIndex.GetAsync("new", TestContext.Current.CancellationToken));
         Assert.Equal(1, cache.Statistics.Count);
         Assert.Equal(1, cache.Statistics.CreationFaults);
     }
@@ -79,7 +77,7 @@ public sealed class ResourceCacheLifecycleTests
         var rejected = new TrackedResource("different");
 
         await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await index.GetOrAddAsync("requested", (_, _) => ValueTask.FromResult(rejected)));
+            await index.GetOrAddAsync("requested", (_, _) => ValueTask.FromResult(rejected), TestContext.Current.CancellationToken));
 
         Assert.Equal(1, rejected.AsyncDisposeCount);
         Assert.Equal(0, rejected.SyncDisposeCount);
@@ -95,19 +93,19 @@ public sealed class ResourceCacheLifecycleTests
         cache.AddIndex("group", value => value.Group);
         var expired = new TrackedResource("expired", "expired-group");
         var retained = new TrackedResource("retained", "retained-group");
-        await cache.AddAsync(expired);
-        await cache.AddAsync(retained);
+        await cache.AddAsync(expired, TestContext.Current.CancellationToken);
+        await cache.AddAsync(retained, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(30));
-        await idIndex.GetAsync("retained");
+        await idIndex.GetAsync("retained", TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(31));
         var rejected = new TrackedResource("retained", "new-group");
 
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await cache.AddAsync(rejected));
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await cache.AddAsync(rejected, TestContext.Current.CancellationToken));
 
         Assert.Equal(1, expired.AsyncDisposeCount);
         Assert.Equal(0, retained.AsyncDisposeCount);
         Assert.Equal(0, rejected.AsyncDisposeCount);
-        Assert.Same(retained, await idIndex.GetAsync("retained"));
+        Assert.Same(retained, await idIndex.GetAsync("retained", TestContext.Current.CancellationToken));
         Assert.Equal(1, cache.Statistics.Count);
     }
 
@@ -119,9 +117,7 @@ public sealed class ResourceCacheLifecycleTests
         var started = NewSignal();
         var factoryExited = NewSignal();
 
-        Task<TrackedResource> pending = index.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<TrackedResource> pending = index.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 started.TrySetResult();
                 try
@@ -133,14 +129,14 @@ public sealed class ResourceCacheLifecycleTests
                 {
                     factoryExited.TrySetResult();
                 }
-            }).AsTask();
-        await started.Task.WaitAsync(OperationTimeout);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Task dispose = cache.DisposeAsync().AsTask();
 
-        await factoryExited.Task.WaitAsync(OperationTimeout);
+        await factoryExited.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
-        await dispose.WaitAsync(OperationTimeout);
+        await dispose.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Assert.Throws<ObjectDisposedException>(() => cache.AddIndex("late", value => value.Id));
     }
 
@@ -153,19 +149,17 @@ public sealed class ResourceCacheLifecycleTests
         var release = NewSignal<TrackedResource>();
         var produced = new TrackedResource("one");
 
-        Task<TrackedResource> pending = index.GetOrAddAsync(
-            "one",
-            async (_, _) =>
+        Task<TrackedResource> pending = index.GetOrAddAsync("one", async (_, _) =>
             {
                 started.TrySetResult();
                 return await release.Task;
-            }).AsTask();
-        await started.Task.WaitAsync(OperationTimeout);
-        Task clear = cache.ClearAsync().AsTask();
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        Task clear = cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
 
         release.TrySetResult(produced);
-        await clear.WaitAsync(OperationTimeout);
+        await clear.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(1, produced.AsyncDisposeCount);
         Assert.Equal(0, cache.Statistics.Count);
@@ -177,7 +171,7 @@ public sealed class ResourceCacheLifecycleTests
     {
         var cache = CreateCache();
         var value = new TrackedResource("one");
-        await cache.AddAsync(value);
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
 
         await cache.DisposeAsync();
 
@@ -192,7 +186,7 @@ public sealed class ResourceCacheLifecycleTests
         cache.AddIndex<string>("id", value => throw new ProjectionException(value.Id));
         var value = new TrackedResource("one");
 
-        ProjectionException exception = await Assert.ThrowsAsync<ProjectionException>(async () => await cache.AddAsync(value));
+        ProjectionException exception = await Assert.ThrowsAsync<ProjectionException>(async () => await cache.AddAsync(value, TestContext.Current.CancellationToken));
 
         Assert.Equal("one", exception.Message);
         Assert.Equal(0, value.AsyncDisposeCount);
@@ -207,7 +201,7 @@ public sealed class ResourceCacheLifecycleTests
         cache.AddIndex<string>("nullable", _ => null!);
         var value = new TrackedResource("one");
 
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await cache.AddAsync(value));
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await cache.AddAsync(value, TestContext.Current.CancellationToken));
 
         Assert.Contains("null key", exception.Message, StringComparison.Ordinal);
         Assert.Equal(0, cache.Statistics.Count);

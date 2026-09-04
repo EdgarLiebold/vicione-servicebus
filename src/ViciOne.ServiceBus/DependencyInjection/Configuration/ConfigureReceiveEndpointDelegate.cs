@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConfigureReceiveEndpointDelegate :
+    IConfigureReceiveEndpoint
 {
-    using System;
+    readonly ConfigureEndpointsCallback _callback;
 
-
-    public class ConfigureReceiveEndpointDelegate :
-        IConfigureReceiveEndpoint
+    public ConfigureReceiveEndpointDelegate(ConfigureEndpointsCallback callback)
     {
-        readonly ConfigureEndpointsCallback _callback;
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
 
-        public ConfigureReceiveEndpointDelegate(ConfigureEndpointsCallback callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
+        _callback = callback;
+    }
 
-            _callback = callback;
-        }
-
-        public void Configure(string name, IReceiveEndpointConfigurator configurator)
-        {
-            _callback(name, configurator);
-        }
+    public void Configure(string name, IReceiveEndpointConfigurator configurator)
+    {
+        _callback(name, configurator);
     }
 }

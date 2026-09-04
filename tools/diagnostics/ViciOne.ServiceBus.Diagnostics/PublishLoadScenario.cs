@@ -1,13 +1,11 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.RabbitMqTransport;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// Publishes a large number of messages concurrently and waits until every one of them is consumed.
 /// <para>

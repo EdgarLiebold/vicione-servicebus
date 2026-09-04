@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class ImmediateRetryPolicyContext<TContext> :
+    BaseRetryPolicyContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
+    readonly ImmediateRetryPolicy _policy;
 
-
-    public class ImmediateRetryPolicyContext<TContext> :
-        BaseRetryPolicyContext<TContext>
-        where TContext : class, PipeContext
+    public ImmediateRetryPolicyContext(ImmediateRetryPolicy policy, TContext context)
+        : base(policy, context)
     {
-        readonly ImmediateRetryPolicy _policy;
+        _policy = policy;
+    }
 
-        public ImmediateRetryPolicyContext(ImmediateRetryPolicy policy, TContext context)
-            : base(policy, context)
-        {
-            _policy = policy;
-        }
-
-        protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
-        {
-            return new ImmediateRetryContext<TContext>(_policy, Context, exception, 0, cancellationToken);
-        }
+    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
+    {
+        return new ImmediateRetryContext<TContext>(_policy, Context, exception, 0, cancellationToken);
     }
 }

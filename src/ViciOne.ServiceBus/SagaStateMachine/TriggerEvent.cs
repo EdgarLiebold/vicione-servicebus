@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class TriggerEvent :
+    Event
 {
-    using System;
+    readonly string _name;
 
-
-    public class TriggerEvent :
-        Event
+    public TriggerEvent(string name)
     {
-        readonly string _name;
+        _name = name;
+    }
 
-        public TriggerEvent(string name)
+    public string Name => _name;
+
+    public virtual void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this, x =>
         {
-            _name = name;
-        }
+        });
+    }
 
-        public string Name => _name;
+    public virtual void Probe(ProbeContext context)
+    {
+        context.Add("name", _name);
+    }
 
-        public virtual void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this, x =>
-            {
-            });
-        }
+    public int CompareTo(Event other)
+    {
+        return string.Compare(_name, other.Name, StringComparison.Ordinal);
+    }
 
-        public virtual void Probe(ProbeContext context)
-        {
-            context.Add("name", _name);
-        }
+    public bool Equals(TriggerEvent other)
+    {
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return Equals(other._name, _name);
+    }
 
-        public int CompareTo(Event other)
-        {
-            return string.Compare(_name, other.Name, StringComparison.Ordinal);
-        }
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != typeof(TriggerEvent))
+            return false;
+        return Equals((TriggerEvent)obj);
+    }
 
-        public bool Equals(TriggerEvent other)
-        {
-            if (ReferenceEquals(null, other))
-                return false;
-            if (ReferenceEquals(this, other))
-                return true;
-            return Equals(other._name, _name);
-        }
+    public override int GetHashCode()
+    {
+        return _name?.GetHashCode() ?? 0;
+    }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-                return false;
-            if (ReferenceEquals(this, obj))
-                return true;
-            if (obj.GetType() != typeof(TriggerEvent))
-                return false;
-            return Equals((TriggerEvent)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return _name?.GetHashCode() ?? 0;
-        }
-
-        public override string ToString()
-        {
-            return $"{_name} (Event)";
-        }
+    public override string ToString()
+    {
+        return $"{_name} (Event)";
     }
 }

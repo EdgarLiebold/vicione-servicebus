@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+using ViciOne.ServiceBus.SqlTransport.Topology;
+
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public interface ISqlConsumeTopologySpecification :
+    ISpecification
 {
-    using Topology;
-
-
-    public interface ISqlConsumeTopologySpecification :
-        ISpecification
-    {
-        void Apply(IReceiveEndpointBrokerTopologyBuilder builder);
-    }
+    void Apply(IReceiveEndpointBrokerTopologyBuilder builder);
 }

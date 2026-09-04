@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class ExponentialRetryContext<TContext> :
+    BaseRetryContext<TContext>,
+    RetryContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
+    readonly TimeSpan _delay;
+    readonly ExponentialRetryPolicy _policy;
 
-
-    public class ExponentialRetryContext<TContext> :
-        BaseRetryContext<TContext>,
-        RetryContext<TContext>
-        where TContext : class, PipeContext
+    public ExponentialRetryContext(ExponentialRetryPolicy policy, TContext context, Exception exception, int retryCount,
+        CancellationToken cancellationToken)
+        : base(context, exception, retryCount, cancellationToken)
     {
-        readonly TimeSpan _delay;
-        readonly ExponentialRetryPolicy _policy;
+        _policy = policy;
+        _delay = policy.GetRetryInterval(retryCount);
+    }
 
-        public ExponentialRetryContext(ExponentialRetryPolicy policy, TContext context, Exception exception, int retryCount,
-            CancellationToken cancellationToken)
-            : base(context, exception, retryCount, cancellationToken)
-        {
-            _policy = policy;
-            _delay = policy.GetRetryInterval(retryCount);
-        }
+    public override TimeSpan? Delay => _delay;
 
-        public override TimeSpan? Delay => _delay;
+    bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
+    {
+        retryContext = new ExponentialRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
 
-        bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
-        {
-            retryContext = new ExponentialRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
-
-            return RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
-        }
+        return RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
     }
 }

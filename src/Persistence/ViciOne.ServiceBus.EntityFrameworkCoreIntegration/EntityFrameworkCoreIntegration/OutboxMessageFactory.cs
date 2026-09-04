@@ -1,9 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Collections.Generic;
-using Context;
+using ViciOne.ServiceBus.Context;
+
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 internal static class OutboxMessageFactory
 {

@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Diagnostics;
-
 #nullable enable
 
 using System;
@@ -10,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using ViciOne.ServiceBus.Serialization;
 
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// DI-owned V5 instrumentation for one typed bus. The host owns listeners, exporters, sampling,
 /// retention, RBAC and telemetry endpoints. Every observation path is exception-isolated so that

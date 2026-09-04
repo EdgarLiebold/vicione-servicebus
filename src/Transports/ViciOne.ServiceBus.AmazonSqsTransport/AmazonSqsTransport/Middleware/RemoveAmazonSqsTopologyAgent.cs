@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Middleware;
-using Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 
 public sealed class RemoveAmazonSqsTopologyAgent :
     Agent

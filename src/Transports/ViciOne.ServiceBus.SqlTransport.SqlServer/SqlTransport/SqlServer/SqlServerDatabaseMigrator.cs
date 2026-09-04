@@ -1,33 +1,32 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
+
+public class SqlServerDatabaseMigrator :
+    ISqlTransportDatabaseMigrator
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.Extensions.Logging;
+    const string DbExistsSql = @"SELECT [database_id] from [sys].[databases] WHERE name = '{0}'";
+    const string DbCreateSql = @"CREATE DATABASE [{0}]";
 
-
-    public class SqlServerDatabaseMigrator :
-        ISqlTransportDatabaseMigrator
-    {
-        const string DbExistsSql = @"SELECT [database_id] from [sys].[databases] WHERE name = '{0}'";
-        const string DbCreateSql = @"CREATE DATABASE [{0}]";
-
-        const string SchemaCreateSql = @"USE [{0}];
+    const string SchemaCreateSql = @"USE [{0}];
 IF (SCHEMA_ID('{1}') IS NULL)
 BEGIN
     EXEC('CREATE SCHEMA [{1}] AUTHORIZATION [dbo]')
 END";
 
-        const string DropSql = @"USE master;
+    const string DropSql = @"USE master;
 ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 DROP DATABASE [{0}];";
 
-        const string RoleExistsSql = @"SELECT DATABASE_PRINCIPAL_ID('{0}')";
-        const string CreateRoleSql = @"CREATE ROLE {0} AUTHORIZATION [dbo]";
+    const string RoleExistsSql = @"SELECT DATABASE_PRINCIPAL_ID('{0}')";
+    const string CreateRoleSql = @"CREATE ROLE {0} AUTHORIZATION [dbo]";
 
-        const string GrantRoleSql = @"IF NOT EXISTS (
+    const string GrantRoleSql = @"IF NOT EXISTS (
     SELECT 1
     FROM sys.schemas s
     INNER JOIN sys.database_principals p ON s.principal_id = p.principal_id
@@ -53,20 +52,20 @@ BEGIN
 END
 ";
 
-        const string LoginExistsSql = @"SELECT 1 FROM sys.sql_logins WHERE [name] = @Username";
-        const string CreateLoginSql = @"
+    const string LoginExistsSql = @"SELECT 1 FROM sys.sql_logins WHERE [name] = @Username";
+    const string CreateLoginSql = @"
 DECLARE @statement nvarchar(max) = N'CREATE LOGIN ' + QUOTENAME(@Username)
     + N' WITH PASSWORD = ' + QUOTENAME(@Password, '''') + N';';
 EXEC sys.sp_executesql @statement;";
 
-        const string CreateUserSql = @"
+    const string CreateUserSql = @"
 IF ORIGINAL_LOGIN() != '{1}' OR CURRENT_USER = '{1}'
 BEGIN
     CREATE USER [{1}] FOR LOGIN [{1}] WITH DEFAULT_SCHEMA = [{0}]
 END
 ";
 
-        const string IsRoleMemberSql = @"
+    const string IsRoleMemberSql = @"
 IF ORIGINAL_LOGIN() = '{1}' AND CURRENT_USER = 'dbo'
 BEGIN
     SELECT 1
@@ -77,7 +76,7 @@ BEGIN
 END
 ";
 
-        const string AddRoleMemberSql = @"USE [{0}];
+    const string AddRoleMemberSql = @"USE [{0}];
 IF ORIGINAL_LOGIN() = '{1}' AND CURRENT_USER = 'dbo'
 BEGIN
     EXEC sp_addrolemember '{2}', 'dbo';
@@ -88,7 +87,7 @@ BEGIN
 END
 ";
 
-        const string CreateInfrastructureSql = @"
+    const string CreateInfrastructureSql = @"
 IF OBJECT_ID('{0}.TopologySequence', 'SO') IS NULL
 BEGIN
     CREATE SEQUENCE [{0}].[TopologySequence] AS BIGINT START WITH 1 INCREMENT BY 1
@@ -374,7 +373,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnCreateQueue = @"
+    const string SqlFnCreateQueue = @"
 CREATE OR ALTER PROCEDURE {0}.CreateQueue
     @QueueName nvarchar(256),
     @AutoDelete integer = NULL
@@ -390,7 +389,7 @@ BEGIN
     SELECT TOP 1 Id FROM @temp_table
 END";
 
-        const string SqlFnCreateQueueV2 = @"
+    const string SqlFnCreateQueueV2 = @"
 CREATE OR ALTER PROCEDURE {0}.CreateQueueV2
     @QueueName nvarchar(256),
     @AutoDelete integer = NULL,
@@ -423,7 +422,7 @@ BEGIN
     SELECT TOP 1 Id FROM @QueueTable WHERE Type = 1;
 END";
 
-        const string SqlFnCreateTopic = @"
+    const string SqlFnCreateTopic = @"
 CREATE OR ALTER PROCEDURE {0}.CreateTopic
     @TopicName nvarchar(256)
 AS
@@ -449,7 +448,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnCreateTopicSubscription = @"
+    const string SqlFnCreateTopicSubscription = @"
 CREATE OR ALTER PROCEDURE {0}.CreateTopicSubscription
     @SourceTopicName nvarchar(256),
     @DestinationTopicName nvarchar(256),
@@ -500,7 +499,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnCreateQueueSubscription = @"
+    const string SqlFnCreateQueueSubscription = @"
 CREATE OR ALTER PROCEDURE {0}.CreateQueueSubscription
     @SourceTopicName nvarchar(256),
     @DestinationQueueName nvarchar(256),
@@ -551,7 +550,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnPublish = @"
+    const string SqlFnPublish = @"
 CREATE OR ALTER PROCEDURE {0}.PublishMessage
     @entityName varchar(256),
     @priority int = 100,
@@ -612,7 +611,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnPublishV2 = @"
+    const string SqlFnPublishV2 = @"
 CREATE OR ALTER PROCEDURE {0}.PublishMessageV2
     @entityName varchar(256),
     @priority int = 100,
@@ -727,7 +726,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnSend = @"
+    const string SqlFnSend = @"
 CREATE OR ALTER PROCEDURE {0}.SendMessage
     @entityName varchar(256),
     @priority int = 100,
@@ -789,7 +788,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnSendV2 = @"
+    const string SqlFnSendV2 = @"
 CREATE OR ALTER PROCEDURE {0}.SendMessageV2
     @entityName varchar(256),
     @priority int = 100,
@@ -866,7 +865,7 @@ BEGIN
 END;
 ";
 
-        const string SqlFnFetchMessages = @"
+    const string SqlFnFetchMessages = @"
 CREATE OR ALTER PROCEDURE {0}.FetchMessages
     @queueName varchar(256),
     @consumerId uniqueidentifier,
@@ -1020,7 +1019,7 @@ BEGIN
     SELECT * FROM @ResultTable;
 END";
 
-        const string SqlFnFetchMessagesPartitioned = @"
+    const string SqlFnFetchMessagesPartitioned = @"
 CREATE OR ALTER PROCEDURE {0}.FetchMessagesPartitioned
     @queueName varchar(256),
     @consumerId uniqueidentifier,
@@ -1186,7 +1185,7 @@ BEGIN
     SELECT * FROM @ResultTable;
 END";
 
-        const string SqlFnDeleteMessage = @"
+    const string SqlFnDeleteMessage = @"
 CREATE OR ALTER PROCEDURE {0}.DeleteMessage
     @messageDeliveryId bigint,
     @lockId uniqueidentifier
@@ -1229,7 +1228,7 @@ BEGIN
     RETURN @outMessageDeliveryId;
 END";
 
-        const string SqlFnTouchQueue = @"
+    const string SqlFnTouchQueue = @"
 CREATE OR ALTER PROCEDURE {0}.TouchQueue
     @queueName varchar(256)
 AS
@@ -1252,7 +1251,7 @@ BEGIN
     SELECT @queueId;
 END";
 
-        const string SqlFnDeadLetterMessages = @"
+    const string SqlFnDeadLetterMessages = @"
 CREATE OR ALTER PROCEDURE {0}.DeadLetterMessages
     @queueName varchar(256),
     @messageCount int
@@ -1306,7 +1305,7 @@ BEGIN
     SELECT @vRowCount;
 END";
 
-        const string SqlFnPurgeQueue = @"
+    const string SqlFnPurgeQueue = @"
 CREATE OR ALTER PROCEDURE {0}.PurgeQueue
     @queueName varchar(256)
 AS
@@ -1332,7 +1331,7 @@ BEGIN
     SELECT COUNT(*) FROM @DeletedMessages
 END";
 
-        const string SqlFnDeleteScheduledMessage = @"
+    const string SqlFnDeleteScheduledMessage = @"
 CREATE OR ALTER PROCEDURE {0}.DeleteScheduledMessage
     @tokenId uniqueidentifier
 AS
@@ -1357,7 +1356,7 @@ BEGIN
 END
 ";
 
-        const string SqlFnRenewMessageLock = @"
+    const string SqlFnRenewMessageLock = @"
 CREATE OR ALTER PROCEDURE {0}.RenewMessageLock
     @messageDeliveryId bigint,
     @lockId uniqueidentifier,
@@ -1392,7 +1391,7 @@ BEGIN
     SELECT MessageDeliveryId FROM @updatedMessages;
 END";
 
-        const string SqlFnUnlockMessage = @"
+    const string SqlFnUnlockMessage = @"
 CREATE OR ALTER PROCEDURE {0}.UnlockMessage
     @messageDeliveryId bigint,
     @lockId uniqueidentifier,
@@ -1428,7 +1427,7 @@ BEGIN
     SELECT MessageDeliveryId FROM @updatedMessages;
 END";
 
-        const string SqlFnMoveMessage = @"
+    const string SqlFnMoveMessage = @"
 CREATE OR ALTER PROCEDURE {0}.MoveMessage
     @messageDeliveryId bigint,
     @lockId uniqueidentifier,
@@ -1474,7 +1473,7 @@ BEGIN
     SELECT MessageDeliveryId FROM @updatedMessages;
 END";
 
-        const string SqlFnRemovedOrphanedMessages = @"
+    const string SqlFnRemovedOrphanedMessages = @"
 CREATE OR ALTER PROCEDURE {0}.RemoveOrphanedMessages
     @RowLimit int
 AS
@@ -1506,7 +1505,7 @@ BEGIN
     SELECT COUNT(*) FROM @DeletedMessages
 END";
 
-        const string SqlFnRequeueMessages = @"
+    const string SqlFnRequeueMessages = @"
 CREATE OR ALTER PROCEDURE {0}.RequeueMessages
     @queueName nvarchar(256),
     @sourceQueueType int,
@@ -1573,7 +1572,7 @@ BEGIN
     RETURN @@ROWCOUNT
 END";
 
-        const string SqlFnRequeueMessage = @"
+    const string SqlFnRequeueMessage = @"
 CREATE OR ALTER PROCEDURE {0}.RequeueMessage @messageDeliveryId bigint,
                                                    @targetQueueType int,
                                                    @delay int = 0,
@@ -1644,7 +1643,7 @@ BEGIN
 END
 ";
 
-        const string SqlFnProcessMetrics = @"
+    const string SqlFnProcessMetrics = @"
 CREATE OR ALTER PROCEDURE {0}.ProcessMetrics
     @rowLimit int
 AS
@@ -1775,7 +1774,7 @@ BEGIN
 END
 ";
 
-        const string SqlFnPurgeTopology = @"
+    const string SqlFnPurgeTopology = @"
 CREATE OR ALTER PROCEDURE {0}.PurgeTopology
 AS
 BEGIN
@@ -1803,264 +1802,263 @@ BEGIN
 END
 ";
 
-        const string SqlFnQueuesView = """
-            CREATE OR ALTER VIEW {0}.Queues
-            AS
-            SELECT x.QueueName,
-                   MAX(x.QueueAutoDelete)                AS QueueAutoDelete,
-                   SUM(x.MessageReady)                   AS Ready,
-                   SUM(x.MessageScheduled)               AS Scheduled,
-                   SUM(x.MessageError)                   AS Errored,
-                   SUM(x.MessageDeadLetter)              AS DeadLettered,
-                   SUM(x.MessageLocked)                  AS Locked,
-                   ISNULL(MAX(x.ConsumeCount), 0)        AS ConsumeCount,
-                   ISNULL(MAX(x.ErrorCount), 0)          AS ErrorCount,
-                   ISNULL(MAX(x.DeadLetterCount), 0)     AS DeadLetterCount,
-                   MAX(x.StartTime)                      AS CountStartTime,
-                   ISNULL(MAX(x.Duration), 0)            AS CountDuration,
-                   MAX(x.QueueMaxDeliveryCount)          AS QueueMaxDeliveryCount
-            FROM (SELECT q.Name                                              AS QueueName,
-                         q.AutoDelete                                        AS QueueAutoDelete,
-                         qm.ConsumeCount,
-                         qm.ErrorCount,
-                         qm.DeadLetterCount,
-                         qm.StartTime,
-                         qm.Duration,
+    const string SqlFnQueuesView = """
+        CREATE OR ALTER VIEW {0}.Queues
+        AS
+        SELECT x.QueueName,
+               MAX(x.QueueAutoDelete)                AS QueueAutoDelete,
+               SUM(x.MessageReady)                   AS Ready,
+               SUM(x.MessageScheduled)               AS Scheduled,
+               SUM(x.MessageError)                   AS Errored,
+               SUM(x.MessageDeadLetter)              AS DeadLettered,
+               SUM(x.MessageLocked)                  AS Locked,
+               ISNULL(MAX(x.ConsumeCount), 0)        AS ConsumeCount,
+               ISNULL(MAX(x.ErrorCount), 0)          AS ErrorCount,
+               ISNULL(MAX(x.DeadLetterCount), 0)     AS DeadLetterCount,
+               MAX(x.StartTime)                      AS CountStartTime,
+               ISNULL(MAX(x.Duration), 0)            AS CountDuration,
+               MAX(x.QueueMaxDeliveryCount)          AS QueueMaxDeliveryCount
+        FROM (SELECT q.Name                                              AS QueueName,
+                     q.AutoDelete                                        AS QueueAutoDelete,
+                     qm.ConsumeCount,
+                     qm.ErrorCount,
+                     qm.DeadLetterCount,
+                     qm.StartTime,
+                     qm.Duration,
 
-                         IIF(q.Type = 1
-                                 AND md.MessageDeliveryId IS NOT NULL
-                                 AND md.EnqueueTime <= SYSUTCDATETIME(), 1, 0)   AS MessageReady,
-                         IIF(q.Type = 1
-                                 AND md.MessageDeliveryId IS NOT NULL
-                                 AND md.LockId IS NULL
-                                 AND md.EnqueueTime > SYSUTCDATETIME(), 1, 0)    AS MessageScheduled,
-                         IIF(q.Type = 1
-                                 AND md.MessageDeliveryId IS NOT NULL
-                                 AND md.LockId IS NOT NULL
-                                 AND md.DeliveryCount >= 1
-                                 AND md.EnqueueTime > SYSUTCDATETIME(), 1, 0)    AS MessageLocked,
-                         IIF(q.Type = 2
-                                 AND md.MessageDeliveryId IS NOT NULL, 1, 0) AS MessageError,
-                         IIF(q.Type = 3
-                                 AND md.MessageDeliveryId IS NOT NULL, 1, 0) AS MessageDeadLetter,
-                         IIF(q.Type = 1, q.MaxDeliveryCount, NULL)           AS QueueMaxDeliveryCount
-                  FROM {0}.Queue q
-                           LEFT JOIN {0}.MessageDelivery md ON q.Id = md.QueueId
-                           LEFT JOIN (SELECT qm.QueueId,
-                                             qm.QueueName,
-                                             qm.ConsumeCount    AS ConsumeCount,
-                                             qm.ErrorCount      AS ErrorCount,
-                                             qm.DeadLetterCount AS DeadLetterCount,
-                                             qm.StartTime,
-                                             qm.Duration
-                                      FROM (SELECT qm.QueueId,
-                                                   q2.Name                                                                as QueueName,
-                                                   ROW_NUMBER() OVER (PARTITION BY qm.QueueId ORDER BY qm.StartTime DESC) AS RowNum,
-                                                   qm.ConsumeCount,
-                                                   qm.ErrorCount,
-                                                   qm.DeadLetterCount,
-                                                   qm.StartTime,
-                                                   qm.Duration
-                                            FROM {0}.QueueMetric qm
-                                                     INNER JOIN {0}.Queue q2 ON qm.QueueId = q2.Id
-                                            WHERE q2.Type = 1
-                                              AND qm.StartTime >= DATEADD(MINUTE, -5, SYSUTCDATETIME())) qm
-                                      WHERE qm.RowNum = 1) qm ON qm.QueueId = q.Id) x
-            GROUP BY x.QueueName;
-            """;
+                     IIF(q.Type = 1
+                             AND md.MessageDeliveryId IS NOT NULL
+                             AND md.EnqueueTime <= SYSUTCDATETIME(), 1, 0)   AS MessageReady,
+                     IIF(q.Type = 1
+                             AND md.MessageDeliveryId IS NOT NULL
+                             AND md.LockId IS NULL
+                             AND md.EnqueueTime > SYSUTCDATETIME(), 1, 0)    AS MessageScheduled,
+                     IIF(q.Type = 1
+                             AND md.MessageDeliveryId IS NOT NULL
+                             AND md.LockId IS NOT NULL
+                             AND md.DeliveryCount >= 1
+                             AND md.EnqueueTime > SYSUTCDATETIME(), 1, 0)    AS MessageLocked,
+                     IIF(q.Type = 2
+                             AND md.MessageDeliveryId IS NOT NULL, 1, 0) AS MessageError,
+                     IIF(q.Type = 3
+                             AND md.MessageDeliveryId IS NOT NULL, 1, 0) AS MessageDeadLetter,
+                     IIF(q.Type = 1, q.MaxDeliveryCount, NULL)           AS QueueMaxDeliveryCount
+              FROM {0}.Queue q
+                       LEFT JOIN {0}.MessageDelivery md ON q.Id = md.QueueId
+                       LEFT JOIN (SELECT qm.QueueId,
+                                         qm.QueueName,
+                                         qm.ConsumeCount    AS ConsumeCount,
+                                         qm.ErrorCount      AS ErrorCount,
+                                         qm.DeadLetterCount AS DeadLetterCount,
+                                         qm.StartTime,
+                                         qm.Duration
+                                  FROM (SELECT qm.QueueId,
+                                               q2.Name                                                                as QueueName,
+                                               ROW_NUMBER() OVER (PARTITION BY qm.QueueId ORDER BY qm.StartTime DESC) AS RowNum,
+                                               qm.ConsumeCount,
+                                               qm.ErrorCount,
+                                               qm.DeadLetterCount,
+                                               qm.StartTime,
+                                               qm.Duration
+                                        FROM {0}.QueueMetric qm
+                                                 INNER JOIN {0}.Queue q2 ON qm.QueueId = q2.Id
+                                        WHERE q2.Type = 1
+                                          AND qm.StartTime >= DATEADD(MINUTE, -5, SYSUTCDATETIME())) qm
+                                  WHERE qm.RowNum = 1) qm ON qm.QueueId = q.Id) x
+        GROUP BY x.QueueName;
+        """;
 
-        const string SqlFnSubscriptionsView = """
-            CREATE OR ALTER VIEW {0}.Subscriptions
-            AS
-                SELECT t.name as TopicName, 'topic' as DestinationType,  t2.name as DestinationName, ts.SubType as SubscriptionType, ts.RoutingKey
-                FROM {0}.topic t
-                         JOIN {0}.TopicSubscription ts ON t.id = ts.sourceid
-                         JOIN {0}.topic t2 on t2.id = ts.destinationid
-                UNION
-                SELECT t.name as TopicName, 'queue' as DestinationType, q.name as DestinationName, qs.SubType as SubscriptionType, qs.RoutingKey
-                FROM {0}.queuesubscription qs
-                         LEFT JOIN {0}.queue q on qs.destinationid = q.id
-                         LEFT JOIN {0}.topic t on qs.sourceid = t.id;
-            """;
+    const string SqlFnSubscriptionsView = """
+        CREATE OR ALTER VIEW {0}.Subscriptions
+        AS
+            SELECT t.name as TopicName, 'topic' as DestinationType,  t2.name as DestinationName, ts.SubType as SubscriptionType, ts.RoutingKey
+            FROM {0}.topic t
+                     JOIN {0}.TopicSubscription ts ON t.id = ts.sourceid
+                     JOIN {0}.topic t2 on t2.id = ts.destinationid
+            UNION
+            SELECT t.name as TopicName, 'queue' as DestinationType, q.name as DestinationName, qs.SubType as SubscriptionType, qs.RoutingKey
+            FROM {0}.queuesubscription qs
+                     LEFT JOIN {0}.queue q on qs.destinationid = q.id
+                     LEFT JOIN {0}.topic t on qs.sourceid = t.id;
+        """;
 
-        readonly ILogger<SqlServerDatabaseMigrator> _logger;
+    readonly ILogger<SqlServerDatabaseMigrator> _logger;
 
-        public SqlServerDatabaseMigrator(ILogger<SqlServerDatabaseMigrator> logger)
+    public SqlServerDatabaseMigrator(ILogger<SqlServerDatabaseMigrator> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task CreateDatabase(SqlTransportOptions options, CancellationToken cancellationToken)
+    {
+        await CreateDatabaseIfNotExist(options, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task DeleteDatabase(SqlTransportOptions options, CancellationToken cancellationToken)
+    {
+        await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
+        await connection.Open(cancellationToken).ConfigureAwait(false);
+
+        var result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
+        if (result > 0)
         {
-            _logger = logger;
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(DropSql, options.Database)).ConfigureAwait(false);
+
+            _logger.LogInformation("Database {Database} deleted", options.Database);
         }
+    }
 
-        public async Task CreateDatabase(SqlTransportOptions options, CancellationToken cancellationToken)
+    public async Task CreateInfrastructure(SqlTransportOptions options, CancellationToken cancellationToken)
+    {
+        await using var connection = SqlServerSqlTransportConnection.GetDatabaseConnection(options);
+        await connection.Open(cancellationToken).ConfigureAwait(false);
+
+        try
         {
-            await CreateDatabaseIfNotExist(options, cancellationToken).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateInfrastructureSql, options.Schema)).ConfigureAwait(false);
+
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateQueue, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateQueueV2, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateTopic, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateTopicSubscription, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateQueueSubscription, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPurgeQueue, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPublish, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPublishV2, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnSend, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnSendV2, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnFetchMessages, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnFetchMessagesPartitioned, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnDeleteMessage, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnDeleteScheduledMessage, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRenewMessageLock, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnUnlockMessage, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnMoveMessage, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRemovedOrphanedMessages, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRequeueMessage, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRequeueMessages, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnProcessMetrics, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPurgeTopology, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnTouchQueue, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnDeadLetterMessages, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnQueuesView, options.Schema)).ConfigureAwait(false);
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnSubscriptionsView, options.Schema)).ConfigureAwait(false);
+
+            _logger.LogDebug("Transport infrastructure in schema {Schema} created (or updated)", options.Schema);
         }
-
-        public async Task DeleteDatabase(SqlTransportOptions options, CancellationToken cancellationToken)
+        finally
         {
-            await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
-            await connection.Open(cancellationToken).ConfigureAwait(false);
+            await connection.Close().ConfigureAwait(false);
+        }
+    }
 
+    async Task CreateDatabaseIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
+    {
+        await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
+        await connection.Open(cancellationToken);
+
+        try
+        {
             var result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
             if (result > 0)
+                _logger.LogDebug("Database {Database} already exists", options.Database);
+            else
             {
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(DropSql, options.Database)).ConfigureAwait(false);
+                await connection.Connection.ExecuteScalarAsync<int>(string.Format(DbCreateSql, options.Database)).ConfigureAwait(false);
 
-                _logger.LogInformation("Database {Database} deleted", options.Database);
+                _logger.LogInformation("Database {Database} created", options.Database);
             }
-        }
 
-        public async Task CreateInfrastructure(SqlTransportOptions options, CancellationToken cancellationToken)
-        {
-            await using var connection = SqlServerSqlTransportConnection.GetDatabaseConnection(options);
-            await connection.Open(cancellationToken).ConfigureAwait(false);
-
-            try
-            {
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateInfrastructureSql, options.Schema)).ConfigureAwait(false);
-
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateQueue, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateQueueV2, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateTopic, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateTopicSubscription, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnCreateQueueSubscription, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPurgeQueue, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPublish, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPublishV2, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnSend, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnSendV2, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnFetchMessages, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnFetchMessagesPartitioned, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnDeleteMessage, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnDeleteScheduledMessage, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRenewMessageLock, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnUnlockMessage, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnMoveMessage, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRemovedOrphanedMessages, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRequeueMessage, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnRequeueMessages, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnProcessMetrics, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnPurgeTopology, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnTouchQueue, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnDeadLetterMessages, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnQueuesView, options.Schema)).ConfigureAwait(false);
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SqlFnSubscriptionsView, options.Schema)).ConfigureAwait(false);
-
-                _logger.LogDebug("Transport infrastructure in schema {Schema} created (or updated)", options.Schema);
-            }
-            finally
-            {
-                await connection.Close().ConfigureAwait(false);
-            }
-        }
-
-        async Task CreateDatabaseIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
-        {
-            await using var connection = SqlServerSqlTransportConnection.GetSystemDatabaseConnection(options);
-            await connection.Open(cancellationToken);
-
-            try
-            {
-                var result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(DbExistsSql, options.Database)).ConfigureAwait(false);
-                if (result > 0)
-                    _logger.LogDebug("Database {Database} already exists", options.Database);
-                else
-                {
-                    await connection.Connection.ExecuteScalarAsync<int>(string.Format(DbCreateSql, options.Database)).ConfigureAwait(false);
-
-                    _logger.LogInformation("Database {Database} created", options.Database);
-                }
-
-                result = await connection.Connection.ExecuteScalarAsync<int?>(LoginExistsSql, new { options.Username }).ConfigureAwait(false);
-                if (!result.HasValue)
-                {
-                    await connection.Connection.ExecuteScalarAsync<int>(CreateLoginSql, new { options.Username, options.Password })
-                        .ConfigureAwait(false);
-
-                    _logger.LogDebug("Login {Username} created", options.Username);
-                }
-            }
-            finally
-            {
-                await connection.Close();
-            }
-        }
-
-        public async Task CreateSchemaIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
-        {
-            await using var connection = SqlServerSqlTransportConnection.GetDatabaseAdminConnection(options);
-            await connection.Open(cancellationToken).ConfigureAwait(false);
-
-            try
-            {
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(SchemaCreateSql, options.Database, options.Schema)).ConfigureAwait(false);
-
-                _logger.LogDebug("Schema {Schema} created", options.Schema);
-
-                await GrantAccess(connection, options).ConfigureAwait(false);
-            }
-            finally
-            {
-                await connection.Close().ConfigureAwait(false);
-            }
-        }
-
-        async Task GrantAccess(ISqlServerSqlTransportConnection connection, SqlTransportOptions options)
-        {
-            if (string.IsNullOrWhiteSpace(options.Role))
-                throw new ArgumentException("The SQL transport migrator requires a valid Role, but Role was not specified", nameof(options));
-
-            var result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(RoleExistsSql, options.Role)).ConfigureAwait(false);
+            result = await connection.Connection.ExecuteScalarAsync<int?>(LoginExistsSql, new { options.Username }).ConfigureAwait(false);
             if (!result.HasValue)
             {
-                await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateRoleSql, options.Role)).ConfigureAwait(false);
-
-                _logger.LogDebug("Role {Role} created", options.Role);
-            }
-
-            await connection.Connection.ExecuteScalarAsync<int>(string.Format(GrantRoleSql, options.Role, options.Schema)).ConfigureAwait(false);
-
-            _logger.LogDebug("Role {Role} granted access to schema {Schema}", options.Role, options.Schema);
-
-            var username = options.Username;
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                var builder = new SqlConnectionStringBuilder(connection.Connection.ConnectionString);
-                if (builder.IntegratedSecurity)
-                {
-                    await using SqlCommand command = new("SELECT ORIGINAL_LOGIN()", connection.Connection);
-
-                    username = (await command.ExecuteScalarAsync())?.ToString();
-                }
-                else if (builder.Authentication == SqlAuthenticationMethod.ActiveDirectoryManagedIdentity)
-                {
-                    await using SqlCommand command = new("SELECT CURRENT_USER", connection.Connection);
-                    username = (await command.ExecuteScalarAsync())?.ToString();
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(username))
-                throw new ArgumentException("The SQL transport migrator requires a valid Username, but Username was not specified", nameof(options));
-
-            result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(RoleExistsSql, username)).ConfigureAwait(false);
-            if (!result.HasValue)
-            {
-                result = await connection.Connection
-                    .ExecuteScalarAsync<int?>(string.Format(CreateUserSql, options.Schema, username))
+                await connection.Connection.ExecuteScalarAsync<int>(CreateLoginSql, new { options.Username, options.Password })
                     .ConfigureAwait(false);
 
-                if (result is 1)
-                    _logger.LogDebug("User {Username} created", username);
+                _logger.LogDebug("Login {Username} created", options.Username);
             }
+        }
+        finally
+        {
+            await connection.Close();
+        }
+    }
 
-            result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(IsRoleMemberSql, options.Role, username)).ConfigureAwait(false);
-            if (result is null or 0)
+    public async Task CreateSchemaIfNotExist(SqlTransportOptions options, CancellationToken cancellationToken)
+    {
+        await using var connection = SqlServerSqlTransportConnection.GetDatabaseAdminConnection(options);
+        await connection.Open(cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(SchemaCreateSql, options.Database, options.Schema)).ConfigureAwait(false);
+
+            _logger.LogDebug("Schema {Schema} created", options.Schema);
+
+            await GrantAccess(connection, options).ConfigureAwait(false);
+        }
+        finally
+        {
+            await connection.Close().ConfigureAwait(false);
+        }
+    }
+
+    async Task GrantAccess(ISqlServerSqlTransportConnection connection, SqlTransportOptions options)
+    {
+        if (string.IsNullOrWhiteSpace(options.Role))
+            throw new ArgumentException("The SQL transport migrator requires a valid Role, but Role was not specified", nameof(options));
+
+        var result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(RoleExistsSql, options.Role)).ConfigureAwait(false);
+        if (!result.HasValue)
+        {
+            await connection.Connection.ExecuteScalarAsync<int>(string.Format(CreateRoleSql, options.Role)).ConfigureAwait(false);
+
+            _logger.LogDebug("Role {Role} created", options.Role);
+        }
+
+        await connection.Connection.ExecuteScalarAsync<int>(string.Format(GrantRoleSql, options.Role, options.Schema)).ConfigureAwait(false);
+
+        _logger.LogDebug("Role {Role} granted access to schema {Schema}", options.Role, options.Schema);
+
+        var username = options.Username;
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            var builder = new SqlConnectionStringBuilder(connection.Connection.ConnectionString);
+            if (builder.IntegratedSecurity)
             {
-                await connection.Connection
-                    .ExecuteScalarAsync<int>(string.Format(AddRoleMemberSql, options.Database, username, options.Role))
-                    .ConfigureAwait(false);
+                await using SqlCommand command = new("SELECT ORIGINAL_LOGIN()", connection.Connection);
 
-                _logger.LogDebug("User {Username} added to role {Role}", username, options.Role);
+                username = (await command.ExecuteScalarAsync())?.ToString();
             }
+            else if (builder.Authentication == SqlAuthenticationMethod.ActiveDirectoryManagedIdentity)
+            {
+                await using SqlCommand command = new("SELECT CURRENT_USER", connection.Connection);
+                username = (await command.ExecuteScalarAsync())?.ToString();
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(username))
+            throw new ArgumentException("The SQL transport migrator requires a valid Username, but Username was not specified", nameof(options));
+
+        result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(RoleExistsSql, username)).ConfigureAwait(false);
+        if (!result.HasValue)
+        {
+            result = await connection.Connection
+                .ExecuteScalarAsync<int?>(string.Format(CreateUserSql, options.Schema, username))
+                .ConfigureAwait(false);
+
+            if (result is 1)
+                _logger.LogDebug("User {Username} created", username);
+        }
+
+        result = await connection.Connection.ExecuteScalarAsync<int?>(string.Format(IsRoleMemberSql, options.Role, username)).ConfigureAwait(false);
+        if (result is null or 0)
+        {
+            await connection.Connection
+                .ExecuteScalarAsync<int>(string.Format(AddRoleMemberSql, options.Database, username, options.Role))
+                .ConfigureAwait(false);
+
+            _logger.LogDebug("User {Username} added to role {Role}", username, options.Role);
         }
     }
 }

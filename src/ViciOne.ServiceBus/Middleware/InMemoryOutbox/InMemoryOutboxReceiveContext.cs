@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
+public class InMemoryOutboxReceiveContext :
+    ReceiveContextProxy
 {
-    using Context;
-
-
-    public class InMemoryOutboxReceiveContext :
-        ReceiveContextProxy
+    public InMemoryOutboxReceiveContext(OutboxContext outboxContext, ReceiveContext context)
+        : base(context)
     {
-        public InMemoryOutboxReceiveContext(OutboxContext outboxContext, ReceiveContext context)
-            : base(context)
-        {
-            SendEndpointProvider = new InMemoryOutboxSendEndpointProvider(outboxContext, context.SendEndpointProvider);
+        SendEndpointProvider = new InMemoryOutboxSendEndpointProvider(outboxContext, context.SendEndpointProvider);
 
-            PublishEndpointProvider = new InMemoryOutboxPublishEndpointProvider(outboxContext, context.PublishEndpointProvider);
-        }
-
-        public override IPublishEndpointProvider PublishEndpointProvider { get; }
-
-        public override ISendEndpointProvider SendEndpointProvider { get; }
+        PublishEndpointProvider = new InMemoryOutboxPublishEndpointProvider(outboxContext, context.PublishEndpointProvider);
     }
+
+    public override IPublishEndpointProvider PublishEndpointProvider { get; }
+
+    public override ISendEndpointProvider SendEndpointProvider { get; }
 }

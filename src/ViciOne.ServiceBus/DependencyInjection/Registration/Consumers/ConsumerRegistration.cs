@@ -1,93 +1,91 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+/// <summary>
+/// A consumer registration represents a single consumer, which will be resolved from the container using the scope
+/// provider. The consumer definition, if present, is loaded from the container and used to configure the consumer
+/// within the receive endpoint.
+/// </summary>
+/// <typeparam name="TConsumer">The consumer type</typeparam>
+public class ConsumerRegistration<TConsumer> :
+    IConsumerRegistration
+    where TConsumer : class, IConsumer
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-    using Internals;
-    using Microsoft.Extensions.DependencyInjection;
-    using Transports;
+    readonly List<Action<IRegistrationContext, IConsumerConfigurator<TConsumer>>> _configureActions;
+    readonly IContainerSelector _selector;
+    IConsumerDefinition<TConsumer> _definition;
 
-
-    /// <summary>
-    /// A consumer registration represents a single consumer, which will be resolved from the container using the scope
-    /// provider. The consumer definition, if present, is loaded from the container and used to configure the consumer
-    /// within the receive endpoint.
-    /// </summary>
-    /// <typeparam name="TConsumer">The consumer type</typeparam>
-    public class ConsumerRegistration<TConsumer> :
-        IConsumerRegistration
-        where TConsumer : class, IConsumer
+    public ConsumerRegistration(IContainerSelector selector)
     {
-        readonly List<Action<IRegistrationContext, IConsumerConfigurator<TConsumer>>> _configureActions;
-        readonly IContainerSelector _selector;
-        IConsumerDefinition<TConsumer> _definition;
+        _selector = selector;
+        _configureActions = new List<Action<IRegistrationContext, IConsumerConfigurator<TConsumer>>>();
+        IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
+    }
 
-        public ConsumerRegistration(IContainerSelector selector)
-        {
-            _selector = selector;
-            _configureActions = new List<Action<IRegistrationContext, IConsumerConfigurator<TConsumer>>>();
-            IncludeInConfigureEndpoints = !Type.HasAttribute<ExcludeFromConfigureEndpointsAttribute>();
-        }
+    public Type Type => typeof(TConsumer);
 
-        public Type Type => typeof(TConsumer);
+    public bool IncludeInConfigureEndpoints { get; set; }
 
-        public bool IncludeInConfigureEndpoints { get; set; }
+    void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure)
+    {
+        if (configure is Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action)
+            _configureActions.Add(action);
+    }
 
-        void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure)
-        {
-            if (configure is Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action)
-                _configureActions.Add(action);
-        }
+    void IConsumerRegistration.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
+    {
+        IConsumeScopeProvider scopeProvider = new ConsumeScopeProvider(context);
+        IConsumerFactory<TConsumer> consumerFactory = new ScopeConsumerFactory<TConsumer>(scopeProvider);
 
-        void IConsumerRegistration.Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context)
-        {
-            IConsumeScopeProvider scopeProvider = new ConsumeScopeProvider(context);
-            IConsumerFactory<TConsumer> consumerFactory = new ScopeConsumerFactory<TConsumer>(scopeProvider);
+        var decoratorRegistration = context.GetService<IConsumerFactoryDecoratorRegistration<TConsumer>>();
+        if (decoratorRegistration != null)
+            consumerFactory = decoratorRegistration.DecorateConsumerFactory(consumerFactory);
 
-            var decoratorRegistration = context.GetService<IConsumerFactoryDecoratorRegistration<TConsumer>>();
-            if (decoratorRegistration != null)
-                consumerFactory = decoratorRegistration.DecorateConsumerFactory(consumerFactory);
+        var consumerConfigurator = new ConsumerConfigurator<TConsumer>(consumerFactory, configurator);
 
-            var consumerConfigurator = new ConsumerConfigurator<TConsumer>(consumerFactory, configurator);
+        GetConsumerDefinition(context)
+            .Configure(configurator, consumerConfigurator, context);
 
-            GetConsumerDefinition(context)
-                .Configure(configurator, consumerConfigurator, context);
+        foreach (Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action in _configureActions)
+            action(context, consumerConfigurator);
 
-            foreach (Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action in _configureActions)
-                action(context, consumerConfigurator);
+        var endpointName = configurator.InputAddress.GetEndpointName();
 
-            var endpointName = configurator.InputAddress.GetEndpointName();
+        foreach (var configureReceiveEndpoint in consumerConfigurator.SelectOptions<IConfigureReceiveEndpoint>())
+            configureReceiveEndpoint.Configure(endpointName, configurator);
 
-            foreach (var configureReceiveEndpoint in consumerConfigurator.SelectOptions<IConfigureReceiveEndpoint>())
-                configureReceiveEndpoint.Configure(endpointName, configurator);
+        LogContext.Info?.Log("Configured endpoint {Endpoint}, Consumer: {ConsumerType}", endpointName, TypeCache<TConsumer>.ShortName);
 
-            LogContext.Info?.Log("Configured endpoint {Endpoint}, Consumer: {ConsumerType}", endpointName, TypeCache<TConsumer>.ShortName);
+        configurator.AddEndpointSpecification(consumerConfigurator);
+    }
 
-            configurator.AddEndpointSpecification(consumerConfigurator);
-        }
+    IConsumerDefinition IConsumerRegistration.GetDefinition(IRegistrationContext context)
+    {
+        return GetConsumerDefinition(context);
+    }
 
-        IConsumerDefinition IConsumerRegistration.GetDefinition(IRegistrationContext context)
-        {
-            return GetConsumerDefinition(context);
-        }
+    public IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator)
+    {
+        return new ConsumerRegistrationConfigurator<TConsumer>(registrationConfigurator, this);
+    }
 
-        public IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator)
-        {
-            return new ConsumerRegistrationConfigurator<TConsumer>(registrationConfigurator, this);
-        }
-
-        IConsumerDefinition<TConsumer> GetConsumerDefinition(IServiceProvider provider)
-        {
-            if (_definition != null)
-                return _definition;
-
-            _definition = _selector.GetDefinition<IConsumerDefinition<TConsumer>>(provider) ?? new DefaultConsumerDefinition<TConsumer>();
-
-            IEndpointDefinition<TConsumer> endpointDefinition = _selector.GetEndpointDefinition<TConsumer>(provider);
-            if (endpointDefinition != null)
-                _definition.EndpointDefinition = endpointDefinition;
-
+    IConsumerDefinition<TConsumer> GetConsumerDefinition(IServiceProvider provider)
+    {
+        if (_definition != null)
             return _definition;
-        }
+
+        _definition = _selector.GetDefinition<IConsumerDefinition<TConsumer>>(provider) ?? new DefaultConsumerDefinition<TConsumer>();
+
+        IEndpointDefinition<TConsumer> endpointDefinition = _selector.GetEndpointDefinition<TConsumer>(provider);
+        if (endpointDefinition != null)
+            _definition.EndpointDefinition = endpointDefinition;
+
+        return _definition;
     }
 }

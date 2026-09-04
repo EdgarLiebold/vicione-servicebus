@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class NotAcceptedStateMachineException :
+    SagaException
 {
-    using System;
-
-
-    [Serializable]
-    public class NotAcceptedStateMachineException :
-        SagaException
+    public NotAcceptedStateMachineException(Type sagaType, Type messageType, Guid correlationId, string currentState, Exception exception)
+        : base($"Not accepted in state {currentState}", sagaType, messageType, correlationId, exception)
     {
-        public NotAcceptedStateMachineException(Type sagaType, Type messageType, Guid correlationId, string currentState, Exception exception)
-            : base($"Not accepted in state {currentState}", sagaType, messageType, correlationId, exception)
-        {
-        }
     }
 }

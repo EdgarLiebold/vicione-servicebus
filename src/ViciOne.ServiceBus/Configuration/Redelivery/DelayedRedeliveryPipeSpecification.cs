@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DelayedRedeliveryPipeSpecification<TMessage> :
+    IPipeSpecification<ConsumeContext<TMessage>>,
+    IRedeliveryPipeSpecification
+    where TMessage : class
 {
-    using System.Collections.Generic;
-    using Middleware;
-
-
-    public class DelayedRedeliveryPipeSpecification<TMessage> :
-        IPipeSpecification<ConsumeContext<TMessage>>,
-        IRedeliveryPipeSpecification
-        where TMessage : class
+    public void Apply(IPipeBuilder<ConsumeContext<TMessage>> builder)
     {
-        public void Apply(IPipeBuilder<ConsumeContext<TMessage>> builder)
-        {
-            builder.AddFilter(new DelayedMessageRedeliveryFilter<TMessage>(Options));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
-
-        public RedeliveryOptions Options { get; set; }
+        builder.AddFilter(new DelayedMessageRedeliveryFilter<TMessage>(Options));
     }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
+
+    public RedeliveryOptions Options { get; set; }
 }

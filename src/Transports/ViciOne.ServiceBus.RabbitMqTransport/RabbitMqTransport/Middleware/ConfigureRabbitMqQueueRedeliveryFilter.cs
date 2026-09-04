@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
-
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 
 public sealed class ConfigureRabbitMqQueueRedeliveryFilter : IFilter<ChannelContext>
 {

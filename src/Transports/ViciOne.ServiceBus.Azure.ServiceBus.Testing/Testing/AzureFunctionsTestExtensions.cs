@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus.Testing;
-
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Azure.Core.Amqp;
 using Azure.Messaging.ServiceBus;
-using AzureServiceBusTransport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Serialization;
+using ViciOne.ServiceBus.AzureServiceBusTransport;
+using ViciOne.ServiceBus.Serialization;
 
+namespace ViciOne.ServiceBus.Testing;
 
 public static class AzureFunctionsTestExtensions
 {

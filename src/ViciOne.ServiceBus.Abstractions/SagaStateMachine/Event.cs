@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface Event :
+    IVisitable,
+    IComparable<Event>
 {
-    using System;
+    string Name { get; }
+}
 
 
-    public interface Event :
-        IVisitable,
-        IComparable<Event>
-    {
-        string Name { get; }
-    }
-
-
-    public interface Event<out TMessage> :
-        Event
-        where TMessage : class
-    {
-    }
+public interface Event<out TMessage> :
+    Event
+    where TMessage : class
+{
 }

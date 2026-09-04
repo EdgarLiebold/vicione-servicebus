@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System;
-using AmazonSqsTransport;
+using ViciOne.ServiceBus.AmazonSqsTransport;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Configure a receiving AmazonSQS endpoint
 /// </summary>

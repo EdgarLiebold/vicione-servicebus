@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.Topology
+using System;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Topology;
+
+public class SetCorrelationIdMessageSendTopology<T> :
+    IMessageSendTopology<T>
+    where T : class
 {
-    using System;
-    using Configuration;
-    using Middleware;
+    readonly IFilter<SendContext<T>> _filter;
 
-
-    public class SetCorrelationIdMessageSendTopology<T> :
-        IMessageSendTopology<T>
-        where T : class
+    public SetCorrelationIdMessageSendTopology(IMessageCorrelationId<T> messageCorrelationId)
     {
-        readonly IFilter<SendContext<T>> _filter;
+        if (messageCorrelationId == null)
+            throw new ArgumentNullException(nameof(messageCorrelationId));
 
-        public SetCorrelationIdMessageSendTopology(IMessageCorrelationId<T> messageCorrelationId)
-        {
-            if (messageCorrelationId == null)
-                throw new ArgumentNullException(nameof(messageCorrelationId));
+        _filter = new SetCorrelationIdFilter<T>(messageCorrelationId);
+    }
 
-            _filter = new SetCorrelationIdFilter<T>(messageCorrelationId);
-        }
-
-        public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
-        {
-            builder.AddFilter(_filter);
-        }
+    public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
+    {
+        builder.AddFilter(_filter);
     }
 }

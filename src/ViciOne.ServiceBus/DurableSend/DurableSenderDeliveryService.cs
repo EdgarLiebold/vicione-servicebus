@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.DurableSend;
-
 #nullable enable
 
 using System;
@@ -13,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DurableSend;
 
 internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundService
     where TBus : class, IBus
@@ -140,7 +140,7 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
                             _timeProvider.GetUtcNow(),
                             cancellationToken)
                         .ConfigureAwait(false);
-                    // false means an in-process completion capability already retired the same durable intent.
+                    // false means an in-process completion capability already removed the same durable intent.
                     RecordOutcome(activity, DurableSendDeliveryOutcome.Delivered, failureKind: null, started);
                     return;
 
@@ -155,7 +155,7 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
                                 cancellationToken)
                             .ConfigureAwait(false);
 
-                        // false means a very fast in-process consumer completed and retired the intent before the delivery
+                        // false means a very fast in-process consumer completed and removed the intent before the delivery
                         // worker persisted AwaitingConsumerCompletion. This race is a successful terminal outcome.
                         RecordOutcome(
                             activity,

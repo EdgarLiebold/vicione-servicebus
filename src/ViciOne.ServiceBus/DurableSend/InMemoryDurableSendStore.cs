@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.DurableSend;
-
 #nullable enable
 
 using System;
@@ -9,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.ProviderAbstractions;
 
+namespace ViciOne.ServiceBus.DurableSend;
 /// <summary>
 /// Deterministic in-memory implementation used by unit/in-memory integration tests. It obeys the exact durable-store
 /// atomicity/fencing/boundedness contract but is intentionally not a production durability substitute.
@@ -162,7 +161,7 @@ internal sealed class InMemoryDurableSendStore<TBus> : IDurableSendStore<TBus>
 
             // Consumer completion is stronger evidence than an overlapping send-side failure/quarantine transition,
             // but only for the same persisted incarnation. A stale capability from a discarded incarnation must not
-            // retire a later re-admission that intentionally reuses the durable-send id.
+            // remove a later re-admission that intentionally reuses the durable-send id.
             return Task.FromResult(_records.Remove(id));
         }
     }

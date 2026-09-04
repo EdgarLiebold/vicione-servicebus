@@ -1,12 +1,11 @@
-#nullable enable
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Threading.Tasks;
-using Middleware;
 using RabbitMQ.Client;
-using Serialization;
+using ViciOne.ServiceBus.RabbitMqTransport.Middleware;
+using ViciOne.ServiceBus.Serialization;
 
+#nullable enable
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 
 public sealed class RabbitMqQueueRedeliveryContext<TMessage> : MessageRedeliveryContext
     where TMessage : class

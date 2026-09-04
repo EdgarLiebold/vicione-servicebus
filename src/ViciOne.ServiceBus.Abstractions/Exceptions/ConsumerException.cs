@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class ConsumerException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class ConsumerException :
-        ViciOneServiceBusException
+    public ConsumerException()
     {
-        public ConsumerException()
-        {
-        }
+    }
 
-        public ConsumerException(string message)
-            : base(message)
-        {
-        }
+    public ConsumerException(string message)
+        : base(message)
+    {
+    }
 
-        public ConsumerException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public ConsumerException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

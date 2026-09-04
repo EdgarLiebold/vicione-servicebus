@@ -2,10 +2,13 @@
   <!-- Shared by every project in the repository. -->
 
   <PropertyGroup>
-    <!-- Warning level, optimization and the DEBUG/TRACE constants are the SDK defaults and are not
-         restated here. CS1591 is the one deliberate exception and is dispositioned against the
-         package and documentation policy. -->
-    <NoWarn>CS1591</NoWarn>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <!-- Package evaluation happens before Directory.Build.targets. Derive this boundary from the
          repository-relative project path here, so a project cannot opt into test-only package

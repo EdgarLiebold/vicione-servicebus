@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Saga;
-
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Configuration;
+using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus.Saga;
 
 public class PropertyExpressionSagaQueryFactory<TInstance, TData, TProperty> :
     ISagaQueryFactory<TInstance, TData>

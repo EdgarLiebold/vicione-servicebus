@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
-
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 public sealed class AzureServiceBusObligationProjectionTests
 {
@@ -13,10 +13,10 @@ public sealed class AzureServiceBusObligationProjectionTests
 
     private static readonly string[] ProjectionPaths =
     [
-        ".testagent/azure-servicebus-hermetic-native-obligation-map.tsv",
-        ".testagent/azure-servicebus-local-baseline-native-obligation-map.tsv",
-        ".testagent/azure-servicebus-provider-neutral-native-obligation-map.tsv",
-        ".testagent/azure-servicebus-external-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/azure-servicebus-hermetic-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/azure-servicebus-local-baseline-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/azure-servicebus-provider-neutral-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/azure-servicebus-external-native-obligation-map.tsv",
     ];
 
     [Fact]

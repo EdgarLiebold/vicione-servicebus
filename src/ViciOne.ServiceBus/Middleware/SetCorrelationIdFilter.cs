@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Sets the CorrelationId header uses the supplied implementation.
+/// </summary>
+/// <typeparam name="T">The message type</typeparam>
+public class SetCorrelationIdFilter<T> :
+    IFilter<SendContext<T>>
+    where T : class
 {
-    using System.Threading.Tasks;
+    readonly IMessageCorrelationId<T> _messageCorrelationId;
 
-
-    /// <summary>
-    /// Sets the CorrelationId header uses the supplied implementation.
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    public class SetCorrelationIdFilter<T> :
-        IFilter<SendContext<T>>
-        where T : class
+    public SetCorrelationIdFilter(IMessageCorrelationId<T> messageCorrelationId)
     {
-        readonly IMessageCorrelationId<T> _messageCorrelationId;
+        _messageCorrelationId = messageCorrelationId;
+    }
 
-        public SetCorrelationIdFilter(IMessageCorrelationId<T> messageCorrelationId)
-        {
-            _messageCorrelationId = messageCorrelationId;
-        }
+    public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+    {
+        if (_messageCorrelationId.TryGetCorrelationId(context.Message, out var correlationId))
+            context.CorrelationId = correlationId;
 
-        public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
-        {
-            if (_messageCorrelationId.TryGetCorrelationId(context.Message, out var correlationId))
-                context.CorrelationId = correlationId;
+        return next.Send(context);
+    }
 
-            return next.Send(context);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("SetCorrelationId");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("SetCorrelationId");
     }
 }

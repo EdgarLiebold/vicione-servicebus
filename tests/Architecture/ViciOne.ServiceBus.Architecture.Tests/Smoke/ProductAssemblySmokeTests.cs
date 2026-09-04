@@ -37,7 +37,7 @@ public sealed class ProductAssemblySmokeTests
     public void ProductAssemblies_AreStrongNamed()
     {
         // The product signs its assemblies. An unsigned one would silently break every
-        // InternalsVisibleTo grant that the native test assemblies depend on.
+        // InternalsVisibleTo grant that the repository test assemblies depend on.
         foreach (var assembly in ProductAssemblyFacts.ArchitectureAnchors)
         {
             var publicKey = assembly.GetName().GetPublicKeyToken();

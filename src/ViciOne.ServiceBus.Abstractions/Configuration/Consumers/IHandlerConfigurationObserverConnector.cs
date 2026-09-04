@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus
+using System.ComponentModel;
+
+namespace ViciOne.ServiceBus;
+
+public interface IHandlerConfigurationObserverConnector
 {
-    using System.ComponentModel;
-
-
-    public interface IHandlerConfigurationObserverConnector
-    {
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer);
-    }
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    ConnectHandle ConnectHandlerConfigurationObserver(IHandlerConfigurationObserver observer);
 }

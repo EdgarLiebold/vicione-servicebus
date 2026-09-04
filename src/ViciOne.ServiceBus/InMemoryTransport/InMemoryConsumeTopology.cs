@@ -1,75 +1,73 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Transports.Fabric;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public class InMemoryConsumeTopology :
+    ConsumeTopology,
+    IInMemoryConsumeTopologyConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
-    using ViciOne.ServiceBus.Configuration;
-    using Transports.Fabric;
+    readonly IMessageTopology _messageTopology;
+    readonly IInMemoryPublishTopologyConfigurator _publishTopology;
+    readonly List<IInMemoryConsumeTopologySpecification> _specifications;
 
-
-    public class InMemoryConsumeTopology :
-        ConsumeTopology,
-        IInMemoryConsumeTopologyConfigurator
+    public InMemoryConsumeTopology(IMessageTopology messageTopology, IInMemoryPublishTopologyConfigurator publishTopology)
     {
-        readonly IMessageTopology _messageTopology;
-        readonly IInMemoryPublishTopologyConfigurator _publishTopology;
-        readonly List<IInMemoryConsumeTopologySpecification> _specifications;
+        _messageTopology = messageTopology;
+        _publishTopology = publishTopology;
+        _specifications = new List<IInMemoryConsumeTopologySpecification>();
+    }
 
-        public InMemoryConsumeTopology(IMessageTopology messageTopology, IInMemoryPublishTopologyConfigurator publishTopology)
-        {
-            _messageTopology = messageTopology;
-            _publishTopology = publishTopology;
-            _specifications = new List<IInMemoryConsumeTopologySpecification>();
-        }
+    IInMemoryMessageConsumeTopology<T> IInMemoryConsumeTopology.GetMessageTopology<T>()
+    {
+        IMessageConsumeTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-        IInMemoryMessageConsumeTopology<T> IInMemoryConsumeTopology.GetMessageTopology<T>()
-        {
-            IMessageConsumeTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
+        return configurator as IInMemoryMessageConsumeTopology<T>;
+    }
 
-            return configurator as IInMemoryMessageConsumeTopology<T>;
-        }
+    public void AddSpecification(IInMemoryConsumeTopologySpecification specification)
+    {
+        if (specification == null)
+            throw new ArgumentNullException(nameof(specification));
 
-        public void AddSpecification(IInMemoryConsumeTopologySpecification specification)
-        {
-            if (specification == null)
-                throw new ArgumentNullException(nameof(specification));
+        _specifications.Add(specification);
+    }
 
-            _specifications.Add(specification);
-        }
+    public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string routingKey = default)
+    {
+        var specification = new ExchangeBindingConsumeTopologySpecification(exchangeName, exchangeType, routingKey);
 
-        public void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string routingKey = default)
-        {
-            var specification = new ExchangeBindingConsumeTopologySpecification(exchangeName, exchangeType, routingKey);
+        _specifications.Add(specification);
+    }
 
-            _specifications.Add(specification);
-        }
+    IInMemoryMessageConsumeTopologyConfigurator<T> IInMemoryConsumeTopologyConfigurator.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>() as IInMemoryMessageConsumeTopologyConfigurator<T>;
+    }
 
-        IInMemoryMessageConsumeTopologyConfigurator<T> IInMemoryConsumeTopologyConfigurator.GetMessageTopology<T>()
-        {
-            return GetMessageTopology<T>() as IInMemoryMessageConsumeTopologyConfigurator<T>;
-        }
+    public void Apply(IMessageFabricConsumeTopologyBuilder builder)
+    {
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
 
-        public void Apply(IMessageFabricConsumeTopologyBuilder builder)
-        {
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
+        ForEach<IInMemoryMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
+    }
 
-            ForEach<IInMemoryMessageConsumeTopologyConfigurator>(x => x.Apply(builder));
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
+    }
 
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
-        }
+    protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
+    {
+        var topology = new InMemoryMessageConsumeTopology<T>(_messageTopology.GetMessageTopology<T>(), _publishTopology);
 
-        protected override IMessageConsumeTopologyConfigurator CreateMessageTopology<T>()
-        {
-            var topology = new InMemoryMessageConsumeTopology<T>(_messageTopology.GetMessageTopology<T>(), _publishTopology);
+        OnMessageTopologyCreated(topology);
 
-            OnMessageTopologyCreated(topology);
-
-            return topology;
-        }
+        return topology;
     }
 }

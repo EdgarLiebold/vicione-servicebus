@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ITransportConfiguration :
+    ISpecification
 {
-    public interface ITransportConfiguration :
-        ISpecification
-    {
-        ITransportConfigurator Configurator { get; }
+    ITransportConfigurator Configurator { get; }
 
-        int PrefetchCount { get; }
+    int PrefetchCount { get; }
 
-        int? ConcurrentMessageLimit { get; }
+    int? ConcurrentMessageLimit { get; }
 
-        int GetConcurrentMessageLimit();
-    }
+    int GetConcurrentMessageLimit();
 }

@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IAsyncBusHandle :
+    IAsyncDisposable
 {
-    using System;
-
-
-    public interface IAsyncBusHandle :
-        IAsyncDisposable
-    {
-    }
 }

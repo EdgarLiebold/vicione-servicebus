@@ -1,17 +1,14 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Buffers;
 using MessagePack;
 using MessagePack.Resolvers;
 
-
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// The only type in this module that names <see cref="MessagePackSerializer" />. Every other call site
 /// goes through the members below, so a caller cannot end up on the global default option set by
-/// leaving an argument out; there is no argument to leave out. An assembly shape test holds this
-/// boundary, because passing the option set by hand at eleven call sites is a convention, and a
-/// convention is exactly what a later edit drops without anybody noticing.
+/// leaving an argument out; there is no argument to leave out. Centralizing the boundary prevents
+/// call sites from accidentally omitting the required option set.
 /// </summary>
 static class InternalMessagePackResolver
 {

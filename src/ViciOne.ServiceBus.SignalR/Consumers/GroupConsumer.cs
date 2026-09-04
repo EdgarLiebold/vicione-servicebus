@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.SignalR.Consumers
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using ViciOne.ServiceBus.SignalR.Contracts;
+using ViciOne.ServiceBus.SignalR.Utils;
+
+namespace ViciOne.ServiceBus.SignalR.Consumers;
+
+public class GroupConsumer<THub> :
+    IConsumer<Group<THub>>
+    where THub : Hub
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Contracts;
-    using Microsoft.AspNetCore.SignalR;
-    using Utils;
+    readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
 
-
-    public class GroupConsumer<THub> :
-        IConsumer<Group<THub>>
-        where THub : Hub
+    public GroupConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
     {
-        readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
+        _hubLifetimeManager = hubLifetimeManager;
+    }
 
-        public GroupConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
+    public Task Consume(ConsumeContext<Group<THub>> context)
+    {
+        return Handle(context.Message.GroupName, context.Message.ExcludedConnectionIds, context.Message.Messages);
+    }
+
+    async Task Handle(string groupName, string[] excludedConnectionIds, IReadOnlyDictionary<string, byte[]> messages)
+    {
+        var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
+
+        var groupStore = _hubLifetimeManager.Groups[groupName];
+
+        if (groupStore == null || groupStore.Count <= 0)
+            return;
+
+        var tasks = new List<Task>();
+        foreach (var connection in groupStore)
         {
-            _hubLifetimeManager = hubLifetimeManager;
+            if (excludedConnectionIds == null || !excludedConnectionIds.Contains(connection.ConnectionId, StringComparer.Ordinal))
+                tasks.Add(connection.WriteAsync(message.Value).AsTask());
         }
 
-        public Task Consume(ConsumeContext<Group<THub>> context)
+        try
         {
-            return Handle(context.Message.GroupName, context.Message.ExcludedConnectionIds, context.Message.Messages);
+            await Task.WhenAll(tasks);
         }
-
-        async Task Handle(string groupName, string[] excludedConnectionIds, IReadOnlyDictionary<string, byte[]> messages)
+        catch (Exception e)
         {
-            var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
-
-            var groupStore = _hubLifetimeManager.Groups[groupName];
-
-            if (groupStore == null || groupStore.Count <= 0)
-                return;
-
-            var tasks = new List<Task>();
-            foreach (var connection in groupStore)
-            {
-                if (excludedConnectionIds == null || !excludedConnectionIds.Contains(connection.ConnectionId, StringComparer.Ordinal))
-                    tasks.Add(connection.WriteAsync(message.Value).AsTask());
-            }
-
-            try
-            {
-                await Task.WhenAll(tasks);
-            }
-            catch (Exception e)
-            {
-                LogContext.Warning?.Log(e, "Failed to write message");
-            }
+            LogContext.Warning?.Log(e, "Failed to write message");
         }
     }
 }

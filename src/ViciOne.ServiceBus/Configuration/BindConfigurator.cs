@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class BindConfigurator<TLeft> :
+    IBindConfigurator<TLeft>
+    where TLeft : class, PipeContext
 {
-    using System;
+    readonly IPipeConfigurator<TLeft> _configurator;
 
-
-    public class BindConfigurator<TLeft> :
-        IBindConfigurator<TLeft>
-        where TLeft : class, PipeContext
+    public BindConfigurator(IPipeConfigurator<TLeft> configurator)
     {
-        readonly IPipeConfigurator<TLeft> _configurator;
+        _configurator = configurator;
+    }
 
-        public BindConfigurator(IPipeConfigurator<TLeft> configurator)
-        {
-            _configurator = configurator;
-        }
+    void IBindConfigurator<TLeft>.Source<T>(IPipeContextSource<T, TLeft> source, Action<IBindConfigurator<TLeft, T>> configureTarget)
+    {
+        var specification = new BindPipeSpecification<TLeft, T>(source);
 
-        void IBindConfigurator<TLeft>.Source<T>(IPipeContextSource<T, TLeft> source, Action<IBindConfigurator<TLeft, T>> configureTarget)
-        {
-            var specification = new BindPipeSpecification<TLeft, T>(source);
+        configureTarget?.Invoke(specification);
 
-            configureTarget?.Invoke(specification);
-
-            _configurator.AddPipeSpecification(specification);
-        }
+        _configurator.AddPipeSpecification(specification);
     }
 }

@@ -1,45 +1,43 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+/// <summary>
+/// Adapts an Activity to a Data Activity context
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class SlimActivity<TSaga, TMessage> :
+    IStateMachineActivity<TSaga, TMessage>
+    where TSaga : class, SagaStateMachineInstance
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IStateMachineActivity<TSaga> _activity;
 
-
-    /// <summary>
-    /// Adapts an Activity to a Data Activity context
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class SlimActivity<TSaga, TMessage> :
-        IStateMachineActivity<TSaga, TMessage>
-        where TSaga : class, SagaStateMachineInstance
-        where TMessage : class
+    public SlimActivity(IStateMachineActivity<TSaga> activity)
     {
-        readonly IStateMachineActivity<TSaga> _activity;
+        _activity = activity;
+    }
 
-        public SlimActivity(IStateMachineActivity<TSaga> activity)
-        {
-            _activity = activity;
-        }
+    public void Accept(StateMachineVisitor visitor)
+    {
+        _activity.Accept(visitor);
+    }
 
-        public void Accept(StateMachineVisitor visitor)
-        {
-            _activity.Accept(visitor);
-        }
+    public void Probe(ProbeContext context)
+    {
+        _activity.Probe(context);
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            _activity.Probe(context);
-        }
+    public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    {
+        return _activity.Execute(context, next);
+    }
 
-        public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
-        {
-            return _activity.Execute(context, next);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
-            where TException : Exception
-        {
-            return _activity.Faulted(context, next);
-        }
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+        where TException : Exception
+    {
+        return _activity.Faulted(context, next);
     }
 }

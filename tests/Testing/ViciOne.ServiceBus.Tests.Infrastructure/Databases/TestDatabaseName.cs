@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Tests.Infrastructure.Databases;
-
 using System.Security.Cryptography;
 using System.Text;
 
+namespace ViciOne.ServiceBus.Tests.Infrastructure.Databases;
 /// <summary>Creates provider-safe database names from an explicit, run-scoped identity.</summary>
 public static class TestDatabaseName
 {

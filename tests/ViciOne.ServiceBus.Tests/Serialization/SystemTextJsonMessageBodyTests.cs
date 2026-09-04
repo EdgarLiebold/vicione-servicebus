@@ -11,6 +11,32 @@ public sealed class SystemTextJsonMessageBodyTests
     private static readonly Guid MessageId = Guid.Parse("82ea3b16-d50d-4ab8-9f7e-86bb26827f08");
     private static readonly DateTime SentTime = new(2026, 8, 23, 12, 34, 56, DateTimeKind.Utc);
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SYSTEM-TEXT-JSON-ENVELOPE-BODY", "wire-header-semantics-survive-nullability")]
+    public void WireHeaders_PreserveComparerNullEntriesAndLiveUpdates()
+    {
+        var envelope = new JsonMessageEnvelope
+        {
+            Headers = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Mixed-Case"] = "before",
+                ["Null-Value"] = null,
+            },
+        };
+        var context = new EnvelopeMessageContext(envelope, ServiceBusMetadataJson.ObjectDeserializer);
+
+        Assert.True(context.Headers.TryGetHeader("mixed-case", out object? before));
+        Assert.Equal("before", before);
+        Assert.True(context.Headers.TryGetHeader("null-value", out object? nullValue));
+        Assert.Null(nullValue);
+
+        envelope.Headers["Mixed-Case"] = "after";
+
+        Assert.True(context.Headers.TryGetHeader("MIXED-CASE", out object? after));
+        Assert.Equal("after", after);
+        Assert.Equal(2, context.Headers.GetAll().Count());
+    }
+
     [Theory]
     [InlineData(MessageBodyFirstAccessor.Length)]
     [InlineData(MessageBodyFirstAccessor.Bytes)]

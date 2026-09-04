@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.MessageData.Conventions
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.MessageData.Conventions;
+
+public class MessageDataMessageSendTopology<T> :
+    IMessageSendTopology<T>
+    where T : class
 {
-    using Initializers;
-    using ViciOne.ServiceBus.Configuration;
-    using Middleware;
+    readonly TransformFilter<T> _transformFilter;
 
-
-    public class MessageDataMessageSendTopology<T> :
-        IMessageSendTopology<T>
-        where T : class
+    public MessageDataMessageSendTopology(IMessageInitializer<T> initializer)
     {
-        readonly TransformFilter<T> _transformFilter;
+        _transformFilter = new TransformFilter<T>(initializer);
+    }
 
-        public MessageDataMessageSendTopology(IMessageInitializer<T> initializer)
-        {
-            _transformFilter = new TransformFilter<T>(initializer);
-        }
+    public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
+    {
+        if (builder.IsImplemented)
+            return;
 
-        public void Apply(ITopologyPipeBuilder<SendContext<T>> builder)
-        {
-            if (builder.IsImplemented)
-                return;
-
-            builder.AddFilter(_transformFilter);
-        }
+        builder.AddFilter(_transformFilter);
     }
 }

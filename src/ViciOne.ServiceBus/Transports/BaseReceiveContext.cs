@@ -1,173 +1,171 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Diagnostics;
+using System.Net.Mime;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public abstract class BaseReceiveContext :
+    ScopePipeContext,
+    ReceiveContext,
+    IDisposable
 {
-    using System;
-    using System.Diagnostics;
-    using System.Net.Mime;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Middleware;
-    using Util;
+    readonly CancellationTokenSource _cancellationTokenSource;
+    readonly Lazy<ContentType> _contentType;
+    readonly Lazy<Headers> _headers;
+    readonly Lazy<IPublishEndpointProvider> _publishEndpointProvider;
+    readonly ReceiveEndpointContext _receiveEndpointContext;
+    readonly PendingTaskCollection _receiveTasks;
+    readonly Stopwatch _receiveTimer;
+    readonly Lazy<ISendEndpointProvider> _sendEndpointProvider;
 
-
-    public abstract class BaseReceiveContext :
-        ScopePipeContext,
-        ReceiveContext,
-        IDisposable
+    protected BaseReceiveContext(bool redelivered, ReceiveEndpointContext receiveEndpointContext, params object[] payloads)
+        : base(receiveEndpointContext, payloads)
     {
-        readonly CancellationTokenSource _cancellationTokenSource;
-        readonly Lazy<ContentType> _contentType;
-        readonly Lazy<Headers> _headers;
-        readonly Lazy<IPublishEndpointProvider> _publishEndpointProvider;
-        readonly ReceiveEndpointContext _receiveEndpointContext;
-        readonly PendingTaskCollection _receiveTasks;
-        readonly Stopwatch _receiveTimer;
-        readonly Lazy<ISendEndpointProvider> _sendEndpointProvider;
+        _receiveTimer = Stopwatch.StartNew();
 
-        protected BaseReceiveContext(bool redelivered, ReceiveEndpointContext receiveEndpointContext, params object[] payloads)
-            : base(receiveEndpointContext, payloads)
+        _cancellationTokenSource = new CancellationTokenSource();
+        _receiveEndpointContext = receiveEndpointContext;
+
+        InputAddress = receiveEndpointContext.InputAddress;
+        Redelivered = redelivered;
+
+        _headers = new Lazy<Headers>(() => new JsonTransportHeaders(HeaderProvider));
+
+        _contentType = new Lazy<ContentType>(GetContentType);
+        _receiveTasks = new PendingTaskCollection(4);
+
+        _sendEndpointProvider = new Lazy<ISendEndpointProvider>(GetSendEndpointProvider);
+        _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(GetPublishEndpointProvider);
+    }
+
+    protected abstract IHeaderProvider HeaderProvider { get; }
+
+    public virtual void Dispose()
+    {
+        _cancellationTokenSource.Dispose();
+    }
+
+    public override CancellationToken CancellationToken => _cancellationTokenSource.Token;
+
+    public bool IsDelivered { get; private set; }
+    public bool IsFaulted { get; private set; }
+
+    public bool PublishFaults => _receiveEndpointContext.PublishFaults;
+    public abstract MessageBody Body { get; }
+
+    public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
+    public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
+
+    public Task ReceiveCompleted => _receiveTasks.Completed(CancellationToken);
+
+    public void AddReceiveTask(Task task)
+    {
+        _receiveTasks.Add(task);
+    }
+
+    public bool Redelivered { get; }
+    public Headers TransportHeaders => _headers.Value;
+
+    public virtual Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
+        where T : class
+    {
+        IsDelivered = true;
+
+        context.LogConsumed(duration, consumerType);
+
+        return _receiveEndpointContext.ReceiveObservers.PostConsume(context, duration, consumerType);
+    }
+
+    public virtual Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
+        where T : class
+    {
+        IsFaulted = true;
+
+        switch (exception)
         {
-            _receiveTimer = Stopwatch.StartNew();
+            case OperationCanceledException canceled when canceled.CancellationToken == context.CancellationToken:
+                context.LogCanceled(duration, consumerType);
+                break;
 
-            _cancellationTokenSource = new CancellationTokenSource();
-            _receiveEndpointContext = receiveEndpointContext;
-
-            InputAddress = receiveEndpointContext.InputAddress;
-            Redelivered = redelivered;
-
-            _headers = new Lazy<Headers>(() => new JsonTransportHeaders(HeaderProvider));
-
-            _contentType = new Lazy<ContentType>(GetContentType);
-            _receiveTasks = new PendingTaskCollection(4);
-
-            _sendEndpointProvider = new Lazy<ISendEndpointProvider>(GetSendEndpointProvider);
-            _publishEndpointProvider = new Lazy<IPublishEndpointProvider>(GetPublishEndpointProvider);
+            default:
+                context.LogFaulted(duration, consumerType, exception);
+                break;
         }
 
-        protected abstract IHeaderProvider HeaderProvider { get; }
+        GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
 
-        public virtual void Dispose()
+        return _receiveEndpointContext.ReceiveObservers.ConsumeFault(context, duration, consumerType, exception);
+    }
+
+    public virtual Task NotifyFaulted(Exception exception)
+    {
+        IsFaulted = true;
+
+        this.LogFaulted(exception);
+
+        return _receiveEndpointContext.ReceiveObservers.ReceiveFault(this, exception);
+    }
+
+    public TimeSpan ElapsedTime => _receiveTimer.Elapsed;
+    public Uri InputAddress { get; protected set; }
+    public ContentType ContentType => _contentType.Value;
+
+    protected virtual ISendEndpointProvider GetSendEndpointProvider()
+    {
+        return _receiveEndpointContext.SendEndpointProvider;
+    }
+
+    protected virtual IPublishEndpointProvider GetPublishEndpointProvider()
+    {
+        return _receiveEndpointContext.PublishEndpointProvider;
+    }
+
+    protected virtual ContentType GetContentType()
+    {
+        if (_headers.Value.TryGetHeader("Content-Type", out var contentTypeHeader) || _headers.Value.TryGetHeader("ContentType", out contentTypeHeader))
         {
-            _cancellationTokenSource.Dispose();
+            if (contentTypeHeader is ContentType contentType)
+                return contentType;
+
+            if (contentTypeHeader is string contentTypeString)
+                return ConvertToContentType(contentTypeString);
         }
 
-        public override CancellationToken CancellationToken => _cancellationTokenSource.Token;
+        return default;
+    }
 
-        public bool IsDelivered { get; private set; }
-        public bool IsFaulted { get; private set; }
+    public void Cancel()
+    {
+        _cancellationTokenSource.Cancel();
+    }
 
-        public bool PublishFaults => _receiveEndpointContext.PublishFaults;
-        public abstract MessageBody Body { get; }
-
-        public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider.Value;
-        public IPublishEndpointProvider PublishEndpointProvider => _publishEndpointProvider.Value;
-
-        public Task ReceiveCompleted => _receiveTasks.Completed(CancellationToken);
-
-        public void AddReceiveTask(Task task)
+    protected static ContentType ConvertToContentType(string text)
+    {
+        try
         {
-            _receiveTasks.Add(task);
+            return new ContentType(text);
         }
-
-        public bool Redelivered { get; }
-        public Headers TransportHeaders => _headers.Value;
-
-        public virtual Task NotifyConsumed<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType)
-            where T : class
+        catch (FormatException)
         {
-            IsDelivered = true;
-
-            context.LogConsumed(duration, consumerType);
-
-            return _receiveEndpointContext.ReceiveObservers.PostConsume(context, duration, consumerType);
-        }
-
-        public virtual Task NotifyFaulted<T>(ConsumeContext<T> context, TimeSpan duration, string consumerType, Exception exception)
-            where T : class
-        {
-            IsFaulted = true;
-
-            switch (exception)
-            {
-                case OperationCanceledException canceled when canceled.CancellationToken == context.CancellationToken:
-                    context.LogCanceled(duration, consumerType);
-                    break;
-
-                default:
-                    context.LogFaulted(duration, consumerType, exception);
-                    break;
-            }
-
-            GetOrAddPayload<ConsumerFaultContext>(() => new FaultContext(TypeCache<T>.ShortName, consumerType));
-
-            return _receiveEndpointContext.ReceiveObservers.ConsumeFault(context, duration, consumerType, exception);
-        }
-
-        public virtual Task NotifyFaulted(Exception exception)
-        {
-            IsFaulted = true;
-
-            this.LogFaulted(exception);
-
-            return _receiveEndpointContext.ReceiveObservers.ReceiveFault(this, exception);
-        }
-
-        public TimeSpan ElapsedTime => _receiveTimer.Elapsed;
-        public Uri InputAddress { get; protected set; }
-        public ContentType ContentType => _contentType.Value;
-
-        protected virtual ISendEndpointProvider GetSendEndpointProvider()
-        {
-            return _receiveEndpointContext.SendEndpointProvider;
-        }
-
-        protected virtual IPublishEndpointProvider GetPublishEndpointProvider()
-        {
-            return _receiveEndpointContext.PublishEndpointProvider;
-        }
-
-        protected virtual ContentType GetContentType()
-        {
-            if (_headers.Value.TryGetHeader("Content-Type", out var contentTypeHeader) || _headers.Value.TryGetHeader("ContentType", out contentTypeHeader))
-            {
-                if (contentTypeHeader is ContentType contentType)
-                    return contentType;
-
-                if (contentTypeHeader is string contentTypeString)
-                    return ConvertToContentType(contentTypeString);
-            }
-
             return default;
         }
+    }
 
-        public void Cancel()
+
+    class FaultContext :
+        ConsumerFaultContext
+    {
+        public FaultContext(string messageType, string consumerType)
         {
-            _cancellationTokenSource.Cancel();
+            MessageType = messageType;
+            ConsumerType = consumerType;
         }
 
-        protected static ContentType ConvertToContentType(string text)
-        {
-            try
-            {
-                return new ContentType(text);
-            }
-            catch (FormatException)
-            {
-                return default;
-            }
-        }
-
-
-        class FaultContext :
-            ConsumerFaultContext
-        {
-            public FaultContext(string messageType, string consumerType)
-            {
-                MessageType = messageType;
-                ConsumerType = consumerType;
-            }
-
-            public string MessageType { get; }
-            public string ConsumerType { get; }
-        }
+        public string MessageType { get; }
+        public string ConsumerType { get; }
     }
 }

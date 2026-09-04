@@ -1,26 +1,24 @@
+using ViciOne.ServiceBus.Transports.Fabric;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IInMemoryReceiveEndpointConfigurator :
+    IReceiveEndpointConfigurator
 {
-    using Transports.Fabric;
+    /// <summary>
+    /// Bind an exchange to the receive endpoint queue
+    /// </summary>
+    /// <param name="exchangeName">The exchange name (not case-sensitive)</param>
+    /// <param name="exchangeType">The exchange type</param>
+    /// <param name="routingKey">Only valid for direct/topic exchanges</param>
+    void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default);
 
-
-    public interface IInMemoryReceiveEndpointConfigurator :
-        IReceiveEndpointConfigurator
-    {
-        /// <summary>
-        /// Bind an exchange to the receive endpoint queue
-        /// </summary>
-        /// <param name="exchangeName">The exchange name (not case-sensitive)</param>
-        /// <param name="exchangeType">The exchange type</param>
-        /// <param name="routingKey">Only valid for direct/topic exchanges</param>
-        void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default);
-
-        /// <summary>
-        /// Bind an exchange to the receive endpoint queue
-        /// </summary>
-        /// <param name="exchangeType">The exchange type</param>
-        /// <param name="routingKey">Only valid for direct/topic exchanges</param>
-        void Bind<T>(ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
-            where T : class;
-    }
+    /// <summary>
+    /// Bind an exchange to the receive endpoint queue
+    /// </summary>
+    /// <param name="exchangeType">The exchange type</param>
+    /// <param name="routingKey">Only valid for direct/topic exchanges</param>
+    void Bind<T>(ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default)
+        where T : class;
 }

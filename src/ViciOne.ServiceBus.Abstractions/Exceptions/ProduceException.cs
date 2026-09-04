@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class ProduceException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class ProduceException :
-        ViciOneServiceBusException
+    public ProduceException()
     {
-        public ProduceException()
-        {
-        }
+    }
 
-        public ProduceException(string message)
-            : base(message)
-        {
-        }
+    public ProduceException(string message)
+        : base(message)
+    {
+    }
 
-        public ProduceException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public ProduceException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

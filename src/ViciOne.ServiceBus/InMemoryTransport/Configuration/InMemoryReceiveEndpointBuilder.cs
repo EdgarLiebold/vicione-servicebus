@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public class InMemoryReceiveEndpointBuilder :
+    ReceiveEndpointBuilder
 {
-    using ViciOne.ServiceBus.Configuration;
+    readonly IInMemoryReceiveEndpointConfiguration _configuration;
+    readonly IInMemoryHostConfiguration _hostConfiguration;
 
-
-    public class InMemoryReceiveEndpointBuilder :
-        ReceiveEndpointBuilder
+    public InMemoryReceiveEndpointBuilder(IInMemoryHostConfiguration hostConfiguration, IInMemoryReceiveEndpointConfiguration configuration)
+        : base(configuration)
     {
-        readonly IInMemoryReceiveEndpointConfiguration _configuration;
-        readonly IInMemoryHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+    }
 
-        public InMemoryReceiveEndpointBuilder(IInMemoryHostConfiguration hostConfiguration, IInMemoryReceiveEndpointConfiguration configuration)
-            : base(configuration)
+    public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+    {
+        if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
         {
-            _hostConfiguration = hostConfiguration;
-            _configuration = configuration;
+            IInMemoryMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
+            if (topology.ConfigureConsumeTopology)
+                topology.Bind();
         }
 
-        public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-        {
-            if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
-            {
-                IInMemoryMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
-                if (topology.ConfigureConsumeTopology)
-                    topology.Bind();
-            }
+        return base.ConnectConsumePipe(pipe, options);
+    }
 
-            return base.ConnectConsumePipe(pipe, options);
-        }
+    public InMemoryReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        var context = new TransportInMemoryReceiveEndpointContext(_hostConfiguration, _configuration);
 
-        public InMemoryReceiveEndpointContext CreateReceiveEndpointContext()
-        {
-            var context = new TransportInMemoryReceiveEndpointContext(_hostConfiguration, _configuration);
+        context.GetOrAddPayload(() => _hostConfiguration.Topology);
 
-            context.GetOrAddPayload(() => _hostConfiguration.Topology);
-
-            return context;
-        }
+        return context;
     }
 }

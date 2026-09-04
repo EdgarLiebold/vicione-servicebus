@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Topology;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
 
-
+namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
 /// <summary>
 /// Configures the broker with the supplied topology once the model is created, to ensure
 /// that the exchanges, queues, and bindings for the model are properly configured in ActiveMQ.

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISendTransformSpecification<TMessage> :
+    IPipeSpecification<SendContext<TMessage>>
+    where TMessage : class
 {
-    public interface ISendTransformSpecification<TMessage> :
-        IPipeSpecification<SendContext<TMessage>>
-        where TMessage : class
-    {
-    }
 }

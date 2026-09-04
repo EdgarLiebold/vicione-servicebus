@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Observables;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public class RabbitMqBusConfiguration :
+    RabbitMqEndpointConfiguration,
+    IRabbitMqBusConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Observables;
+    readonly BusObservable _busObservers;
 
-
-    public class RabbitMqBusConfiguration :
-        RabbitMqEndpointConfiguration,
-        IRabbitMqBusConfiguration
+    public RabbitMqBusConfiguration(IRabbitMqTopologyConfiguration topologyConfiguration)
+        : base(topologyConfiguration)
     {
-        readonly BusObservable _busObservers;
+        MessageRoutes = new MessageRouteTable();
+        HostConfiguration = new RabbitMqHostConfiguration(this, topologyConfiguration);
+        BusEndpointConfiguration = CreateEndpointConfiguration(true);
 
-        public RabbitMqBusConfiguration(IRabbitMqTopologyConfiguration topologyConfiguration)
-            : base(topologyConfiguration)
-        {
-            MessageRoutes = new MessageRouteTable();
-            HostConfiguration = new RabbitMqHostConfiguration(this, topologyConfiguration);
-            BusEndpointConfiguration = CreateEndpointConfiguration(true);
+        _busObservers = new BusObservable();
+    }
 
-            _busObservers = new BusObservable();
-        }
+    IHostConfiguration IBusConfiguration.HostConfiguration => HostConfiguration;
+    IMessageRouteTable IBusConfiguration.MessageRoutes => MessageRoutes;
+    IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
+    IBusObserver IBusConfiguration.BusObservers => _busObservers;
 
-        IHostConfiguration IBusConfiguration.HostConfiguration => HostConfiguration;
-        IMessageRouteTable IBusConfiguration.MessageRoutes => MessageRoutes;
-        IEndpointConfiguration IBusConfiguration.BusEndpointConfiguration => BusEndpointConfiguration;
-        IBusObserver IBusConfiguration.BusObservers => _busObservers;
+    public IRabbitMqEndpointConfiguration BusEndpointConfiguration { get; }
+    public IRabbitMqHostConfiguration HostConfiguration { get; }
+    public MessageRouteTable MessageRoutes { get; }
 
-        public IRabbitMqEndpointConfiguration BusEndpointConfiguration { get; }
-        public IRabbitMqHostConfiguration HostConfiguration { get; }
-        public MessageRouteTable MessageRoutes { get; }
+    public ConnectHandle ConnectBusObserver(IBusObserver observer)
+    {
+        return _busObservers.Connect(observer);
+    }
 
-        public ConnectHandle ConnectBusObserver(IBusObserver observer)
-        {
-            return _busObservers.Connect(observer);
-        }
-
-        public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
-        {
-            return HostConfiguration.ConnectEndpointConfigurationObserver(observer);
-        }
+    public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
+    {
+        return HostConfiguration.ConnectEndpointConfigurationObserver(observer);
     }
 }

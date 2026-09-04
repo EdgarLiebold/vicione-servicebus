@@ -1,100 +1,98 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus;
+
+public static class ActivityObserverConfigurationExtensions
 {
-    using System;
-    using System.Collections.Generic;
-
-
-    public static class ActivityObserverConfigurationExtensions
+    /// <summary>
+    /// Connect an activity observer that will be connected to all activity execute/compensate endpoints
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="observer"></param>
+    /// <returns></returns>
+    public static ConnectHandle ConnectActivityObserver(this IBusFactoryConfigurator configurator, IActivityObserver observer)
     {
-        /// <summary>
-        /// Connect an activity observer that will be connected to all activity execute/compensate endpoints
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="observer"></param>
-        /// <returns></returns>
-        public static ConnectHandle ConnectActivityObserver(this IBusFactoryConfigurator configurator, IActivityObserver observer)
+        return new ActivityConfigurationObserver(configurator, observer);
+    }
+
+    /// <summary>
+    /// Connect an activity observer that will be connected to all activity execute/compensate endpoints
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="observer"></param>
+    /// <returns></returns>
+    public static ConnectHandle ConnectActivityObserver(this IReceiveEndpointConfigurator configurator, IActivityObserver observer)
+    {
+        return new ActivityConfigurationObserver(configurator, observer);
+    }
+
+
+    class ActivityConfigurationObserver :
+        IActivityConfigurationObserver,
+        ConnectHandle
+    {
+        readonly List<ConnectHandle> _handles;
+        readonly IActivityObserver _observer;
+        bool _disposed;
+
+        public ActivityConfigurationObserver(IActivityConfigurationObserverConnector configurator, IActivityObserver observer)
         {
-            return new ActivityConfigurationObserver(configurator, observer);
+            _observer = observer;
+            _handles = new List<ConnectHandle>();
+
+            var handle = configurator.ConnectActivityConfigurationObserver(this);
+            _handles.Add(handle);
         }
 
-        /// <summary>
-        /// Connect an activity observer that will be connected to all activity execute/compensate endpoints
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="observer"></param>
-        /// <returns></returns>
-        public static ConnectHandle ConnectActivityObserver(this IReceiveEndpointConfigurator configurator, IActivityObserver observer)
+        public void Dispose()
         {
-            return new ActivityConfigurationObserver(configurator, observer);
+            _disposed = true;
+
+            for (var i = 0; i < _handles.Count; i++)
+                _handles[i].Dispose();
+
+            _handles.Clear();
         }
 
-
-        class ActivityConfigurationObserver :
-            IActivityConfigurationObserver,
-            ConnectHandle
+        public void Disconnect()
         {
-            readonly List<ConnectHandle> _handles;
-            readonly IActivityObserver _observer;
-            bool _disposed;
+            _disposed = true;
 
-            public ActivityConfigurationObserver(IActivityConfigurationObserverConnector configurator, IActivityObserver observer)
-            {
-                _observer = observer;
-                _handles = new List<ConnectHandle>();
+            for (var i = 0; i < _handles.Count; i++)
+                _handles[i].Disconnect();
 
-                var handle = configurator.ConnectActivityConfigurationObserver(this);
-                _handles.Add(handle);
-            }
+            _handles.Clear();
+        }
 
-            public void Dispose()
-            {
-                _disposed = true;
+        public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+            where TActivity : class, IExecuteActivity<TArguments>
+            where TArguments : class
+        {
+            if (_disposed)
+                return;
 
-                for (var i = 0; i < _handles.Count; i++)
-                    _handles[i].Dispose();
+            _handles.Add(configurator.ConnectActivityObserver(_observer));
+        }
 
-                _handles.Clear();
-            }
+        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+            where TActivity : class, IExecuteActivity<TArguments>
+            where TArguments : class
+        {
+            if (_disposed)
+                return;
 
-            public void Disconnect()
-            {
-                _disposed = true;
+            _handles.Add(configurator.ConnectActivityObserver(_observer));
+        }
 
-                for (var i = 0; i < _handles.Count; i++)
-                    _handles[i].Disconnect();
+        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+            where TActivity : class, ICompensateActivity<TLog>
+            where TLog : class
+        {
+            if (_disposed)
+                return;
 
-                _handles.Clear();
-            }
-
-            public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-                where TActivity : class, IExecuteActivity<TArguments>
-                where TArguments : class
-            {
-                if (_disposed)
-                    return;
-
-                _handles.Add(configurator.ConnectActivityObserver(_observer));
-            }
-
-            public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-                where TActivity : class, IExecuteActivity<TArguments>
-                where TArguments : class
-            {
-                if (_disposed)
-                    return;
-
-                _handles.Add(configurator.ConnectActivityObserver(_observer));
-            }
-
-            public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-                where TActivity : class, ICompensateActivity<TLog>
-                where TLog : class
-            {
-                if (_disposed)
-                    return;
-
-                _handles.Add(configurator.ConnectActivityObserver(_observer));
-            }
+            _handles.Add(configurator.ConnectActivityObserver(_observer));
         }
     }
 }

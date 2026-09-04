@@ -1,61 +1,59 @@
+using System;
+using System.Diagnostics;
+using ViciOne.ServiceBus.Util;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Logging
+namespace ViciOne.ServiceBus.Logging;
+
+public readonly struct StartedActivity
 {
-    using System;
-    using System.Diagnostics;
-    using Util;
+    public readonly Activity Activity;
 
-
-    public readonly struct StartedActivity
+    public StartedActivity(Activity activity)
     {
-        public readonly Activity Activity;
+        Activity = activity;
+    }
 
-        public StartedActivity(Activity activity)
+    public void SetTag(string key, string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return;
+
+        ActivityObservation.TrySetTag(Activity, key, value);
+    }
+
+    public void Update<T>(SendContext<T> context)
+        where T : class
+    {
+        if (context.BodyLength.HasValue)
+            SetTag(DiagnosticHeaders.Messaging.BodyLength, context.BodyLength.Value.ToString());
+    }
+
+    public void AddExceptionEvent(Exception exception, bool escaped = true)
+    {
+        exception = exception.GetBaseException() ?? exception;
+
+        var exceptionMessage = ExceptionUtil.GetMessage(exception);
+
+        var tags = new ActivityTagsCollection
         {
-            Activity = activity;
-        }
+            { DiagnosticHeaders.Exceptions.Escaped, escaped },
+            { DiagnosticHeaders.Exceptions.Message, exceptionMessage },
+            { DiagnosticHeaders.Exceptions.Type, TypeCache.GetShortName(exception.GetType()) },
+            { DiagnosticHeaders.Exceptions.Stacktrace, ExceptionUtil.GetStackTrace(exception) }
+        };
 
-        public void SetTag(string key, string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return;
+        var activityEvent = new ActivityEvent(DiagnosticHeaders.Exceptions.EventName, DateTimeOffset.UtcNow, tags);
 
-            ActivityObservation.TrySetTag(Activity, key, value);
-        }
+        ActivityObservation.TryAddEvent(Activity, activityEvent);
+        ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);
+    }
 
-        public void Update<T>(SendContext<T> context)
-            where T : class
-        {
-            if (context.BodyLength.HasValue)
-                SetTag(DiagnosticHeaders.Messaging.BodyLength, context.BodyLength.Value.ToString());
-        }
+    public void Stop()
+    {
+        if (Activity.Status == ActivityStatusCode.Unset)
+            ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Ok);
 
-        public void AddExceptionEvent(Exception exception, bool escaped = true)
-        {
-            exception = exception.GetBaseException() ?? exception;
-
-            var exceptionMessage = ExceptionUtil.GetMessage(exception);
-
-            var tags = new ActivityTagsCollection
-            {
-                { DiagnosticHeaders.Exceptions.Escaped, escaped },
-                { DiagnosticHeaders.Exceptions.Message, exceptionMessage },
-                { DiagnosticHeaders.Exceptions.Type, TypeCache.GetShortName(exception.GetType()) },
-                { DiagnosticHeaders.Exceptions.Stacktrace, ExceptionUtil.GetStackTrace(exception) }
-            };
-
-            var activityEvent = new ActivityEvent(DiagnosticHeaders.Exceptions.EventName, DateTimeOffset.UtcNow, tags);
-
-            ActivityObservation.TryAddEvent(Activity, activityEvent);
-            ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);
-        }
-
-        public void Stop()
-        {
-            if (Activity.Status == ActivityStatusCode.Unset)
-                ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Ok);
-
-            ActivityObservation.TryDispose(Activity);
-        }
+        ActivityObservation.TryDispose(Activity);
     }
 }

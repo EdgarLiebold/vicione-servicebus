@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
-
 using System.Collections.Concurrent;
 using System.Diagnostics.Metrics;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +9,13 @@ using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.ProviderAbstractions;
+using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
-using ViciOne.ServiceBus.Testing;
 using Xunit;
 
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 
 public sealed class BusOutboxDeliveryTelemetryTests
 {

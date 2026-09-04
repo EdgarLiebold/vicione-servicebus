@@ -1,124 +1,122 @@
+using System;
+using System.Collections.Generic;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ServiceInstanceConfigurator<TEndpointConfigurator> :
+    IServiceInstanceConfigurator<TEndpointConfigurator>
+    where TEndpointConfigurator : IReceiveEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
+    readonly ServiceInstanceOptions _options;
 
-
-    public class ServiceInstanceConfigurator<TEndpointConfigurator> :
-        IServiceInstanceConfigurator<TEndpointConfigurator>
-        where TEndpointConfigurator : IReceiveEndpointConfigurator
+    public ServiceInstanceConfigurator(IReceiveConfigurator<TEndpointConfigurator> configurator, ServiceInstanceOptions options,
+        TEndpointConfigurator instanceEndpointConfigurator)
     {
-        readonly ServiceInstanceOptions _options;
+        if (instanceEndpointConfigurator == null)
+            throw new ArgumentNullException(nameof(instanceEndpointConfigurator), "Service instance now requires an instance endpoint");
 
-        public ServiceInstanceConfigurator(IReceiveConfigurator<TEndpointConfigurator> configurator, ServiceInstanceOptions options,
-            TEndpointConfigurator instanceEndpointConfigurator)
+        BusConfigurator = configurator;
+        InstanceEndpointConfigurator = instanceEndpointConfigurator;
+        _options = options;
+    }
+
+    public Uri InstanceAddress => InstanceEndpointConfigurator.InputAddress;
+
+    IReceiveConfigurator IServiceInstanceConfigurator.BusConfigurator => BusConfigurator;
+    IReceiveEndpointConfigurator IServiceInstanceConfigurator.InstanceEndpointConfigurator => InstanceEndpointConfigurator;
+
+    public IReceiveConfigurator<TEndpointConfigurator> BusConfigurator { get; }
+    public TEndpointConfigurator InstanceEndpointConfigurator { get; }
+
+    public void AddSpecification(ISpecification specification)
+    {
+        InstanceEndpointConfigurator.AddEndpointSpecification(new ValidateSpecification(specification));
+    }
+
+    public IEndpointNameFormatter EndpointNameFormatter => _options.EndpointNameFormatter;
+
+    public T Options<T>(Action<T>? configure = null)
+        where T : IOptions, new()
+    {
+        return _options.Options(configure);
+    }
+
+    public T Options<T>(T options, Action<T>? configure = null)
+        where T : IOptions
+    {
+        return _options.Options(options, configure);
+    }
+
+    public bool TryGetOptions<T>(out T options)
+        where T : IOptions
+    {
+        return _options.TryGetOptions(out options);
+    }
+
+    public IEnumerable<T> SelectOptions<T>()
+        where T : class
+    {
+        return _options.SelectOptions<T>();
+    }
+
+    void IReceiveConfigurator.ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator>? configureEndpoint)
+    {
+        ReceiveEndpoint(definition, endpointNameFormatter, x => configureEndpoint?.Invoke(x));
+    }
+
+    public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
+        Action<TEndpointConfigurator>? configureEndpoint)
+    {
+        endpointNameFormatter ??= EndpointNameFormatter;
+
+        BusConfigurator.ReceiveEndpoint(definition, endpointNameFormatter, endpointConfigurator =>
         {
-            if (instanceEndpointConfigurator == null)
-                throw new ArgumentNullException(nameof(instanceEndpointConfigurator), "Service instance now requires an instance endpoint");
+            endpointConfigurator.AddDependency(InstanceEndpointConfigurator);
 
-            BusConfigurator = configurator;
-            InstanceEndpointConfigurator = instanceEndpointConfigurator;
-            _options = options;
+            configureEndpoint?.Invoke(endpointConfigurator);
+        });
+    }
+
+    void IReceiveConfigurator.ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
+    {
+        ReceiveEndpoint(queueName, x => configureEndpoint(x));
+    }
+
+    public void ReceiveEndpoint(string queueName, Action<TEndpointConfigurator>? configureEndpoint)
+    {
+        BusConfigurator.ReceiveEndpoint(queueName, endpointConfigurator =>
+        {
+            endpointConfigurator.AddDependency(InstanceEndpointConfigurator);
+
+            configureEndpoint?.Invoke(endpointConfigurator);
+        });
+    }
+
+    public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
+    {
+        return BusConfigurator.ConnectEndpointConfigurationObserver(observer);
+    }
+
+
+    class ValidateSpecification :
+        IReceiveEndpointSpecification
+    {
+        readonly ISpecification _specification;
+
+        public ValidateSpecification(ISpecification specification)
+        {
+            _specification = specification;
         }
 
-        public Uri InstanceAddress => InstanceEndpointConfigurator.InputAddress;
-
-        IReceiveConfigurator IServiceInstanceConfigurator.BusConfigurator => BusConfigurator;
-        IReceiveEndpointConfigurator IServiceInstanceConfigurator.InstanceEndpointConfigurator => InstanceEndpointConfigurator;
-
-        public IReceiveConfigurator<TEndpointConfigurator> BusConfigurator { get; }
-        public TEndpointConfigurator InstanceEndpointConfigurator { get; }
-
-        public void AddSpecification(ISpecification specification)
+        public IEnumerable<ValidationResult> Validate()
         {
-            InstanceEndpointConfigurator.AddEndpointSpecification(new ValidateSpecification(specification));
+            return _specification.Validate();
         }
 
-        public IEndpointNameFormatter EndpointNameFormatter => _options.EndpointNameFormatter;
-
-        public T Options<T>(Action<T>? configure = null)
-            where T : IOptions, new()
+        public void Configure(IReceiveEndpointBuilder builder)
         {
-            return _options.Options(configure);
-        }
-
-        public T Options<T>(T options, Action<T>? configure = null)
-            where T : IOptions
-        {
-            return _options.Options(options, configure);
-        }
-
-        public bool TryGetOptions<T>(out T options)
-            where T : IOptions
-        {
-            return _options.TryGetOptions(out options);
-        }
-
-        public IEnumerable<T> SelectOptions<T>()
-            where T : class
-        {
-            return _options.SelectOptions<T>();
-        }
-
-        void IReceiveConfigurator.ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
-            Action<IReceiveEndpointConfigurator>? configureEndpoint)
-        {
-            ReceiveEndpoint(definition, endpointNameFormatter, x => configureEndpoint?.Invoke(x));
-        }
-
-        public void ReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter? endpointNameFormatter,
-            Action<TEndpointConfigurator>? configureEndpoint)
-        {
-            endpointNameFormatter ??= EndpointNameFormatter;
-
-            BusConfigurator.ReceiveEndpoint(definition, endpointNameFormatter, endpointConfigurator =>
-            {
-                endpointConfigurator.AddDependency(InstanceEndpointConfigurator);
-
-                configureEndpoint?.Invoke(endpointConfigurator);
-            });
-        }
-
-        void IReceiveConfigurator.ReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint)
-        {
-            ReceiveEndpoint(queueName, x => configureEndpoint(x));
-        }
-
-        public void ReceiveEndpoint(string queueName, Action<TEndpointConfigurator>? configureEndpoint)
-        {
-            BusConfigurator.ReceiveEndpoint(queueName, endpointConfigurator =>
-            {
-                endpointConfigurator.AddDependency(InstanceEndpointConfigurator);
-
-                configureEndpoint?.Invoke(endpointConfigurator);
-            });
-        }
-
-        public ConnectHandle ConnectEndpointConfigurationObserver(IEndpointConfigurationObserver observer)
-        {
-            return BusConfigurator.ConnectEndpointConfigurationObserver(observer);
-        }
-
-
-        class ValidateSpecification :
-            IReceiveEndpointSpecification
-        {
-            readonly ISpecification _specification;
-
-            public ValidateSpecification(ISpecification specification)
-            {
-                _specification = specification;
-            }
-
-            public IEnumerable<ValidationResult> Validate()
-            {
-                return _specification.Validate();
-            }
-
-            public void Configure(IReceiveEndpointBuilder builder)
-            {
-            }
         }
     }
 }

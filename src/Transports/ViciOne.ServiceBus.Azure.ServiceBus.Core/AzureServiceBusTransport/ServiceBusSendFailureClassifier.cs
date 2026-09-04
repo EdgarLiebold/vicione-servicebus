@@ -1,11 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.AzureServiceBusTransport;
-
 using System;
 using System.Net.WebSockets;
 using Azure;
 using Azure.Messaging.ServiceBus;
 
+#nullable enable
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
 /// <summary>
 /// Classifies Azure Service Bus send failures from typed SDK failure reasons and HTTP status codes.
 /// </summary>

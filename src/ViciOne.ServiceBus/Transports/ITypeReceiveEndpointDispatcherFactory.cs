@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface ITypeReceiveEndpointDispatcherFactory
 {
-    public interface ITypeReceiveEndpointDispatcherFactory
-    {
-        IReceiveEndpointDispatcher Create(IReceiveEndpointDispatcherFactory factory, IEndpointNameFormatter formatter);
-    }
+    IReceiveEndpointDispatcher Create(IReceiveEndpointDispatcherFactory factory, IEndpointNameFormatter formatter);
 }

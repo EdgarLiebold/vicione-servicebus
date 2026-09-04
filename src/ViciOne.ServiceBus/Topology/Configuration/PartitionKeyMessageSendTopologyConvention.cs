@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PartitionKeyMessageSendTopologyConvention<TMessage> :
+    IPartitionKeyMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using Transports;
+    IMessagePartitionKeyFormatter<TMessage> _formatter;
 
-
-    public class PartitionKeyMessageSendTopologyConvention<TMessage> :
-        IPartitionKeyMessageSendTopologyConvention<TMessage>
-        where TMessage : class
+    public PartitionKeyMessageSendTopologyConvention(IPartitionKeyFormatter formatter)
     {
-        IMessagePartitionKeyFormatter<TMessage> _formatter;
+        if (formatter != null)
+            SetFormatter(formatter);
+    }
 
-        public PartitionKeyMessageSendTopologyConvention(IPartitionKeyFormatter formatter)
+    public bool TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    {
+        if (_formatter != null)
         {
-            if (formatter != null)
-                SetFormatter(formatter);
+            messageSendTopology = new SetPartitionKeyMessageSendTopology<TMessage>(_formatter);
+            return true;
         }
 
-        public bool TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
-        {
-            if (_formatter != null)
-            {
-                messageSendTopology = new SetPartitionKeyMessageSendTopology<TMessage>(_formatter);
-                return true;
-            }
+        messageSendTopology = null;
+        return false;
+    }
 
-            messageSendTopology = null;
-            return false;
-        }
+    public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+        where T : class
+    {
+        convention = this as IMessageSendTopologyConvention<T>;
 
-        public bool TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
-            where T : class
-        {
-            convention = this as IMessageSendTopologyConvention<T>;
+        return convention != null;
+    }
 
-            return convention != null;
-        }
+    public void SetFormatter(IPartitionKeyFormatter formatter)
+    {
+        _formatter = new MessagePartitionKeyFormatter<TMessage>(formatter);
+    }
 
-        public void SetFormatter(IPartitionKeyFormatter formatter)
-        {
-            _formatter = new MessagePartitionKeyFormatter<TMessage>(formatter);
-        }
-
-        public void SetFormatter(IMessagePartitionKeyFormatter<TMessage> formatter)
-        {
-            _formatter = formatter;
-        }
+    public void SetFormatter(IMessagePartitionKeyFormatter<TMessage> formatter)
+    {
+        _formatter = formatter;
     }
 }

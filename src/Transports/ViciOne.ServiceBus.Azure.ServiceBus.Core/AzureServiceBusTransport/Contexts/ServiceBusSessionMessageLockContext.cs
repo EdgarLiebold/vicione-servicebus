@@ -1,66 +1,64 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusSessionMessageLockContext :
+    MessageLockContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
-    using Util;
+    readonly CancellationToken _cancellationToken;
+    readonly ServiceBusReceivedMessage _message;
+    readonly ProcessSessionMessageEventArgs _session;
+    bool _deadLettered;
 
-
-    public class ServiceBusSessionMessageLockContext :
-        MessageLockContext
+    public ServiceBusSessionMessageLockContext(ProcessSessionMessageEventArgs session, ServiceBusReceivedMessage message,
+        CancellationToken cancellationToken)
     {
-        readonly CancellationToken _cancellationToken;
-        readonly ServiceBusReceivedMessage _message;
-        readonly ProcessSessionMessageEventArgs _session;
-        bool _deadLettered;
+        _session = session;
+        _message = message;
+        _cancellationToken = cancellationToken;
+    }
 
-        public ServiceBusSessionMessageLockContext(ProcessSessionMessageEventArgs session, ServiceBusReceivedMessage message,
-            CancellationToken cancellationToken)
-        {
-            _session = session;
-            _message = message;
-            _cancellationToken = cancellationToken;
-        }
+    public Task Complete()
+    {
+        return _deadLettered
+            ? Task.CompletedTask
+            : _session.CompleteMessageAsync(_message, _cancellationToken);
+    }
 
-        public Task Complete()
-        {
-            return _deadLettered
-                ? Task.CompletedTask
-                : _session.CompleteMessageAsync(_message, _cancellationToken);
-        }
+    public Task Abandon(Exception exception)
+    {
+        if (_deadLettered)
+            return Task.CompletedTask;
 
-        public Task Abandon(Exception exception)
-        {
-            if (_deadLettered)
-                return Task.CompletedTask;
+        (Dictionary<string, object> dictionary, _) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
 
-            (Dictionary<string, object> dictionary, _) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
+        return _session.AbandonMessageAsync(_message, dictionary, _cancellationToken);
+    }
 
-            return _session.AbandonMessageAsync(_message, dictionary, _cancellationToken);
-        }
+    public async Task DeadLetter()
+    {
+        const string reason = "dead-letter";
 
-        public async Task DeadLetter()
-        {
-            const string reason = "dead-letter";
+        var headers = new Dictionary<string, object> { { MessageHeaders.Reason, reason } };
 
-            var headers = new Dictionary<string, object> { { MessageHeaders.Reason, reason } };
+        await _session.DeadLetterMessageAsync(_message, headers, reason, cancellationToken: _cancellationToken).ConfigureAwait(false);
 
-            await _session.DeadLetterMessageAsync(_message, headers, reason, cancellationToken: _cancellationToken).ConfigureAwait(false);
+        _deadLettered = true;
+    }
 
-            _deadLettered = true;
-        }
+    public async Task DeadLetter(Exception exception)
+    {
+        const string reason = "fault";
 
-        public async Task DeadLetter(Exception exception)
-        {
-            const string reason = "fault";
+        (Dictionary<string, object> dictionary, var message) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
 
-            (Dictionary<string, object> dictionary, var message) = ExceptionUtil.GetExceptionHeaderDetail(exception, ServiceBusSendTransportContext.Adapter);
+        await _session.DeadLetterMessageAsync(_message, dictionary, reason, message, _cancellationToken).ConfigureAwait(false);
 
-            await _session.DeadLetterMessageAsync(_message, dictionary, reason, message, _cancellationToken).ConfigureAwait(false);
-
-            _deadLettered = true;
-        }
+        _deadLettered = true;
     }
 }

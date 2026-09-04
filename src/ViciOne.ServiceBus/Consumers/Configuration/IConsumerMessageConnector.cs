@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IConsumerMessageConnector
 {
-    using System;
+    Type MessageType { get; }
+}
 
 
-    public interface IConsumerMessageConnector
-    {
-        Type MessageType { get; }
-    }
+public interface IConsumerMessageConnector<TConsumer> :
+    IConsumerMessageConnector
+    where TConsumer : class
+{
+    IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification();
 
-
-    public interface IConsumerMessageConnector<TConsumer> :
-        IConsumerMessageConnector
-        where TConsumer : class
-    {
-        IConsumerMessageSpecification<TConsumer> CreateConsumerMessageSpecification();
-
-        ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
-            IConsumerSpecification<TConsumer> specification);
-    }
+    ConnectHandle ConnectConsumer(IConsumePipeConnector consumePipe, IConsumerFactory<TConsumer> consumerFactory,
+        IConsumerSpecification<TConsumer> specification);
 }

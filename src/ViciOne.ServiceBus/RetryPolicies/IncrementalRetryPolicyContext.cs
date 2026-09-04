@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class IncrementalRetryPolicyContext<TContext> :
+    BaseRetryPolicyContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
+    readonly IncrementalRetryPolicy _policy;
 
-
-    public class IncrementalRetryPolicyContext<TContext> :
-        BaseRetryPolicyContext<TContext>
-        where TContext : class, PipeContext
+    public IncrementalRetryPolicyContext(IncrementalRetryPolicy policy, TContext context)
+        : base(policy, context)
     {
-        readonly IncrementalRetryPolicy _policy;
+        _policy = policy;
+    }
 
-        public IncrementalRetryPolicyContext(IncrementalRetryPolicy policy, TContext context)
-            : base(policy, context)
-        {
-            _policy = policy;
-        }
-
-        protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
-        {
-            return new IncrementalRetryContext<TContext>(_policy, Context, exception, 0, _policy.InitialInterval, _policy.IntervalIncrement, cancellationToken);
-        }
+    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
+    {
+        return new IncrementalRetryContext<TContext>(_policy, Context, exception, 0, _policy.InitialInterval, _policy.IntervalIncrement, cancellationToken);
     }
 }

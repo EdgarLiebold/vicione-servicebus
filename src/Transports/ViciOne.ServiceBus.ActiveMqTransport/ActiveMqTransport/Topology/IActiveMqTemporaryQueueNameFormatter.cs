@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public interface IActiveMqTemporaryQueueNameFormatter
 {
-    public interface IActiveMqTemporaryQueueNameFormatter
-    {
-        public string Format(string queueName);
-    }
+    public string Format(string queueName);
 }

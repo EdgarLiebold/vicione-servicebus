@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+using System;
+using ViciOne.ServiceBus.SqlTransport.Topology;
+
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public class SqlTopicConfigurator :
+    ISqlTopicConfigurator,
+    Topic
 {
-    using System;
-    using Topology;
-
-
-    public class SqlTopicConfigurator :
-        ISqlTopicConfigurator,
-        Topic
+    public SqlTopicConfigurator(string topicName)
     {
-        public SqlTopicConfigurator(string topicName)
-        {
-            TopicName = topicName;
-        }
+        TopicName = topicName;
+    }
 
-        public string TopicName { get; }
+    public string TopicName { get; }
 
-        public SqlEndpointAddress GetEndpointAddress(Uri hostAddress)
-        {
-            return new SqlEndpointAddress(hostAddress, TopicName, type: SqlEndpointAddress.AddressType.Topic);
-        }
+    public SqlEndpointAddress GetEndpointAddress(Uri hostAddress)
+    {
+        return new SqlEndpointAddress(hostAddress, TopicName, type: SqlEndpointAddress.AddressType.Topic);
     }
 }

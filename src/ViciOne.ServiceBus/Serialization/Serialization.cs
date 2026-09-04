@@ -1,92 +1,90 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public class Serialization :
+    ISerialization
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Net.Mime;
+    readonly IMessageDeserializer _defaultDeserializer;
+    readonly IMessageSerializer _defaultSerializer;
+    readonly IDictionary<string, IMessageDeserializer> _deserializers;
+    readonly IDictionary<string, IMessageSerializer> _serializers;
 
-
-    public class Serialization :
-        ISerialization
+    public Serialization(IEnumerable<IMessageSerializer> serializers, ContentType serializerContentType,
+        IEnumerable<IMessageDeserializer> deserializers, ContentType defaultContentType)
     {
-        readonly IMessageDeserializer _defaultDeserializer;
-        readonly IMessageSerializer _defaultSerializer;
-        readonly IDictionary<string, IMessageDeserializer> _deserializers;
-        readonly IDictionary<string, IMessageSerializer> _serializers;
+        if (serializerContentType == null)
+            throw new ArgumentNullException(nameof(serializerContentType));
+        if (defaultContentType == null)
+            throw new ArgumentNullException(nameof(defaultContentType));
 
-        public Serialization(IEnumerable<IMessageSerializer> serializers, ContentType serializerContentType,
-            IEnumerable<IMessageDeserializer> deserializers, ContentType defaultContentType)
-        {
-            if (serializerContentType == null)
-                throw new ArgumentNullException(nameof(serializerContentType));
-            if (defaultContentType == null)
-                throw new ArgumentNullException(nameof(defaultContentType));
+        DefaultContentType = defaultContentType;
 
-            DefaultContentType = defaultContentType;
+        _serializers = new Dictionary<string, IMessageSerializer>(StringComparer.OrdinalIgnoreCase);
 
-            _serializers = new Dictionary<string, IMessageSerializer>(StringComparer.OrdinalIgnoreCase);
+        foreach (var serializer in serializers)
+            _serializers[serializer.ContentType.MediaType] = serializer;
 
-            foreach (var serializer in serializers)
-                _serializers[serializer.ContentType.MediaType] = serializer;
+        if (!_serializers.TryGetValue(serializerContentType.MediaType, out var defaultSerializer))
+            throw new ConfigurationException($"The serializer content type was not found: {serializerContentType}");
 
-            if (!_serializers.TryGetValue(serializerContentType.MediaType, out var defaultSerializer))
-                throw new ConfigurationException($"The serializer content type was not found: {serializerContentType}");
+        _defaultSerializer = defaultSerializer;
 
-            _defaultSerializer = defaultSerializer;
+        _deserializers = new Dictionary<string, IMessageDeserializer>(StringComparer.OrdinalIgnoreCase);
 
-            _deserializers = new Dictionary<string, IMessageDeserializer>(StringComparer.OrdinalIgnoreCase);
+        foreach (var deserializer in deserializers)
+            _deserializers[deserializer.ContentType.MediaType] = deserializer;
 
-            foreach (var deserializer in deserializers)
-                _deserializers[deserializer.ContentType.MediaType] = deserializer;
+        if (!_deserializers.TryGetValue(defaultContentType.MediaType, out var defaultDeserializer))
+            throw new ConfigurationException($"The default content type deserializer was not found: {defaultContentType}");
 
-            if (!_deserializers.TryGetValue(defaultContentType.MediaType, out var defaultDeserializer))
-                throw new ConfigurationException($"The default content type deserializer was not found: {defaultContentType}");
+        _defaultDeserializer = defaultDeserializer;
+    }
 
-            _defaultDeserializer = defaultDeserializer;
-        }
+    public ContentType DefaultContentType { get; }
 
-        public ContentType DefaultContentType { get; }
+    public IMessageSerializer GetMessageSerializer(ContentType? contentType = null)
+    {
+        var mediaType = contentType?.MediaType;
 
-        public IMessageSerializer GetMessageSerializer(ContentType? contentType = null)
-        {
-            var mediaType = contentType?.MediaType;
+        if (mediaType != null && _serializers.TryGetValue(mediaType, out var serializer))
+            return serializer;
 
-            if (mediaType != null && _serializers.TryGetValue(mediaType, out var serializer))
-                return serializer;
+        return _defaultSerializer;
+    }
 
-            return _defaultSerializer;
-        }
+    public bool TryGetMessageSerializer(ContentType contentType, [NotNullWhen(true)] out IMessageSerializer? serializer)
+    {
+        var mediaType = contentType.MediaType;
 
-        public bool TryGetMessageSerializer(ContentType contentType, [NotNullWhen(true)] out IMessageSerializer? serializer)
-        {
-            var mediaType = contentType.MediaType;
+        return _serializers.TryGetValue(mediaType, out serializer);
+    }
 
-            return _serializers.TryGetValue(mediaType, out serializer);
-        }
+    public IMessageDeserializer GetMessageDeserializer(ContentType? contentType = null)
+    {
+        var mediaType = contentType?.MediaType;
 
-        public IMessageDeserializer GetMessageDeserializer(ContentType? contentType = null)
-        {
-            var mediaType = contentType?.MediaType;
+        if (mediaType != null && _deserializers.TryGetValue(mediaType, out var deserializer))
+            return deserializer;
 
-            if (mediaType != null && _deserializers.TryGetValue(mediaType, out var deserializer))
-                return deserializer;
+        return _defaultDeserializer;
+    }
 
-            return _defaultDeserializer;
-        }
+    public bool TryGetMessageDeserializer(ContentType contentType, [NotNullWhen(true)] out IMessageDeserializer? deserializer)
+    {
+        var mediaType = contentType.MediaType;
 
-        public bool TryGetMessageDeserializer(ContentType contentType, [NotNullWhen(true)] out IMessageDeserializer? deserializer)
-        {
-            var mediaType = contentType.MediaType;
+        return _deserializers.TryGetValue(mediaType, out deserializer);
+    }
 
-            return _deserializers.TryGetValue(mediaType, out deserializer);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("serializers");
-            foreach (var deserializer in _deserializers.Values)
-                deserializer.Probe(scope);
-        }
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("serializers");
+        foreach (var deserializer in _deserializers.Values)
+            deserializer.Probe(scope);
     }
 }

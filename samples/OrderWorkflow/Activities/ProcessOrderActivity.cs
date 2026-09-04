@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Activities;
+using ViciOne.ServiceBus.Samples.OrderWorkflow.Contracts;
 
-using Contracts;
+namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Activities;
 
 public sealed class ProcessOrderActivity :
     IActivity<ProcessOrderArguments, ProcessOrderLog>

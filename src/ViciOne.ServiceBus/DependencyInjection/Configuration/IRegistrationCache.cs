@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IRegistrationCache<out T>
 {
-    using System.Collections.Generic;
-
-
-    public interface IRegistrationCache<out T>
-    {
-        IEnumerable<T> Values { get; }
-    }
+    IEnumerable<T> Values { get; }
 }

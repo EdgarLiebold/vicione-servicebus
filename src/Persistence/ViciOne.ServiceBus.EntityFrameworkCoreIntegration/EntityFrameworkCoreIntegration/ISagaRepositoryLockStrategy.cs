@@ -1,26 +1,24 @@
+using System;
+using System.Data;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
+
 #nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+public interface ISagaRepositoryLockStrategy<TSaga>
+    where TSaga : class, ISaga
 {
-    using Microsoft.EntityFrameworkCore;
-    using Saga;
-    using System;
-    using System.Data;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
+    IsolationLevel IsolationLevel { get; }
 
+    IQueryable<TSaga> ApplyQueryCustomization(IQueryable<TSaga> query);
 
-    public interface ISagaRepositoryLockStrategy<TSaga>
-        where TSaga : class, ISaga
-    {
-        IsolationLevel IsolationLevel { get; }
+    Task<TSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken);
 
-        IQueryable<TSaga> ApplyQueryCustomization(IQueryable<TSaga> query);
+    Task<SagaLockContext<TSaga>> CreateLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken);
 
-        Task<TSaga?> Load(DbContext context, Guid correlationId, CancellationToken cancellationToken);
-
-        Task<SagaLockContext<TSaga>> CreateLockContext(DbContext context, ISagaQuery<TSaga> query, CancellationToken cancellationToken);
-
-        bool IsTransactionEnabled { get; }
-    }
+    bool IsTransactionEnabled { get; }
 }

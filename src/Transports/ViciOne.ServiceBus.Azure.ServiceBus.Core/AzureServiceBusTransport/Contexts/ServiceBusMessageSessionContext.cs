@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusMessageSessionContext :
+    MessageSessionContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
+    readonly ProcessSessionMessageEventArgs _session;
+    readonly CancellationToken _cancellationToken;
 
-
-    public class ServiceBusMessageSessionContext :
-        MessageSessionContext
+    public ServiceBusMessageSessionContext(ProcessSessionMessageEventArgs session, CancellationToken cancellationToken)
     {
-        readonly ProcessSessionMessageEventArgs _session;
-        readonly CancellationToken _cancellationToken;
-
-        public ServiceBusMessageSessionContext(ProcessSessionMessageEventArgs session, CancellationToken cancellationToken)
-        {
-            _session = session;
-            _cancellationToken = cancellationToken;
-        }
-
-        public Task<BinaryData> GetStateAsync()
-        {
-            return _session.GetSessionStateAsync(_cancellationToken);
-        }
-
-        public Task SetStateAsync(BinaryData state)
-        {
-            return _session.SetSessionStateAsync(state, _cancellationToken);
-        }
-
-        public Task RenewLockAsync(ServiceBusReceivedMessage message)
-        {
-            return Task.CompletedTask;
-        }
-
-        public DateTime LockedUntilUtc => _session.Message.LockedUntil.UtcDateTime;
-
-        public string SessionId => _session.SessionId;
+        _session = session;
+        _cancellationToken = cancellationToken;
     }
+
+    public Task<BinaryData> GetStateAsync()
+    {
+        return _session.GetSessionStateAsync(_cancellationToken);
+    }
+
+    public Task SetStateAsync(BinaryData state)
+    {
+        return _session.SetSessionStateAsync(state, _cancellationToken);
+    }
+
+    public Task RenewLockAsync(ServiceBusReceivedMessage message)
+    {
+        return Task.CompletedTask;
+    }
+
+    public DateTime LockedUntilUtc => _session.Message.LockedUntil.UtcDateTime;
+
+    public string SessionId => _session.SessionId;
 }

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ICorrelationIdSelector<T>
+    where T : class
 {
-    public interface ICorrelationIdSelector<T>
-        where T : class
-    {
-        bool TryGetSetCorrelationId(out IMessageCorrelationId<T> messageCorrelationId);
-    }
+    bool TryGetSetCorrelationId(out IMessageCorrelationId<T> messageCorrelationId);
 }

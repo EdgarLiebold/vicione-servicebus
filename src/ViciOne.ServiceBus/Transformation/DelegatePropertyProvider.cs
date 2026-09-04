@@ -1,59 +1,57 @@
-namespace ViciOne.ServiceBus.Transformation
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Transformation;
+
+/// <summary>
+/// Copies the input property, as-is, for the property value
+/// </summary>
+/// <typeparam name="TInput"></typeparam>
+/// <typeparam name="TProperty"></typeparam>
+public class DelegatePropertyProvider<TInput, TProperty> :
+    IPropertyProvider<TInput, TProperty>
+    where TInput : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Initializers;
-    using Util;
+    readonly IPropertyProvider<TInput, TProperty> _inputProvider;
+    readonly Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> _valueProvider;
 
-
-    /// <summary>
-    /// Copies the input property, as-is, for the property value
-    /// </summary>
-    /// <typeparam name="TInput"></typeparam>
-    /// <typeparam name="TProperty"></typeparam>
-    public class DelegatePropertyProvider<TInput, TProperty> :
-        IPropertyProvider<TInput, TProperty>
-        where TInput : class
+    public DelegatePropertyProvider(IPropertyProvider<TInput, TProperty> inputProvider,
+        Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> valueProvider)
     {
-        readonly IPropertyProvider<TInput, TProperty> _inputProvider;
-        readonly Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> _valueProvider;
+        if (inputProvider == null)
+            throw new ArgumentNullException(nameof(inputProvider));
 
-        public DelegatePropertyProvider(IPropertyProvider<TInput, TProperty> inputProvider,
-            Func<TransformPropertyContext<TProperty, TInput>, Task<TProperty>> valueProvider)
+        _inputProvider = inputProvider;
+        _valueProvider = valueProvider;
+    }
+
+    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+        where T : class
+    {
+        if (!context.TryGetPayload(out TransformContext<TInput> transformContext))
+            return TaskResults.Default<TProperty>();
+
+        if (!context.HasInput)
+            return TaskResults.Default<TProperty>();
+
+        Task<TProperty> inputTask = _inputProvider.GetProperty(context);
+        if (inputTask.IsCompleted)
         {
-            if (inputProvider == null)
-                throw new ArgumentNullException(nameof(inputProvider));
+            var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputTask.Result);
 
-            _inputProvider = inputProvider;
-            _valueProvider = valueProvider;
+            return _valueProvider(propertyContext);
         }
 
-        public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
-            where T : class
+        async Task<TProperty> GetPropertyAsync()
         {
-            if (!context.TryGetPayload(out TransformContext<TInput> transformContext))
-                return TaskResults.Default<TProperty>();
+            var inputValue = await inputTask.ConfigureAwait(false);
+            var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputValue);
 
-            if (!context.HasInput)
-                return TaskResults.Default<TProperty>();
-
-            Task<TProperty> inputTask = _inputProvider.GetProperty(context);
-            if (inputTask.IsCompleted)
-            {
-                var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputTask.Result);
-
-                return _valueProvider(propertyContext);
-            }
-
-            async Task<TProperty> GetPropertyAsync()
-            {
-                var inputValue = await inputTask.ConfigureAwait(false);
-                var propertyContext = new MessageTransformPropertyContext<TProperty, TInput>(transformContext, inputValue);
-
-                return await _valueProvider(propertyContext).ConfigureAwait(false);
-            }
-
-            return GetPropertyAsync();
+            return await _valueProvider(propertyContext).ConfigureAwait(false);
         }
+
+        return GetPropertyAsync();
     }
 }

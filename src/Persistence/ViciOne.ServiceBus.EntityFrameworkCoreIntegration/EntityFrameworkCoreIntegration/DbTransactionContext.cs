@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+using System;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+/// <summary>
+/// Implemented when a filter/context has already started and is managing the transaction
+/// </summary>
+public interface DbTransactionContext
 {
-    using System;
-
-
-    /// <summary>
-    /// Implemented when a filter/context has already started and is managing the transaction
-    /// </summary>
-    public interface DbTransactionContext
-    {
-        Guid TransactionId { get; }
-    }
+    Guid TransactionId { get; }
 }

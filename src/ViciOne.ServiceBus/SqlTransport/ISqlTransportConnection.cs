@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.SqlTransport
+using System;
+
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public interface ISqlTransportConnection :
+    IAsyncDisposable
 {
-    using System;
-
-
-    public interface ISqlTransportConnection :
-        IAsyncDisposable
-    {
-    }
 }

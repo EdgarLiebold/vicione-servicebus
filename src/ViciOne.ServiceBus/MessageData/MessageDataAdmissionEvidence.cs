@@ -1,10 +1,9 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.MessageData;
-
 using System;
 using System.Threading;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.MessageData;
 /// <summary>
 /// Per-send proof that the existing bus-owned MessageData transform carried a stored reference. It is
 /// deliberately not a repository or policy owner.

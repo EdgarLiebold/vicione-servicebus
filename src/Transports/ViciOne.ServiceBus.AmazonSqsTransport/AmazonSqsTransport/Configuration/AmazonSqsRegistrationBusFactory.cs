@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System;
 using System.Collections.Generic;
 using Amazon;
-using ViciOne.ServiceBus.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Transports;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsRegistrationBusFactory :
     TransportRegistrationBusFactory<IAmazonSqsReceiveEndpointConfigurator>

@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Every job type has one entry in this state machine
 /// </summary>

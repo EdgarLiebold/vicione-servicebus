@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
-
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.SqlTransport;
 using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
 
 public sealed class SqlServerConcurrencyTests
 {

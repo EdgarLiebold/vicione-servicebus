@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
-{
-    public interface ICompositeEventStatusAccessor<in TSaga> :
-        IProbeSite
-    {
-        CompositeEventStatus Get(TSaga instance);
+namespace ViciOne.ServiceBus.SagaStateMachine;
 
-        void Set(TSaga instance, CompositeEventStatus status);
-    }
+public interface ICompositeEventStatusAccessor<in TSaga> :
+    IProbeSite
+{
+    CompositeEventStatus Get(TSaga instance);
+
+    void Set(TSaga instance, CompositeEventStatus status);
 }

@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.JobService
+using System;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.JobService.Messages;
+
+namespace ViciOne.ServiceBus.JobService;
+
+public class FinalizeJobConsumer<TJob> :
+    IConsumer<FaultJob>,
+    IConsumer<CompleteJob>
+    where TJob : class
 {
-    using System;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-    using Contracts.JobService;
-    using Messages;
+    readonly Guid _jobTypeId;
 
-
-    public class FinalizeJobConsumer<TJob> :
-        IConsumer<FaultJob>,
-        IConsumer<CompleteJob>
-        where TJob : class
+    public FinalizeJobConsumer(Guid jobTypeId)
     {
-        readonly Guid _jobTypeId;
+        _jobTypeId = jobTypeId;
+    }
 
-        public FinalizeJobConsumer(Guid jobTypeId)
+    public Task Consume(ConsumeContext<CompleteJob> context)
+    {
+        if (context.Message.JobTypeId != _jobTypeId)
+            return Task.CompletedTask;
+
+        var job = context.GetJob<TJob>() ?? throw new SerializationException($"The job could not be deserialized: {TypeCache<TJob>.ShortName}");
+
+        return context.Publish<JobCompleted<TJob>>(new JobCompletedEvent<TJob>
         {
-            _jobTypeId = jobTypeId;
-        }
+            JobId = context.Message.JobId,
+            Timestamp = context.Message.Timestamp,
+            Duration = context.Message.Duration,
+            Job = job,
+            JobProperties = context.Message.JobProperties,
+            InstanceProperties = context.Message.InstanceProperties,
+            JobTypeProperties = context.Message.JobTypeProperties,
+        });
+    }
 
-        public Task Consume(ConsumeContext<CompleteJob> context)
-        {
-            if (context.Message.JobTypeId != _jobTypeId)
-                return Task.CompletedTask;
+    public Task Consume(ConsumeContext<FaultJob> context)
+    {
+        var message = context.Message;
+        if (message.JobTypeId != _jobTypeId)
+            return Task.CompletedTask;
 
-            var job = context.GetJob<TJob>() ?? throw new SerializationException($"The job could not be deserialized: {TypeCache<TJob>.ShortName}");
+        var job = context.GetJob<TJob>() ?? throw new SerializationException($"The job could not be deserialized: {TypeCache<TJob>.ShortName}");
 
-            return context.Publish<JobCompleted<TJob>>(new JobCompletedEvent<TJob>
-            {
-                JobId = context.Message.JobId,
-                Timestamp = context.Message.Timestamp,
-                Duration = context.Message.Duration,
-                Job = job,
-                JobProperties = context.Message.JobProperties,
-                InstanceProperties = context.Message.InstanceProperties,
-                JobTypeProperties = context.Message.JobTypeProperties,
-            });
-        }
+        var jobContext = new FaultJobContext<TJob>(context, job);
 
-        public Task Consume(ConsumeContext<FaultJob> context)
-        {
-            var message = context.Message;
-            if (message.JobTypeId != _jobTypeId)
-                return Task.CompletedTask;
-
-            var job = context.GetJob<TJob>() ?? throw new SerializationException($"The job could not be deserialized: {TypeCache<TJob>.ShortName}");
-
-            var jobContext = new FaultJobContext<TJob>(context, job);
-
-            return jobContext.GenerateFault(new ExceptionInfoException(message.Exceptions));
-        }
+        return jobContext.GenerateFault(new ExceptionInfoException(message.Exceptions));
     }
 }

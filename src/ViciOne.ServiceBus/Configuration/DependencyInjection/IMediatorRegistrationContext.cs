@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IMediatorRegistrationContext :
+    IRegistrationContext
 {
-    public interface IMediatorRegistrationContext :
-        IRegistrationContext
-    {
-    }
 }

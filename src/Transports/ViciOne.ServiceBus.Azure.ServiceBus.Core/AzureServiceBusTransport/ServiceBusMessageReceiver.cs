@@ -1,66 +1,64 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusMessageReceiver :
+    IServiceBusMessageReceiver
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
-    using Context;
-    using Transports;
+    readonly ReceiveEndpointContext _context;
+    readonly IReceivePipeDispatcher _dispatcher;
 
-
-    public class ServiceBusMessageReceiver :
-        IServiceBusMessageReceiver
+    public ServiceBusMessageReceiver(ReceiveEndpointContext context)
     {
-        readonly ReceiveEndpointContext _context;
-        readonly IReceivePipeDispatcher _dispatcher;
+        _context = context;
 
-        public ServiceBusMessageReceiver(ReceiveEndpointContext context)
+        _dispatcher = context.CreateReceivePipeDispatcher();
+    }
+
+    public async Task Handle(ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+    {
+        var context = new ServiceBusReceiveContext(message, _context);
+
+        CancellationTokenRegistration registration = default;
+        if (cancellationToken.CanBeCanceled)
+            registration = cancellationToken.Register(context.Cancel);
+
+        try
         {
-            _context = context;
-
-            _dispatcher = context.CreateReceivePipeDispatcher();
+            await _dispatcher.Dispatch(context, NoLockReceiveContext.Instance).ConfigureAwait(false);
         }
-
-        public async Task Handle(ServiceBusReceivedMessage message, CancellationToken cancellationToken)
+        catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.SessionLockLost)
         {
-            var context = new ServiceBusReceiveContext(message, _context);
+            LogContext.Error?.Log("Session Lock Lost: {InputAddress} {MessageId} {SequenceNumber} ({SessionId})", _context.InputAddress,
+                message.MessageId, message.SequenceNumber, message.SessionId);
 
-            CancellationTokenRegistration registration = default;
-            if (cancellationToken.CanBeCanceled)
-                registration = cancellationToken.Register(context.Cancel);
+            throw;
+        }
+        catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.MessageLockLost)
+        {
+            LogContext.Error?.Log("Message Lock Lost: {InputAddress} {MessageId} {SequenceNumber}", _context.InputAddress, message.MessageId,
+                message.SequenceNumber);
 
-            try
-            {
-                await _dispatcher.Dispatch(context, NoLockReceiveContext.Instance).ConfigureAwait(false);
-            }
-            catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.SessionLockLost)
-            {
-                LogContext.Error?.Log("Session Lock Lost: {InputAddress} {MessageId} {SequenceNumber} ({SessionId})", _context.InputAddress,
-                    message.MessageId, message.SequenceNumber, message.SessionId);
-
-                throw;
-            }
-            catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.MessageLockLost)
-            {
-                LogContext.Error?.Log("Message Lock Lost: {InputAddress} {MessageId} {SequenceNumber}", _context.InputAddress, message.MessageId,
-                    message.SequenceNumber);
-
-                throw;
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception exception)
-            {
-                context.LogTransportFaulted(exception);
-                throw;
-            }
-            finally
-            {
-                registration.Dispose();
-                context.Dispose();
-            }
+            throw;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            context.LogTransportFaulted(exception);
+            throw;
+        }
+        finally
+        {
+            registration.Dispose();
+            context.Dispose();
         }
     }
 }

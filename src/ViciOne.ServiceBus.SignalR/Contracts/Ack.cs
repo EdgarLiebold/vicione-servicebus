@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.SignalR.Contracts
+using Microsoft.AspNetCore.SignalR;
+
+namespace ViciOne.ServiceBus.SignalR.Contracts;
+
+public interface Ack<THub>
+    where THub : Hub
 {
-    using Microsoft.AspNetCore.SignalR;
-
-
-    public interface Ack<THub>
-        where THub : Hub
-    {
-        string ServerName { get; }
-    }
+    string ServerName { get; }
 }

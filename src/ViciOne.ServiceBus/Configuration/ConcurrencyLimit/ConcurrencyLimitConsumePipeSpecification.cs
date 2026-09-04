@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Adds a concurrency limit filter to the message pipe.
+/// </summary>
+/// <typeparam name="T">The message type</typeparam>
+public class ConcurrencyLimitConsumePipeSpecification<T> :
+    IPipeSpecification<ConsumeContext<T>>
+    where T : class
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IConcurrencyLimiter _limiter;
 
-
-    /// <summary>
-    /// Adds a concurrency limit filter to the message pipe.
-    /// </summary>
-    /// <typeparam name="T">The message type</typeparam>
-    public class ConcurrencyLimitConsumePipeSpecification<T> :
-        IPipeSpecification<ConsumeContext<T>>
-        where T : class
+    public ConcurrencyLimitConsumePipeSpecification(IConcurrencyLimiter limiter)
     {
-        readonly IConcurrencyLimiter _limiter;
+        _limiter = limiter;
+    }
 
-        public ConcurrencyLimitConsumePipeSpecification(IConcurrencyLimiter limiter)
-        {
-            _limiter = limiter;
-        }
+    public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
+    {
+        var filter = new ConsumeConcurrencyLimitFilter<T>(_limiter);
 
-        public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
-        {
-            var filter = new ConsumeConcurrencyLimitFilter<T>(_limiter);
+        builder.AddFilter(filter);
+    }
 
-            builder.AddFilter(filter);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_limiter.Limit < 1)
-                yield return this.Failure("ConcurrencyLimit", "must be >= 1");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_limiter.Limit < 1)
+            yield return this.Failure("ConcurrencyLimit", "must be >= 1");
     }
 }

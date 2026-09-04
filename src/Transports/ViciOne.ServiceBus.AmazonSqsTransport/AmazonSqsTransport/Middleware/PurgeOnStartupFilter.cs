@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
-
 using System;
 using System.Threading.Tasks;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 /// <summary>
 /// Purges the queue on startup, only once per filter instance
 /// </summary>

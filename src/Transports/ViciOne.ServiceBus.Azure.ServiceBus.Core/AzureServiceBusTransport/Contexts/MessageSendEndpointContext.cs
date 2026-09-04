@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class MessageSendEndpointContext :
+    BasePipeContext,
+    SendEndpointContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
-    using ViciOne.ServiceBus.Middleware;
+    readonly ServiceBusSender _client;
 
-
-    public class MessageSendEndpointContext :
-        BasePipeContext,
-        SendEndpointContext
+    public MessageSendEndpointContext(ConnectionContext connectionContext, ServiceBusSender client)
     {
-        readonly ServiceBusSender _client;
+        _client = client;
+        ConnectionContext = connectionContext;
+    }
 
-        public MessageSendEndpointContext(ConnectionContext connectionContext, ServiceBusSender client)
-        {
-            _client = client;
-            ConnectionContext = connectionContext;
-        }
+    public ConnectionContext ConnectionContext { get; }
 
-        public ConnectionContext ConnectionContext { get; }
+    public string EntityPath => _client.EntityPath;
 
-        public string EntityPath => _client.EntityPath;
+    public Task Send(ServiceBusMessage message, CancellationToken cancellationToken)
+    {
+        return _client.SendMessageAsync(message, cancellationToken);
+    }
 
-        public Task Send(ServiceBusMessage message, CancellationToken cancellationToken)
-        {
-            return _client.SendMessageAsync(message, cancellationToken);
-        }
+    public Task<long> ScheduleSend(ServiceBusMessage message, DateTime scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
+    {
+        return _client.ScheduleMessageAsync(message, scheduleEnqueueTimeUtc, cancellationToken);
+    }
 
-        public Task<long> ScheduleSend(ServiceBusMessage message, DateTime scheduleEnqueueTimeUtc, CancellationToken cancellationToken)
-        {
-            return _client.ScheduleMessageAsync(message, scheduleEnqueueTimeUtc, cancellationToken);
-        }
-
-        public Task CancelScheduledSend(long sequenceNumber, CancellationToken cancellationToken)
-        {
-            return _client.CancelScheduledMessageAsync(sequenceNumber, cancellationToken);
-        }
+    public Task CancelScheduledSend(long sequenceNumber, CancellationToken cancellationToken)
+    {
+        return _client.CancelScheduledMessageAsync(sequenceNumber, cancellationToken);
     }
 }

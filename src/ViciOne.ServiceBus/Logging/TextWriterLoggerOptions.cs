@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Logging
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+
+namespace ViciOne.ServiceBus.Logging;
+
+public class TextWriterLoggerOptions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.Extensions.Logging;
+    readonly List<string> _disabled;
 
-
-    public class TextWriterLoggerOptions
+    public TextWriterLoggerOptions()
     {
-        readonly List<string> _disabled;
+        _disabled = new List<string>();
+    }
 
-        public TextWriterLoggerOptions()
-        {
-            _disabled = new List<string>();
-        }
+    public LogLevel LogLevel { get; set; }
 
-        public LogLevel LogLevel { get; set; }
+    public TextWriterLoggerOptions Disable(string name)
+    {
+        _disabled.Add(name);
 
-        public TextWriterLoggerOptions Disable(string name)
-        {
-            _disabled.Add(name);
+        return this;
+    }
 
-            return this;
-        }
-
-        public bool IsEnabled(string name)
-        {
-            return !_disabled.Any(x => name.StartsWith(x, StringComparison.OrdinalIgnoreCase));
-        }
+    public bool IsEnabled(string name)
+    {
+        return !_disabled.Any(x => name.StartsWith(x, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Context;
-
 using System.Transactions;
 
+namespace ViciOne.ServiceBus.Context;
 
 internal interface ITransactionContextFactory
 {

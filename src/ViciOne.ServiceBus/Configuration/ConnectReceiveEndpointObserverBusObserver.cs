@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConnectReceiveEndpointObserverBusObserver<T> :
+    IBusObserver
+    where T : class, IReceiveEndpointObserver
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly IServiceProvider _provider;
 
-
-    public class ConnectReceiveEndpointObserverBusObserver<T> :
-        IBusObserver
-        where T : class, IReceiveEndpointObserver
+    public ConnectReceiveEndpointObserverBusObserver(IServiceProvider provider)
     {
-        readonly IServiceProvider _provider;
+        _provider = provider;
+    }
 
-        public ConnectReceiveEndpointObserverBusObserver(IServiceProvider provider)
-        {
-            _provider = provider;
-        }
+    public void PostCreate(IBus bus)
+    {
+        var observer = _provider.GetService<T>();
+        if (observer != null)
+            bus.ConnectReceiveEndpointObserver(observer);
+    }
 
-        public void PostCreate(IBus bus)
-        {
-            var observer = _provider.GetService<T>();
-            if (observer != null)
-                bus.ConnectReceiveEndpointObserver(observer);
-        }
+    public void CreateFaulted(Exception exception)
+    {
+    }
 
-        public void CreateFaulted(Exception exception)
-        {
-        }
+    public Task PreStart(IBus bus)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task PreStart(IBus bus)
-        {
-            return Task.CompletedTask;
-        }
+    public Task PostStart(IBus bus, Task<BusReady> busReady)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task PostStart(IBus bus, Task<BusReady> busReady)
-        {
-            return Task.CompletedTask;
-        }
+    public Task StartFaulted(IBus bus, Exception exception)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task StartFaulted(IBus bus, Exception exception)
-        {
-            return Task.CompletedTask;
-        }
+    public Task PreStop(IBus bus)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task PreStop(IBus bus)
-        {
-            return Task.CompletedTask;
-        }
+    public Task PostStop(IBus bus)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task PostStop(IBus bus)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task StopFaulted(IBus bus, Exception exception)
-        {
-            return Task.CompletedTask;
-        }
+    public Task StopFaulted(IBus bus, Exception exception)
+    {
+        return Task.CompletedTask;
     }
 }

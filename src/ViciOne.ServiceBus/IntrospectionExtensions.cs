@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus
+using System.Threading;
+using ViciOne.ServiceBus.Introspection;
+
+namespace ViciOne.ServiceBus;
+
+public static class IntrospectionExtensions
 {
-    using System.Threading;
-    using Introspection;
-
-
-    public static class IntrospectionExtensions
+    public static ProbeResult GetProbeResult(this IProbeSite probeSite, CancellationToken cancellationToken = default)
     {
-        public static ProbeResult GetProbeResult(this IProbeSite probeSite, CancellationToken cancellationToken = default)
-        {
-            var builder = new ProbeResultBuilder(NewId.NextGuid(), cancellationToken);
+        var builder = new ProbeResultBuilder(NewId.NextGuid(), cancellationToken);
 
-            probeSite.Probe(builder);
+        probeSite.Probe(builder);
 
-            return builder.Build();
-        }
+        return builder.Build();
     }
 }

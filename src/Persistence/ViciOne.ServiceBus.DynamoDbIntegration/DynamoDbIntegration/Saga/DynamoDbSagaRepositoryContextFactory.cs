@@ -1,75 +1,73 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Amazon.DynamoDBv2.DataModel;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga;
+
+internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
+    ISagaRepositoryContextFactory<TSaga>,
+    ILoadSagaRepositoryContextFactory<TSaga>
+    where TSaga : class, ISagaVersion
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Amazon.DynamoDBv2.DataModel;
-    using ViciOne.ServiceBus.Saga;
+    readonly DynamoDbContextFactory<TSaga> _databaseFactory;
+    readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
+    readonly DynamoDbSagaRepositoryOptions<TSaga> _options;
 
-
-    internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
-        ISagaRepositoryContextFactory<TSaga>,
-        ILoadSagaRepositoryContextFactory<TSaga>
-        where TSaga : class, ISagaVersion
+    public DynamoDbSagaRepositoryContextFactory(DynamoDbContextFactory<TSaga> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
+        DynamoDbSagaRepositoryOptions<TSaga> options)
     {
-        readonly DynamoDbContextFactory<TSaga> _databaseFactory;
-        readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
-        readonly DynamoDbSagaRepositoryOptions<TSaga> _options;
+        _databaseFactory = databaseFactory ?? throw new ArgumentNullException(nameof(databaseFactory));
 
-        public DynamoDbSagaRepositoryContextFactory(DynamoDbContextFactory<TSaga> databaseFactory, ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory,
-            DynamoDbSagaRepositoryOptions<TSaga> options)
+        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+    }
+
+    public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        var database = _databaseFactory.Create();
+
+        var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
+        try
         {
-            _databaseFactory = databaseFactory ?? throw new ArgumentNullException(nameof(databaseFactory));
+            var repositoryContext = new DynamoDbSagaRepositoryContext<TSaga>(databaseContext, cancellationToken);
 
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            return await asyncMethod(repositoryContext).ConfigureAwait(false);
         }
-
-        public async Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
-            where T : class
+        finally
         {
-            var database = _databaseFactory.Create();
-
-            var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
-            try
-            {
-                var repositoryContext = new DynamoDbSagaRepositoryContext<TSaga>(databaseContext, cancellationToken);
-
-                return await asyncMethod(repositoryContext).ConfigureAwait(false);
-            }
-            finally
-            {
-                databaseContext.Dispose();
-            }
+            databaseContext.Dispose();
         }
+    }
 
-        public void Probe(ProbeContext context)
+    public void Probe(ProbeContext context)
+    {
+        context.Add("persistence", "dynamodb");
+    }
+
+    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+        where T : class
+    {
+        var database = _databaseFactory.Create();
+
+        var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
+        try
         {
-            context.Add("persistence", "dynamodb");
-        }
+            var repositoryContext = new DynamoDbSagaRepositoryContext<TSaga, T>(databaseContext, context, _factory);
 
-        public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
-            where T : class
+            await next.Send(repositoryContext).ConfigureAwait(false);
+        }
+        finally
         {
-            var database = _databaseFactory.Create();
-
-            var databaseContext = new DynamoDbDatabaseContext<TSaga>(database, _options);
-            try
-            {
-                var repositoryContext = new DynamoDbSagaRepositoryContext<TSaga, T>(databaseContext, context, _factory);
-
-                await next.Send(repositoryContext).ConfigureAwait(false);
-            }
-            finally
-            {
-                databaseContext.Dispose();
-            }
+            databaseContext.Dispose();
         }
+    }
 
-        public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
-            where T : class
-        {
-            throw new NotImplementedByDesignException("DynamoDb saga repository does not support queries");
-        }
+    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+        where T : class
+    {
+        throw new NotImplementedByDesignException("DynamoDb saga repository does not support queries");
     }
 }

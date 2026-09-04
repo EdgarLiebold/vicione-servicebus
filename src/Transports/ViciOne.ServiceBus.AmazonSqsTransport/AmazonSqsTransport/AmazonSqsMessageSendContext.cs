@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Context;
+using ViciOne.ServiceBus.Context;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class AmazonSqsMessageSendContext<T> :
     MessageSendContext<T>,

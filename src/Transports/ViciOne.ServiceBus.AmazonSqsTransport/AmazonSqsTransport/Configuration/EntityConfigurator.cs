@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public abstract class EntityConfigurator
 {

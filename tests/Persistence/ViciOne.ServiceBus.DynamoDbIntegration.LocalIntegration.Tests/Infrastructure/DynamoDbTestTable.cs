@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.Infrastructure;
-
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.DynamoDbIntegration.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class DynamoDbTestTable : IAsyncDisposable
 {

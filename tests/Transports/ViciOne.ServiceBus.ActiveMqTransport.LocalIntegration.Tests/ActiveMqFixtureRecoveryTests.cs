@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
-
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Brokers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Brokers;
 using Xunit;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 [Collection(ActiveMqBrokerOutageCollection.Name)]
 public sealed class ActiveMqFixtureRecoveryTests

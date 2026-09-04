@@ -1,38 +1,36 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class TaskMessageFactory<T>
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Task<SendTuple<T>> _messageFactory;
 
-
-    public class TaskMessageFactory<T>
-        where T : class
+    public TaskMessageFactory(Task<SendTuple<T>> messageFactory)
     {
-        readonly Task<SendTuple<T>> _messageFactory;
+        _messageFactory = messageFactory;
+    }
 
-        public TaskMessageFactory(Task<SendTuple<T>> messageFactory)
+    public Task<SendTuple<T>> GetMessage()
+    {
+        return _messageFactory;
+    }
+
+    public Task Use(Func<SendTuple<T>, Task> callback)
+    {
+        Task<SendTuple<T>> msgTask = _messageFactory;
+        if (msgTask.Status == TaskStatus.RanToCompletion)
+            return callback(msgTask.GetAwaiter().GetResult());
+
+        async Task GetResult()
         {
-            _messageFactory = messageFactory;
+            SendTuple<T> send = await msgTask.ConfigureAwait(false);
+
+            await callback(send).ConfigureAwait(false);
         }
 
-        public Task<SendTuple<T>> GetMessage()
-        {
-            return _messageFactory;
-        }
-
-        public Task Use(Func<SendTuple<T>, Task> callback)
-        {
-            Task<SendTuple<T>> msgTask = _messageFactory;
-            if (msgTask.Status == TaskStatus.RanToCompletion)
-                return callback(msgTask.GetAwaiter().GetResult());
-
-            async Task GetResult()
-            {
-                SendTuple<T> send = await msgTask.ConfigureAwait(false);
-
-                await callback(send).ConfigureAwait(false);
-            }
-
-            return GetResult();
-        }
+        return GetResult();
     }
 }

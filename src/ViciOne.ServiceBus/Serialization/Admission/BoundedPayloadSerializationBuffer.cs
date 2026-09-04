@@ -1,10 +1,9 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Threading;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// Managed writer that never owns more memory than its configured hard maximum.
 /// </summary>

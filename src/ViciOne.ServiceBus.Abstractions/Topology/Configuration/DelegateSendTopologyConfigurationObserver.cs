@@ -1,21 +1,20 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DelegateSendTopologyConfigurationObserver :
+    ISendTopologyConfigurationObserver
 {
-    public class DelegateSendTopologyConfigurationObserver :
-        ISendTopologyConfigurationObserver
+    readonly ISendTopology _sendTopology;
+
+    public DelegateSendTopologyConfigurationObserver(ISendTopology sendTopology)
     {
-        readonly ISendTopology _sendTopology;
+        _sendTopology = sendTopology;
+    }
 
-        public DelegateSendTopologyConfigurationObserver(ISendTopology sendTopology)
-        {
-            _sendTopology = sendTopology;
-        }
+    public void MessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> configuration)
+        where T : class
+    {
+        IMessageSendTopologyConfigurator<T> specification = _sendTopology.GetMessageTopology<T>();
 
-        public void MessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> configuration)
-            where T : class
-        {
-            IMessageSendTopologyConfigurator<T> specification = _sendTopology.GetMessageTopology<T>();
-
-            configuration.AddDelegate(specification);
-        }
+        configuration.AddDelegate(specification);
     }
 }

@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public interface IConsumedMessage
 {
-    using System;
+    ConsumeContext Context { get; }
+
+    Exception Exception { get; }
+
+    Type MessageType { get; }
+}
 
 
-    public interface IConsumedMessage
-    {
-        ConsumeContext Context { get; }
-
-        Exception Exception { get; }
-
-        Type MessageType { get; }
-    }
-
-
-    public interface IConsumedMessage<out T> :
-        IConsumedMessage
-        where T : class
-    {
-        new ConsumeContext<T> Context { get; }
-    }
+public interface IConsumedMessage<out T> :
+    IConsumedMessage
+    where T : class
+{
+    new ConsumeContext<T> Context { get; }
 }

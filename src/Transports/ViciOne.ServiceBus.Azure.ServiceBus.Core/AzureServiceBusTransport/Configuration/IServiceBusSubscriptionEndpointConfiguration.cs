@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public interface IServiceBusSubscriptionEndpointConfiguration :
+    IServiceBusEntityEndpointConfiguration
 {
-    public interface IServiceBusSubscriptionEndpointConfiguration :
-        IServiceBusEntityEndpointConfiguration
-    {
-        SubscriptionSettings Settings { get; }
-    }
+    SubscriptionSettings Settings { get; }
 }

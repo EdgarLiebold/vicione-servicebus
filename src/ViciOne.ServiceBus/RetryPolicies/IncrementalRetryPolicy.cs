@@ -1,71 +1,69 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class IncrementalRetryPolicy :
+    IRetryPolicy
 {
-    using System;
+    readonly IExceptionFilter _filter;
 
-
-    public class IncrementalRetryPolicy :
-        IRetryPolicy
+    public IncrementalRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan initialInterval,
+        TimeSpan intervalIncrement)
     {
-        readonly IExceptionFilter _filter;
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
 
-        public IncrementalRetryPolicy(IExceptionFilter filter, int retryLimit, TimeSpan initialInterval,
-            TimeSpan intervalIncrement)
+        if (initialInterval < TimeSpan.Zero)
         {
-            ArgumentNullException.ThrowIfNull(filter);
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
-
-            if (initialInterval < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(initialInterval),
-                    "The initial interval must be non-negative.");
-            }
-
-            if (intervalIncrement < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(intervalIncrement),
-                    "The interval increment must be non-negative.");
-            }
-
-            if (retryLimit > 1
-                && intervalIncrement.Ticks > (TimeSpan.MaxValue.Ticks - initialInterval.Ticks) / (retryLimit - 1L))
-            {
-                throw new ArgumentOutOfRangeException(nameof(intervalIncrement),
-                    "The retry interval would exceed TimeSpan.MaxValue before the configured retry limit.");
-            }
-
-            _filter = filter;
-            RetryLimit = retryLimit;
-            InitialInterval = initialInterval;
-            IntervalIncrement = intervalIncrement;
+            throw new ArgumentOutOfRangeException(nameof(initialInterval),
+                "The initial interval must be non-negative.");
         }
 
-        public int RetryLimit { get; }
-
-        public TimeSpan InitialInterval { get; }
-
-        public TimeSpan IntervalIncrement { get; }
-
-        void IProbeSite.Probe(ProbeContext context)
+        if (intervalIncrement < TimeSpan.Zero)
         {
-            context.Set(new
-            {
-                Policy = "Incremental",
-                Limit = RetryLimit,
-                Initial = InitialInterval,
-                Increment = IntervalIncrement
-            });
-
-            _filter.Probe(context);
+            throw new ArgumentOutOfRangeException(nameof(intervalIncrement),
+                "The interval increment must be non-negative.");
         }
 
-        RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
+        if (retryLimit > 1
+            && intervalIncrement.Ticks > (TimeSpan.MaxValue.Ticks - initialInterval.Ticks) / (retryLimit - 1L))
         {
-            return new IncrementalRetryPolicyContext<T>(this, context);
+            throw new ArgumentOutOfRangeException(nameof(intervalIncrement),
+                "The retry interval would exceed TimeSpan.MaxValue before the configured retry limit.");
         }
 
-        public bool IsHandled(Exception exception)
+        _filter = filter;
+        RetryLimit = retryLimit;
+        InitialInterval = initialInterval;
+        IntervalIncrement = intervalIncrement;
+    }
+
+    public int RetryLimit { get; }
+
+    public TimeSpan InitialInterval { get; }
+
+    public TimeSpan IntervalIncrement { get; }
+
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.Set(new
         {
-            return _filter.Match(exception);
-        }
+            Policy = "Incremental",
+            Limit = RetryLimit,
+            Initial = InitialInterval,
+            Increment = IntervalIncrement
+        });
+
+        _filter.Probe(context);
+    }
+
+    RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
+    {
+        return new IncrementalRetryPolicyContext<T>(this, context);
+    }
+
+    public bool IsHandled(Exception exception)
+    {
+        return _filter.Match(exception);
     }
 }

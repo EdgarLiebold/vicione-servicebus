@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class DelegateFilter<TContext> :
+    IFilter<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    readonly Action<TContext> _callback;
 
-
-    public class DelegateFilter<TContext> :
-        IFilter<TContext>
-        where TContext : class, PipeContext
+    public DelegateFilter(Action<TContext> callback)
     {
-        readonly Action<TContext> _callback;
+        _callback = callback;
+    }
 
-        public DelegateFilter(Action<TContext> callback)
-        {
-            _callback = callback;
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("delegate");
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("delegate");
-        }
+    [DebuggerNonUserCode]
+    [DebuggerStepThrough]
+    public Task Send(TContext context, IPipe<TContext> next)
+    {
+        _callback(context);
 
-        [DebuggerNonUserCode]
-        [DebuggerStepThrough]
-        public Task Send(TContext context, IPipe<TContext> next)
-        {
-            _callback(context);
-
-            return next.Send(context);
-        }
+        return next.Send(context);
     }
 }

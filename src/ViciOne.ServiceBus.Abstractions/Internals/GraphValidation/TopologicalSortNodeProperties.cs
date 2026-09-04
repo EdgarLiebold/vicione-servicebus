@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Internals.GraphValidation
+namespace ViciOne.ServiceBus.Internals.GraphValidation;
+
+internal interface ITopologicalSortNodeProperties
 {
-    internal interface ITopologicalSortNodeProperties
-    {
-        bool Visited { get; set; }
-    }
+    bool Visited { get; set; }
 }

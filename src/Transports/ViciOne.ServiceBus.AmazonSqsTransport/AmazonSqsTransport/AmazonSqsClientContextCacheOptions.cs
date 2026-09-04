@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Threading;
-using Caching;
+using ViciOne.ServiceBus.Caching;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Immutable cache settings for queue and topic provider contexts owned by one Amazon SQS connection.
 /// </summary>

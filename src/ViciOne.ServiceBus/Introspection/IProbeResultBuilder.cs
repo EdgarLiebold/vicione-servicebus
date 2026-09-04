@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Introspection
+namespace ViciOne.ServiceBus.Introspection;
+
+public interface IProbeResultBuilder
 {
-    public interface IProbeResultBuilder
-    {
-        ProbeResult Build();
-    }
+    ProbeResult Build();
 }

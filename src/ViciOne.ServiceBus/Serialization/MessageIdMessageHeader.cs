@@ -1,69 +1,67 @@
-namespace ViciOne.ServiceBus.Serialization
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Serialization;
+
+public class MessageIdMessageHeader :
+    Headers
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
+    readonly Guid _messageId;
 
-
-    public class MessageIdMessageHeader :
-        Headers
+    public MessageIdMessageHeader(Guid messageId)
     {
-        readonly Guid _messageId;
+        _messageId = messageId;
+    }
 
-        public MessageIdMessageHeader(Guid messageId)
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        yield return new KeyValuePair<string, object>(nameof(MessageContext.MessageId), _messageId);
+    }
+
+    public bool TryGetHeader(string key, out object value)
+    {
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
+
+        if (key.Equals(nameof(MessageContext.MessageId)))
         {
-            _messageId = messageId;
+            value = _messageId;
+            return true;
         }
 
-        public IEnumerable<KeyValuePair<string, object>> GetAll()
+        value = default;
+        return false;
+    }
+
+    T Headers.Get<T>(string key, T defaultValue)
+    {
+        if (key.Equals(nameof(MessageContext.MessageId)))
+            return _messageId as T;
+
+        return defaultValue;
+    }
+
+    public T? Get<T>(string key, T? defaultValue = null)
+        where T : struct
+    {
+        if (key.Equals(nameof(MessageContext.MessageId)))
         {
-            yield return new KeyValuePair<string, object>(nameof(MessageContext.MessageId), _messageId);
+            return _messageId is T result
+                ? result
+                : default;
         }
 
-        public bool TryGetHeader(string key, out object value)
-        {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+        return defaultValue;
+    }
 
-            if (key.Equals(nameof(MessageContext.MessageId)))
-            {
-                value = _messageId;
-                return true;
-            }
+    public IEnumerator<HeaderValue> GetEnumerator()
+    {
+        yield return new HeaderValue(nameof(MessageContext.MessageId), _messageId);
+    }
 
-            value = default;
-            return false;
-        }
-
-        T Headers.Get<T>(string key, T defaultValue)
-        {
-            if (key.Equals(nameof(MessageContext.MessageId)))
-                return _messageId as T;
-
-            return defaultValue;
-        }
-
-        public T? Get<T>(string key, T? defaultValue = null)
-            where T : struct
-        {
-            if (key.Equals(nameof(MessageContext.MessageId)))
-            {
-                return _messageId is T result
-                    ? result
-                    : default;
-            }
-
-            return defaultValue;
-        }
-
-        public IEnumerator<HeaderValue> GetEnumerator()
-        {
-            yield return new HeaderValue(nameof(MessageContext.MessageId), _messageId);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

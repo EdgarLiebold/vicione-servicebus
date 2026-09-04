@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Threading;
 using System.Threading.Tasks;
-using Agents;
-using Internals;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class ScopeClientContextFactory :
     IPipeContextFactory<ClientContext>

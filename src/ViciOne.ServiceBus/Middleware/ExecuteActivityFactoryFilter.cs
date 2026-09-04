@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class ExecuteActivityFactoryFilter<TActivity, TArguments> :
+    IFilter<ExecuteContext<TArguments>>
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System.Threading.Tasks;
+    readonly IExecuteActivityFactory<TActivity, TArguments> _factory;
+    readonly IPipe<ExecuteActivityContext<TActivity, TArguments>> _pipe;
 
-
-    public class ExecuteActivityFactoryFilter<TActivity, TArguments> :
-        IFilter<ExecuteContext<TArguments>>
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
+    public ExecuteActivityFactoryFilter(IExecuteActivityFactory<TActivity, TArguments> factory, IPipe<ExecuteActivityContext<TActivity, TArguments>> pipe)
     {
-        readonly IExecuteActivityFactory<TActivity, TArguments> _factory;
-        readonly IPipe<ExecuteActivityContext<TActivity, TArguments>> _pipe;
+        _factory = factory;
+        _pipe = pipe;
+    }
 
-        public ExecuteActivityFactoryFilter(IExecuteActivityFactory<TActivity, TArguments> factory, IPipe<ExecuteActivityContext<TActivity, TArguments>> pipe)
-        {
-            _factory = factory;
-            _pipe = pipe;
-        }
+    public async Task Send(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
+    {
+        await _factory.Execute(context, _pipe).ConfigureAwait(false);
 
-        public async Task Send(ExecuteContext<TArguments> context, IPipe<ExecuteContext<TArguments>> next)
-        {
-            await _factory.Execute(context, _pipe).ConfigureAwait(false);
+        await next.Send(context).ConfigureAwait(false);
+    }
 
-            await next.Send(context).ConfigureAwait(false);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            _factory.Probe(context);
-        }
+    public void Probe(ProbeContext context)
+    {
+        _factory.Probe(context);
     }
 }

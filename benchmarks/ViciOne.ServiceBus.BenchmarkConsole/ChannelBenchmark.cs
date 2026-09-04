@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using Util;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 [MemoryDiagnoser]
 [GcServer(true)]

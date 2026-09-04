@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.ExceptionFilters
+using System;
+
+namespace ViciOne.ServiceBus.ExceptionFilters;
+
+class CompositeExceptionFilter :
+    IExceptionFilter
 {
-    using System;
+    readonly CompositeFilter<Exception> _filter;
 
-
-    class CompositeExceptionFilter :
-        IExceptionFilter
+    public CompositeExceptionFilter(CompositeFilter<Exception> filter)
     {
-        readonly CompositeFilter<Exception> _filter;
+        _filter = filter;
+    }
 
-        public CompositeExceptionFilter(CompositeFilter<Exception> filter)
-        {
-            _filter = filter;
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.Add("filter", "composite");
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.Add("filter", "composite");
-        }
-
-        public bool Match(Exception exception)
-        {
-            return _filter.Matches(exception);
-        }
+    public bool Match(Exception exception)
+    {
+        return _filter.Matches(exception);
     }
 }

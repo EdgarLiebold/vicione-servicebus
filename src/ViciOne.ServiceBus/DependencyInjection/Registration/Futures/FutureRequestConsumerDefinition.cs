@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class FutureRequestConsumerDefinition<TConsumer, TRequest> :
+    ConsumerDefinition<TConsumer>,
+    IFutureRequestDefinition<TRequest>
+    where TRequest : class
+    where TConsumer : class, IConsumer<TRequest>
 {
-    using System;
+    Lazy<Uri> _requestAddress;
 
+    public Uri RequestAddress =>
+        _requestAddress?.Value ??
+        throw new ConfigurationException($"The future consumer definition was not configured: {TypeCache<TConsumer>.ShortName}");
 
-    public class FutureRequestConsumerDefinition<TConsumer, TRequest> :
-        ConsumerDefinition<TConsumer>,
-        IFutureRequestDefinition<TRequest>
-        where TRequest : class
-        where TConsumer : class, IConsumer<TRequest>
+    protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator,
+        IRegistrationContext context)
     {
-        Lazy<Uri> _requestAddress;
+        endpointConfigurator.ConfigureConsumeTopology = false;
 
-        public Uri RequestAddress =>
-            _requestAddress?.Value ??
-            throw new ConfigurationException($"The future consumer definition was not configured: {TypeCache<TConsumer>.ShortName}");
+        _requestAddress = new Lazy<Uri>(() => endpointConfigurator.InputAddress);
 
-        protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<TConsumer> consumerConfigurator,
-            IRegistrationContext context)
-        {
-            endpointConfigurator.ConfigureConsumeTopology = false;
-
-            _requestAddress = new Lazy<Uri>(() => endpointConfigurator.InputAddress);
-
-            base.ConfigureConsumer(endpointConfigurator, consumerConfigurator, context);
-        }
+        base.ConfigureConsumer(endpointConfigurator, consumerConfigurator, context);
     }
 }

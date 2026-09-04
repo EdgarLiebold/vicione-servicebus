@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Flags]
+public enum PublishBrokerTopologyOptions
 {
-    using System;
-
-
-    [Flags]
-    public enum PublishBrokerTopologyOptions
-    {
-        FlattenHierarchy = 0,
-        MaintainHierarchy = 1
-    }
+    FlattenHierarchy = 0,
+    MaintainHierarchy = 1
 }

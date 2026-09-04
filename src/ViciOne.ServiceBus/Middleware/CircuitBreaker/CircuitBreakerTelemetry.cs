@@ -1,12 +1,12 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
-
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Threading;
-using Metadata;
-using Monitoring;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Monitoring;
+
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 internal static class CircuitBreakerTelemetry
 {

@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using System.ComponentModel;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public interface IRetryConfigurator :
+    IExceptionConfigurator,
+    IRetryObserverConnector
 {
-    using System.ComponentModel;
-    using Configuration;
-
-
-    public interface IRetryConfigurator :
-        IExceptionConfigurator,
-        IRetryObserverConnector
-    {
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void SetRetryPolicy(RetryPolicyFactory factory);
-    }
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    void SetRetryPolicy(RetryPolicyFactory factory);
 }

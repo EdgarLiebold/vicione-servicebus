@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System.Collections.Generic;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+/// <summary>
+/// Used to bind an exchange to the consuming queue's exchange
+/// </summary>
+public class SubscriptionConsumeTopologySpecification :
+    IServiceBusConsumeTopologySpecification
 {
-    using System.Collections.Generic;
-    using Azure.Messaging.ServiceBus.Administration;
-    using Topology;
+    readonly CreateSubscriptionOptions _createSubscriptionOptions;
+    readonly CreateTopicOptions _createTopicOptions;
+    readonly RuleFilter _filter;
+    readonly CreateRuleOptions _rule;
 
-
-    /// <summary>
-    /// Used to bind an exchange to the consuming queue's exchange
-    /// </summary>
-    public class SubscriptionConsumeTopologySpecification :
-        IServiceBusConsumeTopologySpecification
+    public SubscriptionConsumeTopologySpecification(CreateTopicOptions createTopicOptions, CreateSubscriptionOptions createSubscriptionOptions,
+        CreateRuleOptions rule, RuleFilter filter)
     {
-        readonly CreateSubscriptionOptions _createSubscriptionOptions;
-        readonly CreateTopicOptions _createTopicOptions;
-        readonly RuleFilter _filter;
-        readonly CreateRuleOptions _rule;
+        _createTopicOptions = createTopicOptions;
+        _createSubscriptionOptions = createSubscriptionOptions;
+        _rule = rule;
+        _filter = filter;
+    }
 
-        public SubscriptionConsumeTopologySpecification(CreateTopicOptions createTopicOptions, CreateSubscriptionOptions createSubscriptionOptions,
-            CreateRuleOptions rule, RuleFilter filter)
-        {
-            _createTopicOptions = createTopicOptions;
-            _createSubscriptionOptions = createSubscriptionOptions;
-            _rule = rule;
-            _filter = filter;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
+        var topic = builder.CreateTopic(_createTopicOptions);
 
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-            var topic = builder.CreateTopic(_createTopicOptions);
+        _createSubscriptionOptions.ForwardTo = builder.Queue.Queue.CreateQueueOptions.Name;
+        _createSubscriptionOptions.AutoDeleteOnIdle = builder.Queue.Queue.CreateQueueOptions.AutoDeleteOnIdle;
 
-            _createSubscriptionOptions.ForwardTo = builder.Queue.Queue.CreateQueueOptions.Name;
-            _createSubscriptionOptions.AutoDeleteOnIdle = builder.Queue.Queue.CreateQueueOptions.AutoDeleteOnIdle;
-
-            builder.CreateQueueSubscription(topic, builder.Queue, _createSubscriptionOptions, _rule, _filter);
-        }
+        builder.CreateQueueSubscription(topic, builder.Queue, _createSubscriptionOptions, _rule, _filter);
     }
 }

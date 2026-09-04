@@ -1,7 +1,3 @@
-#nullable enable
-
-namespace Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -11,6 +7,9 @@ using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 using ViciOne.ServiceBus.ProviderAbstractions;
 
+#nullable enable
+
+namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>DI registration for the EF Core durable-send persistence provider.</summary>
 public static class EntityFrameworkDurableSendServiceCollectionExtensions
 {

@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class TopicInfo :
     IAsyncDisposable,

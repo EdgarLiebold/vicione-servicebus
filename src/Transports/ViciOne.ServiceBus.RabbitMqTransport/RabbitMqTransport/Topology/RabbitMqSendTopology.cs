@@ -1,63 +1,61 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class RabbitMqSendTopology :
+    SendTopology,
+    IRabbitMqSendTopologyConfigurator
 {
-    using System;
-    using ViciOne.ServiceBus.Topology;
-
-
-    public class RabbitMqSendTopology :
-        SendTopology,
-        IRabbitMqSendTopologyConfigurator
+    public RabbitMqSendTopology(IEntityNameValidator validator)
     {
-        public RabbitMqSendTopology(IEntityNameValidator validator)
-        {
-            ExchangeTypeSelector = new FanoutExchangeTypeSelector();
-            EntityNameValidator = validator;
-        }
+        ExchangeTypeSelector = new FanoutExchangeTypeSelector();
+        EntityNameValidator = validator;
+    }
 
-        public IExchangeTypeSelector ExchangeTypeSelector { get; }
-        public IEntityNameValidator EntityNameValidator { get; }
+    public IExchangeTypeSelector ExchangeTypeSelector { get; }
+    public IEntityNameValidator EntityNameValidator { get; }
 
-        public Action<IRabbitMqQueueBindingConfigurator> ConfigureErrorSettings { get; set; }
-        public Action<IRabbitMqQueueBindingConfigurator> ConfigureDeadLetterSettings { get; set; }
+    public Action<IRabbitMqQueueBindingConfigurator> ConfigureErrorSettings { get; set; }
+    public Action<IRabbitMqQueueBindingConfigurator> ConfigureDeadLetterSettings { get; set; }
 
-        IRabbitMqMessageSendTopologyConfigurator<T> IRabbitMqSendTopology.GetMessageTopology<T>()
-        {
-            IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
+    IRabbitMqMessageSendTopologyConfigurator<T> IRabbitMqSendTopology.GetMessageTopology<T>()
+    {
+        IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-            return configurator as IRabbitMqMessageSendTopologyConfigurator<T>;
-        }
+        return configurator as IRabbitMqMessageSendTopologyConfigurator<T>;
+    }
 
-        public SendSettings GetSendSettings(RabbitMqEndpointAddress address)
-        {
-            return new RabbitMqSendSettings(address);
-        }
+    public SendSettings GetSendSettings(RabbitMqEndpointAddress address)
+    {
+        return new RabbitMqSendSettings(address);
+    }
 
-        // TODO this is a smell, send for error/dead-letter settings?
-        public ErrorSettings GetErrorSettings(ReceiveSettings settings)
-        {
-            var errorSettings = new RabbitMqErrorSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.ExchangeName));
+    // TODO this is a smell, send for error/dead-letter settings?
+    public ErrorSettings GetErrorSettings(ReceiveSettings settings)
+    {
+        var errorSettings = new RabbitMqErrorSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.ExchangeName));
 
-            ConfigureErrorSettings?.Invoke(errorSettings);
+        ConfigureErrorSettings?.Invoke(errorSettings);
 
-            return errorSettings;
-        }
+        return errorSettings;
+    }
 
-        public DeadLetterSettings GetDeadLetterSettings(ReceiveSettings settings)
-        {
-            var deadLetterSetting = new RabbitMqDeadLetterSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.ExchangeName));
+    public DeadLetterSettings GetDeadLetterSettings(ReceiveSettings settings)
+    {
+        var deadLetterSetting = new RabbitMqDeadLetterSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.ExchangeName));
 
-            ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
+        ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
 
-            return deadLetterSetting;
-        }
+        return deadLetterSetting;
+    }
 
-        protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
-        {
-            var messageTopology = new RabbitMqMessageSendTopology<T>();
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    {
+        var messageTopology = new RabbitMqMessageSendTopology<T>();
 
-            OnMessageTopologyCreated(messageTopology);
+        OnMessageTopologyCreated(messageTopology);
 
-            return messageTopology;
-        }
+        return messageTopology;
     }
 }

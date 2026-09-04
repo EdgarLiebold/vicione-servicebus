@@ -1,12 +1,12 @@
-namespace ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal;
-
-using global::Azure.Data.Tables;
 using System.Text.Json;
+using global::Azure.Data.Tables;
 using ViciOne.ServiceBus.AzureTable.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.Tests.MessageJournal;
 
 public sealed class AzureTableMessageJournalOptionsTests
 {

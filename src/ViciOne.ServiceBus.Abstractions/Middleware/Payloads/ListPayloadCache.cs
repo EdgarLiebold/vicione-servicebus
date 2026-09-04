@@ -1,119 +1,117 @@
-namespace ViciOne.ServiceBus.Payloads
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Payloads;
+
+public class ListPayloadCache :
+    IPayloadCache
 {
-    using System;
-    using System.Collections.Generic;
+    IList<object>? _cache;
 
-
-    public class ListPayloadCache :
-        IPayloadCache
+    public ListPayloadCache()
     {
-        IList<object>? _cache;
+    }
 
-        public ListPayloadCache()
-        {
-        }
+    public ListPayloadCache(object[] payloads)
+    {
+        _cache = new List<object>(payloads);
+    }
 
-        public ListPayloadCache(object[] payloads)
-        {
-            _cache = new List<object>(payloads);
-        }
-
-        public bool HasPayloadType(Type payloadType)
-        {
-            if (_cache == null)
-                return false;
-
-            lock (this)
-            {
-                for (var i = _cache.Count - 1; i >= 0; i--)
-                {
-                    if (payloadType.IsInstanceOfType(_cache[i]))
-                        return true;
-                }
-            }
-
+    public bool HasPayloadType(Type payloadType)
+    {
+        if (_cache == null)
             return false;
+
+        lock (this)
+        {
+            for (var i = _cache.Count - 1; i >= 0; i--)
+            {
+                if (payloadType.IsInstanceOfType(_cache[i]))
+                    return true;
+            }
         }
 
-        public bool TryGetPayload<TPayload>(out TPayload? payload)
-            where TPayload : class
+        return false;
+    }
+
+    public bool TryGetPayload<TPayload>(out TPayload? payload)
+        where TPayload : class
+    {
+        if (_cache == null)
         {
-            if (_cache == null)
-            {
-                payload = default;
-                return false;
-            }
-
-            lock (this)
-            {
-                for (var i = _cache.Count - 1; i >= 0; i--)
-                {
-                    if (_cache[i] is TPayload p)
-                    {
-                        payload = p;
-                        return true;
-                    }
-                }
-            }
-
             payload = default;
             return false;
         }
 
-        public T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-            where T : class
+        lock (this)
         {
-            lock (this)
+            for (var i = _cache.Count - 1; i >= 0; i--)
             {
-                if (_cache != null)
+                if (_cache[i] is TPayload p)
                 {
-                    for (var i = _cache.Count - 1; i >= 0; i--)
-                    {
-                        if (_cache[i] is T result)
-                            return result;
-                    }
+                    payload = p;
+                    return true;
                 }
-
-                var payload = payloadFactory();
-
-                if (_cache != null)
-                    _cache.Add(payload);
-                else
-                    _cache = new List<object>(1) { payload };
-
-                return payload;
             }
         }
 
-        public T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-            where T : class
+        payload = default;
+        return false;
+    }
+
+    public T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
+        where T : class
+    {
+        lock (this)
         {
-            lock (this)
+            if (_cache != null)
             {
-                if (_cache != null)
+                for (var i = _cache.Count - 1; i >= 0; i--)
                 {
-                    for (var i = _cache.Count - 1; i >= 0; i--)
+                    if (_cache[i] is T result)
+                        return result;
+                }
+            }
+
+            var payload = payloadFactory();
+
+            if (_cache != null)
+                _cache.Add(payload);
+            else
+                _cache = new List<object>(1) { payload };
+
+            return payload;
+        }
+    }
+
+    public T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
+        where T : class
+    {
+        lock (this)
+        {
+            if (_cache != null)
+            {
+                for (var i = _cache.Count - 1; i >= 0; i--)
+                {
+                    if (_cache[i] is T result)
                     {
-                        if (_cache[i] is T result)
-                        {
-                            var updated = updateFactory(result);
+                        var updated = updateFactory(result);
 
-                            _cache[i] = updated;
+                        _cache[i] = updated;
 
-                            return updated;
-                        }
+                        return updated;
                     }
                 }
-
-                var payload = addFactory();
-
-                if (_cache != null)
-                    _cache.Add(payload);
-                else
-                    _cache = new List<object>(1) { payload };
-
-                return payload;
             }
+
+            var payload = addFactory();
+
+            if (_cache != null)
+                _cache.Add(payload);
+            else
+                _cache = new List<object>(1) { payload };
+
+            return payload;
         }
     }
 }

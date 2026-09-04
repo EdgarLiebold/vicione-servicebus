@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface ITimeoutConfigurator
 {
-    using System;
+    /// <summary>
+    /// The maximum time allowed for the configured operation. The value must be greater than zero.
+    /// </summary>
+    TimeSpan Timeout { set; }
 
-
-    public interface ITimeoutConfigurator
-    {
-        /// <summary>
-        /// The maximum time allowed for the configured operation. The value must be greater than zero.
-        /// </summary>
-        TimeSpan Timeout { set; }
-
-        /// <summary>
-        /// Overrides the context-scoped time provider for this timeout. When it is not set, the
-        /// timeout uses the provider attached to each pipeline context.
-        /// </summary>
-        TimeProvider TimeProvider { set; }
-    }
+    /// <summary>
+    /// Overrides the context-scoped time provider for this timeout. When it is not set, the
+    /// timeout uses the provider attached to each pipeline context.
+    /// </summary>
+    TimeProvider TimeProvider { set; }
 }

@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public interface IAsyncListElement
 {
-    using System;
-
-
-    public interface IAsyncListElement
-    {
-        Guid? ElementId { get; }
-    }
+    Guid? ElementId { get; }
 }

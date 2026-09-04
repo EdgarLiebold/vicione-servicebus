@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public interface IActiveMqBusConfiguration :
+    IBusConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    new IActiveMqHostConfiguration HostConfiguration { get; }
 
+    new IActiveMqEndpointConfiguration BusEndpointConfiguration { get; }
 
-    public interface IActiveMqBusConfiguration :
-        IBusConfiguration
-    {
-        new IActiveMqHostConfiguration HostConfiguration { get; }
+    new IActiveMqTopologyConfiguration Topology { get; }
 
-        new IActiveMqEndpointConfiguration BusEndpointConfiguration { get; }
-
-        new IActiveMqTopologyConfiguration Topology { get; }
-
-        /// <summary>
-        /// Create an endpoint configuration on the bus, which can later be turned into a receive endpoint
-        /// </summary>
-        /// <returns></returns>
-        IActiveMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint = false);
-    }
+    /// <summary>
+    /// Create an endpoint configuration on the bus, which can later be turned into a receive endpoint
+    /// </summary>
+    /// <returns></returns>
+    IActiveMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint = false);
 }

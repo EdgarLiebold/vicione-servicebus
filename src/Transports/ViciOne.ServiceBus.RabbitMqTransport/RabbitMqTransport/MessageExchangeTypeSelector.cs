@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport;
+
+public class MessageExchangeTypeSelector<TMessage> :
+    IMessageExchangeTypeSelector<TMessage>
+    where TMessage : class
 {
-    using Topology;
+    readonly IExchangeTypeSelector _exchangeTypeSelector;
 
-
-    public class MessageExchangeTypeSelector<TMessage> :
-        IMessageExchangeTypeSelector<TMessage>
-        where TMessage : class
+    public MessageExchangeTypeSelector(IExchangeTypeSelector exchangeTypeSelector)
     {
-        readonly IExchangeTypeSelector _exchangeTypeSelector;
+        _exchangeTypeSelector = exchangeTypeSelector;
+    }
 
-        public MessageExchangeTypeSelector(IExchangeTypeSelector exchangeTypeSelector)
-        {
-            _exchangeTypeSelector = exchangeTypeSelector;
-        }
+    public string DefaultExchangeType => _exchangeTypeSelector.DefaultExchangeType;
 
-        public string DefaultExchangeType => _exchangeTypeSelector.DefaultExchangeType;
-
-        public string GetExchangeType(string exchangeName)
-        {
-            return _exchangeTypeSelector.GetExchangeType<TMessage>(exchangeName);
-        }
+    public string GetExchangeType(string exchangeName)
+    {
+        return _exchangeTypeSelector.GetExchangeType<TMessage>(exchangeName);
     }
 }

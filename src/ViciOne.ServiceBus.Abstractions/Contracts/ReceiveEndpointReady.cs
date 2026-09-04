@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ReceiveEndpointReady :
+    ReceiveEndpointEvent
 {
-    public interface ReceiveEndpointReady :
-        ReceiveEndpointEvent
-    {
-        /// <summary>
-        /// If true, the receive endpoint is actually ready, versus "fake-ready" for endpoints which do not auto-start
-        /// </summary>
-        bool IsStarted { get; }
-    }
+    /// <summary>
+    /// If true, the receive endpoint is actually ready, versus "fake-ready" for endpoints which do not auto-start
+    /// </summary>
+    bool IsStarted { get; }
 }

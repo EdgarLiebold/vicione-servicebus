@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class AddressEqualityComparer :
+    IEqualityComparer<Uri>
 {
-    using System;
-    using System.Collections.Generic;
+    public static readonly IEqualityComparer<Uri> Comparer = new AddressEqualityComparer();
 
-
-    public class AddressEqualityComparer :
-        IEqualityComparer<Uri>
+    public bool Equals(Uri x, Uri y)
     {
-        public static readonly IEqualityComparer<Uri> Comparer = new AddressEqualityComparer();
+        return ReferenceEquals(x, y)
+            || (x != null
+                && y != null
+                && x.Scheme.Equals(y.Scheme, StringComparison.OrdinalIgnoreCase)
+                && x.Host.Equals(y.Host, StringComparison.OrdinalIgnoreCase)
+                && x.Port.Equals(y.Port)
+                && x.AbsolutePath.Equals(y.AbsolutePath, StringComparison.OrdinalIgnoreCase));
+    }
 
-        public bool Equals(Uri x, Uri y)
-        {
-            return ReferenceEquals(x, y)
-                || (x != null
-                    && y != null
-                    && x.Scheme.Equals(y.Scheme, StringComparison.OrdinalIgnoreCase)
-                    && x.Host.Equals(y.Host, StringComparison.OrdinalIgnoreCase)
-                    && x.Port.Equals(y.Port)
-                    && x.AbsolutePath.Equals(y.AbsolutePath, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public int GetHashCode(Uri obj)
-        {
-            return obj.AbsolutePath.GetHashCode();
-        }
+    public int GetHashCode(Uri obj)
+    {
+        return obj.AbsolutePath.GetHashCode();
     }
 }

@@ -1,43 +1,41 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class BatchConfigurator<TMessage> :
+    IBatchConfigurator<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly IReceiveEndpointConfigurator _configurator;
 
-
-    public class BatchConfigurator<TMessage> :
-        IBatchConfigurator<TMessage>
-        where TMessage : class
+    public BatchConfigurator(IReceiveEndpointConfigurator configurator)
     {
-        readonly IReceiveEndpointConfigurator _configurator;
+        _configurator = configurator;
 
-        public BatchConfigurator(IReceiveEndpointConfigurator configurator)
-        {
-            _configurator = configurator;
+        ConcurrencyLimit = 1;
+        MessageLimit = 10;
+        TimeLimit = TimeSpan.FromSeconds(10);
+        TimeLimitStart = BatchTimeLimitStart.FromFirst;
+    }
 
-            ConcurrencyLimit = 1;
-            MessageLimit = 10;
-            TimeLimit = TimeSpan.FromSeconds(10);
-            TimeLimitStart = BatchTimeLimitStart.FromFirst;
-        }
+    public TimeSpan TimeLimit { private get; set; }
+    public BatchTimeLimitStart TimeLimitStart { private get; set; }
+    public int MessageLimit { private get; set; }
+    public int ConcurrencyLimit { private get; set; }
 
-        public TimeSpan TimeLimit { private get; set; }
-        public BatchTimeLimitStart TimeLimitStart { private get; set; }
-        public int MessageLimit { private get; set; }
-        public int ConcurrencyLimit { private get; set; }
+    public void Consumer<TConsumer>(IConsumerFactory<TConsumer> consumerFactory,
+        Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure)
+        where TConsumer : class, IConsumer<Batch<TMessage>>
+    {
+        var configurator = new ConsumerConfigurator<TConsumer>(consumerFactory, _configurator);
+        configurator.ConnectConsumerConfigurationObserver(_configurator);
 
-        public void Consumer<TConsumer>(IConsumerFactory<TConsumer> consumerFactory,
-            Action<IConsumerMessageConfigurator<TConsumer, Batch<TMessage>>>? configure)
-            where TConsumer : class, IConsumer<Batch<TMessage>>
-        {
-            var configurator = new ConsumerConfigurator<TConsumer>(consumerFactory, _configurator);
-            configurator.ConnectConsumerConfigurationObserver(_configurator);
+        configurator.Options<BatchOptions>(options => options.SetMessageLimit(MessageLimit).SetTimeLimit(TimeLimit).SetTimeLimitStart(TimeLimitStart)
+            .SetConcurrencyLimit(ConcurrencyLimit));
 
-            configurator.Options<BatchOptions>(options => options.SetMessageLimit(MessageLimit).SetTimeLimit(TimeLimit).SetTimeLimitStart(TimeLimitStart)
-                .SetConcurrencyLimit(ConcurrencyLimit));
+        configurator.ConsumerMessage(configure);
 
-            configurator.ConsumerMessage(configure);
-
-            _configurator.AddEndpointSpecification(configurator);
-        }
+        _configurator.AddEndpointSpecification(configurator);
     }
 }

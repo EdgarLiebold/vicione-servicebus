@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System.Collections.Generic;
 using Amazon.SQS;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsQueueConfigurator :
     EntityConfigurator,

@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+namespace ViciOne.ServiceBus;
+
+public abstract class SagaClassMap<TSaga> :
+    ISagaClassMap<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using EntityFrameworkCoreIntegration;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    public Type SagaType => typeof(TSaga);
 
-
-    public abstract class SagaClassMap<TSaga> :
-        ISagaClassMap<TSaga>
-        where TSaga : class, ISaga
+    public virtual void Configure(ModelBuilder model)
     {
-        public Type SagaType => typeof(TSaga);
+        EntityTypeBuilder<TSaga> entity = model.Entity<TSaga>();
 
-        public virtual void Configure(ModelBuilder model)
-        {
-            EntityTypeBuilder<TSaga> entity = model.Entity<TSaga>();
+        var key = entity.HasKey(p => p.CorrelationId);
 
-            var key = entity.HasKey(p => p.CorrelationId);
+        entity.Property(p => p.CorrelationId)
+            .ValueGeneratedNever();
 
-            entity.Property(p => p.CorrelationId)
-                .ValueGeneratedNever();
+        Configure(entity, model);
+    }
 
-            Configure(entity, model);
-        }
+    protected virtual void Configure(EntityTypeBuilder<TSaga> entity, ModelBuilder model)
+    {
+    }
 
-        protected virtual void Configure(EntityTypeBuilder<TSaga> entity, ModelBuilder model)
-        {
-        }
-
-        /// <summary>
-        /// Override to configure the primary CorrelationId key, to add things like clustering
-        /// </summary>
-        /// <param name="keyBuilder"></param>
-        /// <returns></returns>
-        protected virtual KeyBuilder ConfigureCorrelationIdKey(KeyBuilder keyBuilder)
-        {
-            return keyBuilder;
-        }
+    /// <summary>
+    /// Override to configure the primary CorrelationId key, to add things like clustering
+    /// </summary>
+    /// <param name="keyBuilder"></param>
+    /// <returns></returns>
+    protected virtual KeyBuilder ConfigureCorrelationIdKey(KeyBuilder keyBuilder)
+    {
+        return keyBuilder;
     }
 }

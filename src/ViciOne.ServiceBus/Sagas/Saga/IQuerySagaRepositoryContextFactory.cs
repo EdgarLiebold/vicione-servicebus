@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Saga;
+
+/// <summary>
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+public interface IQuerySagaRepositoryContextFactory<TSaga> :
+    IProbeSite
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-
     /// <summary>
+    /// Create a <see cref="QuerySagaRepositoryContext{TSaga}" /> and send it to the next pipe.
     /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    public interface IQuerySagaRepositoryContextFactory<TSaga> :
-        IProbeSite
-        where TSaga : class, ISaga
-    {
-        /// <summary>
-        /// Create a <see cref="QuerySagaRepositoryContext{TSaga}" /> and send it to the next pipe.
-        /// </summary>
-        /// <param name="asyncMethod"></param>
-        /// <param name="cancellationToken"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
-            where T : class;
-    }
+    /// <param name="asyncMethod"></param>
+    /// <param name="cancellationToken"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+        where T : class;
 }

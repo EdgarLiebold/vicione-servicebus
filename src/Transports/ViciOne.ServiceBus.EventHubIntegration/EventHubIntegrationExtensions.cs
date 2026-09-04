@@ -1,50 +1,48 @@
-namespace ViciOne.ServiceBus
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.EventHubIntegration.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public static class EventHubIntegrationExtensions
 {
-    using System;
-    using DependencyInjection;
-    using EventHubIntegration.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-
-
-    public static class EventHubIntegrationExtensions
+    public static void UsingEventHub(this IRiderRegistrationConfigurator configurator,
+        Action<IRiderRegistrationContext, IEventHubFactoryConfigurator> configure)
     {
-        public static void UsingEventHub(this IRiderRegistrationConfigurator configurator,
-            Action<IRiderRegistrationContext, IEventHubFactoryConfigurator> configure)
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
+
+        var factory = new EventHubRegistrationRiderFactory(configure);
+        configurator.SetRiderFactory(factory);
+
+        configurator.TryAddScoped<IEventHubRider, IEventHubProducerProvider>(GetCurrentProducerProvider);
+    }
+
+    public static void UsingEventHub<TBus>(this IRiderRegistrationConfigurator<TBus> configurator,
+        Action<IRiderRegistrationContext, IEventHubFactoryConfigurator> configure)
+        where TBus : class, IBus
+    {
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
+
+        var factory = new EventHubRegistrationRiderFactory(configure);
+        configurator.SetRiderFactory(factory);
+
+        configurator.TryAddScoped<IEventHubRider, Bind<TBus, IEventHubProducerProvider>>((rider, provider) =>
+            Bind<TBus>.Create(GetCurrentProducerProvider(rider, provider)));
+    }
+
+    static IEventHubProducerProvider GetCurrentProducerProvider(IEventHubRider rider, IServiceProvider provider)
+    {
+        var contextProvider = provider.GetService<IScopedConsumeContextProvider>();
+        if (contextProvider != null)
         {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            var factory = new EventHubRegistrationRiderFactory(configure);
-            configurator.SetRiderFactory(factory);
-
-            configurator.TryAddScoped<IEventHubRider, IEventHubProducerProvider>(GetCurrentProducerProvider);
+            return contextProvider.HasContext
+                ? rider.GetProducerProvider(contextProvider.GetContext())
+                : rider.GetProducerProvider();
         }
 
-        public static void UsingEventHub<TBus>(this IRiderRegistrationConfigurator<TBus> configurator,
-            Action<IRiderRegistrationContext, IEventHubFactoryConfigurator> configure)
-            where TBus : class, IBus
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-
-            var factory = new EventHubRegistrationRiderFactory(configure);
-            configurator.SetRiderFactory(factory);
-
-            configurator.TryAddScoped<IEventHubRider, Bind<TBus, IEventHubProducerProvider>>((rider, provider) =>
-                Bind<TBus>.Create(GetCurrentProducerProvider(rider, provider)));
-        }
-
-        static IEventHubProducerProvider GetCurrentProducerProvider(IEventHubRider rider, IServiceProvider provider)
-        {
-            var contextProvider = provider.GetService<IScopedConsumeContextProvider>();
-            if (contextProvider != null)
-            {
-                return contextProvider.HasContext
-                    ? rider.GetProducerProvider(contextProvider.GetContext())
-                    : rider.GetProducerProvider();
-            }
-
-            return rider.GetProducerProvider(provider.GetService<ConsumeContext>());
-        }
+        return rider.GetProducerProvider(provider.GetService<ConsumeContext>());
     }
 }

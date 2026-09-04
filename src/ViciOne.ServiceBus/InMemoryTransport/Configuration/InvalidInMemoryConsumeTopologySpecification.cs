@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public class InvalidInMemoryConsumeTopologySpecification :
+    IInMemoryConsumeTopologySpecification
 {
-    using System.Collections.Generic;
-    using ViciOne.ServiceBus.Configuration;
+    readonly string _key;
+    readonly string _message;
 
-
-    public class InvalidInMemoryConsumeTopologySpecification :
-        IInMemoryConsumeTopologySpecification
+    public InvalidInMemoryConsumeTopologySpecification(string key, string message)
     {
-        readonly string _key;
-        readonly string _message;
+        _key = key;
+        _message = message;
+    }
 
-        public InvalidInMemoryConsumeTopologySpecification(string key, string message)
-        {
-            _key = key;
-            _message = message;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield return this.Failure(_key, _message);
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield return this.Failure(_key, _message);
-        }
-
-        public void Apply(IMessageFabricConsumeTopologyBuilder builder)
-        {
-        }
+    public void Apply(IMessageFabricConsumeTopologyBuilder builder)
+    {
     }
 }

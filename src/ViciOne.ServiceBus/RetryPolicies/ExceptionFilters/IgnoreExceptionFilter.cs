@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters
+using System;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
+
+public class IgnoreExceptionFilter :
+    IExceptionFilter
 {
-    using System;
-    using System.Linq;
+    readonly Type[] _exceptionTypes;
 
-
-    public class IgnoreExceptionFilter :
-        IExceptionFilter
+    public IgnoreExceptionFilter(params Type[] exceptionTypes)
     {
-        readonly Type[] _exceptionTypes;
+        _exceptionTypes = exceptionTypes;
+    }
 
-        public IgnoreExceptionFilter(params Type[] exceptionTypes)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("except");
+        scope.Set(new { ExceptionTypes = _exceptionTypes.Select(x => x.Name).ToArray() });
+    }
+
+    bool IExceptionFilter.Match(Exception exception)
+    {
+        for (var i = 0; i < _exceptionTypes.Length; i++)
         {
-            _exceptionTypes = exceptionTypes;
+            if (_exceptionTypes[i].IsInstanceOfType(exception))
+                return false;
         }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("except");
-            scope.Set(new { ExceptionTypes = _exceptionTypes.Select(x => x.Name).ToArray() });
-        }
-
-        bool IExceptionFilter.Match(Exception exception)
-        {
-            for (var i = 0; i < _exceptionTypes.Length; i++)
-            {
-                if (_exceptionTypes[i].IsInstanceOfType(exception))
-                    return false;
-            }
-
-            return true;
-        }
+        return true;
     }
 }

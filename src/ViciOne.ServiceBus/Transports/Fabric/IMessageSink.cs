@@ -1,13 +1,11 @@
+using System.Threading.Tasks;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public interface IMessageSink<T> :
+    IProbeSite
+    where T : class
 {
-    using System.Threading.Tasks;
-
-
-    public interface IMessageSink<T> :
-        IProbeSite
-        where T : class
-    {
-        Task Deliver(DeliveryContext<T> context);
-    }
+    Task Deliver(DeliveryContext<T> context);
 }

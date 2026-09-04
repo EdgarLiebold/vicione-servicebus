@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
+using System;
+using Azure.Data.Tables;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.AzureTable.Saga;
+
+public static class AzureTableSagaRepository<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using Azure.Data.Tables;
-    using ViciOne.ServiceBus.Saga;
-
-
-    public static class AzureTableSagaRepository<TSaga>
-        where TSaga : class, ISaga
+    public static ISagaRepository<TSaga> Create(Func<TableClient> tableFactory, ISagaKeyFormatter<TSaga> keyFormatter)
     {
-        public static ISagaRepository<TSaga> Create(Func<TableClient> tableFactory, ISagaKeyFormatter<TSaga> keyFormatter)
-        {
-            ArgumentNullException.ThrowIfNull(tableFactory);
-            ArgumentNullException.ThrowIfNull(keyFormatter);
+        ArgumentNullException.ThrowIfNull(tableFactory);
+        ArgumentNullException.ThrowIfNull(keyFormatter);
 
-            var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
+        var consumeContextFactory = new SagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga>();
 
-            var tableClientProvider = new DelegateTableClientProvider<TSaga>(tableFactory);
+        var tableClientProvider = new DelegateTableClientProvider<TSaga>(tableFactory);
 
-            var repositoryContextFactory = new AzureTableSagaRepositoryContextFactory<TSaga>(tableClientProvider, consumeContextFactory, keyFormatter);
+        var repositoryContextFactory = new AzureTableSagaRepositoryContextFactory<TSaga>(tableClientProvider, consumeContextFactory, keyFormatter);
 
-            return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
-        }
+        return new SagaRepository<TSaga>(repositoryContextFactory, loadSagaRepositoryContextFactory: repositoryContextFactory);
+    }
 
-        public static ISagaRepository<TSaga> Create(Func<TableClient> tableFactory)
-        {
-            return Create(tableFactory, new ConstPartitionSagaKeyFormatter<TSaga>(typeof(TSaga).Name));
-        }
+    public static ISagaRepository<TSaga> Create(Func<TableClient> tableFactory)
+    {
+        return Create(tableFactory, new ConstPartitionSagaKeyFormatter<TSaga>(typeof(TSaga).Name));
     }
 }

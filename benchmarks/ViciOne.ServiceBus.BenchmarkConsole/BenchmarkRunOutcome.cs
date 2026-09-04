@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 public static class BenchmarkRunOutcome
 {

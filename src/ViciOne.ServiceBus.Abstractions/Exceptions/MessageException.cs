@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class MessageException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class MessageException :
-        ViciOneServiceBusException
+    public MessageException(Type messageType, string message, Exception innerException)
+        : base(message, innerException)
     {
-        public MessageException(Type messageType, string message, Exception innerException)
-            : base(message, innerException)
-        {
-            MessageType = messageType;
-        }
-
-        public MessageException(Type messageType, string message)
-            : base(message)
-        {
-            MessageType = messageType;
-        }
-
-        public MessageException()
-        {
-        }
-
-        public Type? MessageType { get; private set; }
+        MessageType = messageType;
     }
+
+    public MessageException(Type messageType, string message)
+        : base(message)
+    {
+        MessageType = messageType;
+    }
+
+    public MessageException()
+    {
+    }
+
+    public Type? MessageType { get; private set; }
 }

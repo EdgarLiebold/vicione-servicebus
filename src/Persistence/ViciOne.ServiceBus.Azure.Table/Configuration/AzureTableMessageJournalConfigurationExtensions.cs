@@ -1,10 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using Azure.Data.Tables;
-using AzureTable.MessageJournal;
+using ViciOne.ServiceBus.AzureTable.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
+
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public static class AzureTableMessageJournalConfigurationExtensions
 {

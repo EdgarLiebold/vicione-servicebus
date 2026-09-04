@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobSlotWaitElapsed
 {
-    using System;
-
-
-    public interface JobSlotWaitElapsed
-    {
-        Guid JobId { get; }
-    }
+    Guid JobId { get; }
 }

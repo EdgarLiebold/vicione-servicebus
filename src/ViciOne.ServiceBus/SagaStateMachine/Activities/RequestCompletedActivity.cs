@@ -1,99 +1,97 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Contracts;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+/// <summary>
+/// Publishes the <see cref="RequestCompleted" /> event, used by the request state machine to track
+/// pending requests for a saga instance.
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class RequestCompletedActivity<TSaga, TMessage> :
+    IStateMachineActivity<TSaga, TMessage>
+    where TSaga : class, SagaStateMachineInstance
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Contracts;
-
-
-    /// <summary>
-    /// Publishes the <see cref="RequestCompleted" /> event, used by the request state machine to track
-    /// pending requests for a saga instance.
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class RequestCompletedActivity<TSaga, TMessage> :
-        IStateMachineActivity<TSaga, TMessage>
-        where TSaga : class, SagaStateMachineInstance
-        where TMessage : class
+    public void Probe(ProbeContext context)
     {
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("requestStarted");
-        }
-
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
-        public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
-        {
-            await context.Publish<RequestCompleted>(new
-            {
-                context.Saga.CorrelationId,
-                InVar.Timestamp,
-                PayloadType = MessageTypeCache<TMessage>.MessageTypeNames,
-                Payload = context.Message
-            }, context.CancellationToken).ConfigureAwait(false);
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
+        context.CreateScope("requestStarted");
     }
 
-
-    /// <summary>
-    /// Publishes the <see cref="RequestCompleted" /> event, used by the request state machine to track
-    /// pending requests for a saga instance.
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
-        IStateMachineActivity<TSaga, TMessage>
-        where TSaga : class, SagaStateMachineInstance
-        where TMessage : class
-        where TResponse : class
+    public void Accept(StateMachineVisitor visitor)
     {
-        readonly AsyncEventMessageFactory<TSaga, TMessage, TResponse> _messageFactory;
+        visitor.Visit(this);
+    }
 
-        public RequestCompletedActivity(AsyncEventMessageFactory<TSaga, TMessage, TResponse> messageFactory)
+    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    {
+        await context.Publish<RequestCompleted>(new
         {
-            _messageFactory = messageFactory;
-        }
+            context.Saga.CorrelationId,
+            InVar.Timestamp,
+            PayloadType = MessageTypeCache<TMessage>.MessageTypeNames,
+            Payload = context.Message
+        }, context.CancellationToken).ConfigureAwait(false);
 
-        public void Probe(ProbeContext context)
+        await next.Execute(context).ConfigureAwait(false);
+    }
+
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
+    }
+}
+
+
+/// <summary>
+/// Publishes the <see cref="RequestCompleted" /> event, used by the request state machine to track
+/// pending requests for a saga instance.
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TResponse"></typeparam>
+public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
+    IStateMachineActivity<TSaga, TMessage>
+    where TSaga : class, SagaStateMachineInstance
+    where TMessage : class
+    where TResponse : class
+{
+    readonly AsyncEventMessageFactory<TSaga, TMessage, TResponse> _messageFactory;
+
+    public RequestCompletedActivity(AsyncEventMessageFactory<TSaga, TMessage, TResponse> messageFactory)
+    {
+        _messageFactory = messageFactory;
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("requestStarted");
+    }
+
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    {
+        await context.Publish<RequestCompleted>(new
         {
-            context.CreateScope("requestStarted");
-        }
+            context.Saga.CorrelationId,
+            InVar.Timestamp,
+            PayloadType = MessageTypeCache<TResponse>.MessageTypeNames,
+            Payload = _messageFactory(context)
+        }, context.CancellationToken).ConfigureAwait(false);
 
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        await next.Execute(context).ConfigureAwait(false);
+    }
 
-        public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
-        {
-            await context.Publish<RequestCompleted>(new
-            {
-                context.Saga.CorrelationId,
-                InVar.Timestamp,
-                PayloadType = MessageTypeCache<TResponse>.MessageTypeNames,
-                Payload = _messageFactory(context)
-            }, context.CancellationToken).ConfigureAwait(false);
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
     }
 }

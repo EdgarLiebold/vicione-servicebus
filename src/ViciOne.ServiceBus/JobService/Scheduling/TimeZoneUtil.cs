@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService.Scheduling;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 public static class TimeZoneUtil
 {

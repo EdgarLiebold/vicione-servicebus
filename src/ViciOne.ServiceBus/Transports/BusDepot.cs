@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class BusDepot :
+    IBusDepot
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
+    readonly IDictionary<Type, IBusInstance> _instances;
+    readonly ILogger<BusDepot> _logger;
 
-
-    public class BusDepot :
-        IBusDepot
+    public BusDepot(IEnumerable<IBusInstance> instances, ILogger<BusDepot> logger)
     {
-        readonly IDictionary<Type, IBusInstance> _instances;
-        readonly ILogger<BusDepot> _logger;
+        _logger = logger;
+        _instances = instances.ToDictionary(x => x.InstanceType);
+    }
 
-        public BusDepot(IEnumerable<IBusInstance> instances, ILogger<BusDepot> logger)
-        {
-            _logger = logger;
-            _instances = instances.ToDictionary(x => x.InstanceType);
-        }
+    public Task Start(CancellationToken cancellationToken)
+    {
+        if (_instances.Count == 0)
+            throw new ConfigurationException("No bus instances were found. Ensure that AddViciOneServiceBus() is used to configure the transport.");
 
-        public Task Start(CancellationToken cancellationToken)
-        {
-            if (_instances.Count == 0)
-                throw new ConfigurationException("No bus instances were found. Ensure that AddViciOneServiceBus() is used to configure the transport.");
+        _logger.LogDebug("Starting bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
 
-            _logger.LogDebug("Starting bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
+        return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StartAsync(cancellationToken)));
+    }
 
-            return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StartAsync(cancellationToken)));
-        }
+    public Task Stop(CancellationToken cancellationToken)
+    {
+        if (_instances.Count == 0)
+            return Task.CompletedTask;
 
-        public Task Stop(CancellationToken cancellationToken)
-        {
-            if (_instances.Count == 0)
-                return Task.CompletedTask;
+        _logger.LogDebug("Stopping bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
 
-            _logger.LogDebug("Stopping bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
-
-            return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StopAsync(cancellationToken)));
-        }
+        return Task.WhenAll(_instances.Values.Select(x => x.BusControl.StopAsync(cancellationToken)));
     }
 }

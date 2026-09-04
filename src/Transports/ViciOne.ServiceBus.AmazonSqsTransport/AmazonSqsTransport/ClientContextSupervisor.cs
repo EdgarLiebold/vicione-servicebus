@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.Transports;
+
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
-using Transports;
-
 
 public class ClientContextSupervisor :
     TransportPipeContextSupervisor<ClientContext>,

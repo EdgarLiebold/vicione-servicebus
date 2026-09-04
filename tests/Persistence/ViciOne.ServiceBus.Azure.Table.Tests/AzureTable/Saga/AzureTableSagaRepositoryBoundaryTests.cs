@@ -1,15 +1,15 @@
-namespace ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga;
-
-using global::Azure;
-using global::Azure.Data.Tables;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using global::Azure;
+using global::Azure.Data.Tables;
 using ViciOne.ServiceBus.AzureTable;
-using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using ViciOne.ServiceBus.AzureTable.Saga;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga;
 
 public sealed class AzureTableSagaRepositoryBoundaryTests
 {
@@ -375,15 +375,15 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
 
         public int WriteCallCount { get; private set; }
 
-        public override Task<Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
+        public override Task<global::Azure.Response> AddEntityAsync<T>(T entity, CancellationToken cancellationToken = default)
         {
             WriteCallCount++;
             ObservedCancellationToken = cancellationToken;
-            return Task.FromException<Response>(insertFailure
+            return Task.FromException<global::Azure.Response>(insertFailure
                 ?? throw new InvalidOperationException("No insert failure was configured."));
         }
 
-        public override Task<Response> UpdateEntityAsync<T>(
+        public override Task<global::Azure.Response> UpdateEntityAsync<T>(
             T entity,
             ETag ifMatch,
             TableUpdateMode mode = TableUpdateMode.Merge,
@@ -392,11 +392,11 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             WriteCallCount++;
             ObservedCancellationToken = cancellationToken;
             ObservedETag = ifMatch;
-            return Task.FromException<Response>(updateFailure
+            return Task.FromException<global::Azure.Response>(updateFailure
                 ?? throw new InvalidOperationException("No update failure was configured."));
         }
 
-        public override Task<Response> DeleteEntityAsync(
+        public override Task<global::Azure.Response> DeleteEntityAsync(
             string partitionKey,
             string rowKey,
             ETag ifMatch = default,
@@ -405,7 +405,7 @@ public sealed class AzureTableSagaRepositoryBoundaryTests
             WriteCallCount++;
             ObservedCancellationToken = cancellationToken;
             ObservedETag = ifMatch;
-            return Task.FromException<Response>(deleteFailure
+            return Task.FromException<global::Azure.Response>(deleteFailure
                 ?? throw new InvalidOperationException("No delete failure was configured."));
         }
     }

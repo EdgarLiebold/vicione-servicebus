@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.AmazonS3.MessageData;
-
 using global::Amazon.S3;
 using global::Amazon.S3.Model;
 using ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.AmazonS3.MessageData;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.AmazonS3.MessageData;
 
 public sealed class AmazonS3MessageDataRepositoryTests
 {

@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.QuartzIntegration;
+using ViciOne.ServiceBus.Scheduling;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CancelScheduledMessageConsumerDefinition :
+    ConsumerDefinition<CancelScheduledMessageConsumer>
 {
-    using QuartzIntegration;
-    using Scheduling;
+    readonly QuartzEndpointDefinition _endpointDefinition;
 
-
-    public class CancelScheduledMessageConsumerDefinition :
-        ConsumerDefinition<CancelScheduledMessageConsumer>
+    public CancelScheduledMessageConsumerDefinition(QuartzEndpointDefinition endpointDefinition)
     {
-        readonly QuartzEndpointDefinition _endpointDefinition;
+        _endpointDefinition = endpointDefinition;
 
-        public CancelScheduledMessageConsumerDefinition(QuartzEndpointDefinition endpointDefinition)
+        EndpointDefinition = endpointDefinition;
+    }
+
+    protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
+        IConsumerConfigurator<CancelScheduledMessageConsumer> consumerConfigurator, IRegistrationContext context)
+    {
+        consumerConfigurator.Message<CancelScheduledMessage>(m => m.UsePartitioner(_endpointDefinition.Partition, p => p.Message.TokenId));
+
+        consumerConfigurator.Message<CancelScheduledRecurringMessage>(m =>
         {
-            _endpointDefinition = endpointDefinition;
-
-            EndpointDefinition = endpointDefinition;
-        }
-
-        protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
-            IConsumerConfigurator<CancelScheduledMessageConsumer> consumerConfigurator, IRegistrationContext context)
-        {
-            consumerConfigurator.Message<CancelScheduledMessage>(m => m.UsePartitioner(_endpointDefinition.Partition, p => p.Message.TokenId));
-
-            consumerConfigurator.Message<CancelScheduledRecurringMessage>(m =>
-            {
-                m.UsePartitioner(_endpointDefinition.Partition, p => $"{p.Message.ScheduleGroup},{p.Message.ScheduleId}");
-            });
-        }
+            m.UsePartitioner(_endpointDefinition.Partition, p => $"{p.Message.ScheduleGroup},{p.Message.ScheduleId}");
+        });
     }
 }

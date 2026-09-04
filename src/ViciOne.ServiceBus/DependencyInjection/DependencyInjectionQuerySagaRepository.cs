@@ -1,55 +1,53 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class DependencyInjectionQuerySagaRepository<TSaga> :
+    QuerySagaRepository<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
-    using Saga;
-
-
-    public class DependencyInjectionQuerySagaRepository<TSaga> :
-        QuerySagaRepository<TSaga>
-        where TSaga : class, ISaga
+    public DependencyInjectionQuerySagaRepository(IServiceProvider provider)
+        : base(new DependencyInjectionQuerySagaRepositoryContextFactory(provider))
     {
-        public DependencyInjectionQuerySagaRepository(IServiceProvider provider)
-            : base(new DependencyInjectionQuerySagaRepositoryContextFactory(provider))
+    }
+
+
+    class DependencyInjectionQuerySagaRepositoryContextFactory :
+        IQuerySagaRepositoryContextFactory<TSaga>
+    {
+        readonly IServiceProvider _serviceProvider;
+
+        public DependencyInjectionQuerySagaRepositoryContextFactory(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
         }
 
-
-        class DependencyInjectionQuerySagaRepositoryContextFactory :
-            IQuerySagaRepositoryContextFactory<TSaga>
+        public void Probe(ProbeContext context)
         {
-            readonly IServiceProvider _serviceProvider;
+            context.Add("provider", "dependencyInjection");
+        }
 
-            public DependencyInjectionQuerySagaRepositoryContextFactory(IServiceProvider serviceProvider)
+        public async Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+            where T : class
+        {
+            var serviceScope = _serviceProvider.CreateScope();
+
+            try
             {
-                _serviceProvider = serviceProvider;
+                var factory = serviceScope.ServiceProvider.GetRequiredService<IQuerySagaRepositoryContextFactory<TSaga>>();
+
+                return await factory.Execute(asyncMethod, cancellationToken).ConfigureAwait(false);
             }
-
-            public void Probe(ProbeContext context)
+            finally
             {
-                context.Add("provider", "dependencyInjection");
-            }
-
-            public async Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
-                where T : class
-            {
-                var serviceScope = _serviceProvider.CreateScope();
-
-                try
-                {
-                    var factory = serviceScope.ServiceProvider.GetRequiredService<IQuerySagaRepositoryContextFactory<TSaga>>();
-
-                    return await factory.Execute(asyncMethod, cancellationToken).ConfigureAwait(false);
-                }
-                finally
-                {
-                    if (serviceScope is IAsyncDisposable asyncDisposable)
-                        await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                    else
-                        serviceScope.Dispose();
-                }
+                if (serviceScope is IAsyncDisposable asyncDisposable)
+                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                else
+                    serviceScope.Dispose();
             }
         }
     }

@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.Batching
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Batching;
+
+public class BatchConsumerFactory<TMessage> :
+    IConsumerFactory<BatchConsumer<TMessage>>,
+    IAsyncDisposable
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Context;
+    readonly IBatchCollector<TMessage> _collector;
+    readonly BatchOptions _options;
 
-
-    public class BatchConsumerFactory<TMessage> :
-        IConsumerFactory<BatchConsumer<TMessage>>,
-        IAsyncDisposable
-        where TMessage : class
+    public BatchConsumerFactory(BatchOptions options, IBatchCollector<TMessage>
+        collector)
     {
-        readonly IBatchCollector<TMessage> _collector;
-        readonly BatchOptions _options;
+        _options = options;
+        _collector = collector;
+    }
 
-        public BatchConsumerFactory(BatchOptions options, IBatchCollector<TMessage>
-            collector)
+    public ValueTask DisposeAsync()
+    {
+        return _collector.DisposeAsync();
+    }
+
+    public virtual async Task Send<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, T>> next)
+        where T : class
+    {
+        var messageContext = context as ConsumeContext<TMessage>;
+        if (messageContext == null)
+            throw new MessageException(typeof(T), $"Expected batch message type: {TypeCache<TMessage>.ShortName}");
+
+        BatchConsumer<TMessage> consumer = await _collector.Collect(messageContext).ConfigureAwait(false);
+
+        try
         {
-            _options = options;
-            _collector = collector;
+            await next.Send(new ConsumerConsumeContextProxy<BatchConsumer<TMessage>, T>(context, consumer)).ConfigureAwait(false);
         }
-
-        public ValueTask DisposeAsync()
+        finally
         {
-            return _collector.DisposeAsync();
+            if (consumer.IsCompleted)
+                await _collector.Complete(messageContext, consumer).ConfigureAwait(false);
         }
+    }
 
-        public virtual async Task Send<T>(ConsumeContext<T> context, IPipe<ConsumerConsumeContext<BatchConsumer<TMessage>, T>> next)
-            where T : class
-        {
-            var messageContext = context as ConsumeContext<TMessage>;
-            if (messageContext == null)
-                throw new MessageException(typeof(T), $"Expected batch message type: {TypeCache<TMessage>.ShortName}");
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateConsumerFactoryScope<IConsumer<TMessage>>("batch");
 
-            BatchConsumer<TMessage> consumer = await _collector.Collect(messageContext).ConfigureAwait(false);
+        scope.Add("timeLimit", _options.TimeLimit);
+        scope.Add("timeLimitStart", _options.TimeLimitStart);
+        scope.Add("messageLimit", _options.MessageLimit);
+        scope.Add("concurrencyLimit", _options.ConcurrencyLimit);
 
-            try
-            {
-                await next.Send(new ConsumerConsumeContextProxy<BatchConsumer<TMessage>, T>(context, consumer)).ConfigureAwait(false);
-            }
-            finally
-            {
-                if (consumer.IsCompleted)
-                    await _collector.Complete(messageContext, consumer).ConfigureAwait(false);
-            }
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateConsumerFactoryScope<IConsumer<TMessage>>("batch");
-
-            scope.Add("timeLimit", _options.TimeLimit);
-            scope.Add("timeLimitStart", _options.TimeLimitStart);
-            scope.Add("messageLimit", _options.MessageLimit);
-            scope.Add("concurrencyLimit", _options.ConcurrencyLimit);
-
-            _collector.Probe(scope);
-        }
+        _collector.Probe(scope);
     }
 }

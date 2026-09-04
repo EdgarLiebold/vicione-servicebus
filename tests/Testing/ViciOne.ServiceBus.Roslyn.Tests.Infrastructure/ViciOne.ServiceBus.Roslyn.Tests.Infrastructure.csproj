@@ -3,6 +3,8 @@
   <!-- Framework-neutral Roslyn test infrastructure. It owns no test case and no verdict. -->
 
   <PropertyGroup>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!-- Keep the reusable Roslyn surface under the one common test-infrastructure namespace while
          the assembly name continues to identify its specialized implementation role. -->
     <RootNamespace>ViciOne.ServiceBus.Tests.Infrastructure.Roslyn</RootNamespace>

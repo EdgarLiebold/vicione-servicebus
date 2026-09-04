@@ -4,8 +4,6 @@ using Xunit;
 
 // Caller cancellation and the no-token overloads are part of the cache contract exercised here;
 // every potentially blocking assertion is independently bounded by OperationTimeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.Tests.Caching;
 
 public sealed class ResourceCacheConcurrencyTests
@@ -152,7 +150,7 @@ public sealed class ResourceCacheConcurrencyTests
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
         var failure = new CacheFactoryException("first failed");
         await Assert.ThrowsAsync<CacheFactoryException>(async () =>
-            await index.GetOrAddAsync("one", (_, _) => ValueTask.FromException<CacheValue>(failure)));
+            await index.GetOrAddAsync("one", (_, _) => ValueTask.FromException<CacheValue>(failure), TestContext.Current.CancellationToken));
         var expected = new CacheValue("one", "healthy");
 
         CacheValue recovered = await index.GetOrAddAsync(
@@ -176,27 +174,23 @@ public sealed class ResourceCacheConcurrencyTests
         var release = NewSignal();
         var failure = new CacheFactoryException("pending failed");
 
-        Task<CacheValue> owner = index.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<CacheValue> owner = index.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 started.TrySetResult();
                 await release.Task.WaitAsync(ownerToken);
                 throw failure;
-            }).AsTask();
+            }, TestContext.Current.CancellationToken).AsTask();
         await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
-        Task<CacheValue> waiter = index.GetOrAddAsync(
-            "one",
-            (_, _) => ValueTask.FromResult(new CacheValue("one", "not-run"))).AsTask();
+        Task<CacheValue> waiter = index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(new CacheValue("one", "not-run")), TestContext.Current.CancellationToken).AsTask();
         release.TrySetResult();
 
         Assert.Same(failure, await Assert.ThrowsAsync<CacheFactoryException>(() => owner));
         Assert.Same(failure, await Assert.ThrowsAsync<CacheFactoryException>(() => waiter));
         var expected = new CacheValue("one", "recovered");
-        CacheValue recovered = await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected));
+        CacheValue recovered = await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected), TestContext.Current.CancellationToken);
 
         Assert.Same(expected, recovered);
-        Assert.Same(expected, await index.GetAsync("one"));
+        Assert.Same(expected, await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -207,14 +201,12 @@ public sealed class ResourceCacheConcurrencyTests
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
 
         await Assert.ThrowsAsync<CacheFactoryException>(async () =>
-            await index.GetOrAddAsync(
-                "one",
-                (_, _) => ValueTask.FromException<CacheValue>(new CacheFactoryException("failed"))));
+            await index.GetOrAddAsync("one", (_, _) => ValueTask.FromException<CacheValue>(new CacheFactoryException("failed")), TestContext.Current.CancellationToken));
 
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one"));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
         Assert.Equal(0, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.PendingCreations);
-        Assert.Empty(await cache.GetValuesAsync());
+        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -224,28 +216,24 @@ public sealed class ResourceCacheConcurrencyTests
         await using var cache = CreateCache();
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
         await Assert.ThrowsAsync<CacheFactoryException>(async () =>
-            await index.GetOrAddAsync(
-                "one",
-                (_, _) => ValueTask.FromException<CacheValue>(new CacheFactoryException("failed"))));
+            await index.GetOrAddAsync("one", (_, _) => ValueTask.FromException<CacheValue>(new CacheFactoryException("failed")), TestContext.Current.CancellationToken));
         var started = NewSignal();
         var release = NewSignal<CacheValue>();
         var calls = 0;
 
-        Task<CacheValue> recovery = index.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<CacheValue> recovery = index.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 Interlocked.Increment(ref calls);
                 started.TrySetResult();
                 return await release.Task.WaitAsync(ownerToken);
-            }).AsTask();
+            }, TestContext.Current.CancellationToken).AsTask();
         await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
-        Task<CacheValue> reader = index.GetAsync("one").AsTask();
+        Task<CacheValue> reader = index.GetAsync("one", TestContext.Current.CancellationToken).AsTask();
         var expected = new CacheValue("one", "healthy");
         release.TrySetResult(expected);
 
-        Assert.Same(expected, await recovery.WaitAsync(OperationTimeout));
-        Assert.Same(expected, await reader.WaitAsync(OperationTimeout));
+        Assert.Same(expected, await recovery.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        Assert.Same(expected, await reader.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
         Assert.Equal(1, calls);
     }
 
@@ -260,13 +248,13 @@ public sealed class ResourceCacheConcurrencyTests
         {
             var expected = new CacheFactoryException($"failure-{attempt}");
             CacheFactoryException actual = await Assert.ThrowsAsync<CacheFactoryException>(async () =>
-                await index.GetOrAddAsync("one", (_, _) => ValueTask.FromException<CacheValue>(expected)));
+                await index.GetOrAddAsync("one", (_, _) => ValueTask.FromException<CacheValue>(expected), TestContext.Current.CancellationToken));
             Assert.Same(expected, actual);
         }
 
         var healthy = new CacheValue("one", "healthy");
-        Assert.Same(healthy, await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(healthy)));
-        Assert.Same(healthy, await index.GetAsync("one"));
+        Assert.Same(healthy, await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(healthy), TestContext.Current.CancellationToken));
+        Assert.Same(healthy, await index.GetAsync("one", TestContext.Current.CancellationToken));
         Assert.Equal(3, cache.Statistics.CreationFaults);
         Assert.Equal(1, cache.Statistics.Count);
     }
@@ -290,22 +278,20 @@ public sealed class ResourceCacheConcurrencyTests
             },
             waiterCancellation.Token).AsTask();
         await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
-        Task<CacheValue> survivingWaiter = index.GetOrAddAsync(
-            "one",
-            (_, ownerToken) =>
+        Task<CacheValue> survivingWaiter = index.GetOrAddAsync("one", (_, ownerToken) =>
             {
                 ownerTokenCanceled = ownerToken.IsCancellationRequested;
                 return ValueTask.FromResult(new CacheValue("one", "loser"));
-            }).AsTask();
+            }, TestContext.Current.CancellationToken).AsTask();
 
         waiterCancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceledWaiter);
         var expected = new CacheValue("one", "healthy");
         release.TrySetResult(expected);
 
-        Assert.Same(expected, await survivingWaiter.WaitAsync(OperationTimeout));
+        Assert.Same(expected, await survivingWaiter.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
         Assert.False(ownerTokenCanceled);
-        Assert.Same(expected, await index.GetAsync("one"));
+        Assert.Same(expected, await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -317,31 +303,27 @@ public sealed class ResourceCacheConcurrencyTests
         var releaseFirst = NewSignal<CacheValue>();
         var secondStarted = NewSignal();
 
-        Task<CacheValue> first = index.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<CacheValue> first = index.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 firstStarted.TrySetResult();
                 return await releaseFirst.Task.WaitAsync(ownerToken);
-            }).AsTask();
-        await firstStarted.Task.WaitAsync(OperationTimeout);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await firstStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        Task<CacheValue> second = index.GetOrAddAsync(
-            "two",
-            (_, _) =>
+        Task<CacheValue> second = index.GetOrAddAsync("two", (_, _) =>
             {
                 secondStarted.TrySetResult();
                 return ValueTask.FromResult(new CacheValue("two", "second"));
-            }).AsTask();
+            }, TestContext.Current.CancellationToken).AsTask();
 
         Assert.False(secondStarted.Task.IsCompleted);
         Assert.Equal(0, cache.Statistics.Count);
         Assert.Equal(1, cache.Statistics.PendingCreations);
         releaseFirst.TrySetResult(new CacheValue("one", "first"));
 
-        await first.WaitAsync(OperationTimeout);
-        await secondStarted.Task.WaitAsync(OperationTimeout);
-        CacheValue secondValue = await second.WaitAsync(OperationTimeout);
+        await first.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        await secondStarted.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        CacheValue secondValue = await second.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.Equal("two", secondValue.Id);
         Assert.Equal(1, cache.Statistics.Count);
@@ -356,21 +338,19 @@ public sealed class ResourceCacheConcurrencyTests
         IResourceCacheIndex<string, CacheValue> index = cache.AddIndex("id", value => value.Id);
         var started = NewSignal();
 
-        Task<CacheValue> pending = index.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<CacheValue> pending = index.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 started.TrySetResult();
                 await Task.Delay(Timeout.InfiniteTimeSpan, ownerToken);
                 return new CacheValue("one", "unreachable");
-            }).AsTask();
-        await started.Task.WaitAsync(OperationTimeout);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        await cache.ClearAsync(TestContext.Current.CancellationToken).AsTask().WaitAsync(OperationTimeout);
+        await cache.ClearAsync(TestContext.Current.CancellationToken).AsTask().WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
         var replacement = new CacheValue("one", "replacement");
-        Assert.Same(replacement, await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(replacement)));
+        Assert.Same(replacement, await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(replacement), TestContext.Current.CancellationToken));
         Assert.Equal(1, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.PendingCreations);
     }
@@ -383,21 +363,19 @@ public sealed class ResourceCacheConcurrencyTests
         var started = NewSignal();
         var release = NewSignal<CacheValue>();
 
-        Task<CacheValue> creation = idIndex.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<CacheValue> creation = idIndex.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 started.TrySetResult();
                 return await release.Task.WaitAsync(ownerToken);
-            }).AsTask();
-        await started.Task.WaitAsync(OperationTimeout);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         IResourceCacheIndex<int, CacheValue> numberIndex = cache.AddIndex("number", value => value.Number);
         var expected = new CacheValue("one", "value", 17);
 
         release.TrySetResult(expected);
 
-        Assert.Same(expected, await creation.WaitAsync(OperationTimeout));
-        Assert.Same(expected, await numberIndex.GetAsync(17));
+        Assert.Same(expected, await creation.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken));
+        Assert.Same(expected, await numberIndex.GetAsync(17, TestContext.Current.CancellationToken));
         Assert.Equal(1, cache.Statistics.Count);
     }
 

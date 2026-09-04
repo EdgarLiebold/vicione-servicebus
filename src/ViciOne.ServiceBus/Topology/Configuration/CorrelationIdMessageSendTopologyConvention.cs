@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CorrelationIdMessageSendTopologyConvention<TMessage> :
+    ICorrelationIdMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using System.Collections.Generic;
-    using Topology;
+    readonly List<ICorrelationIdSelector<TMessage>> _selectors;
 
-
-    public class CorrelationIdMessageSendTopologyConvention<TMessage> :
-        ICorrelationIdMessageSendTopologyConvention<TMessage>
-        where TMessage : class
+    public CorrelationIdMessageSendTopologyConvention()
     {
-        readonly List<ICorrelationIdSelector<TMessage>> _selectors;
+        _selectors =
+        [
+            new CorrelatedByCorrelationIdSelector<TMessage>(),
+            new PropertyCorrelationIdSelector<TMessage>("CorrelationId"),
+            new PropertyCorrelationIdSelector<TMessage>("EventId"),
+            new PropertyCorrelationIdSelector<TMessage>("CommandId")
+        ];
+    }
 
-        public CorrelationIdMessageSendTopologyConvention()
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    {
+        convention = this as IMessageSendTopologyConvention<T>;
+
+        return convention != null;
+    }
+
+    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    {
+        if (TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId))
         {
-            _selectors =
-            [
-                new CorrelatedByCorrelationIdSelector<TMessage>(),
-                new PropertyCorrelationIdSelector<TMessage>("CorrelationId"),
-                new PropertyCorrelationIdSelector<TMessage>("EventId"),
-                new PropertyCorrelationIdSelector<TMessage>("CommandId")
-            ];
+            messageSendTopology = new SetCorrelationIdMessageSendTopology<TMessage>(messageCorrelationId);
+            return true;
         }
 
-        bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
-        {
-            convention = this as IMessageSendTopologyConvention<T>;
+        messageSendTopology = null;
+        return false;
+    }
 
-            return convention != null;
-        }
+    public void SetCorrelationId(IMessageCorrelationId<TMessage> messageCorrelationId)
+    {
+        _selectors.Insert(0, new SetCorrelationIdSelector<TMessage>(messageCorrelationId));
+    }
 
-        bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    public bool TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId)
+    {
+        for (var index = 0; index < _selectors.Count; index++)
         {
-            if (TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId))
-            {
-                messageSendTopology = new SetCorrelationIdMessageSendTopology<TMessage>(messageCorrelationId);
+            if (_selectors[index].TryGetSetCorrelationId(out messageCorrelationId))
                 return true;
-            }
-
-            messageSendTopology = null;
-            return false;
         }
 
-        public void SetCorrelationId(IMessageCorrelationId<TMessage> messageCorrelationId)
-        {
-            _selectors.Insert(0, new SetCorrelationIdSelector<TMessage>(messageCorrelationId));
-        }
-
-        public bool TryGetMessageCorrelationId(out IMessageCorrelationId<TMessage> messageCorrelationId)
-        {
-            for (var index = 0; index < _selectors.Count; index++)
-            {
-                if (_selectors[index].TryGetSetCorrelationId(out messageCorrelationId))
-                    return true;
-            }
-
-            messageCorrelationId = null;
-            return false;
-        }
+        messageCorrelationId = null;
+        return false;
     }
 }

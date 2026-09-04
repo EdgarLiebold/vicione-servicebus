@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Observables;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class BehaviorContextRetryConfigurator :
+    ExceptionSpecification,
+    IRetryConfigurator
 {
-    using Observables;
+    readonly RetryObservable _observers;
 
-
-    public class BehaviorContextRetryConfigurator :
-        ExceptionSpecification,
-        IRetryConfigurator
+    public BehaviorContextRetryConfigurator()
     {
-        readonly RetryObservable _observers;
+        _observers = new RetryObservable();
+    }
 
-        public BehaviorContextRetryConfigurator()
-        {
-            _observers = new RetryObservable();
-        }
+    public RetryPolicyFactory PolicyFactory { get; private set; }
 
-        public RetryPolicyFactory PolicyFactory { get; private set; }
+    public void SetRetryPolicy(RetryPolicyFactory factory)
+    {
+        PolicyFactory = factory;
+    }
 
-        public void SetRetryPolicy(RetryPolicyFactory factory)
-        {
-            PolicyFactory = factory;
-        }
+    public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
+    {
+        return _observers.Connect(observer);
+    }
 
-        public ConnectHandle ConnectRetryObserver(IRetryObserver observer)
-        {
-            return _observers.Connect(observer);
-        }
-
-        public IRetryPolicy GetRetryPolicy()
-        {
-            return PolicyFactory(Filter);
-        }
+    public IRetryPolicy GetRetryPolicy()
+    {
+        return PolicyFactory(Filter);
     }
 }

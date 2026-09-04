@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SendPipeConfiguration :
+    ISendPipeConfiguration
 {
-    using System;
-    using Middleware;
-    using Transports;
+    readonly SendPipeSpecification _specification;
 
-
-    public class SendPipeConfiguration :
-        ISendPipeConfiguration
+    public SendPipeConfiguration(ISendTopology sendTopology)
     {
-        readonly SendPipeSpecification _specification;
+        ArgumentNullException.ThrowIfNull(sendTopology);
 
-        public SendPipeConfiguration(ISendTopology sendTopology)
-        {
-            ArgumentNullException.ThrowIfNull(sendTopology);
+        _specification = new SendPipeSpecification();
+        _specification.ConnectSendPipeSpecificationObserver(new TopologySendPipeSpecificationObserver(sendTopology));
+    }
 
-            _specification = new SendPipeSpecification();
-            _specification.ConnectSendPipeSpecificationObserver(new TopologySendPipeSpecificationObserver(sendTopology));
-        }
+    public SendPipeConfiguration(ISendPipeSpecification parentSpecification)
+    {
+        ArgumentNullException.ThrowIfNull(parentSpecification);
 
-        public SendPipeConfiguration(ISendPipeSpecification parentSpecification)
-        {
-            ArgumentNullException.ThrowIfNull(parentSpecification);
+        _specification = new SendPipeSpecification();
+        _specification.ConnectSendPipeSpecificationObserver(new ParentSendPipeSpecificationObserver(parentSpecification));
+    }
 
-            _specification = new SendPipeSpecification();
-            _specification.ConnectSendPipeSpecificationObserver(new ParentSendPipeSpecificationObserver(parentSpecification));
-        }
+    public ISendPipeSpecification Specification => _specification;
+    public ISendPipeConfigurator Configurator => _specification;
 
-        public ISendPipeSpecification Specification => _specification;
-        public ISendPipeConfigurator Configurator => _specification;
-
-        public ISendPipe CreatePipe()
-        {
-            return new SendPipe(_specification);
-        }
+    public ISendPipe CreatePipe()
+    {
+        return new SendPipe(_specification);
     }
 }

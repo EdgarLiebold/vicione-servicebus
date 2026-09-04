@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class NotDefaultValueTypeSagaQueryPropertySelector<TData, TProperty> :
+    ISagaQueryPropertySelector<TData, TProperty>
+    where TData : class
+    where TProperty : struct
 {
-    using System;
-    using System.Collections.Generic;
+    readonly Func<ConsumeContext<TData>, TProperty> _selector;
 
-
-    public class NotDefaultValueTypeSagaQueryPropertySelector<TData, TProperty> :
-        ISagaQueryPropertySelector<TData, TProperty>
-        where TData : class
-        where TProperty : struct
+    public NotDefaultValueTypeSagaQueryPropertySelector(Func<ConsumeContext<TData>, TProperty> selector)
     {
-        readonly Func<ConsumeContext<TData>, TProperty> _selector;
+        _selector = selector;
+    }
 
-        public NotDefaultValueTypeSagaQueryPropertySelector(Func<ConsumeContext<TData>, TProperty> selector)
-        {
-            _selector = selector;
-        }
+    public bool TryGetProperty(ConsumeContext<TData> context, out TProperty property)
+    {
+        property = _selector(context);
 
-        public bool TryGetProperty(ConsumeContext<TData> context, out TProperty property)
-        {
-            property = _selector(context);
-
-            return !EqualityComparer<TProperty>.Default.Equals(property, default);
-        }
+        return !EqualityComparer<TProperty>.Default.Equals(property, default);
     }
 }

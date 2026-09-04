@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.Initializers.HeaderInitializers
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
+
+public class DictionaryCopyHeaderInitializer<TMessage, TInput, THeader> :
+    IHeaderInitializer<TMessage, TInput>
+    where TMessage : class
+    where TInput : class, IDictionary<string, THeader>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly IWriteProperty<SendContext, THeader> _headerProperty;
+    readonly string _key;
 
-
-    public class DictionaryCopyHeaderInitializer<TMessage, TInput, THeader> :
-        IHeaderInitializer<TMessage, TInput>
-        where TMessage : class
-        where TInput : class, IDictionary<string, THeader>
+    public DictionaryCopyHeaderInitializer(PropertyInfo propertyInfo, string key)
     {
-        readonly IWriteProperty<SendContext, THeader> _headerProperty;
-        readonly string _key;
+        if (propertyInfo == null)
+            throw new ArgumentNullException(nameof(propertyInfo));
 
-        public DictionaryCopyHeaderInitializer(PropertyInfo propertyInfo, string key)
-        {
-            if (propertyInfo == null)
-                throw new ArgumentNullException(nameof(propertyInfo));
+        _key = key;
+        _headerProperty = WritePropertyCache<SendContext>.GetProperty<THeader>(propertyInfo);
+    }
 
-            _key = key;
-            _headerProperty = WritePropertyCache<SendContext>.GetProperty<THeader>(propertyInfo);
-        }
+    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    {
+        if (context.HasInput && context.Input.TryGetValue(_key, out var value))
+            _headerProperty.Set(sendContext, value);
 
-        public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
-        {
-            if (context.HasInput && context.Input.TryGetValue(_key, out var value))
-                _headerProperty.Set(sendContext, value);
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

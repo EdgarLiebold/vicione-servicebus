@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IDispatchConfigurator<TContext>
 {
-    using System;
-
-
-    public interface IDispatchConfigurator<TContext>
-    {
-        void Pipe<T>(Action<IPipeConfigurator<T>> configurePipe)
-            where T : class, PipeContext;
-    }
+    void Pipe<T>(Action<IPipeConfigurator<T>> configurePipe)
+        where T : class, PipeContext;
 }

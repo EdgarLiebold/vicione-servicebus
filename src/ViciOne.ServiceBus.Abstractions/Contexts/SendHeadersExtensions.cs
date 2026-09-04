@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus;
 
 public static class SendHeadersExtensions
 {

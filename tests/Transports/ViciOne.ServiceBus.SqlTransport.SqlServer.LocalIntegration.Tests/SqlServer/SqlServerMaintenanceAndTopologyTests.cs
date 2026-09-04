@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
-
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.SqlServer;
 
 public sealed class SqlServerMaintenanceAndTopologyTests
 {
@@ -127,49 +127,49 @@ public sealed class SqlServerMaintenanceAndTopologyTests
         switch (procedure)
         {
             case "SendMessageV2":
-            {
-                await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                long deliveryId = await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
-                Assert.True(deliveryId > 0);
-                Assert.Equal(1, await DeliveryIdCount(connection, fixture.Schema, deliveryId, cancellationToken));
-                break;
-            }
+                {
+                    await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
+                    long deliveryId = await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    Assert.True(deliveryId > 0);
+                    Assert.Equal(1, await DeliveryIdCount(connection, fixture.Schema, deliveryId, cancellationToken));
+                    break;
+                }
             case "PublishMessageV2":
-            {
-                string queueName = fixture.Name("publish-destination");
-                await CreateTopic(connection, fixture.Schema, entityName, cancellationToken);
-                await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
-                await CreateQueueSubscription(connection, fixture.Schema, entityName, queueName, cancellationToken);
-                long deliveryCount = await Publish(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
-                Assert.Equal(1, deliveryCount);
-                Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
-                break;
-            }
+                {
+                    string queueName = fixture.Name("publish-destination");
+                    await CreateTopic(connection, fixture.Schema, entityName, cancellationToken);
+                    await CreateQueue(connection, fixture.Schema, queueName, cancellationToken);
+                    await CreateQueueSubscription(connection, fixture.Schema, entityName, queueName, cancellationToken);
+                    long deliveryCount = await Publish(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    Assert.Equal(1, deliveryCount);
+                    Assert.Equal(1, await connection.DeliveryCount(fixture.Schema, queueName, 1, cancellationToken));
+                    break;
+                }
             case "DeleteMessage":
-            {
-                await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
-                FetchedDelivery delivery = Assert.Single(await Fetch(connection, fixture.Schema, entityName, cancellationToken));
-                Assert.Null(await Delete(connection, fixture.Schema, delivery.DeliveryId, Guid.NewGuid(), cancellationToken));
-                Assert.Equal(delivery.DeliveryId, await Delete(connection, fixture.Schema, delivery.DeliveryId, delivery.LockId, cancellationToken));
-                Assert.Equal(0, await DeliveryIdCount(connection, fixture.Schema, delivery.DeliveryId, cancellationToken));
-                break;
-            }
+                {
+                    await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
+                    await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    FetchedDelivery delivery = Assert.Single(await Fetch(connection, fixture.Schema, entityName, cancellationToken));
+                    Assert.Null(await Delete(connection, fixture.Schema, delivery.DeliveryId, Guid.NewGuid(), cancellationToken));
+                    Assert.Equal(delivery.DeliveryId, await Delete(connection, fixture.Schema, delivery.DeliveryId, delivery.LockId, cancellationToken));
+                    Assert.Equal(0, await DeliveryIdCount(connection, fixture.Schema, delivery.DeliveryId, cancellationToken));
+                    break;
+                }
             case "TouchQueue":
-            {
-                long queueId = await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                Assert.Equal(queueId, await TouchQueue(connection, fixture.Schema, entityName, cancellationToken));
-                Assert.Equal((1, 0L), await DeadLetterMetric(connection, fixture.Schema, queueId, cancellationToken));
-                break;
-            }
+                {
+                    long queueId = await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
+                    Assert.Equal(queueId, await TouchQueue(connection, fixture.Schema, entityName, cancellationToken));
+                    Assert.Equal((1, 0L), await DeadLetterMetric(connection, fixture.Schema, queueId, cancellationToken));
+                    break;
+                }
             case "DeadLetterMessages":
-            {
-                await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
-                long deliveryId = await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
-                await Exhaust(connection, fixture.Schema, deliveryId, cancellationToken);
-                Assert.Equal(1, await DeadLetter(connection, fixture.Schema, entityName, 10, cancellationToken));
-                break;
-            }
+                {
+                    await CreateQueue(connection, fixture.Schema, entityName, cancellationToken);
+                    long deliveryId = await Send(connection, fixture.Schema, entityName, Guid.NewGuid(), cancellationToken);
+                    await Exhaust(connection, fixture.Schema, deliveryId, cancellationToken);
+                    Assert.Equal(1, await DeadLetter(connection, fixture.Schema, entityName, 10, cancellationToken));
+                    break;
+                }
             default:
                 throw new ArgumentOutOfRangeException(nameof(procedure), procedure, null);
         }
@@ -295,7 +295,7 @@ public sealed class SqlServerMaintenanceAndTopologyTests
     {
         const int retryLimit = 10;
 
-        for (int attempt = 0;; attempt++)
+        for (int attempt = 0; ; attempt++)
         {
             try
             {

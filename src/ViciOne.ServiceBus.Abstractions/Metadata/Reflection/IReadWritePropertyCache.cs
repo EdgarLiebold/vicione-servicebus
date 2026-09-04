@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Metadata;
-
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+namespace ViciOne.ServiceBus.Metadata;
 
 public interface IReadWritePropertyCache<T> : IEnumerable<ReadWriteProperty<T>>
 {

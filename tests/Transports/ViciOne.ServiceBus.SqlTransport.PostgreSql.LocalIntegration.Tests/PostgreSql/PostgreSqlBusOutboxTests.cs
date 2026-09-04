@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql;
-
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +7,8 @@ using ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastr
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.PostgreSql;
 
 public sealed class PostgreSqlBusOutboxTests
 {

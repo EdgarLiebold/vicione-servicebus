@@ -1,79 +1,77 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class DictionaryTransportSetHeaderAdapter :
+    ITransportSetHeaderAdapter<object>
 {
-    using System;
-    using System.Collections.Generic;
+    readonly IHeaderValueConverter _converter;
+    readonly TransportHeaderOptions _options;
 
-
-    public class DictionaryTransportSetHeaderAdapter :
-        ITransportSetHeaderAdapter<object>
+    public DictionaryTransportSetHeaderAdapter(IHeaderValueConverter converter, TransportHeaderOptions options = TransportHeaderOptions.Default)
     {
-        readonly IHeaderValueConverter _converter;
-        readonly TransportHeaderOptions _options;
+        _converter = converter;
+        _options = options;
+    }
 
-        public DictionaryTransportSetHeaderAdapter(IHeaderValueConverter converter, TransportHeaderOptions options = TransportHeaderOptions.Default)
+    public int? MaxHeaderLength { get; set; }
+
+    public void Set(IDictionary<string, object> dictionary, in HeaderValue headerValue)
+    {
+        switch (headerValue.Value)
         {
-            _converter = converter;
-            _options = options;
+            case null:
+                if (dictionary.ContainsKey(headerValue.Key))
+                    dictionary.Remove(headerValue.Key);
+                break;
+
+            default:
+                if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out var result))
+                    dictionary[result.Key] = TrimHeaderIfLengthExceedsLimit(result.Value);
+
+                break;
+        }
+    }
+
+    public void Set<T>(IDictionary<string, object> dictionary, in HeaderValue<T> headerValue)
+    {
+        switch (headerValue.Value)
+        {
+            case null:
+            case string s when string.IsNullOrWhiteSpace(s):
+                if (dictionary.ContainsKey(headerValue.Key))
+                    dictionary.Remove(headerValue.Key);
+                break;
+
+            default:
+                if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out var result))
+                    dictionary[result.Key] = TrimHeaderIfLengthExceedsLimit(result.Value);
+                break;
+        }
+    }
+
+    object TrimHeaderIfLengthExceedsLimit(object value)
+    {
+        if (MaxHeaderLength.HasValue && value is string stringValue && stringValue.Length > MaxHeaderLength.Value)
+            value = stringValue.Substring(0, MaxHeaderLength.Value);
+
+        return value;
+    }
+
+    bool IsHeaderIncluded(string key)
+    {
+        if (key.StartsWith(MessageHeaders.Host.Prefix, StringComparison.Ordinal))
+            return _options.HasFlag(TransportHeaderOptions.IncludeHost);
+
+        if (key.StartsWith(MessageHeaders.FaultPrefix, StringComparison.Ordinal))
+        {
+            if (_options.HasFlag(TransportHeaderOptions.IncludeFaultDetail))
+                return true;
+
+            return _options.HasFlag(TransportHeaderOptions.IncludeFaultMessage) && key.Equals(MessageHeaders.FaultMessage);
         }
 
-        public int? MaxHeaderLength { get; set; }
-
-        public void Set(IDictionary<string, object> dictionary, in HeaderValue headerValue)
-        {
-            switch (headerValue.Value)
-            {
-                case null:
-                    if (dictionary.ContainsKey(headerValue.Key))
-                        dictionary.Remove(headerValue.Key);
-                    break;
-
-                default:
-                    if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out var result))
-                        dictionary[result.Key] = TrimHeaderIfLengthExceedsLimit(result.Value);
-
-                    break;
-            }
-        }
-
-        public void Set<T>(IDictionary<string, object> dictionary, in HeaderValue<T> headerValue)
-        {
-            switch (headerValue.Value)
-            {
-                case null:
-                case string s when string.IsNullOrWhiteSpace(s):
-                    if (dictionary.ContainsKey(headerValue.Key))
-                        dictionary.Remove(headerValue.Key);
-                    break;
-
-                default:
-                    if (IsHeaderIncluded(headerValue.Key) && _converter.TryConvert(headerValue, out var result))
-                        dictionary[result.Key] = TrimHeaderIfLengthExceedsLimit(result.Value);
-                    break;
-            }
-        }
-
-        object TrimHeaderIfLengthExceedsLimit(object value)
-        {
-            if (MaxHeaderLength.HasValue && value is string stringValue && stringValue.Length > MaxHeaderLength.Value)
-                value = stringValue.Substring(0, MaxHeaderLength.Value);
-
-            return value;
-        }
-
-        bool IsHeaderIncluded(string key)
-        {
-            if (key.StartsWith(MessageHeaders.Host.Prefix, StringComparison.Ordinal))
-                return _options.HasFlag(TransportHeaderOptions.IncludeHost);
-
-            if (key.StartsWith(MessageHeaders.FaultPrefix, StringComparison.Ordinal))
-            {
-                if (_options.HasFlag(TransportHeaderOptions.IncludeFaultDetail))
-                    return true;
-
-                return _options.HasFlag(TransportHeaderOptions.IncludeFaultMessage) && key.Equals(MessageHeaders.FaultMessage);
-            }
-
-            return true;
-        }
+        return true;
     }
 }

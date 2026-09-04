@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus;
+
+public interface IQuerySagaRepository<TSaga> :
+    IProbeSite
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
-
-    public interface IQuerySagaRepository<TSaga> :
-        IProbeSite
-        where TSaga : class, ISaga
-    {
-        Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query);
-    }
+    Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query);
 }

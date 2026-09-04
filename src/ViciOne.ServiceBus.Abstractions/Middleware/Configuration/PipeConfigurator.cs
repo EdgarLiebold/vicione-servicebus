@@ -1,52 +1,50 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public partial class PipeConfigurator<TContext> :
+    IBuildPipeConfigurator<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Collections.Generic;
+    readonly List<IPipeSpecification<TContext>> _specifications;
 
-
-    public partial class PipeConfigurator<TContext> :
-        IBuildPipeConfigurator<TContext>
-        where TContext : class, PipeContext
+    public PipeConfigurator()
     {
-        readonly List<IPipeSpecification<TContext>> _specifications;
+        _specifications = new List<IPipeSpecification<TContext>>(16);
+    }
 
-        public PipeConfigurator()
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_specifications.Count == 0)
+            yield break;
+
+        for (var i = 0; i < _specifications.Count; i++)
         {
-            _specifications = new List<IPipeSpecification<TContext>>(16);
+            foreach (var result in _specifications[i].Validate())
+                yield return result;
         }
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_specifications.Count == 0)
-                yield break;
+    public void AddPipeSpecification(IPipeSpecification<TContext> specification)
+    {
+        if (specification == null)
+            throw new ArgumentNullException(nameof(specification));
 
-            for (var i = 0; i < _specifications.Count; i++)
-            {
-                foreach (var result in _specifications[i].Validate())
-                    yield return result;
-            }
-        }
+        _specifications.Add(specification);
+    }
 
-        public void AddPipeSpecification(IPipeSpecification<TContext> specification)
-        {
-            if (specification == null)
-                throw new ArgumentNullException(nameof(specification));
+    public IPipe<TContext> Build()
+    {
+        if (_specifications.Count == 0)
+            return Cache.EmptyPipe;
 
-            _specifications.Add(specification);
-        }
+        var builder = new PipeBuilder(_specifications.Count);
 
-        public IPipe<TContext> Build()
-        {
-            if (_specifications.Count == 0)
-                return Cache.EmptyPipe;
+        var count = _specifications.Count;
+        for (var index = 0; index < count; index++)
+            _specifications[index].Apply(builder);
 
-            var builder = new PipeBuilder(_specifications.Count);
-
-            var count = _specifications.Count;
-            for (var index = 0; index < count; index++)
-                _specifications[index].Apply(builder);
-
-            return builder.Build();
-        }
+        return builder.Build();
     }
 }

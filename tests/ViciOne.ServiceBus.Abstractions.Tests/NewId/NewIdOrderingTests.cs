@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.NewId;
-
 using System.Data.SqlTypes;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests.NewId;
 
 public sealed class NewIdOrderingTests
 {

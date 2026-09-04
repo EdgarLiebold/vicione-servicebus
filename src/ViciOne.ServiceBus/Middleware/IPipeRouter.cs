@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Middleware
+namespace ViciOne.ServiceBus.Middleware;
+
+public interface IPipeRouter :
+    IDynamicRouter<PipeContext>
 {
-    public interface IPipeRouter :
-        IDynamicRouter<PipeContext>
-    {
-    }
 }

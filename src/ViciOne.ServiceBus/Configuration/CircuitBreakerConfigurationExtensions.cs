@@ -1,8 +1,8 @@
+using System;
+using ViciOne.ServiceBus.Configuration;
+
 #nullable enable
 namespace ViciOne.ServiceBus;
-
-using System;
-using Configuration;
 
 public static class CircuitBreakerConfigurationExtensions
 {

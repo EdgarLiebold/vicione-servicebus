@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
 using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 public sealed class AmazonSqsScopeTests
 {

@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS;
@@ -7,6 +5,8 @@ using Amazon.SQS.Model;
 using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 public sealed class AmazonSqsTopologyTests
 {

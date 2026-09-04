@@ -1,23 +1,22 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+/// <summary>
+/// The queue details used to declare the queue to ActiveMQ
+/// </summary>
+public interface Queue
 {
     /// <summary>
-    /// The queue details used to declare the queue to ActiveMQ
+    /// The queue name
     /// </summary>
-    public interface Queue
-    {
-        /// <summary>
-        /// The queue name
-        /// </summary>
-        string EntityName { get; }
+    string EntityName { get; }
 
-        /// <summary>
-        /// True if the queue should be deleted when the connection is closed
-        /// </summary>
-        bool AutoDelete { get; }
+    /// <summary>
+    /// True if the queue should be deleted when the connection is closed
+    /// </summary>
+    bool AutoDelete { get; }
 
-        /// <summary>
-        /// True if queue is not persisted on disk
-        /// </summary>
-        bool Durable { get; }
-    }
+    /// <summary>
+    /// True if queue is not persisted on disk
+    /// </summary>
+    bool Durable { get; }
 }

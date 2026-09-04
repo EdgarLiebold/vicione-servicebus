@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Util;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+namespace ViciOne.ServiceBus.Util;
 /// <summary>
 /// Executes work on stable hash partitions so work sharing a partition key remains serialized while
 /// independent partitions can progress concurrently.

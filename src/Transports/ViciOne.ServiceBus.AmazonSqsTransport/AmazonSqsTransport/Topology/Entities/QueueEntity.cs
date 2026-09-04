@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System.Collections.Generic;
 using System.Linq;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public class QueueEntity :
     Queue,

@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IRetryObserverConnector
 {
-    public interface IRetryObserverConnector
-    {
-        /// <summary>
-        /// Connect an observer to the filter and/or pipe
-        /// </summary>
-        /// <param name="observer"></param>
-        /// <returns></returns>
-        ConnectHandle ConnectRetryObserver(IRetryObserver observer);
-    }
+    /// <summary>
+    /// Connect an observer to the filter and/or pipe
+    /// </summary>
+    /// <param name="observer"></param>
+    /// <returns></returns>
+    ConnectHandle ConnectRetryObserver(IRetryObserver observer);
 }

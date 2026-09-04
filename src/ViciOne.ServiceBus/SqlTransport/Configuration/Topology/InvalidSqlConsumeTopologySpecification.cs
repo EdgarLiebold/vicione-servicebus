@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.SqlTransport.Topology;
+
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public class InvalidSqlConsumeTopologySpecification :
+    ISqlConsumeTopologySpecification
 {
-    using System.Collections.Generic;
-    using Topology;
+    readonly string _key;
+    readonly string _message;
 
-
-    public class InvalidSqlConsumeTopologySpecification :
-        ISqlConsumeTopologySpecification
+    public InvalidSqlConsumeTopologySpecification(string key, string message)
     {
-        readonly string _key;
-        readonly string _message;
+        _key = key;
+        _message = message;
+    }
 
-        public InvalidSqlConsumeTopologySpecification(string key, string message)
-        {
-            _key = key;
-            _message = message;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield return this.Failure(_key, _message);
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield return this.Failure(_key, _message);
-        }
-
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-        }
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
     }
 }

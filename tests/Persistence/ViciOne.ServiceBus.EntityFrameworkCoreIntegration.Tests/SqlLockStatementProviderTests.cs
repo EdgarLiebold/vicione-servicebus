@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests;
-
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests;
 
 public sealed class SqlLockStatementProviderTests
 {

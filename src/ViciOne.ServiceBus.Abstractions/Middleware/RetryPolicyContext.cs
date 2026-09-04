@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
-    using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// An initial context acquired to begin a retry filter
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+public interface RetryPolicyContext<TContext> :
+    IDisposable
+    where TContext : class
+{
+    /// <summary>
+    /// The context being managed by the retry policy
+    /// </summary>
+    TContext Context { get; }
 
     /// <summary>
-    /// An initial context acquired to begin a retry filter
+    /// Determines if the exception can be retried
     /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public interface RetryPolicyContext<TContext> :
-        IDisposable
-        where TContext : class
-    {
-        /// <summary>
-        /// The context being managed by the retry policy
-        /// </summary>
-        TContext Context { get; }
+    /// <param name="exception">The exception that occurred</param>
+    /// <param name="retryContext">The retry context for the retry</param>
+    /// <returns>True if the task should be retried</returns>
+    bool CanRetry(Exception exception, out RetryContext<TContext> retryContext);
 
-        /// <summary>
-        /// Determines if the exception can be retried
-        /// </summary>
-        /// <param name="exception">The exception that occurred</param>
-        /// <param name="retryContext">The retry context for the retry</param>
-        /// <returns>True if the task should be retried</returns>
-        bool CanRetry(Exception exception, out RetryContext<TContext> retryContext);
+    /// <summary>
+    /// Called after the retry attempt has failed
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
+    Task RetryFaulted(Exception exception);
 
-        /// <summary>
-        /// Called after the retry attempt has failed
-        /// </summary>
-        /// <param name="exception"></param>
-        /// <returns></returns>
-        Task RetryFaulted(Exception exception);
-
-        /// <summary>
-        /// Cancel any pending or subsequent retries
-        /// </summary>
-        void Cancel();
-    }
+    /// <summary>
+    /// Cancel any pending or subsequent retries
+    /// </summary>
+    void Cancel();
 }

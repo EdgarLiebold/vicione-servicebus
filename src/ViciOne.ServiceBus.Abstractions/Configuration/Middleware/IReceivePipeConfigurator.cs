@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IReceivePipeConfigurator :
+    IPipeConfigurator<ReceiveContext>
 {
-    public interface IReceivePipeConfigurator :
-        IPipeConfigurator<ReceiveContext>
-    {
-    }
 }

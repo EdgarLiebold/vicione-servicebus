@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
-
 using System;
 using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
 
 public sealed class RabbitMqQueueRedeliveryConfigurationObserver : ConfigurationObserver, IMessageConfigurationObserver
 {

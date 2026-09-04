@@ -1,53 +1,51 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
+    IPipe<ConsumeContext<TMessage>>
+    where TSaga : SagaStateMachineInstance
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Context;
+    readonly IPipe<ConsumeContext<TMessage>> _finalPipe;
+    readonly RedeliveryOptions _options;
+    readonly IRetryPolicy _retryPolicy;
 
-
-    public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
-        IPipe<ConsumeContext<TMessage>>
-        where TSaga : SagaStateMachineInstance
-        where TMessage : class
+    public MissingInstanceRedeliveryPipe(IRetryPolicy retryPolicy, IPipe<ConsumeContext<TMessage>> finalPipe, RedeliveryOptions options)
     {
-        readonly IPipe<ConsumeContext<TMessage>> _finalPipe;
-        readonly RedeliveryOptions _options;
-        readonly IRetryPolicy _retryPolicy;
+        _retryPolicy = retryPolicy;
+        _finalPipe = finalPipe;
+        _options = options;
+    }
 
-        public MissingInstanceRedeliveryPipe(IRetryPolicy retryPolicy, IPipe<ConsumeContext<TMessage>> finalPipe, RedeliveryOptions options)
+    public Task Send(ConsumeContext<TMessage> context)
+    {
+        using RetryPolicyContext<ConsumeContext<TMessage>> policyContext = _retryPolicy.CreatePolicyContext(context);
+
+        var exception = new SagaException("An existing saga instance was not found", typeof(TSaga), typeof(TMessage), context.CorrelationId ?? Guid.Empty);
+
+        if (!policyContext.CanRetry(exception, out RetryContext<ConsumeContext<TMessage>> retryContext))
+            return _finalPipe.Send(context);
+
+        var previousDeliveryCount = context.GetRedeliveryCount();
+        for (var retryIndex = 0; retryIndex < previousDeliveryCount; retryIndex++)
         {
-            _retryPolicy = retryPolicy;
-            _finalPipe = finalPipe;
-            _options = options;
-        }
-
-        public Task Send(ConsumeContext<TMessage> context)
-        {
-            using RetryPolicyContext<ConsumeContext<TMessage>> policyContext = _retryPolicy.CreatePolicyContext(context);
-
-            var exception = new SagaException("An existing saga instance was not found", typeof(TSaga), typeof(TMessage), context.CorrelationId ?? Guid.Empty);
-
-            if (!policyContext.CanRetry(exception, out RetryContext<ConsumeContext<TMessage>> retryContext))
+            if (!retryContext.CanRetry(exception, out retryContext))
                 return _finalPipe.Send(context);
-
-            var previousDeliveryCount = context.GetRedeliveryCount();
-            for (var retryIndex = 0; retryIndex < previousDeliveryCount; retryIndex++)
-            {
-                if (!retryContext.CanRetry(exception, out retryContext))
-                    return _finalPipe.Send(context);
-            }
-
-            var redeliveryContext = _options.HasFlag(RedeliveryOptions.UseMessageScheduler)
-                ? (MessageRedeliveryContext)new ScheduleMessageRedeliveryContext<TMessage>(context, _options)
-                : new DelayedMessageRedeliveryContext<TMessage>(context, _options);
-
-            var delay = retryContext.Delay ?? TimeSpan.Zero;
-
-            return redeliveryContext.ScheduleRedelivery(delay);
         }
 
-        public void Probe(ProbeContext context)
-        {
-        }
+        var redeliveryContext = _options.HasFlag(RedeliveryOptions.UseMessageScheduler)
+            ? (MessageRedeliveryContext)new ScheduleMessageRedeliveryContext<TMessage>(context, _options)
+            : new DelayedMessageRedeliveryContext<TMessage>(context, _options);
+
+        var delay = retryContext.Delay ?? TimeSpan.Zero;
+
+        return redeliveryContext.ScheduleRedelivery(delay);
+    }
+
+    public void Probe(ProbeContext context)
+    {
     }
 }

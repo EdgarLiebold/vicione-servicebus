@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.DurableSend;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
+namespace ViciOne.ServiceBus.DurableSend;
 /// <summary>
 /// Readiness-oriented durable-sender health check. It reports durable backlog/quarantine state without
 /// exposing payloads, destinations, message identifiers or exception messages.

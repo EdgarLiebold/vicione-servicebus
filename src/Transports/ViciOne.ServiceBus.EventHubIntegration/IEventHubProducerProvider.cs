@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus;
+
+public interface IEventHubProducerProvider :
+    ISendObserverConnector
 {
-    using System;
-    using System.Threading.Tasks;
-
-
-    public interface IEventHubProducerProvider :
-        ISendObserverConnector
-    {
-        Task<IEventHubProducer> GetProducer(Uri address);
-    }
+    Task<IEventHubProducer> GetProducer(Uri address);
 }

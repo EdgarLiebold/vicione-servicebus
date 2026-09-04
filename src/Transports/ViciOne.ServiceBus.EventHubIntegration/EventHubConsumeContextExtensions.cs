@@ -1,8 +1,7 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public static class EventHubConsumeContextExtensions
 {

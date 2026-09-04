@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.QuartzIntegration;
+using ViciOne.ServiceBus.Scheduling;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PauseScheduledMessageConsumerDefinition :
+    ConsumerDefinition<PauseScheduledMessageConsumer>
 {
-    using QuartzIntegration;
-    using Scheduling;
+    readonly QuartzEndpointDefinition _endpointDefinition;
 
-
-    public class PauseScheduledMessageConsumerDefinition :
-        ConsumerDefinition<PauseScheduledMessageConsumer>
+    public PauseScheduledMessageConsumerDefinition(QuartzEndpointDefinition endpointDefinition)
     {
-        readonly QuartzEndpointDefinition _endpointDefinition;
+        _endpointDefinition = endpointDefinition;
 
-        public PauseScheduledMessageConsumerDefinition(QuartzEndpointDefinition endpointDefinition)
+        EndpointDefinition = endpointDefinition;
+    }
+
+    protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
+        IConsumerConfigurator<PauseScheduledMessageConsumer> consumerConfigurator, IRegistrationContext context)
+    {
+        consumerConfigurator.Message<PauseScheduledRecurringMessage>(m =>
         {
-            _endpointDefinition = endpointDefinition;
-
-            EndpointDefinition = endpointDefinition;
-        }
-
-        protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
-            IConsumerConfigurator<PauseScheduledMessageConsumer> consumerConfigurator, IRegistrationContext context)
-        {
-            consumerConfigurator.Message<PauseScheduledRecurringMessage>(m =>
-            {
-                m.UsePartitioner(_endpointDefinition.Partition, p => $"{p.Message.ScheduleGroup},{p.Message.ScheduleId}");
-            });
-        }
+            m.UsePartitioner(_endpointDefinition.Partition, p => $"{p.Message.ScheduleGroup},{p.Message.ScheduleId}");
+        });
     }
 }

@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
-{
-    public interface TopologyHandle
-    {
-        long Id { get; }
+namespace ViciOne.ServiceBus.Transports.Fabric;
 
-        void Disconnect();
-    }
+public interface TopologyHandle
+{
+    long Id { get; }
+
+    void Disconnect();
 }

@@ -1,208 +1,206 @@
-namespace ViciOne.ServiceBus.Util
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.Util;
+
+/// <summary>
+/// Maintains a collection of connections of the generic type
+/// </summary>
+/// <typeparam name="T">The connectable type</typeparam>
+public class Connectable<T>
+    where T : class
+{
+    readonly Dictionary<long, T> _connections;
+    T[]? _connected;
+    long _nextId;
+
+    public Connectable()
+    {
+        _connections = new Dictionary<long, T>();
+        _connected = null;
+    }
 
     /// <summary>
-    /// Maintains a collection of connections of the generic type
+    /// Returns a point-in-time snapshot of the connected instances. Modifying the returned
+    /// array does not change this connection set.
     /// </summary>
-    /// <typeparam name="T">The connectable type</typeparam>
-    public class Connectable<T>
-        where T : class
-    {
-        readonly Dictionary<long, T> _connections;
-        T[]? _connected;
-        long _nextId;
+    public T[] Connected => [.. GetConnected()];
 
-        public Connectable()
+    /// <summary>
+    /// The number of connections
+    /// </summary>
+    public int Count => GetConnected().Length;
+
+    /// <summary>
+    /// Connect a connectable type
+    /// </summary>
+    /// <param name="connection">The connection to add</param>
+    /// <returns>The connection handle</returns>
+    public ConnectHandle Connect(T connection)
+    {
+        ArgumentNullException.ThrowIfNull(connection);
+
+        var id = Interlocked.Increment(ref _nextId);
+
+        lock (_connections)
         {
-            _connections = new Dictionary<long, T>();
+            _connections.Add(id, connection);
             _connected = null;
         }
 
-        /// <summary>
-        /// Returns a point-in-time snapshot of the connected instances. Modifying the returned
-        /// array does not change this connection set.
-        /// </summary>
-        public T[] Connected => [.. GetConnected()];
+        return new Handle(id, this);
+    }
 
-        /// <summary>
-        /// The number of connections
-        /// </summary>
-        public int Count => GetConnected().Length;
+    /// <summary>
+    /// Enumerate the connections invoking the callback for each connection
+    /// </summary>
+    /// <param name="callback">The callback</param>
+    /// <returns>An awaitable Task for the operation</returns>
+    public Task ForEachAsync(Func<T, Task> callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
 
-        /// <summary>
-        /// Connect a connectable type
-        /// </summary>
-        /// <param name="connection">The connection to add</param>
-        /// <returns>The connection handle</returns>
-        public ConnectHandle Connect(T connection)
+        T[] connected = GetConnected();
+
+        if (connected.Length == 0)
+            return Task.CompletedTask;
+
+        if (connected.Length == 1)
+            return InvokeCallback(connected[0], callback);
+
+        var outputTasks = new Task[connected.Length];
+        int i;
+        for (i = 0; i < connected.Length; i++)
+            outputTasks[i] = InvokeCallback(connected[i], callback);
+
+        for (i = 0; i < outputTasks.Length; i++)
         {
-            ArgumentNullException.ThrowIfNull(connection);
-
-            var id = Interlocked.Increment(ref _nextId);
-
-            lock (_connections)
-            {
-                _connections.Add(id, connection);
-                _connected = null;
-            }
-
-            return new Handle(id, this);
+            if (outputTasks[i].Status != TaskStatus.RanToCompletion)
+                break;
         }
 
-        /// <summary>
-        /// Enumerate the connections invoking the callback for each connection
-        /// </summary>
-        /// <param name="callback">The callback</param>
-        /// <returns>An awaitable Task for the operation</returns>
-        public Task ForEachAsync(Func<T, Task> callback)
+        if (i == outputTasks.Length)
+            return Task.CompletedTask;
+
+        return Task.WhenAll(outputTasks);
+    }
+
+    /// <summary>
+    /// Invokes <paramref name="callback" /> for every instance in a stable point-in-time snapshot.
+    /// </summary>
+    public void ForEach(Action<T> callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
+
+        T[] connected = GetConnected();
+
+        switch (connected.Length)
         {
-            ArgumentNullException.ThrowIfNull(callback);
-
-            T[] connected = GetConnected();
-
-            if (connected.Length == 0)
-                return Task.CompletedTask;
-
-            if (connected.Length == 1)
-                return InvokeCallback(connected[0], callback);
-
-            var outputTasks = new Task[connected.Length];
-            int i;
-            for (i = 0; i < connected.Length; i++)
-                outputTasks[i] = InvokeCallback(connected[i], callback);
-
-            for (i = 0; i < outputTasks.Length; i++)
-            {
-                if (outputTasks[i].Status != TaskStatus.RanToCompletion)
+            case 0:
+                break;
+            case 1:
+                callback(connected[0]);
+                break;
+            default:
+                {
+                    for (var i = 0; i < connected.Length; i++)
+                        callback(connected[i]);
                     break;
-            }
-
-            if (i == outputTasks.Length)
-                return Task.CompletedTask;
-
-            return Task.WhenAll(outputTasks);
+                }
         }
+    }
 
-        /// <summary>
-        /// Invokes <paramref name="callback" /> for every instance in a stable point-in-time snapshot.
-        /// </summary>
-        public void ForEach(Action<T> callback)
-        {
-            ArgumentNullException.ThrowIfNull(callback);
+    /// <summary>
+    /// Returns whether <paramref name="callback" /> accepts every instance in a stable
+    /// point-in-time snapshot, stopping at the first rejection.
+    /// </summary>
+    public bool All(Func<T, bool> callback)
+    {
+        ArgumentNullException.ThrowIfNull(callback);
 
-            T[] connected = GetConnected();
+        T[] connected = GetConnected();
 
-            switch (connected.Length)
-            {
-                case 0:
-                    break;
-                case 1:
-                    callback(connected[0]);
-                    break;
-                default:
-                    {
-                        for (var i = 0; i < connected.Length; i++)
-                            callback(connected[i]);
-                        break;
-                    }
-            }
-        }
-
-        /// <summary>
-        /// Returns whether <paramref name="callback" /> accepts every instance in a stable
-        /// point-in-time snapshot, stopping at the first rejection.
-        /// </summary>
-        public bool All(Func<T, bool> callback)
-        {
-            ArgumentNullException.ThrowIfNull(callback);
-
-            T[] connected = GetConnected();
-
-            if (connected.Length == 0)
-                return true;
-
-            if (connected.Length == 1)
-                return callback(connected[0]);
-
-            for (var i = 0; i < connected.Length; i++)
-            {
-                if (callback(connected[i]) == false)
-                    return false;
-            }
-
+        if (connected.Length == 0)
             return true;
+
+        if (connected.Length == 1)
+            return callback(connected[0]);
+
+        for (var i = 0; i < connected.Length; i++)
+        {
+            if (callback(connected[i]) == false)
+                return false;
         }
 
-        T[] GetConnected()
+        return true;
+    }
+
+    T[] GetConnected()
+    {
+        T[]? read = Volatile.Read(ref _connected);
+        if (read != null)
+            return read;
+
+        lock (_connections)
         {
-            T[]? read = Volatile.Read(ref _connected);
+            read = Volatile.Read(ref _connected);
             if (read != null)
                 return read;
 
-            lock (_connections)
-            {
-                read = Volatile.Read(ref _connected);
-                if (read != null)
-                    return read;
+            var connected = new T[_connections.Count];
+            _connections.Values.CopyTo(connected, 0);
 
-                var connected = new T[_connections.Count];
-                _connections.Values.CopyTo(connected, 0);
+            Volatile.Write(ref _connected, connected);
 
-                Volatile.Write(ref _connected, connected);
+            return connected;
+        }
+    }
 
-                return connected;
-            }
+    static Task InvokeCallback(T connection, Func<T, Task> callback)
+    {
+        try
+        {
+            return callback(connection)
+                ?? Task.FromException(new InvalidOperationException("The connection callback returned a null task."));
+        }
+        catch (Exception exception)
+        {
+            return Task.FromException(exception);
+        }
+    }
+
+    void Disconnect(long id)
+    {
+        lock (_connections)
+        {
+            _connections.Remove(id);
+            _connected = null;
+        }
+    }
+
+
+    class Handle :
+        ConnectHandle
+    {
+        readonly Connectable<T> _connectable;
+        readonly long _id;
+
+        public Handle(long id, Connectable<T> connectable)
+        {
+            _id = id;
+            _connectable = connectable;
         }
 
-        static Task InvokeCallback(T connection, Func<T, Task> callback)
+        public void Disconnect()
         {
-            try
-            {
-                return callback(connection)
-                    ?? Task.FromException(new InvalidOperationException("The connection callback returned a null task."));
-            }
-            catch (Exception exception)
-            {
-                return Task.FromException(exception);
-            }
+            _connectable.Disconnect(_id);
         }
 
-        void Disconnect(long id)
+        public void Dispose()
         {
-            lock (_connections)
-            {
-                _connections.Remove(id);
-                _connected = null;
-            }
-        }
-
-
-        class Handle :
-            ConnectHandle
-        {
-            readonly Connectable<T> _connectable;
-            readonly long _id;
-
-            public Handle(long id, Connectable<T> connectable)
-            {
-                _id = id;
-                _connectable = connectable;
-            }
-
-            public void Disconnect()
-            {
-                _connectable.Disconnect(_id);
-            }
-
-            public void Dispose()
-            {
-                Disconnect();
-            }
+            Disconnect();
         }
     }
 }

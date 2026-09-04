@@ -1,11 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Util;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Util;
 /// <summary>
 /// Shared completed task results used on allocation-sensitive paths.
 /// </summary>

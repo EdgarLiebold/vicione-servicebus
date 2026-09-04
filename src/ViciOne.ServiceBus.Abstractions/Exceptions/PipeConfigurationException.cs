@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class PipeConfigurationException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class PipeConfigurationException :
-        ViciOneServiceBusException
+    public PipeConfigurationException()
     {
-        public PipeConfigurationException()
-        {
-        }
+    }
 
-        public PipeConfigurationException(string message)
-            : base(message)
-        {
-        }
+    public PipeConfigurationException(string message)
+        : base(message)
+    {
+    }
 
-        public PipeConfigurationException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public PipeConfigurationException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

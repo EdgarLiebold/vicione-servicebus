@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions;
-
 using System.Reflection;
 using global::ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions;
 
 public sealed class TypeExtensionsTests
 {

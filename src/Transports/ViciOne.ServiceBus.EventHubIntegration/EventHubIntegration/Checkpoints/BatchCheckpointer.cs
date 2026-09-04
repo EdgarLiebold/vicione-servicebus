@@ -1,143 +1,141 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
+
+public class BatchCheckpointer :
+    ICheckpointer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Channels;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly Channel<IPendingConfirmation> _channel;
+    readonly Task _checkpointTask;
+    readonly ReceiveSettings _settings;
+    readonly CancellationToken _cancellationToken;
 
-
-    public class BatchCheckpointer :
-        ICheckpointer
+    public BatchCheckpointer(ReceiveSettings settings, CancellationToken cancellationToken)
     {
-        readonly Channel<IPendingConfirmation> _channel;
-        readonly Task _checkpointTask;
-        readonly ReceiveSettings _settings;
-        readonly CancellationToken _cancellationToken;
-
-        public BatchCheckpointer(ReceiveSettings settings, CancellationToken cancellationToken)
+        _settings = settings;
+        _cancellationToken = cancellationToken;
+        var channelOptions = new BoundedChannelOptions(settings.CheckpointMessageLimit)
         {
-            _settings = settings;
-            _cancellationToken = cancellationToken;
-            var channelOptions = new BoundedChannelOptions(settings.CheckpointMessageLimit)
-            {
-                AllowSynchronousContinuations = false,
-                FullMode = BoundedChannelFullMode.Wait,
-                SingleReader = true,
-                SingleWriter = true
-            };
+            AllowSynchronousContinuations = false,
+            FullMode = BoundedChannelFullMode.Wait,
+            SingleReader = true,
+            SingleWriter = true
+        };
 
-            _channel = Channel.CreateBounded<IPendingConfirmation>(channelOptions);
-            _checkpointTask = WaitForBatch();
-        }
+        _channel = Channel.CreateBounded<IPendingConfirmation>(channelOptions);
+        _checkpointTask = WaitForBatch();
+    }
 
-        public async Task Pending(IPendingConfirmation confirmation)
+    public async Task Pending(IPendingConfirmation confirmation)
+    {
+        await _channel.Writer.WriteAsync(confirmation).ConfigureAwait(false);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _channel.Writer.TryComplete();
+
+        await _checkpointTask.ConfigureAwait(false);
+    }
+
+    async Task WaitForBatch()
+    {
+        try
         {
-            await _channel.Writer.WriteAsync(confirmation).ConfigureAwait(false);
+            while (await _channel.Reader.WaitToReadAsync(_cancellationToken).ConfigureAwait(false))
+                await ReadBatch().ConfigureAwait(false);
         }
-
-        public async ValueTask DisposeAsync()
+        catch (OperationCanceledException)
         {
-            _channel.Writer.TryComplete();
-
-            await _checkpointTask.ConfigureAwait(false);
         }
+        catch (ChannelClosedException)
+        {
+        }
+        catch (Exception exception)
+        {
+            LogContext.Error?.Log(exception, "WaitForBatch Faulted");
+        }
+    }
 
-        async Task WaitForBatch()
+    async Task ReadBatch()
+    {
+        var timeoutToken = new CancellationTokenSource(_settings.CheckpointInterval);
+        var batchToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token, _cancellationToken);
+        var batch = new List<IPendingConfirmation>(_settings.CheckpointMessageCount);
+
+        try
         {
             try
             {
-                while (await _channel.Reader.WaitToReadAsync(_cancellationToken).ConfigureAwait(false))
-                    await ReadBatch().ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (ChannelClosedException)
-            {
-            }
-            catch (Exception exception)
-            {
-                LogContext.Error?.Log(exception, "WaitForBatch Faulted");
-            }
-        }
-
-        async Task ReadBatch()
-        {
-            var timeoutToken = new CancellationTokenSource(_settings.CheckpointInterval);
-            var batchToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token, _cancellationToken);
-            var batch = new List<IPendingConfirmation>(_settings.CheckpointMessageCount);
-
-            try
-            {
-                try
+                while (batch.Count < _settings.CheckpointMessageCount)
                 {
-                    while (batch.Count < _settings.CheckpointMessageCount)
+                    if (_channel.Reader.TryRead(out var confirmation))
                     {
-                        if (_channel.Reader.TryRead(out var confirmation))
-                        {
-                            await confirmation.Confirmed.OrCanceled(_cancellationToken).ConfigureAwait(false);
-                            batch.Add(confirmation);
-                        }
-                        else if (await _channel.Reader.WaitToReadAsync(batchToken.Token).ConfigureAwait(false) == false)
-                        {
-                            break;
-                        }
+                        await confirmation.Confirmed.OrCanceled(_cancellationToken).ConfigureAwait(false);
+                        batch.Add(confirmation);
+                    }
+                    else if (await _channel.Reader.WaitToReadAsync(batchToken.Token).ConfigureAwait(false) == false)
+                    {
+                        break;
                     }
                 }
-                catch (Exception) when (batch.Count > 0)
-                {
-                }
+            }
+            catch (Exception) when (batch.Count > 0)
+            {
+            }
 
-                await Checkpoint(batch).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException exception) when (exception.CancellationToken == batchToken.Token)
-            {
-            }
-            catch (Exception exception)
-            {
-                for (var i = 0; i < batch.Count; i++)
-                    batch[i].Faulted(exception);
-            }
-            finally
-            {
-                batchToken.Dispose();
-                timeoutToken.Dispose();
-            }
+            await Checkpoint(batch).ConfigureAwait(false);
         }
-
-        async Task Checkpoint(List<IPendingConfirmation> batch)
+        catch (OperationCanceledException exception) when (exception.CancellationToken == batchToken.Token)
         {
-            for (var i = batch.Count - 1; i >= 0; i--)
-            {
-                if (await TryCheckpoint(batch[i]).ConfigureAwait(false) == false)
-                    continue;
-
-                batch.RemoveRange(0, i + 1);
-                return;
-            }
         }
-
-        async Task<bool> TryCheckpoint(IPendingConfirmation confirmation)
+        catch (Exception exception)
         {
-            _cancellationToken.ThrowIfCancellationRequested();
+            for (var i = 0; i < batch.Count; i++)
+                batch[i].Faulted(exception);
+        }
+        finally
+        {
+            batchToken.Dispose();
+            timeoutToken.Dispose();
+        }
+    }
 
-            LogContext.Debug?.Log("Partition: {PartitionId} updating checkpoint with offset: {Offset}", confirmation.Partition.PartitionId,
+    async Task Checkpoint(List<IPendingConfirmation> batch)
+    {
+        for (var i = batch.Count - 1; i >= 0; i--)
+        {
+            if (await TryCheckpoint(batch[i]).ConfigureAwait(false) == false)
+                continue;
+
+            batch.RemoveRange(0, i + 1);
+            return;
+        }
+    }
+
+    async Task<bool> TryCheckpoint(IPendingConfirmation confirmation)
+    {
+        _cancellationToken.ThrowIfCancellationRequested();
+
+        LogContext.Debug?.Log("Partition: {PartitionId} updating checkpoint with offset: {Offset}", confirmation.Partition.PartitionId,
+            confirmation.OffsetString);
+
+        try
+        {
+            await confirmation.Checkpoint(_cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            LogContext.Error?.Log(exception, "Partition: {PartitionId} checkpoint failed with offset: {Offset}", confirmation.Partition,
                 confirmation.OffsetString);
-
-            try
-            {
-                await confirmation.Checkpoint(_cancellationToken).ConfigureAwait(false);
-                return true;
-            }
-            catch (Exception exception)
-            {
-                LogContext.Error?.Log(exception, "Partition: {PartitionId} checkpoint failed with offset: {Offset}", confirmation.Partition,
-                    confirmation.OffsetString);
-                confirmation.Faulted(exception);
-                return false;
-            }
+            confirmation.Faulted(exception);
+            return false;
         }
     }
 }

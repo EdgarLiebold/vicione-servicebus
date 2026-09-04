@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
-
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 public sealed class RabbitMqObligationProjectionTests
 {
@@ -13,9 +13,9 @@ public sealed class RabbitMqObligationProjectionTests
 
     private static readonly string[] ProjectionPaths =
     [
-        ".testagent/rabbitmq-unit-native-obligation-map.tsv",
-        ".testagent/rabbitmq-local-native-obligation-map.tsv",
-        ".testagent/rabbitmq-external-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/rabbitmq-unit-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/rabbitmq-local-native-obligation-map.tsv",
+        "evidence/native-tests/obligation-maps/rabbitmq-external-native-obligation-map.tsv",
     ];
 
     [Fact]

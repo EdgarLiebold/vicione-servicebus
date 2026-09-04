@@ -2,6 +2,10 @@
   <Import Project="../../../signing.props" />
 
   <PropertyGroup>
+    <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
+    <Nullable>annotations</Nullable>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 

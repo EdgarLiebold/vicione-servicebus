@@ -1,11 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.MessageJournal;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+#nullable enable
+namespace ViciOne.ServiceBus.MessageJournal;
 /// <summary>
 /// Sanitized content selected by the application policy for persistence.
 /// </summary>

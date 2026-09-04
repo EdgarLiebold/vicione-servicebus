@@ -1,13 +1,12 @@
-namespace ViciOneServiceBusBenchmark.BusOutbox;
-
 using System.Threading;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ViciOne.ServiceBus;
 
+namespace ViciOneServiceBusBenchmark.BusOutbox;
 
 public class MigrationHostedService<TDbContext> :
     IHostedService

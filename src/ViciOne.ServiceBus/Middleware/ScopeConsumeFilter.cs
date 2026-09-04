@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class ScopeConsumeFilter :
+    IFilter<ConsumeContext>
 {
-    using System.Threading.Tasks;
-    using DependencyInjection;
+    readonly IConsumeScopeProvider _scopeProvider;
 
-
-    public class ScopeConsumeFilter :
-        IFilter<ConsumeContext>
+    public ScopeConsumeFilter(IConsumeScopeProvider scopeProvider)
     {
-        readonly IConsumeScopeProvider _scopeProvider;
+        _scopeProvider = scopeProvider;
+    }
 
-        public ScopeConsumeFilter(IConsumeScopeProvider scopeProvider)
-        {
-            _scopeProvider = scopeProvider;
-        }
+    public async Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    {
+        await using var scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
 
-        public async Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
-        {
-            await using var scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        await next.Send(scope.Context).ConfigureAwait(false);
+    }
 
-            await next.Send(scope.Context).ConfigureAwait(false);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("scope");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("scope");
     }
 }

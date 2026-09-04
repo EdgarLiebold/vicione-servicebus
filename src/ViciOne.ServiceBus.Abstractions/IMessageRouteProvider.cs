@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+internal interface IMessageRouteProvider
 {
-    internal interface IMessageRouteProvider
-    {
-        IMessageRouteTable MessageRoutes { get; }
-    }
+    IMessageRouteTable MessageRoutes { get; }
 }

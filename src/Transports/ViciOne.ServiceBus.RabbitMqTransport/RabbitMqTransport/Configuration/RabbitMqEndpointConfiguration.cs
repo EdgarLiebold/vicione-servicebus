@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public class RabbitMqEndpointConfiguration :
+    EndpointConfiguration,
+    IRabbitMqEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public class RabbitMqEndpointConfiguration :
-        EndpointConfiguration,
-        IRabbitMqEndpointConfiguration
+    public RabbitMqEndpointConfiguration(IRabbitMqTopologyConfiguration topologyConfiguration)
+        : base(topologyConfiguration)
     {
-        public RabbitMqEndpointConfiguration(IRabbitMqTopologyConfiguration topologyConfiguration)
-            : base(topologyConfiguration)
-        {
-            Topology = topologyConfiguration;
-        }
+        Topology = topologyConfiguration;
+    }
 
-        RabbitMqEndpointConfiguration(IEndpointConfiguration parentConfiguration, IRabbitMqTopologyConfiguration topologyConfiguration, bool isBusEndpoint)
-            : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
-        {
-            Topology = topologyConfiguration;
-        }
+    RabbitMqEndpointConfiguration(IEndpointConfiguration parentConfiguration, IRabbitMqTopologyConfiguration topologyConfiguration, bool isBusEndpoint)
+        : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+    {
+        Topology = topologyConfiguration;
+    }
 
-        public new IRabbitMqTopologyConfiguration Topology { get; }
+    public new IRabbitMqTopologyConfiguration Topology { get; }
 
-        public IRabbitMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
-        {
-            var topologyConfiguration = new RabbitMqTopologyConfiguration(Topology);
+    public IRabbitMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
+    {
+        var topologyConfiguration = new RabbitMqTopologyConfiguration(Topology);
 
-            return new RabbitMqEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
-        }
+        return new RabbitMqEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
     }
 }

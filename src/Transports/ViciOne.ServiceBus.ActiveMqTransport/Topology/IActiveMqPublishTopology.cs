@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqPublishTopology :
+    IPublishTopology
 {
-    using ActiveMqTransport.Topology;
+    string VirtualTopicPrefix { get; }
 
+    string VirtualTopicConsumerPattern { get; }
 
-    public interface IActiveMqPublishTopology :
-        IPublishTopology
-    {
-        string VirtualTopicPrefix { get; }
+    new IActiveMqMessagePublishTopology<T> GetMessageTopology<T>()
+        where T : class;
 
-        string VirtualTopicConsumerPattern { get; }
-
-        new IActiveMqMessagePublishTopology<T> GetMessageTopology<T>()
-            where T : class;
-
-        BrokerTopology GetPublishBrokerTopology();
-    }
+    BrokerTopology GetPublishBrokerTopology();
 }

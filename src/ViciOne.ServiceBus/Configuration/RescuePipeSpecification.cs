@@ -1,76 +1,74 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RescuePipeSpecification<TContext, TRescue> :
+    ExceptionSpecification,
+    IPipeSpecification<TContext>,
+    IRescueConfigurator<TContext, TRescue>
+    where TContext : class, PipeContext
+    where TRescue : class, TContext
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IPipeConfigurator<TContext> _contextPipeConfigurator;
+    readonly IBuildPipeConfigurator<TRescue> _pipeConfigurator;
+    readonly RescueContextFactory<TContext, TRescue> _rescueContextFactory;
 
-
-    public class RescuePipeSpecification<TContext, TRescue> :
-        ExceptionSpecification,
-        IPipeSpecification<TContext>,
-        IRescueConfigurator<TContext, TRescue>
-        where TContext : class, PipeContext
-        where TRescue : class, TContext
+    public RescuePipeSpecification(RescueContextFactory<TContext, TRescue> rescueContextFactory)
     {
-        readonly IPipeConfigurator<TContext> _contextPipeConfigurator;
-        readonly IBuildPipeConfigurator<TRescue> _pipeConfigurator;
-        readonly RescueContextFactory<TContext, TRescue> _rescueContextFactory;
+        _rescueContextFactory = rescueContextFactory;
 
-        public RescuePipeSpecification(RescueContextFactory<TContext, TRescue> rescueContextFactory)
+        _pipeConfigurator = new PipeConfigurator<TRescue>();
+        _contextPipeConfigurator = new ContextPipeConfigurator(_pipeConfigurator);
+    }
+
+    public void Apply(IPipeBuilder<TContext> builder)
+    {
+        IPipe<TRescue> rescuePipe = _pipeConfigurator.Build();
+
+        builder.AddFilter(new RescueFilter<TContext, TRescue>(rescuePipe, Filter, _rescueContextFactory));
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_rescueContextFactory == null)
+            yield return this.Failure("RescueContextFactory", "must not be null");
+
+        foreach (var result in _pipeConfigurator.Validate())
+            yield return result;
+    }
+
+    IPipeConfigurator<TContext> IRescueConfigurator<TContext, TRescue>.ContextPipe => _contextPipeConfigurator;
+
+    void IPipeConfigurator<TRescue>.AddPipeSpecification(IPipeSpecification<TRescue> specification)
+    {
+        _pipeConfigurator.AddPipeSpecification(specification);
+    }
+
+
+    class ContextPipeConfigurator :
+        IPipeConfigurator<TContext>
+    {
+        readonly IPipeConfigurator<TRescue> _configurator;
+
+        public ContextPipeConfigurator(IPipeConfigurator<TRescue> configurator)
         {
-            _rescueContextFactory = rescueContextFactory;
-
-            _pipeConfigurator = new PipeConfigurator<TRescue>();
-            _contextPipeConfigurator = new ContextPipeConfigurator(_pipeConfigurator);
+            _configurator = configurator;
         }
 
-        public void Apply(IPipeBuilder<TContext> builder)
+        public void AddPipeSpecification(IPipeSpecification<TContext> specification)
         {
-            IPipe<TRescue> rescuePipe = _pipeConfigurator.Build();
-
-            builder.AddFilter(new RescueFilter<TContext, TRescue>(rescuePipe, Filter, _rescueContextFactory));
+            _configurator.AddPipeSpecification(new PipeConfigurator<TRescue>.SplitFilterPipeSpecification<TContext>(specification, InputContext, Context));
         }
 
-        public IEnumerable<ValidationResult> Validate()
+        static TRescue Context(TRescue context)
         {
-            if (_rescueContextFactory == null)
-                yield return this.Failure("RescueContextFactory", "must not be null");
-
-            foreach (var result in _pipeConfigurator.Validate())
-                yield return result;
+            return context;
         }
 
-        IPipeConfigurator<TContext> IRescueConfigurator<TContext, TRescue>.ContextPipe => _contextPipeConfigurator;
-
-        void IPipeConfigurator<TRescue>.AddPipeSpecification(IPipeSpecification<TRescue> specification)
+        static TRescue InputContext(TRescue input, TContext context)
         {
-            _pipeConfigurator.AddPipeSpecification(specification);
-        }
-
-
-        class ContextPipeConfigurator :
-            IPipeConfigurator<TContext>
-        {
-            readonly IPipeConfigurator<TRescue> _configurator;
-
-            public ContextPipeConfigurator(IPipeConfigurator<TRescue> configurator)
-            {
-                _configurator = configurator;
-            }
-
-            public void AddPipeSpecification(IPipeSpecification<TContext> specification)
-            {
-                _configurator.AddPipeSpecification(new PipeConfigurator<TRescue>.SplitFilterPipeSpecification<TContext>(specification, InputContext, Context));
-            }
-
-            static TRescue Context(TRescue context)
-            {
-                return context;
-            }
-
-            static TRescue InputContext(TRescue input, TContext context)
-            {
-                return input;
-            }
+            return input;
         }
     }
 }

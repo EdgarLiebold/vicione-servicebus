@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Extracts the CorrelationId from the message where there is a one-to-one correlation
+/// identifier in the message (such as CorrelationId) and sets it in the header for use
+/// by the saga repository.
+/// </summary>
+/// <typeparam name="TMessage">The message type</typeparam>
+public class CorrelationIdMessageFilter<TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Context;
+    readonly Func<ConsumeContext<TMessage>, Guid> _getCorrelationId;
 
-
-    /// <summary>
-    /// Extracts the CorrelationId from the message where there is a one-to-one correlation
-    /// identifier in the message (such as CorrelationId) and sets it in the header for use
-    /// by the saga repository.
-    /// </summary>
-    /// <typeparam name="TMessage">The message type</typeparam>
-    public class CorrelationIdMessageFilter<TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TMessage : class
+    public CorrelationIdMessageFilter(Func<ConsumeContext<TMessage>, Guid> getCorrelationId)
     {
-        readonly Func<ConsumeContext<TMessage>, Guid> _getCorrelationId;
+        if (getCorrelationId == null)
+            throw new ArgumentNullException(nameof(getCorrelationId));
 
-        public CorrelationIdMessageFilter(Func<ConsumeContext<TMessage>, Guid> getCorrelationId)
-        {
-            if (getCorrelationId == null)
-                throw new ArgumentNullException(nameof(getCorrelationId));
+        _getCorrelationId = getCorrelationId;
+    }
 
-            _getCorrelationId = getCorrelationId;
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("correlationId");
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("correlationId");
-        }
+    public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        var correlationId = _getCorrelationId(context);
 
-        public Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
-        {
-            var correlationId = _getCorrelationId(context);
+        var proxy = new CorrelationIdConsumeContextProxy<TMessage>(context, correlationId);
 
-            var proxy = new CorrelationIdConsumeContextProxy<TMessage>(context, correlationId);
-
-            return next.Send(proxy);
-        }
+        return next.Send(proxy);
     }
 }

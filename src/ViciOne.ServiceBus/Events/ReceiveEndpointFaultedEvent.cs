@@ -1,24 +1,22 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Events
+namespace ViciOne.ServiceBus.Events;
+
+public class ReceiveEndpointFaultedEvent :
+    ReceiveEndpointFaulted
 {
-    using System;
+    readonly ReceiveTransportFaulted _faulted;
 
-
-    public class ReceiveEndpointFaultedEvent :
-        ReceiveEndpointFaulted
+    public ReceiveEndpointFaultedEvent(ReceiveTransportFaulted faulted, IReceiveEndpoint receiveEndpoint)
     {
-        readonly ReceiveTransportFaulted _faulted;
-
-        public ReceiveEndpointFaultedEvent(ReceiveTransportFaulted faulted, IReceiveEndpoint receiveEndpoint)
-        {
-            _faulted = faulted;
-            ReceiveEndpoint = receiveEndpoint;
-        }
-
-        public Uri InputAddress => _faulted.InputAddress;
-        public Exception Exception => _faulted.Exception;
-        public bool IsTerminal => _faulted.IsTerminal;
-
-        public IReceiveEndpoint ReceiveEndpoint { get; }
+        _faulted = faulted;
+        ReceiveEndpoint = receiveEndpoint;
     }
+
+    public Uri InputAddress => _faulted.InputAddress;
+    public Exception Exception => _faulted.Exception;
+    public bool IsTerminal => _faulted.IsTerminal;
+
+    public IReceiveEndpoint ReceiveEndpoint { get; }
 }

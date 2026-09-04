@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
-
 using System.Threading.Tasks;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 /// <summary>
 /// A filter that uses the model context to create a basic consumer and connect it to the model
 /// </summary>

@@ -1,11 +1,10 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 
 using Microsoft.Extensions.Options;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>Mutable startup options frozen into one bus-owned payload-admission policy.</summary>
 public sealed class PayloadAdmissionOptions<TBus>
     where TBus : class, IBus

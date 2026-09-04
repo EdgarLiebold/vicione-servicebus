@@ -11,10 +11,16 @@
        errors is the same thing with a longer path, and a warning in one that does not is a note
        nobody reads. -->
 
+  <!-- Globalization is a runtime-host choice. It is enabled only after a project has declared
+       itself executable, so library packages never impose that choice on their consumers. -->
+  <PropertyGroup Condition=" '$(OutputType)' == 'Exe' ">
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
   <!-- Configuration and package-provided project classification are final when targets are imported.
        Product assemblies use full symbols for Debug and embedded symbols for Release. Microsoft
        Testing Platform applications are the deliberate exception: xUnit's MTP package requires a
-       portable PDB for discovery, so applying the product Release policy to a native test executable
+       portable PDB for discovery, so applying the product Release policy to a test executable
        produces a successful build whose MTP run discovers zero tests. -->
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' AND '$(IsTestingPlatformApplication)' != 'true' ">
     <DebugType>full</DebugType>
@@ -56,7 +62,7 @@
 
   <!-- Build must consume a physical lock file already materialized by the explicit restore step.
        Restore remains able to create a lock for a new project; a build cannot silently proceed
-       without the tracked graph that reviewers and CI inspect. -->
+       without the tracked graph that the repository and CI require. -->
   <Target Name="AssertProjectLockFileExists"
           BeforeTargets="BeforeBuild">
     <Error Code="VOSB0011"
@@ -85,8 +91,8 @@
 
        net10.0 is the product target. Three projects may use netstandard2.0, and which three is decided
        by their repository relative path below: a marker a project sets about itself is not a control,
-       because any project can set it. The measurement behind the third one is in
-       evidence/WP-F2-SERVICEBUS-A-PLUS-RECOVERY-03/record-0097; docs/build.md states the rule. -->
+       because any project can set it. The analyzer package uses the framework as its consumer
+       surface because it ships no library assembly; docs/build.md states the complete rule. -->
   <PropertyGroup>
     <ViciOneProjectIdentity>$([MSBuild]::MakeRelative($(MSBuildThisFileDirectory), $(MSBuildProjectFullPath)))</ViciOneProjectIdentity>
     <ViciOneProjectIdentity>$(ViciOneProjectIdentity.Replace('\','/'))</ViciOneProjectIdentity>
@@ -105,8 +111,8 @@
   </PropertyGroup>
 
   <!-- The marker controls central package evaluation, but its authority is the path. Re-derive the
-       boundary after the project body and reject both marker spoofing and a native test entry in a
-       product or inherited-test project. -->
+       boundary after the project body and reject both marker spoofing and a test entry in a
+       product or compatibility-test project. -->
   <Target Name="AssertNativeTestBoundaryIsIntact"
           BeforeTargets="CollectPackageReferences">
     <ItemGroup>

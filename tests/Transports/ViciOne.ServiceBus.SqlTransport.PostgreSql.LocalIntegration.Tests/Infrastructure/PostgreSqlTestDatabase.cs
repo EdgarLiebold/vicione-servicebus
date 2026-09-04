@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
-
 using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Databases;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
 {

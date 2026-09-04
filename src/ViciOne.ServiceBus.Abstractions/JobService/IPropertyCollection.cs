@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+namespace ViciOne.ServiceBus;
 
 public interface IPropertyCollection :
     IReadOnlyDictionary<string, object>

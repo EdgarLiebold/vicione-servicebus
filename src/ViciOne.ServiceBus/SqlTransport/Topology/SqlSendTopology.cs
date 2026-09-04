@@ -1,57 +1,55 @@
+using System;
+using ViciOne.ServiceBus.Topology;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public class SqlSendTopology :
+    SendTopology,
+    ISqlSendTopologyConfigurator
 {
-    using System;
-    using ViciOne.ServiceBus.Topology;
+    public Action<ISqlQueueConfigurator>? ConfigureErrorSettings { get; set; }
+    public Action<ISqlQueueConfigurator>? ConfigureDeadLetterSettings { get; set; }
 
-
-    public class SqlSendTopology :
-        SendTopology,
-        ISqlSendTopologyConfigurator
+    public new ISqlMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
+        where T : class
     {
-        public Action<ISqlQueueConfigurator>? ConfigureErrorSettings { get; set; }
-        public Action<ISqlQueueConfigurator>? ConfigureDeadLetterSettings { get; set; }
+        IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
 
-        public new ISqlMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
-            where T : class
-        {
-            IMessageSendTopologyConfigurator<T> configurator = base.GetMessageTopology<T>();
+        return (configurator as ISqlMessageSendTopologyConfigurator<T>)!;
+    }
 
-            return (configurator as ISqlMessageSendTopologyConfigurator<T>)!;
-        }
+    public SendSettings GetSendSettings(SqlEndpointAddress address)
+    {
+        return address.Type == SqlEndpointAddress.AddressType.Queue
+            ? new QueueSendSettings(address)
+            : new TopicSendSettings(address);
+    }
 
-        public SendSettings GetSendSettings(SqlEndpointAddress address)
-        {
-            return address.Type == SqlEndpointAddress.AddressType.Queue
-                ? new QueueSendSettings(address)
-                : new TopicSendSettings(address);
-        }
+    public SendSettings GetErrorSettings(ReceiveSettings settings)
+    {
+        var errorSettings = new QueueSendSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.QueueName));
 
-        public SendSettings GetErrorSettings(ReceiveSettings settings)
-        {
-            var errorSettings = new QueueSendSettings(settings, ErrorQueueNameFormatter.FormatErrorQueueName(settings.QueueName));
+        ConfigureErrorSettings?.Invoke(errorSettings);
 
-            ConfigureErrorSettings?.Invoke(errorSettings);
+        return errorSettings;
+    }
 
-            return errorSettings;
-        }
+    public SendSettings GetDeadLetterSettings(ReceiveSettings settings)
+    {
+        var deadLetterSetting = new QueueSendSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.QueueName));
 
-        public SendSettings GetDeadLetterSettings(ReceiveSettings settings)
-        {
-            var deadLetterSetting = new QueueSendSettings(settings, DeadLetterQueueNameFormatter.FormatDeadLetterQueueName(settings.QueueName));
+        ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
 
-            ConfigureDeadLetterSettings?.Invoke(deadLetterSetting);
+        return deadLetterSetting;
+    }
 
-            return deadLetterSetting;
-        }
+    protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
+    {
+        var messageTopology = new SqlMessageSendTopology<T>();
 
-        protected override IMessageSendTopologyConfigurator CreateMessageTopology<T>(Type type)
-        {
-            var messageTopology = new SqlMessageSendTopology<T>();
+        OnMessageTopologyCreated(messageTopology);
 
-            OnMessageTopologyCreated(messageTopology);
-
-            return messageTopology;
-        }
+        return messageTopology;
     }
 }

@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Tooling;
-
 using System.Diagnostics;
 using System.Text;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
+namespace ViciOne.ServiceBus.Architecture.Tests.Tooling;
 /// <summary>Black-box contracts for the retained provider-only orchestration boundary.</summary>
 public sealed class ProviderFixtureRunnerTests
 {

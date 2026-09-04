@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Configuration
-{
-    public interface IFutureRegistration :
-        IRegistration
-    {
-        void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context);
+namespace ViciOne.ServiceBus.Configuration;
 
-        IFutureDefinition GetDefinition(IRegistrationContext context);
-    }
+public interface IFutureRegistration :
+    IRegistration
+{
+    void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context);
+
+    IFutureDefinition GetDefinition(IRegistrationContext context);
 }

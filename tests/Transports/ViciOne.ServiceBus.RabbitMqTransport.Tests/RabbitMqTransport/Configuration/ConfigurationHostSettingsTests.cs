@@ -1,8 +1,8 @@
-using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using System.Net.Security;
 using System.Security.Authentication;
 using RabbitMQ.Client;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.RabbitMqTransport.Tests.RabbitMqTransport.Configuration;

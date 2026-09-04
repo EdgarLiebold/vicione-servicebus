@@ -1,17 +1,16 @@
-namespace ViciOne.ServiceBus.Configuration
-{
-    public class ConsumerEndpointDefinition<TConsumer> :
-        SettingsEndpointDefinition<TConsumer>
-        where TConsumer : class, IConsumer
-    {
-        public ConsumerEndpointDefinition(IEndpointSettings<IEndpointDefinition<TConsumer>> settings)
-            : base(settings)
-        {
-        }
+namespace ViciOne.ServiceBus.Configuration;
 
-        protected override string FormatEndpointName(IEndpointNameFormatter formatter)
-        {
-            return formatter.Consumer<TConsumer>();
-        }
+public class ConsumerEndpointDefinition<TConsumer> :
+    SettingsEndpointDefinition<TConsumer>
+    where TConsumer : class, IConsumer
+{
+    public ConsumerEndpointDefinition(IEndpointSettings<IEndpointDefinition<TConsumer>> settings)
+        : base(settings)
+    {
+    }
+
+    protected override string FormatEndpointName(IEndpointNameFormatter formatter)
+    {
+        return formatter.Consumer<TConsumer>();
     }
 }

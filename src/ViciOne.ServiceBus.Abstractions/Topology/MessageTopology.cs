@@ -1,113 +1,111 @@
-namespace ViciOne.ServiceBus.Topology
+using System;
+using System.Collections.Concurrent;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.Topology;
+
+public class MessageTopology :
+    IMessageTopologyConfigurator
 {
-    using System;
-    using System.Collections.Concurrent;
-    using Configuration;
+    readonly ConcurrentDictionary<Type, IMessageTypeTopologyConfigurator> _messageTypes;
+    readonly MessageTopologyConfigurationObservable _observers;
 
-
-    public class MessageTopology :
-        IMessageTopologyConfigurator
+    public MessageTopology(IEntityNameFormatter entityNameFormatter)
     {
-        readonly ConcurrentDictionary<Type, IMessageTypeTopologyConfigurator> _messageTypes;
-        readonly MessageTopologyConfigurationObservable _observers;
+        EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
 
-        public MessageTopology(IEntityNameFormatter entityNameFormatter)
-        {
-            EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
-
-            _messageTypes = new ConcurrentDictionary<Type, IMessageTypeTopologyConfigurator>();
-            _observers = new MessageTopologyConfigurationObservable();
-        }
-
-        public IEntityNameFormatter EntityNameFormatter { get; private set; }
-
-        public void SetEntityNameFormatter(IEntityNameFormatter entityNameFormatter)
-        {
-            EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
-        }
-
-        IMessageTopologyConfigurator<T> IMessageTopologyConfigurator.GetMessageTopology<T>()
-        {
-            return GetMessageTopology<T>();
-        }
-
-        public ConnectHandle ConnectMessageTopologyConfigurationObserver(IMessageTopologyConfigurationObserver observer)
-        {
-            return _observers.Connect(observer);
-        }
-
-        IMessageTopology<T> IMessageTopology.GetMessageTopology<T>()
-        {
-            return GetMessageTopology<T>();
-        }
-
-        IMessageTopologyConfigurator<T> GetMessageTopology<T>()
-            where T : class
-        {
-            if (MessageTypeCache<T>.IsValidMessageType == false)
-                throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
-
-            var specification = _messageTypes.GetOrAdd(typeof(T), CreateMessageTopology<T>);
-
-            return (IMessageTopologyConfigurator<T>)specification;
-        }
-
-        protected virtual IMessageTypeTopologyConfigurator CreateMessageTopology<T>(Type type)
-            where T : class
-        {
-            var messageTopology = new MessageTopology<T>(new MessageEntityNameFormatter<T>(EntityNameFormatter));
-
-            OnMessageTopologyCreated(messageTopology);
-
-            return messageTopology;
-        }
-
-        void OnMessageTopologyCreated<T>(IMessageTopologyConfigurator<T> messageTopology)
-            where T : class
-        {
-            _observers.MessageTopologyCreated(messageTopology);
-        }
+        _messageTypes = new ConcurrentDictionary<Type, IMessageTypeTopologyConfigurator>();
+        _observers = new MessageTopologyConfigurationObservable();
     }
 
+    public IEntityNameFormatter EntityNameFormatter { get; private set; }
 
-    public class MessageTopology<TMessage> :
-        IMessageTopologyConfigurator<TMessage>
-        where TMessage : class
+    public void SetEntityNameFormatter(IEntityNameFormatter entityNameFormatter)
     {
-        string? _entityName;
+        EntityNameFormatter = entityNameFormatter ?? throw new ArgumentNullException(nameof(entityNameFormatter));
+    }
 
-        public MessageTopology(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
+    IMessageTopologyConfigurator<T> IMessageTopologyConfigurator.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>();
+    }
+
+    public ConnectHandle ConnectMessageTopologyConfigurationObserver(IMessageTopologyConfigurationObserver observer)
+    {
+        return _observers.Connect(observer);
+    }
+
+    IMessageTopology<T> IMessageTopology.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>();
+    }
+
+    IMessageTopologyConfigurator<T> GetMessageTopology<T>()
+        where T : class
+    {
+        if (MessageTypeCache<T>.IsValidMessageType == false)
+            throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
+
+        var specification = _messageTypes.GetOrAdd(typeof(T), CreateMessageTopology<T>);
+
+        return (IMessageTopologyConfigurator<T>)specification;
+    }
+
+    protected virtual IMessageTypeTopologyConfigurator CreateMessageTopology<T>(Type type)
+        where T : class
+    {
+        var messageTopology = new MessageTopology<T>(new MessageEntityNameFormatter<T>(EntityNameFormatter));
+
+        OnMessageTopologyCreated(messageTopology);
+
+        return messageTopology;
+    }
+
+    void OnMessageTopologyCreated<T>(IMessageTopologyConfigurator<T> messageTopology)
+        where T : class
+    {
+        _observers.MessageTopologyCreated(messageTopology);
+    }
+}
+
+
+public class MessageTopology<TMessage> :
+    IMessageTopologyConfigurator<TMessage>
+    where TMessage : class
+{
+    string? _entityName;
+
+    public MessageTopology(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
+    {
+        EntityNameFormatter = entityNameFormatter;
+    }
+
+    public IMessageEntityNameFormatter<TMessage> EntityNameFormatter { get; private set; }
+
+    public string EntityName => _entityName ??= EntityNameFormatter.FormatEntityName();
+
+    public void SetEntityNameFormatter(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
+    {
+        if (entityNameFormatter == null)
+            throw new ArgumentNullException(nameof(entityNameFormatter));
+
+        if (_entityName != null)
         {
-            EntityNameFormatter = entityNameFormatter;
+            if (_entityName == entityNameFormatter.FormatEntityName())
+                return;
+
+            throw new ConfigurationException(
+                $"The message type {TypeCache<TMessage>.ShortName} entity name was already evaluated: {_entityName}");
         }
 
-        public IMessageEntityNameFormatter<TMessage> EntityNameFormatter { get; private set; }
+        EntityNameFormatter = entityNameFormatter;
+    }
 
-        public string EntityName => _entityName ??= EntityNameFormatter.FormatEntityName();
+    public void SetEntityName(string entityName)
+    {
+        if (entityName == null)
+            throw new ArgumentNullException(nameof(entityName));
 
-        public void SetEntityNameFormatter(IMessageEntityNameFormatter<TMessage> entityNameFormatter)
-        {
-            if (entityNameFormatter == null)
-                throw new ArgumentNullException(nameof(entityNameFormatter));
-
-            if (_entityName != null)
-            {
-                if (_entityName == entityNameFormatter.FormatEntityName())
-                    return;
-
-                throw new ConfigurationException(
-                    $"The message type {TypeCache<TMessage>.ShortName} entity name was already evaluated: {_entityName}");
-            }
-
-            EntityNameFormatter = entityNameFormatter;
-        }
-
-        public void SetEntityName(string entityName)
-        {
-            if (entityName == null)
-                throw new ArgumentNullException(nameof(entityName));
-
-            SetEntityNameFormatter(new StaticEntityNameFormatter<TMessage>(entityName));
-        }
+        SetEntityNameFormatter(new StaticEntityNameFormatter<TMessage>(entityName));
     }
 }

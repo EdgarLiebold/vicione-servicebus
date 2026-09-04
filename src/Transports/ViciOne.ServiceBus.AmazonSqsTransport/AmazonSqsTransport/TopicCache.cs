@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
-using Caching;
-using Internals;
+using ViciOne.ServiceBus.Caching;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public sealed class TopicCache :
     IAsyncDisposable

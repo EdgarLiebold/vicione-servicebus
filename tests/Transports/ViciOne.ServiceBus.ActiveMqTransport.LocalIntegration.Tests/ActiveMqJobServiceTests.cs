@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
-
 using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
@@ -7,6 +5,8 @@ using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 public sealed class ActiveMqJobServiceTests
 {

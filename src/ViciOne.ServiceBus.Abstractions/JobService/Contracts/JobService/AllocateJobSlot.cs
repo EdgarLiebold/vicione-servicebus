@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface AllocateJobSlot
 {
-    using System;
-    using System.Collections.Generic;
+    Guid JobTypeId { get; }
 
+    TimeSpan JobTimeout { get; }
 
-    public interface AllocateJobSlot
-    {
-        Guid JobTypeId { get; }
+    Guid JobId { get; }
 
-        TimeSpan JobTimeout { get; }
-
-        Guid JobId { get; }
-
-        /// <summary>
-        /// The job properties
-        /// </summary>
-        Dictionary<string, object>? JobProperties { get; }
-    }
+    /// <summary>
+    /// The job properties
+    /// </summary>
+    Dictionary<string, object>? JobProperties { get; }
 }

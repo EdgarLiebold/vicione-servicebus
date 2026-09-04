@@ -1,104 +1,102 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public class DictionarySendHeaders :
+    SendHeaders
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
+    readonly IDictionary<string, object> _headers;
 
-
-    public class DictionarySendHeaders :
-        SendHeaders
+    public DictionarySendHeaders()
     {
-        readonly IDictionary<string, object> _headers;
+        _headers = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+    }
 
-        public DictionarySendHeaders()
+    public DictionarySendHeaders(IDictionary<string, object?>? headers)
+        : this()
+    {
+        if (headers == null)
+            return;
+
+        foreach (KeyValuePair<string, object?> header in headers)
         {
-            _headers = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            if (header.Value != null)
+                _headers.Add(header.Key, header.Value);
         }
+    }
 
-        public DictionarySendHeaders(IDictionary<string, object?>? headers)
-            : this()
+    public DictionarySendHeaders(IDictionary<string, object> headers, bool useExistingDictionary)
+    {
+        if (headers == null)
+            throw new ArgumentNullException(nameof(headers));
+
+        if (useExistingDictionary)
+            _headers = headers;
+        else
+            _headers = new Dictionary<string, object>(headers, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public void Set(string key, string? value)
+    {
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
+
+        if (value == null)
+            _headers.Remove(key);
+        else
+            _headers[key] = value;
+    }
+
+    public void Set(string key, object? value, bool overwrite = true)
+    {
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
+
+        if (overwrite)
         {
-            if (headers == null)
-                return;
-
-            foreach (KeyValuePair<string, object?> header in headers)
-            {
-                if (header.Value != null)
-                    _headers.Add(header.Key, header.Value);
-            }
-        }
-
-        public DictionarySendHeaders(IDictionary<string, object> headers, bool useExistingDictionary)
-        {
-            if (headers == null)
-                throw new ArgumentNullException(nameof(headers));
-
-            if (useExistingDictionary)
-                _headers = headers;
-            else
-                _headers = new Dictionary<string, object>(headers, StringComparer.OrdinalIgnoreCase);
-        }
-
-        public void Set(string key, string? value)
-        {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
             if (value == null)
                 _headers.Remove(key);
             else
                 _headers[key] = value;
         }
+        else if (!_headers.ContainsKey(key) && value != null)
+            _headers.Add(key, value);
+    }
 
-        public void Set(string key, object? value, bool overwrite = true)
-        {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
+    {
+        return _headers.TryGetValue(key, out value);
+    }
 
-            if (overwrite)
-            {
-                if (value == null)
-                    _headers.Remove(key);
-                else
-                    _headers[key] = value;
-            }
-            else if (!_headers.ContainsKey(key) && value != null)
-                _headers.Add(key, value);
-        }
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        return _headers;
+    }
 
-        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
-        {
-            return _headers.TryGetValue(key, out value);
-        }
+    public T? Get<T>(string key, T? defaultValue)
+        where T : class
+    {
+        return ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
+    }
 
-        public IEnumerable<KeyValuePair<string, object>> GetAll()
-        {
-            return _headers;
-        }
+    public T? Get<T>(string key, T? defaultValue)
+        where T : struct
+    {
+        return ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
+    }
 
-        public T? Get<T>(string key, T? defaultValue)
-            where T : class
-        {
-            return ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
-        }
+    public IEnumerator<HeaderValue> GetEnumerator()
+    {
+        return _headers.Select(x => new HeaderValue(x.Key, x.Value)).GetEnumerator();
+    }
 
-        public T? Get<T>(string key, T? defaultValue)
-            where T : struct
-        {
-            return ServiceBusMetadataJson.ObjectDeserializer.GetValue((IReadOnlyDictionary<string, object>)_headers, key, defaultValue);
-        }
-
-        public IEnumerator<HeaderValue> GetEnumerator()
-        {
-            return _headers.Select(x => new HeaderValue(x.Key, x.Value)).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

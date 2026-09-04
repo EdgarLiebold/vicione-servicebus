@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus;
-
 using System.ComponentModel;
 
+namespace ViciOne.ServiceBus;
 /// <summary>
-/// Defines the acceptance boundary after which a durable sender may retire its local persisted intent.
+/// Defines the acceptance boundary after which a durable sender may remove its local persisted intent.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public enum DurableSendCompletionMode
 {
     /// <summary>
     /// The transport's successful send acknowledgment is itself a durable hand-off boundary (for example a broker
-    /// publisher confirmation to a durable queue). The local producer intent may be retired immediately.
+    /// publisher confirmation to a durable queue). The local producer intent may be removed immediately.
     /// </summary>
     TransportAcceptance = 0,
 

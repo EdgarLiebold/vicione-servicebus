@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface HostHandle
 {
-    using System.Threading;
-    using System.Threading.Tasks;
+    /// <summary>
+    /// A task which can be awaited to know when the host is ready
+    /// </summary>
+    Task<HostReady> Ready { get; }
 
-
-    public interface HostHandle
-    {
-        /// <summary>
-        /// A task which can be awaited to know when the host is ready
-        /// </summary>
-        Task<HostReady> Ready { get; }
-
-        /// <summary>
-        /// Close the Host, shutting it down for good.
-        /// </summary>
-        /// <returns></returns>
-        Task Stop(CancellationToken cancellationToken = default);
-    }
+    /// <summary>
+    /// Close the Host, shutting it down for good.
+    /// </summary>
+    /// <returns></returns>
+    Task Stop(CancellationToken cancellationToken = default);
 }

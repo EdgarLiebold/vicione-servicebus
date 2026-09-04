@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IFilterScopeProvider<TContext> :
+    IProbeSite
+    where TContext : class, PipeContext
 {
-    public interface IFilterScopeProvider<TContext> :
-        IProbeSite
-        where TContext : class, PipeContext
-    {
-        IFilterScopeContext<TContext> Create(TContext context);
-    }
+    IFilterScopeContext<TContext> Create(TContext context);
 }

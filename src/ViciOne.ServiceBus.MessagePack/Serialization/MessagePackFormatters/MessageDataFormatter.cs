@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
-
-using JsonConverters;
-using MessageData.Values;
 using MessagePack;
 using MessagePack.Formatters;
+using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.Serialization.JsonConverters;
 
+namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
 public class MessageDataFormatter<T> :
     IMessagePackFormatter<MessageData<T>?>

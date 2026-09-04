@@ -1,7 +1,5 @@
-namespace ViciOne.ServiceBus.Transports
-{
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.Transports;
 
-    public delegate Task ZeroActiveDispatchHandler();
-}
+public delegate Task ZeroActiveDispatchHandler();

@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -7,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 /// <summary>
 /// Connection-lifetime owner for durable transport resources. Creation is single-flight per key and caller cancellation
 /// cancels only that caller's wait. The store lifetime owns resource creation and disposal.

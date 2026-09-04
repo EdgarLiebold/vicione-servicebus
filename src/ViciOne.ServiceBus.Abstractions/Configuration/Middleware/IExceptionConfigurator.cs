@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IExceptionConfigurator
 {
-    using System;
+    void Handle(params Type[] exceptionTypes);
 
+    void Handle<T>()
+        where T : Exception;
 
-    public interface IExceptionConfigurator
-    {
-        void Handle(params Type[] exceptionTypes);
+    void Handle<T>(Func<T, bool> filter)
+        where T : Exception;
 
-        void Handle<T>()
-            where T : Exception;
+    void Ignore(params Type[] exceptionTypes);
 
-        void Handle<T>(Func<T, bool> filter)
-            where T : Exception;
+    void Ignore<T>()
+        where T : Exception;
 
-        void Ignore(params Type[] exceptionTypes);
-
-        void Ignore<T>()
-            where T : Exception;
-
-        void Ignore<T>(Func<T, bool> filter)
-            where T : Exception;
-    }
+    void Ignore<T>(Func<T, bool> filter)
+        where T : Exception;
 }

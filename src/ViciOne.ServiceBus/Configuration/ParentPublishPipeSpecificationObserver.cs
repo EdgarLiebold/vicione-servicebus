@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ParentPublishPipeSpecificationObserver :
+    IPublishPipeSpecificationObserver
 {
-    using System;
+    readonly IPublishPipeSpecification _specification;
 
-
-    public class ParentPublishPipeSpecificationObserver :
-        IPublishPipeSpecificationObserver
+    public ParentPublishPipeSpecificationObserver(IPublishPipeSpecification specification)
     {
-        readonly IPublishPipeSpecification _specification;
+        _specification = specification ?? throw new ArgumentNullException(nameof(specification));
+    }
 
-        public ParentPublishPipeSpecificationObserver(IPublishPipeSpecification specification)
-        {
-            _specification = specification ?? throw new ArgumentNullException(nameof(specification));
-        }
+    public void MessageSpecificationCreated<T>(IMessagePublishPipeSpecification<T> specification)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(specification);
 
-        public void MessageSpecificationCreated<T>(IMessagePublishPipeSpecification<T> specification)
-            where T : class
-        {
-            ArgumentNullException.ThrowIfNull(specification);
+        IMessagePublishPipeSpecification<T> messageSpecification = _specification.GetMessageSpecification<T>();
 
-            IMessagePublishPipeSpecification<T> messageSpecification = _specification.GetMessageSpecification<T>();
-
-            specification.AddParentMessageSpecification(messageSpecification);
-        }
+        specification.AddParentMessageSpecification(messageSpecification);
     }
 }

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.ComponentModel;
 
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// Bus-owned immutable policy for the application body and final transport envelope.
 /// </summary>

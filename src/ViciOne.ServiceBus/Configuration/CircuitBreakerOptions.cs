@@ -1,14 +1,13 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Configuration;
-using Middleware;
-using Middleware.CircuitBreaker;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Configures a circuit breaker. The values are captured as an immutable snapshot when the pipe is built.
 /// </summary>

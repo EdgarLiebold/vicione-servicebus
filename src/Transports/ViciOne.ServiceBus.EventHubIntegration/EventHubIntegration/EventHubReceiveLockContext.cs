@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class EventHubReceiveLockContext :
+    ReceiveLockContext
 {
-    using System;
-    using System.Threading.Tasks;
-    using Azure.Messaging.EventHubs.Processor;
-    using Transports;
+    readonly ProcessEventArgs _eventArgs;
+    readonly IProcessorLockContext _lockContext;
 
-
-    public class EventHubReceiveLockContext :
-        ReceiveLockContext
+    public EventHubReceiveLockContext(ProcessEventArgs eventArgs, IProcessorLockContext lockContext)
     {
-        readonly ProcessEventArgs _eventArgs;
-        readonly IProcessorLockContext _lockContext;
+        _eventArgs = eventArgs;
+        _lockContext = lockContext;
+    }
 
-        public EventHubReceiveLockContext(ProcessEventArgs eventArgs, IProcessorLockContext lockContext)
-        {
-            _eventArgs = eventArgs;
-            _lockContext = lockContext;
-        }
+    public Task Complete()
+    {
+        return _lockContext.Complete(_eventArgs);
+    }
 
-        public Task Complete()
-        {
-            return _lockContext.Complete(_eventArgs);
-        }
+    public Task Faulted(Exception exception)
+    {
+        return _lockContext.Faulted(_eventArgs, exception);
+    }
 
-        public Task Faulted(Exception exception)
-        {
-            return _lockContext.Faulted(_eventArgs, exception);
-        }
-
-        public Task ValidateLockStatus()
-        {
-            return Task.CompletedTask;
-        }
+    public Task ValidateLockStatus()
+    {
+        return Task.CompletedTask;
     }
 }

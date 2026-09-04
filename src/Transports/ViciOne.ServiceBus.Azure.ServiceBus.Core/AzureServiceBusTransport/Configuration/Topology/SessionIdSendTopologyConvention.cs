@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class SessionIdSendTopologyConvention :
+    ISessionIdSendTopologyConvention
 {
-    using ViciOne.ServiceBus.Configuration;
+    readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
 
-
-    public class SessionIdSendTopologyConvention :
-        ISessionIdSendTopologyConvention
+    public SessionIdSendTopologyConvention()
     {
-        readonly ITopologyConventionCache<IMessageSendTopologyConvention> _cache;
+        DefaultFormatter = new EmptySessionIdFormatter();
 
-        public SessionIdSendTopologyConvention()
+        _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(ISessionIdMessageSendTopologyConvention<>), new Factory());
+    }
+
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    {
+        return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
+    }
+
+    public ISessionIdFormatter DefaultFormatter { get; set; }
+
+
+    class Factory :
+        IConventionTypeFactory<IMessageSendTopologyConvention>
+    {
+        IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
         {
-            DefaultFormatter = new EmptySessionIdFormatter();
-
-            _cache = new TopologyConventionCache<IMessageSendTopologyConvention>(typeof(ISessionIdMessageSendTopologyConvention<>), new Factory());
-        }
-
-        bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
-        {
-            return _cache.GetOrAdd<T, IMessageSendTopologyConvention<T>>().TryGetMessageSendTopologyConvention(out convention);
-        }
-
-        public ISessionIdFormatter DefaultFormatter { get; set; }
-
-
-        class Factory :
-            IConventionTypeFactory<IMessageSendTopologyConvention>
-        {
-            IMessageSendTopologyConvention IConventionTypeFactory<IMessageSendTopologyConvention>.Create<T>()
-            {
-                return new SessionIdMessageSendTopologyConvention<T>(null);
-            }
+            return new SessionIdMessageSendTopologyConvention<T>(null);
         }
     }
 }

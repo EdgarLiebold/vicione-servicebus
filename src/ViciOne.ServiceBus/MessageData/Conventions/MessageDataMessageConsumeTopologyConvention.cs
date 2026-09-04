@@ -1,38 +1,36 @@
+using System.Diagnostics.CodeAnalysis;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.MessageData.Configuration;
+
 #nullable enable
-namespace ViciOne.ServiceBus.MessageData.Conventions
+namespace ViciOne.ServiceBus.MessageData.Conventions;
+
+public class MessageDataMessageConsumeTopologyConvention<TMessage> :
+    IMessageDataMessageConsumeTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using System.Diagnostics.CodeAnalysis;
-    using Configuration;
-    using ViciOne.ServiceBus.Configuration;
+    readonly IMessageDataRepository _repository;
 
-
-    public class MessageDataMessageConsumeTopologyConvention<TMessage> :
-        IMessageDataMessageConsumeTopologyConvention<TMessage>
-        where TMessage : class
+    public MessageDataMessageConsumeTopologyConvention(IMessageDataRepository repository)
     {
-        readonly IMessageDataRepository _repository;
+        _repository = repository;
+    }
 
-        public MessageDataMessageConsumeTopologyConvention(IMessageDataRepository repository)
-        {
-            _repository = repository;
-        }
+    bool IMessageConsumeTopologyConvention.TryGetMessageConsumeTopologyConvention<T>(
+        [NotNullWhen(true)] out IMessageConsumeTopologyConvention<T>? convention)
+    {
+        convention = this as IMessageConsumeTopologyConvention<T>;
 
-        bool IMessageConsumeTopologyConvention.TryGetMessageConsumeTopologyConvention<T>(
-            [NotNullWhen(true)] out IMessageConsumeTopologyConvention<T>? convention)
-        {
-            convention = this as IMessageConsumeTopologyConvention<T>;
+        return convention != null;
+    }
 
-            return convention != null;
-        }
+    public bool TryGetMessageConsumeTopology([NotNullWhen(true)] out IMessageConsumeTopology<TMessage>? messageConsumeTopology)
+    {
+        var specification = new GetMessageDataTransformSpecification<TMessage>(_repository);
+        if (specification.TryGetConsumeTopology(out messageConsumeTopology))
+            return true;
 
-        public bool TryGetMessageConsumeTopology([NotNullWhen(true)] out IMessageConsumeTopology<TMessage>? messageConsumeTopology)
-        {
-            var specification = new GetMessageDataTransformSpecification<TMessage>(_repository);
-            if (specification.TryGetConsumeTopology(out messageConsumeTopology))
-                return true;
-
-            messageConsumeTopology = null;
-            return false;
-        }
+        messageConsumeTopology = null;
+        return false;
     }
 }

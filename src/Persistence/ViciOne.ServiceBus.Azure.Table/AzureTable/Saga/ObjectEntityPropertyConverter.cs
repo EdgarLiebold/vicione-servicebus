@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.AzureTable.Saga;
+
+public class ObjectEntityPropertyConverter<TEntity, TProperty> :
+    IEntityPropertyConverter<TEntity>
+    where TEntity : class
+    where TProperty : class
 {
-    using System.Collections.Generic;
-    using Internals;
-    using Serialization;
+    readonly string _name;
+    readonly IReadProperty<TEntity, TProperty> _read;
+    readonly IWriteProperty<TEntity, TProperty> _write;
 
-
-    public class ObjectEntityPropertyConverter<TEntity, TProperty> :
-        IEntityPropertyConverter<TEntity>
-        where TEntity : class
-        where TProperty : class
+    public ObjectEntityPropertyConverter(string name)
     {
-        readonly string _name;
-        readonly IReadProperty<TEntity, TProperty> _read;
-        readonly IWriteProperty<TEntity, TProperty> _write;
+        _name = name;
+        _read = ReadPropertyCache<TEntity>.GetProperty<TProperty>(name);
+        _write = WritePropertyCache<TEntity>.GetProperty<TProperty>(name);
+    }
 
-        public ObjectEntityPropertyConverter(string name)
+    public void ToEntity(TEntity entity, IDictionary<string, object> entityProperties)
+    {
+        if (entityProperties.TryGetValue(_name, out var entityProperty))
         {
-            _name = name;
-            _read = ReadPropertyCache<TEntity>.GetProperty<TProperty>(name);
-            _write = WritePropertyCache<TEntity>.GetProperty<TProperty>(name);
+            var propertyValue = ObjectDeserializer.Deserialize<TProperty>(entityProperty.ToString());
+
+            _write.Set(entity, propertyValue);
         }
+    }
 
-        public void ToEntity(TEntity entity, IDictionary<string, object> entityProperties)
-        {
-            if (entityProperties.TryGetValue(_name, out var entityProperty))
-            {
-                var propertyValue = ObjectDeserializer.Deserialize<TProperty>(entityProperty.ToString());
+    public void FromEntity(TEntity entity, IDictionary<string, object> entityProperties)
+    {
+        var propertyValue = _read.Get(entity);
 
-                _write.Set(entity, propertyValue);
-            }
-        }
-
-        public void FromEntity(TEntity entity, IDictionary<string, object> entityProperties)
-        {
-            var propertyValue = _read.Get(entity);
-
-            var text = ObjectDeserializer.Serialize(propertyValue);
-            if (!string.IsNullOrWhiteSpace(text))
-                entityProperties.Add(_name, text);
-        }
+        var text = ObjectDeserializer.Serialize(propertyValue);
+        if (!string.IsNullOrWhiteSpace(text))
+            entityProperties.Add(_name, text);
     }
 }

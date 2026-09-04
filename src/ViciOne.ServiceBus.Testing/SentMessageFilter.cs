@@ -1,22 +1,21 @@
-namespace ViciOne.ServiceBus.Testing
+namespace ViciOne.ServiceBus.Testing;
+
+public class SentMessageFilter
 {
-    public class SentMessageFilter
+    readonly SentMessageFilterSet _excludes = new SentMessageFilterSet();
+    readonly SentMessageFilterSet _includes = new SentMessageFilterSet();
+
+    public SentMessageFilterSet Includes => _includes;
+
+    public SentMessageFilterSet Excludes => _excludes;
+
+    public bool Any(ISentMessage element)
     {
-        readonly SentMessageFilterSet _excludes = new SentMessageFilterSet();
-        readonly SentMessageFilterSet _includes = new SentMessageFilterSet();
+        return _includes.Any(element) && _excludes.None(element);
+    }
 
-        public SentMessageFilterSet Includes => _includes;
-
-        public SentMessageFilterSet Excludes => _excludes;
-
-        public bool Any(ISentMessage element)
-        {
-            return _includes.Any(element) && _excludes.None(element);
-        }
-
-        public bool None(ISentMessage element)
-        {
-            return _includes.None(element);
-        }
+    public bool None(ISentMessage element)
+    {
+        return _includes.None(element);
     }
 }

@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.Infrastructure;
-
 using global::Amazon.S3;
 using global::Amazon.S3.Model;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class AmazonS3TestBucket : IAsyncDisposable
 {

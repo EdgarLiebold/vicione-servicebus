@@ -1,53 +1,51 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using System.Linq.Expressions;
+
+namespace ViciOne.ServiceBus.Saga;
+
+public class StateExpressionVisitor<TInstance> :
+    ExpressionVisitor
 {
-    using System;
-    using System.Linq.Expressions;
+    readonly Expression _expressionBody;
+    readonly ParameterExpression _instanceParameter;
 
-
-    public class StateExpressionVisitor<TInstance> :
-        ExpressionVisitor
+    public StateExpressionVisitor(Expression<Func<TInstance, bool>> expression)
     {
-        readonly Expression _expressionBody;
-        readonly ParameterExpression _instanceParameter;
+        _instanceParameter = expression.Parameters[0];
+        _expressionBody = expression.Body;
+    }
 
-        public StateExpressionVisitor(Expression<Func<TInstance, bool>> expression)
+    /// <summary>
+    /// Combines the base expression with the specified state expression (from the state accessor)
+    /// </summary>
+    /// <param name="stateExpression">The state expression</param>
+    /// <param name="not">If true, adds a not to the expression, otherwise, matches any of the states</param>
+    /// <returns>The combined expression</returns>
+    Expression<Func<TInstance, bool>> Combine(Expression<Func<TInstance, bool>> stateExpression, bool not = false)
+    {
+        var result = Visit(stateExpression);
+        if (result is LambdaExpression lambda)
         {
-            _instanceParameter = expression.Parameters[0];
-            _expressionBody = expression.Body;
+            var stateExpressionBody = not
+                ? Expression.Not(lambda.Body)
+                : lambda.Body;
+
+            return Expression.Lambda<Func<TInstance, bool>>(Expression.AndAlso(_expressionBody, stateExpressionBody), _instanceParameter);
         }
 
-        /// <summary>
-        /// Combines the base expression with the specified state expression (from the state accessor)
-        /// </summary>
-        /// <param name="stateExpression">The state expression</param>
-        /// <param name="not">If true, adds a not to the expression, otherwise, matches any of the states</param>
-        /// <returns>The combined expression</returns>
-        Expression<Func<TInstance, bool>> Combine(Expression<Func<TInstance, bool>> stateExpression, bool not = false)
-        {
-            var result = Visit(stateExpression);
-            if (result is LambdaExpression lambda)
-            {
-                var stateExpressionBody = not
-                    ? Expression.Not(lambda.Body)
-                    : lambda.Body;
+        throw new ArgumentException("Could not combine the expression", nameof(stateExpression));
+    }
 
-                return Expression.Lambda<Func<TInstance, bool>>(Expression.AndAlso(_expressionBody, stateExpressionBody), _instanceParameter);
-            }
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        if (node != null && node.Type == typeof(TInstance))
+            return _instanceParameter;
 
-            throw new ArgumentException("Could not combine the expression", nameof(stateExpression));
-        }
+        return base.VisitParameter(node);
+    }
 
-        protected override Expression VisitParameter(ParameterExpression node)
-        {
-            if (node != null && node.Type == typeof(TInstance))
-                return _instanceParameter;
-
-            return base.VisitParameter(node);
-        }
-
-        public static Expression<Func<TInstance, bool>> Combine(Expression<Func<TInstance, bool>> expression, Expression<Func<TInstance, bool>> stateExpression)
-        {
-            return new StateExpressionVisitor<TInstance>(expression).Combine(stateExpression);
-        }
+    public static Expression<Func<TInstance, bool>> Combine(Expression<Func<TInstance, bool>> expression, Expression<Func<TInstance, bool>> stateExpression)
+    {
+        return new StateExpressionVisitor<TInstance>(expression).Combine(stateExpression);
     }
 }

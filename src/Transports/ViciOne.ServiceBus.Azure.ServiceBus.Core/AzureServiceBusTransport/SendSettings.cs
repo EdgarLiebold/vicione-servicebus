@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+/// <summary>
+/// The settings for sending to an endpoint
+/// </summary>
+public interface SendSettings
 {
-    using Topology;
-
-
     /// <summary>
-    /// The settings for sending to an endpoint
+    /// The path of the messaging entity
     /// </summary>
-    public interface SendSettings
-    {
-        /// <summary>
-        /// The path of the messaging entity
-        /// </summary>
-        string EntityPath { get; }
+    string EntityPath { get; }
 
-        BrokerTopology GetBrokerTopology();
-    }
+    BrokerTopology GetBrokerTopology();
 }

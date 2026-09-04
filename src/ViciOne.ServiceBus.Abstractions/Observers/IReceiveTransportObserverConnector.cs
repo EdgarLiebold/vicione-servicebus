@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IReceiveTransportObserverConnector
 {
-    public interface IReceiveTransportObserverConnector
-    {
-        ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer);
-    }
+    ConnectHandle ConnectReceiveTransportObserver(IReceiveTransportObserver observer);
 }

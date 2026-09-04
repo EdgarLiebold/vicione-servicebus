@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.Courier
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Courier;
+
+public class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
+    ICompensateActivityFactory<TActivity, TLog>
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Func<TLog, TActivity> _compensateFactory;
 
-
-    public class FactoryMethodCompensateActivityFactory<TActivity, TLog> :
-        ICompensateActivityFactory<TActivity, TLog>
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
+    public FactoryMethodCompensateActivityFactory(Func<TLog, TActivity> compensateFactory)
     {
-        readonly Func<TLog, TActivity> _compensateFactory;
+        _compensateFactory = compensateFactory;
+    }
 
-        public FactoryMethodCompensateActivityFactory(Func<TLog, TActivity> compensateFactory)
+    public async Task Compensate(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+    {
+        TActivity activity = null;
+        try
         {
-            _compensateFactory = compensateFactory;
+            activity = _compensateFactory(context.Log);
+
+            CompensateActivityContext<TActivity, TLog> activityContext = context.CreateActivityContext(activity);
+
+            await next.Send(activityContext).ConfigureAwait(false);
         }
-
-        public async Task Compensate(CompensateContext<TLog> context, IPipe<CompensateActivityContext<TActivity, TLog>> next)
+        finally
         {
-            TActivity activity = null;
-            try
+            switch (activity)
             {
-                activity = _compensateFactory(context.Log);
-
-                CompensateActivityContext<TActivity, TLog> activityContext = context.CreateActivityContext(activity);
-
-                await next.Send(activityContext).ConfigureAwait(false);
-            }
-            finally
-            {
-                switch (activity)
-                {
-                    case IAsyncDisposable asyncDisposable:
-                        await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                        break;
-                    case IDisposable disposable:
-                        disposable.Dispose();
-                        break;
-                }
+                case IAsyncDisposable asyncDisposable:
+                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                    break;
+                case IDisposable disposable:
+                    disposable.Dispose();
+                    break;
             }
         }
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("factoryMethod");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("factoryMethod");
     }
 }

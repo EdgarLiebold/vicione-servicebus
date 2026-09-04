@@ -1,67 +1,65 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Context;
+
+public class CompensateContextProxy<TLog> :
+    CourierContextProxy,
+    CompensateContext<TLog>
+    where TLog : class
 {
-    using System;
-    using System.Collections.Generic;
+    readonly CompensateContext<TLog> _context;
+    readonly TLog _log;
 
-
-    public class CompensateContextProxy<TLog> :
-        CourierContextProxy,
-        CompensateContext<TLog>
-        where TLog : class
+    public CompensateContextProxy(CompensateContext<TLog> context, TLog log)
+        : base(context)
     {
-        readonly CompensateContext<TLog> _context;
-        readonly TLog _log;
+        _context = context;
+        _log = log;
+    }
 
-        public CompensateContextProxy(CompensateContext<TLog> context, TLog log)
-            : base(context)
-        {
-            _context = context;
-            _log = log;
-        }
+    protected CompensateContextProxy(CompensateContext<TLog> context)
+        : base(context)
+    {
+        _context = context;
+        _log = context.Log;
+    }
 
-        protected CompensateContextProxy(CompensateContext<TLog> context)
-            : base(context)
-        {
-            _context = context;
-            _log = context.Log;
-        }
+    TLog CompensateContext<TLog>.Log => _log;
 
-        TLog CompensateContext<TLog>.Log => _log;
+    CompensateActivityContext<TActivity, TLog> CompensateContext<TLog>.CreateActivityContext<TActivity>(TActivity activity)
+    {
+        return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
+    }
 
-        CompensateActivityContext<TActivity, TLog> CompensateContext<TLog>.CreateActivityContext<TActivity>(TActivity activity)
-        {
-            return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
-        }
+    CompensationResult CompensateContext.Compensated()
+    {
+        return _context.Compensated();
+    }
 
-        CompensationResult CompensateContext.Compensated()
-        {
-            return _context.Compensated();
-        }
+    CompensationResult CompensateContext.Compensated(object values)
+    {
+        return _context.Compensated(values);
+    }
 
-        CompensationResult CompensateContext.Compensated(object values)
-        {
-            return _context.Compensated(values);
-        }
+    CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
+    {
+        return _context.Compensated(variables);
+    }
 
-        CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
-        {
-            return _context.Compensated(variables);
-        }
+    CompensationResult CompensateContext.Failed()
+    {
+        return _context.Failed();
+    }
 
-        CompensationResult CompensateContext.Failed()
-        {
-            return _context.Failed();
-        }
+    CompensationResult CompensateContext.Failed(Exception exception)
+    {
+        return _context.Failed(exception);
+    }
 
-        CompensationResult CompensateContext.Failed(Exception exception)
-        {
-            return _context.Failed(exception);
-        }
-
-        CompensationResult CompensateContext.Result
-        {
-            get => _context.Result;
-            set => _context.Result = value;
-        }
+    CompensationResult CompensateContext.Result
+    {
+        get => _context.Result;
+        set => _context.Result = value;
     }
 }

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface INewIdParser
 {
-    public interface INewIdParser
-    {
-        NewId Parse(in string text);
-    }
+    NewId Parse(in string text);
 }

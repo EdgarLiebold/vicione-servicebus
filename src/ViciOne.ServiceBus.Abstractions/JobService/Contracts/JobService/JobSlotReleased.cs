@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobSlotReleased
 {
-    using System;
+    Guid JobTypeId { get; }
 
+    Guid JobId { get; }
 
-    public interface JobSlotReleased
-    {
-        Guid JobTypeId { get; }
-
-        Guid JobId { get; }
-
-        JobSlotDisposition Disposition { get; }
-    }
+    JobSlotDisposition Disposition { get; }
 }

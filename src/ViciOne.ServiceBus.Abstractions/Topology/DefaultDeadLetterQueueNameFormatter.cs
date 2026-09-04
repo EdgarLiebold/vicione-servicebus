@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus.Topology
+namespace ViciOne.ServiceBus.Topology;
+
+public class DefaultDeadLetterQueueNameFormatter :
+    IDeadLetterQueueNameFormatter
 {
-    public class DefaultDeadLetterQueueNameFormatter :
-        IDeadLetterQueueNameFormatter
+    const string DeadLetterQueueSuffix = "_skipped";
+
+    public static readonly IDeadLetterQueueNameFormatter Instance = new DefaultDeadLetterQueueNameFormatter();
+
+    public string FormatDeadLetterQueueName(string queueName)
     {
-        const string DeadLetterQueueSuffix = "_skipped";
-
-        public static readonly IDeadLetterQueueNameFormatter Instance = new DefaultDeadLetterQueueNameFormatter();
-
-        public string FormatDeadLetterQueueName(string queueName)
-        {
-            return queueName + DeadLetterQueueSuffix;
-        }
+        return queueName + DeadLetterQueueSuffix;
     }
 }

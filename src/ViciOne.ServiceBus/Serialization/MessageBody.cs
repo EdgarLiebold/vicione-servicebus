@@ -1,6 +1,5 @@
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public class SerializedMessageBody
 {
-    public class SerializedMessageBody
-    {
-    }
 }

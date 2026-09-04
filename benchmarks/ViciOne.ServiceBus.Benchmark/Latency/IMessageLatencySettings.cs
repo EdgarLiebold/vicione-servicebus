@@ -1,17 +1,16 @@
-namespace ViciOneServiceBusBenchmark.Latency
+namespace ViciOneServiceBusBenchmark.Latency;
+
+public interface IMessageLatencySettings
 {
-    public interface IMessageLatencySettings
-    {
-        long MessageCount { get; }
+    long MessageCount { get; }
 
-        int ConcurrencyLimit { get; }
+    int ConcurrencyLimit { get; }
 
-        ushort PrefetchCount { get; }
+    ushort PrefetchCount { get; }
 
-        bool Durable { get; }
+    bool Durable { get; }
 
-        int Clients { get; }
+    int Clients { get; }
 
-        int PayloadSize { get; }
-    }
+    int PayloadSize { get; }
 }

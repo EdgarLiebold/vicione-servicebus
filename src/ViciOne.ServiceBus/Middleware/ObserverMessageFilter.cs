@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Consumes a message via a message handler and reports the message as consumed or faulted
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+public class ObserverMessageFilter<TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    readonly IObserver<ConsumeContext<TMessage>> _observer;
+    readonly string _observerType;
 
-
-    /// <summary>
-    /// Consumes a message via a message handler and reports the message as consumed or faulted
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    public class ObserverMessageFilter<TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TMessage : class
+    public ObserverMessageFilter(IObserver<ConsumeContext<TMessage>> observer)
     {
-        readonly IObserver<ConsumeContext<TMessage>> _observer;
-        readonly string _observerType;
+        if (observer == null)
+            throw new ArgumentNullException(nameof(observer));
 
-        public ObserverMessageFilter(IObserver<ConsumeContext<TMessage>> observer)
+        _observer = observer;
+        _observerType = TypeCache.GetShortName(observer.GetType());
+    }
+
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("observer");
+        scope.Add("observerType", _observerType);
+    }
+
+    [DebuggerNonUserCode]
+    async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        var timer = Stopwatch.StartNew();
+        try
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            await Task.Yield();
 
-            _observer = observer;
-            _observerType = TypeCache.GetShortName(observer.GetType());
+            _observer.OnNext(context);
+
+            await context.NotifyConsumed(timer.Elapsed, _observerType).ConfigureAwait(false);
+
+            await next.Send(context).ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        catch (Exception ex)
         {
-            var scope = context.CreateFilterScope("observer");
-            scope.Add("observerType", _observerType);
-        }
+            await context.NotifyFaulted(timer.Elapsed, _observerType, ex).ConfigureAwait(false);
 
-        [DebuggerNonUserCode]
-        async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
-        {
-            var timer = Stopwatch.StartNew();
-            try
-            {
-                await Task.Yield();
+            _observer.OnError(ex);
 
-                _observer.OnNext(context);
-
-                await context.NotifyConsumed(timer.Elapsed, _observerType).ConfigureAwait(false);
-
-                await next.Send(context).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                await context.NotifyFaulted(timer.Elapsed, _observerType, ex).ConfigureAwait(false);
-
-                _observer.OnError(ex);
-
-                throw;
-            }
+            throw;
         }
     }
 }

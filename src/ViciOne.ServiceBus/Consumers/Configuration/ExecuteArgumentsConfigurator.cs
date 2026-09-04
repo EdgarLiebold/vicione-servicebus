@@ -1,19 +1,18 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ExecuteArgumentsConfigurator<TArguments> :
+    IExecuteArgumentsConfigurator<TArguments>
+    where TArguments : class
 {
-    public class ExecuteArgumentsConfigurator<TArguments> :
-        IExecuteArgumentsConfigurator<TArguments>
-        where TArguments : class
+    readonly IPipeConfigurator<ExecuteContext<TArguments>> _configurator;
+
+    public ExecuteArgumentsConfigurator(IPipeConfigurator<ExecuteContext<TArguments>> configurator)
     {
-        readonly IPipeConfigurator<ExecuteContext<TArguments>> _configurator;
+        _configurator = configurator;
+    }
 
-        public ExecuteArgumentsConfigurator(IPipeConfigurator<ExecuteContext<TArguments>> configurator)
-        {
-            _configurator = configurator;
-        }
-
-        public void AddPipeSpecification(IPipeSpecification<ExecuteContext<TArguments>> specification)
-        {
-            _configurator.AddPipeSpecification(specification);
-        }
+    public void AddPipeSpecification(IPipeSpecification<ExecuteContext<TArguments>> specification)
+    {
+        _configurator.AddPipeSpecification(specification);
     }
 }

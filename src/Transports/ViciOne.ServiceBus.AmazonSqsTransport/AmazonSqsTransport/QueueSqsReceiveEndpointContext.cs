@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
-using Configuration;
-using Topology;
-using Transports;
-using Util;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class QueueSqsReceiveEndpointContext :
     BaseReceiveEndpointContext,

@@ -1,68 +1,66 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class TestConsumerFactoryDecorator<TConsumer> :
+    IConsumerFactory<TConsumer>
+    where TConsumer : class, IConsumer
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IConsumerFactory<TConsumer> _consumerFactory;
+    readonly ReceivedMessageList _received;
 
-
-    public class TestConsumerFactoryDecorator<TConsumer> :
-        IConsumerFactory<TConsumer>
-        where TConsumer : class, IConsumer
+    public TestConsumerFactoryDecorator(IConsumerFactory<TConsumer> consumerFactory, ReceivedMessageList received)
     {
-        readonly IConsumerFactory<TConsumer> _consumerFactory;
+        _consumerFactory = consumerFactory;
+        _received = received;
+    }
+
+    public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+        where TMessage : class
+    {
+        return _consumerFactory.Send(context, new TestDecoratorPipe<TMessage>(_received, next));
+    }
+
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("testDecorator");
+
+        _consumerFactory.Probe(scope);
+    }
+
+
+    class TestDecoratorPipe<TMessage> :
+        IPipe<ConsumerConsumeContext<TConsumer, TMessage>>
+        where TMessage : class
+    {
+        readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _next;
         readonly ReceivedMessageList _received;
 
-        public TestConsumerFactoryDecorator(IConsumerFactory<TConsumer> consumerFactory, ReceivedMessageList received)
+        public TestDecoratorPipe(ReceivedMessageList received, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
         {
-            _consumerFactory = consumerFactory;
             _received = received;
-        }
-
-        public Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
-            where TMessage : class
-        {
-            return _consumerFactory.Send(context, new TestDecoratorPipe<TMessage>(_received, next));
+            _next = next;
         }
 
         void IProbeSite.Probe(ProbeContext context)
         {
-            var scope = context.CreateScope("testDecorator");
-
-            _consumerFactory.Probe(scope);
+            _next.Probe(context);
         }
 
-
-        class TestDecoratorPipe<TMessage> :
-            IPipe<ConsumerConsumeContext<TConsumer, TMessage>>
-            where TMessage : class
+        public async Task Send(ConsumerConsumeContext<TConsumer, TMessage> context)
         {
-            readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _next;
-            readonly ReceivedMessageList _received;
-
-            public TestDecoratorPipe(ReceivedMessageList received, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+            try
             {
-                _received = received;
-                _next = next;
+                await _next.Send(context).ConfigureAwait(false);
+
+                _received.Add(context);
             }
-
-            void IProbeSite.Probe(ProbeContext context)
+            catch (Exception ex)
             {
-                _next.Probe(context);
-            }
+                _received.Add(context, ex);
 
-            public async Task Send(ConsumerConsumeContext<TConsumer, TMessage> context)
-            {
-                try
-                {
-                    await _next.Send(context).ConfigureAwait(false);
-
-                    _received.Add(context);
-                }
-                catch (Exception ex)
-                {
-                    _received.Add(context, ex);
-
-                    throw;
-                }
+                throw;
             }
         }
     }

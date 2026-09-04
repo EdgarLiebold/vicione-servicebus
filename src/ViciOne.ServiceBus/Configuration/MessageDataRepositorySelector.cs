@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.Configuration
-{
-    class MessageDataRepositorySelector :
-        IMessageDataRepositorySelector
-    {
-        public MessageDataRepositorySelector(IBusFactoryConfigurator configurator)
-        {
-            Configurator = configurator;
-        }
+namespace ViciOne.ServiceBus.Configuration;
 
-        public IBusFactoryConfigurator Configurator { get; }
+class MessageDataRepositorySelector :
+    IMessageDataRepositorySelector
+{
+    public MessageDataRepositorySelector(IBusFactoryConfigurator configurator)
+    {
+        Configurator = configurator;
     }
+
+    public IBusFactoryConfigurator Configurator { get; }
 }

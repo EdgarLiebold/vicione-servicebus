@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsHostConfigurator :
     IAmazonSqsHostConfigurator

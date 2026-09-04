@@ -1,233 +1,231 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.Scheduling;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusSendTransportContext :
+    BaseSendTransportContext,
+    SendTransportContext<SendEndpointContext>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
-    using Configuration;
-    using Scheduling;
-    using Transports;
+    internal static readonly ITransportSetHeaderAdapter<object> Adapter =
+        new DictionaryTransportSetHeaderAdapter(new SimpleHeaderValueConverter()) { MaxHeaderLength = Defaults.MaxHeaderLength };
 
+    readonly IServiceBusHostConfiguration _hostConfiguration;
+    readonly ISendEndpointContextSupervisor _supervisor;
 
-    public class ServiceBusSendTransportContext :
-        BaseSendTransportContext,
-        SendTransportContext<SendEndpointContext>
+    public ServiceBusSendTransportContext(IServiceBusHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
+        ISendEndpointContextSupervisor supervisor, SendSettings settings)
+        : base(hostConfiguration, receiveEndpointContext.Serialization)
     {
-        internal static readonly ITransportSetHeaderAdapter<object> Adapter =
-            new DictionaryTransportSetHeaderAdapter(new SimpleHeaderValueConverter()) { MaxHeaderLength = Defaults.MaxHeaderLength };
+        _hostConfiguration = hostConfiguration;
+        _supervisor = supervisor;
 
-        readonly IServiceBusHostConfiguration _hostConfiguration;
-        readonly ISendEndpointContextSupervisor _supervisor;
+        EntityName = settings.EntityPath;
+    }
 
-        public ServiceBusSendTransportContext(IServiceBusHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
-            ISendEndpointContextSupervisor supervisor, SendSettings settings)
-            : base(hostConfiguration, receiveEndpointContext.Serialization)
+    public override string EntityName { get; }
+    public override string ActivitySystem => "servicebus";
+
+    public Task Send(IPipe<SendEndpointContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        _supervisor.Probe(context);
+    }
+
+    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    {
+        var sendContext = new AzureServiceBusSendContext<T>(message, cancellationToken);
+
+        await pipe.Send(sendContext).ConfigureAwait(false);
+
+        CopyIncomingIdentifiersIfPresent(sendContext);
+
+        return sendContext;
+    }
+
+    public override IEnumerable<IAgent> GetAgentHandles()
+    {
+        return [_supervisor];
+    }
+
+    public Task<SendContext<T>> CreateSendContext<T>(SendEndpointContext context, T message, IPipe<SendContext<T>> pipe,
+        CancellationToken cancellationToken)
+        where T : class
+    {
+        return CreateSendContext(message, pipe, cancellationToken);
+    }
+
+    public async Task Send<T>(SendEndpointContext sendEndpointContext, SendContext<T> sendContext)
+        where T : class
+    {
+        AzureServiceBusSendContext<T> context = sendContext as AzureServiceBusSendContext<T>
+            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+
+        if (Activity.Current?.IsAllDataRequested ?? false)
         {
-            _hostConfiguration = hostConfiguration;
-            _supervisor = supervisor;
-
-            EntityName = settings.EntityPath;
+            if (!string.IsNullOrWhiteSpace(context.PartitionKey))
+                Activity.Current.SetTag(nameof(context.PartitionKey), context.PartitionKey);
+            if (!string.IsNullOrWhiteSpace(context.SessionId))
+                Activity.Current.SetTag(nameof(context.SessionId), context.SessionId);
         }
 
-        public override string EntityName { get; }
-        public override string ActivitySystem => "servicebus";
+        sendContext.CancellationToken.ThrowIfCancellationRequested();
 
-        public Task Send(IPipe<SendEndpointContext> pipe, CancellationToken cancellationToken = default)
+        if (IsCancelScheduledSend(context, out var tokenId, out var sequenceNumber))
         {
-            return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+            await CancelScheduledSend(sendEndpointContext, tokenId, sequenceNumber, sendContext.CancellationToken).ConfigureAwait(false);
+
+            return;
         }
 
-        public void Probe(ProbeContext context)
+        if (context.ScheduledEnqueueTimeUtc.HasValue)
         {
-            _supervisor.Probe(context);
-        }
-
-        public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
-        {
-            var sendContext = new AzureServiceBusSendContext<T>(message, cancellationToken);
-
-            await pipe.Send(sendContext).ConfigureAwait(false);
-
-            CopyIncomingIdentifiersIfPresent(sendContext);
-
-            return sendContext;
-        }
-
-        public override IEnumerable<IAgent> GetAgentHandles()
-        {
-            return [_supervisor];
-        }
-
-        public Task<SendContext<T>> CreateSendContext<T>(SendEndpointContext context, T message, IPipe<SendContext<T>> pipe,
-            CancellationToken cancellationToken)
-            where T : class
-        {
-            return CreateSendContext(message, pipe, cancellationToken);
-        }
-
-        public async Task Send<T>(SendEndpointContext sendEndpointContext, SendContext<T> sendContext)
-            where T : class
-        {
-            AzureServiceBusSendContext<T> context = sendContext as AzureServiceBusSendContext<T>
-                ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
-
-            if (Activity.Current?.IsAllDataRequested ?? false)
-            {
-                if (!string.IsNullOrWhiteSpace(context.PartitionKey))
-                    Activity.Current.SetTag(nameof(context.PartitionKey), context.PartitionKey);
-                if (!string.IsNullOrWhiteSpace(context.SessionId))
-                    Activity.Current.SetTag(nameof(context.SessionId), context.SessionId);
-            }
-
-            sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-            if (IsCancelScheduledSend(context, out var tokenId, out var sequenceNumber))
-            {
-                await CancelScheduledSend(sendEndpointContext, tokenId, sequenceNumber, sendContext.CancellationToken).ConfigureAwait(false);
-
+            var scheduled = await ScheduleSend(sendEndpointContext, context).ConfigureAwait(false);
+            if (scheduled)
                 return;
-            }
-
-            if (context.ScheduledEnqueueTimeUtc.HasValue)
-            {
-                var scheduled = await ScheduleSend(sendEndpointContext, context).ConfigureAwait(false);
-                if (scheduled)
-                    return;
-            }
-
-            var message = CreateMessage(context);
-
-            await sendEndpointContext.Send(message, context.CancellationToken).ConfigureAwait(false);
         }
 
-        static async Task<bool> ScheduleSend<T>(SendEndpointContext clientContext, AzureServiceBusSendContext<T> context)
-            where T : class
+        var message = CreateMessage(context);
+
+        await sendEndpointContext.Send(message, context.CancellationToken).ConfigureAwait(false);
+    }
+
+    static async Task<bool> ScheduleSend<T>(SendEndpointContext clientContext, AzureServiceBusSendContext<T> context)
+        where T : class
+    {
+        var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
+
+        var enqueueTimeUtc = context.ScheduledEnqueueTimeUtc.Value;
+        if (enqueueTimeUtc < now)
         {
-            var now = context.GetTimeProvider().GetUtcNow().UtcDateTime;
+            ViciOne.ServiceBus.LogContext.Debug?.Log("The scheduled time was in the past, sending: {ScheduledTime}", context.ScheduledEnqueueTimeUtc);
 
-            var enqueueTimeUtc = context.ScheduledEnqueueTimeUtc.Value;
-            if (enqueueTimeUtc < now)
-            {
-                ViciOne.ServiceBus.LogContext.Debug?.Log("The scheduled time was in the past, sending: {ScheduledTime}", context.ScheduledEnqueueTimeUtc);
-
-                return false;
-            }
-
-            try
-            {
-                context.Headers.Set(MessageHeaders.SchedulingTokenId, null);
-
-                var message = CreateMessage(context);
-
-                var sequenceNumber = await clientContext.ScheduleSend(message, enqueueTimeUtc, context.CancellationToken).ConfigureAwait(false);
-
-                context.SetScheduledMessageId(sequenceNumber);
-
-                context.LogScheduled(enqueueTimeUtc);
-
-                return true;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                ViciOne.ServiceBus.LogContext.Debug?.Log("The scheduled time was rejected by the server, sending: {MessageId}", context.MessageId);
-
-                return false;
-            }
-        }
-
-        async Task CancelScheduledSend(SendEndpointContext clientContext, Guid tokenId, long sequenceNumber, CancellationToken cancellationToken)
-        {
-            try
-            {
-                await clientContext.CancelScheduledSend(sequenceNumber, cancellationToken).ConfigureAwait(false);
-
-                ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", EntityName, tokenId);
-            }
-            catch (ServiceBusException exception) when (exception.Reason == ServiceBusFailureReason.MessageNotFound)
-            {
-                ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message not found", EntityName, tokenId);
-            }
-            catch (InvalidOperationException exception) when (exception.Message.Contains("already being cancelled"))
-            {
-                ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message already being canceled", EntityName, tokenId);
-            }
-        }
-
-        static bool IsCancelScheduledSend<T>(AzureServiceBusSendContext<T> context, out Guid tokenId, out long sequenceNumber)
-            where T : class
-        {
-            if (context.Message is CancelScheduledMessage cancelScheduledMessage)
-            {
-                tokenId = cancelScheduledMessage.TokenId;
-
-                if (context.TryGetScheduledMessageId(out sequenceNumber)
-                    || context.TryGetSequenceNumber(cancelScheduledMessage.TokenId, out sequenceNumber))
-                    return true;
-            }
-
-            tokenId = Guid.Empty;
-            sequenceNumber = 0;
             return false;
         }
 
-        static ServiceBusMessage CreateMessage<T>(AzureServiceBusSendContext<T> context)
-            where T : class
+        try
         {
-            var message = new ServiceBusMessage(context.Body.GetBytes()) { ContentType = context.ContentType.ToString() };
+            context.Headers.Set(MessageHeaders.SchedulingTokenId, null);
 
-            Adapter.Set(message.ApplicationProperties, context.Headers);
+            var message = CreateMessage(context);
 
-            if (context.TimeToLive.HasValue)
-                message.TimeToLive = context.TimeToLive > TimeSpan.Zero ? context.TimeToLive.Value : TimeSpan.FromSeconds(1);
+            var sequenceNumber = await clientContext.ScheduleSend(message, enqueueTimeUtc, context.CancellationToken).ConfigureAwait(false);
 
-            if (context.MessageId.HasValue)
-                message.MessageId = context.MessageId.Value.ToString("N");
+            context.SetScheduledMessageId(sequenceNumber);
 
-            if (context.CorrelationId.HasValue)
-                message.CorrelationId = context.CorrelationId.Value.ToString("N");
+            context.LogScheduled(enqueueTimeUtc);
 
-            if (context.PartitionKey != null)
-                message.PartitionKey = context.PartitionKey;
+            return true;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            ViciOne.ServiceBus.LogContext.Debug?.Log("The scheduled time was rejected by the server, sending: {MessageId}", context.MessageId);
 
-            if (!string.IsNullOrWhiteSpace(context.SessionId))
-            {
-                message.SessionId = context.SessionId;
+            return false;
+        }
+    }
 
-                if (context.ReplyToSessionId == null)
-                    message.ReplyToSessionId = context.SessionId;
-            }
+    async Task CancelScheduledSend(SendEndpointContext clientContext, Guid tokenId, long sequenceNumber, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await clientContext.CancelScheduledSend(sequenceNumber, cancellationToken).ConfigureAwait(false);
 
-            if (context.ReplyToSessionId != null)
-                message.ReplyToSessionId = context.ReplyToSessionId;
+            ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId}", EntityName, tokenId);
+        }
+        catch (ServiceBusException exception) when (exception.Reason == ServiceBusFailureReason.MessageNotFound)
+        {
+            ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message not found", EntityName, tokenId);
+        }
+        catch (InvalidOperationException exception) when (exception.Message.Contains("already being cancelled"))
+        {
+            ViciOne.ServiceBus.LogContext.Debug?.Log("CANCEL {DestinationAddress} {TokenId} message already being canceled", EntityName, tokenId);
+        }
+    }
 
-            if (context.ReplyTo != null)
-                message.ReplyTo = context.ReplyTo;
+    static bool IsCancelScheduledSend<T>(AzureServiceBusSendContext<T> context, out Guid tokenId, out long sequenceNumber)
+        where T : class
+    {
+        if (context.Message is CancelScheduledMessage cancelScheduledMessage)
+        {
+            tokenId = cancelScheduledMessage.TokenId;
 
-            if (context.Label != null)
-                message.Subject = context.Label;
-
-            return message;
+            if (context.TryGetScheduledMessageId(out sequenceNumber)
+                || context.TryGetSequenceNumber(cancelScheduledMessage.TokenId, out sequenceNumber))
+                return true;
         }
 
-        static void CopyIncomingIdentifiersIfPresent<T>(AzureServiceBusSendContext<T> context)
-            where T : class
-        {
-            if (context.TryGetPayload<ConsumeContext>(out var consumeContext)
-                && consumeContext.TryGetPayload<ServiceBusMessageContext>(out var brokeredMessageContext))
-            {
-                if (context.SessionId == null)
-                {
-                    if (brokeredMessageContext.ReplyToSessionId != null)
-                        context.SessionId = brokeredMessageContext.ReplyToSessionId;
-                    else if (brokeredMessageContext.SessionId != null)
-                        context.SessionId = brokeredMessageContext.SessionId;
-                }
+        tokenId = Guid.Empty;
+        sequenceNumber = 0;
+        return false;
+    }
 
-                if (context.PartitionKey == null && brokeredMessageContext.PartitionKey != null)
-                    context.PartitionKey = brokeredMessageContext.PartitionKey;
+    static ServiceBusMessage CreateMessage<T>(AzureServiceBusSendContext<T> context)
+        where T : class
+    {
+        var message = new ServiceBusMessage(context.Body.GetBytes()) { ContentType = context.ContentType.ToString() };
+
+        Adapter.Set(message.ApplicationProperties, context.Headers);
+
+        if (context.TimeToLive.HasValue)
+            message.TimeToLive = context.TimeToLive > TimeSpan.Zero ? context.TimeToLive.Value : TimeSpan.FromSeconds(1);
+
+        if (context.MessageId.HasValue)
+            message.MessageId = context.MessageId.Value.ToString("N");
+
+        if (context.CorrelationId.HasValue)
+            message.CorrelationId = context.CorrelationId.Value.ToString("N");
+
+        if (context.PartitionKey != null)
+            message.PartitionKey = context.PartitionKey;
+
+        if (!string.IsNullOrWhiteSpace(context.SessionId))
+        {
+            message.SessionId = context.SessionId;
+
+            if (context.ReplyToSessionId == null)
+                message.ReplyToSessionId = context.SessionId;
+        }
+
+        if (context.ReplyToSessionId != null)
+            message.ReplyToSessionId = context.ReplyToSessionId;
+
+        if (context.ReplyTo != null)
+            message.ReplyTo = context.ReplyTo;
+
+        if (context.Label != null)
+            message.Subject = context.Label;
+
+        return message;
+    }
+
+    static void CopyIncomingIdentifiersIfPresent<T>(AzureServiceBusSendContext<T> context)
+        where T : class
+    {
+        if (context.TryGetPayload<ConsumeContext>(out var consumeContext)
+            && consumeContext.TryGetPayload<ServiceBusMessageContext>(out var brokeredMessageContext))
+        {
+            if (context.SessionId == null)
+            {
+                if (brokeredMessageContext.ReplyToSessionId != null)
+                    context.SessionId = brokeredMessageContext.ReplyToSessionId;
+                else if (brokeredMessageContext.SessionId != null)
+                    context.SessionId = brokeredMessageContext.SessionId;
             }
+
+            if (context.PartitionKey == null && brokeredMessageContext.PartitionKey != null)
+                context.PartitionKey = brokeredMessageContext.PartitionKey;
         }
     }
 }

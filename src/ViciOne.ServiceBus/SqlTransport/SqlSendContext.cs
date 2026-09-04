@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface SqlSendContext<out T> :
+    SqlSendContext,
+    SendContext<T>
+    where T : class
 {
-    using System;
+}
 
 
-    public interface SqlSendContext<out T> :
-        SqlSendContext,
-        SendContext<T>
-        where T : class
-    {
-    }
+public interface SqlSendContext :
+    SendContext,
+    RoutingKeySendContext,
+    PartitionKeySendContext
+{
+    Guid TransportMessageId { get; }
 
-
-    public interface SqlSendContext :
-        SendContext,
-        RoutingKeySendContext,
-        PartitionKeySendContext
-    {
-        Guid TransportMessageId { get; }
-
-        public short? Priority { set; }
-    }
+    public short? Priority { set; }
 }

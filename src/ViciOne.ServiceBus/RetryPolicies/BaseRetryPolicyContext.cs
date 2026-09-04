@@ -1,59 +1,57 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public abstract class BaseRetryPolicyContext<TContext> :
+    RetryPolicyContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly IRetryPolicy _policy;
+    readonly Lazy<CancellationTokenSource> _cancellationTokenSource;
 
-
-    public abstract class BaseRetryPolicyContext<TContext> :
-        RetryPolicyContext<TContext>
-        where TContext : class, PipeContext
+    protected BaseRetryPolicyContext(IRetryPolicy policy, TContext context)
     {
-        readonly IRetryPolicy _policy;
-        readonly Lazy<CancellationTokenSource> _cancellationTokenSource;
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        _cancellationTokenSource = new Lazy<CancellationTokenSource>(CreateCancellationTokenSource,
+            LazyThreadSafetyMode.ExecutionAndPublication);
+    }
 
-        protected BaseRetryPolicyContext(IRetryPolicy policy, TContext context)
-        {
-            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
-            Context = context ?? throw new ArgumentNullException(nameof(context));
-            _cancellationTokenSource = new Lazy<CancellationTokenSource>(CreateCancellationTokenSource,
-                LazyThreadSafetyMode.ExecutionAndPublication);
-        }
+    protected CancellationToken CancellationToken => _cancellationTokenSource.Value.Token;
 
-        protected CancellationToken CancellationToken => _cancellationTokenSource.Value.Token;
+    public TContext Context { get; }
 
-        public TContext Context { get; }
+    public virtual bool CanRetry(Exception exception, out RetryContext<TContext> retryContext)
+    {
+        retryContext = CreateRetryContext(exception, CancellationToken);
 
-        public virtual bool CanRetry(Exception exception, out RetryContext<TContext> retryContext)
-        {
-            retryContext = CreateRetryContext(exception, CancellationToken);
+        return _policy.IsHandled(exception) && !_cancellationTokenSource.Value.IsCancellationRequested;
+    }
 
-            return _policy.IsHandled(exception) && !_cancellationTokenSource.Value.IsCancellationRequested;
-        }
+    Task RetryPolicyContext<TContext>.RetryFaulted(Exception exception)
+    {
+        return Task.CompletedTask;
+    }
 
-        Task RetryPolicyContext<TContext>.RetryFaulted(Exception exception)
-        {
-            return Task.CompletedTask;
-        }
+    public void Cancel()
+    {
+        _cancellationTokenSource.Value.Cancel();
+    }
 
-        public void Cancel()
-        {
-            _cancellationTokenSource.Value.Cancel();
-        }
+    void IDisposable.Dispose()
+    {
+        if (_cancellationTokenSource.IsValueCreated)
+            _cancellationTokenSource.Value.Dispose();
+    }
 
-        void IDisposable.Dispose()
-        {
-            if (_cancellationTokenSource.IsValueCreated)
-                _cancellationTokenSource.Value.Dispose();
-        }
+    protected abstract RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken);
 
-        protected abstract RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken);
-
-        CancellationTokenSource CreateCancellationTokenSource()
-        {
-            return Context.CancellationToken.CanBeCanceled
-                ? CancellationTokenSource.CreateLinkedTokenSource(Context.CancellationToken)
-                : new CancellationTokenSource();
-        }
+    CancellationTokenSource CreateCancellationTokenSource()
+    {
+        return Context.CancellationToken.CanBeCanceled
+            ? CancellationTokenSource.CreateLinkedTokenSource(Context.CancellationToken)
+            : new CancellationTokenSource();
     }
 }

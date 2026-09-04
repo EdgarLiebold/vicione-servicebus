@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+/// <summary>
+/// Published when a job faults
+/// </summary>
+public interface JobFaulted
 {
-    using System;
-    using System.Collections.Generic;
+    Guid JobId { get; }
 
+    DateTime Timestamp { get; }
 
-    /// <summary>
-    /// Published when a job faults
-    /// </summary>
-    public interface JobFaulted
-    {
-        Guid JobId { get; }
+    TimeSpan? Duration { get; }
 
-        DateTime Timestamp { get; }
+    Dictionary<string, object> Job { get; }
 
-        TimeSpan? Duration { get; }
-
-        Dictionary<string, object> Job { get; }
-
-        ExceptionInfo Exceptions { get; }
-    }
+    ExceptionInfo Exceptions { get; }
 }

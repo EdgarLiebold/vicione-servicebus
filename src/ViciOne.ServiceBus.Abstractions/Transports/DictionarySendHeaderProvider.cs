@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus.Transports;
-
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-
+namespace ViciOne.ServiceBus.Transports;
 /// <summary>
 /// A simple in-memory header collection for use with the in memory transport
 /// </summary>

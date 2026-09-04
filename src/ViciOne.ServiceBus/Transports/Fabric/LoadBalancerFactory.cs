@@ -1,5 +1,4 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
-{
-    public delegate IReceiverLoadBalancer<T> LoadBalancerFactory<T>(IMessageReceiver<T>[] consumers)
-        where T : class;
-}
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public delegate IReceiverLoadBalancer<T> LoadBalancerFactory<T>(IMessageReceiver<T>[] consumers)
+    where T : class;

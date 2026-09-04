@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobSlotAllocated
 {
-    using System;
+    Guid JobId { get; }
 
-
-    public interface JobSlotAllocated
-    {
-        Guid JobId { get; }
-
-        Uri InstanceAddress { get; }
-    }
+    Uri InstanceAddress { get; }
 }

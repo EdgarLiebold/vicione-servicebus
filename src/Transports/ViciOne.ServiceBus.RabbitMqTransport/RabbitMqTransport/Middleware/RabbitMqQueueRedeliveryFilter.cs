@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
-
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Middleware;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 
 public sealed class RabbitMqQueueRedeliveryFilter<TMessage> : IFilter<ConsumeContext<TMessage>>
     where TMessage : class

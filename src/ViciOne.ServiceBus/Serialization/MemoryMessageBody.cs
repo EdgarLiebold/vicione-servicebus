@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.Serialization
+using System;
+using System.IO;
+
+namespace ViciOne.ServiceBus.Serialization;
+
+public class MemoryMessageBody :
+    MessageBody
 {
-    using System;
-    using System.IO;
+    readonly ReadOnlyMemory<byte> _memory;
+    byte[] _bytes;
+    string _string;
 
-
-    public class MemoryMessageBody :
-        MessageBody
+    public MemoryMessageBody(ReadOnlyMemory<byte> memory)
     {
-        readonly ReadOnlyMemory<byte> _memory;
-        byte[] _bytes;
-        string _string;
+        _memory = memory;
+    }
 
-        public MemoryMessageBody(ReadOnlyMemory<byte> memory)
-        {
-            _memory = memory;
-        }
+    public long? Length => _memory.Length;
 
-        public long? Length => _memory.Length;
+    public Stream GetStream()
+    {
+        return new MemoryStream(GetBytes(), false);
+    }
 
-        public Stream GetStream()
-        {
-            return new MemoryStream(GetBytes(), false);
-        }
+    public byte[] GetBytes()
+    {
+        return _bytes ??= _memory.ToArray();
+    }
 
-        public byte[] GetBytes()
-        {
-            return _bytes ??= _memory.ToArray();
-        }
-
-        public string GetString()
-        {
-            return _string ??= MessageDefaults.Encoding.GetString(_memory.Span);
-        }
+    public string GetString()
+    {
+        return _string ??= MessageDefaults.Encoding.GetString(_memory.Span);
     }
 }

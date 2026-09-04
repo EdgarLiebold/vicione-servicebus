@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System.Threading;
+using Azure.Messaging.EventHubs;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class SharedProcessorContext :
+    ProxyPipeContext,
+    ProcessorContext
 {
-    using System.Threading;
-    using Azure.Messaging.EventHubs;
-    using Logging;
-    using ViciOne.ServiceBus.Middleware;
+    readonly ProcessorContext _context;
 
-
-    public class SharedProcessorContext :
-        ProxyPipeContext,
-        ProcessorContext
+    public SharedProcessorContext(ProcessorContext context, CancellationToken cancellationToken)
+        : base(context)
     {
-        readonly ProcessorContext _context;
+        _context = context;
+        CancellationToken = cancellationToken;
+    }
 
-        public SharedProcessorContext(ProcessorContext context, CancellationToken cancellationToken)
-            : base(context)
-        {
-            _context = context;
-            CancellationToken = cancellationToken;
-        }
+    public override CancellationToken CancellationToken { get; }
 
-        public override CancellationToken CancellationToken { get; }
+    public ILogContext LogContext => _context.LogContext;
 
-        public ILogContext LogContext => _context.LogContext;
+    public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
+    {
+        return _context.GetClient(context);
+    }
 
-        public EventProcessorClient GetClient(ProcessorClientBuilderContext context)
-        {
-            return _context.GetClient(context);
-        }
-
-        public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
-        {
-            _context.ReleaseClient(processorLockContext);
-        }
+    public void ReleaseClient(ProcessorClientBuilderContext processorLockContext)
+    {
+        _context.ReleaseClient(processorLockContext);
     }
 }

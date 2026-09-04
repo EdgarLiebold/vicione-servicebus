@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Contracts.JobService;
-using Initializers;
-using JobService;
-using JobService.Messages;
-using Serialization;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.JobService;
+using ViciOne.ServiceBus.JobService.Messages;
+using ViciOne.ServiceBus.Serialization;
 
+namespace ViciOne.ServiceBus;
 
 public static class RecurringJobConsumerExtensions
 {

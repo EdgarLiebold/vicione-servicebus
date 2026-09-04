@@ -1,135 +1,133 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Saga;
+
+/// <summary>
+/// For queries that load the actual saga instances
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
+    ConsumeContextProxy<TMessage>,
+    SagaRepositoryQueryContext<TSaga, TMessage>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Context;
-    using Middleware;
+    readonly IDictionary<Guid, TSaga> _index;
+    readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
 
-
-    /// <summary>
-    /// For queries that load the actual saga instances
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class LoadedSagaRepositoryQueryContext<TSaga, TMessage> :
-        ConsumeContextProxy<TMessage>,
-        SagaRepositoryQueryContext<TSaga, TMessage>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public LoadedSagaRepositoryQueryContext(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IEnumerable<TSaga> instances)
+        : base(repositoryContext)
     {
-        readonly IDictionary<Guid, TSaga> _index;
-        readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
+        _repositoryContext = repositoryContext;
 
-        public LoadedSagaRepositoryQueryContext(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IEnumerable<TSaga> instances)
-            : base(repositoryContext)
-        {
-            _repositoryContext = repositoryContext;
-
-            _index = instances.ToDictionary(x => x.CorrelationId);
-        }
-
-        public int Count => _index.Count;
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
-        {
-            return _repositoryContext.Add(instance);
-        }
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
-        {
-            return _repositoryContext.Insert(instance);
-        }
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
-        {
-            if (_index.TryGetValue(correlationId, out var instance))
-                return _repositoryContext.CreateSagaConsumeContext(_repositoryContext, instance, SagaConsumeContextMode.Load);
-
-            return _repositoryContext.Load(correlationId);
-        }
-
-        public Task Save(SagaConsumeContext<TSaga> context)
-        {
-            return _repositoryContext.Save(context);
-        }
-
-        public Task Discard(SagaConsumeContext<TSaga> context)
-        {
-            return _repositoryContext.Discard(context);
-        }
-
-        public Task Undo(SagaConsumeContext<TSaga> context)
-        {
-            return _repositoryContext.Undo(context);
-        }
-
-        public Task Update(SagaConsumeContext<TSaga> context)
-        {
-            return _repositoryContext.Update(context);
-        }
-
-        public Task Delete(SagaConsumeContext<TSaga> context)
-        {
-            return _repositoryContext.Delete(context);
-        }
-
-        public IEnumerator<Guid> GetEnumerator()
-        {
-            return _index.Keys.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
-            where T : class
-        {
-            return _repositoryContext.CreateSagaConsumeContext(consumeContext, instance, mode);
-        }
+        _index = instances.ToDictionary(x => x.CorrelationId);
     }
 
+    public int Count => _index.Count;
 
-    /// <summary>
-    /// For queries that load the actual saga instances
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    public class LoadedSagaRepositoryQueryContext<TSaga> :
-        BasePipeContext,
-        SagaRepositoryQueryContext<TSaga>
-        where TSaga : class, ISaga
+    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
     {
-        readonly IDictionary<Guid, TSaga> _index;
-        readonly QuerySagaRepositoryContext<TSaga> _querySagaRepositoryContext;
+        return _repositoryContext.Add(instance);
+    }
 
-        public LoadedSagaRepositoryQueryContext(QuerySagaRepositoryContext<TSaga> querySagaRepositoryContext, IEnumerable<TSaga> instances)
-            : base(querySagaRepositoryContext)
-        {
-            _querySagaRepositoryContext = querySagaRepositoryContext;
+    public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    {
+        return _repositoryContext.Insert(instance);
+    }
 
-            _index = instances.ToDictionary(x => x.CorrelationId);
-        }
+    public Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    {
+        if (_index.TryGetValue(correlationId, out var instance))
+            return _repositoryContext.CreateSagaConsumeContext(_repositoryContext, instance, SagaConsumeContextMode.Load);
 
-        public int Count => _index.Count;
+        return _repositoryContext.Load(correlationId);
+    }
 
-        public Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
-        {
-            return _querySagaRepositoryContext.Query(query, cancellationToken);
-        }
+    public Task Save(SagaConsumeContext<TSaga> context)
+    {
+        return _repositoryContext.Save(context);
+    }
 
-        public IEnumerator<Guid> GetEnumerator()
-        {
-            return _index.Keys.GetEnumerator();
-        }
+    public Task Discard(SagaConsumeContext<TSaga> context)
+    {
+        return _repositoryContext.Discard(context);
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    public Task Undo(SagaConsumeContext<TSaga> context)
+    {
+        return _repositoryContext.Undo(context);
+    }
+
+    public Task Update(SagaConsumeContext<TSaga> context)
+    {
+        return _repositoryContext.Update(context);
+    }
+
+    public Task Delete(SagaConsumeContext<TSaga> context)
+    {
+        return _repositoryContext.Delete(context);
+    }
+
+    public IEnumerator<Guid> GetEnumerator()
+    {
+        return _index.Keys.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+        where T : class
+    {
+        return _repositoryContext.CreateSagaConsumeContext(consumeContext, instance, mode);
+    }
+}
+
+
+/// <summary>
+/// For queries that load the actual saga instances
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+public class LoadedSagaRepositoryQueryContext<TSaga> :
+    BasePipeContext,
+    SagaRepositoryQueryContext<TSaga>
+    where TSaga : class, ISaga
+{
+    readonly IDictionary<Guid, TSaga> _index;
+    readonly QuerySagaRepositoryContext<TSaga> _querySagaRepositoryContext;
+
+    public LoadedSagaRepositoryQueryContext(QuerySagaRepositoryContext<TSaga> querySagaRepositoryContext, IEnumerable<TSaga> instances)
+        : base(querySagaRepositoryContext)
+    {
+        _querySagaRepositoryContext = querySagaRepositoryContext;
+
+        _index = instances.ToDictionary(x => x.CorrelationId);
+    }
+
+    public int Count => _index.Count;
+
+    public Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken = default)
+    {
+        return _querySagaRepositoryContext.Query(query, cancellationToken);
+    }
+
+    public IEnumerator<Guid> GetEnumerator()
+    {
+        return _index.Keys.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

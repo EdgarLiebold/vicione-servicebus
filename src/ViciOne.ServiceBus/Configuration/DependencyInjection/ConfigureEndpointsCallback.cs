@@ -1,4 +1,3 @@
-namespace ViciOne.ServiceBus
-{
-    public delegate void ConfigureEndpointsCallback(string queueName, IReceiveEndpointConfigurator configurator);
-}
+namespace ViciOne.ServiceBus;
+
+public delegate void ConfigureEndpointsCallback(string queueName, IReceiveEndpointConfigurator configurator);

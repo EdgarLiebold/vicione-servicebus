@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISagaRepositoryRegistrationProvider
 {
-    public interface ISagaRepositoryRegistrationProvider
-    {
-        void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga;
-    }
+    void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+        where TSaga : class, ISaga;
 }

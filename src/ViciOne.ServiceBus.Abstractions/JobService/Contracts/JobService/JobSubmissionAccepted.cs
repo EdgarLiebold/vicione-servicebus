@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobSubmissionAccepted
 {
-    using System;
-
-
-    public interface JobSubmissionAccepted
-    {
-        Guid JobId { get; }
-    }
+    Guid JobId { get; }
 }

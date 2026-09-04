@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class BatchConsumerConvention :
+    IConsumerConvention
 {
-    public class BatchConsumerConvention :
-        IConsumerConvention
+    IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>()
     {
-        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>()
-        {
-            return new BatchConsumerMessageConvention<T>();
-        }
+        return new BatchConsumerMessageConvention<T>();
     }
 }

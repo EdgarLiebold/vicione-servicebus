@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+/// <summary>
+/// Specify the consumer, saga, and activity types to include/exclude
+/// </summary>
+public interface IRegistrationFilterConfigurator
+{
+    /// <summary>
+    /// Include the specified types
+    /// </summary>
+    /// <param name="types"></param>
+    void Include(params Type[] types);
 
     /// <summary>
-    /// Specify the consumer, saga, and activity types to include/exclude
+    /// Include the specified type
     /// </summary>
-    public interface IRegistrationFilterConfigurator
-    {
-        /// <summary>
-        /// Include the specified types
-        /// </summary>
-        /// <param name="types"></param>
-        void Include(params Type[] types);
+    /// <typeparam name="T"></typeparam>
+    void Include<T>();
 
-        /// <summary>
-        /// Include the specified type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void Include<T>();
+    /// <summary>
+    /// Exclude the specified types
+    /// </summary>
+    /// <param name="types"></param>
+    void Exclude(params Type[] types);
 
-        /// <summary>
-        /// Exclude the specified types
-        /// </summary>
-        /// <param name="types"></param>
-        void Exclude(params Type[] types);
-
-        /// <summary>
-        /// Exclude the specified type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void Exclude<T>();
-    }
+    /// <summary>
+    /// Exclude the specified type
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    void Exclude<T>();
 }

@@ -1,86 +1,84 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ScopedConsumePipeSpecificationObserver :
+    IConsumerConfigurationObserver,
+    ISagaConfigurationObserver
 {
-    using System;
-    using DependencyInjection;
-    using Internals;
-    using Middleware;
-    using Serialization;
+    readonly IRegistrationContext _context;
+    readonly Type _filterType;
+    readonly CompositeFilter<Type> _messageTypeFilter;
 
-
-    public class ScopedConsumePipeSpecificationObserver :
-        IConsumerConfigurationObserver,
-        ISagaConfigurationObserver
+    public ScopedConsumePipeSpecificationObserver(Type filterType, IRegistrationContext context, CompositeFilter<Type> messageTypeFilter)
     {
-        readonly IRegistrationContext _context;
-        readonly Type _filterType;
-        readonly CompositeFilter<Type> _messageTypeFilter;
+        _filterType = filterType;
+        _context = context;
+        _messageTypeFilter = messageTypeFilter;
+        // do not create filters for scheduled/outbox messages
+        _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
+    }
 
-        public ScopedConsumePipeSpecificationObserver(Type filterType, IRegistrationContext context, CompositeFilter<Type> messageTypeFilter)
-        {
-            _filterType = filterType;
-            _context = context;
-            _messageTypeFilter = messageTypeFilter;
-            // do not create filters for scheduled/outbox messages
-            _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
-        }
+    public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
+        where TConsumer : class
+    {
+    }
 
-        public void ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
-            where TConsumer : class
-        {
-        }
+    public void ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
+        where TConsumer : class
+        where TMessage : class
+    {
+        if (!(configurator is IConsumerMessageConfigurator<TMessage> messageConfigurator))
+            throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TConsumer>.ShortName} - {TypeCache<TMessage>.ShortName}");
 
-        public void ConsumerMessageConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, TMessage> configurator)
-            where TConsumer : class
-            where TMessage : class
-        {
-            if (!(configurator is IConsumerMessageConfigurator<TMessage> messageConfigurator))
-                throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TConsumer>.ShortName} - {TypeCache<TMessage>.ShortName}");
+        AddScopedFilter(messageConfigurator);
+    }
 
-            AddScopedFilter(messageConfigurator);
-        }
+    public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
+        where TSaga : class, ISaga
+    {
+    }
 
-        public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga
-        {
-        }
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
+        where TInstance : class, ISaga, SagaStateMachineInstance
+    {
+    }
 
-        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance
-        {
-        }
+    public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
+        where TSaga : class, ISaga
+        where TMessage : class
+    {
+        if (!(configurator is ISagaMessageConfigurator<TMessage> messageConfigurator))
+            throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TSaga>.ShortName} - {TypeCache<TMessage>.ShortName}");
 
-        public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-            where TSaga : class, ISaga
-            where TMessage : class
-        {
-            if (!(configurator is ISagaMessageConfigurator<TMessage> messageConfigurator))
-                throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TSaga>.ShortName} - {TypeCache<TMessage>.ShortName}");
+        AddScopedFilter(messageConfigurator);
+    }
 
-            AddScopedFilter(messageConfigurator);
-        }
+    void AddScopedFilter<TMessage>(IPipeConfigurator<ConsumeContext<TMessage>> messageConfigurator)
+        where TMessage : class
+    {
+        if (!_messageTypeFilter.Matches(typeof(TMessage)))
+            return;
 
-        void AddScopedFilter<TMessage>(IPipeConfigurator<ConsumeContext<TMessage>> messageConfigurator)
-            where TMessage : class
-        {
-            if (!_messageTypeFilter.Matches(typeof(TMessage)))
-                return;
+        var filterType = _filterType.ImplementsInterface<IFilter<ConsumeContext<TMessage>>>()
+            ? _filterType
+            : _filterType.MakeGenericType(typeof(TMessage));
 
-            var filterType = _filterType.ImplementsInterface<IFilter<ConsumeContext<TMessage>>>()
-                ? _filterType
-                : _filterType.MakeGenericType(typeof(TMessage));
+        if (!filterType.ImplementsInterface(typeof(IFilter<ConsumeContext<TMessage>>)))
+            throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<ConsumeContext<TMessage>>>.ShortName} ");
 
-            if (!filterType.ImplementsInterface(typeof(IFilter<ConsumeContext<TMessage>>)))
-                throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<ConsumeContext<TMessage>>>.ShortName} ");
+        var scopeProvider = new ConsumeScopeProvider(_context);
 
-            var scopeProvider = new ConsumeScopeProvider(_context);
+        var scopedFilterType = typeof(ScopedConsumeFilter<,>).MakeGenericType(typeof(TMessage), filterType);
 
-            var scopedFilterType = typeof(ScopedConsumeFilter<,>).MakeGenericType(typeof(TMessage), filterType);
+        var filter = (IFilter<ConsumeContext<TMessage>>)Activator.CreateInstance(scopedFilterType, scopeProvider);
 
-            var filter = (IFilter<ConsumeContext<TMessage>>)Activator.CreateInstance(scopedFilterType, scopeProvider);
+        var specification = new FilterPipeSpecification<ConsumeContext<TMessage>>(filter);
 
-            var specification = new FilterPipeSpecification<ConsumeContext<TMessage>>(filter);
-
-            messageConfigurator.AddPipeSpecification(specification);
-        }
+        messageConfigurator.AddPipeSpecification(specification);
     }
 }

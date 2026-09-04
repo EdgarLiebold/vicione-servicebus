@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
-
 using Quartz;
 using ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 public sealed class ActiveMqQuartzSchedulingTests
 {

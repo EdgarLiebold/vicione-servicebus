@@ -1,12 +1,11 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService;
-
 using System;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Messages;
+using ViciOne.ServiceBus.JobService.Messages;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService;
 
 public class JobProgressBuffer
 {

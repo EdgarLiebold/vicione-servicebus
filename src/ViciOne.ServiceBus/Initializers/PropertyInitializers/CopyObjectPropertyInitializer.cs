@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyInitializers
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyInitializers;
+
+public class CopyObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
+    IPropertyInitializer<TMessage, TInput>
+    where TMessage : class
+    where TInput : class
 {
-    using System;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly IReadProperty<TInput, TInputProperty> _inputProperty;
+    readonly IWriteProperty<TMessage, object> _messageProperty;
 
-
-    public class CopyObjectPropertyInitializer<TMessage, TInput, TInputProperty> :
-        IPropertyInitializer<TMessage, TInput>
-        where TMessage : class
-        where TInput : class
+    public CopyObjectPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
     {
-        readonly IReadProperty<TInput, TInputProperty> _inputProperty;
-        readonly IWriteProperty<TMessage, object> _messageProperty;
+        if (messagePropertyInfo == null)
+            throw new ArgumentNullException(nameof(messagePropertyInfo));
 
-        public CopyObjectPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
-        {
-            if (messagePropertyInfo == null)
-                throw new ArgumentNullException(nameof(messagePropertyInfo));
+        _inputProperty = ReadPropertyCache<TInput>.GetProperty<TInputProperty>(inputPropertyInfo);
+        _messageProperty = WritePropertyCache<TMessage>.GetProperty<object>(messagePropertyInfo);
+    }
 
-            _inputProperty = ReadPropertyCache<TInput>.GetProperty<TInputProperty>(inputPropertyInfo);
-            _messageProperty = WritePropertyCache<TMessage>.GetProperty<object>(messagePropertyInfo);
-        }
+    public Task Apply(InitializeContext<TMessage, TInput> context)
+    {
+        _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
 
-        public Task Apply(InitializeContext<TMessage, TInput> context)
-        {
-            _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

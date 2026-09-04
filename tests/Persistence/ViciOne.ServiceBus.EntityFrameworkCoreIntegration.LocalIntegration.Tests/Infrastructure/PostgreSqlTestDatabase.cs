@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
-
 using Npgsql;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Databases;
 using Xunit;
 
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
 /// <summary>Owns one PostgreSQL database whose lifetime and name belong to the current test.</summary>
 internal sealed class PostgreSqlTestDatabase : IAsyncDisposable
 {

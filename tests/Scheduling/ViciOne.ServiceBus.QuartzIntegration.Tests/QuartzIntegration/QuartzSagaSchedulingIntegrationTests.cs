@@ -1,5 +1,5 @@
-using Quartz;
 using System.Collections.Concurrent;
+using Quartz;
 using ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;

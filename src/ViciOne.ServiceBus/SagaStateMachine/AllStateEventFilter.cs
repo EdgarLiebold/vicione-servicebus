@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
-{
-    public class AllStateEventFilter<TSaga> :
-        IStateEventFilter<TSaga>
-        where TSaga : class, SagaStateMachineInstance
-    {
-        public bool Filter(BehaviorContext<TSaga> context)
-        {
-            return true;
-        }
+namespace ViciOne.ServiceBus.SagaStateMachine;
 
-        public bool Filter<T>(BehaviorContext<TSaga, T> context)
-            where T : class
-        {
-            return true;
-        }
+public class AllStateEventFilter<TSaga> :
+    IStateEventFilter<TSaga>
+    where TSaga : class, SagaStateMachineInstance
+{
+    public bool Filter(BehaviorContext<TSaga> context)
+    {
+        return true;
+    }
+
+    public bool Filter<T>(BehaviorContext<TSaga, T> context)
+        where T : class
+    {
+        return true;
     }
 }

@@ -1,21 +1,20 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IEndpointSettings<TConsumer>
+    where TConsumer : class
 {
-    public interface IEndpointSettings<TConsumer>
-        where TConsumer : class
-    {
-        string? Name { get; }
+    string? Name { get; }
 
-        bool IsTemporary { get; }
+    bool IsTemporary { get; }
 
-        int? PrefetchCount { get; }
+    int? PrefetchCount { get; }
 
-        int? ConcurrentMessageLimit { get; }
+    int? ConcurrentMessageLimit { get; }
 
-        bool ConfigureConsumeTopology { get; }
+    bool ConfigureConsumeTopology { get; }
 
-        string? InstanceId { get; }
+    string? InstanceId { get; }
 
-        void ConfigureEndpoint<T>(T configurator, IRegistrationContext? context)
-            where T : IReceiveEndpointConfigurator;
-    }
+    void ConfigureEndpoint<T>(T configurator, IRegistrationContext? context)
+        where T : IReceiveEndpointConfigurator;
 }

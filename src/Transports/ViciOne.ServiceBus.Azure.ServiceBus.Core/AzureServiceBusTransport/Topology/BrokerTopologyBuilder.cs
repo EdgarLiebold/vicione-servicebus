@@ -1,97 +1,95 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using System.Threading;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class BrokerTopologyBuilder :
+    IBrokerTopologyBuilder
 {
-    using System.Threading;
-    using Azure.Messaging.ServiceBus.Administration;
-    using ViciOne.ServiceBus.Topology;
+    long _nextId;
 
-
-    public class BrokerTopologyBuilder :
-        IBrokerTopologyBuilder
+    public BrokerTopologyBuilder()
     {
-        long _nextId;
+        Topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
+        Queues = new NamedEntityCollection<QueueEntity, QueueHandle>(QueueEntity.EntityComparer, QueueEntity.NameComparer);
 
-        public BrokerTopologyBuilder()
-        {
-            Topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
-            Queues = new NamedEntityCollection<QueueEntity, QueueHandle>(QueueEntity.EntityComparer, QueueEntity.NameComparer);
+        Subscriptions = new NamedEntityCollection<SubscriptionEntity, SubscriptionHandle>(SubscriptionEntity.EntityComparer,
+            SubscriptionEntity.NameComparer);
 
-            Subscriptions = new NamedEntityCollection<SubscriptionEntity, SubscriptionHandle>(SubscriptionEntity.EntityComparer,
-                SubscriptionEntity.NameComparer);
+        QueueSubscriptions = new NamedEntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle>(QueueSubscriptionEntity.EntityComparer,
+            QueueSubscriptionEntity.NameComparer);
 
-            QueueSubscriptions = new NamedEntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle>(QueueSubscriptionEntity.EntityComparer,
-                QueueSubscriptionEntity.NameComparer);
+        TopicSubscriptions = new NamedEntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle>(TopicSubscriptionEntity.EntityComparer,
+            TopicSubscriptionEntity.NameComparer);
+    }
 
-            TopicSubscriptions = new NamedEntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle>(TopicSubscriptionEntity.EntityComparer,
-                TopicSubscriptionEntity.NameComparer);
-        }
+    protected EntityCollection<SubscriptionEntity, SubscriptionHandle> Subscriptions { get; }
+    protected NamedEntityCollection<TopicEntity, TopicHandle> Topics { get; }
+    protected EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle> QueueSubscriptions { get; }
+    protected EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> TopicSubscriptions { get; }
+    protected NamedEntityCollection<QueueEntity, QueueHandle> Queues { get; }
 
-        protected EntityCollection<SubscriptionEntity, SubscriptionHandle> Subscriptions { get; }
-        protected NamedEntityCollection<TopicEntity, TopicHandle> Topics { get; }
-        protected EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle> QueueSubscriptions { get; }
-        protected EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> TopicSubscriptions { get; }
-        protected NamedEntityCollection<QueueEntity, QueueHandle> Queues { get; }
+    public TopicHandle CreateTopic(CreateTopicOptions createTopicOptions)
+    {
+        var exchange = new TopicEntity(GetNextId(), createTopicOptions);
 
-        public TopicHandle CreateTopic(CreateTopicOptions createTopicOptions)
-        {
-            var exchange = new TopicEntity(GetNextId(), createTopicOptions);
+        return Topics.GetOrAdd(exchange);
+    }
 
-            return Topics.GetOrAdd(exchange);
-        }
+    public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
+        RuleFilter filter)
+    {
+        var topicEntity = Topics.Get(topic);
 
-        public SubscriptionHandle CreateSubscription(TopicHandle topic, CreateSubscriptionOptions createSubscriptionOptions, CreateRuleOptions rule,
-            RuleFilter filter)
-        {
-            var topicEntity = Topics.Get(topic);
+        var subscriptionEntity = new SubscriptionEntity(GetNextId(), topicEntity, createSubscriptionOptions, rule, filter);
 
-            var subscriptionEntity = new SubscriptionEntity(GetNextId(), topicEntity, createSubscriptionOptions, rule, filter);
+        return Subscriptions.GetOrAdd(subscriptionEntity);
+    }
 
-            return Subscriptions.GetOrAdd(subscriptionEntity);
-        }
+    public QueueHandle CreateQueue(CreateQueueOptions createQueueOptions)
+    {
+        var queue = new QueueEntity(GetNextId(), createQueueOptions);
 
-        public QueueHandle CreateQueue(CreateQueueOptions createQueueOptions)
-        {
-            var queue = new QueueEntity(GetNextId(), createQueueOptions);
+        return Queues.GetOrAdd(queue);
+    }
 
-            return Queues.GetOrAdd(queue);
-        }
+    public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle exchange, QueueHandle queue, CreateSubscriptionOptions createSubscriptionOptions,
+        CreateRuleOptions rule, RuleFilter filter)
+    {
+        var topicEntity = Topics.Get(exchange);
 
-        public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle exchange, QueueHandle queue, CreateSubscriptionOptions createSubscriptionOptions,
-            CreateRuleOptions rule, RuleFilter filter)
-        {
-            var topicEntity = Topics.Get(exchange);
+        var queueEntity = Queues.Get(queue);
 
-            var queueEntity = Queues.Get(queue);
+        if (topicEntity.CreateTopicOptions.EnablePartitioning)
+            queueEntity.CreateQueueOptions.EnablePartitioning = true;
 
-            if (topicEntity.CreateTopicOptions.EnablePartitioning)
-                queueEntity.CreateQueueOptions.EnablePartitioning = true;
+        var binding = new QueueSubscriptionEntity(GetNextId(), GetNextId(), topicEntity, queueEntity, createSubscriptionOptions, rule, filter);
 
-            var binding = new QueueSubscriptionEntity(GetNextId(), GetNextId(), topicEntity, queueEntity, createSubscriptionOptions, rule, filter);
+        return QueueSubscriptions.GetOrAdd(binding);
+    }
 
-            return QueueSubscriptions.GetOrAdd(binding);
-        }
+    public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, CreateSubscriptionOptions createSubscriptionOptions)
+    {
+        var sourceEntity = Topics.Get(source);
 
-        public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, CreateSubscriptionOptions createSubscriptionOptions)
-        {
-            var sourceEntity = Topics.Get(source);
+        var destinationEntity = Topics.Get(destination);
 
-            var destinationEntity = Topics.Get(destination);
+        if (sourceEntity.CreateTopicOptions.EnablePartitioning)
+            destinationEntity.CreateTopicOptions.EnablePartitioning = true;
 
-            if (sourceEntity.CreateTopicOptions.EnablePartitioning)
-                destinationEntity.CreateTopicOptions.EnablePartitioning = true;
+        var subscriptionEntity = new TopicSubscriptionEntity(GetNextId(), GetNextId(), sourceEntity, destinationEntity, createSubscriptionOptions);
 
-            var subscriptionEntity = new TopicSubscriptionEntity(GetNextId(), GetNextId(), sourceEntity, destinationEntity, createSubscriptionOptions);
+        return TopicSubscriptions.GetOrAdd(subscriptionEntity);
+    }
 
-            return TopicSubscriptions.GetOrAdd(subscriptionEntity);
-        }
+    public BrokerTopology BuildBrokerTopology()
+    {
+        return new ServiceBusBrokerTopology(Topics, Subscriptions, Queues, QueueSubscriptions, TopicSubscriptions);
+    }
 
-        public BrokerTopology BuildBrokerTopology()
-        {
-            return new ServiceBusBrokerTopology(Topics, Subscriptions, Queues, QueueSubscriptions, TopicSubscriptions);
-        }
-
-        long GetNextId()
-        {
-            return Interlocked.Increment(ref _nextId);
-        }
+    long GetNextId()
+    {
+        return Interlocked.Increment(ref _nextId);
     }
 }

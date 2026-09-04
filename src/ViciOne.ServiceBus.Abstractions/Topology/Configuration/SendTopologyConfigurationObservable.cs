@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SendTopologyConfigurationObservable :
+    Connectable<ISendTopologyConfigurationObserver>,
+    ISendTopologyConfigurationObserver
 {
-    using Util;
-
-
-    public class SendTopologyConfigurationObservable :
-        Connectable<ISendTopologyConfigurationObserver>,
-        ISendTopologyConfigurationObserver
+    public void MessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> configuration)
+        where T : class
     {
-        public void MessageTopologyCreated<T>(IMessageSendTopologyConfigurator<T> configuration)
-            where T : class
-        {
-            ForEach(observer => observer.MessageTopologyCreated(configuration));
-        }
+        ForEach(observer => observer.MessageTopologyCreated(configuration));
     }
 }

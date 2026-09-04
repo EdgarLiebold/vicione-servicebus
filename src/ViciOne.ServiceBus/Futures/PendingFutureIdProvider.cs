@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus;
 
-    public delegate Guid PendingFutureIdProvider<in T>(T message)
-        where T : class;
-}
+public delegate Guid PendingFutureIdProvider<in T>(T message)
+    where T : class;

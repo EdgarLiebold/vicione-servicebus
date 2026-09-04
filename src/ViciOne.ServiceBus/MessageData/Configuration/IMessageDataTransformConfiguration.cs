@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.MessageData.Configuration
+namespace ViciOne.ServiceBus.MessageData.Configuration;
+
+public interface IMessageDataTransformConfiguration<TInput>
+    where TInput : class
 {
-    public interface IMessageDataTransformConfiguration<TInput>
-        where TInput : class
-    {
-        void Apply(ITransformConfigurator<TInput> configurator);
-    }
+    void Apply(ITransformConfigurator<TInput> configurator);
 }

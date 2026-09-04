@@ -1,64 +1,62 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Threading.Tasks;
+using System.Transactions;
+
+namespace ViciOne.ServiceBus.Context;
+
+internal sealed class SystemTransactionContext :
+    IManagedTransactionContext
 {
-    using System;
-    using System.Threading.Tasks;
-    using System.Transactions;
+    readonly CommittableTransaction _transaction;
+    bool _completed;
+    bool _disposed;
 
-
-    internal sealed class SystemTransactionContext :
-        IManagedTransactionContext
+    public SystemTransactionContext(TransactionOptions options)
     {
-        readonly CommittableTransaction _transaction;
-        bool _completed;
-        bool _disposed;
+        _transaction = new CommittableTransaction(options);
+    }
 
-        public SystemTransactionContext(TransactionOptions options)
-        {
-            _transaction = new CommittableTransaction(options);
-        }
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
 
-        public void Dispose()
-        {
-            if (_disposed)
-                return;
+        _transaction.Dispose();
 
-            _transaction.Dispose();
+        _disposed = true;
+    }
 
-            _disposed = true;
-        }
+    public Transaction Transaction => _transaction;
 
-        public Transaction Transaction => _transaction;
+    public bool IsActive => !_completed && !_disposed;
 
-        public bool IsActive => !_completed && !_disposed;
+    public async Task Commit()
+    {
+        if (_completed)
+            return;
 
-        public async Task Commit()
-        {
-            if (_completed)
-                return;
+        await Task.Factory.FromAsync(_transaction.BeginCommit, _transaction.EndCommit, null).ConfigureAwait(false);
 
-            await Task.Factory.FromAsync(_transaction.BeginCommit, _transaction.EndCommit, null).ConfigureAwait(false);
+        _completed = true;
+    }
 
-            _completed = true;
-        }
+    public void Rollback()
+    {
+        if (_completed)
+            return;
 
-        public void Rollback()
-        {
-            if (_completed)
-                return;
+        _transaction.Rollback();
 
-            _transaction.Rollback();
+        _completed = true;
+    }
 
-            _completed = true;
-        }
+    public void Rollback(Exception exception)
+    {
+        if (_completed)
+            return;
 
-        public void Rollback(Exception exception)
-        {
-            if (_completed)
-                return;
+        _transaction.Rollback(exception);
 
-            _transaction.Rollback(exception);
-
-            _completed = true;
-        }
+        _completed = true;
     }
 }

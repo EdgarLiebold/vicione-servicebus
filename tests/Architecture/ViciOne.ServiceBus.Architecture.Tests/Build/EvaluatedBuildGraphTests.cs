@@ -1,6 +1,6 @@
-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Architecture.Tests.Dependencies;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Architecture.Tests.Build;
@@ -14,7 +14,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Build;
 /// rules are only meaningful as a contrast between the two.
 /// <para>
 /// The executable projects are derived from the evaluated graph rather than named here. A written
-/// list would keep passing for the projects on it while a newly added cohort stayed unchecked, and
+/// list would keep passing for the projects on it while a newly added project stayed unchecked, and
 /// nothing would say so. The three Facts that carry a requirement variant are the deliberate
 /// exception: their variant keys name the architecture test project specifically.
 /// </para>
@@ -58,7 +58,7 @@ public sealed class EvaluatedBuildGraphTests
     public void EveryExecutableTestProject_UsesPortableSymbolsRequiredByMtpDiscovery()
     {
         // The failure this prevents is silent: with the product Release symbol policy the build
-        // succeeds and the run discovers zero tests. A cohort added without this exception would
+        // succeeds and the run discovers zero tests. A project added without this exception would
         // simply contribute nothing and report success.
         Assert.NotEmpty(ExecutableTestProjects);
 
@@ -93,6 +93,19 @@ public sealed class EvaluatedBuildGraphTests
         {
             Assert.NotEqual("true", MsBuildEvaluation.PropertyOf(project, "IsTestProject"));
             Assert.NotEqual("Exe", MsBuildEvaluation.PropertyOf(project, "OutputType"));
+        }
+    }
+
+    [Fact]
+    public void InvariantGlobalization_IsEnabledOnlyForExecutableProjects()
+    {
+        Assert.NotEmpty(RepositoryLayout.GovernedProjects);
+
+        foreach (var project in RepositoryLayout.GovernedProjects)
+        {
+            var expected = MsBuildEvaluation.PropertyOf(project, "OutputType") == "Exe" ? "true" : string.Empty;
+
+            Assert.Equal(expected, MsBuildEvaluation.PropertyOf(project, "InvariantGlobalization"));
         }
     }
 
@@ -208,7 +221,7 @@ public sealed class EvaluatedBuildGraphTests
     {
         // One store for the tree. Two ids would mean a secret placed once is invisible to the other
         // projects, which looks like a missing secret and is actually a second store. Counting the
-        // distinct values says that directly, and keeps saying it as cohorts are added.
+        // distinct values says that directly, and keeps saying it as projects are added.
         Assert.NotEmpty(RepositoryLayout.NativeTestProjects);
 
         var stores = RepositoryLayout.NativeTestProjects
@@ -224,7 +237,7 @@ public sealed class EvaluatedBuildGraphTests
     public void EveryNativeTestProject_IsMarkedAsPartOfTheNativeTestTree()
     {
         // The marker selects test-only package versions without allowing a project to classify
-        // itself. Test runners and loggers are never injected globally.
+        // itself. Runner and logger packages are never injected globally.
         Assert.NotEmpty(RepositoryLayout.NativeTestProjects);
 
         foreach (var project in RepositoryLayout.NativeTestProjects)

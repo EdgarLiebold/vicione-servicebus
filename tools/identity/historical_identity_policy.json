@@ -8,7 +8,7 @@
       "authorizedLineCount": 3,
       "authorizedLinesSha256": "1052cb4bb3e7afdaccc3194ea6d6bb18101e7f5dd6d623693c1e89090f9de2fa",
       "category": "HISTORICAL_EVIDENCE",
-      "path": ".testagent/plan.md"
+      "path": "evidence/native-tests/obligation-maps/plan.md"
     },
     {
       "allowedGates": [
@@ -18,7 +18,7 @@
       "authorizedLineCount": 10,
       "authorizedLinesSha256": "f67d1c3fc949287f8d397403df14d81bc1756b322ce128dfe3b5c06408bddf6f",
       "category": "HISTORICAL_EVIDENCE",
-      "path": ".testagent/research.md"
+      "path": "evidence/native-tests/obligation-maps/research.md"
     },
     {
       "allowedGates": [
@@ -28,7 +28,7 @@
       "authorizedLineCount": 2,
       "authorizedLinesSha256": "1eead4443f5925171d8a98f1f6d6d4d23afc8ad0a0facea9bf47a06cf6bca713",
       "category": "HISTORICAL_EVIDENCE",
-      "path": ".testagent/status.md"
+      "path": "evidence/native-tests/obligation-maps/status.md"
     },
     {
       "allowedGates": [

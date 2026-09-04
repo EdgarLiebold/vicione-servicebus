@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AmazonSqsTransport.Topology;
-using Initializers;
-using Initializers.TypeConverters;
-using Internals;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.TypeConverters;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus;
 
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public readonly struct AmazonSqsEndpointAddress

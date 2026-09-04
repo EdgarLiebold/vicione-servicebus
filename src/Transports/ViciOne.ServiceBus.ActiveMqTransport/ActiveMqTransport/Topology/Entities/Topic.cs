@@ -1,23 +1,22 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+/// <summary>
+/// The exchange details used to declare the exchange to ActiveMQ
+/// </summary>
+public interface Topic
 {
     /// <summary>
-    /// The exchange details used to declare the exchange to ActiveMQ
+    /// The exchange name
     /// </summary>
-    public interface Topic
-    {
-        /// <summary>
-        /// The exchange name
-        /// </summary>
-        string EntityName { get; }
+    string EntityName { get; }
 
-        /// <summary>
-        /// True if the exchange should be durable, and survive a broker restart
-        /// </summary>
-        bool Durable { get; }
+    /// <summary>
+    /// True if the exchange should be durable, and survive a broker restart
+    /// </summary>
+    bool Durable { get; }
 
-        /// <summary>
-        /// True if the exchange should be deleted when the connection is closed
-        /// </summary>
-        bool AutoDelete { get; }
-    }
+    /// <summary>
+    /// True if the exchange should be deleted when the connection is closed
+    /// </summary>
+    bool AutoDelete { get; }
 }

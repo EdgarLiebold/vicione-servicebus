@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus;
-
 using System;
-using AmazonSqsTransport;
-using AmazonSqsTransport.Configuration;
-using Configuration;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Topology;
 
+namespace ViciOne.ServiceBus;
 
 public static class AmazonSqsBusFactory
 {

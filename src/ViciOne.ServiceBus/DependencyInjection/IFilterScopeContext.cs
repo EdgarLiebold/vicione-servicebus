@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IFilterScopeContext<TContext> :
+    IAsyncDisposable
+    where TContext : class, PipeContext
 {
-    using System;
-
-
-    public interface IFilterScopeContext<TContext> :
-        IAsyncDisposable
-        where TContext : class, PipeContext
-    {
-        IFilter<TContext> Filter { get; }
-        TContext Context { get; }
-    }
+    IFilter<TContext> Filter { get; }
+    TContext Context { get; }
 }

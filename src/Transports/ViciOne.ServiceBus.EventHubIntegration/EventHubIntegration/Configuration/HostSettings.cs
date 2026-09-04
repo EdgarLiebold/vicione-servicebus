@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Configuration
+using Azure.Core;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Configuration;
+
+public class HostSettings :
+    IHostSettings
 {
-    using Azure.Core;
-
-
-    public class HostSettings :
-        IHostSettings
-    {
-        public string ConnectionString { get; set; }
-        public string FullyQualifiedNamespace { get; set; }
-        public TokenCredential TokenCredential { get; set; }
-    }
+    public string ConnectionString { get; set; }
+    public string FullyQualifiedNamespace { get; set; }
+    public TokenCredential TokenCredential { get; set; }
 }

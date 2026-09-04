@@ -1,92 +1,90 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class RabbitMqPublishTopology :
+    PublishTopology,
+    IRabbitMqPublishTopologyConfigurator
 {
-    using System;
-    using ViciOne.ServiceBus.Topology;
-    using Metadata;
+    readonly IMessageTopology _messageTopology;
 
-
-    public class RabbitMqPublishTopology :
-        PublishTopology,
-        IRabbitMqPublishTopologyConfigurator
+    public RabbitMqPublishTopology(IMessageTopology messageTopology)
     {
-        readonly IMessageTopology _messageTopology;
+        _messageTopology = messageTopology;
+        ExchangeTypeSelector = new FanoutExchangeTypeSelector();
+    }
 
-        public RabbitMqPublishTopology(IMessageTopology messageTopology)
+    public IExchangeTypeSelector ExchangeTypeSelector { get; }
+
+    public PublishBrokerTopologyOptions BrokerTopologyOptions { get; set; }
+
+    IRabbitMqMessagePublishTopology<T> IRabbitMqPublishTopology.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>;
+    }
+
+    IRabbitMqMessagePublishTopologyConfigurator IRabbitMqPublishTopologyConfigurator.GetMessageTopology(Type messageType)
+    {
+        return GetMessageTopology(messageType) as IRabbitMqMessagePublishTopologyConfigurator;
+    }
+
+    public BrokerTopology GetPublishBrokerTopology()
+    {
+        var builder = new PublishEndpointBrokerTopologyBuilder(BrokerTopologyOptions);
+
+        ForEachMessageType<IRabbitMqMessagePublishTopology>(x =>
         {
-            _messageTopology = messageTopology;
-            ExchangeTypeSelector = new FanoutExchangeTypeSelector();
+            x.Apply(builder);
+
+            builder.Exchange = null;
+        });
+
+        return builder.BuildBrokerTopology();
+    }
+
+    IRabbitMqMessagePublishTopologyConfigurator<T> IRabbitMqPublishTopologyConfigurator.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>;
+    }
+
+    protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
+    {
+        var exchangeTypeSelector = new MessageExchangeTypeSelector<T>(ExchangeTypeSelector);
+
+        var messageTopology = new RabbitMqMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>(), exchangeTypeSelector);
+
+        var connector = new ImplementedMessageTypeConnector<T>(this, messageTopology);
+
+        ImplementedMessageTypeCache<T>.EnumerateImplementedTypes(connector);
+
+        OnMessageTopologyCreated(messageTopology);
+
+        return messageTopology;
+    }
+
+
+    class ImplementedMessageTypeConnector<TMessage> :
+        IImplementedMessageType
+        where TMessage : class
+    {
+        readonly RabbitMqMessagePublishTopology<TMessage> _messagePublishTopologyConfigurator;
+        readonly IRabbitMqPublishTopologyConfigurator _publishTopology;
+
+        public ImplementedMessageTypeConnector(IRabbitMqPublishTopologyConfigurator publishTopology,
+            RabbitMqMessagePublishTopology<TMessage> messagePublishTopologyConfigurator)
+        {
+            _publishTopology = publishTopology;
+            _messagePublishTopologyConfigurator = messagePublishTopologyConfigurator;
         }
 
-        public IExchangeTypeSelector ExchangeTypeSelector { get; }
-
-        public PublishBrokerTopologyOptions BrokerTopologyOptions { get; set; }
-
-        IRabbitMqMessagePublishTopology<T> IRabbitMqPublishTopology.GetMessageTopology<T>()
+        public void ImplementsMessageType<T>(bool direct)
+            where T : class
         {
-            return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>;
-        }
+            IRabbitMqMessagePublishTopologyConfigurator<T> messageTopology = _publishTopology.GetMessageTopology<T>();
 
-        IRabbitMqMessagePublishTopologyConfigurator IRabbitMqPublishTopologyConfigurator.GetMessageTopology(Type messageType)
-        {
-            return GetMessageTopology(messageType) as IRabbitMqMessagePublishTopologyConfigurator;
-        }
-
-        public BrokerTopology GetPublishBrokerTopology()
-        {
-            var builder = new PublishEndpointBrokerTopologyBuilder(BrokerTopologyOptions);
-
-            ForEachMessageType<IRabbitMqMessagePublishTopology>(x =>
-            {
-                x.Apply(builder);
-
-                builder.Exchange = null;
-            });
-
-            return builder.BuildBrokerTopology();
-        }
-
-        IRabbitMqMessagePublishTopologyConfigurator<T> IRabbitMqPublishTopologyConfigurator.GetMessageTopology<T>()
-        {
-            return GetMessageTopology<T>() as IRabbitMqMessagePublishTopologyConfigurator<T>;
-        }
-
-        protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
-        {
-            var exchangeTypeSelector = new MessageExchangeTypeSelector<T>(ExchangeTypeSelector);
-
-            var messageTopology = new RabbitMqMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>(), exchangeTypeSelector);
-
-            var connector = new ImplementedMessageTypeConnector<T>(this, messageTopology);
-
-            ImplementedMessageTypeCache<T>.EnumerateImplementedTypes(connector);
-
-            OnMessageTopologyCreated(messageTopology);
-
-            return messageTopology;
-        }
-
-
-        class ImplementedMessageTypeConnector<TMessage> :
-            IImplementedMessageType
-            where TMessage : class
-        {
-            readonly RabbitMqMessagePublishTopology<TMessage> _messagePublishTopologyConfigurator;
-            readonly IRabbitMqPublishTopologyConfigurator _publishTopology;
-
-            public ImplementedMessageTypeConnector(IRabbitMqPublishTopologyConfigurator publishTopology,
-                RabbitMqMessagePublishTopology<TMessage> messagePublishTopologyConfigurator)
-            {
-                _publishTopology = publishTopology;
-                _messagePublishTopologyConfigurator = messagePublishTopologyConfigurator;
-            }
-
-            public void ImplementsMessageType<T>(bool direct)
-                where T : class
-            {
-                IRabbitMqMessagePublishTopologyConfigurator<T> messageTopology = _publishTopology.GetMessageTopology<T>();
-
-                _messagePublishTopologyConfigurator.AddImplementedMessageConfigurator(messageTopology, direct);
-            }
+            _messagePublishTopologyConfigurator.AddImplementedMessageConfigurator(messageTopology, direct);
         }
     }
 }

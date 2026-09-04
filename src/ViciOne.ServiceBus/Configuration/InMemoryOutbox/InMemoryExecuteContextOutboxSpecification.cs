@@ -1,44 +1,42 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InMemoryExecuteContextOutboxSpecification<TArguments> :
+    IPipeSpecification<ExecuteContext<TArguments>>,
+    IOutboxConfigurator
+    where TArguments : class
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
-    using Middleware.InMemoryOutbox;
+    readonly ISetScopedConsumeContext _setter;
 
-
-    public class InMemoryExecuteContextOutboxSpecification<TArguments> :
-        IPipeSpecification<ExecuteContext<TArguments>>,
-        IOutboxConfigurator
-        where TArguments : class
+    public InMemoryExecuteContextOutboxSpecification(IRegistrationContext context)
+        : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
     {
-        readonly ISetScopedConsumeContext _setter;
+    }
 
-        public InMemoryExecuteContextOutboxSpecification(IRegistrationContext context)
-            : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)))
-        {
-        }
+    public InMemoryExecuteContextOutboxSpecification(ISetScopedConsumeContext setter)
+    {
+        _setter = setter;
+    }
 
-        public InMemoryExecuteContextOutboxSpecification(ISetScopedConsumeContext setter)
-        {
-            _setter = setter;
-        }
+    public bool ConcurrentMessageDelivery { get; set; }
 
-        public bool ConcurrentMessageDelivery { get; set; }
+    public void Apply(IPipeBuilder<ExecuteContext<TArguments>> builder)
+    {
+        builder.AddFilter(
+            new InMemoryOutboxFilter<ExecuteContext<TArguments>, InMemoryOutboxExecuteContext<TArguments>>(_setter, Factory, ConcurrentMessageDelivery));
+    }
 
-        public void Apply(IPipeBuilder<ExecuteContext<TArguments>> builder)
-        {
-            builder.AddFilter(
-                new InMemoryOutboxFilter<ExecuteContext<TArguments>, InMemoryOutboxExecuteContext<TArguments>>(_setter, Factory, ConcurrentMessageDelivery));
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
-
-        static InMemoryOutboxExecuteContext<TArguments> Factory(ExecuteContext<TArguments> context)
-        {
-            return new InMemoryOutboxExecuteContext<TArguments>(context);
-        }
+    static InMemoryOutboxExecuteContext<TArguments> Factory(ExecuteContext<TArguments> context)
+    {
+        return new InMemoryOutboxExecuteContext<TArguments>(context);
     }
 }

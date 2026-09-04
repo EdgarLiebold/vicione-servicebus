@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IObserverConnectorCache<T>
+    where T : class
 {
-    public interface IObserverConnectorCache<T>
-        where T : class
-    {
-        IObserverConnector<T> Connector { get; }
-    }
+    IObserverConnector<T> Connector { get; }
 }

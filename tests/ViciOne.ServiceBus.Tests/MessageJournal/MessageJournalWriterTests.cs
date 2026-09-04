@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Time.Testing;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

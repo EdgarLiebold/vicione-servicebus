@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class ActiveMqSendTransportProvider :
+    ISendTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
+    readonly ActiveMqReceiveEndpointContext _context;
+    readonly ISessionContextSupervisor _sessionContextSupervisor;
 
-
-    public class ActiveMqSendTransportProvider :
-        ISendTransportProvider
+    public ActiveMqSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ActiveMqReceiveEndpointContext context)
     {
-        readonly IConnectionContextSupervisor _connectionContextSupervisor;
-        readonly ActiveMqReceiveEndpointContext _context;
-        readonly ISessionContextSupervisor _sessionContextSupervisor;
+        _connectionContextSupervisor = connectionContextSupervisor;
+        _context = context;
+        _sessionContextSupervisor = _context.SessionContextSupervisor;
+    }
 
-        public ActiveMqSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ActiveMqReceiveEndpointContext context)
-        {
-            _connectionContextSupervisor = connectionContextSupervisor;
-            _context = context;
-            _sessionContextSupervisor = _context.SessionContextSupervisor;
-        }
+    public Uri NormalizeAddress(Uri address)
+    {
+        return _connectionContextSupervisor.NormalizeAddress(address);
+    }
 
-        public Uri NormalizeAddress(Uri address)
-        {
-            return _connectionContextSupervisor.NormalizeAddress(address);
-        }
-
-        public Task<ISendTransport> GetSendTransport(Uri address)
-        {
-            return _connectionContextSupervisor.CreateSendTransport(_context, _sessionContextSupervisor, address);
-        }
+    public Task<ISendTransport> GetSendTransport(Uri address)
+    {
+        return _connectionContextSupervisor.CreateSendTransport(_context, _sessionContextSupervisor, address);
     }
 }

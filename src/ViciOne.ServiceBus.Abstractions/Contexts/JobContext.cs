@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus;
 
 public interface JobContext :
     PipeContext,

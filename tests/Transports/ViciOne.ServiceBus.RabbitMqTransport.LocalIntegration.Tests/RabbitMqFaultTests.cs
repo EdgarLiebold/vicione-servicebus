@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests;
-
 using System.Runtime.Serialization;
-using Infrastructure;
+using ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests;
 
 public sealed class RabbitMqFaultTests
 {

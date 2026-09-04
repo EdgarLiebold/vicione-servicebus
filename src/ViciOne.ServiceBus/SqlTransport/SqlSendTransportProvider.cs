@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.SqlTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public class SqlSendTransportProvider :
+    ISendTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
+    readonly SqlReceiveEndpointContext _context;
 
-
-    public class SqlSendTransportProvider :
-        ISendTransportProvider
+    public SqlSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, SqlReceiveEndpointContext context)
     {
-        readonly IConnectionContextSupervisor _connectionContextSupervisor;
-        readonly SqlReceiveEndpointContext _context;
+        _connectionContextSupervisor = connectionContextSupervisor;
+        _context = context;
+    }
 
-        public SqlSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, SqlReceiveEndpointContext context)
-        {
-            _connectionContextSupervisor = connectionContextSupervisor;
-            _context = context;
-        }
+    public Uri NormalizeAddress(Uri address)
+    {
+        return _connectionContextSupervisor.NormalizeAddress(address);
+    }
 
-        public Uri NormalizeAddress(Uri address)
-        {
-            return _connectionContextSupervisor.NormalizeAddress(address);
-        }
-
-        public Task<ISendTransport> GetSendTransport(Uri address)
-        {
-            return _connectionContextSupervisor.CreateSendTransport(_context, address);
-        }
+    public Task<ISendTransport> GetSendTransport(Uri address)
+    {
+        return _connectionContextSupervisor.CreateSendTransport(_context, address);
     }
 }

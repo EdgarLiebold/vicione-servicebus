@@ -1,64 +1,62 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole
+using System;
+using BenchmarkDotNet.Attributes;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.BenchmarkConsole;
+
+[MemoryDiagnoser]
+public class JsonSerializationBenchmark
 {
-    using System;
-    using BenchmarkDotNet.Attributes;
-    using Context;
-    using Serialization;
+    readonly MessageSendContext<AverageMessage> _averageMessageSendContext;
+    readonly SystemTextJsonMessageSerializer _serializer;
 
-
-    [MemoryDiagnoser]
-    public class JsonSerializationBenchmark
+    public JsonSerializationBenchmark()
     {
-        readonly MessageSendContext<AverageMessage> _averageMessageSendContext;
-        readonly SystemTextJsonMessageSerializer _serializer;
+        var options = SystemTextJsonSerializerOptions.CreateDefault();
+        options.MakeReadOnly();
+        _serializer = new SystemTextJsonMessageSerializer(options);
 
-        public JsonSerializationBenchmark()
+        _averageMessageSendContext = new MessageSendContext<AverageMessage>(new AverageMessage
         {
-            var options = SystemTextJsonSerializerOptions.CreateDefault();
-            options.MakeReadOnly();
-            _serializer = new SystemTextJsonMessageSerializer(options);
-
-            _averageMessageSendContext = new MessageSendContext<AverageMessage>(new AverageMessage
-            {
-                CorrelationId = NewId.NextGuid(),
-                Name = "Franklin",
-                SomeValue = 27,
-                SomeOptionalValue = 42,
-                Created = DateTime.UtcNow,
-                Amount = 123.45m
-            })
-            {
-                DestinationAddress = new Uri("loopback://localhost/input-queue"),
-                SourceAddress = new Uri("loopback://localhost/request-client-queue"),
-                CorrelationId = NewId.NextGuid(),
-                ConversationId = NewId.NextGuid(),
-            };
-
-            _averageMessageSendContext.Headers.Set("VSB-Activity-Id", NewId.NextGuid().ToString());
-        }
-
-        [Benchmark(Description = "System.Text.Json byte[]")]
-        public byte[] SystemTextJson()
+            CorrelationId = NewId.NextGuid(),
+            Name = "Franklin",
+            SomeValue = 27,
+            SomeOptionalValue = 42,
+            Created = DateTime.UtcNow,
+            Amount = 123.45m
+        })
         {
-            return _serializer.GetMessageBody(_averageMessageSendContext).GetBytes();
-        }
+            DestinationAddress = new Uri("loopback://localhost/input-queue"),
+            SourceAddress = new Uri("loopback://localhost/request-client-queue"),
+            CorrelationId = NewId.NextGuid(),
+            ConversationId = NewId.NextGuid(),
+        };
 
-        [Benchmark(Description = "System.Text.Json string")]
-        public string SystemTextJsonString()
-        {
-            return _serializer.GetMessageBody(_averageMessageSendContext).GetString();
-        }
+        _averageMessageSendContext.Headers.Set("VSB-Activity-Id", NewId.NextGuid().ToString());
     }
 
-
-    public class AverageMessage
+    [Benchmark(Description = "System.Text.Json byte[]")]
+    public byte[] SystemTextJson()
     {
-        public Guid CorrelationId { get; set; }
-        public string Name { get; set; }
-        public int SomeValue { get; set; }
-        public int? SomeOptionalValue { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime? Completed { get; set; }
-        public decimal Amount { get; set; }
+        return _serializer.GetMessageBody(_averageMessageSendContext).GetBytes();
     }
+
+    [Benchmark(Description = "System.Text.Json string")]
+    public string SystemTextJsonString()
+    {
+        return _serializer.GetMessageBody(_averageMessageSendContext).GetString();
+    }
+}
+
+
+public class AverageMessage
+{
+    public Guid CorrelationId { get; set; }
+    public string Name { get; set; }
+    public int SomeValue { get; set; }
+    public int? SomeOptionalValue { get; set; }
+    public DateTime Created { get; set; }
+    public DateTime? Completed { get; set; }
+    public decimal Amount { get; set; }
 }

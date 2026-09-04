@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
+
+public class PostgresConnectionContextFactory :
+    ConnectionContextFactory
 {
-    using Configuration;
-    using Transports;
+    readonly ISqlHostConfiguration _hostConfiguration;
+    readonly PostgresSqlHostSettings _hostSettings;
 
-
-    public class PostgresConnectionContextFactory :
-        ConnectionContextFactory
+    public PostgresConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
     {
-        readonly ISqlHostConfiguration _hostConfiguration;
-        readonly PostgresSqlHostSettings _hostSettings;
+        _hostConfiguration = hostConfiguration;
+        _hostSettings = hostConfiguration.Settings as PostgresSqlHostSettings
+            ?? throw new ConfigurationException("The host settings were not of the expected type");
+    }
 
-        public PostgresConnectionContextFactory(ISqlHostConfiguration hostConfiguration)
-        {
-            _hostConfiguration = hostConfiguration;
-            _hostSettings = hostConfiguration.Settings as PostgresSqlHostSettings
-                ?? throw new ConfigurationException("The host settings were not of the expected type");
-        }
-
-        protected override ConnectionContext CreateConnection(ITransportSupervisor<ConnectionContext> supervisor)
-        {
-            return new PostgresDbConnectionContext(_hostConfiguration, supervisor);
-        }
+    protected override ConnectionContext CreateConnection(ITransportSupervisor<ConnectionContext> supervisor)
+    {
+        return new PostgresDbConnectionContext(_hostConfiguration, supervisor);
     }
 }

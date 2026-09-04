@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
+
+/// <summary>
+/// Purges the queue on startup, only once per filter instance
+/// </summary>
+public class PurgeOnStartupFilter :
+    IFilter<ChannelContext>
 {
-    using System.Threading.Tasks;
+    readonly string _queueName;
+    bool _queueAlreadyPurged;
 
-
-    /// <summary>
-    /// Purges the queue on startup, only once per filter instance
-    /// </summary>
-    public class PurgeOnStartupFilter :
-        IFilter<ChannelContext>
+    public PurgeOnStartupFilter(string queueName)
     {
-        readonly string _queueName;
-        bool _queueAlreadyPurged;
+        _queueName = queueName;
+    }
 
-        public PurgeOnStartupFilter(string queueName)
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("purgeOnStartup");
+    }
+
+    public async Task Send(ChannelContext context, IPipe<ChannelContext> next)
+    {
+        var queueOk = await context.QueueDeclarePassive(_queueName, context.CancellationToken).ConfigureAwait(false);
+
+        if (queueOk.ConsumerCount == 0 && queueOk.MessageCount > 0)
+            await PurgeIfRequested(context, _queueName).ConfigureAwait(false);
+
+        await next.Send(context).ConfigureAwait(false);
+    }
+
+    async Task PurgeIfRequested(ChannelContext context, string queueName)
+    {
+        if (!_queueAlreadyPurged)
         {
-            _queueName = queueName;
+            var purgedMessageCount = await context.QueuePurge(queueName, context.CancellationToken).ConfigureAwait(false);
+
+            LogContext.Debug?.Log("Purged {MessageCount} messages from queue {QueueName}", purgedMessageCount, queueName);
+
+            _queueAlreadyPurged = true;
         }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("purgeOnStartup");
-        }
-
-        public async Task Send(ChannelContext context, IPipe<ChannelContext> next)
-        {
-            var queueOk = await context.QueueDeclarePassive(_queueName, context.CancellationToken).ConfigureAwait(false);
-
-            if (queueOk.ConsumerCount == 0 && queueOk.MessageCount > 0)
-                await PurgeIfRequested(context, _queueName).ConfigureAwait(false);
-
-            await next.Send(context).ConfigureAwait(false);
-        }
-
-        async Task PurgeIfRequested(ChannelContext context, string queueName)
-        {
-            if (!_queueAlreadyPurged)
-            {
-                var purgedMessageCount = await context.QueuePurge(queueName, context.CancellationToken).ConfigureAwait(false);
-
-                LogContext.Debug?.Log("Purged {MessageCount} messages from queue {QueueName}", purgedMessageCount, queueName);
-
-                _queueAlreadyPurged = true;
-            }
-            else
-                LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
-        }
+        else
+            LogContext.Debug?.Log("Queue {QueueName} was purged at startup, skipping", queueName);
     }
 }

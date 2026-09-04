@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Transports.Components;
-
 using System;
 using System.Collections.Generic;
-using Configuration;
+using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus.Transports.Components;
 
 internal sealed record KillSwitchSettings(
     int ActivationThreshold,

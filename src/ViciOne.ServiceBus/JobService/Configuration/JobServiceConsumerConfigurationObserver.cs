@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.JobService;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class JobServiceConsumerConfigurationObserver :
+    IConsumerConfigurationObserver
 {
-    using System;
-    using System.Collections.Generic;
-    using Internals;
-    using JobService;
-    using Transports;
+    readonly IReceiveEndpointConfigurator _configurator;
+    readonly Action<IReceiveEndpointConfigurator> _configureEndpoint;
+    readonly Dictionary<Type, IConsumeConfigurator> _consumerConfigurators;
+    readonly JobServiceSettings _settings;
+    bool _endpointConfigured;
 
-
-    public class JobServiceConsumerConfigurationObserver :
-        IConsumerConfigurationObserver
+    public JobServiceConsumerConfigurationObserver(IReceiveEndpointConfigurator configurator, JobServiceSettings settings,
+        Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
-        readonly IReceiveEndpointConfigurator _configurator;
-        readonly Action<IReceiveEndpointConfigurator> _configureEndpoint;
-        readonly Dictionary<Type, IConsumeConfigurator> _consumerConfigurators;
-        readonly JobServiceSettings _settings;
-        bool _endpointConfigured;
+        _configurator = configurator;
+        _configureEndpoint = configureEndpoint;
 
-        public JobServiceConsumerConfigurationObserver(IReceiveEndpointConfigurator configurator, JobServiceSettings settings,
-            Action<IReceiveEndpointConfigurator> configureEndpoint)
+        _settings = settings;
+
+        _consumerConfigurators = new Dictionary<Type, IConsumeConfigurator>();
+    }
+
+    public void ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
+        where T : class
+    {
+        if (typeof(T).ImplementsInterface(typeof(IJobConsumer<>)))
         {
-            _configurator = configurator;
-            _configureEndpoint = configureEndpoint;
+            _consumerConfigurators.Add(typeof(T), configurator);
 
-            _settings = settings;
+            configurator.Options(_settings);
 
-            _consumerConfigurators = new Dictionary<Type, IConsumeConfigurator>();
+            if (_endpointConfigured)
+                return;
+
+            _configureEndpoint(_configurator);
+
+            _endpointConfigured = true;
         }
+    }
 
-        public void ConsumerConfigured<T>(IConsumerConfigurator<T> configurator)
-            where T : class
+    public void ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
+        where T : class
+        where TMessage : class
+    {
+        if (typeof(T).ImplementsInterface<IJobConsumer<TMessage>>()
+            && _consumerConfigurators.TryGetValue(typeof(T), out var value)
+            && value is IConsumerConfigurator<T> consumerConfigurator)
         {
-            if (typeof(T).ImplementsInterface(typeof(IJobConsumer<>)))
-            {
-                _consumerConfigurators.Add(typeof(T), configurator);
+            var options = consumerConfigurator.Options<JobOptions<TMessage>>();
 
-                configurator.Options(_settings);
+            var jobTypeId = JobMetadataCache<T, TMessage>.GenerateJobTypeId(_configurator.InputAddress.GetEndpointName());
+            var jobTypeName = JobMetadataCache<T, TMessage>.GenerateJobTypeName(_configurator.InputAddress.GetEndpointName());
 
-                if (_endpointConfigured)
-                    return;
-
-                _configureEndpoint(_configurator);
-
-                _endpointConfigured = true;
-            }
-        }
-
-        public void ConsumerMessageConfigured<T, TMessage>(IConsumerMessageConfigurator<T, TMessage> configurator)
-            where T : class
-            where TMessage : class
-        {
-            if (typeof(T).ImplementsInterface<IJobConsumer<TMessage>>()
-                && _consumerConfigurators.TryGetValue(typeof(T), out var value)
-                && value is IConsumerConfigurator<T> consumerConfigurator)
-            {
-                var options = consumerConfigurator.Options<JobOptions<TMessage>>();
-
-                var jobTypeId = JobMetadataCache<T, TMessage>.GenerateJobTypeId(_configurator.InputAddress.GetEndpointName());
-                var jobTypeName = JobMetadataCache<T, TMessage>.GenerateJobTypeName(_configurator.InputAddress.GetEndpointName());
-
-                _settings.JobService.RegisterJobType(_configurator, options, jobTypeId, jobTypeName);
-            }
+            _settings.JobService.RegisterJobType(_configurator, options, jobTypeId, jobTypeName);
         }
     }
 }

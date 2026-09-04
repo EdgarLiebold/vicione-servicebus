@@ -1,8 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
-
 using System;
 using System.Linq;
+
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
 
 internal static class SagaQueryCustomization
 {

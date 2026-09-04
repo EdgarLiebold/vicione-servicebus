@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PublishMessageSchedulerPipeSpecification :
+    IPipeSpecification<ConsumeContext>
 {
-    using System.Collections.Generic;
-    using Middleware;
-
-
-    public class PublishMessageSchedulerPipeSpecification :
-        IPipeSpecification<ConsumeContext>
+    public void Apply(IPipeBuilder<ConsumeContext> builder)
     {
-        public void Apply(IPipeBuilder<ConsumeContext> builder)
-        {
-            builder.AddFilter(new PublishMessageSchedulerFilter());
-        }
+        builder.AddFilter(new PublishMessageSchedulerFilter());
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
     }
 }

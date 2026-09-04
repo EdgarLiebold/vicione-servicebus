@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+[ConfigureConsumeTopology(false)]
+public interface CompleteJob
 {
-    using System;
-    using System.Collections.Generic;
+    Guid JobId { get; }
 
+    DateTime Timestamp { get; }
 
-    [ConfigureConsumeTopology(false)]
-    public interface CompleteJob
-    {
-        Guid JobId { get; }
+    TimeSpan Duration { get; }
 
-        DateTime Timestamp { get; }
+    /// <summary>
+    /// The job, as an object dictionary
+    /// </summary>
+    Dictionary<string, object> Job { get; }
 
-        TimeSpan Duration { get; }
+    /// <summary>
+    /// The JobTypeId, to ensure the proper job type is started
+    /// </summary>
+    Guid JobTypeId { get; }
 
-        /// <summary>
-        /// The job, as an object dictionary
-        /// </summary>
-        Dictionary<string, object> Job { get; }
+    Dictionary<string, object>? JobProperties { get; }
 
-        /// <summary>
-        /// The JobTypeId, to ensure the proper job type is started
-        /// </summary>
-        Guid JobTypeId { get; }
+    Dictionary<string, object>? InstanceProperties { get; }
 
-        Dictionary<string, object>? JobProperties { get; }
-
-        Dictionary<string, object>? InstanceProperties { get; }
-
-        Dictionary<string, object>? JobTypeProperties { get; }
-    }
+    Dictionary<string, object>? JobTypeProperties { get; }
 }

@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading.Tasks;
-using Configuration;
-using Middleware;
-using Topology;
-using Transports;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class ConnectionContextSupervisor :
     TransportPipeContextSupervisor<ConnectionContext>,

@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IRegistration
 {
-    using System;
+    Type Type { get; }
 
-
-    public interface IRegistration
-    {
-        Type Type { get; }
-
-        bool IncludeInConfigureEndpoints { get; set; }
-    }
+    bool IncludeInConfigureEndpoints { get; set; }
 }

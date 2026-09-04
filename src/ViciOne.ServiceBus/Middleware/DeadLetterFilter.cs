@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// If a message was neither delivered to a consumer nor caused a fault (which was notified already)
+/// then this filter will send the message to the dead letter pipe.
+/// </summary>
+public class DeadLetterFilter :
+    IFilter<ReceiveContext>
 {
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IPipe<ReceiveContext> _deadLetterPipe;
 
-
-    /// <summary>
-    /// If a message was neither delivered to a consumer nor caused a fault (which was notified already)
-    /// then this filter will send the message to the dead letter pipe.
-    /// </summary>
-    public class DeadLetterFilter :
-        IFilter<ReceiveContext>
+    public DeadLetterFilter(IPipe<ReceiveContext> deadLetterPipe)
     {
-        readonly IPipe<ReceiveContext> _deadLetterPipe;
+        _deadLetterPipe = deadLetterPipe;
+    }
 
-        public DeadLetterFilter(IPipe<ReceiveContext> deadLetterPipe)
-        {
-            _deadLetterPipe = deadLetterPipe;
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("deadLetter");
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("deadLetter");
+        _deadLetterPipe.Probe(scope);
+    }
 
-            _deadLetterPipe.Probe(scope);
-        }
+    [DebuggerNonUserCode]
+    async Task IFilter<ReceiveContext>.Send(ReceiveContext context, IPipe<ReceiveContext> next)
+    {
+        await next.Send(context).ConfigureAwait(false);
 
-        [DebuggerNonUserCode]
-        async Task IFilter<ReceiveContext>.Send(ReceiveContext context, IPipe<ReceiveContext> next)
-        {
-            await next.Send(context).ConfigureAwait(false);
+        if (context.IsDelivered || context.IsFaulted)
+            return;
 
-            if (context.IsDelivered || context.IsFaulted)
-                return;
+        await _deadLetterPipe.Send(context).ConfigureAwait(false);
 
-            await _deadLetterPipe.Send(context).ConfigureAwait(false);
-
-            context.LogSkipped();
-        }
+        context.LogSkipped();
     }
 }

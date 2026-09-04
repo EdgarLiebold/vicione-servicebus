@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.QuartzIntegration;
-
 using System;
+
+namespace ViciOne.ServiceBus.QuartzIntegration;
 
 internal static class ScheduledMessageExpiration
 {

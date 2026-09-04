@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.EventHubIntegration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus;
+
+public interface IEventHubReceiveEndpointContext :
+    ReceiveEndpointContext
 {
-    using EventHubIntegration;
-    using Transports;
-
-
-    public interface IEventHubReceiveEndpointContext :
-        ReceiveEndpointContext
-    {
-        IProcessorContextSupervisor ContextSupervisor { get; }
-    }
+    IProcessorContextSupervisor ContextSupervisor { get; }
 }

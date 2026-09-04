@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.SqlTransport.Middleware
+namespace ViciOne.ServiceBus.SqlTransport.Middleware;
+
+public interface ConfigureTopologyContext<T>
+    where T : class
 {
-    public interface ConfigureTopologyContext<T>
-        where T : class
-    {
-    }
 }

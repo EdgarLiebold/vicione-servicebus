@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.IO;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusMessageBody :
+    MessageBody
 {
-    using System;
-    using System.IO;
+    readonly BinaryData _data;
 
-
-    public class ServiceBusMessageBody :
-        MessageBody
+    public ServiceBusMessageBody(BinaryData data)
     {
-        readonly BinaryData _data;
+        _data = data;
+    }
 
-        public ServiceBusMessageBody(BinaryData data)
-        {
-            _data = data;
-        }
+    public long? Length => _data.ToMemory().Length;
 
-        public long? Length => _data.ToMemory().Length;
+    public Stream GetStream()
+    {
+        return _data.ToStream();
+    }
 
-        public Stream GetStream()
-        {
-            return _data.ToStream();
-        }
+    public byte[] GetBytes()
+    {
+        return _data.ToArray();
+    }
 
-        public byte[] GetBytes()
-        {
-            return _data.ToArray();
-        }
-
-        public string GetString()
-        {
-            return _data.ToString();
-        }
+    public string GetString()
+    {
+        return _data.ToString();
     }
 }

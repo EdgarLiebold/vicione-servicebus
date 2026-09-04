@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using ViciOne.ServiceBus.DependencyInjection.Testing;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class RegistrationConsumerTestHarness<TConsumer> :
+    IConsumerTestHarness<TConsumer>
+    where TConsumer : class, IConsumer
 {
-    using DependencyInjection.Testing;
+    readonly ReceivedMessageList _consumed;
 
-
-    public class RegistrationConsumerTestHarness<TConsumer> :
-        IConsumerTestHarness<TConsumer>
-        where TConsumer : class, IConsumer
+    public RegistrationConsumerTestHarness(ConsumerContainerTestHarnessRegistration<TConsumer> registration)
     {
-        readonly ReceivedMessageList _consumed;
-
-        public RegistrationConsumerTestHarness(ConsumerContainerTestHarnessRegistration<TConsumer> registration)
-        {
-            _consumed = registration.Consumed;
-        }
-
-        public IReceivedMessageList Consumed => _consumed;
+        _consumed = registration.Consumed;
     }
+
+    public IReceivedMessageList Consumed => _consumed;
 }

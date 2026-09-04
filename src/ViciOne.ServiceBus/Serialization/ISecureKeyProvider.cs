@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public interface ISecureKeyProvider :
+    IProbeSite
 {
-    public interface ISecureKeyProvider :
-        IProbeSite
-    {
-        byte[] GetKey(Headers headers);
-    }
+    byte[] GetKey(Headers headers);
 }

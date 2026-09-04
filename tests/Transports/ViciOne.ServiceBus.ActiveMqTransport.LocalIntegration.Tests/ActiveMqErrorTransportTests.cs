@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
-
 using System.Net.Mime;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -9,6 +7,8 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 public sealed class ActiveMqErrorTransportTests
 {

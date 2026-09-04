@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+
+namespace ViciOne.ServiceBus.Transports;
+
+/// <summary>
+/// Used to format a message type into a MessageName, which can be used as a valid
+/// queue name on the transport
+/// </summary>
+public interface IMessageNameFormatter
 {
-    using System;
-
-
-    /// <summary>
-    /// Used to format a message type into a MessageName, which can be used as a valid
-    /// queue name on the transport
-    /// </summary>
-    public interface IMessageNameFormatter
-    {
-        string GetMessageName(Type type);
-    }
+    string GetMessageName(Type type);
 }

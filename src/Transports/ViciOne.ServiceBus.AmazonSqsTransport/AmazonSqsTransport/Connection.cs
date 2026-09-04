@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Runtime.ExceptionServices;
 using Amazon;
@@ -7,6 +5,7 @@ using Amazon.Runtime;
 using Amazon.SimpleNotificationService;
 using Amazon.SQS;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class Connection :
     IConnection

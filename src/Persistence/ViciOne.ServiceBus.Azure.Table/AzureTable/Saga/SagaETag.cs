@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
-{
-    public class SagaETag
-    {
-        public SagaETag(string eTag)
-        {
-            ETag = eTag;
-        }
+namespace ViciOne.ServiceBus.AzureTable.Saga;
 
-        public string ETag { get; }
+public class SagaETag
+{
+    public SagaETag(string eTag)
+    {
+        ETag = eTag;
     }
+
+    public string ETag { get; }
 }

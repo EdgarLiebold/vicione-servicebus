@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Saga
-{
-    using System;
-    using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.Saga;
+
+/// <summary>
+/// For the in-memory saga repository, this maintains an index of saga properties
+/// for fast searching
+/// </summary>
+/// <typeparam name="TSaga">The saga type</typeparam>
+public interface IIndexedSagaProperty<TSaga>
+    where TSaga : class, ISaga
+{
+    /// <summary>
+    /// Returns the saga with the specified key
+    /// </summary>
+    /// <param name="key"></param>
+    SagaInstance<TSaga> this[object key] { get; }
+
+    int Count { get; }
 
     /// <summary>
-    /// For the in-memory saga repository, this maintains an index of saga properties
-    /// for fast searching
+    /// Adds a new saga to the index
     /// </summary>
-    /// <typeparam name="TSaga">The saga type</typeparam>
-    public interface IIndexedSagaProperty<TSaga>
-        where TSaga : class, ISaga
-    {
-        /// <summary>
-        /// Returns the saga with the specified key
-        /// </summary>
-        /// <param name="key"></param>
-        SagaInstance<TSaga> this[object key] { get; }
+    /// <param name="newItem"></param>
+    void Add(SagaInstance<TSaga> newItem);
 
-        int Count { get; }
+    /// <summary>
+    /// Removes a saga from the index
+    /// </summary>
+    /// <param name="item"></param>
+    void Remove(SagaInstance<TSaga> item);
 
-        /// <summary>
-        /// Adds a new saga to the index
-        /// </summary>
-        /// <param name="newItem"></param>
-        void Add(SagaInstance<TSaga> newItem);
+    /// <summary>
+    /// Returns sagas matching the filter function
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    IEnumerable<SagaInstance<TSaga>> Where(Func<TSaga, bool> filter);
 
-        /// <summary>
-        /// Removes a saga from the index
-        /// </summary>
-        /// <param name="item"></param>
-        void Remove(SagaInstance<TSaga> item);
+    /// <summary>
+    /// Returns sagas matching the filter function where the key also matches
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    IEnumerable<SagaInstance<TSaga>> Where(object key, Func<TSaga, bool> filter);
 
-        /// <summary>
-        /// Returns sagas matching the filter function
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        IEnumerable<SagaInstance<TSaga>> Where(Func<TSaga, bool> filter);
-
-        /// <summary>
-        /// Returns sagas matching the filter function where the key also matches
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        IEnumerable<SagaInstance<TSaga>> Where(object key, Func<TSaga, bool> filter);
-
-        /// <summary>
-        /// Selects sagas from the index, running the transformation function and returning the output type
-        /// </summary>
-        /// <param name="transformer"></param>
-        /// <typeparam name="TResult"></typeparam>
-        /// <returns></returns>
-        IEnumerable<TResult> Select<TResult>(Func<TSaga, TResult> transformer);
-    }
+    /// <summary>
+    /// Selects sagas from the index, running the transformation function and returning the output type
+    /// </summary>
+    /// <param name="transformer"></param>
+    /// <typeparam name="TResult"></typeparam>
+    /// <returns></returns>
+    IEnumerable<TResult> Select<TResult>(Func<TSaga, TResult> transformer);
 }

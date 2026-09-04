@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface IProcessorContextSupervisor :
+    ITransportSupervisor<ProcessorContext>
 {
-    using Transports;
-
-
-    public interface IProcessorContextSupervisor :
-        ITransportSupervisor<ProcessorContext>
-    {
-    }
 }

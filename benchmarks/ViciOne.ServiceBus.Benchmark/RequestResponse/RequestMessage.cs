@@ -1,19 +1,17 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public class RequestMessage
 {
-    using System;
-
-
-    public class RequestMessage
+    public RequestMessage()
     {
-        public RequestMessage()
-        {
-        }
-
-        public RequestMessage(Guid correlationId)
-        {
-            CorrelationId = correlationId;
-        }
-
-        public Guid CorrelationId { get; set; }
     }
+
+    public RequestMessage(Guid correlationId)
+    {
+        CorrelationId = correlationId;
+    }
+
+    public Guid CorrelationId { get; set; }
 }

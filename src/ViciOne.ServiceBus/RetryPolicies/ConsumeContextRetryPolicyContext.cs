@@ -1,107 +1,105 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class ConsumeContextRetryPolicyContext :
+    RetryPolicyContext<ConsumeContext>
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly RetryConsumeContext _context;
+    readonly RetryPolicyContext<ConsumeContext> _policyContext;
+    readonly CancellationTokenRegistration _registration;
 
-
-    public class ConsumeContextRetryPolicyContext :
-        RetryPolicyContext<ConsumeContext>
+    public ConsumeContextRetryPolicyContext(RetryPolicyContext<ConsumeContext> policyContext, RetryConsumeContext context,
+        CancellationToken cancellationToken)
     {
-        readonly RetryConsumeContext _context;
-        readonly RetryPolicyContext<ConsumeContext> _policyContext;
-        readonly CancellationTokenRegistration _registration;
-
-        public ConsumeContextRetryPolicyContext(RetryPolicyContext<ConsumeContext> policyContext, RetryConsumeContext context,
-            CancellationToken cancellationToken)
-        {
-            _policyContext = policyContext ?? throw new ArgumentNullException(nameof(policyContext));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext)state).Cancel(), this);
-        }
-
-        public void Cancel()
-        {
-            _policyContext.Cancel();
-        }
-
-        public ConsumeContext Context => _context;
-
-        public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
-        {
-            var canRetry = _policyContext.CanRetry(exception, out RetryContext<ConsumeContext> policyRetryContext);
-            if (policyRetryContext == null)
-                throw new InvalidOperationException("The retry policy returned a null retry context.");
-
-            if (canRetry)
-                _context.LogRetry(exception);
-
-            retryContext = new ConsumeContextRetryContext(policyRetryContext, canRetry ? _context.CreateNext(policyRetryContext) : _context);
-
-            return canRetry;
-        }
-
-        public Task RetryFaulted(Exception exception)
-        {
-            return Task.WhenAll(_context.NotifyPendingFaults(), _policyContext.RetryFaulted(exception));
-        }
-
-        public void Dispose()
-        {
-            _registration.Dispose();
-            _policyContext.Dispose();
-        }
+        _policyContext = policyContext ?? throw new ArgumentNullException(nameof(policyContext));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext)state).Cancel(), this);
     }
 
-
-    public class ConsumeContextRetryPolicyContext<TFilter, TContext> :
-        RetryPolicyContext<TFilter>
-        where TFilter : class, ConsumeContext
-        where TContext : class, TFilter, ConsumeRetryContext
+    public void Cancel()
     {
-        readonly TContext _context;
-        readonly RetryPolicyContext<TFilter> _policyContext;
-        readonly CancellationTokenRegistration _registration;
+        _policyContext.Cancel();
+    }
 
-        public ConsumeContextRetryPolicyContext(RetryPolicyContext<TFilter> policyContext, TContext context, CancellationToken cancellationToken)
-        {
-            _policyContext = policyContext ?? throw new ArgumentNullException(nameof(policyContext));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext<TFilter, TContext>)state).Cancel(), this);
-        }
+    public ConsumeContext Context => _context;
 
-        public void Cancel()
-        {
-            _policyContext.Cancel();
-        }
+    public bool CanRetry(Exception exception, out RetryContext<ConsumeContext> retryContext)
+    {
+        var canRetry = _policyContext.CanRetry(exception, out RetryContext<ConsumeContext> policyRetryContext);
+        if (policyRetryContext == null)
+            throw new InvalidOperationException("The retry policy returned a null retry context.");
 
-        public TFilter Context => _context;
+        if (canRetry)
+            _context.LogRetry(exception);
 
-        public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)
-        {
-            var canRetry = _policyContext.CanRetry(exception, out RetryContext<TFilter> policyRetryContext);
-            if (policyRetryContext == null)
-                throw new InvalidOperationException("The retry policy returned a null retry context.");
+        retryContext = new ConsumeContextRetryContext(policyRetryContext, canRetry ? _context.CreateNext(policyRetryContext) : _context);
 
-            if (canRetry)
-                _context.LogRetry(exception);
+        return canRetry;
+    }
 
-            retryContext = new ConsumeContextRetryContext<TFilter, TContext>(policyRetryContext,
-                canRetry ? _context.CreateNext<TContext>(policyRetryContext) : _context);
+    public Task RetryFaulted(Exception exception)
+    {
+        return Task.WhenAll(_context.NotifyPendingFaults(), _policyContext.RetryFaulted(exception));
+    }
 
-            return canRetry;
-        }
+    public void Dispose()
+    {
+        _registration.Dispose();
+        _policyContext.Dispose();
+    }
+}
 
-        public Task RetryFaulted(Exception exception)
-        {
-            return Task.WhenAll(_context.NotifyPendingFaults(), _policyContext.RetryFaulted(exception));
-        }
 
-        public void Dispose()
-        {
-            _registration.Dispose();
-            _policyContext.Dispose();
-        }
+public class ConsumeContextRetryPolicyContext<TFilter, TContext> :
+    RetryPolicyContext<TFilter>
+    where TFilter : class, ConsumeContext
+    where TContext : class, TFilter, ConsumeRetryContext
+{
+    readonly TContext _context;
+    readonly RetryPolicyContext<TFilter> _policyContext;
+    readonly CancellationTokenRegistration _registration;
+
+    public ConsumeContextRetryPolicyContext(RetryPolicyContext<TFilter> policyContext, TContext context, CancellationToken cancellationToken)
+    {
+        _policyContext = policyContext ?? throw new ArgumentNullException(nameof(policyContext));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _registration = cancellationToken.Register(static state => ((ConsumeContextRetryPolicyContext<TFilter, TContext>)state).Cancel(), this);
+    }
+
+    public void Cancel()
+    {
+        _policyContext.Cancel();
+    }
+
+    public TFilter Context => _context;
+
+    public bool CanRetry(Exception exception, out RetryContext<TFilter> retryContext)
+    {
+        var canRetry = _policyContext.CanRetry(exception, out RetryContext<TFilter> policyRetryContext);
+        if (policyRetryContext == null)
+            throw new InvalidOperationException("The retry policy returned a null retry context.");
+
+        if (canRetry)
+            _context.LogRetry(exception);
+
+        retryContext = new ConsumeContextRetryContext<TFilter, TContext>(policyRetryContext,
+            canRetry ? _context.CreateNext<TContext>(policyRetryContext) : _context);
+
+        return canRetry;
+    }
+
+    public Task RetryFaulted(Exception exception)
+    {
+        return Task.WhenAll(_context.NotifyPendingFaults(), _policyContext.RetryFaulted(exception));
+    }
+
+    public void Dispose()
+    {
+        _registration.Dispose();
+        _policyContext.Dispose();
     }
 }

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Configuration;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public class AmazonSqsMessageConsumeTopology<TMessage> :
     MessageConsumeTopology<TMessage>,

@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Context;
+
+/// <summary>
+/// A consumer instance merged with a message consume context
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class SagaConsumeContextProxy<TSaga, TMessage> :
+    ConsumeContextProxy<TMessage>,
+    SagaConsumeContext<TSaga, TMessage>
+    where TMessage : class
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly SagaConsumeContext<TSaga, TMessage> _sagaContext;
 
-
-    /// <summary>
-    /// A consumer instance merged with a message consume context
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class SagaConsumeContextProxy<TSaga, TMessage> :
-        ConsumeContextProxy<TMessage>,
-        SagaConsumeContext<TSaga, TMessage>
-        where TMessage : class
-        where TSaga : class, ISaga
+    public SagaConsumeContextProxy(ConsumeContext<TMessage> context, SagaConsumeContext<TSaga, TMessage> sagaContext)
+        : base(context)
     {
-        readonly SagaConsumeContext<TSaga, TMessage> _sagaContext;
-
-        public SagaConsumeContextProxy(ConsumeContext<TMessage> context, SagaConsumeContext<TSaga, TMessage> sagaContext)
-            : base(context)
-        {
-            _sagaContext = sagaContext;
-        }
-
-        public override Guid? CorrelationId => Saga.CorrelationId;
-
-        public TSaga Saga => _sagaContext.Saga;
-
-        public Task SetCompleted()
-        {
-            return _sagaContext.SetCompleted();
-        }
-
-        public bool IsCompleted => _sagaContext.IsCompleted;
+        _sagaContext = sagaContext;
     }
+
+    public override Guid? CorrelationId => Saga.CorrelationId;
+
+    public TSaga Saga => _sagaContext.Saga;
+
+    public Task SetCompleted()
+    {
+        return _sagaContext.SetCompleted();
+    }
+
+    public bool IsCompleted => _sagaContext.IsCompleted;
 }

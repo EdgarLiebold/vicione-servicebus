@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PartitionSagaSpecification<TSaga> :
+    IPipeSpecification<SagaConsumeContext<TSaga>>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
+    readonly PartitionKeyProvider<SagaConsumeContext<TSaga>> _keyProvider;
+    readonly IPartitioner _partitioner;
 
-
-    public class PartitionSagaSpecification<TSaga> :
-        IPipeSpecification<SagaConsumeContext<TSaga>>
-        where TSaga : class, ISaga
+    public PartitionSagaSpecification(IPartitioner partitioner, PartitionKeyProvider<SagaConsumeContext<TSaga>> keyProvider)
     {
-        readonly PartitionKeyProvider<SagaConsumeContext<TSaga>> _keyProvider;
-        readonly IPartitioner _partitioner;
+        if (partitioner == null)
+            throw new ArgumentNullException(nameof(partitioner));
+        if (keyProvider == null)
+            throw new ArgumentNullException(nameof(keyProvider));
 
-        public PartitionSagaSpecification(IPartitioner partitioner, PartitionKeyProvider<SagaConsumeContext<TSaga>> keyProvider)
-        {
-            if (partitioner == null)
-                throw new ArgumentNullException(nameof(partitioner));
-            if (keyProvider == null)
-                throw new ArgumentNullException(nameof(keyProvider));
+        _partitioner = partitioner;
+        _keyProvider = keyProvider;
+    }
 
-            _partitioner = partitioner;
-            _keyProvider = keyProvider;
-        }
+    public void Apply(IPipeBuilder<SagaConsumeContext<TSaga>> builder)
+    {
+        builder.AddFilter(new PartitionFilter<SagaConsumeContext<TSaga>>(_keyProvider, _partitioner));
+    }
 
-        public void Apply(IPipeBuilder<SagaConsumeContext<TSaga>> builder)
-        {
-            builder.AddFilter(new PartitionFilter<SagaConsumeContext<TSaga>>(_keyProvider, _partitioner));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_keyProvider == null)
-                yield return this.Failure("KeyProvider", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_keyProvider == null)
+            yield return this.Failure("KeyProvider", "must not be null");
     }
 }

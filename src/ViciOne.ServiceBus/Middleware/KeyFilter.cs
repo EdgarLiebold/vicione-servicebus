@@ -1,102 +1,100 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Handles the registration of requests and connecting them to the consume pipe
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TKey"></typeparam>
+public class KeyFilter<TContext, TKey> :
+    IFilter<TContext>,
+    IKeyPipeConnector<TKey>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    readonly KeyAccessor<TContext, TKey> _keyAccessor;
+    readonly ConcurrentDictionary<TKey, IPipe<TContext>> _pipes;
 
-
-    /// <summary>
-    /// Handles the registration of requests and connecting them to the consume pipe
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    public class KeyFilter<TContext, TKey> :
-        IFilter<TContext>,
-        IKeyPipeConnector<TKey>
-        where TContext : class, PipeContext
+    public KeyFilter(KeyAccessor<TContext, TKey> keyAccessor)
     {
-        readonly KeyAccessor<TContext, TKey> _keyAccessor;
-        readonly ConcurrentDictionary<TKey, IPipe<TContext>> _pipes;
+        _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
+        _pipes = new ConcurrentDictionary<TKey, IPipe<TContext>>();
+    }
 
-        public KeyFilter(KeyAccessor<TContext, TKey> keyAccessor)
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("key");
+
+        ICollection<IPipe<TContext>> pipes = _pipes.Values;
+        scope.Add("count", pipes.Count);
+
+        foreach (IPipe<TContext> pipe in pipes)
+            pipe.Probe(scope);
+    }
+
+    [DebuggerNonUserCode]
+    public async Task Send(TContext context, IPipe<TContext> next)
+    {
+        var key = _keyAccessor(context);
+        if (key == null)
+            throw new InvalidOperationException("The key accessor returned null.");
+
+        if (_pipes.TryGetValue(key, out IPipe<TContext> pipe))
+            await pipe.Send(context).ConfigureAwait(false);
+
+        await next.Send(context).ConfigureAwait(false);
+    }
+
+    public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
+        where T : class, PipeContext
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        if (pipe == null)
+            throw new ArgumentNullException(nameof(pipe));
+
+        if (pipe is IPipe<TContext> keyPipe)
         {
-            _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
-            _pipes = new ConcurrentDictionary<TKey, IPipe<TContext>>();
+            var added = _pipes.TryAdd(key, keyPipe);
+            if (!added)
+                throw new DuplicateKeyPipeConfigurationException($"A pipe with the specified key already exists: {key}");
+
+            return new Handle(key, RemovePipe);
         }
 
-        public void Probe(ProbeContext context)
+        throw new ArgumentException($"The pipe must match the input type: {TypeCache<TContext>.ShortName}", nameof(pipe));
+    }
+
+    void RemovePipe(TKey key)
+    {
+        _pipes.TryRemove(key, out IPipe<TContext> _);
+    }
+
+
+    class Handle :
+        ConnectHandle
+    {
+        readonly TKey _key;
+        readonly Action<TKey> _removeKey;
+
+        public Handle(TKey key, Action<TKey> removeKey)
         {
-            var scope = context.CreateScope("key");
-
-            ICollection<IPipe<TContext>> pipes = _pipes.Values;
-            scope.Add("count", pipes.Count);
-
-            foreach (IPipe<TContext> pipe in pipes)
-                pipe.Probe(scope);
+            _key = key;
+            _removeKey = removeKey;
         }
 
-        [DebuggerNonUserCode]
-        public async Task Send(TContext context, IPipe<TContext> next)
+        public void Disconnect()
         {
-            var key = _keyAccessor(context);
-            if (key == null)
-                throw new InvalidOperationException("The key accessor returned null.");
-
-            if (_pipes.TryGetValue(key, out IPipe<TContext> pipe))
-                await pipe.Send(context).ConfigureAwait(false);
-
-            await next.Send(context).ConfigureAwait(false);
+            _removeKey(_key);
         }
 
-        public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
-            where T : class, PipeContext
+        public void Dispose()
         {
-            ArgumentNullException.ThrowIfNull(key);
-
-            if (pipe == null)
-                throw new ArgumentNullException(nameof(pipe));
-
-            if (pipe is IPipe<TContext> keyPipe)
-            {
-                var added = _pipes.TryAdd(key, keyPipe);
-                if (!added)
-                    throw new DuplicateKeyPipeConfigurationException($"A pipe with the specified key already exists: {key}");
-
-                return new Handle(key, RemovePipe);
-            }
-
-            throw new ArgumentException($"The pipe must match the input type: {TypeCache<TContext>.ShortName}", nameof(pipe));
-        }
-
-        void RemovePipe(TKey key)
-        {
-            _pipes.TryRemove(key, out IPipe<TContext> _);
-        }
-
-
-        class Handle :
-            ConnectHandle
-        {
-            readonly TKey _key;
-            readonly Action<TKey> _removeKey;
-
-            public Handle(TKey key, Action<TKey> removeKey)
-            {
-                _key = key;
-                _removeKey = removeKey;
-            }
-
-            public void Disconnect()
-            {
-                _removeKey(_key);
-            }
-
-            public void Dispose()
-            {
-                Disconnect();
-            }
+            Disconnect();
         }
     }
 }

@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System.Threading;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using Util;
+using ViciOne.ServiceBus.Util;
 
-
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 /// <summary>
 /// Measures the complete request/response path over the InMemory transport. It is intentionally separate from the
 /// direct-versus-mediator dispatch comparison because those operations do not have equivalent semantics.

@@ -1,17 +1,15 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Configuration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Configuration;
+
+public interface IEventHubReceiveEndpointSpecification :
+    IReceiveEndpointObserverConnector,
+    ISpecification
 {
-    using Transports;
+    /// <summary>
+    /// EventHub name
+    /// </summary>
+    string EndpointName { get; }
 
-
-    public interface IEventHubReceiveEndpointSpecification :
-        IReceiveEndpointObserverConnector,
-        ISpecification
-    {
-        /// <summary>
-        /// EventHub name
-        /// </summary>
-        string EndpointName { get; }
-
-        ReceiveEndpoint CreateReceiveEndpoint(IBusInstance busInstance);
-    }
+    ReceiveEndpoint CreateReceiveEndpoint(IBusInstance busInstance);
 }

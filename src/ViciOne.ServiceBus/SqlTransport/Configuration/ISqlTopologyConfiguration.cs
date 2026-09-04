@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public interface ISqlTopologyConfiguration :
+    ITopologyConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    new ISqlPublishTopologyConfigurator Publish { get; }
 
+    new ISqlSendTopologyConfigurator Send { get; }
 
-    public interface ISqlTopologyConfiguration :
-        ITopologyConfiguration
-    {
-        new ISqlPublishTopologyConfigurator Publish { get; }
-
-        new ISqlSendTopologyConfigurator Send { get; }
-
-        new ISqlConsumeTopologyConfigurator Consume { get; }
-    }
+    new ISqlConsumeTopologyConfigurator Consume { get; }
 }

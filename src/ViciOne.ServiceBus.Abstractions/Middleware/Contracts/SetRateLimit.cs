@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.Contracts
+namespace ViciOne.ServiceBus.Contracts;
+
+/// <summary>
+/// Set the rate limit of the RateLimitFilter
+/// </summary>
+public interface SetRateLimit
 {
     /// <summary>
-    /// Set the rate limit of the RateLimitFilter
+    /// The new rate limit for the filter
     /// </summary>
-    public interface SetRateLimit
-    {
-        /// <summary>
-        /// The new rate limit for the filter
-        /// </summary>
-        int RateLimit { get; }
-    }
+    int RateLimit { get; }
 }

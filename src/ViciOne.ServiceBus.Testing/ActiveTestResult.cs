@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Testing;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace ViciOne.ServiceBus.Testing;
 /// <summary>
 /// Immutable messages observed while one <c>Act</c> operation and its resulting activity chain were active.
 /// </summary>

@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// used to get access to the bus factories
+/// </summary>
+public static class Bus
 {
-    using Configuration;
-
-
     /// <summary>
-    /// used to get access to the bus factories
+    /// Access a bus factory from this main factory interface (easy extension method support)
     /// </summary>
-    public static class Bus
-    {
-        /// <summary>
-        /// Access a bus factory from this main factory interface (easy extension method support)
-        /// </summary>
-        public static IBusFactorySelector Factory { get; } = new BusFactorySelector();
-    }
+    public static IBusFactorySelector Factory { get; } = new BusFactorySelector();
 }

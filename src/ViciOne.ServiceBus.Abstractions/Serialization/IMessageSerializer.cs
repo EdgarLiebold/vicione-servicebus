@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
-{
-    using System.Net.Mime;
+using System.Net.Mime;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// A message serializer is responsible for serializing a message. Shocking, I know.
+/// </summary>
+public interface IMessageSerializer
+{
+    ContentType ContentType { get; }
 
     /// <summary>
-    /// A message serializer is responsible for serializing a message. Shocking, I know.
+    /// Returns a message body, for the serializer, which can be used by the transport to obtain the
+    /// serialized message in the desired format.
     /// </summary>
-    public interface IMessageSerializer
-    {
-        ContentType ContentType { get; }
-
-        /// <summary>
-        /// Returns a message body, for the serializer, which can be used by the transport to obtain the
-        /// serialized message in the desired format.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        MessageBody GetMessageBody<T>(SendContext<T> context)
-            where T : class;
-    }
+    /// <param name="context"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    MessageBody GetMessageBody<T>(SendContext<T> context)
+        where T : class;
 }

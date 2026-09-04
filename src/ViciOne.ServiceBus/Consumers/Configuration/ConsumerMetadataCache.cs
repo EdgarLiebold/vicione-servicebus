@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConsumerMetadataCache<T> :
+    IConsumerMetadataCache<T>
+    where T : class
 {
-    using System;
-    using System.Linq;
+    readonly IMessageInterfaceType[] _consumerTypes;
 
-
-    public class ConsumerMetadataCache<T> :
-        IConsumerMetadataCache<T>
-        where T : class
+    ConsumerMetadataCache()
     {
-        readonly IMessageInterfaceType[] _consumerTypes;
+        _consumerTypes = ConsumerConventionCache.GetConventions<T>()
+            .SelectMany(x => x.GetMessageTypes())
+            .GroupBy(x => x.MessageType)
+            .Select(x => x.Last())
+            .ToArray();
+    }
 
-        ConsumerMetadataCache()
-        {
-            _consumerTypes = ConsumerConventionCache.GetConventions<T>()
-                .SelectMany(x => x.GetMessageTypes())
-                .GroupBy(x => x.MessageType)
-                .Select(x => x.Last())
-                .ToArray();
-        }
+    public static IMessageInterfaceType[] ConsumerTypes => Cached.Metadata.Value.ConsumerTypes;
 
-        public static IMessageInterfaceType[] ConsumerTypes => Cached.Metadata.Value.ConsumerTypes;
-
-        IMessageInterfaceType[] IConsumerMetadataCache<T>.ConsumerTypes => _consumerTypes;
+    IMessageInterfaceType[] IConsumerMetadataCache<T>.ConsumerTypes => _consumerTypes;
 
 
-        static class Cached
-        {
-            internal static readonly Lazy<IConsumerMetadataCache<T>> Metadata = new Lazy<IConsumerMetadataCache<T>>(() => new ConsumerMetadataCache<T>());
-        }
+    static class Cached
+    {
+        internal static readonly Lazy<IConsumerMetadataCache<T>> Metadata = new Lazy<IConsumerMetadataCache<T>>(() => new ConsumerMetadataCache<T>());
     }
 }

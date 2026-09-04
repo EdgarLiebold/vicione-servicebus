@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport;
+
+public class RabbitMqSendTransportProvider :
+    ISendTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
+    readonly IChannelContextSupervisor _channelContextSupervisor;
+    readonly RabbitMqReceiveEndpointContext _receiveEndpointContext;
 
-
-    public class RabbitMqSendTransportProvider :
-        ISendTransportProvider
+    public RabbitMqSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, RabbitMqReceiveEndpointContext receiveEndpointContext)
     {
-        readonly IConnectionContextSupervisor _connectionContextSupervisor;
-        readonly IChannelContextSupervisor _channelContextSupervisor;
-        readonly RabbitMqReceiveEndpointContext _receiveEndpointContext;
+        _connectionContextSupervisor = connectionContextSupervisor;
+        _channelContextSupervisor = receiveEndpointContext.ChannelContextSupervisor;
+        _receiveEndpointContext = receiveEndpointContext;
+    }
 
-        public RabbitMqSendTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, RabbitMqReceiveEndpointContext receiveEndpointContext)
-        {
-            _connectionContextSupervisor = connectionContextSupervisor;
-            _channelContextSupervisor = receiveEndpointContext.ChannelContextSupervisor;
-            _receiveEndpointContext = receiveEndpointContext;
-        }
+    public Uri NormalizeAddress(Uri address)
+    {
+        return _connectionContextSupervisor.NormalizeAddress(address);
+    }
 
-        public Uri NormalizeAddress(Uri address)
-        {
-            return _connectionContextSupervisor.NormalizeAddress(address);
-        }
-
-        public Task<ISendTransport> GetSendTransport(Uri address)
-        {
-            return _connectionContextSupervisor.CreateSendTransport(_receiveEndpointContext,_channelContextSupervisor, address);
-        }
+    public Task<ISendTransport> GetSendTransport(Uri address)
+    {
+        return _connectionContextSupervisor.CreateSendTransport(_receiveEndpointContext, _channelContextSupervisor, address);
     }
 }

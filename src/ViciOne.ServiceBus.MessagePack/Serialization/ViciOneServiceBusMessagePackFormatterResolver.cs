@@ -1,21 +1,21 @@
 #define USE_CONCRETE_MAPPERS
-namespace ViciOne.ServiceBus.Serialization;
 
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Contracts.JobService;
-using Courier.Contracts;
-using Courier.Messages;
-using Events;
-using JobService.Messages;
 using MessagePack;
 using MessagePack.Formatters;
-using MessagePackFormatters;
-using Metadata;
-using Scheduling;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Courier.Messages;
+using ViciOne.ServiceBus.Events;
+using ViciOne.ServiceBus.JobService.Messages;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Scheduling;
+using ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
+namespace ViciOne.ServiceBus.Serialization;
 
 class ViciOneServiceBusMessagePackFormatterResolver :
     IFormatterResolver

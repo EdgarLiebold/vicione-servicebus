@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using Amazon.S3;
-using AmazonS3.MessageData;
+using ViciOne.ServiceBus.AmazonS3.MessageData;
 
+namespace ViciOne.ServiceBus;
 
 public static class AmazonS3ClientExtensions
 {

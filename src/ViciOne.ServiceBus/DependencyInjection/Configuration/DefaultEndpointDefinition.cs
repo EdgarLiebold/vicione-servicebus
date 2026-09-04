@@ -1,29 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Base/Default endpoint definition, not used apparently
+/// </summary>
+public abstract class DefaultEndpointDefinition :
+    IEndpointDefinition
 {
-    /// <summary>
-    /// Base/Default endpoint definition, not used apparently
-    /// </summary>
-    public abstract class DefaultEndpointDefinition :
-        IEndpointDefinition
+    protected DefaultEndpointDefinition(bool isTemporary = false)
     {
-        protected DefaultEndpointDefinition(bool isTemporary = false)
-        {
-            IsTemporary = isTemporary;
-        }
+        IsTemporary = isTemporary;
+    }
 
-        public virtual bool ConfigureConsumeTopology => true;
+    public virtual bool ConfigureConsumeTopology => true;
 
-        public abstract string GetEndpointName(IEndpointNameFormatter formatter);
+    public abstract string GetEndpointName(IEndpointNameFormatter formatter);
 
-        public virtual bool IsTemporary { get; }
+    public virtual bool IsTemporary { get; }
 
-        public virtual int? PrefetchCount => default;
+    public virtual int? PrefetchCount => default;
 
-        public virtual int? ConcurrentMessageLimit => default;
+    public virtual int? ConcurrentMessageLimit => default;
 
-        public void Configure<T>(T configurator, IRegistrationContext context)
-            where T : IReceiveEndpointConfigurator
-        {
-        }
+    public void Configure<T>(T configurator, IRegistrationContext context)
+        where T : IReceiveEndpointConfigurator
+    {
     }
 }

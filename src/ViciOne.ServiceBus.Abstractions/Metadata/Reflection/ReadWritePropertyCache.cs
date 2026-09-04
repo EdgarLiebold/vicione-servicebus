@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.Metadata;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.Metadata;
 
 public class ReadWritePropertyCache<T> : IReadWritePropertyCache<T>
 {

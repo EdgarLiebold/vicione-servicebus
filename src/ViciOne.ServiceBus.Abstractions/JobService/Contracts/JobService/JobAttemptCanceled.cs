@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobAttemptCanceled
 {
-    using System;
-
-
-    public interface JobAttemptCanceled
-    {
-        Guid JobId { get; }
-        Guid AttemptId { get; }
-        DateTime Timestamp { get; }
-        string Reason { get; }
-    }
+    Guid JobId { get; }
+    Guid AttemptId { get; }
+    DateTime Timestamp { get; }
+    string Reason { get; }
 }

@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.InMemoryTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.InMemoryTransport;
 
 public interface IInMemoryDelayProvider
 {

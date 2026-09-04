@@ -1,77 +1,75 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InstanceConnector<TConsumer> :
+    IInstanceConnector
+    where TConsumer : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Metadata;
-    using Util;
+    readonly List<IInstanceMessageConnector<TConsumer>> _connectors;
 
-
-    public class InstanceConnector<TConsumer> :
-        IInstanceConnector
-        where TConsumer : class
+    public InstanceConnector()
     {
-        readonly List<IInstanceMessageConnector<TConsumer>> _connectors;
+        if (RegistrationMetadata.IsSaga(typeof(TConsumer)))
+            throw new ConfigurationException("A saga cannot be registered as a consumer");
 
-        public InstanceConnector()
+        _connectors = Consumes()
+            .ToList();
+    }
+
+    public ConnectHandle ConnectInstance<T>(IConsumePipeConnector pipeConnector, T instance, IConsumerSpecification<T> specification)
+        where T : class
+    {
+        var handles = new List<ConnectHandle>(_connectors.Count);
+        try
         {
-            if (RegistrationMetadata.IsSaga(typeof(TConsumer)))
-                throw new ConfigurationException("A saga cannot be registered as a consumer");
+            foreach (IInstanceMessageConnector<T> connector in _connectors.Cast<IInstanceMessageConnector<T>>())
+            {
+                var handle = connector.ConnectInstance(pipeConnector, instance, specification);
 
-            _connectors = Consumes()
+                handles.Add(handle);
+            }
+
+            return new MultipleConnectHandle(handles);
+        }
+        catch (Exception)
+        {
+            foreach (var handle in handles)
+                handle.Dispose();
+            throw;
+        }
+    }
+
+    public ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, object instance)
+    {
+        if (instance is TConsumer consumer)
+        {
+            IConsumerSpecification<TConsumer> specification = CreateConsumerSpecification<TConsumer>();
+
+            return ConnectInstance(pipeConnector, consumer, specification);
+        }
+
+        throw new ConsumerException(
+            $"The instance type {TypeCache.GetShortName(instance.GetType())} does not match the consumer type: {TypeCache<TConsumer>.ShortName}");
+    }
+
+    public IConsumerSpecification<T> CreateConsumerSpecification<T>()
+        where T : class
+    {
+        List<IConsumerMessageSpecification<T>> messageSpecifications =
+            _connectors.Select(x => x.CreateConsumerMessageSpecification())
+                .Cast<IConsumerMessageSpecification<T>>()
                 .ToList();
-        }
 
-        public ConnectHandle ConnectInstance<T>(IConsumePipeConnector pipeConnector, T instance, IConsumerSpecification<T> specification)
-            where T : class
-        {
-            var handles = new List<ConnectHandle>(_connectors.Count);
-            try
-            {
-                foreach (IInstanceMessageConnector<T> connector in _connectors.Cast<IInstanceMessageConnector<T>>())
-                {
-                    var handle = connector.ConnectInstance(pipeConnector, instance, specification);
+        return new ConsumerSpecification<T>(messageSpecifications);
+    }
 
-                    handles.Add(handle);
-                }
-
-                return new MultipleConnectHandle(handles);
-            }
-            catch (Exception)
-            {
-                foreach (var handle in handles)
-                    handle.Dispose();
-                throw;
-            }
-        }
-
-        public ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, object instance)
-        {
-            if (instance is TConsumer consumer)
-            {
-                IConsumerSpecification<TConsumer> specification = CreateConsumerSpecification<TConsumer>();
-
-                return ConnectInstance(pipeConnector, consumer, specification);
-            }
-
-            throw new ConsumerException(
-                $"The instance type {TypeCache.GetShortName(instance.GetType())} does not match the consumer type: {TypeCache<TConsumer>.ShortName}");
-        }
-
-        public IConsumerSpecification<T> CreateConsumerSpecification<T>()
-            where T : class
-        {
-            List<IConsumerMessageSpecification<T>> messageSpecifications =
-                _connectors.Select(x => x.CreateConsumerMessageSpecification())
-                    .Cast<IConsumerMessageSpecification<T>>()
-                    .ToList();
-
-            return new ConsumerSpecification<T>(messageSpecifications);
-        }
-
-        static IEnumerable<IInstanceMessageConnector<TConsumer>> Consumes()
-        {
-            return ConsumerMetadataCache<TConsumer>.ConsumerTypes.Select(x => x.GetInstanceConnector<TConsumer>());
-        }
+    static IEnumerable<IInstanceMessageConnector<TConsumer>> Consumes()
+    {
+        return ConsumerMetadataCache<TConsumer>.ConsumerTypes.Select(x => x.GetInstanceConnector<TConsumer>());
     }
 }

@@ -1,62 +1,60 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class ServiceBusMessageConsumeTopology<TMessage> :
+    MessageConsumeTopology<TMessage>,
+    IServiceBusMessageConsumeTopologyConfigurator<TMessage>,
+    IServiceBusMessageConsumeTopologyConfigurator
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
+    readonly IMessageTopology<TMessage> _messageTopology;
+    readonly IServiceBusMessagePublishTopology<TMessage> _publishTopology;
+    readonly IList<IServiceBusConsumeTopologySpecification> _specifications;
 
-
-    public class ServiceBusMessageConsumeTopology<TMessage> :
-        MessageConsumeTopology<TMessage>,
-        IServiceBusMessageConsumeTopologyConfigurator<TMessage>,
-        IServiceBusMessageConsumeTopologyConfigurator
-        where TMessage : class
+    public ServiceBusMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IServiceBusMessagePublishTopology<TMessage> publishTopology)
     {
-        readonly IMessageTopology<TMessage> _messageTopology;
-        readonly IServiceBusMessagePublishTopology<TMessage> _publishTopology;
-        readonly IList<IServiceBusConsumeTopologySpecification> _specifications;
+        _messageTopology = messageTopology;
+        _publishTopology = publishTopology;
 
-        public ServiceBusMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IServiceBusMessagePublishTopology<TMessage> publishTopology)
+        _specifications = new List<IServiceBusConsumeTopologySpecification>();
+    }
+
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
+    }
+
+    public void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> configure = null)
+    {
+        if (string.IsNullOrWhiteSpace(subscriptionName))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(subscriptionName));
+
+        if (!IsBindableMessageType)
         {
-            _messageTopology = messageTopology;
-            _publishTopology = publishTopology;
-
-            _specifications = new List<IServiceBusConsumeTopologySpecification>();
+            _specifications.Add(new InvalidServiceBusConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a bindable message type"));
+            return;
         }
 
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
-        }
+        var createTopicOptions = _publishTopology.CreateTopicOptions;
 
-        public void Subscribe(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> configure = null)
-        {
-            if (string.IsNullOrWhiteSpace(subscriptionName))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(subscriptionName));
+        var subscriptionConfigurator = _publishTopology.GetSubscriptionConfigurator(subscriptionName);
 
-            if (!IsBindableMessageType)
-            {
-                _specifications.Add(new InvalidServiceBusConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a bindable message type"));
-                return;
-            }
+        configure?.Invoke(subscriptionConfigurator);
 
-            var createTopicOptions = _publishTopology.CreateTopicOptions;
+        var specification = new SubscriptionConsumeTopologySpecification(createTopicOptions, subscriptionConfigurator.GetCreateSubscriptionOptions(),
+            subscriptionConfigurator.Rule,
+            subscriptionConfigurator.Filter);
 
-            var subscriptionConfigurator = _publishTopology.GetSubscriptionConfigurator(subscriptionName);
+        _specifications.Add(specification);
+    }
 
-            configure?.Invoke(subscriptionConfigurator);
-
-            var specification = new SubscriptionConsumeTopologySpecification(createTopicOptions, subscriptionConfigurator.GetCreateSubscriptionOptions(),
-                subscriptionConfigurator.Rule,
-                subscriptionConfigurator.Filter);
-
-            _specifications.Add(specification);
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 }

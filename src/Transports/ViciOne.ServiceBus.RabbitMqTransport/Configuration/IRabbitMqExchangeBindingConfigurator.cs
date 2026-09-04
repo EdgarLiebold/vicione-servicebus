@@ -1,21 +1,20 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Used to configure the binding of an exchange (to either a queue or another exchange)
+/// </summary>
+public interface IRabbitMqExchangeBindingConfigurator :
+    IRabbitMqExchangeConfigurator
 {
     /// <summary>
-    /// Used to configure the binding of an exchange (to either a queue or another exchange)
+    /// A routing key for the exchange binding
     /// </summary>
-    public interface IRabbitMqExchangeBindingConfigurator :
-        IRabbitMqExchangeConfigurator
-    {
-        /// <summary>
-        /// A routing key for the exchange binding
-        /// </summary>
-        string RoutingKey { set; }
+    string RoutingKey { set; }
 
-        /// <summary>
-        /// Sets the binding argument, or removes it if value is null
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        void SetBindingArgument(string key, object value);
-    }
+    /// <summary>
+    /// Sets the binding argument, or removes it if value is null
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    void SetBindingArgument(string key, object value);
 }

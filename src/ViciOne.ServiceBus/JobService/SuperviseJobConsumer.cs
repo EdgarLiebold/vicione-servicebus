@@ -1,52 +1,50 @@
-namespace ViciOne.ServiceBus.JobService
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.JobService.Messages;
+
+namespace ViciOne.ServiceBus.JobService;
+
+public class SuperviseJobConsumer :
+    IConsumer<CancelJobAttempt>,
+    IConsumer<GetJobAttemptStatus>
 {
-    using System;
-    using System.Threading.Tasks;
-    using Contracts.JobService;
-    using Messages;
+    readonly IJobService _jobService;
 
-
-    public class SuperviseJobConsumer :
-        IConsumer<CancelJobAttempt>,
-        IConsumer<GetJobAttemptStatus>
+    public SuperviseJobConsumer(IJobService jobService)
     {
-        readonly IJobService _jobService;
+        _jobService = jobService;
+    }
 
-        public SuperviseJobConsumer(IJobService jobService)
+    public async Task Consume(ConsumeContext<CancelJobAttempt> context)
+    {
+        if (_jobService.TryGetJob(context.Message.JobId, out var handle))
         {
-            _jobService = jobService;
+            await handle.Cancel(context.Message.GetCancellationReason()).ConfigureAwait(false);
         }
+    }
 
-        public async Task Consume(ConsumeContext<CancelJobAttempt> context)
+    public Task Consume(ConsumeContext<GetJobAttemptStatus> context)
+    {
+        if (_jobService.TryGetJob(context.Message.JobId, out var jobHandle))
         {
-            if (_jobService.TryGetJob(context.Message.JobId, out var handle))
+            return context.RespondAsync<JobAttemptStatus>(new JobAttemptStatusResponse
             {
-                await handle.Cancel(context.Message.GetCancellationReason()).ConfigureAwait(false);
-            }
-        }
-
-        public Task Consume(ConsumeContext<GetJobAttemptStatus> context)
-        {
-            if (_jobService.TryGetJob(context.Message.JobId, out var jobHandle))
-            {
-                return context.RespondAsync<JobAttemptStatus>(new JobAttemptStatusResponse
+                JobId = context.Message.JobId,
+                AttemptId = context.Message.AttemptId,
+                Timestamp = context.GetUtcDateTime(),
+                Status = jobHandle.JobTask.Status switch
                 {
-                    JobId = context.Message.JobId,
-                    AttemptId = context.Message.AttemptId,
-                    Timestamp = context.GetUtcDateTime(),
-                    Status = jobHandle.JobTask.Status switch
-                    {
-                        TaskStatus.RanToCompletion => JobStatus.Completed,
-                        TaskStatus.Faulted => JobStatus.Faulted,
-                        TaskStatus.Canceled => JobStatus.Canceled,
-                        _ => JobStatus.Running
-                    }
-                });
-            }
-
-            LogContext.Debug?.Log("CheckJobStatus, job not found: {JobId}", context.Message.JobId);
-
-            return Task.CompletedTask;
+                    TaskStatus.RanToCompletion => JobStatus.Completed,
+                    TaskStatus.Faulted => JobStatus.Faulted,
+                    TaskStatus.Canceled => JobStatus.Canceled,
+                    _ => JobStatus.Running
+                }
+            });
         }
+
+        LogContext.Debug?.Log("CheckJobStatus, job not found: {JobId}", context.Message.JobId);
+
+        return Task.CompletedTask;
     }
 }

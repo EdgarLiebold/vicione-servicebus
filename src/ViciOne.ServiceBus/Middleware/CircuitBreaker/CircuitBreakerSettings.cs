@@ -1,10 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Configuration;
+using ViciOne.ServiceBus.Configuration;
+
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 internal sealed record CircuitBreakerSettings(
     int MinimumThroughput,

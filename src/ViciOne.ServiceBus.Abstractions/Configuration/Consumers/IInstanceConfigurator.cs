@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IInstanceConfigurator :
+    IConsumeConfigurator
 {
-    public interface IInstanceConfigurator :
-        IConsumeConfigurator
-    {
-    }
+}
 
 
-    public interface IInstanceConfigurator<TInstance> :
-        IConsumerConfigurator<TInstance>,
-        IInstanceConfigurator
-        where TInstance : class, IConsumer
-    {
-    }
+public interface IInstanceConfigurator<TInstance> :
+    IConsumerConfigurator<TInstance>,
+    IInstanceConfigurator
+    where TInstance : class, IConsumer
+{
 }

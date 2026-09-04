@@ -1,45 +1,43 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyProviders
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
+
+/// <summary>
+/// Copies the input property, as-is, for the property value
+/// </summary>
+/// <typeparam name="TInput"></typeparam>
+/// <typeparam name="TProperty"></typeparam>
+/// <typeparam name="TValue"></typeparam>
+public class VariablePropertyProvider<TInput, TProperty, TValue> :
+    IPropertyProvider<TInput, TValue>
+    where TInput : class
+    where TProperty : class, IInitializerVariable<TValue>
 {
-    using System.Threading.Tasks;
-    using Util;
+    readonly IPropertyProvider<TInput, TProperty> _provider;
 
-
-    /// <summary>
-    /// Copies the input property, as-is, for the property value
-    /// </summary>
-    /// <typeparam name="TInput"></typeparam>
-    /// <typeparam name="TProperty"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    public class VariablePropertyProvider<TInput, TProperty, TValue> :
-        IPropertyProvider<TInput, TValue>
-        where TInput : class
-        where TProperty : class, IInitializerVariable<TValue>
+    public VariablePropertyProvider(IPropertyProvider<TInput, TProperty> provider)
     {
-        readonly IPropertyProvider<TInput, TProperty> _provider;
+        _provider = provider;
+    }
 
-        public VariablePropertyProvider(IPropertyProvider<TInput, TProperty> provider)
+    public Task<TValue> GetProperty<T>(InitializeContext<T, TInput> context)
+        where T : class
+    {
+        if (!context.HasInput)
+            return TaskResults.Default<TValue>();
+
+        Task<TProperty> propertyTask = _provider.GetProperty(context);
+        if (propertyTask.Status == TaskStatus.RanToCompletion)
+            return propertyTask.Result.GetValue(context);
+
+        async Task<TValue> GetPropertyAsync()
         {
-            _provider = provider;
+            var property = await propertyTask.ConfigureAwait(false);
+
+            return await property.GetValue(context).ConfigureAwait(false);
         }
 
-        public Task<TValue> GetProperty<T>(InitializeContext<T, TInput> context)
-            where T : class
-        {
-            if (!context.HasInput)
-                return TaskResults.Default<TValue>();
-
-            Task<TProperty> propertyTask = _provider.GetProperty(context);
-            if (propertyTask.Status == TaskStatus.RanToCompletion)
-                return propertyTask.Result.GetValue(context);
-
-            async Task<TValue> GetPropertyAsync()
-            {
-                var property = await propertyTask.ConfigureAwait(false);
-
-                return await property.GetValue(context).ConfigureAwait(false);
-            }
-
-            return GetPropertyAsync();
-        }
+        return GetPropertyAsync();
     }
 }

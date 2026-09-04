@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
-using Configuration;
-using Transports;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class AmazonSqsHost :
     BaseHost,

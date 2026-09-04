@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+class RabbitMqBatchPublishConfigurator :
+    IRabbitMqBatchPublishConfigurator
 {
-    using System;
+    readonly ConfigurationHostSettings.ConfigurationBatchSettings _settings;
 
-
-    class RabbitMqBatchPublishConfigurator :
-        IRabbitMqBatchPublishConfigurator
+    public RabbitMqBatchPublishConfigurator(ConfigurationHostSettings.ConfigurationBatchSettings settings)
     {
-        readonly ConfigurationHostSettings.ConfigurationBatchSettings _settings;
+        _settings = settings;
+    }
 
-        public RabbitMqBatchPublishConfigurator(ConfigurationHostSettings.ConfigurationBatchSettings settings)
-        {
-            _settings = settings;
-        }
+    public bool Enabled
+    {
+        set => _settings.Enabled = value;
+    }
 
-        public bool Enabled
-        {
-            set => _settings.Enabled = value;
-        }
+    public int MessageLimit
+    {
+        set => _settings.MessageLimit = value;
+    }
 
-        public int MessageLimit
-        {
-            set => _settings.MessageLimit = value;
-        }
+    public int SizeLimit
+    {
+        set => _settings.SizeLimit = value;
+    }
 
-        public int SizeLimit
-        {
-            set => _settings.SizeLimit = value;
-        }
-
-        public TimeSpan Timeout
-        {
-            set => _settings.Timeout = value;
-        }
+    public TimeSpan Timeout
+    {
+        set => _settings.Timeout = value;
     }
 }

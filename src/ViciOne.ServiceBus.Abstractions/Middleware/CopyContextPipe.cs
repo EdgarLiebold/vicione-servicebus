@@ -1,59 +1,57 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class CopyContextPipe :
+    IPipe<SendContext>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    readonly Action<ConsumeContext, SendContext>? _callback;
+    readonly ConsumeContext _context;
 
-
-    public class CopyContextPipe :
-        IPipe<SendContext>
+    public CopyContextPipe(ConsumeContext context, Action<ConsumeContext, SendContext>? callback = null)
     {
-        readonly Action<ConsumeContext, SendContext>? _callback;
-        readonly ConsumeContext _context;
+        _context = context;
+        _callback = callback;
+    }
 
-        public CopyContextPipe(ConsumeContext context, Action<ConsumeContext, SendContext>? callback = null)
+    public Task Send(SendContext context)
+    {
+        context.MessageId = _context.MessageId;
+        context.RequestId = _context.RequestId;
+        context.CorrelationId = _context.CorrelationId;
+        context.ConversationId = _context.ConversationId;
+        context.InitiatorId = _context.InitiatorId;
+        context.SourceAddress = _context.SourceAddress;
+        context.ResponseAddress = _context.ResponseAddress;
+        context.FaultAddress = _context.FaultAddress;
+
+        TimeProvider timeProvider = _context.GetTimeProvider();
+        context.SetTimeProvider(timeProvider);
+
+        if (_context.ExpirationTime.HasValue)
+            context.TimeToLive = _context.ExpirationTime.Value.ToUniversalTime() - timeProvider.GetUtcNow().UtcDateTime;
+
+        foreach (KeyValuePair<string, object> header in _context.Headers.GetAll())
         {
-            _context = context;
-            _callback = callback;
-        }
-
-        public Task Send(SendContext context)
-        {
-            context.MessageId = _context.MessageId;
-            context.RequestId = _context.RequestId;
-            context.CorrelationId = _context.CorrelationId;
-            context.ConversationId = _context.ConversationId;
-            context.InitiatorId = _context.InitiatorId;
-            context.SourceAddress = _context.SourceAddress;
-            context.ResponseAddress = _context.ResponseAddress;
-            context.FaultAddress = _context.FaultAddress;
-
-            TimeProvider timeProvider = _context.GetTimeProvider();
-            context.SetTimeProvider(timeProvider);
-
-            if (_context.ExpirationTime.HasValue)
-                context.TimeToLive = _context.ExpirationTime.Value.ToUniversalTime() - timeProvider.GetUtcNow().UtcDateTime;
-
-            foreach (KeyValuePair<string, object> header in _context.Headers.GetAll())
+            switch (header.Key)
             {
-                switch (header.Key)
-                {
-                    case MessageHeaders.RedeliveryCount:
-                    case MessageHeaders.SchedulingTokenId:
-                        continue;
-                }
-
-                context.Headers.Set(header.Key, header.Value, false);
+                case MessageHeaders.RedeliveryCount:
+                case MessageHeaders.SchedulingTokenId:
+                    continue;
             }
 
-            _callback?.Invoke(_context, context);
-
-            return Task.CompletedTask;
+            context.Headers.Set(header.Key, header.Value, false);
         }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("copyContext");
-        }
+        _callback?.Invoke(_context, context);
+
+        return Task.CompletedTask;
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("copyContext");
     }
 }

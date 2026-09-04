@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface ISendEndpointContextSupervisor :
+    ITransportSupervisor<SendEndpointContext>
 {
-    using Transports;
-
-
-    public interface ISendEndpointContextSupervisor :
-        ITransportSupervisor<SendEndpointContext>
-    {
-    }
 }

@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public class ActiveMqErrorSettings :
+    ActiveMqQueueBindingConfigurator,
+    ErrorSettings
 {
-    using Configuration;
-
-
-    public class ActiveMqErrorSettings :
-        ActiveMqQueueBindingConfigurator,
-        ErrorSettings
+    public ActiveMqErrorSettings(EntitySettings source, string queueName)
+        : base(queueName, source.Durable, source.AutoDelete)
     {
-        public ActiveMqErrorSettings(EntitySettings source, string queueName)
-            : base(queueName, source.Durable, source.AutoDelete)
-        {
-        }
+    }
 
-        public BrokerTopology GetBrokerTopology()
-        {
-            var builder = new PublishEndpointBrokerTopologyBuilder();
+    public BrokerTopology GetBrokerTopology()
+    {
+        var builder = new PublishEndpointBrokerTopologyBuilder();
 
-            builder.CreateQueue(EntityName, Durable, AutoDelete);
+        builder.CreateQueue(EntityName, Durable, AutoDelete);
 
-            return builder.BuildBrokerTopology();
-        }
+        return builder.BuildBrokerTopology();
     }
 }

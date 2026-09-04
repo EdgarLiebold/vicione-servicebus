@@ -1,13 +1,12 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.ProviderAbstractions;
-
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.ProviderAbstractions;
 /// <summary>Canonical seek-token codec shared by durable persistence providers.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class DurableSendQuarantinePagination

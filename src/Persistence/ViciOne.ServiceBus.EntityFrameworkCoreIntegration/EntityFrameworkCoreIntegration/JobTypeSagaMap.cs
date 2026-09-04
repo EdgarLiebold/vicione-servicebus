@@ -1,51 +1,49 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+public class JobTypeSagaMap :
+    SagaClassMap<JobTypeSaga>
 {
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    readonly bool _optimistic;
 
-
-    public class JobTypeSagaMap :
-        SagaClassMap<JobTypeSaga>
+    public JobTypeSagaMap(bool optimistic)
     {
-        readonly bool _optimistic;
+        _optimistic = optimistic;
+    }
 
-        public JobTypeSagaMap(bool optimistic)
+    protected override void Configure(EntityTypeBuilder<JobTypeSaga> entity, ModelBuilder model)
+    {
+        entity.OptOutOfEntityFrameworkConventions();
+
+        entity.Property(x => x.CurrentState);
+
+        entity.Ignore(x => x.Version);
+
+        if (_optimistic)
         {
-            _optimistic = optimistic;
+            entity.Property(x => x.RowVersion)
+                .IsRowVersion();
         }
+        else
+            entity.Ignore(x => x.RowVersion);
 
-        protected override void Configure(EntityTypeBuilder<JobTypeSaga> entity, ModelBuilder model)
-        {
-            entity.OptOutOfEntityFrameworkConventions();
+        entity.Property(x => x.ActiveJobCount);
+        entity.Property(x => x.ConcurrentJobLimit);
+        entity.Property(x => x.GlobalConcurrentJobLimit);
+        entity.Property(x => x.Name);
 
-            entity.Property(x => x.CurrentState);
+        entity.Property(x => x.OverrideJobLimit);
+        entity.Property(x => x.OverrideLimitExpiration);
 
-            entity.Ignore(x => x.Version);
+        entity.Property(x => x.ActiveJobs)
+            .HasJsonConversion();
 
-            if (_optimistic)
-            {
-                entity.Property(x => x.RowVersion)
-                    .IsRowVersion();
-            }
-            else
-                entity.Ignore(x => x.RowVersion);
+        entity.Property(x => x.Instances)
+            .HasJsonConversion();
 
-            entity.Property(x => x.ActiveJobCount);
-            entity.Property(x => x.ConcurrentJobLimit);
-            entity.Property(x => x.GlobalConcurrentJobLimit);
-            entity.Property(x => x.Name);
-
-            entity.Property(x => x.OverrideJobLimit);
-            entity.Property(x => x.OverrideLimitExpiration);
-
-            entity.Property(x => x.ActiveJobs)
-                .HasJsonConversion();
-
-            entity.Property(x => x.Instances)
-                .HasJsonConversion();
-
-            entity.Property(x => x.Properties)
-                .HasJsonConversion();
-        }
+        entity.Property(x => x.Properties)
+            .HasJsonConversion();
     }
 }

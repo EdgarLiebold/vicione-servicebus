@@ -1,11 +1,10 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 
 using ViciOne.ServiceBus.Diagnostics;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>Exception-isolated observation around the exact-byte admission evaluator.</summary>
 internal sealed class InstrumentedPayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator<TBus>
     where TBus : class, IBus

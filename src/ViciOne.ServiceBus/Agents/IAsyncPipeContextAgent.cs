@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Agents
+namespace ViciOne.ServiceBus.Agents;
+
+public interface IAsyncPipeContextAgent<TContext> :
+    IAsyncPipeContextHandle<TContext>,
+    IPipeContextAgent<TContext>
+    where TContext : class, PipeContext
 {
-    public interface IAsyncPipeContextAgent<TContext> :
-        IAsyncPipeContextHandle<TContext>,
-        IPipeContextAgent<TContext>
-        where TContext : class, PipeContext
-    {
-    }
 }

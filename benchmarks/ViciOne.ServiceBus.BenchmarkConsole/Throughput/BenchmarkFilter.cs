@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole.Throughput
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.BenchmarkConsole.Throughput;
+
+public class BenchmarkFilter :
+    IFilter<TestContext>
 {
-    using System.Threading.Tasks;
-
-
-    public class BenchmarkFilter :
-        IFilter<TestContext>
+    public Task Send(TestContext context, IPipe<TestContext> next)
     {
-        public Task Send(TestContext context, IPipe<TestContext> next)
-        {
-            return next.Send(context);
-        }
+        return next.Send(context);
+    }
 
-        public void Probe(ProbeContext context)
-        {
-        }
+    public void Probe(ProbeContext context)
+    {
     }
 }

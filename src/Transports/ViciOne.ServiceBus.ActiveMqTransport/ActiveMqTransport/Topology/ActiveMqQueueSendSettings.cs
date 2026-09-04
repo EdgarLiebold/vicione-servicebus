@@ -1,45 +1,43 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public class ActiveMqQueueSendSettings :
+    ActiveMqQueueConfigurator,
+    SendSettings
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-
-
-    public class ActiveMqQueueSendSettings :
-        ActiveMqQueueConfigurator,
-        SendSettings
+    public ActiveMqQueueSendSettings(ActiveMqEndpointAddress address)
+        : base(address.Name, address.Durable, address.AutoDelete)
     {
-        public ActiveMqQueueSendSettings(ActiveMqEndpointAddress address)
-            : base(address.Name, address.Durable, address.AutoDelete)
-        {
-        }
+    }
 
-        public Uri GetSendAddress(Uri hostAddress)
-        {
-            return GetEndpointAddress(hostAddress);
-        }
+    public Uri GetSendAddress(Uri hostAddress)
+    {
+        return GetEndpointAddress(hostAddress);
+    }
 
-        public BrokerTopology GetBrokerTopology()
-        {
-            var builder = new PublishEndpointBrokerTopologyBuilder();
+    public BrokerTopology GetBrokerTopology()
+    {
+        var builder = new PublishEndpointBrokerTopologyBuilder();
 
-            builder.CreateQueue(EntityName, Durable, AutoDelete);
+        builder.CreateQueue(EntityName, Durable, AutoDelete);
 
-            return builder.BuildBrokerTopology();
-        }
+        return builder.BuildBrokerTopology();
+    }
 
-        IEnumerable<string> GetSettingStrings()
-        {
-            if (Durable)
-                yield return "durable";
+    IEnumerable<string> GetSettingStrings()
+    {
+        if (Durable)
+            yield return "durable";
 
-            if (AutoDelete)
-                yield return "auto-delete";
-        }
+        if (AutoDelete)
+            yield return "auto-delete";
+    }
 
-        public override string ToString()
-        {
-            return string.Join(", ", GetSettingStrings());
-        }
+    public override string ToString()
+    {
+        return string.Join(", ", GetSettingStrings());
     }
 }

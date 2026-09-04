@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// A bus is a logical element that includes a local endpoint and zero or more receive endpoints
+/// </summary>
+public interface IBus :
+    IPublishEndpoint,
+    IPublishEndpointProvider,
+    ISendEndpointProvider,
+    IConsumePipeConnector,
+    IRequestPipeConnector,
+    IConsumeMessageObserverConnector,
+    IConsumeObserverConnector,
+    IReceiveObserverConnector,
+    IReceiveEndpointObserverConnector,
+    IReceiveConnector,
+    IProbeSite
+{
+    /// <summary>
+    /// The InputAddress of the default bus endpoint
+    /// </summary>
+    Uri Address { get; }
 
     /// <summary>
-    /// A bus is a logical element that includes a local endpoint and zero or more receive endpoints
+    /// The bus topology
     /// </summary>
-    public interface IBus :
-        IPublishEndpoint,
-        IPublishEndpointProvider,
-        ISendEndpointProvider,
-        IConsumePipeConnector,
-        IRequestPipeConnector,
-        IConsumeMessageObserverConnector,
-        IConsumeObserverConnector,
-        IReceiveObserverConnector,
-        IReceiveEndpointObserverConnector,
-        IReceiveConnector,
-        IProbeSite
-    {
-        /// <summary>
-        /// The InputAddress of the default bus endpoint
-        /// </summary>
-        Uri Address { get; }
-
-        /// <summary>
-        /// The bus topology
-        /// </summary>
-        IBusTopology Topology { get; }
-    }
+    IBusTopology Topology { get; }
 }

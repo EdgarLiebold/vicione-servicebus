@@ -1,205 +1,203 @@
-namespace ViciOne.ServiceBus.QuartzIntegration
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using Quartz;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.QuartzIntegration;
+
+public class JobDataMessageContext :
+    MessageContext,
+    Headers
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using Metadata;
-    using Quartz;
-    using Serialization;
+    readonly IJobExecutionContext _executionContext;
+    readonly JobDataMap _jobDataMap;
+    readonly IObjectDeserializer _objectDeserializer;
 
+    Guid? _conversationId;
+    Guid? _correlationId;
+    Uri? _destinationAddress;
+    DateTime? _expirationTime;
+    Uri? _faultAddress;
+    Headers? _headers;
+    HostInfo? _hostInfo;
+    Guid? _initiatorId;
+    Guid? _messageId;
+    Guid? _requestId;
+    Uri? _responseAddress;
+    DateTime? _sentTime;
+    Uri? _sourceAddress;
 
-    public class JobDataMessageContext :
-        MessageContext,
-        Headers
+    public JobDataMessageContext(IJobExecutionContext executionContext, IObjectDeserializer objectDeserializer)
     {
-        readonly IJobExecutionContext _executionContext;
-        readonly JobDataMap _jobDataMap;
-        readonly IObjectDeserializer _objectDeserializer;
+        _executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
+        _jobDataMap = executionContext.MergedJobDataMap;
+        _objectDeserializer = objectDeserializer ?? throw new ArgumentNullException(nameof(objectDeserializer));
 
-        Guid? _conversationId;
-        Guid? _correlationId;
-        Uri? _destinationAddress;
-        DateTime? _expirationTime;
-        Uri? _faultAddress;
-        Headers? _headers;
-        HostInfo? _hostInfo;
-        Guid? _initiatorId;
-        Guid? _messageId;
-        Guid? _requestId;
-        Uri? _responseAddress;
-        DateTime? _sentTime;
-        Uri? _sourceAddress;
+        Guid? messageId = _jobDataMap.TryGetString(nameof(MessageId), out var text) ? ConvertIdToGuid(text) : default;
 
-        public JobDataMessageContext(IJobExecutionContext executionContext, IObjectDeserializer objectDeserializer)
+        if (messageId.HasValue)
+            _messageId = messageId;
+        else
         {
-            _executionContext = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
-            _jobDataMap = executionContext.MergedJobDataMap;
-            _objectDeserializer = objectDeserializer ?? throw new ArgumentNullException(nameof(objectDeserializer));
+            var newId = NewId.Next();
 
-            Guid? messageId = _jobDataMap.TryGetString(nameof(MessageId), out var text) ? ConvertIdToGuid(text) : default;
+            _messageId = newId.ToGuid();
+            _sentTime = newId.Timestamp;
+        }
+    }
 
-            if (messageId.HasValue)
-                _messageId = messageId;
-            else
+    public IEnumerator<HeaderValue> GetEnumerator()
+    {
+        return Headers.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        return Headers.GetAll();
+    }
+
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
+    {
+        switch (key)
+        {
+            case MessageHeaders.MessageId:
+                value = MessageId;
+                return value != null;
+            case MessageHeaders.CorrelationId:
+                value = CorrelationId;
+                return value != null;
+            case MessageHeaders.ConversationId:
+                value = ConversationId;
+                return value != null;
+            case MessageHeaders.RequestId:
+                value = RequestId;
+                return value != null;
+            case MessageHeaders.InitiatorId:
+                value = InitiatorId;
+                return value != null;
+            case MessageHeaders.SourceAddress:
+                value = SourceAddress;
+                return value != null;
+            case MessageHeaders.ResponseAddress:
+                value = ResponseAddress;
+                return value != null;
+            case MessageHeaders.FaultAddress:
+                value = FaultAddress;
+                return value != null;
+        }
+
+        return _jobDataMap.TryGetValue(key, out value);
+    }
+
+    public T? Get<T>(string key, T? defaultValue = default)
+        where T : class
+    {
+        return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : default;
+    }
+
+    public T? Get<T>(string key, T? defaultValue = default)
+        where T : struct
+    {
+        return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : default;
+    }
+
+    public Guid? MessageId => _messageId ??= _jobDataMap.TryGetValue(nameof(MessageId), out string? value) ? ConvertIdToGuid(value) : NewId.NextGuid();
+    public Guid? RequestId => _requestId ??= _jobDataMap.TryGetValue(nameof(RequestId), out string? value) ? ConvertIdToGuid(value) : default;
+    public Guid? CorrelationId => _correlationId ??= _jobDataMap.TryGetValue(nameof(CorrelationId), out string? value) ? ConvertIdToGuid(value) : default;
+    public Guid? ConversationId => _conversationId ??= _jobDataMap.TryGetValue(nameof(ConversationId), out string? value) ? ConvertIdToGuid(value) : default;
+    public Guid? InitiatorId => _initiatorId ??= _jobDataMap.TryGetValue(nameof(InitiatorId), out string? value) ? ConvertIdToGuid(value) : default;
+
+    public DateTime? ExpirationTime =>
+        _expirationTime ??= _jobDataMap.TryGetValue(nameof(ExpirationTime), out string? value) ? ConvertDateTime(value) : default;
+
+    public Uri? SourceAddress => _sourceAddress ??= _jobDataMap.TryGetValue(nameof(SourceAddress), out string? value) ? ConvertToUri(value) : default;
+
+    public Uri? DestinationAddress =>
+        _destinationAddress ??= _jobDataMap.TryGetValue(nameof(DestinationAddress), out string? value) ? ConvertToUri(value) : default;
+
+    public Uri? ResponseAddress => _responseAddress ??= _jobDataMap.TryGetValue(nameof(ResponseAddress), out string? value) ? ConvertToUri(value) : default;
+    public Uri? FaultAddress => _faultAddress ??= _jobDataMap.TryGetValue(nameof(FaultAddress), out string? value) ? ConvertToUri(value) : default;
+    public DateTime? SentTime => _sentTime ??= _jobDataMap.TryGetValue(nameof(SentTime), out DateTime? value) ? value : default;
+    public Headers Headers => _headers ??= GetHeaders();
+    public HostInfo Host => _hostInfo ??= _jobDataMap.TryGetValue(nameof(Host), out HostInfo? value) ? value! : HostMetadataCache.Empty;
+
+    public IReadOnlyDictionary<string, object>? TransportProperties =>
+        _jobDataMap.TryGetValue("TransportProperties", out object? value)
+            ? _objectDeserializer.DeserializeObject<IReadOnlyDictionary<string, object>>(value)
+            : default;
+
+    Headers GetHeaders()
+    {
+        var headers = new DictionarySendHeaders();
+
+        if (_jobDataMap.TryGetValue("HeadersAsJson", out object? value))
+        {
+            IEnumerable<KeyValuePair<string, object>>? headerElements =
+                _objectDeserializer.DeserializeObject<IEnumerable<KeyValuePair<string, object>>>(value);
+
+            if (headerElements != null)
             {
-                var newId = NewId.Next();
-
-                _messageId = newId.ToGuid();
-                _sentTime = newId.Timestamp;
+                foreach (KeyValuePair<string, object> element in headerElements)
+                    headers.Set(element.Key, element.Value);
             }
         }
 
-        public IEnumerator<HeaderValue> GetEnumerator()
-        {
-            return Headers.GetEnumerator();
-        }
+        headers.Set(MessageHeaders.Quartz.Sent, _executionContext.FireTimeUtc);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        if (_executionContext.ScheduledFireTimeUtc.HasValue)
+            headers.Set(MessageHeaders.Quartz.Scheduled, _executionContext.ScheduledFireTimeUtc);
 
-        public IEnumerable<KeyValuePair<string, object>> GetAll()
-        {
-            return Headers.GetAll();
-        }
+        if (_executionContext.NextFireTimeUtc.HasValue)
+            headers.Set(MessageHeaders.Quartz.NextScheduled, _executionContext.NextFireTimeUtc);
 
-        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
-        {
-            switch (key)
-            {
-                case MessageHeaders.MessageId:
-                    value = MessageId;
-                    return value != null;
-                case MessageHeaders.CorrelationId:
-                    value = CorrelationId;
-                    return value != null;
-                case MessageHeaders.ConversationId:
-                    value = ConversationId;
-                    return value != null;
-                case MessageHeaders.RequestId:
-                    value = RequestId;
-                    return value != null;
-                case MessageHeaders.InitiatorId:
-                    value = InitiatorId;
-                    return value != null;
-                case MessageHeaders.SourceAddress:
-                    value = SourceAddress;
-                    return value != null;
-                case MessageHeaders.ResponseAddress:
-                    value = ResponseAddress;
-                    return value != null;
-                case MessageHeaders.FaultAddress:
-                    value = FaultAddress;
-                    return value != null;
-            }
+        if (_executionContext.PreviousFireTimeUtc.HasValue)
+            headers.Set(MessageHeaders.Quartz.PreviousSent, _executionContext.PreviousFireTimeUtc);
 
-            return _jobDataMap.TryGetValue(key, out value);
-        }
+        if (_jobDataMap.TryGetValue("TokenId", out var tokenId))
+            headers.Set(MessageHeaders.SchedulingTokenId, tokenId);
 
-        public T? Get<T>(string key, T? defaultValue = default)
-            where T : class
-        {
-            return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : default;
-        }
+        if (!string.IsNullOrWhiteSpace(_executionContext.Trigger.Key.Name))
+            headers.Set(MessageHeaders.Quartz.ScheduleId, QuartzTriggerKey.GetScheduleId(_executionContext.Trigger.Key));
 
-        public T? Get<T>(string key, T? defaultValue = default)
-            where T : struct
-        {
-            return TryGetHeader(key, out var value) ? _objectDeserializer.DeserializeObject(value, defaultValue) : default;
-        }
+        if (!string.IsNullOrWhiteSpace(_executionContext.Trigger.Key.Group))
+            headers.Set(MessageHeaders.Quartz.ScheduleGroup, _executionContext.Trigger.Key.Group);
 
-        public Guid? MessageId => _messageId ??= _jobDataMap.TryGetValue(nameof(MessageId), out string value) ? ConvertIdToGuid(value) : NewId.NextGuid();
-        public Guid? RequestId => _requestId ??= _jobDataMap.TryGetValue(nameof(RequestId), out string value) ? ConvertIdToGuid(value) : default;
-        public Guid? CorrelationId => _correlationId ??= _jobDataMap.TryGetValue(nameof(CorrelationId), out string value) ? ConvertIdToGuid(value) : default;
-        public Guid? ConversationId => _conversationId ??= _jobDataMap.TryGetValue(nameof(ConversationId), out string value) ? ConvertIdToGuid(value) : default;
-        public Guid? InitiatorId => _initiatorId ??= _jobDataMap.TryGetValue(nameof(InitiatorId), out string value) ? ConvertIdToGuid(value) : default;
+        return headers;
+    }
 
-        public DateTime? ExpirationTime =>
-            _expirationTime ??= _jobDataMap.TryGetValue(nameof(ExpirationTime), out string value) ? ConvertDateTime(value) : default;
+    static DateTime? ConvertDateTime(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return default;
 
-        public Uri? SourceAddress => _sourceAddress ??= _jobDataMap.TryGetValue(nameof(SourceAddress), out string value) ? ConvertToUri(value) : default;
+        return DateTime.TryParse(text, null, DateTimeStyles.RoundtripKind, out var expirationTime)
+            || DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out expirationTime)
+                ? expirationTime
+                : default(DateTime?);
+    }
 
-        public Uri? DestinationAddress =>
-            _destinationAddress ??= _jobDataMap.TryGetValue(nameof(DestinationAddress), out string value) ? ConvertToUri(value) : default;
+    static Guid? ConvertIdToGuid(string? id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            return default;
 
-        public Uri? ResponseAddress => _responseAddress ??= _jobDataMap.TryGetValue(nameof(ResponseAddress), out string value) ? ConvertToUri(value) : default;
-        public Uri? FaultAddress => _faultAddress ??= _jobDataMap.TryGetValue(nameof(FaultAddress), out string value) ? ConvertToUri(value) : default;
-        public DateTime? SentTime => _sentTime ??= _jobDataMap.TryGetValue(nameof(SentTime), out DateTime? value) ? value : default;
-        public Headers Headers => _headers ??= GetHeaders();
-        public HostInfo Host => _hostInfo ??= _jobDataMap.TryGetValue(nameof(Host), out HostInfo? value) ? value! : HostMetadataCache.Empty;
+        if (Guid.TryParse(id, out var messageId))
+            return messageId;
 
-        public IReadOnlyDictionary<string, object>? TransportProperties =>
-            _jobDataMap.TryGetValue("TransportProperties", out object? value)
-                ? _objectDeserializer.DeserializeObject<IReadOnlyDictionary<string, object>>(value)
-                : default;
+        throw new FormatException("The Id was not a Guid: " + id);
+    }
 
-        Headers GetHeaders()
-        {
-            var headers = new DictionarySendHeaders();
-
-            if (_jobDataMap.TryGetValue("HeadersAsJson", out object? value))
-            {
-                IEnumerable<KeyValuePair<string, object>>? headerElements =
-                    _objectDeserializer.DeserializeObject<IEnumerable<KeyValuePair<string, object>>>(value);
-
-                if (headerElements != null)
-                {
-                    foreach (KeyValuePair<string, object> element in headerElements)
-                        headers.Set(element.Key, element.Value);
-                }
-            }
-
-            headers.Set(MessageHeaders.Quartz.Sent, _executionContext.FireTimeUtc);
-
-            if (_executionContext.ScheduledFireTimeUtc.HasValue)
-                headers.Set(MessageHeaders.Quartz.Scheduled, _executionContext.ScheduledFireTimeUtc);
-
-            if (_executionContext.NextFireTimeUtc.HasValue)
-                headers.Set(MessageHeaders.Quartz.NextScheduled, _executionContext.NextFireTimeUtc);
-
-            if (_executionContext.PreviousFireTimeUtc.HasValue)
-                headers.Set(MessageHeaders.Quartz.PreviousSent, _executionContext.PreviousFireTimeUtc);
-
-            if (_jobDataMap.TryGetValue("TokenId", out var tokenId))
-                headers.Set(MessageHeaders.SchedulingTokenId, tokenId);
-
-            if (!string.IsNullOrWhiteSpace(_executionContext.Trigger.Key.Name))
-                headers.Set(MessageHeaders.Quartz.ScheduleId, QuartzTriggerKey.GetScheduleId(_executionContext.Trigger.Key));
-
-            if (!string.IsNullOrWhiteSpace(_executionContext.Trigger.Key.Group))
-                headers.Set(MessageHeaders.Quartz.ScheduleGroup, _executionContext.Trigger.Key.Group);
-
-            return headers;
-        }
-
-        static DateTime? ConvertDateTime(string? text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return default;
-
-            return DateTime.TryParse(text, null, DateTimeStyles.RoundtripKind, out var expirationTime)
-                || DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out expirationTime)
-                    ? expirationTime
-                    : default(DateTime?);
-        }
-
-        static Guid? ConvertIdToGuid(string? id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                return default;
-
-            if (Guid.TryParse(id, out var messageId))
-                return messageId;
-
-            throw new FormatException("The Id was not a Guid: " + id);
-        }
-
-        static Uri? ConvertToUri(string? uri)
-        {
-            return string.IsNullOrWhiteSpace(uri) ? null : new Uri(uri);
-        }
+    static Uri? ConvertToUri(string? uri)
+    {
+        return string.IsNullOrWhiteSpace(uri) ? null : new Uri(uri);
     }
 }

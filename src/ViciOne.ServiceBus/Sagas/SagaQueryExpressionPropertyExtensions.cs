@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Linq.Expressions;
-using Saga;
+using ViciOne.ServiceBus.Saga;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public static class SagaQueryExpressionPropertyExtensions
 {

@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IRescueConfigurator<TContext, TRescue> :
+    IExceptionConfigurator,
+    IPipeConfigurator<TRescue>
+    where TContext : class, PipeContext
+    where TRescue : class, TContext
 {
-    public interface IRescueConfigurator<TContext, TRescue> :
-        IExceptionConfigurator,
-        IPipeConfigurator<TRescue>
-        where TContext : class, PipeContext
-        where TRescue : class, TContext
-    {
-        /// <summary>
-        /// Configure a filter on the context pipe, versus the rescue pipe
-        /// </summary>
-        IPipeConfigurator<TContext> ContextPipe { get; }
-    }
+    /// <summary>
+    /// Configure a filter on the context pipe, versus the rescue pipe
+    /// </summary>
+    IPipeConfigurator<TContext> ContextPipe { get; }
 }

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public enum BusState
 {
-    public enum BusState
-    {
-        Created = 0,
-        Started = 1,
-        Faulted = 2,
-        Stopped = 3,
-    }
+    Created = 0,
+    Started = 1,
+    Faulted = 2,
+    Stopped = 3,
 }

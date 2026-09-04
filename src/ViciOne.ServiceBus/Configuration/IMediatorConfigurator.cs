@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IMediatorConfigurator :
+    IReceiveEndpointConfigurator,
+    IConsumeObserverConnector,
+    ISendObserverConnector,
+    IPublishObserverConnector
 {
-    public interface IMediatorConfigurator :
-        IReceiveEndpointConfigurator,
-        IConsumeObserverConnector,
-        ISendObserverConnector,
-        IPublishObserverConnector
-    {
-    }
 }

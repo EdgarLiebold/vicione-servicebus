@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus
-{
-    public interface IEntityNameValidator
-    {
-        bool IsValidEntityName(string name);
+namespace ViciOne.ServiceBus;
 
-        void ThrowIfInvalidEntityName(string name);
-    }
+public interface IEntityNameValidator
+{
+    bool IsValidEntityName(string name);
+
+    void ThrowIfInvalidEntityName(string name);
 }

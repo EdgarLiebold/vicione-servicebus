@@ -1,97 +1,95 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Saga;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
+    ConsumeContextScope<TMessage>,
+    SagaRepositoryContext<TSaga, TMessage>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Context;
-    using Saga;
-    using Serialization;
+    readonly ConsumeContext<TMessage> _consumeContext;
+    readonly ISagaConsumeContextFactory<MessageSessionContext, TSaga> _factory;
+    readonly MessageSessionContext _sessionContext;
 
-
-    public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
-        ConsumeContextScope<TMessage>,
-        SagaRepositoryContext<TSaga, TMessage>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public MessageSessionSagaRepositoryContext(ConsumeContext<TMessage> consumeContext, ISagaConsumeContextFactory<MessageSessionContext, TSaga> factory)
+        : base(consumeContext)
     {
-        readonly ConsumeContext<TMessage> _consumeContext;
-        readonly ISagaConsumeContextFactory<MessageSessionContext, TSaga> _factory;
-        readonly MessageSessionContext _sessionContext;
-
-        public MessageSessionSagaRepositoryContext(ConsumeContext<TMessage> consumeContext, ISagaConsumeContextFactory<MessageSessionContext, TSaga> factory)
-            : base(consumeContext)
+        if (!consumeContext.TryGetPayload(out MessageSessionContext sessionContext))
         {
-            if (!consumeContext.TryGetPayload(out MessageSessionContext sessionContext))
-            {
-                throw new SagaException($"The session-based saga repository requires an active message session: {TypeCache<TSaga>.ShortName}",
-                    typeof(TSaga), typeof(TMessage));
-            }
-
-            _consumeContext = consumeContext;
-            _sessionContext = sessionContext;
-            _factory = factory;
+            throw new SagaException($"The session-based saga repository requires an active message session: {TypeCache<TSaga>.ShortName}",
+                typeof(TSaga), typeof(TMessage));
         }
 
-        public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance,
-            SagaConsumeContextMode mode)
-            where T : class
-        {
-            return _factory.CreateSagaConsumeContext(_sessionContext, consumeContext, instance, mode);
-        }
+        _consumeContext = consumeContext;
+        _sessionContext = sessionContext;
+        _factory = factory;
+    }
 
-        public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
-        {
-            return _factory.CreateSagaConsumeContext(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Add);
-        }
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance,
+        SagaConsumeContextMode mode)
+        where T : class
+    {
+        return _factory.CreateSagaConsumeContext(_sessionContext, consumeContext, instance, mode);
+    }
 
-        public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
-        {
-            return Task.FromResult<SagaConsumeContext<TSaga, TMessage>>(default);
-        }
+    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    {
+        return _factory.CreateSagaConsumeContext(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Add);
+    }
 
-        public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
-        {
-            var instance = await ReadSagaState(_sessionContext).ConfigureAwait(false);
-            if (instance == null)
-                return default;
+    public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    {
+        return Task.FromResult<SagaConsumeContext<TSaga, TMessage>>(default);
+    }
 
-            return await _factory.CreateSagaConsumeContext(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
-        }
+    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    {
+        var instance = await ReadSagaState(_sessionContext).ConfigureAwait(false);
+        if (instance == null)
+            return default;
 
-        public Task Save(SagaConsumeContext<TSaga> context)
-        {
-            return WriteSagaState(_sessionContext, context.Saga);
-        }
+        return await _factory.CreateSagaConsumeContext(_sessionContext, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
+    }
 
-        public Task Update(SagaConsumeContext<TSaga> context)
-        {
-            return WriteSagaState(_sessionContext, context.Saga);
-        }
+    public Task Save(SagaConsumeContext<TSaga> context)
+    {
+        return WriteSagaState(_sessionContext, context.Saga);
+    }
 
-        public async Task Delete(SagaConsumeContext<TSaga> context)
-        {
-            await _sessionContext.SetStateAsync(null).ConfigureAwait(false);
-        }
+    public Task Update(SagaConsumeContext<TSaga> context)
+    {
+        return WriteSagaState(_sessionContext, context.Saga);
+    }
 
-        public Task Discard(SagaConsumeContext<TSaga> context)
-        {
-            return Task.CompletedTask;
-        }
+    public async Task Delete(SagaConsumeContext<TSaga> context)
+    {
+        await _sessionContext.SetStateAsync(null).ConfigureAwait(false);
+    }
 
-        public Task Undo(SagaConsumeContext<TSaga> context)
-        {
-            return Task.CompletedTask;
-        }
+    public Task Discard(SagaConsumeContext<TSaga> context)
+    {
+        return Task.CompletedTask;
+    }
 
-        static Task WriteSagaState(MessageSessionContext context, TSaga saga)
-        {
-            return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, ServiceBusMetadataJson.Options));
-        }
+    public Task Undo(SagaConsumeContext<TSaga> context)
+    {
+        return Task.CompletedTask;
+    }
 
-        static async Task<TSaga> ReadSagaState(MessageSessionContext context)
-        {
-            var state = await context.GetStateAsync().ConfigureAwait(false);
+    static Task WriteSagaState(MessageSessionContext context, TSaga saga)
+    {
+        return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, ServiceBusMetadataJson.Options));
+    }
 
-            return state?.ToObjectFromJson<TSaga>(ServiceBusMetadataJson.Options);
-        }
+    static async Task<TSaga> ReadSagaState(MessageSessionContext context)
+    {
+        var state = await context.GetStateAsync().ConfigureAwait(false);
+
+        return state?.ToObjectFromJson<TSaga>(ServiceBusMetadataJson.Options);
     }
 }

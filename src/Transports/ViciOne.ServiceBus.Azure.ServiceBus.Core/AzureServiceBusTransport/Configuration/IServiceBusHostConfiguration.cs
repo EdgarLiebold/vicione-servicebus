@@ -1,51 +1,49 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public interface IServiceBusHostConfiguration :
+    IHostConfiguration,
+    IReceiveConfigurator<IServiceBusReceiveEndpointConfigurator>
 {
-    using System;
-    using ViciOne.ServiceBus.Configuration;
-    using Topology;
+    ServiceBusHostSettings Settings { get; set; }
 
+    string BasePath { get; }
 
-    public interface IServiceBusHostConfiguration :
-        IHostConfiguration,
-        IReceiveConfigurator<IServiceBusReceiveEndpointConfigurator>
-    {
-        ServiceBusHostSettings Settings { get; set; }
+    IConnectionContextSupervisor ConnectionContextSupervisor { get; }
 
-        string BasePath { get; }
+    new IServiceBusBusTopology Topology { get; }
 
-        IConnectionContextSupervisor ConnectionContextSupervisor { get; }
+    /// <summary>
+    /// Apply the endpoint definition to the receive endpoint configurator
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="definition"></param>
+    void ApplyEndpointDefinition(IServiceBusReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
-        new IServiceBusBusTopology Topology { get; }
+    IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
+        Action<IServiceBusReceiveEndpointConfigurator> configure = null);
 
-        /// <summary>
-        /// Apply the endpoint definition to the receive endpoint configurator
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="definition"></param>
-        void ApplyEndpointDefinition(IServiceBusReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
+    IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ReceiveEndpointSettings settings, IServiceBusEndpointConfiguration
+        endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator> configure = null);
 
-        IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-            Action<IServiceBusReceiveEndpointConfigurator> configure = null);
+    void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+        where T : class;
 
-        IServiceBusReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(ReceiveEndpointSettings settings, IServiceBusEndpointConfiguration
-            endpointConfiguration, Action<IServiceBusReceiveEndpointConfigurator> configure = null);
+    void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator> configure);
 
-        void SubscriptionEndpoint<T>(string subscriptionName, Action<IServiceBusSubscriptionEndpointConfigurator> configure)
-            where T : class;
+    void SetNamespaceSeparatorToTilde();
 
-        void SubscriptionEndpoint(string subscriptionName, string topicPath, Action<IServiceBusSubscriptionEndpointConfigurator> configure);
+    void SetNamespaceSeparatorToUnderscore();
 
-        void SetNamespaceSeparatorToTilde();
+    void SetNamespaceSeparatorTo(string separator);
 
-        void SetNamespaceSeparatorToUnderscore();
+    IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration<T>(string subscriptionName,
+        Action<IServiceBusSubscriptionEndpointConfigurator> configure)
+        where T : class;
 
-        void SetNamespaceSeparatorTo(string separator);
-
-        IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration<T>(string subscriptionName,
-            Action<IServiceBusSubscriptionEndpointConfigurator> configure)
-            where T : class;
-
-        IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(string subscriptionName, string topicPath,
-            Action<IServiceBusSubscriptionEndpointConfigurator> configure);
-    }
+    IServiceBusSubscriptionEndpointConfiguration CreateSubscriptionEndpointConfiguration(string subscriptionName, string topicPath,
+        Action<IServiceBusSubscriptionEndpointConfigurator> configure);
 }

@@ -1,39 +1,37 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public class RequestConsumer :
+    IConsumer<RequestMessage>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    public static int CurrentConsumerCount;
+    public static int MaxConsumerCount;
+    readonly IReportConsumerMetric _report;
 
-
-    public class RequestConsumer :
-        IConsumer<RequestMessage>
+    public RequestConsumer(IReportConsumerMetric report)
     {
-        public static int CurrentConsumerCount;
-        public static int MaxConsumerCount;
-        readonly IReportConsumerMetric _report;
+        _report = report;
+    }
 
-        public RequestConsumer(IReportConsumerMetric report)
+    public async Task Consume(ConsumeContext<RequestMessage> context)
+    {
+        var current = Interlocked.Increment(ref CurrentConsumerCount);
+        var maxConsumerCount = MaxConsumerCount;
+        if (current > maxConsumerCount)
+            Interlocked.CompareExchange(ref MaxConsumerCount, current, maxConsumerCount);
+
+        try
         {
-            _report = report;
+            context.Respond(new ResponseMessage(context.Message.CorrelationId));
+
+            await _report.Consumed<RequestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
         }
-
-        public async Task Consume(ConsumeContext<RequestMessage> context)
+        finally
         {
-            var current = Interlocked.Increment(ref CurrentConsumerCount);
-            var maxConsumerCount = MaxConsumerCount;
-            if (current > maxConsumerCount)
-                Interlocked.CompareExchange(ref MaxConsumerCount, current, maxConsumerCount);
-
-            try
-            {
-                context.Respond(new ResponseMessage(context.Message.CorrelationId));
-
-                await _report.Consumed<RequestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
-            }
-            finally
-            {
-                Interlocked.Decrement(ref CurrentConsumerCount);
-            }
+            Interlocked.Decrement(ref CurrentConsumerCount);
         }
     }
 }

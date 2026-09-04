@@ -1,12 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Transports.Components;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Logging;
+using ViciOne.ServiceBus.Logging;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Transports.Components;
 /// <summary>
 /// Minimal runtime capability required by the kill switch. Keeping endpoint orchestration behind
 /// this boundary prevents the state machine from depending on unrelated send, publish and probe APIs.

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IEndpointConfigurator :
+    IConsumePipeConfigurator,
+    ISendPipelineConfigurator,
+    IPublishPipelineConfigurator,
+    IReceivePipelineConfigurator
 {
-    public interface IEndpointConfigurator :
-        IConsumePipeConfigurator,
-        ISendPipelineConfigurator,
-        IPublishPipelineConfigurator,
-        IReceivePipelineConfigurator
-    {
-    }
 }

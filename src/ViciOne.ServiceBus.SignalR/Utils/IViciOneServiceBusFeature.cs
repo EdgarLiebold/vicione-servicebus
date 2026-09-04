@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.SignalR.Utils
+namespace ViciOne.ServiceBus.SignalR.Utils;
+
+public interface IViciOneServiceBusFeature
 {
-    public interface IViciOneServiceBusFeature
-    {
-        ConcurrentHashSet<string> Groups { get; }
-    }
+    ConcurrentHashSet<string> Groups { get; }
 }

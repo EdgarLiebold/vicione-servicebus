@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Net.Mime;
+
+namespace ViciOne.ServiceBus;
+
+public interface IMessageDeserializer :
+    IProbeSite
 {
-    using System;
-    using System.Net.Mime;
+    ContentType ContentType { get; }
 
+    ConsumeContext Deserialize(ReceiveContext receiveContext);
 
-    public interface IMessageDeserializer :
-        IProbeSite
-    {
-        ContentType ContentType { get; }
+    SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null);
 
-        ConsumeContext Deserialize(ReceiveContext receiveContext);
-
-        SerializerContext Deserialize(MessageBody body, Headers headers, Uri? destinationAddress = null);
-
-        /// <summary>
-        /// Returns the appropriate message body for the message deserializer, using the input type
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        MessageBody GetMessageBody(string text);
-    }
+    /// <summary>
+    /// Returns the appropriate message body for the message deserializer, using the input type
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    MessageBody GetMessageBody(string text);
 }

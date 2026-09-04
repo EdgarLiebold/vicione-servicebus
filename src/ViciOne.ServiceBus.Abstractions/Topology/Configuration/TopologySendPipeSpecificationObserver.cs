@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class TopologySendPipeSpecificationObserver :
+    ISendPipeSpecificationObserver
 {
-    using System;
+    readonly ISendTopology _topology;
 
-
-    public class TopologySendPipeSpecificationObserver :
-        ISendPipeSpecificationObserver
+    public TopologySendPipeSpecificationObserver(ISendTopology topology)
     {
-        readonly ISendTopology _topology;
+        _topology = topology ?? throw new ArgumentNullException(nameof(topology));
+    }
 
-        public TopologySendPipeSpecificationObserver(ISendTopology topology)
-        {
-            _topology = topology ?? throw new ArgumentNullException(nameof(topology));
-        }
+    void ISendPipeSpecificationObserver.MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
+    {
+        ArgumentNullException.ThrowIfNull(specification);
 
-        void ISendPipeSpecificationObserver.MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
-        {
-            ArgumentNullException.ThrowIfNull(specification);
+        IMessageSendTopology<T> messageSendTopology = _topology.GetMessageTopology<T>();
 
-            IMessageSendTopology<T> messageSendTopology = _topology.GetMessageTopology<T>();
+        var topologySpecification = new MessageSendTopologyPipeSpecification<T>(messageSendTopology);
 
-            var topologySpecification = new MessageSendTopologyPipeSpecification<T>(messageSendTopology);
-
-            specification.AddParentMessageSpecification(topologySpecification);
-        }
+        specification.AddParentMessageSpecification(topologySpecification);
     }
 }

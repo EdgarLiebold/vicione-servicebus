@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public interface QueueSubscriptionHandle :
+    EntityHandle
 {
-    using ViciOne.ServiceBus.Topology;
-
-
-    public interface QueueSubscriptionHandle :
-        EntityHandle
-    {
-        TopicToQueueSubscription Subscription { get; }
-    }
+    TopicToQueueSubscription Subscription { get; }
 }

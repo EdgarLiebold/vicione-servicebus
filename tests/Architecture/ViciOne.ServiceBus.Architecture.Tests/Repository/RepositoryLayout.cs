@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
-
 using ViciOne.ServiceBus.Architecture.Tests.Build;
 
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 /// <summary>
 /// Locates the repository and the project files the evaluated-graph tests inspect.
 /// </summary>
@@ -42,11 +41,11 @@ internal static class RepositoryLayout
     internal static string ProductComparisonProject => Path.Combine(
         Root, "src", "ViciOne.ServiceBus.Abstractions", "ViciOne.ServiceBus.Abstractions.csproj");
 
-    /// <summary>The retired inherited compatibility-test directory, which must remain absent.</summary>
+    /// <summary>The removed compatibility-test directory, which must remain absent.</summary>
     internal static string RetiredTestFrameworkDirectory => Path.Combine(
         Root, "src", "ViciOne.ServiceBus.TestFramework");
 
-    /// <summary>The single native core test project.</summary>
+    /// <summary>The single core test project.</summary>
     internal static string NativeCoreTestProject => Path.Combine(
         Root, "tests", "ViciOne.ServiceBus.Tests", "ViciOne.ServiceBus.Tests.csproj");
 
@@ -59,11 +58,21 @@ internal static class RepositoryLayout
     /// </summary>
     internal static IReadOnlyList<string> ProductProjects => EnumerateProjects("src");
 
-    /// <summary>Every native-test project in the current replacement tree.</summary>
+    /// <summary>Every test project in the current repository tree.</summary>
     internal static IReadOnlyList<string> NativeTestProjects => EnumerateProjects("tests");
 
     /// <summary>Every compile-verified, non-deliverable sample project.</summary>
     internal static IReadOnlyList<string> SampleProjects => EnumerateProjects("samples");
+
+    /// <summary>Every MSBuild project governed by the repository root build contract.</summary>
+    internal static IReadOnlyList<string> GovernedProjects =>
+    [
+        .. EnumerateProjects("src"),
+        .. EnumerateProjects("tests"),
+        .. EnumerateProjects("samples"),
+        .. EnumerateProjects("benchmarks"),
+        .. EnumerateProjects("tools"),
+    ];
 
     /// <summary>Samples intentionally compiled only against freshly packed packages by their dedicated gate.</summary>
     internal static IReadOnlyList<string> PackageConsumerProjects => SampleProjects
@@ -73,7 +82,7 @@ internal static class RepositoryLayout
             StringComparison.OrdinalIgnoreCase))
         .ToArray();
 
-    /// <summary>Every currently materialized native test-profile solution.</summary>
+    /// <summary>Every currently materialized test-profile solution.</summary>
     internal static IReadOnlyList<string> TestProfileSolutions =>
         Directory.GetFiles(Root, "ViciOne.ServiceBus.Tests.*.slnx", SearchOption.TopDirectoryOnly)
             .OrderBy(path => path, StringComparer.Ordinal)

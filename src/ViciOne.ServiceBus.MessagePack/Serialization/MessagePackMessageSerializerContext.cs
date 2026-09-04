@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Internals;
 using MessagePack;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.Serialization;
 
 public class MessagePackMessageSerializerContext :
     BaseSerializerContext

@@ -1,37 +1,35 @@
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Adds exactly one first-class consumer-concurrency gate to a consumed message pipeline.
+/// </summary>
+internal sealed class ConsumerConcurrencyPipeSpecification<TMessage> :
+    IPipeSpecification<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IConsumerConcurrencyGate<TMessage> _gate;
+    readonly ConsumerConcurrencyPolicy _policy;
 
-
-    /// <summary>
-    /// Adds exactly one first-class consumer-concurrency gate to a consumed message pipeline.
-    /// </summary>
-    internal sealed class ConsumerConcurrencyPipeSpecification<TMessage> :
-        IPipeSpecification<ConsumeContext<TMessage>>
-        where TMessage : class
+    public ConsumerConcurrencyPipeSpecification(
+        IConsumerConcurrencyGate<TMessage> gate,
+        ConsumerConcurrencyPolicy policy)
     {
-        readonly IConsumerConcurrencyGate<TMessage> _gate;
-        readonly ConsumerConcurrencyPolicy _policy;
+        _gate = gate ?? throw new ArgumentNullException(nameof(gate));
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+    }
 
-        public ConsumerConcurrencyPipeSpecification(
-            IConsumerConcurrencyGate<TMessage> gate,
-            ConsumerConcurrencyPolicy policy)
-        {
-            _gate = gate ?? throw new ArgumentNullException(nameof(gate));
-            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
-        }
+    public void Apply(IPipeBuilder<ConsumeContext<TMessage>> builder)
+    {
+        builder.AddFilter(new ConsumerConcurrencyFilter<TMessage>(_gate, _policy));
+    }
 
-        public void Apply(IPipeBuilder<ConsumeContext<TMessage>> builder)
-        {
-            builder.AddFilter(new ConsumerConcurrencyFilter<TMessage>(_gate, _policy));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            yield break;
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
     }
 }

@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Configuration;
-using Internals;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public class AmazonSqsMessagePublishTopology<TMessage> :
     MessagePublishTopology<TMessage>,

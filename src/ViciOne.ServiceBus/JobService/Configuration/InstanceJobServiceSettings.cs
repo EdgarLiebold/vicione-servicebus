@@ -1,42 +1,41 @@
+using System;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.JobService;
+using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InstanceJobServiceSettings :
+    JobServiceSettings
 {
-    using System;
-    using JobService;
-    using Microsoft.Extensions.Options;
+    readonly JobConsumerOptions _options;
 
-
-    public class InstanceJobServiceSettings :
-        JobServiceSettings
+    public InstanceJobServiceSettings(IOptions<JobConsumerOptions> options)
+        : this(options.Value)
     {
-        readonly JobConsumerOptions _options;
+    }
 
-        public InstanceJobServiceSettings(IOptions<JobConsumerOptions> options)
-            : this(options.Value)
-        {
-        }
+    public InstanceJobServiceSettings(JobConsumerOptions options)
+    {
+        _options = options;
 
-        public InstanceJobServiceSettings(JobConsumerOptions options)
-        {
-            _options = options;
+        JobService = new JobServiceState(this);
+    }
 
-            JobService = new JobService(this);
-        }
+    public TimeSpan HeartbeatInterval => _options.HeartbeatInterval;
+    public TimeSpan RejectedJobDelay => _options.RejectedJobDelay;
+    public TimeProvider TimeProvider => _options.TimeProvider;
 
-        public TimeSpan HeartbeatInterval => _options.HeartbeatInterval;
-        public TimeSpan RejectedJobDelay => _options.RejectedJobDelay;
-        public TimeProvider TimeProvider => _options.TimeProvider;
+    public Uri? InstanceAddress { get; set; }
+    public IReceiveEndpointConfigurator? InstanceEndpointConfigurator { get; set; }
+    public IJobService JobService { get; }
 
-        public Uri? InstanceAddress { get; set; }
-        public IReceiveEndpointConfigurator? InstanceEndpointConfigurator { get; set; }
-        public IJobService JobService { get; }
+    public void ApplyConfiguration<T>(T configurator)
+        where T : IReceiveEndpointConfigurator
+    {
+        InstanceEndpointConfigurator = configurator;
 
-        public void ApplyConfiguration<T>(T configurator)
-            where T : IReceiveEndpointConfigurator
-        {
-            InstanceEndpointConfigurator = configurator;
-
-            InstanceAddress = configurator.InputAddress;
-        }
+        InstanceAddress = configurator.InputAddress;
     }
 }

@@ -1,6 +1,5 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IRider
 {
-    public interface IRider
-    {
-    }
 }

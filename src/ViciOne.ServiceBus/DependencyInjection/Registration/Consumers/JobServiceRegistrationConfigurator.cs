@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class JobServiceRegistrationConfigurator :
+    IJobServiceRegistrationConfigurator
 {
-    using System;
-    using Configuration;
+    readonly IBusRegistrationConfigurator _configurator;
+    readonly IJobServiceRegistration _registration;
 
-
-    public class JobServiceRegistrationConfigurator :
-        IJobServiceRegistrationConfigurator
+    public JobServiceRegistrationConfigurator(IBusRegistrationConfigurator configurator, IJobServiceRegistration registration)
     {
-        readonly IBusRegistrationConfigurator _configurator;
-        readonly IJobServiceRegistration _registration;
+        _configurator = configurator;
+        _registration = registration;
+    }
 
-        public JobServiceRegistrationConfigurator(IBusRegistrationConfigurator configurator, IJobServiceRegistration registration)
-        {
-            _configurator = configurator;
-            _registration = registration;
-        }
+    public IJobServiceRegistrationConfigurator Options(Action<JobConsumerOptions> configure)
+    {
+        _registration.AddConfigureAction(configure);
 
-        public IJobServiceRegistrationConfigurator Options(Action<JobConsumerOptions> configure)
-        {
-            _registration.AddConfigureAction(configure);
+        return this;
+    }
 
-            return this;
-        }
-
-        public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
-        {
-            configure?.Invoke(_registration.EndpointRegistrationConfigurator);
-        }
+    public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
+    {
+        configure?.Invoke(_registration.EndpointRegistrationConfigurator);
     }
 }

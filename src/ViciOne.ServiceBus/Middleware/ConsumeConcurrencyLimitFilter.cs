@@ -1,46 +1,44 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// A concurrency limit filter that is shared by multiple message types, so that a consumer
+/// accepting those various types can be limited to a specific number of consumer instances.
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+public class ConsumeConcurrencyLimitFilter<TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System.Threading.Tasks;
+    readonly IConcurrencyLimiter _limiter;
 
-
-    /// <summary>
-    /// A concurrency limit filter that is shared by multiple message types, so that a consumer
-    /// accepting those various types can be limited to a specific number of consumer instances.
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    public class ConsumeConcurrencyLimitFilter<TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TMessage : class
+    public ConsumeConcurrencyLimitFilter(IConcurrencyLimiter limiter)
     {
-        readonly IConcurrencyLimiter _limiter;
+        _limiter = limiter;
+    }
 
-        public ConsumeConcurrencyLimitFilter(IConcurrencyLimiter limiter)
+    public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        await _limiter.Wait(context.CancellationToken).ConfigureAwait(false);
+
+        try
         {
-            _limiter = limiter;
+            await next.Send(context).ConfigureAwait(false);
         }
-
-        public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+        finally
         {
-            await _limiter.Wait(context.CancellationToken).ConfigureAwait(false);
-
-            try
-            {
-                await next.Send(context).ConfigureAwait(false);
-            }
-            finally
-            {
-                _limiter.Release();
-            }
+            _limiter.Release();
         }
+    }
 
-        public void Probe(ProbeContext context)
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("concurrencyLimit");
+        scope.Set(new
         {
-            var scope = context.CreateFilterScope("concurrencyLimit");
-            scope.Set(new
-            {
-                _limiter.Limit,
-                _limiter.Available
-            });
-        }
+            _limiter.Limit,
+            _limiter.Available
+        });
     }
 }

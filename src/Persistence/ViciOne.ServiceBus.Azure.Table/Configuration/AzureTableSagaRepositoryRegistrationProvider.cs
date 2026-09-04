@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class AzureTableSagaRepositoryRegistrationProvider :
+    ISagaRepositoryRegistrationProvider
 {
-    using System;
+    readonly Action<IAzureTableSagaRepositoryConfigurator> _configure;
 
-
-    public class AzureTableSagaRepositoryRegistrationProvider :
-        ISagaRepositoryRegistrationProvider
+    public AzureTableSagaRepositoryRegistrationProvider(Action<IAzureTableSagaRepositoryConfigurator> configure)
     {
-        readonly Action<IAzureTableSagaRepositoryConfigurator> _configure;
+        ArgumentNullException.ThrowIfNull(configure);
+        _configure = configure;
+    }
 
-        public AzureTableSagaRepositoryRegistrationProvider(Action<IAzureTableSagaRepositoryConfigurator> configure)
-        {
-            ArgumentNullException.ThrowIfNull(configure);
-            _configure = configure;
-        }
-
-        public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga
-        {
-            configurator.AzureTableRepository(_configure);
-        }
+    public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+        where TSaga : class, ISaga
+    {
+        configurator.AzureTableRepository(_configure);
     }
 }

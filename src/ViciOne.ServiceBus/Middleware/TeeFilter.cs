@@ -1,90 +1,88 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Connects multiple output pipes to a single input pipe
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+public class TeeFilter<TContext> :
+    ITeeFilter<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Util;
+    readonly Connectable<IPipe<TContext>> _connections;
 
-
-    /// <summary>
-    /// Connects multiple output pipes to a single input pipe
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public class TeeFilter<TContext> :
-        ITeeFilter<TContext>
-        where TContext : class, PipeContext
+    public TeeFilter()
     {
-        readonly Connectable<IPipe<TContext>> _connections;
-
-        public TeeFilter()
-        {
-            _connections = new Connectable<IPipe<TContext>>();
-        }
-
-        public int Count => _connections.Count;
-
-        public void Probe(ProbeContext context)
-        {
-            _connections.ForEach(pipe => pipe.Probe(context));
-        }
-
-        [DebuggerNonUserCode]
-        public Task Send(TContext context, IPipe<TContext> next)
-        {
-            var connectionsTask = _connections.ForEachAsync(pipe => pipe.Send(context));
-            if (connectionsTask.Status == TaskStatus.RanToCompletion)
-                return next.Send(context);
-
-            async Task SendAsync()
-            {
-                await connectionsTask.ConfigureAwait(false);
-
-                await next.Send(context).ConfigureAwait(false);
-            }
-
-            return SendAsync();
-        }
-
-        public ConnectHandle ConnectPipe(IPipe<TContext> pipe)
-        {
-            return _connections.Connect(pipe);
-        }
+        _connections = new Connectable<IPipe<TContext>>();
     }
 
+    public int Count => _connections.Count;
 
-    /// <summary>
-    /// Connects multiple output pipes to a single input pipe
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    /// <typeparam name="TKey">The key type</typeparam>
-    public class TeeFilter<TContext, TKey> :
-        TeeFilter<TContext>,
-        ITeeFilter<TContext, TKey>
-        where TContext : class, PipeContext
+    public void Probe(ProbeContext context)
     {
-        readonly KeyAccessor<TContext, TKey> _keyAccessor;
-        readonly Lazy<IKeyPipeConnector<TKey>> _keyConnections;
+        _connections.ForEach(pipe => pipe.Probe(context));
+    }
 
-        public TeeFilter(KeyAccessor<TContext, TKey> keyAccessor)
+    [DebuggerNonUserCode]
+    public Task Send(TContext context, IPipe<TContext> next)
+    {
+        var connectionsTask = _connections.ForEachAsync(pipe => pipe.Send(context));
+        if (connectionsTask.Status == TaskStatus.RanToCompletion)
+            return next.Send(context);
+
+        async Task SendAsync()
         {
-            _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
+            await connectionsTask.ConfigureAwait(false);
 
-            _keyConnections = new Lazy<IKeyPipeConnector<TKey>>(ConnectKeyFilter);
+            await next.Send(context).ConfigureAwait(false);
         }
 
-        public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
-            where T : class, PipeContext
-        {
-            return _keyConnections.Value.ConnectPipe(key, pipe);
-        }
+        return SendAsync();
+    }
 
-        IKeyPipeConnector<TKey> ConnectKeyFilter()
-        {
-            var filter = new KeyFilter<TContext, TKey>(_keyAccessor);
+    public ConnectHandle ConnectPipe(IPipe<TContext> pipe)
+    {
+        return _connections.Connect(pipe);
+    }
+}
 
-            ConnectPipe(filter.ToPipe());
 
-            return filter;
-        }
+/// <summary>
+/// Connects multiple output pipes to a single input pipe
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TKey">The key type</typeparam>
+public class TeeFilter<TContext, TKey> :
+    TeeFilter<TContext>,
+    ITeeFilter<TContext, TKey>
+    where TContext : class, PipeContext
+{
+    readonly KeyAccessor<TContext, TKey> _keyAccessor;
+    readonly Lazy<IKeyPipeConnector<TKey>> _keyConnections;
+
+    public TeeFilter(KeyAccessor<TContext, TKey> keyAccessor)
+    {
+        _keyAccessor = keyAccessor ?? throw new ArgumentNullException(nameof(keyAccessor));
+
+        _keyConnections = new Lazy<IKeyPipeConnector<TKey>>(ConnectKeyFilter);
+    }
+
+    public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
+        where T : class, PipeContext
+    {
+        return _keyConnections.Value.ConnectPipe(key, pipe);
+    }
+
+    IKeyPipeConnector<TKey> ConnectKeyFilter()
+    {
+        var filter = new KeyFilter<TContext, TKey>(_keyAccessor);
+
+        ConnectPipe(filter.ToPipe());
+
+        return filter;
     }
 }

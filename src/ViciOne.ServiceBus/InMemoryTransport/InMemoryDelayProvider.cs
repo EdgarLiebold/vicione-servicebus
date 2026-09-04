@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.InMemoryTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.InMemoryTransport;
 
 public sealed class InMemoryDelayProvider :
     IAsyncDisposable,

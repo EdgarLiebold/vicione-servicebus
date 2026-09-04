@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.Clients
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Clients;
+
+public class PublishRequestSendEndpoint<TRequest> :
+    RequestSendEndpoint<TRequest>
+    where TRequest : class
 {
-    using System.Threading.Tasks;
+    readonly IPublishEndpointProvider _provider;
 
-
-    public class PublishRequestSendEndpoint<TRequest> :
-        RequestSendEndpoint<TRequest>
-        where TRequest : class
+    public PublishRequestSendEndpoint(IPublishEndpointProvider provider, ConsumeContext? consumeContext)
+        : base(consumeContext)
     {
-        readonly IPublishEndpointProvider _provider;
+        _provider = provider;
+    }
 
-        public PublishRequestSendEndpoint(IPublishEndpointProvider provider, ConsumeContext consumeContext)
-            : base(consumeContext)
-        {
-            _provider = provider;
-        }
-
-        protected override async Task<ISendEndpoint> GetSendEndpoint()
-        {
-            return await _provider.GetPublishSendEndpoint<TRequest>().ConfigureAwait(false);
-        }
+    protected override async Task<ISendEndpoint> GetSendEndpoint()
+    {
+        return await _provider.GetPublishSendEndpoint<TRequest>().ConfigureAwait(false);
     }
 }

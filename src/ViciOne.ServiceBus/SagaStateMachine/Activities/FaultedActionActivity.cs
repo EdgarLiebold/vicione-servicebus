@@ -1,98 +1,96 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class FaultedActionActivity<TSaga, TException> :
+    IStateMachineActivity<TSaga>
+    where TException : Exception
+    where TSaga : class, SagaStateMachineInstance
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Action<BehaviorExceptionContext<TSaga, TException>> _action;
 
-
-    public class FaultedActionActivity<TSaga, TException> :
-        IStateMachineActivity<TSaga>
-        where TException : Exception
-        where TSaga : class, SagaStateMachineInstance
+    public FaultedActionActivity(Action<BehaviorExceptionContext<TSaga, TException>> action)
     {
-        readonly Action<BehaviorExceptionContext<TSaga, TException>> _action;
-
-        public FaultedActionActivity(Action<BehaviorExceptionContext<TSaga, TException>> action)
-        {
-            _action = action;
-        }
-
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("then-faulted");
-        }
-
-        public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
-        {
-            return next.Execute(context);
-        }
-
-        public Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
-            where TData : class
-        {
-            return next.Execute(context);
-        }
-
-        public Task Faulted<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
-            where T : Exception
-        {
-            if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
-                _action(exceptionContext);
-
-            return next.Faulted(context);
-        }
-
-        public Task Faulted<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
-            where TData : class
-            where T : Exception
-        {
-            if (context is BehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
-                _action(exceptionContext);
-
-            return next.Faulted(context);
-        }
+        _action = action;
     }
 
-
-    public class FaultedActionActivity<TSaga, TMessage, TException> :
-        IStateMachineActivity<TSaga, TMessage>
-        where TSaga : class, SagaStateMachineInstance
-        where TException : Exception
-        where TMessage : class
+    public void Accept(StateMachineVisitor visitor)
     {
-        readonly Action<BehaviorExceptionContext<TSaga, TMessage, TException>> _action;
+        visitor.Visit(this);
+    }
 
-        public FaultedActionActivity(Action<BehaviorExceptionContext<TSaga, TMessage, TException>> action)
-        {
-            _action = action;
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("then-faulted");
+    }
 
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+    public Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    {
+        return next.Execute(context);
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("then-faulted");
-        }
+    public Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
+        where TData : class
+    {
+        return next.Execute(context);
+    }
 
-        public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
-        {
-            return next.Execute(context);
-        }
+    public Task Faulted<T>(BehaviorExceptionContext<TSaga, T> context, IBehavior<TSaga> next)
+        where T : Exception
+    {
+        if (context is BehaviorExceptionContext<TSaga, TException> exceptionContext)
+            _action(exceptionContext);
 
-        public Task Faulted<T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
-            where T : Exception
-        {
-            if (context is BehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
-                _action(exceptionContext);
+        return next.Faulted(context);
+    }
 
-            return next.Faulted(context);
-        }
+    public Task Faulted<TData, T>(BehaviorExceptionContext<TSaga, TData, T> context, IBehavior<TSaga, TData> next)
+        where TData : class
+        where T : Exception
+    {
+        if (context is BehaviorExceptionContext<TSaga, TData, TException> exceptionContext)
+            _action(exceptionContext);
+
+        return next.Faulted(context);
+    }
+}
+
+
+public class FaultedActionActivity<TSaga, TMessage, TException> :
+    IStateMachineActivity<TSaga, TMessage>
+    where TSaga : class, SagaStateMachineInstance
+    where TException : Exception
+    where TMessage : class
+{
+    readonly Action<BehaviorExceptionContext<TSaga, TMessage, TException>> _action;
+
+    public FaultedActionActivity(Action<BehaviorExceptionContext<TSaga, TMessage, TException>> action)
+    {
+        _action = action;
+    }
+
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("then-faulted");
+    }
+
+    public Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    {
+        return next.Execute(context);
+    }
+
+    public Task Faulted<T>(BehaviorExceptionContext<TSaga, TMessage, T> context, IBehavior<TSaga, TMessage> next)
+        where T : Exception
+    {
+        if (context is BehaviorExceptionContext<TSaga, TMessage, TException> exceptionContext)
+            _action(exceptionContext);
+
+        return next.Faulted(context);
     }
 }

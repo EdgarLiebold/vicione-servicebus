@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISagaQueryPropertySelector<in TData, TProperty>
+    where TData : class
 {
-    public interface ISagaQueryPropertySelector<in TData, TProperty>
-        where TData : class
-    {
-        bool TryGetProperty(ConsumeContext<TData> context, out TProperty property);
-    }
+    bool TryGetProperty(ConsumeContext<TData> context, out TProperty property);
 }

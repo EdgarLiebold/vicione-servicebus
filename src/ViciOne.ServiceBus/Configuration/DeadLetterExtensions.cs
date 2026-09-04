@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public static class DeadLetterExtensions
 {
-    using System;
-    using Configuration;
-
-
-    public static class DeadLetterExtensions
+    /// <summary>
+    /// Rescue exceptions via the alternate pipe
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="rescuePipe"></param>
+    public static void UseDeadLetter(this IPipeConfigurator<ReceiveContext> configurator, IPipe<ReceiveContext> rescuePipe)
     {
-        /// <summary>
-        /// Rescue exceptions via the alternate pipe
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="rescuePipe"></param>
-        public static void UseDeadLetter(this IPipeConfigurator<ReceiveContext> configurator, IPipe<ReceiveContext> rescuePipe)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
 
-            var rescueConfigurator = new DeadLetterPipeSpecification(rescuePipe);
+        var rescueConfigurator = new DeadLetterPipeSpecification(rescuePipe);
 
-            configurator.AddPipeSpecification(rescueConfigurator);
-        }
+        configurator.AddPipeSpecification(rescueConfigurator);
     }
 }

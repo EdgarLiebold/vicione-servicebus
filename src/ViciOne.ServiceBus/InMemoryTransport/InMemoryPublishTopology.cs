@@ -1,71 +1,69 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using System;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public class InMemoryPublishTopology :
+    PublishTopology,
+    IInMemoryPublishTopologyConfigurator
 {
-    using System;
-    using Metadata;
-    using Topology;
+    readonly IMessageTopology _messageTopology;
 
-
-    public class InMemoryPublishTopology :
-        PublishTopology,
-        IInMemoryPublishTopologyConfigurator
+    public InMemoryPublishTopology(IMessageTopology messageTopology)
     {
-        readonly IMessageTopology _messageTopology;
+        _messageTopology = messageTopology;
+    }
 
-        public InMemoryPublishTopology(IMessageTopology messageTopology)
+    IInMemoryMessagePublishTopology<T> IInMemoryPublishTopology.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>() as IInMemoryMessagePublishTopology<T>;
+    }
+
+    IInMemoryMessagePublishTopologyConfigurator<T> IInMemoryPublishTopologyConfigurator.GetMessageTopology<T>()
+    {
+        return GetMessageTopology<T>() as IInMemoryMessagePublishTopologyConfigurator<T>;
+    }
+
+    IInMemoryMessagePublishTopologyConfigurator IInMemoryPublishTopologyConfigurator.GetMessageTopology(Type messageType)
+    {
+        return GetMessageTopology(messageType) as IInMemoryMessagePublishTopologyConfigurator;
+    }
+
+    protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
+    {
+        var topology = new InMemoryMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());
+
+        var connector = new ImplementedMessageTypeConnector<T>(this, topology);
+
+        ImplementedMessageTypeCache<T>.EnumerateImplementedTypes(connector);
+
+        OnMessageTopologyCreated(topology);
+
+        return topology;
+    }
+
+
+    class ImplementedMessageTypeConnector<TMessage> :
+        IImplementedMessageType
+        where TMessage : class
+    {
+        readonly InMemoryMessagePublishTopology<TMessage> _messagePublishTopologyConfigurator;
+        readonly IInMemoryPublishTopologyConfigurator _publishTopology;
+
+        public ImplementedMessageTypeConnector(IInMemoryPublishTopologyConfigurator publishTopology,
+            InMemoryMessagePublishTopology<TMessage> messagePublishTopologyConfigurator)
         {
-            _messageTopology = messageTopology;
+            _publishTopology = publishTopology;
+            _messagePublishTopologyConfigurator = messagePublishTopologyConfigurator;
         }
 
-        IInMemoryMessagePublishTopology<T> IInMemoryPublishTopology.GetMessageTopology<T>()
+        public void ImplementsMessageType<T>(bool direct)
+            where T : class
         {
-            return GetMessageTopology<T>() as IInMemoryMessagePublishTopology<T>;
-        }
+            IInMemoryMessagePublishTopologyConfigurator<T> messageTopology = _publishTopology.GetMessageTopology<T>();
 
-        IInMemoryMessagePublishTopologyConfigurator<T> IInMemoryPublishTopologyConfigurator.GetMessageTopology<T>()
-        {
-            return GetMessageTopology<T>() as IInMemoryMessagePublishTopologyConfigurator<T>;
-        }
-
-        IInMemoryMessagePublishTopologyConfigurator IInMemoryPublishTopologyConfigurator.GetMessageTopology(Type messageType)
-        {
-            return GetMessageTopology(messageType) as IInMemoryMessagePublishTopologyConfigurator;
-        }
-
-        protected override IMessagePublishTopologyConfigurator CreateMessageTopology<T>()
-        {
-            var topology = new InMemoryMessagePublishTopology<T>(this, _messageTopology.GetMessageTopology<T>());
-
-            var connector = new ImplementedMessageTypeConnector<T>(this, topology);
-
-            ImplementedMessageTypeCache<T>.EnumerateImplementedTypes(connector);
-
-            OnMessageTopologyCreated(topology);
-
-            return topology;
-        }
-
-
-        class ImplementedMessageTypeConnector<TMessage> :
-            IImplementedMessageType
-            where TMessage : class
-        {
-            readonly InMemoryMessagePublishTopology<TMessage> _messagePublishTopologyConfigurator;
-            readonly IInMemoryPublishTopologyConfigurator _publishTopology;
-
-            public ImplementedMessageTypeConnector(IInMemoryPublishTopologyConfigurator publishTopology,
-                InMemoryMessagePublishTopology<TMessage> messagePublishTopologyConfigurator)
-            {
-                _publishTopology = publishTopology;
-                _messagePublishTopologyConfigurator = messagePublishTopologyConfigurator;
-            }
-
-            public void ImplementsMessageType<T>(bool direct)
-                where T : class
-            {
-                IInMemoryMessagePublishTopologyConfigurator<T> messageTopology = _publishTopology.GetMessageTopology<T>();
-
-                _messagePublishTopologyConfigurator.AddImplementedMessageConfigurator(messageTopology, direct);
-            }
+            _messagePublishTopologyConfigurator.AddImplementedMessageConfigurator(messageTopology, direct);
         }
     }
 }

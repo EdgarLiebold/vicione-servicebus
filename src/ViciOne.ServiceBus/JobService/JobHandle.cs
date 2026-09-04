@@ -1,24 +1,22 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService
-{
-    using System;
-    using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService;
+
+/// <summary>
+/// A JobHandle contains the JobContext, Task, and provides access to the job control
+/// </summary>
+public interface JobHandle :
+    IAsyncDisposable
+{
+    Guid JobId { get; }
+
+    Task JobTask { get; }
 
     /// <summary>
-    /// A JobHandle contains the JobContext, Task, and provides access to the job control
+    /// Cancel the job task
     /// </summary>
-    public interface JobHandle :
-        IAsyncDisposable
-    {
-        Guid JobId { get; }
-
-        Task JobTask { get; }
-
-        /// <summary>
-        /// Cancel the job task
-        /// </summary>
-        /// <returns></returns>
-        Task Cancel(string? reason);
-    }
+    /// <returns></returns>
+    Task Cancel(string? reason);
 }

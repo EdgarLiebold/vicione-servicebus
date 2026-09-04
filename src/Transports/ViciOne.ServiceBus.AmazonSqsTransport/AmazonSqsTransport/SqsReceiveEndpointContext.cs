@@ -1,8 +1,7 @@
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Transports;
+
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
-using Topology;
-using Transports;
-
 
 public interface SqsReceiveEndpointContext :
     ReceiveEndpointContext

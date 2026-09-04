@@ -1,13 +1,12 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Serialization;
 
 public class JobPropertyCollection :
     ISetPropertyCollection

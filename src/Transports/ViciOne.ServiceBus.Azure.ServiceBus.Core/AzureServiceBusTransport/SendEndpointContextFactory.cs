@@ -1,63 +1,61 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class SendEndpointContextFactory :
+    IPipeContextFactory<SendEndpointContext>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Agents;
-    using Internals;
-    using Middleware;
+    readonly ConfigureServiceBusTopologyFilter<SendSettings> _configureTopologyFilter;
+    readonly SendSettings _settings;
+    readonly IConnectionContextSupervisor _supervisor;
 
-
-    public class SendEndpointContextFactory :
-        IPipeContextFactory<SendEndpointContext>
+    public SendEndpointContextFactory(IConnectionContextSupervisor supervisor, ConfigureServiceBusTopologyFilter<SendSettings> configureTopologyFilter,
+        SendSettings settings)
     {
-        readonly ConfigureServiceBusTopologyFilter<SendSettings> _configureTopologyFilter;
-        readonly SendSettings _settings;
-        readonly IConnectionContextSupervisor _supervisor;
+        _supervisor = supervisor;
+        _configureTopologyFilter = configureTopologyFilter;
+        _settings = settings;
+    }
 
-        public SendEndpointContextFactory(IConnectionContextSupervisor supervisor, ConfigureServiceBusTopologyFilter<SendSettings> configureTopologyFilter,
-            SendSettings settings)
+    public IPipeContextAgent<SendEndpointContext> CreateContext(ISupervisor supervisor)
+    {
+        IAsyncPipeContextAgent<SendEndpointContext> asyncContext = supervisor.AddAsyncContext<SendEndpointContext>();
+
+        CreateSendEndpointContext(asyncContext, supervisor.Stopped);
+
+        return asyncContext;
+    }
+
+    public IActivePipeContextAgent<SendEndpointContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<SendEndpointContext> context,
+        CancellationToken cancellationToken)
+    {
+        return supervisor.AddActiveContext(context, CreateSharedContext(context.Context, cancellationToken));
+    }
+
+    void CreateSendEndpointContext(IAsyncPipeContextAgent<SendEndpointContext> asyncContext, CancellationToken cancellationToken)
+    {
+        async Task<SendEndpointContext> Create(ConnectionContext context, CancellationToken createCancellationToken)
         {
-            _supervisor = supervisor;
-            _configureTopologyFilter = configureTopologyFilter;
-            _settings = settings;
+            var messageSender = context.CreateMessageSender(_settings.EntityPath);
+
+            var sendEndpointContext = new MessageSendEndpointContext(context, messageSender);
+
+            await _configureTopologyFilter.Configure(sendEndpointContext, createCancellationToken).ConfigureAwait(false);
+
+            return sendEndpointContext;
         }
 
-        public IPipeContextAgent<SendEndpointContext> CreateContext(ISupervisor supervisor)
-        {
-            IAsyncPipeContextAgent<SendEndpointContext> asyncContext = supervisor.AddAsyncContext<SendEndpointContext>();
+        _supervisor.StartAgent(asyncContext, Create, cancellationToken);
+    }
 
-            CreateSendEndpointContext(asyncContext, supervisor.Stopped);
-
-            return asyncContext;
-        }
-
-        public IActivePipeContextAgent<SendEndpointContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<SendEndpointContext> context,
-            CancellationToken cancellationToken)
-        {
-            return supervisor.AddActiveContext(context, CreateSharedContext(context.Context, cancellationToken));
-        }
-
-        void CreateSendEndpointContext(IAsyncPipeContextAgent<SendEndpointContext> asyncContext, CancellationToken cancellationToken)
-        {
-            async Task<SendEndpointContext> Create(ConnectionContext context, CancellationToken createCancellationToken)
-            {
-                var messageSender = context.CreateMessageSender(_settings.EntityPath);
-
-                var sendEndpointContext = new MessageSendEndpointContext(context, messageSender);
-
-                await _configureTopologyFilter.Configure(sendEndpointContext, createCancellationToken).ConfigureAwait(false);
-
-                return sendEndpointContext;
-            }
-
-            _supervisor.StartAgent(asyncContext, Create, cancellationToken);
-        }
-
-        static async Task<SendEndpointContext> CreateSharedContext(Task<SendEndpointContext> context, CancellationToken cancellationToken)
-        {
-            return context.IsCompletedSuccessfully()
-                ? new SharedSendEndpointContext(context.Result, cancellationToken)
-                : new SharedSendEndpointContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
-        }
+    static async Task<SendEndpointContext> CreateSharedContext(Task<SendEndpointContext> context, CancellationToken cancellationToken)
+    {
+        return context.IsCompletedSuccessfully()
+            ? new SharedSendEndpointContext(context.Result, cancellationToken)
+            : new SharedSendEndpointContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 }

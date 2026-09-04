@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.JobService.Scheduling;
-
 using System.Globalization;
 using System.Text;
 
+namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 readonly struct CronExpressionSummary
 {

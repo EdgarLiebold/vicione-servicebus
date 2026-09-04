@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class ConsumerRegistrationConfigurator<TConsumer> :
+    IConsumerRegistrationConfigurator<TConsumer>
+    where TConsumer : class, IConsumer
 {
-    using System;
-    using Configuration;
+    readonly IRegistrationConfigurator _configurator;
+    readonly IConsumerRegistration _registration;
 
-
-    public class ConsumerRegistrationConfigurator<TConsumer> :
-        IConsumerRegistrationConfigurator<TConsumer>
-        where TConsumer : class, IConsumer
+    public ConsumerRegistrationConfigurator(IRegistrationConfigurator configurator, IConsumerRegistration registration)
     {
-        readonly IRegistrationConfigurator _configurator;
-        readonly IConsumerRegistration _registration;
+        _configurator = configurator;
+        _registration = registration;
+    }
 
-        public ConsumerRegistrationConfigurator(IRegistrationConfigurator configurator, IConsumerRegistration registration)
-        {
-            _configurator = configurator;
-            _registration = registration;
-        }
+    public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
+    {
+        if (!_registration.IncludeInConfigureEndpoints)
+            throw new ConfigurationException("Consumer is excluded from ConfigureEndpoints");
 
-        public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
-        {
-            if (!_registration.IncludeInConfigureEndpoints)
-                throw new ConfigurationException("Consumer is excluded from ConfigureEndpoints");
+        var configurator = new EndpointRegistrationConfigurator<TConsumer>();
 
-            var configurator = new EndpointRegistrationConfigurator<TConsumer>();
+        configure?.Invoke(configurator);
 
-            configure?.Invoke(configurator);
+        _configurator.AddEndpoint<ConsumerEndpointDefinition<TConsumer>, TConsumer>(_registration, configurator.Settings);
+    }
 
-            _configurator.AddEndpoint<ConsumerEndpointDefinition<TConsumer>, TConsumer>(_registration, configurator.Settings);
-        }
-
-        public void ExcludeFromConfigureEndpoints()
-        {
-            _registration.IncludeInConfigureEndpoints = false;
-        }
+    public void ExcludeFromConfigureEndpoints()
+    {
+        _registration.IncludeInConfigureEndpoints = false;
     }
 }

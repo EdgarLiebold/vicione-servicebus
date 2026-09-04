@@ -1,38 +1,36 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+internal sealed class TimeoutSagaConfigurationObserver<TSaga> :
+    ISagaConfigurationObserver
+    where TSaga : class, ISaga
 {
-    using System;
+    readonly ISagaConfigurator<TSaga> _configurator;
+    readonly Action<ITimeoutConfigurator> _configure;
 
-
-    internal sealed class TimeoutSagaConfigurationObserver<TSaga> :
-        ISagaConfigurationObserver
-        where TSaga : class, ISaga
+    public TimeoutSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure)
     {
-        readonly ISagaConfigurator<TSaga> _configurator;
-        readonly Action<ITimeoutConfigurator> _configure;
+        _configurator = configurator;
+        _configure = configure;
+    }
 
-        public TimeoutSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure)
-        {
-            _configurator = configurator;
-            _configure = configure;
-        }
+    void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
+    {
+    }
 
-        void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
-        {
-        }
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
+        where TInstance : class, ISaga, SagaStateMachineInstance
+    {
+    }
 
-        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance
-        {
-        }
+    void ISagaConfigurationObserver.SagaMessageConfigured<T, TMessage>(ISagaMessageConfigurator<T, TMessage> configurator)
+    {
+        var specification = new TimeoutSpecification<TMessage>();
 
-        void ISagaConfigurationObserver.SagaMessageConfigured<T, TMessage>(ISagaMessageConfigurator<T, TMessage> configurator)
-        {
-            var specification = new TimeoutSpecification<TMessage>();
+        _configure(specification);
 
-            _configure(specification);
-
-            _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
-        }
+        _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
     }
 }

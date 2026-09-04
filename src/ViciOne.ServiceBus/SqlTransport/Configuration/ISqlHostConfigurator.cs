@@ -1,9 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Data;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public interface ISqlHostConfigurator
 {

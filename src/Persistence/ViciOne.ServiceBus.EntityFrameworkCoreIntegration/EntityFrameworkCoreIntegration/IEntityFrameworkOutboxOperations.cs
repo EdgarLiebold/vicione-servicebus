@@ -1,13 +1,11 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 /// <summary>
 /// Operational API for a single bus/DbContext outbox. Authorization, audit and operator UI belong to the host.
 /// </summary>

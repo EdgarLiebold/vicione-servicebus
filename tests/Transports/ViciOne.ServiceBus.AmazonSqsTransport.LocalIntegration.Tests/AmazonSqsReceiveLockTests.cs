@@ -1,12 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
-using Amazon.SQS;
-using Amazon.SQS.Model;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 public sealed class AmazonSqsReceiveLockTests
 {

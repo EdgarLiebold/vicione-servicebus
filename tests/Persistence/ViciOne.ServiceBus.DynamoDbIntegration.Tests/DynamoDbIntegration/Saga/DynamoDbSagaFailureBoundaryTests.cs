@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga;
-
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -11,6 +9,8 @@ using ViciOne.ServiceBus.DynamoDbIntegration.Saga;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.DynamoDbIntegration.Tests.DynamoDbIntegration.Saga;
 
 public sealed class DynamoDbSagaFailureBoundaryTests
 {

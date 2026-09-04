@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+
+namespace ViciOne.ServiceBus.Transports;
+
+[Flags]
+public enum TransportHeaderOptions
 {
-    using System;
+    IncludeFaultMessage = 1,
+    IncludeFaultDetail = 2,
+    IncludeHost = 4,
 
-
-    [Flags]
-    public enum TransportHeaderOptions
-    {
-        IncludeFaultMessage = 1,
-        IncludeFaultDetail = 2,
-        IncludeHost = 4,
-
-        Default = IncludeFaultMessage | IncludeFaultDetail
-    }
+    Default = IncludeFaultMessage | IncludeFaultDetail
 }

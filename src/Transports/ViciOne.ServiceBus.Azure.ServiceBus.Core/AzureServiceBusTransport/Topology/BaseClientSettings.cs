@@ -1,50 +1,48 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public abstract class BaseClientSettings :
+    ClientSettings
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
+    readonly IServiceBusEndpointConfiguration _configuration;
 
-
-    public abstract class BaseClientSettings :
-        ClientSettings
+    protected BaseClientSettings(IServiceBusEndpointConfiguration configuration, IServiceBusEndpointEntityConfigurator configurator)
     {
-        readonly IServiceBusEndpointConfiguration _configuration;
+        _configuration = configuration;
+        Configurator = configurator;
 
-        protected BaseClientSettings(IServiceBusEndpointConfiguration configuration, IServiceBusEndpointEntityConfigurator configurator)
-        {
-            _configuration = configuration;
-            Configurator = configurator;
-
-            MaxAutoRenewDuration = Defaults.MaxAutoRenewDuration;
-            SessionIdleTimeout = Defaults.SessionIdleTimeout;
-        }
-
-        public IServiceBusEndpointEntityConfigurator Configurator { get; }
-
-        public abstract bool RequiresSession { get; }
-        public abstract int MaxConcurrentSessions { get; }
-        public abstract int MaxConcurrentCallsPerSession { get; }
-
-        public TimeSpan? SessionIdleTimeout { get; set; }
-
-        public int MaxConcurrentCalls => Math.Max(_configuration.Transport.GetConcurrentMessageLimit(), 1);
-        public int PrefetchCount => _configuration.Transport.PrefetchCount;
-
-        public TimeSpan MaxAutoRenewDuration { get; set; }
-
-        public abstract string Path { get; }
-
-        public string Name { get; set; }
-
-        public Uri GetInputAddress(Uri serviceUri, string path)
-        {
-            var builder = new UriBuilder(serviceUri) { Path = path };
-
-            builder.Query += string.Join("&", GetQueryStringOptions());
-
-            return builder.Uri;
-        }
-
-        protected abstract IEnumerable<string> GetQueryStringOptions();
+        MaxAutoRenewDuration = Defaults.MaxAutoRenewDuration;
+        SessionIdleTimeout = Defaults.SessionIdleTimeout;
     }
+
+    public IServiceBusEndpointEntityConfigurator Configurator { get; }
+
+    public abstract bool RequiresSession { get; }
+    public abstract int MaxConcurrentSessions { get; }
+    public abstract int MaxConcurrentCallsPerSession { get; }
+
+    public TimeSpan? SessionIdleTimeout { get; set; }
+
+    public int MaxConcurrentCalls => Math.Max(_configuration.Transport.GetConcurrentMessageLimit(), 1);
+    public int PrefetchCount => _configuration.Transport.PrefetchCount;
+
+    public TimeSpan MaxAutoRenewDuration { get; set; }
+
+    public abstract string Path { get; }
+
+    public string Name { get; set; }
+
+    public Uri GetInputAddress(Uri serviceUri, string path)
+    {
+        var builder = new UriBuilder(serviceUri) { Path = path };
+
+        builder.Query += string.Join("&", GetQueryStringOptions());
+
+        return builder.Uri;
+    }
+
+    protected abstract IEnumerable<string> GetQueryStringOptions();
 }

@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class DelegateRoutingKeyFormatter<TMessage> :
+    IMessageRoutingKeyFormatter<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly Func<SendContext<TMessage>, string> _formatter;
 
-
-    public class DelegateRoutingKeyFormatter<TMessage> :
-        IMessageRoutingKeyFormatter<TMessage>
-        where TMessage : class
+    public DelegateRoutingKeyFormatter(Func<SendContext<TMessage>, string> formatter)
     {
-        readonly Func<SendContext<TMessage>, string> _formatter;
+        _formatter = formatter;
+    }
 
-        public DelegateRoutingKeyFormatter(Func<SendContext<TMessage>, string> formatter)
-        {
-            _formatter = formatter;
-        }
-
-        public string FormatRoutingKey(SendContext<TMessage> context)
-        {
-            return _formatter(context);
-        }
+    public string FormatRoutingKey(SendContext<TMessage> context)
+    {
+        return _formatter(context);
     }
 }

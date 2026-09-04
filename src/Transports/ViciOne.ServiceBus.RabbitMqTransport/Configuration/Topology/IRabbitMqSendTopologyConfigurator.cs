@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IRabbitMqSendTopologyConfigurator :
+    ISendTopologyConfigurator,
+    IRabbitMqSendTopology
 {
-    using System;
-
-
-    public interface IRabbitMqSendTopologyConfigurator :
-        ISendTopologyConfigurator,
-        IRabbitMqSendTopology
-    {
-        Action<IRabbitMqQueueBindingConfigurator> ConfigureErrorSettings { set; }
-        Action<IRabbitMqQueueBindingConfigurator> ConfigureDeadLetterSettings { set; }
-    }
+    Action<IRabbitMqQueueBindingConfigurator> ConfigureErrorSettings { set; }
+    Action<IRabbitMqQueueBindingConfigurator> ConfigureDeadLetterSettings { set; }
 }

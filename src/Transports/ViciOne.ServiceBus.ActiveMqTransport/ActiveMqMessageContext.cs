@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus
+using Apache.NMS;
+
+namespace ViciOne.ServiceBus;
+
+public interface ActiveMqMessageContext
 {
-    using Apache.NMS;
+    IMessage TransportMessage { get; }
 
+    IPrimitiveMap Properties { get; }
 
-    public interface ActiveMqMessageContext
-    {
-        IMessage TransportMessage { get; }
-
-        IPrimitiveMap Properties { get; }
-
-        string GroupId { get; }
-        int GroupSequence { get; }
-    }
+    string GroupId { get; }
+    int GroupSequence { get; }
 }

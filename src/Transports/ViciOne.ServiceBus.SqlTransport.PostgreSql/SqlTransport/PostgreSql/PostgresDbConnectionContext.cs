@@ -1,370 +1,368 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using Dapper;
+using Npgsql;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.RetryPolicies;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
+
+public class PostgresDbConnectionContext :
+    BasePipeContext,
+    ConnectionContext,
+    IAsyncDisposable
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Configuration;
-    using Dapper;
-    using Helpers;
-    using Logging;
-    using ViciOne.ServiceBus.Middleware;
-    using Npgsql;
-    using RetryPolicies;
-    using Transports;
-    using Util;
+    readonly NotificationAgent _agent;
+    readonly NpgsqlDataSource _dataSource;
+    readonly TaskExecutor _executor;
+    readonly ISqlHostConfiguration _hostConfiguration;
+    readonly PostgresSqlHostSettings _hostSettings;
+    readonly IRetryPolicy _retryPolicy;
 
-
-    public class PostgresDbConnectionContext :
-        BasePipeContext,
-        ConnectionContext,
-        IAsyncDisposable
+    static PostgresDbConnectionContext()
     {
-        readonly NotificationAgent _agent;
-        readonly NpgsqlDataSource _dataSource;
-        readonly TaskExecutor _executor;
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
+        SqlMapper.AddTypeHandler(new UriTypeHandler());
+    }
+
+    public PostgresDbConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
+        : base(supervisor.Stopped)
+    {
+        _hostConfiguration = hostConfiguration;
+
+        _hostSettings = hostConfiguration.Settings as PostgresSqlHostSettings
+            ?? throw new ConfigurationException("The host settings were not of the expected type");
+
+        _dataSource = _hostSettings.GetDataSource();
+
+        _retryPolicy = Retry.CreatePolicy(x => x.Immediate(10).Handle<PostgresException>(ex => ex.IsTransient));
+
+        Topology = hostConfiguration.Topology;
+
+        _agent = new NotificationAgent(this, hostConfiguration);
+        supervisor.AddConsumeAgent(_agent);
+
+        if (_hostSettings.MaintenanceEnabled)
+            supervisor.AddConsumeAgent(new MaintenanceAgent(this, hostConfiguration));
+
+        _executor = new TaskExecutor(hostConfiguration.Settings.ConnectionLimit);
+    }
+
+    public ISqlBusTopology Topology { get; }
+
+    public IsolationLevel IsolationLevel => _hostSettings.IsolationLevel;
+
+    public Uri HostAddress => _hostConfiguration.HostAddress;
+
+    public string? Schema => _hostSettings.Schema;
+
+    public ClientContext CreateClientContext(CancellationToken cancellationToken)
+    {
+        return new PostgresClientContext(this, cancellationToken);
+    }
+
+    async Task<ISqlTransportConnection> ConnectionContext.CreateConnection(CancellationToken cancellationToken)
+    {
+        return await CreateConnection(cancellationToken).ConfigureAwait(false);
+    }
+
+    public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
+    {
+        return _executor.ExecuteAsync(() =>
+        {
+            return _retryPolicy.Retry(async () =>
+            {
+                await using var connection = await CreateConnection(cancellationToken).ConfigureAwait(false);
+
+                await using var transaction = await connection.Connection.BeginTransactionAsync(_hostSettings.IsolationLevel, cancellationToken)
+                    .ConfigureAwait(false);
+
+                var result = await callback(connection.Connection, transaction).ConfigureAwait(false);
+
+                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+
+                return result;
+            }, false, cancellationToken);
+        }, cancellationToken);
+    }
+
+    public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        var queueToken = _agent.GetCancellationTokenForQueue(queueId);
+
+        async Task WaitAsync()
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, queueToken);
+            var delayTask = Task.Delay(timeout, timeProvider, cts.Token);
+            await Task.WhenAny(delayTask).ConfigureAwait(false);
+
+            cts.Cancel();
+
+            if (queueToken.IsCancellationRequested)
+                _agent.RemoveTokenForQueue(queueId);
+        }
+
+        return WaitAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hostSettings.IsProvidedDataSource == false)
+            await _dataSource.DisposeAsync().ConfigureAwait(false);
+
+        TransportLogMessages.DisconnectedHost(_hostConfiguration.HostAddress.ToString());
+    }
+
+    async Task<IPostgresSqlTransportConnection> CreateConnection(CancellationToken cancellationToken)
+    {
+        var connection = new PostgresSqlTransportConnection(_dataSource.CreateConnection());
+
+        await connection.Open(cancellationToken).ConfigureAwait(false);
+
+        return connection;
+    }
+
+
+    class NotificationAgent :
+        Agent
+    {
+        readonly PostgresDbConnectionContext _context;
         readonly ISqlHostConfiguration _hostConfiguration;
-        readonly PostgresSqlHostSettings _hostSettings;
-        readonly IRetryPolicy _retryPolicy;
+        readonly ILogContext? _logContext;
+        readonly ConcurrentDictionary<long, CancellationTokenSource> _notificationTokens;
+        CancellationTokenSource _listenTokenSource;
 
-        static PostgresDbConnectionContext()
+        public NotificationAgent(PostgresDbConnectionContext context, ISqlHostConfiguration hostConfiguration)
         {
-            DefaultTypeMap.MatchNamesWithUnderscores = true;
-            SqlMapper.AddTypeHandler(new UriTypeHandler());
-        }
-
-        public PostgresDbConnectionContext(ISqlHostConfiguration hostConfiguration, ITransportSupervisor<ConnectionContext> supervisor)
-            : base(supervisor.Stopped)
-        {
+            _context = context;
             _hostConfiguration = hostConfiguration;
+            _logContext = hostConfiguration.LogContext;
 
-            _hostSettings = hostConfiguration.Settings as PostgresSqlHostSettings
-                ?? throw new ConfigurationException("The host settings were not of the expected type");
+            _notificationTokens = new ConcurrentDictionary<long, CancellationTokenSource>();
+            _listenTokenSource = new CancellationTokenSource();
 
-            _dataSource = _hostSettings.GetDataSource();
+            var runTask = Task.Run(() => ListenForNotifications(), Stopping);
 
-            _retryPolicy = Retry.CreatePolicy(x => x.Immediate(10).Handle<PostgresException>(ex => ex.IsTransient));
+            SetReady(runTask);
 
-            Topology = hostConfiguration.Topology;
-
-            _agent = new NotificationAgent(this, hostConfiguration);
-            supervisor.AddConsumeAgent(_agent);
-
-            if (_hostSettings.MaintenanceEnabled)
-                supervisor.AddConsumeAgent(new MaintenanceAgent(this, hostConfiguration));
-
-            _executor = new TaskExecutor(hostConfiguration.Settings.ConnectionLimit);
+            SetCompleted(runTask);
         }
 
-        public ISqlBusTopology Topology { get; }
-
-        public IsolationLevel IsolationLevel => _hostSettings.IsolationLevel;
-
-        public Uri HostAddress => _hostConfiguration.HostAddress;
-
-        public string? Schema => _hostSettings.Schema;
-
-        public ClientContext CreateClientContext(CancellationToken cancellationToken)
+        public CancellationToken GetCancellationTokenForQueue(long queueId)
         {
-            return new PostgresClientContext(this, cancellationToken);
-        }
-
-        async Task<ISqlTransportConnection> ConnectionContext.CreateConnection(CancellationToken cancellationToken)
-        {
-            return await CreateConnection(cancellationToken).ConfigureAwait(false);
-        }
-
-        public Task<T> Query<T>(Func<IDbConnection, IDbTransaction, Task<T>> callback, CancellationToken cancellationToken)
-        {
-            return _executor.ExecuteAsync(() =>
+            var added = false;
+            var notifyTokenSource = _notificationTokens.GetOrAdd(queueId, _ =>
             {
-                return _retryPolicy.Retry(async () =>
-                {
-                    await using var connection = await CreateConnection(cancellationToken).ConfigureAwait(false);
+                added = true;
+                return new CancellationTokenSource();
+            });
 
-                    await using var transaction = await connection.Connection.BeginTransactionAsync(_hostSettings.IsolationLevel, cancellationToken)
-                        .ConfigureAwait(false);
+            if (added)
+                _listenTokenSource.Cancel();
 
-                    var result = await callback(connection.Connection, transaction).ConfigureAwait(false);
+            if (notifyTokenSource.IsCancellationRequested)
+                _notificationTokens.TryRemove(queueId, out _);
 
-                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-
-                    return result;
-                }, false, cancellationToken);
-            }, cancellationToken);
+            return notifyTokenSource.Token;
         }
 
-        public Task DelayUntilMessageReady(long queueId, TimeSpan timeout, TimeProvider timeProvider, CancellationToken cancellationToken)
+        public void RemoveTokenForQueue(long queueId)
         {
-            ArgumentNullException.ThrowIfNull(timeProvider);
-            var queueToken = _agent.GetCancellationTokenForQueue(queueId);
-
-            async Task WaitAsync()
+            if (_notificationTokens.TryGetValue(queueId, out var existing))
             {
-                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, queueToken);
-                var delayTask = Task.Delay(timeout, timeProvider, cts.Token);
-                await Task.WhenAny(delayTask).ConfigureAwait(false);
-
-                cts.Cancel();
-
-                if (queueToken.IsCancellationRequested)
-                    _agent.RemoveTokenForQueue(queueId);
+                var newValue = new CancellationTokenSource();
+                if (!_notificationTokens.TryUpdate(queueId, newValue, existing))
+                    newValue.Dispose();
             }
-
-            return WaitAsync();
         }
 
-        public async ValueTask DisposeAsync()
+        async Task ListenForNotifications()
         {
-            if (_hostSettings.IsProvidedDataSource == false)
-                await _dataSource.DisposeAsync().ConfigureAwait(false);
+            LogContext.SetCurrentIfNull(_logContext);
 
-            TransportLogMessages.DisconnectedHost(_hostConfiguration.HostAddress.ToString());
-        }
-
-        async Task<IPostgresSqlTransportConnection> CreateConnection(CancellationToken cancellationToken)
-        {
-            var connection = new PostgresSqlTransportConnection(_dataSource.CreateConnection());
-
-            await connection.Open(cancellationToken).ConfigureAwait(false);
-
-            return connection;
-        }
-
-
-        class NotificationAgent :
-            Agent
-        {
-            readonly PostgresDbConnectionContext _context;
-            readonly ISqlHostConfiguration _hostConfiguration;
-            readonly ILogContext? _logContext;
-            readonly ConcurrentDictionary<long, CancellationTokenSource> _notificationTokens;
-            CancellationTokenSource _listenTokenSource;
-
-            public NotificationAgent(PostgresDbConnectionContext context, ISqlHostConfiguration hostConfiguration)
+            while (!Stopping.IsCancellationRequested)
             {
-                _context = context;
-                _hostConfiguration = hostConfiguration;
-                _logContext = hostConfiguration.LogContext;
-
-                _notificationTokens = new ConcurrentDictionary<long, CancellationTokenSource>();
-                _listenTokenSource = new CancellationTokenSource();
-
-                var runTask = Task.Run(() => ListenForNotifications(), Stopping);
-
-                SetReady(runTask);
-
-                SetCompleted(runTask);
-            }
-
-            public CancellationToken GetCancellationTokenForQueue(long queueId)
-            {
-                var added = false;
-                var notifyTokenSource = _notificationTokens.GetOrAdd(queueId, _ =>
+                try
                 {
-                    added = true;
-                    return new CancellationTokenSource();
-                });
-
-                if (added)
-                    _listenTokenSource.Cancel();
-
-                if (notifyTokenSource.IsCancellationRequested)
-                    _notificationTokens.TryRemove(queueId, out _);
-
-                return notifyTokenSource.Token;
-            }
-
-            public void RemoveTokenForQueue(long queueId)
-            {
-                if (_notificationTokens.TryGetValue(queueId, out var existing))
-                {
-                    var newValue = new CancellationTokenSource();
-                    if (!_notificationTokens.TryUpdate(queueId, newValue, existing))
-                        newValue.Dispose();
-                }
-            }
-
-            async Task ListenForNotifications()
-            {
-                LogContext.SetCurrentIfNull(_logContext);
-
-                while (!Stopping.IsCancellationRequested)
-                {
-                    try
+                    await _hostConfiguration.Retry(async () =>
                     {
-                        await _hostConfiguration.Retry(async () =>
+                        await using var connection = await _context.CreateConnection(Stopping);
+
+                        var queueIds = new HashSet<long>(_notificationTokens.Keys);
+                        var sanitizedSchemaName = NotifyChannel.SanitizeSchemaName(_context.Schema);
+
+                        connection.Connection.Notification += OnConnectionOnNotification;
+
+                        foreach (var queueId in queueIds)
                         {
-                            await using var connection = await _context.CreateConnection(Stopping);
+                            await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", Stopping)
+                                .ConfigureAwait(false);
 
-                            var queueIds = new HashSet<long>(_notificationTokens.Keys);
-                            var sanitizedSchemaName = NotifyChannel.SanitizeSchemaName(_context.Schema);
-
-                            connection.Connection.Notification += OnConnectionOnNotification;
-
-                            foreach (var queueId in queueIds)
-                            {
-                                await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", Stopping)
-                                    .ConfigureAwait(false);
-
-                                // LogContext.Debug?.Log("LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", queueId);
-                            }
-
-                            while (!Stopping.IsCancellationRequested)
-                            {
-                                try
-                                {
-                                    using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_listenTokenSource.Token, Stopping);
-
-                                    await connection.Connection.WaitAsync(linkedTokenSource.Token).ConfigureAwait(false);
-                                }
-                                catch (OperationCanceledException)
-                                {
-                                }
-
-                                if (_listenTokenSource.IsCancellationRequested)
-                                    _listenTokenSource = new CancellationTokenSource();
-
-                                foreach (var queueId in _notificationTokens.Keys)
-                                {
-                                    if (queueIds.Contains(queueId))
-                                        continue;
-
-                                    await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", Stopping)
-                                        .ConfigureAwait(false);
-
-                                    // LogContext.Debug?.Log("LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", queueId);
-
-                                    queueIds.Add(queueId);
-                                }
-                            }
-                        }, Stopping, Stopping);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                    }
-                    catch (Exception exception)
-                    {
-                        LogContext.Debug?.Log(exception, "PgSql notification faulted");
-                    }
-                }
-            }
-
-            void OnConnectionOnNotification(object sender, NpgsqlNotificationEventArgs args)
-            {
-                LogContext.SetCurrentIfNull(_logContext);
-
-                var index = args.Channel.LastIndexOf('_');
-                if (index > 0 && long.TryParse(args.Channel.Substring(index + 1), out var queueId) && _notificationTokens.TryGetValue(queueId, out var source))
-                {
-                    // LogContext.Debug?.Log("NOTIFY {Channel}", args.Channel);
-                    source.Cancel();
-                }
-            }
-        }
-
-
-        class MaintenanceAgent :
-            Agent
-        {
-            readonly PostgresDbConnectionContext _context;
-            readonly ISqlHostConfiguration _hostConfiguration;
-            readonly ILogContext? _logContext;
-
-            public MaintenanceAgent(PostgresDbConnectionContext context, ISqlHostConfiguration hostConfiguration)
-            {
-                _context = context;
-                _hostConfiguration = hostConfiguration;
-                _logContext = hostConfiguration.LogContext;
-
-                var runTask = Task.Run(() => PerformMaintenance(), Stopping);
-
-                SetReady(runTask);
-
-                SetCompleted(runTask);
-            }
-
-            async Task PerformMaintenance()
-            {
-                LogContext.SetCurrentIfNull(_logContext);
-
-                var processMetricsSql = string.Format(SqlStatements.DbProcessMetricsSql, _context.Schema);
-                var purgeTopologySql = string.Format(SqlStatements.DbPurgeTopologySql, _context.Schema);
-                var removeOrphanedMessagesSql = string.Format(SqlStatements.DbRemoveOrphanedMessages, _context.Schema);
-
-                var random = new Random();
-
-                var cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
-                    + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
-
-                DateTime? lastCleanup = null;
-
-                while (!Stopping.IsCancellationRequested)
-                {
-                    try
-                    {
-                        var maintenanceInterval = _hostConfiguration.Settings.MaintenanceInterval
-                            + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.MaintenanceInterval.TotalSeconds / 10)));
-
-                        try
-                        {
-                            await Task.Delay(maintenanceInterval, _context.GetTimeProvider(), Stopping);
+                            // LogContext.Debug?.Log("LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", queueId);
                         }
-                        catch (OperationCanceledException)
-                        {
-                            using var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(10), _context.GetTimeProvider());
 
+                        while (!Stopping.IsCancellationRequested)
+                        {
                             try
                             {
-                                await _context.Query(
-                                    (x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql,
-                                        new { row_limit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), timeoutToken.Token);
+                                using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_listenTokenSource.Token, Stopping);
 
-                                if (lastCleanup == null)
-                                    await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), timeoutToken.Token);
-                            }
-                            catch (ObjectDisposedException)
-                            {
+                                await connection.Connection.WaitAsync(linkedTokenSource.Token).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException)
                             {
                             }
-                            catch (TimeoutException)
+
+                            if (_listenTokenSource.IsCancellationRequested)
+                                _listenTokenSource = new CancellationTokenSource();
+
+                            foreach (var queueId in _notificationTokens.Keys)
                             {
+                                if (queueIds.Contains(queueId))
+                                    continue;
+
+                                await connection.Connection.ExecuteScalarAsync<int>($"LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", Stopping)
+                                    .ConfigureAwait(false);
+
+                                // LogContext.Debug?.Log("LISTEN \"{sanitizedSchemaName}_msg_{queueId}\"", queueId);
+
+                                queueIds.Add(queueId);
                             }
                         }
+                    }, Stopping, Stopping);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception exception)
+                {
+                    LogContext.Debug?.Log(exception, "PgSql notification faulted");
+                }
+            }
+        }
 
-                        await _hostConfiguration.Retry(async () =>
-                        {
-                            await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql, new
-                            {
-                                row_limit = _hostConfiguration.Settings.MaintenanceBatchSize,
-                            }, t), Stopping);
+        void OnConnectionOnNotification(object sender, NpgsqlNotificationEventArgs args)
+        {
+            LogContext.SetCurrentIfNull(_logContext);
 
-                            var utcNow = _context.GetTimeProvider().GetUtcNow().UtcDateTime;
+            var index = args.Channel.LastIndexOf('_');
+            if (index > 0 && long.TryParse(args.Channel.Substring(index + 1), out var queueId) && _notificationTokens.TryGetValue(queueId, out var source))
+            {
+                // LogContext.Debug?.Log("NOTIFY {Channel}", args.Channel);
+                source.Cancel();
+            }
+        }
+    }
 
-                            if (lastCleanup == null || lastCleanup < utcNow - cleanupInterval)
-                            {
-                                await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), Stopping);
 
-                                lastCleanup = utcNow;
-                                cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
-                                    + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
+    class MaintenanceAgent :
+        Agent
+    {
+        readonly PostgresDbConnectionContext _context;
+        readonly ISqlHostConfiguration _hostConfiguration;
+        readonly ILogContext? _logContext;
 
-                                await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
-                                    new { row_limit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), Stopping);
-                            }
-                        }, Stopping, Stopping);
+        public MaintenanceAgent(PostgresDbConnectionContext context, ISqlHostConfiguration hostConfiguration)
+        {
+            _context = context;
+            _hostConfiguration = hostConfiguration;
+            _logContext = hostConfiguration.LogContext;
+
+            var runTask = Task.Run(() => PerformMaintenance(), Stopping);
+
+            SetReady(runTask);
+
+            SetCompleted(runTask);
+        }
+
+        async Task PerformMaintenance()
+        {
+            LogContext.SetCurrentIfNull(_logContext);
+
+            var processMetricsSql = string.Format(SqlStatements.DbProcessMetricsSql, _context.Schema);
+            var purgeTopologySql = string.Format(SqlStatements.DbPurgeTopologySql, _context.Schema);
+            var removeOrphanedMessagesSql = string.Format(SqlStatements.DbRemoveOrphanedMessages, _context.Schema);
+
+            var random = new Random();
+
+            var cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
+                + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
+
+            DateTime? lastCleanup = null;
+
+            while (!Stopping.IsCancellationRequested)
+            {
+                try
+                {
+                    var maintenanceInterval = _hostConfiguration.Settings.MaintenanceInterval
+                        + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.MaintenanceInterval.TotalSeconds / 10)));
+
+                    try
+                    {
+                        await Task.Delay(maintenanceInterval, _context.GetTimeProvider(), Stopping);
                     }
                     catch (OperationCanceledException)
                     {
+                        using var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(10), _context.GetTimeProvider());
+
+                        try
+                        {
+                            await _context.Query(
+                                (x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql,
+                                    new { row_limit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), timeoutToken.Token);
+
+                            if (lastCleanup == null)
+                                await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), timeoutToken.Token);
+                        }
+                        catch (ObjectDisposedException)
+                        {
+                        }
+                        catch (OperationCanceledException)
+                        {
+                        }
+                        catch (TimeoutException)
+                        {
+                        }
                     }
-                    catch (Exception exception)
+
+                    await _hostConfiguration.Retry(async () =>
                     {
-                        LogContext.Debug?.Log(exception, "PostgreSQL Maintenance Faulted");
-                    }
+                        await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(processMetricsSql, new
+                        {
+                            row_limit = _hostConfiguration.Settings.MaintenanceBatchSize,
+                        }, t), Stopping);
+
+                        var utcNow = _context.GetTimeProvider().GetUtcNow().UtcDateTime;
+
+                        if (lastCleanup == null || lastCleanup < utcNow - cleanupInterval)
+                        {
+                            await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(purgeTopologySql, t), Stopping);
+
+                            lastCleanup = utcNow;
+                            cleanupInterval = _hostConfiguration.Settings.QueueCleanupInterval
+                                + TimeSpan.FromSeconds(random.Next(0, (int)(_hostConfiguration.Settings.QueueCleanupInterval.TotalSeconds / 10)));
+
+                            await _context.Query((x, t) => x.ExecuteScalarAsync<long?>(removeOrphanedMessagesSql,
+                                new { row_limit = _hostConfiguration.Settings.MaintenanceBatchSize }, t), Stopping);
+                        }
+                    }, Stopping, Stopping);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception exception)
+                {
+                    LogContext.Debug?.Log(exception, "PostgreSQL Maintenance Faulted");
                 }
             }
         }

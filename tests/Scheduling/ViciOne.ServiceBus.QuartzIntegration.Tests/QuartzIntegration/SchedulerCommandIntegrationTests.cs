@@ -1,9 +1,9 @@
 using Quartz;
 using Quartz.Impl.Triggers;
+using ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
 using Xunit;
 
 namespace ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration;

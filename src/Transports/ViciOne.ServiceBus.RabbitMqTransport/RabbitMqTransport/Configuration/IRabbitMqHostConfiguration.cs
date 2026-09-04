@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public interface IRabbitMqHostConfiguration :
+    IHostConfiguration,
+    IReceiveConfigurator<IRabbitMqReceiveEndpointConfigurator>
 {
-    using System;
-    using ViciOne.ServiceBus.Configuration;
+    IConnectionContextSupervisor ConnectionContextSupervisor { get; }
 
+    RabbitMqHostSettings Settings { get; set; }
 
-    public interface IRabbitMqHostConfiguration :
-        IHostConfiguration,
-        IReceiveConfigurator<IRabbitMqReceiveEndpointConfigurator>
-    {
-        IConnectionContextSupervisor ConnectionContextSupervisor { get; }
+    /// <summary>
+    /// True if the broker is confirming published messages
+    /// </summary>
+    bool PublisherConfirmation { get; }
 
-        RabbitMqHostSettings Settings { get; set; }
+    BatchSettings BatchSettings { get; }
 
-        /// <summary>
-        /// True if the broker is confirming published messages
-        /// </summary>
-        bool PublisherConfirmation { get; }
+    new IRabbitMqBusTopology Topology { get; }
 
-        BatchSettings BatchSettings { get; }
+    /// <summary>
+    /// Apply the endpoint definition to the receive endpoint configurator
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="definition"></param>
+    void ApplyEndpointDefinition(IRabbitMqReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
-        new IRabbitMqBusTopology Topology { get; }
+    IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
+        Action<IRabbitMqReceiveEndpointConfigurator> configure = null);
 
-        /// <summary>
-        /// Apply the endpoint definition to the receive endpoint configurator
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="definition"></param>
-        void ApplyEndpointDefinition(IRabbitMqReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
-
-        IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-            Action<IRabbitMqReceiveEndpointConfigurator> configure = null);
-
-        IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(RabbitMqReceiveSettings settings,
-            IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator> configure = null);
-    }
+    IRabbitMqReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(RabbitMqReceiveSettings settings,
+        IRabbitMqEndpointConfiguration endpointConfiguration, Action<IRabbitMqReceiveEndpointConfigurator> configure = null);
 }

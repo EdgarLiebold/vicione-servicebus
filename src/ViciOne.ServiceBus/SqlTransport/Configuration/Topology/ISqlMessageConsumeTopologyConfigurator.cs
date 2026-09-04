@@ -1,9 +1,8 @@
+using System;
+using ViciOne.ServiceBus.SqlTransport.Topology;
+
 #nullable enable
 namespace ViciOne.ServiceBus;
-
-using System;
-using SqlTransport.Topology;
-
 
 public interface ISqlMessageConsumeTopologyConfigurator<TMessage> :
     IMessageConsumeTopologyConfigurator<TMessage>,

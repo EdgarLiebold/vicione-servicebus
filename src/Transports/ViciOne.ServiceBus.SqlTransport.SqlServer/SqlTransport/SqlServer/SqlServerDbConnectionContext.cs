@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
-
 using System;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
 using Dapper;
-using Logging;
-using ViciOne.ServiceBus.Middleware;
 using Microsoft.Data.SqlClient;
-using RetryPolicies;
-using Transports;
-using Util;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.RetryPolicies;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 public class SqlServerDbConnectionContext :
     BasePipeContext,

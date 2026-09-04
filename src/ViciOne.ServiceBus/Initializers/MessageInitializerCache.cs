@@ -1,131 +1,129 @@
-namespace ViciOne.ServiceBus.Initializers
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Initializers.Factories;
+
+namespace ViciOne.ServiceBus.Initializers;
+
+public class MessageInitializerCache<TMessage> :
+    IMessageInitializerCache<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Factories;
+    readonly IDictionary<Type, Lazy<IMessageInitializer<TMessage>>> _initializers;
 
-
-    public class MessageInitializerCache<TMessage> :
-        IMessageInitializerCache<TMessage>
-        where TMessage : class
+    MessageInitializerCache()
     {
-        readonly IDictionary<Type, Lazy<IMessageInitializer<TMessage>>> _initializers;
+        _initializers = new Dictionary<Type, Lazy<IMessageInitializer<TMessage>>>();
+    }
 
-        MessageInitializerCache()
+    IMessageInitializer<TMessage> IMessageInitializerCache<TMessage>.GetInitializer(Type inputType)
+    {
+        Lazy<IMessageInitializer<TMessage>> result;
+        lock (_initializers)
         {
-            _initializers = new Dictionary<Type, Lazy<IMessageInitializer<TMessage>>>();
+            if (_initializers.TryGetValue(inputType, out Lazy<IMessageInitializer<TMessage>> initializer))
+                return initializer.Value;
+
+            result = new Lazy<IMessageInitializer<TMessage>>(() => CreateMessageInitializer(inputType));
+
+            _initializers[inputType] = result;
         }
 
-        IMessageInitializer<TMessage> IMessageInitializerCache<TMessage>.GetInitializer(Type inputType)
-        {
-            Lazy<IMessageInitializer<TMessage>> result;
-            lock (_initializers)
-            {
-                if (_initializers.TryGetValue(inputType, out Lazy<IMessageInitializer<TMessage>> initializer))
-                    return initializer.Value;
+        return result.Value;
+    }
 
-                result = new Lazy<IMessageInitializer<TMessage>>(() => CreateMessageInitializer(inputType));
+    static IMessageInitializer<TMessage> CreateMessageInitializer(Type inputType)
+    {
+        var factoryType = typeof(MessageInitializerFactory<,>).MakeGenericType(typeof(TMessage), inputType);
 
-                _initializers[inputType] = result;
-            }
+        var factory = (IMessageInitializerFactory<TMessage>)Activator.CreateInstance(factoryType,
+            new object[] { MessageInitializer.Conventions.ToArray() });
 
-            return result.Value;
-        }
+        return factory.CreateMessageInitializer();
+    }
 
-        static IMessageInitializer<TMessage> CreateMessageInitializer(Type inputType)
-        {
-            var factoryType = typeof(MessageInitializerFactory<,>).MakeGenericType(typeof(TMessage), inputType);
+    /// <summary>
+    /// Returns the initializer for the message/input type combination
+    /// </summary>
+    /// <returns></returns>
+    public static IMessageInitializer<TMessage> GetInitializer(Type inputType)
+    {
+        return Cached.InitializerCache.GetInitializer(inputType);
+    }
 
-            var factory = (IMessageInitializerFactory<TMessage>)Activator.CreateInstance(factoryType,
-                new object[] { MessageInitializer.Conventions.ToArray() });
+    public static Task<InitializeContext<TMessage>> Initialize(object values, CancellationToken cancellationToken = default)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            return factory.CreateMessageInitializer();
-        }
+        return Cached.InitializerCache.GetInitializer(values.GetType()).Initialize(values, cancellationToken);
+    }
 
-        /// <summary>
-        /// Returns the initializer for the message/input type combination
-        /// </summary>
-        /// <returns></returns>
-        public static IMessageInitializer<TMessage> GetInitializer(Type inputType)
-        {
-            return Cached.InitializerCache.GetInitializer(inputType);
-        }
+    public static Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object values)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-        public static Task<InitializeContext<TMessage>> Initialize(object values, CancellationToken cancellationToken = default)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+        IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
 
-            return Cached.InitializerCache.GetInitializer(values.GetType()).Initialize(values, cancellationToken);
-        }
+        return initializer.InitializeMessage(context, values);
+    }
 
-        public static Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object values)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+    public static Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object values, object[] moreValues,
+        IPipe<SendContext<TMessage>> pipe = null)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
+        IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
 
-            return initializer.InitializeMessage(context, values);
-        }
+        return initializer.InitializeMessage(context, values, moreValues, pipe);
+    }
 
-        public static Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object values, object[] moreValues,
-            IPipe<SendContext<TMessage>> pipe = null)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+    public static Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object values, IPipe<SendContext<TMessage>> pipe)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
+        IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
 
-            return initializer.InitializeMessage(context, values, moreValues, pipe);
-        }
+        return initializer.InitializeMessage(context, values, pipe.IsNotEmpty() ? pipe : Pipe.Empty<SendContext<TMessage>>());
+    }
 
-        public static Task<SendTuple<TMessage>> InitializeMessage(PipeContext context, object values, IPipe<SendContext<TMessage>> pipe)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+    public static Task<SendTuple<TMessage>> InitializeMessage(object values, CancellationToken cancellationToken = default)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
+        IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
 
-            return initializer.InitializeMessage(context, values, pipe.IsNotEmpty() ? pipe : Pipe.Empty<SendContext<TMessage>>());
-        }
+        return initializer.InitializeMessage(values, Pipe.Empty<SendContext<TMessage>>(), cancellationToken);
+    }
 
-        public static Task<SendTuple<TMessage>> InitializeMessage(object values, CancellationToken cancellationToken = default)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+    public static Task<SendTuple<TMessage>> InitializeMessage(object values, IPipe<SendContext<TMessage>> pipe,
+        CancellationToken cancellationToken = default)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
+        IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
 
-            return initializer.InitializeMessage(values, Pipe.Empty<SendContext<TMessage>>(), cancellationToken);
-        }
+        return initializer.InitializeMessage(values, pipe.IsNotEmpty() ? pipe : Pipe.Empty<SendContext<TMessage>>(), cancellationToken);
+    }
 
-        public static Task<SendTuple<TMessage>> InitializeMessage(object values, IPipe<SendContext<TMessage>> pipe,
-            CancellationToken cancellationToken = default)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+    public static Task<InitializeContext<TMessage>> Initialize(InitializeContext<TMessage> context, object values)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            IMessageInitializer<TMessage> initializer = Cached.InitializerCache.GetInitializer(values.GetType());
-
-            return initializer.InitializeMessage(values, pipe.IsNotEmpty() ? pipe : Pipe.Empty<SendContext<TMessage>>(), cancellationToken);
-        }
-
-        public static Task<InitializeContext<TMessage>> Initialize(InitializeContext<TMessage> context, object values)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
-
-            return Cached.InitializerCache.GetInitializer(values.GetType()).Initialize(context, values);
-        }
+        return Cached.InitializerCache.GetInitializer(values.GetType()).Initialize(context, values);
+    }
 
 
-        static class Cached
-        {
-            internal static readonly IMessageInitializerCache<TMessage> InitializerCache = new MessageInitializerCache<TMessage>();
-        }
+    static class Cached
+    {
+        internal static readonly IMessageInitializerCache<TMessage> InitializerCache = new MessageInitializerCache<TMessage>();
     }
 }

@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public interface IRabbitMqEndpointConfiguration :
+    IEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public interface IRabbitMqEndpointConfiguration :
-        IEndpointConfiguration
-    {
-        new IRabbitMqTopologyConfiguration Topology { get; }
-    }
+    new IRabbitMqTopologyConfiguration Topology { get; }
 }

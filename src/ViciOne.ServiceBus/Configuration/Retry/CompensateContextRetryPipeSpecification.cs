@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Observables;
+using ViciOne.ServiceBus.RetryPolicies;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CompensateContextRetryPipeSpecification<TLog> :
+    ExceptionSpecification,
+    IRetryConfigurator,
+    IPipeSpecification<CompensateContext<TLog>>
+    where TLog : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using Context;
-    using Middleware;
-    using Observables;
-    using RetryPolicies;
+    readonly CancellationToken _cancellationToken;
+    readonly RetryObservable _observers;
+    RetryPolicyFactory _policyFactory;
 
-
-    public class CompensateContextRetryPipeSpecification<TLog> :
-        ExceptionSpecification,
-        IRetryConfigurator,
-        IPipeSpecification<CompensateContext<TLog>>
-        where TLog : class
+    public CompensateContextRetryPipeSpecification(CancellationToken cancellationToken = default)
     {
-        readonly CancellationToken _cancellationToken;
-        readonly RetryObservable _observers;
-        RetryPolicyFactory _policyFactory;
+        _cancellationToken = cancellationToken;
+        _observers = new RetryObservable();
+    }
 
-        public CompensateContextRetryPipeSpecification(CancellationToken cancellationToken = default)
-        {
-            _cancellationToken = cancellationToken;
-            _observers = new RetryObservable();
-        }
+    public void Apply(IPipeBuilder<CompensateContext<TLog>> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
 
-        public void Apply(IPipeBuilder<CompensateContext<TLog>> builder)
-        {
-            ArgumentNullException.ThrowIfNull(builder);
+        RetryPolicyFactory factory = _policyFactory
+            ?? throw new InvalidOperationException("A retry policy must be configured before the specification is applied.");
+        IRetryPolicy retryPolicy = factory(Filter)
+            ?? throw new InvalidOperationException("The retry policy factory returned null.");
 
-            RetryPolicyFactory factory = _policyFactory
-                ?? throw new InvalidOperationException("A retry policy must be configured before the specification is applied.");
-            IRetryPolicy retryPolicy = factory(Filter)
-                ?? throw new InvalidOperationException("The retry policy factory returned null.");
+        var policy = new ConsumeContextRetryPolicy<CompensateContext<TLog>, RetryCompensateContext<TLog>>(retryPolicy, _cancellationToken, Factory);
 
-            var policy = new ConsumeContextRetryPolicy<CompensateContext<TLog>, RetryCompensateContext<TLog>>(retryPolicy, _cancellationToken, Factory);
+        builder.AddFilter(new RetryFilter<CompensateContext<TLog>>(policy, _observers));
+    }
 
-            builder.AddFilter(new RetryFilter<CompensateContext<TLog>>(policy, _observers));
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_policyFactory == null)
+            yield return this.Failure("RetryPolicy", "must not be null");
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_policyFactory == null)
-                yield return this.Failure("RetryPolicy", "must not be null");
-        }
+    public void SetRetryPolicy(RetryPolicyFactory factory)
+    {
+        _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
+    }
 
-        public void SetRetryPolicy(RetryPolicyFactory factory)
-        {
-            _policyFactory = factory ?? throw new ArgumentNullException(nameof(factory));
-        }
+    ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
+    {
+        ArgumentNullException.ThrowIfNull(observer);
 
-        ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
-        {
-            ArgumentNullException.ThrowIfNull(observer);
+        return _observers.Connect(observer);
+    }
 
-            return _observers.Connect(observer);
-        }
-
-        static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-        {
-            return new RetryCompensateContext<TLog>(context, retryPolicy, retryContext);
-        }
+    static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    {
+        return new RetryCompensateContext<TLog>(context, retryPolicy, retryContext);
     }
 }

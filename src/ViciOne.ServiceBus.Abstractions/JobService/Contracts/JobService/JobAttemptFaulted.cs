@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobAttemptFaulted
 {
-    using System;
+    Guid JobId { get; }
+    Guid AttemptId { get; }
 
+    /// <summary>
+    /// The retry attempt that faulted. Zero for the first attempt.
+    /// </summary>
+    int RetryAttempt { get; }
 
-    public interface JobAttemptFaulted
-    {
-        Guid JobId { get; }
-        Guid AttemptId { get; }
+    /// <summary>
+    /// If present, the delay until the next retry
+    /// </summary>
+    TimeSpan? RetryDelay { get; }
 
-        /// <summary>
-        /// The retry attempt that faulted. Zero for the first attempt.
-        /// </summary>
-        int RetryAttempt { get; }
+    DateTime Timestamp { get; }
 
-        /// <summary>
-        /// If present, the delay until the next retry
-        /// </summary>
-        TimeSpan? RetryDelay { get; }
-
-        DateTime Timestamp { get; }
-
-        ExceptionInfo Exceptions { get; }
-    }
+    ExceptionInfo Exceptions { get; }
 }

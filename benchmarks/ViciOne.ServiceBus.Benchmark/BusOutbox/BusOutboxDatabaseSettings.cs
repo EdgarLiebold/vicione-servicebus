@@ -1,9 +1,8 @@
-namespace ViciOneServiceBusBenchmark.BusOutbox;
-
 using System;
 using Microsoft.Data.SqlClient;
 using NDesk.Options;
 
+namespace ViciOneServiceBusBenchmark.BusOutbox;
 
 public static class BusOutboxDatabaseSettings
 {

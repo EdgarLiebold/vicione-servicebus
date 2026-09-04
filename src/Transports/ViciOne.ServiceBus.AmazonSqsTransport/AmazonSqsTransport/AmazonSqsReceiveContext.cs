@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Context;
-using Transports;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public sealed class AmazonSqsReceiveContext :
     BaseReceiveContext,
@@ -15,7 +14,7 @@ public sealed class AmazonSqsReceiveContext :
 {
     readonly AmazonSqsHeaderProvider _headerProvider;
 
-    public AmazonSqsReceiveContext(Message message, bool redelivered, SqsReceiveEndpointContext? context, ClientContext clientContext,
+    public AmazonSqsReceiveContext(Message message, bool redelivered, SqsReceiveEndpointContext context, ClientContext clientContext,
         ReceiveSettings settings, ConnectionContext connectionContext)
         : base(redelivered, context, settings, clientContext, connectionContext)
     {

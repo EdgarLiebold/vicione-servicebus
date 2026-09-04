@@ -1,86 +1,85 @@
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.JobService;
+using ViciOne.ServiceBus.NewIdFormatters;
+using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
+
 #nullable enable
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class JobServiceRegistration :
+    IJobServiceRegistration
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-    using JobService;
-    using NewIdFormatters;
+    readonly List<Action<JobConsumerOptions>> _configureActions;
+    readonly List<IReceiveEndpointConfigurator> _dependencies;
+    readonly EndpointRegistrationConfigurator<JobServiceState> _endpointConfigurator;
+    readonly Lazy<InstanceJobServiceSettings> _settings;
 
-
-    public class JobServiceRegistration :
-        IJobServiceRegistration
+    public JobServiceRegistration()
     {
-        readonly List<Action<JobConsumerOptions>> _configureActions;
-        readonly List<IReceiveEndpointConfigurator> _dependencies;
-        readonly EndpointRegistrationConfigurator<JobService> _endpointConfigurator;
-        readonly Lazy<InstanceJobServiceSettings> _settings;
+        _configureActions = new List<Action<JobConsumerOptions>>();
+        _dependencies = new List<IReceiveEndpointConfigurator>(4);
 
-        public JobServiceRegistration()
+        _settings = new Lazy<InstanceJobServiceSettings>(GetJobServiceSettings);
+
+        _endpointConfigurator = new EndpointRegistrationConfigurator<JobServiceState>
         {
-            _configureActions = new List<Action<JobConsumerOptions>>();
-            _dependencies = new List<IReceiveEndpointConfigurator>(4);
+            Name = "Instance",
+            InstanceId = NewId.Next().ToString(ZBase32Formatter.LowerCase),
+            Temporary = true
+        };
 
-            _settings = new Lazy<InstanceJobServiceSettings>(GetJobServiceSettings);
+        IncludeInConfigureEndpoints = true;
+    }
 
-            _endpointConfigurator = new EndpointRegistrationConfigurator<JobService>
-            {
-                Name = "Instance",
-                InstanceId = NewId.Next().ToString(ZBase32Formatter.LowerCase),
-                Temporary = true
-            };
+    JobServiceSettings Settings => _settings.Value;
 
-            IncludeInConfigureEndpoints = true;
-        }
+    public Type Type => typeof(JobServiceState);
 
-        JobServiceSettings Settings => _settings.Value;
+    public bool IncludeInConfigureEndpoints { get; set; }
 
-        public Type Type => typeof(JobService);
+    public IEndpointRegistrationConfigurator EndpointRegistrationConfigurator => _endpointConfigurator;
+    public IEndpointDefinition EndpointDefinition => new JobServiceEndpointDefinition(_endpointConfigurator.Settings, _settings.Value);
 
-        public bool IncludeInConfigureEndpoints { get; set; }
+    public void AddConfigureAction(Action<JobConsumerOptions>? configure)
+    {
+        if (_settings.IsValueCreated)
+            throw new ConfigurationException("The settings were already computed");
 
-        public IEndpointRegistrationConfigurator EndpointRegistrationConfigurator => _endpointConfigurator;
-        public IEndpointDefinition EndpointDefinition => new JobServiceEndpointDefinition(_endpointConfigurator.Settings, _settings.Value);
+        if (configure != null)
+            _configureActions.Add(configure);
+    }
 
-        public void AddConfigureAction(Action<JobConsumerOptions>? configure)
-        {
-            if (_settings.IsValueCreated)
-                throw new ConfigurationException("The settings were already computed");
+    public void AddReceiveEndpointDependency(IReceiveEndpointConfigurator dependency)
+    {
+        _dependencies.Add(dependency);
+    }
 
-            if (configure != null)
-                _configureActions.Add(configure);
-        }
+    public void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context)
+    {
+        AddReceiveEndpointDependency(instanceConfigurator.InstanceEndpointConfigurator);
 
-        public void AddReceiveEndpointDependency(IReceiveEndpointConfigurator dependency)
-        {
-            _dependencies.Add(dependency);
-        }
+        Settings.JobService.ConfigureSuperviseJobConsumer(instanceConfigurator.InstanceEndpointConfigurator);
 
-        public void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context)
-        {
-            AddReceiveEndpointDependency(instanceConfigurator.InstanceEndpointConfigurator);
+        if (instanceConfigurator.BusConfigurator is IBusObserverConnector connector)
+            connector.ConnectBusObserver(new JobServiceBusObserver(Settings.JobService));
 
-            Settings.JobService.ConfigureSuperviseJobConsumer(instanceConfigurator.InstanceEndpointConfigurator);
+        instanceConfigurator.ConnectEndpointConfigurationObserver(new JobServiceEndpointConfigurationObserver(Settings, ConfigureJobConsumerEndpoint));
+    }
 
-            if (instanceConfigurator.BusConfigurator is IBusObserverConnector connector)
-                connector.ConnectBusObserver(new JobServiceBusObserver(Settings.JobService));
+    void ConfigureJobConsumerEndpoint(IReceiveEndpointConfigurator configurator)
+    {
+        foreach (var dependency in _dependencies)
+            configurator.AddDependency(dependency);
+    }
 
-            instanceConfigurator.ConnectEndpointConfigurationObserver(new JobServiceEndpointConfigurationObserver(Settings, ConfigureJobConsumerEndpoint));
-        }
+    InstanceJobServiceSettings GetJobServiceSettings()
+    {
+        var options = new JobConsumerOptions();
+        foreach (Action<JobConsumerOptions> configure in _configureActions)
+            configure(options);
 
-        void ConfigureJobConsumerEndpoint(IReceiveEndpointConfigurator configurator)
-        {
-            foreach (var dependency in _dependencies)
-                configurator.AddDependency(dependency);
-        }
-
-        InstanceJobServiceSettings GetJobServiceSettings()
-        {
-            var options = new JobConsumerOptions();
-            foreach (Action<JobConsumerOptions> configure in _configureActions)
-                configure(options);
-
-            return new InstanceJobServiceSettings(options);
-        }
+        return new InstanceJobServiceSettings(options);
     }
 }

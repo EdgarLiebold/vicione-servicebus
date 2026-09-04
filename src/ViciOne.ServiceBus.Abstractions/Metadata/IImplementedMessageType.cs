@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Metadata
+namespace ViciOne.ServiceBus.Metadata;
+
+public interface IImplementedMessageType
 {
-    public interface IImplementedMessageType
-    {
-        void ImplementsMessageType<T>(bool direct)
-            where T : class;
-    }
+    void ImplementsMessageType<T>(bool direct)
+        where T : class;
 }

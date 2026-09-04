@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IRabbitMqMessageSendTopologyConfigurator<TMessage> :
+    IMessageSendTopologyConfigurator<TMessage>,
+    IRabbitMqMessageSendTopology<TMessage>,
+    IRabbitMqMessageSendTopologyConfigurator
+    where TMessage : class
 {
-    public interface IRabbitMqMessageSendTopologyConfigurator<TMessage> :
-        IMessageSendTopologyConfigurator<TMessage>,
-        IRabbitMqMessageSendTopology<TMessage>,
-        IRabbitMqMessageSendTopologyConfigurator
-        where TMessage : class
-    {
-    }
+}
 
 
-    public interface IRabbitMqMessageSendTopologyConfigurator :
-        IMessageSendTopologyConfigurator
-    {
-    }
+public interface IRabbitMqMessageSendTopologyConfigurator :
+    IMessageSendTopologyConfigurator
+{
 }

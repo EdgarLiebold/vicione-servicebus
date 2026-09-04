@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 
 public sealed class EntityFrameworkScopedBusContextProviderTests
 {

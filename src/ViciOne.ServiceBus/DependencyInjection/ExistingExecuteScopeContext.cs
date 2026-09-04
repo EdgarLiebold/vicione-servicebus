@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ExistingExecuteScopeContext<TArguments> :
+    IExecuteScopeContext<TArguments>
+    where TArguments : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly IDisposable _disposable;
+    readonly IServiceScope _scope;
 
-
-    public class ExistingExecuteScopeContext<TArguments> :
-        IExecuteScopeContext<TArguments>
-        where TArguments : class
+    public ExistingExecuteScopeContext(ExecuteContext<TArguments> context, IServiceScope scope, IDisposable disposable)
     {
-        readonly IDisposable _disposable;
-        readonly IServiceScope _scope;
+        _scope = scope;
+        _disposable = disposable;
+        Context = context;
+    }
 
-        public ExistingExecuteScopeContext(ExecuteContext<TArguments> context, IServiceScope scope, IDisposable disposable)
-        {
-            _scope = scope;
-            _disposable = disposable;
-            Context = context;
-        }
+    public ExecuteContext<TArguments> Context { get; }
 
-        public ExecuteContext<TArguments> Context { get; }
+    public ValueTask DisposeAsync()
+    {
+        _disposable?.Dispose();
+        return default;
+    }
 
-        public ValueTask DisposeAsync()
-        {
-            _disposable?.Dispose();
-            return default;
-        }
-
-        public T GetService<T>()
-            where T : class
-        {
-            return ActivatorUtilities.GetServiceOrCreateInstance<T>(_scope.ServiceProvider);
-        }
+    public T GetService<T>()
+        where T : class
+    {
+        return ActivatorUtilities.GetServiceOrCreateInstance<T>(_scope.ServiceProvider);
     }
 }

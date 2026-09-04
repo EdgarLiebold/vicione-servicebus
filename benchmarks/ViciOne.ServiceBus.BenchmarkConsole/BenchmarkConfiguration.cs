@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 using System.IO;
 using BenchmarkDotNet.Configs;
 
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 public static class BenchmarkConfiguration
 {

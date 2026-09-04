@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus
+using System.IO;
+
+namespace ViciOne.ServiceBus;
+
+public class EmptyMessageBody :
+    MessageBody
 {
-    using System.IO;
+    public static MessageBody Instance { get; } = new EmptyMessageBody();
 
+    public long? Length => 0;
 
-    public class EmptyMessageBody :
-        MessageBody
+    /// <summary>
+    /// Read-only and not expandable. The default constructor hands out a growable buffer, so a
+    /// caller could have written a body into what is by definition empty.
+    /// </summary>
+    public Stream GetStream()
     {
-        public static MessageBody Instance { get; } = new EmptyMessageBody();
+        return new MemoryStream([], false);
+    }
 
-        public long? Length => 0;
+    public byte[] GetBytes()
+    {
+        return [];
+    }
 
-        /// <summary>
-        /// Read-only and not expandable. The default constructor hands out a growable buffer, so a
-        /// caller could have written a body into what is by definition empty.
-        /// </summary>
-        public Stream GetStream()
-        {
-            return new MemoryStream([], false);
-        }
-
-        public byte[] GetBytes()
-        {
-            return [];
-        }
-
-        public string GetString()
-        {
-            return string.Empty;
-        }
+    public string GetString()
+    {
+        return string.Empty;
     }
 }

@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IInstanceConnector
 {
-    public interface IInstanceConnector
-    {
-        IConsumerSpecification<TConsumer> CreateConsumerSpecification<TConsumer>()
-            where TConsumer : class;
+    IConsumerSpecification<TConsumer> CreateConsumerSpecification<TConsumer>()
+        where TConsumer : class;
 
-        ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, object instance);
+    ConnectHandle ConnectInstance(IConsumePipeConnector pipeConnector, object instance);
 
-        ConnectHandle ConnectInstance<TInstance>(IConsumePipeConnector pipeConnector, TInstance instance,
-            IConsumerSpecification<TInstance> specification)
-            where TInstance : class;
-    }
+    ConnectHandle ConnectInstance<TInstance>(IConsumePipeConnector pipeConnector, TInstance instance,
+        IConsumerSpecification<TInstance> specification)
+        where TInstance : class;
 }

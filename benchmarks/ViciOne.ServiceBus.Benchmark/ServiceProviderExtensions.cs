@@ -1,5 +1,3 @@
-namespace ViciOneServiceBusBenchmark;
-
 using System;
 using System.Linq;
 using System.Threading;
@@ -7,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+namespace ViciOneServiceBusBenchmark;
 
 public static class ServiceProviderExtensions
 {

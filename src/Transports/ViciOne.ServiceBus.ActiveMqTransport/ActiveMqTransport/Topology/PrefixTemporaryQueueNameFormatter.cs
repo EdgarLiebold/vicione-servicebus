@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public class PrefixTemporaryQueueNameFormatter :
+    IActiveMqTemporaryQueueNameFormatter
 {
-    public class PrefixTemporaryQueueNameFormatter :
-        IActiveMqTemporaryQueueNameFormatter
+    readonly string _prefix;
+
+    public PrefixTemporaryQueueNameFormatter(string prefix)
     {
-        readonly string _prefix;
+        _prefix = prefix;
+    }
 
-        public PrefixTemporaryQueueNameFormatter(string prefix)
-        {
-            _prefix = prefix;
-        }
-
-        public string Format(string queueName)
-        {
-            return $"{_prefix}{queueName}";
-        }
+    public string Format(string queueName)
+    {
+        return $"{_prefix}{queueName}";
     }
 }

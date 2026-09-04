@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS.Model;
-using Configuration;
-using Transports;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class QueueSendTransportContext :
     BaseSendTransportContext,
@@ -85,7 +84,7 @@ public class QueueSendTransportContext :
         };
 
         _headerAdapter.Set(message.MessageAttributes, context.Headers);
-        _headerAdapter.Set(message.MessageAttributes, MessageHeaders.ContentType, context.ContentType.ToString());
+        _headerAdapter.Set(message.MessageAttributes, MessageHeaders.ContentType, context.ContentType!.ToString());
         _headerAdapter.Set(message.MessageAttributes, MessageHeaders.CorrelationId, context.CorrelationId);
 
         if (!string.IsNullOrEmpty(context.DeduplicationId))

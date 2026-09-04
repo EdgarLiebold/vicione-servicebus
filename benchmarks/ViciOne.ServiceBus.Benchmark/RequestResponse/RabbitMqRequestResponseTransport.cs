@@ -1,58 +1,56 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public class RabbitMqRequestResponseTransport :
+    IRequestResponseTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    readonly RabbitMqHostSettings _hostSettings;
+    readonly IRequestResponseSettings _settings;
+    IBusControl _busControl;
+    IClientFactory _clientFactory;
+    Uri _targetEndpointAddress;
 
-
-    public class RabbitMqRequestResponseTransport :
-        IRequestResponseTransport
+    public RabbitMqRequestResponseTransport(RabbitMqHostSettings hostSettings, IRequestResponseSettings settings)
     {
-        readonly RabbitMqHostSettings _hostSettings;
-        readonly IRequestResponseSettings _settings;
-        IBusControl _busControl;
-        IClientFactory _clientFactory;
-        Uri _targetEndpointAddress;
+        _hostSettings = hostSettings;
+        _settings = settings;
+    }
 
-        public RabbitMqRequestResponseTransport(RabbitMqHostSettings hostSettings, IRequestResponseSettings settings)
-        {
-            _hostSettings = hostSettings;
-            _settings = settings;
-        }
+    public async Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
+        where T : class
+    {
+        return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
+    }
 
-        public async Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
-            where T : class
+    public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
+    {
+        _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
         {
-            return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
-        }
+            x.AutoStart = true;
+            x.Host(_hostSettings);
 
-        public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
-        {
-            _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
+            x.ReceiveEndpoint("rpc_consumer" + (_settings.Durable ? "" : "_express"), e =>
             {
-                x.AutoStart = true;
-                x.Host(_hostSettings);
+                e.PurgeOnStartup = true;
+                e.Durable = _settings.Durable;
+                e.PrefetchCount = _settings.PrefetchCount;
 
-                x.ReceiveEndpoint("rpc_consumer" + (_settings.Durable ? "" : "_express"), e =>
-                {
-                    e.PurgeOnStartup = true;
-                    e.Durable = _settings.Durable;
-                    e.PrefetchCount = _settings.PrefetchCount;
+                callback(e);
 
-                    callback(e);
-
-                    _targetEndpointAddress = e.InputAddress;
-                });
+                _targetEndpointAddress = e.InputAddress;
             });
+        });
 
-            _busControl.Start();
+        _busControl.Start();
 
-            _clientFactory = _busControl.CreateReplyToClientFactory();
-        }
+        _clientFactory = _busControl.CreateReplyToClientFactory();
+    }
 
-        public void Dispose()
-        {
-            _busControl.Stop();
-        }
+    public void Dispose()
+    {
+        _busControl.Stop();
     }
 }

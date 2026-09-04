@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Agents;
-using Configuration;
-using Internals;
-using RetryPolicies;
-using Transports;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.RetryPolicies;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class ConnectionContextFactory :
     IPipeContextFactory<ConnectionContext>

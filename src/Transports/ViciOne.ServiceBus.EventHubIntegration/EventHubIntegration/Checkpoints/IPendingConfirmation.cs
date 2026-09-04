@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs.Consumer;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
+
+public interface IPendingConfirmation
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.EventHubs.Consumer;
+    PartitionContext Partition { get; }
 
+    string OffsetString { get; }
 
-    public interface IPendingConfirmation
-    {
-        PartitionContext Partition { get; }
+    Task Confirmed { get; }
 
-        string OffsetString { get; }
+    void Complete();
+    void Faulted(Exception exception);
+    void Faulted(string message);
+    void Canceled(CancellationToken cancellationToken);
 
-        Task Confirmed { get; }
-
-        void Complete();
-        void Faulted(Exception exception);
-        void Faulted(string message);
-        void Canceled(CancellationToken cancellationToken);
-
-        Task Checkpoint(CancellationToken cancellationToken);
-    }
+    Task Checkpoint(CancellationToken cancellationToken);
 }

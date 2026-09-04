@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ObserverConnectorCache<TMessage> :
+    IObserverConnectorCache<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly Lazy<MessageObserverConnector<TMessage>> _connector;
 
-
-    public class ObserverConnectorCache<TMessage> :
-        IObserverConnectorCache<TMessage>
-        where TMessage : class
+    ObserverConnectorCache()
     {
-        readonly Lazy<MessageObserverConnector<TMessage>> _connector;
+        _connector = new Lazy<MessageObserverConnector<TMessage>>(() => new MessageObserverConnector<TMessage>());
+    }
 
-        ObserverConnectorCache()
-        {
-            _connector = new Lazy<MessageObserverConnector<TMessage>>(() => new MessageObserverConnector<TMessage>());
-        }
+    public static IObserverConnector<TMessage> Connector => InstanceCache.Cached.Value.Connector;
 
-        public static IObserverConnector<TMessage> Connector => InstanceCache.Cached.Value.Connector;
-
-        IObserverConnector<TMessage> IObserverConnectorCache<TMessage>.Connector => _connector.Value;
+    IObserverConnector<TMessage> IObserverConnectorCache<TMessage>.Connector => _connector.Value;
 
 
-        static class InstanceCache
-        {
-            internal static readonly Lazy<IObserverConnectorCache<TMessage>> Cached =
-                new Lazy<IObserverConnectorCache<TMessage>>(() => new ObserverConnectorCache<TMessage>());
-        }
+    static class InstanceCache
+    {
+        internal static readonly Lazy<IObserverConnectorCache<TMessage>> Cached =
+            new Lazy<IObserverConnectorCache<TMessage>>(() => new ObserverConnectorCache<TMessage>());
     }
 }

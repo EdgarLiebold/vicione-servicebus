@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
-{
-    public interface IMessageConnectorFactory
-    {
-        IConsumerMessageConnector<T> CreateConsumerConnector<T>()
-            where T : class;
+namespace ViciOne.ServiceBus.Configuration;
 
-        IInstanceMessageConnector<T> CreateInstanceConnector<T>()
-            where T : class;
-    }
+public interface IMessageConnectorFactory
+{
+    IConsumerMessageConnector<T> CreateConsumerConnector<T>()
+        where T : class;
+
+    IInstanceMessageConnector<T> CreateInstanceConnector<T>()
+        where T : class;
 }

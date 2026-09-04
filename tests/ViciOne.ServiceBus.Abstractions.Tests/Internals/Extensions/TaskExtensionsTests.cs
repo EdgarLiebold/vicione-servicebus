@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

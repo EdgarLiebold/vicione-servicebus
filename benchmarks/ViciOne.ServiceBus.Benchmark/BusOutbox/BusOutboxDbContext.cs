@@ -1,10 +1,9 @@
-namespace ViciOneServiceBusBenchmark.BusOutbox;
-
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-using Microsoft.EntityFrameworkCore;
 
+namespace ViciOneServiceBusBenchmark.BusOutbox;
 
 public class BusOutboxDbContext :
     SagaDbContext

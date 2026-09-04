@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.SignalR.Contracts
+namespace ViciOne.ServiceBus.SignalR.Contracts;
+
+public enum GroupAction
 {
-    public enum GroupAction
-    {
-        Add = 1,
-        Remove = 2
-    }
+    Add = 1,
+    Remove = 2
 }

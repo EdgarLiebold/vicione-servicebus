@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Read-only message routes owned by a single bus instance.
+/// </summary>
+public interface IMessageRouteTable
 {
-    using System;
+    bool TryGetDestinationAddress<T>(out Uri destinationAddress)
+        where T : class;
 
-
-    /// <summary>
-    /// Read-only message routes owned by a single bus instance.
-    /// </summary>
-    public interface IMessageRouteTable
-    {
-        bool TryGetDestinationAddress<T>(out Uri destinationAddress)
-            where T : class;
-
-        bool TryGetDestinationAddress(Type messageType, out Uri destinationAddress);
-    }
+    bool TryGetDestinationAddress(Type messageType, out Uri destinationAddress);
 }

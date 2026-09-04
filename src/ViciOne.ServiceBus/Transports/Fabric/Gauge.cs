@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class Gauge :
+    Metric
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    long _activeCount;
+    long _concurrentActiveCount;
 
+    public event ZeroActiveHandler ZeroActive;
 
-    public class Gauge :
-        Metric
+    public void Add()
     {
-        long _activeCount;
-        long _concurrentActiveCount;
+        var currentActiveCount = Interlocked.Increment(ref _activeCount);
+        while (currentActiveCount < _concurrentActiveCount)
+            Interlocked.CompareExchange(ref _concurrentActiveCount, currentActiveCount, _concurrentActiveCount);
+    }
 
-        public event ZeroActiveHandler ZeroActive;
+    public Task Remove()
+    {
+        var pendingCount = Interlocked.Decrement(ref _activeCount);
+        if (pendingCount != 0)
+            return Task.CompletedTask;
 
-        public void Add()
+        var zeroActivity = ZeroActive;
+        if (zeroActivity == null)
+            return Task.CompletedTask;
+
+        return NotifyZeroActivity(zeroActivity);
+    }
+
+    static Task NotifyZeroActivity(ZeroActiveHandler zeroActivity)
+    {
+        Delegate[] invocationList = zeroActivity.GetInvocationList();
+
+        async Task InvokeAsync()
         {
-            var currentActiveCount = Interlocked.Increment(ref _activeCount);
-            while (currentActiveCount < _concurrentActiveCount)
-                Interlocked.CompareExchange(ref _concurrentActiveCount, currentActiveCount, _concurrentActiveCount);
-        }
-
-        public Task Remove()
-        {
-            var pendingCount = Interlocked.Decrement(ref _activeCount);
-            if (pendingCount != 0)
-                return Task.CompletedTask;
-
-            var zeroActivity = ZeroActive;
-            if (zeroActivity == null)
-                return Task.CompletedTask;
-
-            return NotifyZeroActivity(zeroActivity);
-        }
-
-        static Task NotifyZeroActivity(ZeroActiveHandler zeroActivity)
-        {
-            Delegate[] invocationList = zeroActivity.GetInvocationList();
-
-            async Task InvokeAsync()
+            for (var i = 0; i < invocationList.Length; i++)
             {
-                for (var i = 0; i < invocationList.Length; i++)
-                {
-                    if (invocationList[i] is ZeroActiveHandler handler)
-                        await handler().ConfigureAwait(false);
-                }
+                if (invocationList[i] is ZeroActiveHandler handler)
+                    await handler().ConfigureAwait(false);
             }
-
-            return invocationList.Length switch
-            {
-                0 => Task.CompletedTask,
-                1 when invocationList[0] is ZeroActiveHandler handler => handler(),
-                _ => InvokeAsync()
-            };
         }
+
+        return invocationList.Length switch
+        {
+            0 => Task.CompletedTask,
+            1 when invocationList[0] is ZeroActiveHandler handler => handler(),
+            _ => InvokeAsync()
+        };
     }
 }

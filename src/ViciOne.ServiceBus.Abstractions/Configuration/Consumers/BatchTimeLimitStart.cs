@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public enum BatchTimeLimitStart
 {
-    public enum BatchTimeLimitStart
-    {
-        FromFirst,
-        FromLast
-    }
+    FromFirst,
+    FromLast
 }

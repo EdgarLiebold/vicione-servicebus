@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.SQS.Model;
-using Middleware;
-using Transports;
+using ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class SqsErrorTransport :
     SqsMoveTransport<ErrorSettings>,

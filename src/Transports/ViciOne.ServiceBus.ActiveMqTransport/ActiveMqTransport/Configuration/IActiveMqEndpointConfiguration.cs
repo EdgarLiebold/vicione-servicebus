@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public interface IActiveMqEndpointConfiguration :
+    IEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public interface IActiveMqEndpointConfiguration :
-        IEndpointConfiguration
-    {
-        new IActiveMqTopologyConfiguration Topology { get; }
-    }
+    new IActiveMqTopologyConfiguration Topology { get; }
 }

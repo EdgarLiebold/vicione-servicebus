@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public interface ISqlReceiveEndpointConfiguration :
+    IReceiveEndpointConfiguration,
+    ISqlEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Transports;
+    ReceiveSettings Settings { get; }
 
-
-    public interface ISqlReceiveEndpointConfiguration :
-        IReceiveEndpointConfiguration,
-        ISqlEndpointConfiguration
-    {
-        ReceiveSettings Settings { get; }
-
-        void Build(IHost host);
-    }
+    void Build(IHost host);
 }

@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Testing
+namespace ViciOne.ServiceBus.Testing;
+
+public interface ISagaInstance<out T> :
+    IAsyncListElement
+    where T : class, ISaga
 {
-    public interface ISagaInstance<out T> :
-        IAsyncListElement
-        where T : class, ISaga
-    {
-        T Saga { get; }
-    }
+    T Saga { get; }
 }

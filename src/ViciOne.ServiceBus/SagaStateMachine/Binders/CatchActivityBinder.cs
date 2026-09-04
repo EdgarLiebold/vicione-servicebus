@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+/// <summary>
+/// Creates a compensation activity with the compensation behavior
+/// </summary>
+/// <typeparam name="TInstance"></typeparam>
+/// <typeparam name="TException"></typeparam>
+public class CatchActivityBinder<TInstance, TException> :
+    IActivityBinder<TInstance>
+    where TInstance : class, SagaStateMachineInstance
+    where TException : Exception
 {
-    using System;
+    readonly EventActivities<TInstance> _activities;
 
-
-    /// <summary>
-    /// Creates a compensation activity with the compensation behavior
-    /// </summary>
-    /// <typeparam name="TInstance"></typeparam>
-    /// <typeparam name="TException"></typeparam>
-    public class CatchActivityBinder<TInstance, TException> :
-        IActivityBinder<TInstance>
-        where TInstance : class, SagaStateMachineInstance
-        where TException : Exception
+    public CatchActivityBinder(Event @event, EventActivities<TInstance> activities)
     {
-        readonly EventActivities<TInstance> _activities;
+        Event = @event;
+        _activities = activities;
+    }
 
-        public CatchActivityBinder(Event @event, EventActivities<TInstance> activities)
-        {
-            Event = @event;
-            _activities = activities;
-        }
+    public Event Event { get; }
 
-        public Event Event { get; }
+    public bool IsStateTransitionEvent(State state)
+    {
+        return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
+            || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
+    }
 
-        public bool IsStateTransitionEvent(State state)
-        {
-            return Equals(Event, state.Enter) || Equals(Event, state.BeforeEnter)
-                || Equals(Event, state.AfterLeave) || Equals(Event, state.Leave);
-        }
+    public void Bind(State<TInstance> state)
+    {
+        var builder = new CatchBehaviorBuilder<TInstance>();
+        foreach (IActivityBinder<TInstance> activity in _activities.GetStateActivityBinders())
+            activity.Bind(builder);
 
-        public void Bind(State<TInstance> state)
-        {
-            var builder = new CatchBehaviorBuilder<TInstance>();
-            foreach (IActivityBinder<TInstance> activity in _activities.GetStateActivityBinders())
-                activity.Bind(builder);
+        var compensateActivity = new CatchFaultActivity<TInstance, TException>(builder.Behavior);
 
-            var compensateActivity = new CatchFaultActivity<TInstance, TException>(builder.Behavior);
+        state.Bind(Event, compensateActivity);
+    }
 
-            state.Bind(Event, compensateActivity);
-        }
+    public void Bind(IBehaviorBuilder<TInstance> builder)
+    {
+        var compensateActivityBuilder = new CatchBehaviorBuilder<TInstance>();
+        foreach (IActivityBinder<TInstance> activity in _activities.GetStateActivityBinders())
+            activity.Bind(compensateActivityBuilder);
 
-        public void Bind(IBehaviorBuilder<TInstance> builder)
-        {
-            var compensateActivityBuilder = new CatchBehaviorBuilder<TInstance>();
-            foreach (IActivityBinder<TInstance> activity in _activities.GetStateActivityBinders())
-                activity.Bind(compensateActivityBuilder);
+        var compensateActivity = new CatchFaultActivity<TInstance, TException>(compensateActivityBuilder.Behavior);
 
-            var compensateActivity = new CatchFaultActivity<TInstance, TException>(compensateActivityBuilder.Behavior);
-
-            builder.Add(compensateActivity);
-        }
+        builder.Add(compensateActivity);
     }
 }

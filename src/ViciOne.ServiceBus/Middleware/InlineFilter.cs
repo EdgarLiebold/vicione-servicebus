@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class InlineFilter<TContext> :
+    IFilter<TContext>
+    where TContext : class, PipeContext
 {
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    readonly InlineFilterMethod<TContext> _filterMethod;
 
-
-    public class InlineFilter<TContext> :
-        IFilter<TContext>
-        where TContext : class, PipeContext
+    public InlineFilter(InlineFilterMethod<TContext> filterMethod)
     {
-        readonly InlineFilterMethod<TContext> _filterMethod;
+        _filterMethod = filterMethod;
+    }
 
-        public InlineFilter(InlineFilterMethod<TContext> filterMethod)
-        {
-            _filterMethod = filterMethod;
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("inline");
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("inline");
-        }
-
-        [DebuggerNonUserCode]
-        [DebuggerStepThrough]
-        public Task Send(TContext context, IPipe<TContext> next)
-        {
-            return _filterMethod(context, next);
-        }
+    [DebuggerNonUserCode]
+    [DebuggerStepThrough]
+    public Task Send(TContext context, IPipe<TContext> next)
+    {
+        return _filterMethod(context, next);
     }
 }

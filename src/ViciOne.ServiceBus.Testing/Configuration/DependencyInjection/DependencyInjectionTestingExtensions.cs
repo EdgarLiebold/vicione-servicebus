@@ -1,377 +1,375 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
+using ViciOne.ServiceBus.DependencyInjection.Testing;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Testing;
+using ViciOne.ServiceBus.Testing.Implementations;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public static class DependencyInjectionTestingExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using Configuration;
-    using DependencyInjection;
-    using DependencyInjection.Registration;
-    using DependencyInjection.Testing;
-    using Internals;
-    using Logging;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Testing;
-    using Testing.Implementations;
-    using Transports;
-
-
-    public static class DependencyInjectionTestingExtensions
+    /// <summary>
+    /// AddViciOneServiceBus, including the test harness, to the container.
+    /// To specify a transport, add the appropriate UsingXxx method. If no transport is specified, the
+    /// default in-memory transport will be used, and ConfigureEndpoints will be called.
+    /// If ViciOne.ServiceBus has already been configured, the existing bus configuration will be replaced with an in-memory
+    /// configuration (by default, unless another UsingXxx transport method is specified), and saga repositories are
+    /// replaced with in-memory as well.
+    /// </summary>
+    public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, Action<IBusRegistrationConfigurator>? configure = null)
     {
-        /// <summary>
-        /// AddViciOneServiceBus, including the test harness, to the container.
-        /// To specify a transport, add the appropriate UsingXxx method. If no transport is specified, the
-        /// default in-memory transport will be used, and ConfigureEndpoints will be called.
-        /// If ViciOne.ServiceBus has already been configured, the existing bus configuration will be replaced with an in-memory
-        /// configuration (by default, unless another UsingXxx transport method is specified), and saga repositories are
-        /// replaced with in-memory as well.
-        /// </summary>
-        public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, Action<IBusRegistrationConfigurator>? configure = null)
+        return AddViciOneServiceBusTestHarness(services, Console.Out, configure);
+    }
+
+    /// <summary>
+    /// AddViciOneServiceBus, including the test harness, to the container.
+    /// To specify a transport, add the appropriate UsingXxx method. If no transport is specified, the
+    /// default in-memory transport will be used, and ConfigureEndpoints will be called.
+    /// If ViciOne.ServiceBus has already been configured, the existing bus configuration will be replaced with an in-memory
+    /// configuration (by default, unless another UsingXxx transport method is specified), and saga repositories are
+    /// replaced with in-memory as well.
+    /// </summary>
+    public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, TextWriter textWriter,
+        Action<IBusRegistrationConfigurator>? configure = null)
+    {
+        AddViciOneServiceBusTextWriterLogger(services, textWriter);
+
+        services.AddOptions<TestHarnessOptions>();
+        services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
+        services.AddBusObserver<ContainerTestHarnessBusObserver>();
+        services.TryAddSingleton<ITestHarness>(provider => provider.GetRequiredService<ContainerTestHarness>());
+        services.TryAddSingleton<ContainerTestHarness>();
+
+        services.AddOptions<ViciOneServiceBusHostOptions>().Configure(options =>
         {
-            return AddViciOneServiceBusTestHarness(services, Console.Out, configure);
+            options.WaitUntilStarted = true;
+        });
+
+        services.TryAddSingleton<IValidateOptions<ViciOneServiceBusHostOptions>, ValidateViciOneServiceBusHostOptions>();
+
+        // If the bus was already configured, well, let's use it and any existing registrations
+        if (services.Any(d => d.ServiceType == typeof(IBus)))
+        {
+            RegisterConsumerTestHarnesses(services);
+            RegisterSagaTestHarnesses(services);
+
+            services.RemoveViciOneServiceBus();
+            services.RemoveSagaRepositories();
         }
 
-        /// <summary>
-        /// AddViciOneServiceBus, including the test harness, to the container.
-        /// To specify a transport, add the appropriate UsingXxx method. If no transport is specified, the
-        /// default in-memory transport will be used, and ConfigureEndpoints will be called.
-        /// If ViciOne.ServiceBus has already been configured, the existing bus configuration will be replaced with an in-memory
-        /// configuration (by default, unless another UsingXxx transport method is specified), and saga repositories are
-        /// replaced with in-memory as well.
-        /// </summary>
-        public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, TextWriter textWriter,
-            Action<IBusRegistrationConfigurator>? configure = null)
+        return services.AddViciOneServiceBus(x =>
         {
-            AddViciOneServiceBusTextWriterLogger(services, textWriter);
+            var harnessConfigurator = new TestHarnessRegistrationConfigurator(x);
 
-            services.AddOptions<TestHarnessOptions>();
-            services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
-            services.AddBusObserver<ContainerTestHarnessBusObserver>();
-            services.TryAddSingleton<ITestHarness>(provider => provider.GetRequiredService<ContainerTestHarness>());
-            services.TryAddSingleton<ContainerTestHarness>();
+            harnessConfigurator.SetInMemorySagaRepositoryProvider();
 
-            services.AddOptions<ViciOneServiceBusHostOptions>().Configure(options =>
+            configure?.Invoke(harnessConfigurator);
+
+            var addScheduler = false;
+            if (services.All(d => d.ServiceType != typeof(IMessageScheduler)))
             {
-                options.WaitUntilStarted = true;
-            });
-
-            services.TryAddSingleton<IValidateOptions<ViciOneServiceBusHostOptions>, ValidateViciOneServiceBusHostOptions>();
-
-            // If the bus was already configured, well, let's use it and any existing registrations
-            if (services.Any(d => d.ServiceType == typeof(IBus)))
-            {
-                RegisterConsumerTestHarnesses(services);
-                RegisterSagaTestHarnesses(services);
-
-                services.RemoveViciOneServiceBus();
-                services.RemoveSagaRepositories();
+                x.AddDelayedMessageScheduler();
+                addScheduler = true;
             }
 
-            return services.AddViciOneServiceBus(x =>
+            if (harnessConfigurator.UseDefaultBusFactory)
             {
-                var harnessConfigurator = new TestHarnessRegistrationConfigurator(x);
-
-                harnessConfigurator.SetInMemorySagaRepositoryProvider();
-
-                configure?.Invoke(harnessConfigurator);
-
-                var addScheduler = false;
-                if (services.All(d => d.ServiceType != typeof(IMessageScheduler)))
+                harnessConfigurator.UsingInMemory((context, cfg) =>
                 {
-                    x.AddDelayedMessageScheduler();
-                    addScheduler = true;
-                }
+                    if (addScheduler)
+                        cfg.UseDelayedMessageScheduler();
 
-                if (harnessConfigurator.UseDefaultBusFactory)
-                {
-                    harnessConfigurator.UsingInMemory((context, cfg) =>
-                    {
-                        if (addScheduler)
-                            cfg.UseDelayedMessageScheduler();
-
-                        cfg.ConfigureEndpoints(context);
-                    });
-                }
-            });
-        }
-
-
-        /// <summary>
-        /// Internally used by AddViciOneServiceBusTestHarness to add a console-based <see cref="ILogger"/> for unit testing
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="textWriter"></param>
-        public static IServiceCollection AddViciOneServiceBusTextWriterLogger(this IServiceCollection services, TextWriter? textWriter = null)
-        {
-            services.AddOptions<TextWriterLoggerOptions>();
-            services.TryAddSingleton<ILoggerFactory>(provider =>
-                new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>()));
-            services.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
-
-            return services;
-        }
-
-        /// <summary>
-        /// Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="includeDetails">If true, additional details from each span are shown</param>
-        public static IServiceCollection AddTelemetryListener(this IServiceCollection services, bool includeDetails = false)
-        {
-            return services.AddTelemetryListener(Console.Out, includeDetails);
-        }
-
-        /// <summary>
-        /// Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="textWriter">Override the default Console.Out TextWriter</param>
-        /// <param name="includeDetails">If true, additional details from each span are shown</param>
-        public static IServiceCollection AddTelemetryListener(this IServiceCollection services, TextWriter textWriter, bool includeDetails = false)
-        {
-            var (methodName, className) = GetTestMethodInfo();
-
-            services.TryAddSingleton(_ => new TestActivityListener(textWriter, methodName, className, includeDetails));
-
-            return services;
-        }
-
-        /// <summary>
-        /// Specify the test and/or the test inactivity timeouts that should be used by the test harness.
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="testTimeout">If specified, changes the test timeout</param>
-        /// <param name="testInactivityTimeout">If specified, changes the test inactivity timeout</param>
-        /// <returns></returns>
-        public static IBusRegistrationConfigurator SetTestTimeouts(this IBusRegistrationConfigurator configurator, TimeSpan? testTimeout = null,
-            TimeSpan? testInactivityTimeout = null)
-        {
-            configurator.AddOptions<TestHarnessOptions>()
-                .Configure(options =>
-                {
-                    if (testTimeout.HasValue)
-                        options.TestTimeout = testTimeout.Value;
-                    if (testInactivityTimeout.HasValue)
-                        options.TestInactivityTimeout = testInactivityTimeout.Value;
+                    cfg.ConfigureEndpoints(context);
                 });
+            }
+        });
+    }
 
-            return configurator;
-        }
 
-        /// <summary>
-        /// Controls how many observed contexts the test harness retains for later assertions.
-        /// Activity/inactivity tracking is independent from context retention.
-        /// </summary>
-        public static IBusRegistrationConfigurator SetTestContextSaveMode(this IBusRegistrationConfigurator configurator,
-            TestContextSaveMode saveMode, int maximumSavedContexts = 4096)
-        {
-            if (maximumSavedContexts <= 0)
-                throw new ArgumentOutOfRangeException(nameof(maximumSavedContexts));
+    /// <summary>
+    /// Internally used by AddViciOneServiceBusTestHarness to add a console-based <see cref="ILogger"/> for unit testing
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="textWriter"></param>
+    public static IServiceCollection AddViciOneServiceBusTextWriterLogger(this IServiceCollection services, TextWriter? textWriter = null)
+    {
+        services.AddOptions<TextWriterLoggerOptions>();
+        services.TryAddSingleton<ILoggerFactory>(provider =>
+            new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>()));
+        services.TryAddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
-            configurator.AddOptions<TestHarnessOptions>().Configure(options =>
+        return services;
+    }
+
+    /// <summary>
+    /// Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="includeDetails">If true, additional details from each span are shown</param>
+    public static IServiceCollection AddTelemetryListener(this IServiceCollection services, bool includeDetails = false)
+    {
+        return services.AddTelemetryListener(Console.Out, includeDetails);
+    }
+
+    /// <summary>
+    /// Adds a telemetry listener to the test harness, which outputs a timeline view of the unit test
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="textWriter">Override the default Console.Out TextWriter</param>
+    /// <param name="includeDetails">If true, additional details from each span are shown</param>
+    public static IServiceCollection AddTelemetryListener(this IServiceCollection services, TextWriter textWriter, bool includeDetails = false)
+    {
+        var (methodName, className) = GetTestMethodInfo();
+
+        services.TryAddSingleton(_ => new TestActivityListener(textWriter, methodName, className, includeDetails));
+
+        return services;
+    }
+
+    /// <summary>
+    /// Specify the test and/or the test inactivity timeouts that should be used by the test harness.
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="testTimeout">If specified, changes the test timeout</param>
+    /// <param name="testInactivityTimeout">If specified, changes the test inactivity timeout</param>
+    /// <returns></returns>
+    public static IBusRegistrationConfigurator SetTestTimeouts(this IBusRegistrationConfigurator configurator, TimeSpan? testTimeout = null,
+        TimeSpan? testInactivityTimeout = null)
+    {
+        configurator.AddOptions<TestHarnessOptions>()
+            .Configure(options =>
             {
-                options.ContextSaveMode = saveMode;
-                options.MaximumSavedContexts = maximumSavedContexts;
+                if (testTimeout.HasValue)
+                    options.TestTimeout = testTimeout.Value;
+                if (testInactivityTimeout.HasValue)
+                    options.TestInactivityTimeout = testInactivityTimeout.Value;
             });
 
-            return configurator;
-        }
+        return configurator;
+    }
 
-        static void RegisterConsumerTestHarnesses(IServiceCollection services)
+    /// <summary>
+    /// Controls how many observed contexts the test harness retains for later assertions.
+    /// Activity/inactivity tracking is independent from context retention.
+    /// </summary>
+    public static IBusRegistrationConfigurator SetTestContextSaveMode(this IBusRegistrationConfigurator configurator,
+        TestContextSaveMode saveMode, int maximumSavedContexts = 4096)
+    {
+        if (maximumSavedContexts <= 0)
+            throw new ArgumentOutOfRangeException(nameof(maximumSavedContexts));
+
+        configurator.AddOptions<TestHarnessOptions>().Configure(options =>
         {
-            List<ServiceDescriptor> consumerRegistrations = services
-                .Where(x => x.ServiceType == typeof(IConsumerRegistration))
-                .ToList();
+            options.ContextSaveMode = saveMode;
+            options.MaximumSavedContexts = maximumSavedContexts;
+        });
 
-            foreach (var registration in consumerRegistrations)
+        return configurator;
+    }
+
+    static void RegisterConsumerTestHarnesses(IServiceCollection services)
+    {
+        List<ServiceDescriptor> consumerRegistrations = services
+            .Where(x => x.ServiceType == typeof(IConsumerRegistration))
+            .ToList();
+
+        foreach (var registration in consumerRegistrations)
+        {
+            if (registration.ImplementationInstance == null
+                || !registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumerRegistration<>), out Type[] types))
+                continue;
+
+            var type = typeof(RegistrationForConsumer<>).MakeGenericType(types[0]);
+            var register = Activator.CreateInstance(type) as IRegisterTestHarness
+                ?? throw new InvalidOperationException("Could not create consumer registration");
+            register.RegisterTestHarness(services);
+        }
+    }
+
+    static void RegisterSagaTestHarnesses(IServiceCollection services)
+    {
+        List<ServiceDescriptor> sagaStateMachines = services
+            .Where(x => x.ServiceType == typeof(ISagaRegistration))
+            .ToList();
+
+        foreach (var registration in sagaStateMachines)
+        {
+            if (registration.ImplementationInstance == null)
+                continue;
+
+            if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaStateMachineRegistration<,>), out Type[] types))
             {
-                if (registration.ImplementationInstance == null
-                    || !registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumerRegistration<>), out Type[] types))
-                    continue;
-
-                var type = typeof(RegistrationForConsumer<>).MakeGenericType(types[0]);
+                var type = typeof(RegistrationForSagaStateMachine<,>).MakeGenericType(types);
+                var register = Activator.CreateInstance(type) as IRegisterTestHarness
+                    ?? throw new InvalidOperationException("Could not create consumer registration");
+                register.RegisterTestHarness(services);
+            }
+            else if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaRegistration<>), out types))
+            {
+                var type = typeof(RegistrationForSaga<>).MakeGenericType(types);
                 var register = Activator.CreateInstance(type) as IRegisterTestHarness
                     ?? throw new InvalidOperationException("Could not create consumer registration");
                 register.RegisterTestHarness(services);
             }
         }
+    }
 
-        static void RegisterSagaTestHarnesses(IServiceCollection services)
+    /// <summary>
+    /// Add the In-Memory test harness to the container, and configure it using the callback specified.
+    /// </summary>
+    public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,
+        Action<IBusRegistrationConfigurator>? configure = null)
+    {
+        services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
+        services.AddViciOneServiceBus(cfg =>
         {
-            List<ServiceDescriptor> sagaStateMachines = services
-                .Where(x => x.ServiceType == typeof(ISagaRegistration))
-                .ToList();
+            configure?.Invoke(cfg);
 
-            foreach (var registration in sagaStateMachines)
+            cfg.SetBusFactory(new InMemoryTestHarnessRegistrationBusFactory());
+        });
+        services.AddSingleton(provider =>
+        {
+            var busInstances = provider.GetService<IEnumerable<IBusInstance>>();
+            if (busInstances == null)
             {
-                if (registration.ImplementationInstance == null)
-                    continue;
+                var busInstance = provider.GetService<IBusInstance>();
+                if (busInstance == null)
+                    throw new ConfigurationException("No bus instances found");
 
-                if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaStateMachineRegistration<,>), out Type[] types))
+                busInstances = [busInstance];
+            }
+
+            var testHarnessBusInstance = busInstances.FirstOrDefault(x => x is InMemoryTestHarnessBusInstance);
+            if (testHarnessBusInstance is InMemoryTestHarnessBusInstance testInstance)
+                return testInstance.Harness;
+
+            throw new ConfigurationException("Test Harness configuration is invalid");
+        });
+        services.AddSingleton<BusTestHarness>(provider => provider.GetRequiredService<InMemoryTestHarness>());
+
+        return services;
+    }
+
+    static (string? methodName, string? className) GetTestMethodInfo()
+    {
+        var stackTrace = new StackTrace(2);
+        var frameCount = stackTrace.FrameCount;
+        for (var i = 0; i < frameCount; i++)
+        {
+            var frame = stackTrace.GetFrame(i);
+            if (frame == null)
+                continue;
+
+            var method = frame.GetMethod();
+            if (method == null)
+                continue;
+
+            if (method.GetCustomAttributes(false).Any(x =>
                 {
-                    var type = typeof(RegistrationForSagaStateMachine<,>).MakeGenericType(types);
-                    var register = Activator.CreateInstance(type) as IRegisterTestHarness
-                        ?? throw new InvalidOperationException("Could not create consumer registration");
-                    register.RegisterTestHarness(services);
-                }
-                else if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaRegistration<>), out types))
-                {
-                    var type = typeof(RegistrationForSaga<>).MakeGenericType(types);
-                    var register = Activator.CreateInstance(type) as IRegisterTestHarness
-                        ?? throw new InvalidOperationException("Could not create consumer registration");
-                    register.RegisterTestHarness(services);
-                }
-            }
+                    var name = x.GetType().Name;
+                    return name.ToLower().Contains("test") || name.ToLower().Contains("fact");
+                }))
+                return (method.Name, method.DeclaringType?.Name);
         }
 
-        /// <summary>
-        /// Add the In-Memory test harness to the container, and configure it using the callback specified.
-        /// </summary>
-        public static IServiceCollection AddViciOneServiceBusInMemoryTestHarness(this IServiceCollection services,
-            Action<IBusRegistrationConfigurator>? configure = null)
+        return (null, null);
+    }
+
+    /// <summary>
+    /// Add a consumer test harness for the specified consumer to the container
+    /// </summary>
+    public static void AddConsumerContainerTestHarness<T>(this IServiceCollection configurator)
+        where T : class, IConsumer
+    {
+        configurator.TryAddSingleton<ConsumerContainerTestHarnessRegistration<T>>();
+        configurator.TryAddSingleton<IConsumerFactoryDecoratorRegistration<T>>(provider =>
+            provider.GetRequiredService<ConsumerContainerTestHarnessRegistration<T>>());
+        configurator.TryAddSingleton<IConsumerTestHarness<T>, RegistrationConsumerTestHarness<T>>();
+    }
+
+    /// <summary>
+    /// Add a saga test harness for the specified saga to the container. The saga must be added separately, including
+    /// a valid saga repository.
+    /// </summary>
+    public static void AddSagaContainerTestHarness<T>(this IServiceCollection services)
+        where T : class, ISaga
+    {
+        services.TryAddSingleton<SagaContainerTestHarnessRegistration<T>>();
+        services.TryAddSingleton<ISagaRepositoryDecoratorRegistration<T>>(provider =>
+            provider.GetRequiredService<SagaContainerTestHarnessRegistration<T>>());
+        services.TryAddSingleton<ISagaTestHarness<T>, RegistrationSagaTestHarness<T>>();
+    }
+
+    /// <summary>
+    /// Add a saga state machine test harness for the specified saga to the container. The saga must be added separately, including
+    /// a valid saga repository.
+    /// </summary>
+    public static void AddSagaStateMachineContainerTestHarness<TStateMachine, T>(this IServiceCollection services)
+        where TStateMachine : class, SagaStateMachine<T>
+        where T : class, SagaStateMachineInstance
+    {
+        services.TryAddSingleton<SagaContainerTestHarnessRegistration<T>>();
+        services.TryAddSingleton<ISagaRepositoryDecoratorRegistration<T>>(provider =>
+            provider.GetRequiredService<SagaContainerTestHarnessRegistration<T>>());
+
+        services.TryAddSingleton<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>();
+        services.TryAddSingleton<ISagaStateMachineTestHarness<TStateMachine, T>>(provider =>
+            provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>());
+    }
+
+
+    interface IRegisterTestHarness
+    {
+        void RegisterTestHarness(IServiceCollection services);
+    }
+
+
+    class RegistrationForConsumer<T> :
+        IRegisterTestHarness
+        where T : class, IConsumer
+    {
+        public void RegisterTestHarness(IServiceCollection services)
         {
-            services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
-            services.AddViciOneServiceBus(cfg =>
-            {
-                configure?.Invoke(cfg);
-
-                cfg.SetBusFactory(new InMemoryTestHarnessRegistrationBusFactory());
-            });
-            services.AddSingleton(provider =>
-            {
-                var busInstances = provider.GetService<IEnumerable<IBusInstance>>();
-                if (busInstances == null)
-                {
-                    var busInstance = provider.GetService<IBusInstance>();
-                    if (busInstance == null)
-                        throw new ConfigurationException("No bus instances found");
-
-                    busInstances = [busInstance];
-                }
-
-                var testHarnessBusInstance = busInstances.FirstOrDefault(x => x is InMemoryTestHarnessBusInstance);
-                if (testHarnessBusInstance is InMemoryTestHarnessBusInstance testInstance)
-                    return testInstance.Harness;
-
-                throw new ConfigurationException("Test Harness configuration is invalid");
-            });
-            services.AddSingleton<BusTestHarness>(provider => provider.GetRequiredService<InMemoryTestHarness>());
-
-            return services;
+            services.AddConsumerContainerTestHarness<T>();
         }
+    }
 
-        static (string? methodName, string? className) GetTestMethodInfo()
+
+    class RegistrationForSagaStateMachine<TStateMachine, TInstance> :
+        IRegisterTestHarness
+        where TStateMachine : class, SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        public void RegisterTestHarness(IServiceCollection services)
         {
-            var stackTrace = new StackTrace(2);
-            var frameCount = stackTrace.FrameCount;
-            for (var i = 0; i < frameCount; i++)
-            {
-                var frame = stackTrace.GetFrame(i);
-                if (frame == null)
-                    continue;
-
-                var method = frame.GetMethod();
-                if (method == null)
-                    continue;
-
-                if (method.GetCustomAttributes(false).Any(x =>
-                    {
-                        var name = x.GetType().Name;
-                        return name.ToLower().Contains("test") || name.ToLower().Contains("fact");
-                    }))
-                    return (method.Name, method.DeclaringType?.Name);
-            }
-
-            return (null, null);
+            services.RegisterInMemorySagaRepository<TInstance>();
+            services.AddSagaStateMachineContainerTestHarness<TStateMachine, TInstance>();
         }
+    }
 
-        /// <summary>
-        /// Add a consumer test harness for the specified consumer to the container
-        /// </summary>
-        public static void AddConsumerContainerTestHarness<T>(this IServiceCollection configurator)
-            where T : class, IConsumer
+
+    class RegistrationForSaga<TSaga> :
+        IRegisterTestHarness
+        where TSaga : class, ISaga
+    {
+        public void RegisterTestHarness(IServiceCollection services)
         {
-            configurator.TryAddSingleton<ConsumerContainerTestHarnessRegistration<T>>();
-            configurator.TryAddSingleton<IConsumerFactoryDecoratorRegistration<T>>(provider =>
-                provider.GetRequiredService<ConsumerContainerTestHarnessRegistration<T>>());
-            configurator.TryAddSingleton<IConsumerTestHarness<T>, RegistrationConsumerTestHarness<T>>();
-        }
-
-        /// <summary>
-        /// Add a saga test harness for the specified saga to the container. The saga must be added separately, including
-        /// a valid saga repository.
-        /// </summary>
-        public static void AddSagaContainerTestHarness<T>(this IServiceCollection services)
-            where T : class, ISaga
-        {
-            services.TryAddSingleton<SagaContainerTestHarnessRegistration<T>>();
-            services.TryAddSingleton<ISagaRepositoryDecoratorRegistration<T>>(provider =>
-                provider.GetRequiredService<SagaContainerTestHarnessRegistration<T>>());
-            services.TryAddSingleton<ISagaTestHarness<T>, RegistrationSagaTestHarness<T>>();
-        }
-
-        /// <summary>
-        /// Add a saga state machine test harness for the specified saga to the container. The saga must be added separately, including
-        /// a valid saga repository.
-        /// </summary>
-        public static void AddSagaStateMachineContainerTestHarness<TStateMachine, T>(this IServiceCollection services)
-            where TStateMachine : class, SagaStateMachine<T>
-            where T : class, SagaStateMachineInstance
-        {
-            services.TryAddSingleton<SagaContainerTestHarnessRegistration<T>>();
-            services.TryAddSingleton<ISagaRepositoryDecoratorRegistration<T>>(provider =>
-                provider.GetRequiredService<SagaContainerTestHarnessRegistration<T>>());
-
-            services.TryAddSingleton<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>();
-            services.TryAddSingleton<ISagaStateMachineTestHarness<TStateMachine, T>>(provider =>
-                provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>());
-        }
-
-
-        interface IRegisterTestHarness
-        {
-            void RegisterTestHarness(IServiceCollection services);
-        }
-
-
-        class RegistrationForConsumer<T> :
-            IRegisterTestHarness
-            where T : class, IConsumer
-        {
-            public void RegisterTestHarness(IServiceCollection services)
-            {
-                services.AddConsumerContainerTestHarness<T>();
-            }
-        }
-
-
-        class RegistrationForSagaStateMachine<TStateMachine, TInstance> :
-            IRegisterTestHarness
-            where TStateMachine : class, SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            public void RegisterTestHarness(IServiceCollection services)
-            {
-                services.RegisterInMemorySagaRepository<TInstance>();
-                services.AddSagaStateMachineContainerTestHarness<TStateMachine, TInstance>();
-            }
-        }
-
-
-        class RegistrationForSaga<TSaga> :
-            IRegisterTestHarness
-            where TSaga : class, ISaga
-        {
-            public void RegisterTestHarness(IServiceCollection services)
-            {
-                services.RegisterInMemorySagaRepository<TSaga>();
-                services.AddSagaContainerTestHarness<TSaga>();
-            }
+            services.RegisterInMemorySagaRepository<TSaga>();
+            services.AddSagaContainerTestHarness<TSaga>();
         }
     }
 }

@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public class ActiveMqQueueReceiveSettings :
+    ActiveMqQueueBindingConfigurator,
+    ReceiveSettings
 {
-    using System;
+    readonly IActiveMqEndpointConfiguration _configuration;
 
-
-    public class ActiveMqQueueReceiveSettings :
-        ActiveMqQueueBindingConfigurator,
-        ReceiveSettings
+    public ActiveMqQueueReceiveSettings(IActiveMqEndpointConfiguration configuration, string queueName, bool durable, bool autoDelete)
+        : base(queueName, durable, autoDelete)
     {
-        readonly IActiveMqEndpointConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public ActiveMqQueueReceiveSettings(IActiveMqEndpointConfiguration configuration, string queueName, bool durable, bool autoDelete)
-            : base(queueName, durable, autoDelete)
-        {
-            _configuration = configuration;
-        }
+    public int PrefetchCount => _configuration.Transport.PrefetchCount;
+    public int ConcurrentMessageLimit => _configuration.Transport.GetConcurrentMessageLimit();
 
-        public int PrefetchCount => _configuration.Transport.PrefetchCount;
-        public int ConcurrentMessageLimit => _configuration.Transport.GetConcurrentMessageLimit();
-
-        public Uri GetInputAddress(Uri hostAddress)
-        {
-            return GetEndpointAddress(hostAddress);
-        }
+    public Uri GetInputAddress(Uri hostAddress)
+    {
+        return GetEndpointAddress(hostAddress);
     }
 }

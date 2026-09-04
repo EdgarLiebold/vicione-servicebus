@@ -1,13 +1,13 @@
-namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.AzureTable;
-
 using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.AzureTable.Saga;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.AzureTable;
 
 public sealed class AzureTableFuturePersistenceTests
 {

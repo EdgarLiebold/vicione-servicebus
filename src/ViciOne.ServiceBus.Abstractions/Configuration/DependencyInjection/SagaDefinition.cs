@@ -1,88 +1,86 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
-    using Configuration;
+using System;
+using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// A saga definition defines the configuration for a saga, which can be used by the automatic registration code to
+/// configure the consumer on a receive endpoint.
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+public class SagaDefinition<TSaga> :
+    ISagaDefinition<TSaga>
+    where TSaga : class, ISaga
+{
+    int? _concurrentMessageLimit;
+    string? _endpointName;
+
+    protected SagaDefinition()
+    {
+    }
 
     /// <summary>
-    /// A saga definition defines the configuration for a saga, which can be used by the automatic registration code to
-    /// configure the consumer on a receive endpoint.
+    /// Specify the endpoint name (which may be a queue, or a subscription, depending upon the transport) on which the saga
+    /// should be configured.
     /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    public class SagaDefinition<TSaga> :
-        ISagaDefinition<TSaga>
-        where TSaga : class, ISaga
+    protected string EndpointName
     {
-        int? _concurrentMessageLimit;
-        string? _endpointName;
+        set => _endpointName = value;
+    }
 
-        protected SagaDefinition()
-        {
-        }
+    public IEndpointDefinition<TSaga>? EndpointDefinition { get; set; }
 
-        /// <summary>
-        /// Specify the endpoint name (which may be a queue, or a subscription, depending upon the transport) on which the saga
-        /// should be configured.
-        /// </summary>
-        protected string EndpointName
-        {
-            set => _endpointName = value;
-        }
+    IEndpointDefinition? ISagaDefinition.EndpointDefinition => EndpointDefinition;
 
-        public IEndpointDefinition<TSaga>? EndpointDefinition { get; set; }
+    /// <summary>
+    /// Set the concurrent message limit for the saga, which limits how many saga instances are able to concurrently
+    /// consume messages.
+    /// </summary>
+    public int? ConcurrentMessageLimit
+    {
+        get => _concurrentMessageLimit;
+        protected set => _concurrentMessageLimit = value;
+    }
 
-        IEndpointDefinition? ISagaDefinition.EndpointDefinition => EndpointDefinition;
+    void ISagaDefinition<TSaga>.Configure(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator,
+        IRegistrationContext context)
+    {
+        if (_concurrentMessageLimit.HasValue)
+            sagaConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
+        ConfigureSaga(endpointConfigurator, sagaConfigurator, context);
+    }
 
-        /// <summary>
-        /// Set the concurrent message limit for the saga, which limits how many saga instances are able to concurrently
-        /// consume messages.
-        /// </summary>
-        public int? ConcurrentMessageLimit
-        {
-            get => _concurrentMessageLimit;
-            protected set => _concurrentMessageLimit = value;
-        }
+    Type ISagaDefinition.SagaType => typeof(TSaga);
 
-        void ISagaDefinition<TSaga>.Configure(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator,
-            IRegistrationContext context)
-        {
-            if (_concurrentMessageLimit.HasValue)
-                sagaConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
-            ConfigureSaga(endpointConfigurator, sagaConfigurator, context);
-        }
+    string ISagaDefinition.GetEndpointName(IEndpointNameFormatter formatter)
+    {
+        return string.IsNullOrWhiteSpace(_endpointName)
+            ? _endpointName = EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Saga<TSaga>()
+            : _endpointName!;
+    }
 
-        Type ISagaDefinition.SagaType => typeof(TSaga);
+    /// <summary>
+    /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
+    /// the endpoint.
+    /// </summary>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
+    /// <param name="sagaConfigurator">The saga configurator</param>
+    /// <param name="context"></param>
+    protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator,
+        IRegistrationContext context)
+    {
+    }
 
-        string ISagaDefinition.GetEndpointName(IEndpointNameFormatter formatter)
-        {
-            return string.IsNullOrWhiteSpace(_endpointName)
-                ? _endpointName = EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Saga<TSaga>()
-                : _endpointName!;
-        }
+    /// <summary>
+    /// Configure the saga endpoint
+    /// </summary>
+    /// <param name="configure"></param>
+    protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
+    {
+        var configurator = new EndpointRegistrationConfigurator<TSaga>();
 
-        /// <summary>
-        /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
-        /// the endpoint.
-        /// </summary>
-        /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-        /// <param name="sagaConfigurator">The saga configurator</param>
-        /// <param name="context"></param>
-        protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<TSaga> sagaConfigurator,
-            IRegistrationContext context)
-        {
-        }
+        configure?.Invoke(configurator);
 
-        /// <summary>
-        /// Configure the saga endpoint
-        /// </summary>
-        /// <param name="configure"></param>
-        protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
-        {
-            var configurator = new EndpointRegistrationConfigurator<TSaga>();
-
-            configure?.Invoke(configurator);
-
-            EndpointDefinition = new SagaEndpointDefinition<TSaga>(configurator.Settings);
-        }
+        EndpointDefinition = new SagaEndpointDefinition<TSaga>(configurator.Settings);
     }
 }

@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.Serialization
+using System;
+using System.IO;
+
+namespace ViciOne.ServiceBus.Serialization;
+
+public class NotSupportedMessageBody :
+    MessageBody
 {
-    using System;
-    using System.IO;
+    public long? Length => throw new NotSupportedException();
 
-
-    public class NotSupportedMessageBody :
-        MessageBody
+    public Stream GetStream()
     {
-        public long? Length => throw new NotSupportedException();
+        throw new NotSupportedException();
+    }
 
-        public Stream GetStream()
-        {
-            throw new NotSupportedException();
-        }
+    public byte[] GetBytes()
+    {
+        throw new NotSupportedException();
+    }
 
-        public byte[] GetBytes()
-        {
-            throw new NotSupportedException();
-        }
-
-        public string GetString()
-        {
-            throw new NotSupportedException();
-        }
+    public string GetString()
+    {
+        throw new NotSupportedException();
     }
 }

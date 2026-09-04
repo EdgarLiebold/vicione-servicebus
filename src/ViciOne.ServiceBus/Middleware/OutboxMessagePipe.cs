@@ -1,142 +1,140 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Serialization;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Middleware
+namespace ViciOne.ServiceBus.Middleware;
+
+public class OutboxMessagePipe<TMessage> :
+    IPipe<OutboxConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using DependencyInjection;
-    using Logging;
-    using Serialization;
+    readonly IPipe<ConsumeContext<TMessage>> _next;
+    readonly OutboxConsumeOptions _options;
+    readonly IConsumeScopeContext<TMessage> _scopeContext;
 
-
-    public class OutboxMessagePipe<TMessage> :
-        IPipe<OutboxConsumeContext<TMessage>>
-        where TMessage : class
+    public OutboxMessagePipe(OutboxConsumeOptions options, IConsumeScopeContext<TMessage> scopeContext, IPipe<ConsumeContext<TMessage>> next)
     {
-        readonly IPipe<ConsumeContext<TMessage>> _next;
-        readonly OutboxConsumeOptions _options;
-        readonly IConsumeScopeContext<TMessage> _scopeContext;
+        _options = options;
+        _scopeContext = scopeContext;
+        _next = next;
+    }
 
-        public OutboxMessagePipe(OutboxConsumeOptions options, IConsumeScopeContext<TMessage> scopeContext, IPipe<ConsumeContext<TMessage>> next)
+    public async Task Send(OutboxConsumeContext<TMessage> context)
+    {
+        using var pop = _scopeContext.PushConsumeContext(context);
+
+        var timer = Stopwatch.StartNew();
+
+        if (!context.IsMessageConsumed)
         {
-            _options = options;
-            _scopeContext = scopeContext;
-            _next = next;
+            await _next.Send(context).ConfigureAwait(false);
+
+            await context.ConsumeCompleted.ConfigureAwait(false);
+
+            try
+            {
+                await context.SetConsumed().ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                if (!context.ReceiveContext.IsFaulted)
+                    await context.NotifyFaulted(timer.Elapsed, TypeCache<TMessage>.ShortName, exception).ConfigureAwait(false);
+
+                throw;
+            }
+
+            return;
         }
 
-        public async Task Send(OutboxConsumeContext<TMessage> context)
+        if (!context.IsOutboxDelivered)
         {
-            using var pop = _scopeContext.PushConsumeContext(context);
+            await DeliverOutboxMessages(context).ConfigureAwait(false);
 
-            var timer = Stopwatch.StartNew();
+            await context.ConsumeCompleted.ConfigureAwait(false);
 
-            if (!context.IsMessageConsumed)
+            return;
+        }
+
+        await context.RemoveOutboxMessages().ConfigureAwait(false);
+
+        LogContext.Debug?.Log("Outbox Completed: {MessageId} ({ReceiveCount})", context.MessageId, context.ReceiveCount);
+
+        if (context.ReceiveContext is { IsDelivered: false, IsFaulted: false })
+            await context.NotifyConsumed(context, timer.Elapsed, _options.ConsumerType).ConfigureAwait(false);
+
+        context.ContinueProcessing = false;
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("outbox");
+
+        _next.Probe(scope);
+    }
+
+    async Task DeliverOutboxMessages(OutboxConsumeContext context)
+    {
+        List<OutboxMessageContext> messages = await context.LoadOutboxMessages().ConfigureAwait(false);
+
+        var messageLimit = _options.MessageDeliveryLimit;
+        var messageCount = 0;
+        var messageIndex = 0;
+        for (; messageIndex < messages.Count && messageCount < messageLimit; messageIndex++)
+        {
+            var message = messages[messageIndex];
+
+            if (context.LastSequenceNumber != null && context.LastSequenceNumber >= message.SequenceNumber)
             {
-                await _next.Send(context).ConfigureAwait(false);
+            }
+            else if (message.DestinationAddress == null)
+            {
+                LogContext.Warning?.Log("Outbox message DestinationAddress not present: {SequenceNumber} {MessageId}", message.SequenceNumber,
+                    message.MessageId);
+            }
+            else
+            {
+                using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout);
+                using var token = CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken, sendToken.Token);
 
-                await context.ConsumeCompleted.ConfigureAwait(false);
+                var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
 
+                var endpoint = await context.CapturedContext.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
+
+                StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
+                MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
                 try
                 {
-                    await context.SetConsumed().ConfigureAwait(false);
+                    await endpoint.Send(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
-                    if (!context.ReceiveContext.IsFaulted)
-                        await context.NotifyFaulted(timer.Elapsed, TypeCache<TMessage>.ShortName, exception).ConfigureAwait(false);
+                    activity?.AddExceptionEvent(exception);
+                    instrument?.RecordException(exception);
 
                     throw;
                 }
+                finally
+                {
+                    activity?.Stop();
+                    instrument?.Complete();
+                }
 
-                return;
+                LogContext.Debug?.Log("Outbox Sent: {InboxMessageId} {SequenceNumber} {MessageId}", context.MessageId, message.SequenceNumber,
+                    message.MessageId);
+
+                await context.NotifyOutboxMessageDelivered(message).ConfigureAwait(false);
+
+                messageCount++;
             }
-
-            if (!context.IsOutboxDelivered)
-            {
-                await DeliverOutboxMessages(context).ConfigureAwait(false);
-
-                await context.ConsumeCompleted.ConfigureAwait(false);
-
-                return;
-            }
-
-            await context.RemoveOutboxMessages().ConfigureAwait(false);
-
-            LogContext.Debug?.Log("Outbox Completed: {MessageId} ({ReceiveCount})", context.MessageId, context.ReceiveCount);
-
-            if (context.ReceiveContext is { IsDelivered: false, IsFaulted: false })
-                await context.NotifyConsumed(context, timer.Elapsed, _options.ConsumerType).ConfigureAwait(false);
-
-            context.ContinueProcessing = false;
         }
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("outbox");
-
-            _next.Probe(scope);
-        }
-
-        async Task DeliverOutboxMessages(OutboxConsumeContext context)
-        {
-            List<OutboxMessageContext> messages = await context.LoadOutboxMessages().ConfigureAwait(false);
-
-            var messageLimit = _options.MessageDeliveryLimit;
-            var messageCount = 0;
-            var messageIndex = 0;
-            for (; messageIndex < messages.Count && messageCount < messageLimit; messageIndex++)
-            {
-                var message = messages[messageIndex];
-
-                if (context.LastSequenceNumber != null && context.LastSequenceNumber >= message.SequenceNumber)
-                {
-                }
-                else if (message.DestinationAddress == null)
-                {
-                    LogContext.Warning?.Log("Outbox message DestinationAddress not present: {SequenceNumber} {MessageId}", message.SequenceNumber,
-                        message.MessageId);
-                }
-                else
-                {
-                    using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout);
-                    using var token = CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken, sendToken.Token);
-
-                    var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);
-
-                    var endpoint = await context.CapturedContext.GetSendEndpoint(message.DestinationAddress).ConfigureAwait(false);
-
-                    StartedActivity? activity = LogContext.Current?.StartOutboxDeliverActivity(message);
-                    MetricOperation? instrument = LogContext.Current?.StartOutboxDeliveryInstrument();
-                    try
-                    {
-                        await endpoint.Send(new SerializedMessageBody(), pipe, token.Token).ConfigureAwait(false);
-                    }
-                    catch (Exception exception)
-                    {
-                        activity?.AddExceptionEvent(exception);
-                        instrument?.RecordException(exception);
-
-                        throw;
-                    }
-                    finally
-                    {
-                        activity?.Stop();
-                        instrument?.Complete();
-                    }
-
-                    LogContext.Debug?.Log("Outbox Sent: {InboxMessageId} {SequenceNumber} {MessageId}", context.MessageId, message.SequenceNumber,
-                        message.MessageId);
-
-                    await context.NotifyOutboxMessageDelivered(message).ConfigureAwait(false);
-
-                    messageCount++;
-                }
-            }
-
-            if (messageIndex == messages.Count && messages.Count < messageLimit)
-                await context.SetDelivered().ConfigureAwait(false);
-        }
+        if (messageIndex == messages.Count && messages.Count < messageLimit)
+            await context.SetDelivered().ConfigureAwait(false);
     }
 }

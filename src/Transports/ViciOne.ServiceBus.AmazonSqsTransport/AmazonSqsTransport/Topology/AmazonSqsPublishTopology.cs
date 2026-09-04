@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public class AmazonSqsPublishTopology :
     PublishTopology,

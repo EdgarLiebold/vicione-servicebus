@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
+using System;
+using Azure.Data.Tables;
+
+namespace ViciOne.ServiceBus.AzureTable.Saga;
+
+internal sealed class FixedTableClientProvider<TSaga> :
+    ITableClientProvider<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using Azure.Data.Tables;
+    readonly TableClient _tableClient;
 
-
-    internal sealed class FixedTableClientProvider<TSaga> :
-        ITableClientProvider<TSaga>
-        where TSaga : class, ISaga
+    public FixedTableClientProvider(TableClient tableClient)
     {
-        readonly TableClient _tableClient;
+        ArgumentNullException.ThrowIfNull(tableClient);
+        _tableClient = tableClient;
+    }
 
-        public FixedTableClientProvider(TableClient tableClient)
-        {
-            ArgumentNullException.ThrowIfNull(tableClient);
-            _tableClient = tableClient;
-        }
-
-        public TableClient GetTableClient()
-        {
-            return _tableClient;
-        }
+    public TableClient GetTableClient()
+    {
+        return _tableClient;
     }
 }

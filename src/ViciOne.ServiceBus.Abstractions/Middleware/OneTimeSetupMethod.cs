@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Threading.Tasks;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus;
 
 class OneTimeSetupMethod
 {

@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.SqlTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public interface IClientContextSupervisor :
+    ITransportSupervisor<ClientContext>
 {
-    using Transports;
-
-
-    public interface IClientContextSupervisor :
-        ITransportSupervisor<ClientContext>
-    {
-    }
 }

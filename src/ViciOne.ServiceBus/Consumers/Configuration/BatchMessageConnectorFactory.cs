@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class BatchMessageConnectorFactory<TConsumer, TMessage> :
+    IMessageConnectorFactory
+    where TConsumer : class, IConsumer<Batch<TMessage>>
+    where TMessage : class
 {
-    using System;
+    readonly BatchConsumerMessageConnector<TConsumer, TMessage> _consumerConnector;
 
-
-    public class BatchMessageConnectorFactory<TConsumer, TMessage> :
-        IMessageConnectorFactory
-        where TConsumer : class, IConsumer<Batch<TMessage>>
-        where TMessage : class
+    public BatchMessageConnectorFactory()
     {
-        readonly BatchConsumerMessageConnector<TConsumer, TMessage> _consumerConnector;
+        _consumerConnector = new BatchConsumerMessageConnector<TConsumer, TMessage>();
+    }
 
-        public BatchMessageConnectorFactory()
-        {
-            _consumerConnector = new BatchConsumerMessageConnector<TConsumer, TMessage>();
-        }
+    public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
+        where T : class
+    {
+        return _consumerConnector as IConsumerMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
+    }
 
-        public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
-            where T : class
-        {
-            return _consumerConnector as IConsumerMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
-        }
-
-        public IInstanceMessageConnector<T> CreateInstanceConnector<T>()
-            where T : class
-        {
-            throw new NotSupportedException($"Batch<{TypeCache<TMessage>.ShortName}> cannot be connected to a consumer instance.");
-        }
+    public IInstanceMessageConnector<T> CreateInstanceConnector<T>()
+        where T : class
+    {
+        throw new NotSupportedException($"Batch<{TypeCache<TMessage>.ShortName}> cannot be connected to a consumer instance.");
     }
 }

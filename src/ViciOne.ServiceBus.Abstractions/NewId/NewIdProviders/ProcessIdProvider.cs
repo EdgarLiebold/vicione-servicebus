@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus.NewIdProviders
+using System;
+using System.Diagnostics;
+
+namespace ViciOne.ServiceBus.NewIdProviders;
+
+public class CurrentProcessIdProvider :
+    IProcessIdProvider
 {
-    using System;
-    using System.Diagnostics;
-
-
-    public class CurrentProcessIdProvider :
-        IProcessIdProvider
+    public byte[] GetProcessId()
     {
-        public byte[] GetProcessId()
-        {
-            var processId = BitConverter.GetBytes(Process.GetCurrentProcess().Id);
+        var processId = BitConverter.GetBytes(Process.GetCurrentProcess().Id);
 
-            if (processId.Length < 2)
-                throw new InvalidOperationException("Current Process Id is of insufficient length");
+        if (processId.Length < 2)
+            throw new InvalidOperationException("Current Process Id is of insufficient length");
 
-            return processId;
-        }
+        return processId;
     }
 }

@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IExecuteActivityScopeProvider<TActivity, TArguments> :
+    IProbeSite
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System.Threading.Tasks;
+    ValueTask<IExecuteScopeContext<TArguments>> GetScope(ExecuteContext<TArguments> context);
 
-
-    public interface IExecuteActivityScopeProvider<TActivity, TArguments> :
-        IProbeSite
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        ValueTask<IExecuteScopeContext<TArguments>> GetScope(ExecuteContext<TArguments> context);
-
-        ValueTask<IExecuteActivityScopeContext<TActivity, TArguments>> GetActivityScope(ExecuteContext<TArguments> context);
-    }
+    ValueTask<IExecuteActivityScopeContext<TActivity, TArguments>> GetActivityScope(ExecuteContext<TArguments> context);
 }

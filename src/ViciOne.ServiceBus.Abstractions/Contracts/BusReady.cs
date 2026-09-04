@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus
-{
-    public interface BusReady
-    {
-        IBus Bus { get; }
+namespace ViciOne.ServiceBus;
 
-        HostReady Host { get; }
-    }
+public interface BusReady
+{
+    IBus Bus { get; }
+
+    HostReady Host { get; }
 }

@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+using ViciOne.ServiceBus.InMemoryTransport;
+
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public interface IMessageFabric<TContext, T> :
+    IMessageFabricObserverConnector<TContext>,
+    IAgent,
+    IProbeSite
+    where T : class
+    where TContext : class
 {
-    using InMemoryTransport;
+    IInMemoryDelayProvider DelayProvider { get; }
 
+    void ExchangeDeclare(TContext context, string name, ExchangeType exchangeType);
 
-    public interface IMessageFabric<TContext, T> :
-        IMessageFabricObserverConnector<TContext>,
-        IAgent,
-        IProbeSite
-        where T : class
-        where TContext : class
-    {
-        IInMemoryDelayProvider DelayProvider { get; }
+    void ExchangeBind(TContext context, string source, string destination, string? routingKey);
 
-        void ExchangeDeclare(TContext context, string name, ExchangeType exchangeType);
+    void QueueDeclare(TContext context, string name);
 
-        void ExchangeBind(TContext context, string source, string destination, string routingKey);
+    void QueueBind(TContext context, string source, string destination);
 
-        void QueueDeclare(TContext context, string name);
+    IMessageExchange<T> GetExchange(TContext context, string name, ExchangeType exchangeType = ExchangeType.FanOut);
 
-        void QueueBind(TContext context, string source, string destination);
-
-        IMessageExchange<T> GetExchange(TContext context, string name, ExchangeType exchangeType = ExchangeType.FanOut);
-
-        IMessageQueue<TContext, T> GetQueue(TContext context, string name);
-    }
+    IMessageQueue<TContext, T> GetQueue(TContext context, string name);
 }

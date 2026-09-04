@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing;
 
-
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// Starts and stops a bus repeatedly and records what one round trip costs as the cycles accumulate.
 /// <para>

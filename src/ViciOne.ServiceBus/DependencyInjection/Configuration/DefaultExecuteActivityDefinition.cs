@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DefaultExecuteActivityDefinition<TActivity, TArguments> :
+    ExecuteActivityDefinition<TActivity, TArguments>
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    public class DefaultExecuteActivityDefinition<TActivity, TArguments> :
-        ExecuteActivityDefinition<TActivity, TArguments>
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-    }
 }

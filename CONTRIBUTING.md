@@ -24,9 +24,10 @@ The current native hermetic profile is xUnit 4 on Microsoft Testing Platform 2:
 
 ```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
-dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore --no-incremental
+dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3496 \
+  --max-parallel-test-modules 1
 ```
 
 There is one test architecture. Add executable checks to the source-owner xUnit project and run them

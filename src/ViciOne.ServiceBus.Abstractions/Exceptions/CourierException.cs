@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class CourierException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class CourierException :
-        ViciOneServiceBusException
+    public CourierException()
     {
-        public CourierException()
-        {
-        }
+    }
 
-        public CourierException(string message)
-            : base(message)
-        {
-        }
+    public CourierException(string message)
+        : base(message)
+    {
+    }
 
-        public CourierException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public CourierException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

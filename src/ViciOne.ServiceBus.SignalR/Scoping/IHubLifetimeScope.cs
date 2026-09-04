@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.SignalR.Scoping
+using System;
+using Microsoft.AspNetCore.SignalR;
+using ViciOne.ServiceBus.SignalR.Contracts;
+
+namespace ViciOne.ServiceBus.SignalR.Scoping;
+
+public interface IHubLifetimeScope<THub> :
+    IAsyncDisposable
+    where THub : Hub
 {
-    using System;
-    using Contracts;
-    using Microsoft.AspNetCore.SignalR;
-
-
-    public interface IHubLifetimeScope<THub> :
-        IAsyncDisposable
-        where THub : Hub
-    {
-        IPublishEndpoint PublishEndpoint { get; }
-        IRequestClient<GroupManagement<THub>> RequestClient { get; }
-    }
+    IPublishEndpoint PublishEndpoint { get; }
+    IRequestClient<GroupManagement<THub>> RequestClient { get; }
 }

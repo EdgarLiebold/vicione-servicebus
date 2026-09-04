@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
-
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +9,8 @@ using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Outbox;
 
 public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 {

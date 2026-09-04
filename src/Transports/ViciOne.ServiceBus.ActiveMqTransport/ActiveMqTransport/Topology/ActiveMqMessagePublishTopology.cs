@@ -1,74 +1,72 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+using ViciOne.ServiceBus.Topology;
+
 #nullable enable
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public class ActiveMqMessagePublishTopology<TMessage> :
+    MessagePublishTopology<TMessage>,
+    IActiveMqMessagePublishTopologyConfigurator<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Configuration;
-    using ViciOne.ServiceBus.Topology;
+    readonly ActiveMqTopicConfigurator _topic;
 
-
-    public class ActiveMqMessagePublishTopology<TMessage> :
-        MessagePublishTopology<TMessage>,
-        IActiveMqMessagePublishTopologyConfigurator<TMessage>
-        where TMessage : class
+    public ActiveMqMessagePublishTopology(IActiveMqPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology)
+        : base(publishTopology)
     {
-        readonly ActiveMqTopicConfigurator _topic;
+        var topicName = $"{publishTopology.VirtualTopicPrefix}{messageTopology.EntityName}";
 
-        public ActiveMqMessagePublishTopology(IActiveMqPublishTopology publishTopology, IMessageTopology<TMessage> messageTopology)
-            : base(publishTopology)
-        {
-            var topicName = $"{publishTopology.VirtualTopicPrefix}{messageTopology.EntityName}";
+        var temporary = MessageTypeCache<TMessage>.IsTemporaryMessageType;
 
-            var temporary = MessageTypeCache<TMessage>.IsTemporaryMessageType;
+        var durable = !temporary;
+        var autoDelete = temporary;
 
-            var durable = !temporary;
-            var autoDelete = temporary;
+        _topic = new ActiveMqTopicConfigurator(topicName, durable, autoDelete);
+    }
 
-            _topic = new ActiveMqTopicConfigurator(topicName, durable, autoDelete);
-        }
+    public Topic Topic => _topic;
 
-        public Topic Topic => _topic;
+    bool IActiveMqTopicConfigurator.Durable
+    {
+        set => _topic.Durable = value;
+    }
 
-        bool IActiveMqTopicConfigurator.Durable
-        {
-            set => _topic.Durable = value;
-        }
+    bool IActiveMqTopicConfigurator.AutoDelete
+    {
+        set => _topic.AutoDelete = value;
+    }
 
-        bool IActiveMqTopicConfigurator.AutoDelete
-        {
-            set => _topic.AutoDelete = value;
-        }
+    public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
+    {
+        publishAddress = _topic.GetEndpointAddress(baseAddress);
+        return true;
+    }
 
-        public override bool TryGetPublishAddress(Uri baseAddress, [NotNullWhen(true)] out Uri? publishAddress)
-        {
-            publishAddress = _topic.GetEndpointAddress(baseAddress);
-            return true;
-        }
+    public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
+    {
+        if (Exclude)
+            return;
 
-        public void Apply(IPublishEndpointBrokerTopologyBuilder builder)
-        {
-            if (Exclude)
-                return;
+        builder.Topic = builder.CreateTopic(_topic.EntityName, _topic.Durable, _topic.AutoDelete);
 
-            builder.Topic = builder.CreateTopic(_topic.EntityName, _topic.Durable, _topic.AutoDelete);
+        // this was disabled previously, so not sure if it can be added
+        // foreach (IActiveMqMessagePublishTopology configurator in _implementedMessageTypes)
+        //     configurator.Apply(builder);
+    }
 
-            // this was disabled previously, so not sure if it can be added
-            // foreach (IActiveMqMessagePublishTopology configurator in _implementedMessageTypes)
-            //     configurator.Apply(builder);
-        }
+    public SendSettings GetSendSettings(Uri hostAddress)
+    {
+        return new ActiveMqTopicSendSettings(_topic.GetEndpointAddress(hostAddress));
+    }
 
-        public SendSettings GetSendSettings(Uri hostAddress)
-        {
-            return new ActiveMqTopicSendSettings(_topic.GetEndpointAddress(hostAddress));
-        }
+    public BrokerTopology GetBrokerTopology(PublishBrokerTopologyOptions options)
+    {
+        var builder = new PublishEndpointBrokerTopologyBuilder(options);
 
-        public BrokerTopology GetBrokerTopology(PublishBrokerTopologyOptions options)
-        {
-            var builder = new PublishEndpointBrokerTopologyBuilder(options);
+        Apply(builder);
 
-            Apply(builder);
-
-            return builder.BuildBrokerTopology();
-        }
+        return builder.BuildBrokerTopology();
     }
 }

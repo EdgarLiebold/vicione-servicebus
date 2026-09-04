@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DynamoDbSagaRepositoryRegistrationProvider :
+    ISagaRepositoryRegistrationProvider
 {
-    using System;
-    using Internals;
+    readonly Action<IDynamoDbSagaRepositoryConfigurator> _configure;
 
-
-    public class DynamoDbSagaRepositoryRegistrationProvider :
-        ISagaRepositoryRegistrationProvider
+    public DynamoDbSagaRepositoryRegistrationProvider(Action<IDynamoDbSagaRepositoryConfigurator> configure)
     {
-        readonly Action<IDynamoDbSagaRepositoryConfigurator> _configure;
+        _configure = configure ?? throw new ArgumentNullException(nameof(configure));
+    }
 
-        public DynamoDbSagaRepositoryRegistrationProvider(Action<IDynamoDbSagaRepositoryConfigurator> configure)
+    void ISagaRepositoryRegistrationProvider.Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+        where TSaga : class
+    {
+        if (typeof(TSaga).ImplementsInterface<ISagaVersion>())
         {
-            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
+            var proxy = (IProxy)Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(typeof(TSaga)), configurator);
+
+            proxy.Configure(this);
+        }
+    }
+
+    protected virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+        where TSaga : class, ISagaVersion
+    {
+        configurator.DynamoDbRepository(r => _configure(r));
+    }
+
+
+    interface IProxy
+    {
+        public void Configure<T>(T provider)
+            where T : DynamoDbSagaRepositoryRegistrationProvider;
+    }
+
+
+    class Proxy<TSaga> :
+        IProxy
+        where TSaga : class, ISagaVersion
+    {
+        readonly ISagaRegistrationConfigurator<TSaga> _configurator;
+
+        public Proxy(ISagaRegistrationConfigurator<TSaga> configurator)
+        {
+            _configurator = configurator;
         }
 
-        void ISagaRepositoryRegistrationProvider.Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
-            where TSaga : class
+        public void Configure<T>(T provider)
+            where T : DynamoDbSagaRepositoryRegistrationProvider
         {
-            if (typeof(TSaga).ImplementsInterface<ISagaVersion>())
-            {
-                var proxy = (IProxy)Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(typeof(TSaga)), configurator);
-
-                proxy.Configure(this);
-            }
-        }
-
-        protected virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
-            where TSaga : class, ISagaVersion
-        {
-            configurator.DynamoDbRepository(r => _configure(r));
-        }
-
-
-        interface IProxy
-        {
-            public void Configure<T>(T provider)
-                where T : DynamoDbSagaRepositoryRegistrationProvider;
-        }
-
-
-        class Proxy<TSaga> :
-            IProxy
-            where TSaga : class, ISagaVersion
-        {
-            readonly ISagaRegistrationConfigurator<TSaga> _configurator;
-
-            public Proxy(ISagaRegistrationConfigurator<TSaga> configurator)
-            {
-                _configurator = configurator;
-            }
-
-            public void Configure<T>(T provider)
-                where T : DynamoDbSagaRepositoryRegistrationProvider
-            {
-                provider.Configure(_configurator);
-            }
+            provider.Configure(_configurator);
         }
     }
 }

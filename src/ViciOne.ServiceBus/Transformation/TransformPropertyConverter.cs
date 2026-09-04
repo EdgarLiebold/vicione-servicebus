@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.Transformation
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Transformation;
+
+public class TransformPropertyConverter<TProperty> :
+    IPropertyConverter<TProperty, TProperty>
+    where TProperty : class
 {
-    using System.Threading.Tasks;
-    using Initializers;
-    using Util;
+    readonly IMessageInitializer<TProperty> _initializer;
 
-
-    public class TransformPropertyConverter<TProperty> :
-        IPropertyConverter<TProperty, TProperty>
-        where TProperty : class
+    public TransformPropertyConverter(IMessageInitializer<TProperty> initializer)
     {
-        readonly IMessageInitializer<TProperty> _initializer;
+        _initializer = initializer;
+    }
 
-        public TransformPropertyConverter(IMessageInitializer<TProperty> initializer)
+    public Task<TProperty> Convert<TMessage>(InitializeContext<TMessage> context, TProperty input)
+        where TMessage : class
+    {
+        if (input == null || !context.TryGetPayload(out TransformContext<TMessage> transformContext) || !transformContext.HasInput)
+            return TaskResults.Default<TProperty>();
+
+        var propertyTransformContext = new PropertyTransformContext<TMessage, TProperty>(transformContext, input);
+
+        InitializeContext<TProperty> messageContext = _initializer.Create(propertyTransformContext);
+
+        Task<InitializeContext<TProperty>> initTask = _initializer.Initialize(messageContext, input);
+        if (initTask.IsCompleted)
+            return Task.FromResult(initTask.Result.Message);
+
+        async Task<TProperty> ConvertAsync()
         {
-            _initializer = initializer;
+            InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
+
+            return result.Message;
         }
 
-        public Task<TProperty> Convert<TMessage>(InitializeContext<TMessage> context, TProperty input)
-            where TMessage : class
-        {
-            if (input == null || !context.TryGetPayload(out TransformContext<TMessage> transformContext) || !transformContext.HasInput)
-                return TaskResults.Default<TProperty>();
-
-            var propertyTransformContext = new PropertyTransformContext<TMessage, TProperty>(transformContext, input);
-
-            InitializeContext<TProperty> messageContext = _initializer.Create(propertyTransformContext);
-
-            Task<InitializeContext<TProperty>> initTask = _initializer.Initialize(messageContext, input);
-            if (initTask.IsCompleted)
-                return Task.FromResult(initTask.Result.Message);
-
-            async Task<TProperty> ConvertAsync()
-            {
-                InitializeContext<TProperty> result = await initTask.ConfigureAwait(false);
-
-                return result.Message;
-            }
-
-            return ConvertAsync();
-        }
+        return ConvertAsync();
     }
 }

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Contracts.JobService;
-
 using System;
 
+namespace ViciOne.ServiceBus.Contracts.JobService;
 
 public interface SetJobProgress
 {

@@ -1,323 +1,321 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using System;
+using System.Collections.Generic;
+using RabbitMQ.Client;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.RabbitMqTransport.Middleware;
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public class RabbitMqReceiveEndpointConfiguration :
+    ReceiveEndpointConfiguration,
+    IRabbitMqReceiveEndpointConfiguration,
+    IRabbitMqReceiveEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using ViciOne.ServiceBus.Configuration;
-    using ViciOne.ServiceBus.Middleware;
-    using Middleware;
-    using RabbitMQ.Client;
-    using Topology;
-    using Transports;
-    using Util;
+    readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
+    readonly IRabbitMqEndpointConfiguration _endpointConfiguration;
+    readonly IRabbitMqHostConfiguration _hostConfiguration;
+    readonly Lazy<Uri> _inputAddress;
+    readonly IBuildPipeConfigurator<ChannelContext> _channelConfigurator;
+    readonly List<RabbitMqQueueRedeliveryPlan> _queueRedeliveryPlans = new();
+    readonly RabbitMqReceiveSettings _settings;
 
-
-    public class RabbitMqReceiveEndpointConfiguration :
-        ReceiveEndpointConfiguration,
-        IRabbitMqReceiveEndpointConfiguration,
-        IRabbitMqReceiveEndpointConfigurator
+    public RabbitMqReceiveEndpointConfiguration(IRabbitMqHostConfiguration hostConfiguration, RabbitMqReceiveSettings settings,
+        IRabbitMqEndpointConfiguration endpointConfiguration)
+        : base(hostConfiguration, endpointConfiguration)
     {
-        readonly IBuildPipeConfigurator<ConnectionContext> _connectionConfigurator;
-        readonly IRabbitMqEndpointConfiguration _endpointConfiguration;
-        readonly IRabbitMqHostConfiguration _hostConfiguration;
-        readonly Lazy<Uri> _inputAddress;
-        readonly IBuildPipeConfigurator<ChannelContext> _channelConfigurator;
-        readonly List<RabbitMqQueueRedeliveryPlan> _queueRedeliveryPlans = new();
-        readonly RabbitMqReceiveSettings _settings;
+        _hostConfiguration = hostConfiguration;
+        _settings = settings;
 
-        public RabbitMqReceiveEndpointConfiguration(IRabbitMqHostConfiguration hostConfiguration, RabbitMqReceiveSettings settings,
-            IRabbitMqEndpointConfiguration endpointConfiguration)
-            : base(hostConfiguration, endpointConfiguration)
+        _endpointConfiguration = endpointConfiguration;
+
+        _connectionConfigurator = new PipeConfigurator<ConnectionContext>();
+        _channelConfigurator = new PipeConfigurator<ChannelContext>();
+
+        _inputAddress = new Lazy<Uri>(FormatInputAddress);
+
+        if (settings.QueueName == RabbitMqExchangeNames.ReplyTo)
         {
-            _hostConfiguration = hostConfiguration;
-            _settings = settings;
-
-            _endpointConfiguration = endpointConfiguration;
-
-            _connectionConfigurator = new PipeConfigurator<ConnectionContext>();
-            _channelConfigurator = new PipeConfigurator<ChannelContext>();
-
-            _inputAddress = new Lazy<Uri>(FormatInputAddress);
-
-            if (settings.QueueName == RabbitMqExchangeNames.ReplyTo)
-            {
-                settings.ExchangeName = null;
-                settings.BindQueue = true;
-                settings.NoAck = true;
-            }
+            settings.ExchangeName = null;
+            settings.BindQueue = true;
+            settings.NoAck = true;
         }
+    }
 
-        public ReceiveSettings Settings => _settings;
+    public ReceiveSettings Settings => _settings;
 
-        public override Uri HostAddress => _hostConfiguration.HostAddress;
-        public override Uri InputAddress => _inputAddress.Value;
+    public override Uri HostAddress => _hostConfiguration.HostAddress;
+    public override Uri InputAddress => _inputAddress.Value;
 
-        public override ReceiveEndpointContext CreateReceiveEndpointContext()
+    public override ReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        return CreateRabbitMqReceiveEndpointContext();
+    }
+
+    IRabbitMqTopologyConfiguration IRabbitMqEndpointConfiguration.Topology => _endpointConfiguration.Topology;
+
+    public void Build(IHost host)
+    {
+        var context = CreateRabbitMqReceiveEndpointContext();
+
+        _channelConfigurator.UseFilter(new ConfigureRabbitMqTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology));
+
+        foreach (var plan in _queueRedeliveryPlans)
+            _channelConfigurator.UseFilter(new ConfigureRabbitMqQueueRedeliveryFilter(plan));
+
+        if (_hostConfiguration.DeployTopologyOnly)
+            _channelConfigurator.UseFilter(new TransportReadyFilter<ChannelContext>(context));
+        else
         {
-            return CreateRabbitMqReceiveEndpointContext();
-        }
-
-        IRabbitMqTopologyConfiguration IRabbitMqEndpointConfiguration.Topology => _endpointConfiguration.Topology;
-
-        public void Build(IHost host)
-        {
-            var context = CreateRabbitMqReceiveEndpointContext();
-
-            _channelConfigurator.UseFilter(new ConfigureRabbitMqTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology));
-
-            foreach (var plan in _queueRedeliveryPlans)
-                _channelConfigurator.UseFilter(new ConfigureRabbitMqQueueRedeliveryFilter(plan));
-
-            if (_hostConfiguration.DeployTopologyOnly)
-                _channelConfigurator.UseFilter(new TransportReadyFilter<ChannelContext>(context));
-            else
-            {
-                if (_settings.PurgeOnStartup)
-                    _channelConfigurator.UseFilter(new PurgeOnStartupFilter(_settings.QueueName));
-
-                _channelConfigurator.UseFilter(new PrefetchCountFilter(_settings.PrefetchCount));
-                _channelConfigurator.UseFilter(new ReceiveEndpointDependencyFilter<ChannelContext>(context));
-                _channelConfigurator.UseFilter(new RabbitMqConsumerFilter(context));
-            }
-
-            IPipe<ChannelContext> channelPipe = _channelConfigurator.Build();
-
-            var transport = new ReceiveTransport<ChannelContext>(_hostConfiguration, context, () => context.ChannelContextSupervisor, channelPipe);
-
-            if (IsBusEndpoint && _hostConfiguration.DeployPublishTopology)
-            {
-                var publishTopology = _hostConfiguration.Topology.PublishTopology;
-
-                var brokerTopology = publishTopology.GetPublishBrokerTopology();
-
-                transport.PreStartPipe = new ConfigureRabbitMqTopologyFilter<IPublishTopology>(publishTopology, brokerTopology).ToPipe();
-            }
-
-            var receiveEndpoint = new ReceiveEndpoint(transport, context);
-
-            var queueName = _settings.QueueName ?? NewId.Next().ToString(FormatUtil.Formatter);
-
-            host.AddReceiveEndpoint(queueName, receiveEndpoint);
-
-            ReceiveEndpoint = receiveEndpoint;
-        }
-
-        internal RabbitMqQueueRedeliveryPlan CreateQueueRedeliveryPlan(IEnumerable<TimeSpan> intervals)
-        {
-            if (_queueRedeliveryPlans.Count > 0)
-                throw new ConfigurationException("RabbitMQ queue redelivery may only be configured once per receive endpoint.");
-
-            var plan = new RabbitMqQueueRedeliveryPlan(_settings, intervals);
-            _queueRedeliveryPlans.Add(plan);
-            Changed("QueueRedelivery");
-            return plan;
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            var queueName = $"{_settings.QueueName}";
-
-            if (!RabbitMqEntityNameValidator.Validator.IsValidEntityName(_settings.QueueName))
-                yield return this.Failure(queueName, "must be a valid queue name");
-
             if (_settings.PurgeOnStartup)
-                yield return this.Warning(queueName, "Existing messages in the queue will be purged on service start");
+                _channelConfigurator.UseFilter(new PurgeOnStartupFilter(_settings.QueueName));
 
-            foreach (var result in base.Validate())
-                yield return result.WithParentKey(queueName);
+            _channelConfigurator.UseFilter(new PrefetchCountFilter(_settings.PrefetchCount));
+            _channelConfigurator.UseFilter(new ReceiveEndpointDependencyFilter<ChannelContext>(context));
+            _channelConfigurator.UseFilter(new RabbitMqConsumerFilter(context));
         }
 
-        public bool Durable
+        IPipe<ChannelContext> channelPipe = _channelConfigurator.Build();
+
+        var transport = new ReceiveTransport<ChannelContext>(_hostConfiguration, context, () => context.ChannelContextSupervisor, channelPipe);
+
+        if (IsBusEndpoint && _hostConfiguration.DeployPublishTopology)
         {
-            set
-            {
-                _settings.Durable = value;
+            var publishTopology = _hostConfiguration.Topology.PublishTopology;
 
-                Changed("Durable");
-            }
+            var brokerTopology = publishTopology.GetPublishBrokerTopology();
+
+            transport.PreStartPipe = new ConfigureRabbitMqTopologyFilter<IPublishTopology>(publishTopology, brokerTopology).ToPipe();
         }
 
-        public bool Exclusive
+        var receiveEndpoint = new ReceiveEndpoint(transport, context);
+
+        var queueName = _settings.QueueName ?? NewId.Next().ToString(FormatUtil.Formatter);
+
+        host.AddReceiveEndpoint(queueName, receiveEndpoint);
+
+        ReceiveEndpoint = receiveEndpoint;
+    }
+
+    internal RabbitMqQueueRedeliveryPlan CreateQueueRedeliveryPlan(IEnumerable<TimeSpan> intervals)
+    {
+        if (_queueRedeliveryPlans.Count > 0)
+            throw new ConfigurationException("RabbitMQ queue redelivery may only be configured once per receive endpoint.");
+
+        var plan = new RabbitMqQueueRedeliveryPlan(_settings, intervals);
+        _queueRedeliveryPlans.Add(plan);
+        Changed("QueueRedelivery");
+        return plan;
+    }
+
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        var queueName = $"{_settings.QueueName}";
+
+        if (!RabbitMqEntityNameValidator.Validator.IsValidEntityName(_settings.QueueName))
+            yield return this.Failure(queueName, "must be a valid queue name");
+
+        if (_settings.PurgeOnStartup)
+            yield return this.Warning(queueName, "Existing messages in the queue will be purged on service start");
+
+        foreach (var result in base.Validate())
+            yield return result.WithParentKey(queueName);
+    }
+
+    public bool Durable
+    {
+        set
         {
-            set
-            {
-                _settings.Exclusive = value;
+            _settings.Durable = value;
 
-                Changed("Exclusive");
-            }
+            Changed("Durable");
         }
+    }
 
-        public bool AutoDelete
+    public bool Exclusive
+    {
+        set
         {
-            set
-            {
-                _settings.AutoDelete = value;
+            _settings.Exclusive = value;
 
-                Changed("AutoDelete");
-            }
+            Changed("Exclusive");
         }
+    }
 
-        public string ExchangeType
+    public bool AutoDelete
+    {
+        set
         {
-            set => _settings.ExchangeType = value;
+            _settings.AutoDelete = value;
+
+            Changed("AutoDelete");
         }
+    }
 
-        public bool PurgeOnStartup
-        {
-            set => _settings.PurgeOnStartup = value;
-        }
+    public string ExchangeType
+    {
+        set => _settings.ExchangeType = value;
+    }
 
-        public int ConsumerPriority
-        {
-            set => _settings.ConsumerPriority = value;
-        }
+    public bool PurgeOnStartup
+    {
+        set => _settings.PurgeOnStartup = value;
+    }
 
-        public bool ExclusiveConsumer
-        {
-            set => _settings.ExclusiveConsumer = value;
-        }
+    public int ConsumerPriority
+    {
+        set => _settings.ConsumerPriority = value;
+    }
 
-        public void Stream(Action<IRabbitMqStreamConfigurator> callback = null)
-        {
-            _settings.QueueArguments[Headers.XQueueType] = "stream";
+    public bool ExclusiveConsumer
+    {
+        set => _settings.ExclusiveConsumer = value;
+    }
 
-            var configurator = new RabbitMqStreamConfigurator(_settings);
+    public void Stream(Action<IRabbitMqStreamConfigurator> callback = null)
+    {
+        _settings.QueueArguments[RabbitMQ.Client.Headers.XQueueType] = "stream";
 
-            callback?.Invoke(configurator);
-        }
+        var configurator = new RabbitMqStreamConfigurator(_settings);
 
-        public void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator> callback = null)
-        {
-            if (string.IsNullOrWhiteSpace(consumerTag))
-                throw new ArgumentNullException(nameof(consumerTag));
+        callback?.Invoke(configurator);
+    }
 
-            _settings.ConsumerTag = consumerTag;
+    public void Stream(string consumerTag, Action<IRabbitMqStreamConfigurator> callback = null)
+    {
+        if (string.IsNullOrWhiteSpace(consumerTag))
+            throw new ArgumentNullException(nameof(consumerTag));
 
-            Stream(callback);
-        }
+        _settings.ConsumerTag = consumerTag;
 
-        public bool Lazy
-        {
-            set => _settings.Lazy = value;
-        }
+        Stream(callback);
+    }
 
-        public bool BindQueue
-        {
-            set => _settings.BindQueue = value;
-        }
+    public bool Lazy
+    {
+        set => _settings.Lazy = value;
+    }
 
-        public TimeSpan? QueueExpiration
-        {
-            set => _settings.QueueExpiration = value;
-        }
+    public bool BindQueue
+    {
+        set => _settings.BindQueue = value;
+    }
 
-        public bool SingleActiveConsumer
-        {
-            set => _settings.SingleActiveConsumer = value;
-        }
+    public TimeSpan? QueueExpiration
+    {
+        set => _settings.QueueExpiration = value;
+    }
 
-        public string DeadLetterExchange
-        {
-            set => SetQueueArgument(Headers.XDeadLetterExchange, value);
-        }
+    public bool SingleActiveConsumer
+    {
+        set => _settings.SingleActiveConsumer = value;
+    }
 
-        public void SetQueueArgument(string key, object value)
-        {
-            _settings.SetQueueArgument(key, value);
-        }
+    public string DeadLetterExchange
+    {
+        set => SetQueueArgument(RabbitMQ.Client.Headers.XDeadLetterExchange, value);
+    }
 
-        public void SetQueueArgument(string key, TimeSpan value)
-        {
-            _settings.SetQueueArgument(key, value);
-        }
+    public void SetQueueArgument(string key, object value)
+    {
+        _settings.SetQueueArgument(key, value);
+    }
 
-        public void SetExchangeArgument(string key, object value)
-        {
-            _settings.SetExchangeArgument(key, value);
-        }
+    public void SetQueueArgument(string key, TimeSpan value)
+    {
+        _settings.SetQueueArgument(key, value);
+    }
 
-        public void SetExchangeArgument(string key, TimeSpan value)
-        {
-            _settings.SetExchangeArgument(key, value);
-        }
+    public void SetExchangeArgument(string key, object value)
+    {
+        _settings.SetExchangeArgument(key, value);
+    }
 
-        public void EnablePriority(byte maxPriority)
-        {
-            _settings.EnablePriority(maxPriority);
-        }
+    public void SetExchangeArgument(string key, TimeSpan value)
+    {
+        _settings.SetExchangeArgument(key, value);
+    }
 
-        public void SetQuorumQueue(int? replicationFactor = default)
-        {
-            _settings.SetQuorumQueue(replicationFactor);
-        }
+    public void EnablePriority(byte maxPriority)
+    {
+        _settings.EnablePriority(maxPriority);
+    }
 
-        public void SetDeliveryAcknowledgementTimeout(TimeSpan timeSpan)
-        {
-            if (timeSpan <= TimeSpan.Zero)
-                throw new ArgumentException("The RabbitMQ consumer timeout must be > 0");
+    public void SetQuorumQueue(int? replicationFactor = default)
+    {
+        _settings.SetQuorumQueue(replicationFactor);
+    }
 
-            SetQueueArgument("x-consumer-timeout", (long)timeSpan.TotalMilliseconds);
-        }
+    public void SetDeliveryAcknowledgementTimeout(TimeSpan timeSpan)
+    {
+        if (timeSpan <= TimeSpan.Zero)
+            throw new ArgumentException("The RabbitMQ consumer timeout must be > 0");
 
-        public void SetDeliveryAcknowledgementTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
-        {
-            var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
+        SetQueueArgument("x-consumer-timeout", (long)timeSpan.TotalMilliseconds);
+    }
 
-            SetDeliveryAcknowledgementTimeout(value);
-        }
+    public void SetDeliveryAcknowledgementTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null)
+    {
+        var value = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
 
-        public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> callback)
-        {
-            if (exchangeName == null)
-                throw new ArgumentNullException(nameof(exchangeName));
+        SetDeliveryAcknowledgementTimeout(value);
+    }
 
-            _endpointConfiguration.Topology.Consume.Bind(exchangeName, callback);
-        }
+    public void Bind(string exchangeName, Action<IRabbitMqExchangeToExchangeBindingConfigurator> callback)
+    {
+        if (exchangeName == null)
+            throw new ArgumentNullException(nameof(exchangeName));
 
-        public void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator> callback)
-            where T : class
-        {
-            _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(callback);
-        }
+        _endpointConfiguration.Topology.Consume.Bind(exchangeName, callback);
+    }
 
-        public void BindDeadLetterQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator> configure)
-        {
-            _endpointConfiguration.Topology.Consume.BindQueue(exchangeName, queueName, configure);
+    public void Bind<T>(Action<IRabbitMqExchangeBindingConfigurator> callback)
+        where T : class
+    {
+        _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Bind(callback);
+    }
 
-            DeadLetterExchange = exchangeName;
-        }
+    public void BindDeadLetterQueue(string exchangeName, string queueName, Action<IRabbitMqQueueBindingConfigurator> configure)
+    {
+        _endpointConfiguration.Topology.Consume.BindQueue(exchangeName, queueName, configure);
 
-        public void ConfigureChannel(Action<IPipeConfigurator<ChannelContext>> configure)
-        {
-            configure?.Invoke(_channelConfigurator);
-        }
+        DeadLetterExchange = exchangeName;
+    }
 
-        public void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>> configure)
-        {
-            configure?.Invoke(_connectionConfigurator);
-        }
+    public void ConfigureChannel(Action<IPipeConfigurator<ChannelContext>> configure)
+    {
+        configure?.Invoke(_channelConfigurator);
+    }
 
-        public void OverrideConsumerTag(string consumerTag)
-        {
-            _settings.ConsumerTag = consumerTag;
-        }
+    public void ConfigureConnection(Action<IPipeConfigurator<ConnectionContext>> configure)
+    {
+        configure?.Invoke(_connectionConfigurator);
+    }
 
-        RabbitMqReceiveEndpointContext CreateRabbitMqReceiveEndpointContext()
-        {
-            var builder = new RabbitMqReceiveEndpointBuilder(_hostConfiguration, this);
+    public void OverrideConsumerTag(string consumerTag)
+    {
+        _settings.ConsumerTag = consumerTag;
+    }
 
-            ApplySpecifications(builder);
+    RabbitMqReceiveEndpointContext CreateRabbitMqReceiveEndpointContext()
+    {
+        var builder = new RabbitMqReceiveEndpointBuilder(_hostConfiguration, this);
 
-            return builder.CreateReceiveEndpointContext();
-        }
+        ApplySpecifications(builder);
 
-        Uri FormatInputAddress()
-        {
-            return _settings.GetInputAddress(_hostConfiguration.HostAddress);
-        }
+        return builder.CreateReceiveEndpointContext();
+    }
 
-        protected override bool IsAlreadyConfigured()
-        {
-            return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
-        }
+    Uri FormatInputAddress()
+    {
+        return _settings.GetInputAddress(_hostConfiguration.HostAddress);
+    }
+
+    protected override bool IsAlreadyConfigured()
+    {
+        return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
     }
 }

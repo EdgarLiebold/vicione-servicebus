@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus
+using System.Collections.Generic;
+using ViciOne.ServiceBus.SagaStateMachine;
+
+namespace ViciOne.ServiceBus;
+
+public interface EventActivities<TInstance>
+    where TInstance : class, SagaStateMachineInstance
 {
-    using System.Collections.Generic;
-    using SagaStateMachine;
-
-
-    public interface EventActivities<TInstance>
-        where TInstance : class, SagaStateMachineInstance
-    {
-        IEnumerable<IActivityBinder<TInstance>> GetStateActivityBinders();
-    }
+    IEnumerable<IActivityBinder<TInstance>> GetStateActivityBinders();
 }

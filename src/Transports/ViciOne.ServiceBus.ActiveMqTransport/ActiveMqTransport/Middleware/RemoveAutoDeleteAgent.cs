@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Apache.NMS;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
 using ViciOne.ServiceBus.Middleware;
-using Topology;
 
+namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
 
 public sealed class RemoveAutoDeleteAgent :
     Agent
@@ -32,7 +31,7 @@ public sealed class RemoveAutoDeleteAgent :
                 {
                     // Topology setup runs through a scoped session which is released as soon as that
                     // operation completes. Resolve the current connection at stop time: after broker
-                    // recovery, the setup connection may already have been retired and must never be
+                    // recovery, the setup connection may already have been released and must never be
                     // reused for cleanup.
                     var session = await connectionContext.CreateSession(context.CancellationToken).ConfigureAwait(false);
                     await using var sessionContext = new ActiveMqSessionContext(connectionContext, session, context.CancellationToken);

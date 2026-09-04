@@ -1,11 +1,10 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.ComponentModel;
 using System.Globalization;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// Conservative bounded rendering that never invokes arbitrary application <see cref="object.ToString"/> implementations.
 /// </summary>

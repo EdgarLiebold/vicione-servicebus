@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISendPipeSpecification :
+    ISendPipeSpecificationObserverConnector,
+    ISpecification
 {
-    public interface ISendPipeSpecification :
-        ISendPipeSpecificationObserverConnector,
-        ISpecification
-    {
-        /// <summary>
-        /// Returns the specification for the message type
-        /// </summary>
-        /// <typeparam name="T">The message type</typeparam>
-        /// <returns></returns>
-        IMessageSendPipeSpecification<T> GetMessageSpecification<T>()
-            where T : class;
-    }
+    /// <summary>
+    /// Returns the specification for the message type
+    /// </summary>
+    /// <typeparam name="T">The message type</typeparam>
+    /// <returns></returns>
+    IMessageSendPipeSpecification<T> GetMessageSpecification<T>()
+        where T : class;
 }

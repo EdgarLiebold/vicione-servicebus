@@ -60,7 +60,7 @@ directly through the .NET 10 CLI:
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
 dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 3490 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3496 \
   --max-parallel-test-modules 1
 ```
 

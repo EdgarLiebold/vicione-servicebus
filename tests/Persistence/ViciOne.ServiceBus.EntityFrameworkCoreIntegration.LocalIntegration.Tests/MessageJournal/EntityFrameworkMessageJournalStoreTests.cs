@@ -1,15 +1,15 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.MessageJournal;
-
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Infrastructure;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.MessageJournal;
 
 public sealed class EntityFrameworkMessageJournalStoreTests
 {

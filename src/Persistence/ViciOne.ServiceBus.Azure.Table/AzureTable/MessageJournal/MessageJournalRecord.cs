@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
-
 using System;
 using System.Text;
 using System.Text.Json;
@@ -8,6 +5,8 @@ using Azure;
 using Azure.Data.Tables;
 using ViciOne.ServiceBus.MessageJournal;
 
+#nullable enable
+namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 /// <summary>
 /// Azure Table representation of one sanitized message-journal entry.
 /// </summary>

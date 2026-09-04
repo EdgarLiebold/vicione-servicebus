@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOneServiceBusBenchmark;
+using Xunit;
 using LatencyMetricCapture = ViciOneServiceBusBenchmark.Latency.MessageMetricCapture;
 using RequestMetricCapture = ViciOneServiceBusBenchmark.RequestResponse.MessageMetricCapture;
-using Xunit;
 
 namespace ViciOne.ServiceBus.Benchmark.Tests;
 

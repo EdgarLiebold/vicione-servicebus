@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.SqlTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public interface ISqlHost :
+    IHost<ISqlReceiveEndpointConfigurator>
 {
-    using Transports;
-
-
-    public interface ISqlHost :
-        IHost<ISqlReceiveEndpointConfigurator>
-    {
-    }
 }

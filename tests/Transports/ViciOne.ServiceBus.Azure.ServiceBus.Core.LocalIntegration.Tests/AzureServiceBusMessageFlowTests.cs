@@ -1,12 +1,12 @@
-namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests;
-
 using System.Collections.Concurrent;
 using System.Runtime.Serialization;
 using global::Azure.Messaging.ServiceBus;
 using global::Azure.Messaging.ServiceBus.Administration;
-using Infrastructure;
+using ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.ServiceBus.Core.LocalIntegration.Tests;
 
 public sealed class AzureServiceBusMessageFlowTests
 {

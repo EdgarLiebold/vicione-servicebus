@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 
+namespace ViciOne.ServiceBus;
 
 public interface IAmazonSqsBusFactoryConfigurator :
     IBusFactoryConfigurator<IAmazonSqsReceiveEndpointConfigurator>,

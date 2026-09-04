@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class RabbitMqDelaySettings :
+    RabbitMqSendSettings,
+    DelaySettings
 {
-    public class RabbitMqDelaySettings :
-        RabbitMqSendSettings,
-        DelaySettings
+    public RabbitMqDelaySettings(RabbitMqEndpointAddress address)
+        : base(address)
     {
-        public RabbitMqDelaySettings(RabbitMqEndpointAddress address)
-            : base(address)
-        {
-        }
     }
 }

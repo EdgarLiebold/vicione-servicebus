@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public interface CachedRegistration
 {
-    using Microsoft.Extensions.DependencyInjection;
-
-
-    public interface CachedRegistration
-    {
-        void Register(IServiceCollection collection);
-    }
+    void Register(IServiceCollection collection);
 }

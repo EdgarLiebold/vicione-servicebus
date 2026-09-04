@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Serialization;
-
-using System.Buffers;
 using System;
+using System.Buffers;
 using System.ComponentModel;
 
+namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// A serialization target whose owned-memory growth is bounded by a configured hard maximum.
 /// </summary>

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.SqlTransport
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public interface NotificationContext :
+    PipeContext
 {
-    public interface NotificationContext :
-        PipeContext
-    {
-        ConnectHandle ConnectNotificationSink(string queueName, IQueueNotificationListener listener);
-    }
+    ConnectHandle ConnectNotificationSink(string queueName, IQueueNotificationListener listener);
 }

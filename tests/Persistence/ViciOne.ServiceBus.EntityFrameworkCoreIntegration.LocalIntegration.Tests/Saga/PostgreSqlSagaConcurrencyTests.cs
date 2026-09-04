@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Saga;
-
 using System.Data.Common;
 using System.Threading.Channels;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +9,8 @@ using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.Saga;
 
 public sealed class PostgreSqlSagaConcurrencyTests
 {

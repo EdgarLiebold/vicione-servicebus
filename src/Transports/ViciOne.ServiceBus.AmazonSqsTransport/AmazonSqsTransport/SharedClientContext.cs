@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS.Model;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Middleware;
-using Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class SharedClientContext :
     ProxyPipeContext,

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// The requested bus health status was not reached within the configured timeout.
 /// </summary>

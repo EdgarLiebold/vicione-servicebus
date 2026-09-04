@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ScopedSendEndpointProvider :
+    ISendEndpointProvider,
+    IMessageRouteProvider
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly ISendEndpointProvider _provider;
+    readonly IServiceProvider _serviceProvider;
 
-
-    public class ScopedSendEndpointProvider :
-        ISendEndpointProvider,
-        IMessageRouteProvider
+    public ScopedSendEndpointProvider(ISendEndpointProvider provider, IServiceProvider serviceProvider)
     {
-        readonly ISendEndpointProvider _provider;
-        readonly IServiceProvider _serviceProvider;
+        _provider = provider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public ScopedSendEndpointProvider(ISendEndpointProvider provider, IServiceProvider serviceProvider)
-        {
-            _provider = provider;
-            _serviceProvider = serviceProvider;
-        }
+    ConnectHandle ISendObserverConnector.ConnectSendObserver(ISendObserver observer)
+    {
+        return _provider.ConnectSendObserver(observer);
+    }
 
-        ConnectHandle ISendObserverConnector.ConnectSendObserver(ISendObserver observer)
-        {
-            return _provider.ConnectSendObserver(observer);
-        }
+    IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_provider);
 
-        IMessageRouteTable IMessageRouteProvider.MessageRoutes => EndpointConvention.GetMessageRoutes(_provider);
+    async Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpoint(Uri address)
+    {
+        var endpoint = await _provider.GetSendEndpoint(address).ConfigureAwait(false);
 
-        async Task<ISendEndpoint> ISendEndpointProvider.GetSendEndpoint(Uri address)
-        {
-            var endpoint = await _provider.GetSendEndpoint(address).ConfigureAwait(false);
-
-            return new ScopedSendEndpoint(endpoint, _serviceProvider);
-        }
+        return new ScopedSendEndpoint(endpoint, _serviceProvider);
     }
 }

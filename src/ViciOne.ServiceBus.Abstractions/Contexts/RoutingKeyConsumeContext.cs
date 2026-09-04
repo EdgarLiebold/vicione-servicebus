@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface RoutingKeyConsumeContext
 {
-    public interface RoutingKeyConsumeContext
-    {
-        /// <summary>
-        /// The routing key for the message (defaults to "")
-        /// </summary>
-        string? RoutingKey { get; }
-    }
+    /// <summary>
+    /// The routing key for the message (defaults to "")
+    /// </summary>
+    string? RoutingKey { get; }
 }

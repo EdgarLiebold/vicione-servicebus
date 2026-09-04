@@ -1,133 +1,131 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public partial class PipeConfigurator<TContext>
+    where TContext : class, PipeContext
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-
-
-    public partial class PipeConfigurator<TContext>
-        where TContext : class, PipeContext
+    public class PipeBuilder :
+        IPipeBuilder<TContext>
     {
-        public class PipeBuilder :
-            IPipeBuilder<TContext>
+        readonly List<IFilter<TContext>> _filters;
+
+        public PipeBuilder(int capacity = 16)
         {
-            readonly List<IFilter<TContext>> _filters;
-
-            public PipeBuilder(int capacity = 16)
-            {
-                _filters = new List<IFilter<TContext>>(capacity);
-            }
-
-            public PipeBuilder(params IFilter<TContext>[] filters)
-            {
-                _filters = new List<IFilter<TContext>>(filters);
-            }
-
-            public void AddFilter(IFilter<TContext> filter)
-            {
-                _filters.Add(filter);
-            }
-
-            public IPipe<TContext> Build()
-            {
-                if (_filters.Count == 0)
-                    return Cache.EmptyPipe;
-
-                IPipe<TContext> current = new LastPipe(_filters[_filters.Count - 1]);
-
-                for (var i = _filters.Count - 2; i >= 0; i--)
-                    current = new FilterPipe(_filters[i], current);
-
-                return current;
-            }
+            _filters = new List<IFilter<TContext>>(capacity);
         }
 
-
-        internal static class Cache
+        public PipeBuilder(params IFilter<TContext>[] filters)
         {
-            internal static readonly IPipe<TContext> EmptyPipe = new EmptyPipe();
-            internal static readonly IPipe<TContext> LastPipe = new Last();
+            _filters = new List<IFilter<TContext>>(filters);
         }
 
-
-        public class EmptyPipe :
-            IPipe<TContext>
+        public void AddFilter(IFilter<TContext> filter)
         {
-            [DebuggerNonUserCode]
-            Task IPipe<TContext>.Send(TContext context)
-            {
-                return Task.CompletedTask;
-            }
-
-            void IProbeSite.Probe(ProbeContext context)
-            {
-            }
+            _filters.Add(filter);
         }
 
-
-        public class FilterPipe :
-            IPipe<TContext>
+        public IPipe<TContext> Build()
         {
-            readonly IFilter<TContext> _filter;
-            readonly IPipe<TContext> _next;
+            if (_filters.Count == 0)
+                return Cache.EmptyPipe;
 
-            public FilterPipe(IFilter<TContext> filter, IPipe<TContext> next)
-            {
-                _filter = filter;
-                _next = next;
-            }
+            IPipe<TContext> current = new LastPipe(_filters[_filters.Count - 1]);
 
-            public void Probe(ProbeContext context)
-            {
-                _filter.Probe(context);
-                _next.Probe(context);
-            }
+            for (var i = _filters.Count - 2; i >= 0; i--)
+                current = new FilterPipe(_filters[i], current);
 
-            [DebuggerStepThrough]
-            public Task Send(TContext context)
-            {
-                return _filter.Send(context, _next);
-            }
+            return current;
+        }
+    }
+
+
+    internal static class Cache
+    {
+        internal static readonly IPipe<TContext> EmptyPipe = new EmptyPipe();
+        internal static readonly IPipe<TContext> LastPipe = new Last();
+    }
+
+
+    public class EmptyPipe :
+        IPipe<TContext>
+    {
+        [DebuggerNonUserCode]
+        Task IPipe<TContext>.Send(TContext context)
+        {
+            return Task.CompletedTask;
         }
 
-
-        /// <summary>
-        /// The last pipe in a pipeline is always an end pipe that does nothing and returns synchronously
-        /// </summary>
-        public class LastPipe :
-            IPipe<TContext>
+        void IProbeSite.Probe(ProbeContext context)
         {
-            readonly IFilter<TContext> _filter;
+        }
+    }
 
-            public LastPipe(IFilter<TContext> filter)
-            {
-                _filter = filter;
-            }
 
-            public void Probe(ProbeContext context)
-            {
-                _filter.Probe(context);
-            }
+    public class FilterPipe :
+        IPipe<TContext>
+    {
+        readonly IFilter<TContext> _filter;
+        readonly IPipe<TContext> _next;
 
-            [DebuggerStepThrough]
-            public Task Send(TContext context)
-            {
-                return _filter.Send(context, Cache.LastPipe);
-            }
+        public FilterPipe(IFilter<TContext> filter, IPipe<TContext> next)
+        {
+            _filter = filter;
+            _next = next;
         }
 
-
-        class Last :
-            IPipe<TContext>
+        public void Probe(ProbeContext context)
         {
-            public void Probe(ProbeContext context)
-            {
-            }
+            _filter.Probe(context);
+            _next.Probe(context);
+        }
 
-            public Task Send(TContext context)
-            {
-                return Task.CompletedTask;
-            }
+        [DebuggerStepThrough]
+        public Task Send(TContext context)
+        {
+            return _filter.Send(context, _next);
+        }
+    }
+
+
+    /// <summary>
+    /// The last pipe in a pipeline is always an end pipe that does nothing and returns synchronously
+    /// </summary>
+    public class LastPipe :
+        IPipe<TContext>
+    {
+        readonly IFilter<TContext> _filter;
+
+        public LastPipe(IFilter<TContext> filter)
+        {
+            _filter = filter;
+        }
+
+        public void Probe(ProbeContext context)
+        {
+            _filter.Probe(context);
+        }
+
+        [DebuggerStepThrough]
+        public Task Send(TContext context)
+        {
+            return _filter.Send(context, Cache.LastPipe);
+        }
+    }
+
+
+    class Last :
+        IPipe<TContext>
+    {
+        public void Probe(ProbeContext context)
+        {
+        }
+
+        public Task Send(TContext context)
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal;
-
 using System.Text.Json;
 using global::Azure;
 using global::Azure.Core;
@@ -12,6 +10,8 @@ using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.MessageJournal;
 
 public sealed class AzureTableMessageJournalStoreTests
 {
@@ -246,7 +246,7 @@ public sealed class AzureTableMessageJournalStoreTests
         await store.AppendAsync(Entry(Guid.CreateVersion7(), observedAt), cancellationToken);
 
         Assert.Single(await ReadEntriesAsync(fixture.Table, cancellationToken));
-        Response<TableEntity> retained = await fixture.Table.GetEntityAsync<TableEntity>(
+        global::Azure.Response<TableEntity> retained = await fixture.Table.GetEntityAsync<TableEntity>(
             foreign.PartitionKey,
             foreign.RowKey,
             cancellationToken: cancellationToken);

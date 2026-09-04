@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class SetRoutingKeyFilter<TMessage> :
+    IFilter<SendContext<TMessage>>
+    where TMessage : class
 {
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IMessageRoutingKeyFormatter<TMessage> _routingKeyFormatter;
 
-
-    public class SetRoutingKeyFilter<TMessage> :
-        IFilter<SendContext<TMessage>>
-        where TMessage : class
+    public SetRoutingKeyFilter(IMessageRoutingKeyFormatter<TMessage> routingKeyFormatter)
     {
-        readonly IMessageRoutingKeyFormatter<TMessage> _routingKeyFormatter;
+        _routingKeyFormatter = routingKeyFormatter;
+    }
 
-        public SetRoutingKeyFilter(IMessageRoutingKeyFormatter<TMessage> routingKeyFormatter)
-        {
-            _routingKeyFormatter = routingKeyFormatter;
-        }
+    public Task Send(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
+    {
+        var routingKey = _routingKeyFormatter.FormatRoutingKey(context);
 
-        public Task Send(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
-        {
-            var routingKey = _routingKeyFormatter.FormatRoutingKey(context);
+        if (context.TryGetPayload(out RoutingKeySendContext routingKeySendContext))
+            routingKeySendContext.RoutingKey = routingKey;
 
-            if (context.TryGetPayload(out RoutingKeySendContext routingKeySendContext))
-                routingKeySendContext.RoutingKey = routingKey;
+        return next.Send(context);
+    }
 
-            return next.Send(context);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("setRoutingKey");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("setRoutingKey");
     }
 }

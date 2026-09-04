@@ -4,8 +4,6 @@ using Xunit;
 
 // Caller cancellation and the no-token overloads are part of the cache contract exercised here;
 // every potentially blocking assertion is independently bounded by OperationTimeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.Tests.Caching;
 
 public sealed class ResourceCacheGenerationAndLockingTests
@@ -19,8 +17,8 @@ public sealed class ResourceCacheGenerationAndLockingTests
             NewOptions());
         var expected = new Resource("one");
 
-        Resource created = await cache.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected));
-        Resource read = await cache.GetAsync("one");
+        Resource created = await cache.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected), TestContext.Current.CancellationToken);
+        Resource read = await cache.GetAsync("one", TestContext.Current.CancellationToken);
 
         Assert.Same(expected, created);
         Assert.Same(expected, read);
@@ -38,12 +36,12 @@ public sealed class ResourceCacheGenerationAndLockingTests
         using ConnectHandle connection = cache.Connect(observer);
         var expected = new Resource("one");
 
-        Resource actual = await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected));
+        Resource actual = await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected), TestContext.Current.CancellationToken);
 
         Assert.Same(expected, actual);
         Assert.Same(expected, observer.ObservedValue);
         Assert.True(observer.WasCommittedWhenObserved);
-        Assert.Same(expected, await index.GetAsync("one"));
+        Assert.Same(expected, await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -54,8 +52,8 @@ public sealed class ResourceCacheGenerationAndLockingTests
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var expected = new Resource("one");
 
-        Resource created = await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected));
-        Resource read = await index.GetAsync("one");
+        Resource created = await index.GetOrAddAsync("one", (_, _) => ValueTask.FromResult(expected), TestContext.Current.CancellationToken);
+        Resource read = await index.GetAsync("one", TestContext.Current.CancellationToken);
 
         Assert.Same(expected, created);
         Assert.Same(expected, read);
@@ -70,14 +68,14 @@ public sealed class ResourceCacheGenerationAndLockingTests
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> idIndex = cache.AddIndex("id", value => value.Id);
         IResourceCacheIndex<int, Resource> numberIndex = cache.AddIndex("number", value => value.Number);
-        await cache.AddAsync(new Resource("one", 1));
-        await cache.ClearAsync();
+        await cache.AddAsync(new Resource("one", 1), TestContext.Current.CancellationToken);
+        await cache.ClearAsync(TestContext.Current.CancellationToken);
         var replacement = new Resource("one", 1);
 
-        await cache.AddAsync(replacement);
+        await cache.AddAsync(replacement, TestContext.Current.CancellationToken);
 
-        Assert.Same(replacement, await idIndex.GetAsync("one"));
-        Assert.Same(replacement, await numberIndex.GetAsync(1));
+        Assert.Same(replacement, await idIndex.GetAsync("one", TestContext.Current.CancellationToken));
+        Assert.Same(replacement, await numberIndex.GetAsync(1, TestContext.Current.CancellationToken));
         Assert.Equal(1, cache.Statistics.Count);
         Assert.Equal(2, cache.Statistics.TotalCreated);
     }
@@ -89,10 +87,10 @@ public sealed class ResourceCacheGenerationAndLockingTests
         var timeProvider = new CoordinatingTimeProvider();
         await using var cache = CreateCache(timeProvider);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
         timeProvider.Arm(() => CompleteConcurrentRead(cache));
 
-        Resource value = await index.GetAsync("one");
+        Resource value = await index.GetAsync("one", TestContext.Current.CancellationToken);
 
         Assert.Equal("one", value.Id);
         Assert.True(timeProvider.CallbackCompleted);
@@ -107,7 +105,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
         cache.AddIndex("id", value => value.Id);
         timeProvider.Arm(() => CompleteConcurrentRead(cache));
 
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
 
         Assert.True(timeProvider.CallbackCompleted);
         Assert.Equal(1, cache.Statistics.Count);
@@ -120,9 +118,9 @@ public sealed class ResourceCacheGenerationAndLockingTests
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var value = new CoordinatingUsageResource("one", () => CompleteConcurrentRead(cache));
-        await cache.AddAsync(value);
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
 
-        Assert.True(await index.RemoveAsync("one"));
+        Assert.True(await index.RemoveAsync("one", TestContext.Current.CancellationToken));
 
         Assert.True(value.DetachCallbackCompleted);
         Assert.Equal(1, value.DisposeCount);
@@ -136,7 +134,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
         var timeProvider = new CoordinatingTimeProvider();
         await using var cache = CreateCache(timeProvider);
         cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
         timeProvider.Arm(() => CompleteConcurrentRead(cache));
 
         timeProvider.FireTimer();
@@ -156,9 +154,7 @@ public sealed class ResourceCacheGenerationAndLockingTests
         var started = NewSignal();
         var callbackReadCompleted = 0;
 
-        Task<Resource> pending = index.GetOrAddAsync(
-            "one",
-            async (_, ownerToken) =>
+        Task<Resource> pending = index.GetOrAddAsync("one", async (_, ownerToken) =>
             {
                 using CancellationTokenRegistration registration = ownerToken.Register(() =>
                 {
@@ -169,14 +165,14 @@ public sealed class ResourceCacheGenerationAndLockingTests
                 started.TrySetResult();
                 await Task.Delay(Timeout.InfiniteTimeSpan, ownerToken);
                 return new Resource("unreachable");
-            }).AsTask();
-        await started.Task.WaitAsync(OperationTimeout);
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Task stop = disposeCache
             ? cache.DisposeAsync().AsTask()
-            : cache.ClearAsync().AsTask();
+            : cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
 
-        await stop.WaitAsync(OperationTimeout);
+        await stop.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => pending);
         Assert.Equal(1, Volatile.Read(ref callbackReadCompleted));
 
@@ -191,14 +187,14 @@ public sealed class ResourceCacheGenerationAndLockingTests
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var value = new BlockingSubscriptionResource("one");
 
-        Task addition = Task.Run(async () => await cache.AddAsync(value));
-        await value.SubscriptionStarted.WaitAsync(OperationTimeout);
+        Task addition = Task.Run(async () => await cache.AddAsync(value), TestContext.Current.CancellationToken);
+        await value.SubscriptionStarted.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
-        Assert.True(await index.RemoveAsync("one"));
+        Assert.True(await index.RemoveAsync("one", TestContext.Current.CancellationToken));
         Assert.Equal(1, value.DisposeCount);
 
         value.ReleaseSubscription();
-        await addition.WaitAsync(OperationTimeout);
+        await addition.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(0, value.SubscriberCount);
         Assert.Equal(0, cache.Statistics.Count);
@@ -211,14 +207,14 @@ public sealed class ResourceCacheGenerationAndLockingTests
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var removed = new Resource("same");
-        await cache.AddAsync(removed);
-        Assert.True(await index.RemoveAsync("same"));
+        await cache.AddAsync(removed, TestContext.Current.CancellationToken);
+        Assert.True(await index.RemoveAsync("same", TestContext.Current.CancellationToken));
         var replacement = new Resource("same");
-        await cache.AddAsync(replacement);
+        await cache.AddAsync(replacement, TestContext.Current.CancellationToken);
 
         removed.Use();
 
-        Assert.Same(replacement, await index.GetAsync("same"));
+        Assert.Same(replacement, await index.GetAsync("same", TestContext.Current.CancellationToken));
         Assert.Equal(1, removed.DisposeCount);
         Assert.Equal(0, replacement.DisposeCount);
         Assert.Equal(1, cache.Statistics.Count);
@@ -234,24 +230,22 @@ public sealed class ResourceCacheGenerationAndLockingTests
         var releaseOld = NewSignal<Resource>();
         var oldValue = new Resource("same");
 
-        Task<Resource> oldCreation = index.GetOrAddAsync(
-            "same",
-            async (_, _) =>
+        Task<Resource> oldCreation = index.GetOrAddAsync("same", async (_, _) =>
             {
                 started.TrySetResult();
                 return await releaseOld.Task;
-            }).AsTask();
-        await started.Task.WaitAsync(OperationTimeout);
-        Task clear = cache.ClearAsync().AsTask();
+            }, TestContext.Current.CancellationToken).AsTask();
+        await started.Task.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        Task clear = cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => oldCreation);
         var replacement = new Resource("same");
-        Resource committed = await index.GetOrAddAsync("same", (_, _) => ValueTask.FromResult(replacement));
+        Resource committed = await index.GetOrAddAsync("same", (_, _) => ValueTask.FromResult(replacement), TestContext.Current.CancellationToken);
 
         releaseOld.TrySetResult(oldValue);
-        await clear.WaitAsync(OperationTimeout);
+        await clear.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.Same(replacement, committed);
-        Assert.Same(replacement, await index.GetAsync("same"));
+        Assert.Same(replacement, await index.GetAsync("same", TestContext.Current.CancellationToken));
         Assert.Equal(1, oldValue.DisposeCount);
         Assert.Equal(0, replacement.DisposeCount);
         Assert.Equal(1, cache.Statistics.Count);

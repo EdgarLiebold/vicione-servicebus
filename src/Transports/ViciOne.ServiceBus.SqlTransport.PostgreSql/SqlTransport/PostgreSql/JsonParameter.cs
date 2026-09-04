@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql
+using System;
+using System.Data;
+using Dapper;
+using Npgsql;
+using NpgsqlTypes;
+
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
+
+public class JsonParameter :
+    SqlMapper.ICustomQueryParameter
 {
-    using System;
-    using System.Data;
-    using Dapper;
-    using Npgsql;
-    using NpgsqlTypes;
+    readonly string? _value;
 
-
-    public class JsonParameter :
-        SqlMapper.ICustomQueryParameter
+    public JsonParameter(string? value)
     {
-        readonly string? _value;
+        _value = value;
+    }
 
-        public JsonParameter(string? value)
-        {
-            _value = value;
-        }
+    public void AddParameter(IDbCommand command, string name)
+    {
+        var parameter = new NpgsqlParameter(name, NpgsqlDbType.Jsonb) { Value = _value != null ? _value : DBNull.Value };
 
-        public void AddParameter(IDbCommand command, string name)
-        {
-            var parameter = new NpgsqlParameter(name, NpgsqlDbType.Jsonb) { Value = _value != null ? _value : DBNull.Value };
-
-            command.Parameters.Add(parameter);
-        }
+        command.Parameters.Add(parameter);
     }
 }

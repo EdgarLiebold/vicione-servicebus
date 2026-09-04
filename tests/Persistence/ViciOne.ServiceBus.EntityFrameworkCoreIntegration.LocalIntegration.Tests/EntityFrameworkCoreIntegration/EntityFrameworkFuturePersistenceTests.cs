@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
@@ -7,6 +5,8 @@ using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.I
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration;
 
 public sealed class EntityFrameworkFuturePersistenceTests
 {

@@ -1,11 +1,11 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Analyzers.V5;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+
+#nullable enable
+
+namespace ViciOne.ServiceBus.Analyzers.V5;
 
 internal static class AnalyzerSymbolFacts
 {

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface RiderReady
 {
-    public interface RiderReady
-    {
-        string Name { get; }
-    }
+    string Name { get; }
 }

@@ -62,11 +62,13 @@ public sealed class StateMachineConcurrencyIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var releaseCompletion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var completionEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var cancelDispatched = new TaskCompletionSource<Task>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("repository-progress", timeout);
         var machine = new RepositoryProgressMachine(releaseCompletion.Task, completionEntered);
         var repository = new InMemorySagaRepository<RepositoryProgressState>();
+        var signalingRepository = new SignalingSagaRepository<RepositoryProgressState, RepositoryCancel>(repository, cancelDispatched);
         ISagaStateMachineTestHarness<RepositoryProgressMachine, RepositoryProgressState> sagaHarness =
-            harness.StateMachineSaga<RepositoryProgressState, RepositoryProgressMachine>(machine, repository);
+            harness.StateMachineSaga<RepositoryProgressState, RepositoryProgressMachine>(machine, signalingRepository);
 
         await harness.Start(cancellationToken).WaitAsync(timeout, cancellationToken);
         try
@@ -85,6 +87,8 @@ public sealed class StateMachineConcurrencyIntegrationTests
             await harness.InputQueueSendEndpoint.Send(new RepositoryComplete(heldId), cancellationToken);
             await completionEntered.Task.WaitAsync(timeout, cancellationToken);
             await harness.InputQueueSendEndpoint.Send(new RepositoryCancel(heldId), cancellationToken);
+            Task cancelDispatch = await cancelDispatched.Task.WaitAsync(timeout, cancellationToken);
+            Assert.False(cancelDispatch.IsCompleted);
             await harness.InputQueueSendEndpoint.Send(new RepositoryCreate(independentId), cancellationToken);
 
             Assert.Equal(independentId, await sagaHarness.Exists(independentId, machine.Active, timeout));
@@ -105,6 +109,46 @@ public sealed class StateMachineConcurrencyIntegrationTests
         Assert.Equal(2, sagaHarness.Consumed.Select<RepositoryCreate>(SnapshotOnlyToken()).Count());
         Assert.Single(sagaHarness.Consumed.Select<RepositoryComplete>(SnapshotOnlyToken()));
         Assert.Single(sagaHarness.Consumed.Select<RepositoryCancel>(SnapshotOnlyToken()));
+    }
+
+    sealed class SignalingSagaRepository<TSaga, TMessage> :
+        ISagaRepository<TSaga>,
+        IQuerySagaRepository<TSaga>,
+        ILoadSagaRepository<TSaga>
+        where TSaga : class, ISaga
+        where TMessage : class
+    {
+        readonly TaskCompletionSource<Task> _dispatched;
+        readonly InMemorySagaRepository<TSaga> _repository;
+
+        public SignalingSagaRepository(InMemorySagaRepository<TSaga> repository, TaskCompletionSource<Task> dispatched)
+        {
+            _repository = repository;
+            _dispatched = dispatched;
+        }
+
+        public Task<TSaga> Load(Guid correlationId) => _repository.Load(correlationId);
+
+        public Task<IEnumerable<Guid>> Find(ISagaQuery<TSaga> query) => _repository.Find(query);
+
+        public void Probe(ProbeContext context) => ((IProbeSite)_repository).Probe(context);
+
+        public Task Send<T>(ConsumeContext<T> context, ISagaPolicy<TSaga, T> policy, IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class
+        {
+            Task dispatch = ((ISagaRepository<TSaga>)_repository).Send(context, policy, next);
+            if (context.Message is TMessage)
+                _dispatched.TrySetResult(dispatch);
+
+            return dispatch;
+        }
+
+        public Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, ISagaPolicy<TSaga, T> policy,
+            IPipe<SagaConsumeContext<TSaga, T>> next)
+            where T : class
+        {
+            return ((ISagaRepository<TSaga>)_repository).SendQuery(context, query, policy, next);
+        }
     }
 
     [Fact]

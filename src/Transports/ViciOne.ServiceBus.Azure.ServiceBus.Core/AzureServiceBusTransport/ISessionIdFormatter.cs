@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface ISessionIdFormatter
 {
-    public interface ISessionIdFormatter
-    {
-        string FormatSessionId<T>(SendContext<T> context)
-            where T : class;
-    }
+    string FormatSessionId<T>(SendContext<T> context)
+        where T : class;
 }

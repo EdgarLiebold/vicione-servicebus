@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ExistingConsumerConsumeScopeContext<TConsumer, T> :
+    IConsumerConsumeScopeContext<TConsumer, T>
+    where TConsumer : class
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IDisposable _disposable;
 
-
-    public class ExistingConsumerConsumeScopeContext<TConsumer, T> :
-        IConsumerConsumeScopeContext<TConsumer, T>
-        where TConsumer : class
-        where T : class
+    public ExistingConsumerConsumeScopeContext(ConsumerConsumeContext<TConsumer, T> context, IDisposable disposable)
     {
-        readonly IDisposable _disposable;
+        _disposable = disposable;
+        Context = context;
+    }
 
-        public ExistingConsumerConsumeScopeContext(ConsumerConsumeContext<TConsumer, T> context, IDisposable disposable)
-        {
-            _disposable = disposable;
-            Context = context;
-        }
+    public ConsumerConsumeContext<TConsumer, T> Context { get; }
 
-        public ConsumerConsumeContext<TConsumer, T> Context { get; }
-
-        public ValueTask DisposeAsync()
-        {
-            _disposable?.Dispose();
-            return default;
-        }
+    public ValueTask DisposeAsync()
+    {
+        _disposable?.Dispose();
+        return default;
     }
 }

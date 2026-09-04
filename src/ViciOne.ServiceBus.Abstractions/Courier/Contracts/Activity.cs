@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.Courier.Contracts
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Courier.Contracts;
+
+public interface Activity
 {
-    using System;
-    using System.Collections.Generic;
+    string Name { get; }
 
+    Uri Address { get; }
 
-    public interface Activity
-    {
-        string Name { get; }
-
-        Uri Address { get; }
-
-        IDictionary<string, object> Arguments { get; }
-    }
+    IDictionary<string, object> Arguments { get; }
 }

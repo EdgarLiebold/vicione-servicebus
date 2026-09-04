@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System.Threading;
 using System.Threading.Tasks;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Administrative RabbitMQ queue operations for the default bus instance. Authorization, approval,
 /// audit, and user interface policy belong to the host application.

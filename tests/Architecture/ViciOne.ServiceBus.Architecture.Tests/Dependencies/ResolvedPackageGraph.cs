@@ -47,7 +47,7 @@ internal static class ResolvedPackageGraph
             .ToArray();
     }
 
-    /// <summary>Reads the one effective MSBuild package-policy source for the native test tree.</summary>
+    /// <summary>Reads the one effective MSBuild package-policy source for the repository test tree.</summary>
     internal static IReadOnlyList<string> ForbiddenIdentitiesOf(string projectPath) =>
         MsBuildEvaluation.ItemIdentities(projectPath, "ViciOneForbiddenNativeTestPackage")
             .Distinct(StringComparer.OrdinalIgnoreCase)

@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Specification for configuring a receive endpoint
+/// </summary>
+public interface IReceiveEndpointSpecification :
+    ISpecification
 {
-    using Configuration;
-
-
-    /// <summary>
-    /// Specification for configuring a receive endpoint
-    /// </summary>
-    public interface IReceiveEndpointSpecification :
-        ISpecification
-    {
-        void Configure(IReceiveEndpointBuilder builder);
-    }
+    void Configure(IReceiveEndpointBuilder builder);
 }

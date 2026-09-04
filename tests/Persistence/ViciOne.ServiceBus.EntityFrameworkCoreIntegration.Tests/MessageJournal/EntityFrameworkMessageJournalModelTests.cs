@@ -1,13 +1,13 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.MessageJournal;
-
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System.Text.Json;
 using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.MessageJournal;
 
 public sealed class EntityFrameworkMessageJournalModelTests
 {

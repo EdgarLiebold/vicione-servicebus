@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 static class PublishBatchSettings
 {

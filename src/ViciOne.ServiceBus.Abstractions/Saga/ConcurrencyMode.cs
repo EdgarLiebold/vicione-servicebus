@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public enum ConcurrencyMode
 {
-    public enum ConcurrencyMode
-    {
-        Optimistic = 0,
-        Pessimistic = 1
-    }
+    Optimistic = 0,
+    Pessimistic = 1
 }

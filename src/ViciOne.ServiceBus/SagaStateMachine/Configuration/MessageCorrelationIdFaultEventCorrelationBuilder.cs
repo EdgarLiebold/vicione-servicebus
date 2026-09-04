@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public partial class StateMachineInterfaceType<TInstance, TData>
 {
-    using System;
-
-
-    public partial class StateMachineInterfaceType<TInstance, TData>
+    public class MessageCorrelationIdFaultEventCorrelationBuilder :
+        IEventCorrelationBuilder
     {
-        public class MessageCorrelationIdFaultEventCorrelationBuilder :
-            IEventCorrelationBuilder
+        readonly StateMachineInterfaceType<TInstance, Fault<TData>>.ViciOneServiceBusEventCorrelationConfigurator _configurator;
+
+        public MessageCorrelationIdFaultEventCorrelationBuilder(SagaStateMachine<TInstance> machine, Event<Fault<TData>> @event,
+            IMessageCorrelationId<TData> messageCorrelationId)
         {
-            readonly StateMachineInterfaceType<TInstance, Fault<TData>>.ViciOneServiceBusEventCorrelationConfigurator _configurator;
+            var configurator = new StateMachineInterfaceType<TInstance, Fault<TData>>.ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
 
-            public MessageCorrelationIdFaultEventCorrelationBuilder(SagaStateMachine<TInstance> machine, Event<Fault<TData>> @event,
-                IMessageCorrelationId<TData> messageCorrelationId)
-            {
-                var configurator = new StateMachineInterfaceType<TInstance, Fault<TData>>.ViciOneServiceBusEventCorrelationConfigurator(machine, @event, null);
+            configurator.CorrelateById(x => messageCorrelationId.TryGetCorrelationId(x.Message.Message, out var correlationId)
+                ? correlationId
+                : throw new ArgumentException($"The message {TypeCache<TData>.ShortName} did not have a correlationId"));
 
-                configurator.CorrelateById(x => messageCorrelationId.TryGetCorrelationId(x.Message.Message, out var correlationId)
-                    ? correlationId
-                    : throw new ArgumentException($"The message {TypeCache<TData>.ShortName} did not have a correlationId"));
+            _configurator = configurator;
+        }
 
-                _configurator = configurator;
-            }
-
-            public EventCorrelation Build()
-            {
-                return _configurator.Build();
-            }
+        public EventCorrelation Build()
+        {
+            return _configurator.Build();
         }
     }
 }

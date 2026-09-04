@@ -1,44 +1,42 @@
-namespace ViciOne.ServiceBus.MessageData
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.MessageData;
+
+public class InMemoryMessageDataRepository :
+    IMessageDataRepository
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly ConcurrentDictionary<Uri, byte[]> _values;
 
-
-    public class InMemoryMessageDataRepository :
-        IMessageDataRepository
+    public InMemoryMessageDataRepository()
     {
-        readonly ConcurrentDictionary<Uri, byte[]> _values;
+        _values = new ConcurrentDictionary<Uri, byte[]>();
+    }
 
-        public InMemoryMessageDataRepository()
-        {
-            _values = new ConcurrentDictionary<Uri, byte[]>();
-        }
+    Task<Stream> IMessageDataRepository.Get(Uri address, CancellationToken cancellationToken)
+    {
+        if (address == null)
+            throw new ArgumentNullException(nameof(address));
 
-        Task<Stream> IMessageDataRepository.Get(Uri address, CancellationToken cancellationToken)
-        {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
+        if (_values.TryGetValue(address, out var value))
+            return Task.FromResult<Stream>(new MemoryStream(value, false));
 
-            if (_values.TryGetValue(address, out var value))
-                return Task.FromResult<Stream>(new MemoryStream(value, false));
+        throw new MessageDataNotFoundException(address);
+    }
 
-            throw new MessageDataNotFoundException(address);
-        }
+    async Task<Uri> IMessageDataRepository.Put(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
+    {
+        var address = new InMemoryMessageDataId().Uri;
 
-        async Task<Uri> IMessageDataRepository.Put(Stream stream, TimeSpan? timeToLive, CancellationToken cancellationToken)
-        {
-            var address = new InMemoryMessageDataId().Uri;
+        using var ms = new MemoryStream();
 
-            using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms).ConfigureAwait(false);
 
-            await stream.CopyToAsync(ms).ConfigureAwait(false);
+        _values.TryAdd(address, ms.ToArray());
 
-            _values.TryAdd(address, ms.ToArray());
-
-            return address;
-        }
+        return address;
     }
 }

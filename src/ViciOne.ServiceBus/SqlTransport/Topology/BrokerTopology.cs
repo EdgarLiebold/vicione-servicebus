@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public interface BrokerTopology :
+    IProbeSite
 {
-    public interface BrokerTopology :
-        IProbeSite
-    {
-        Topic[] Topics { get; }
-        Queue[] Queues { get; }
-        TopicToTopicSubscription[] TopicSubscriptions { get; }
-        TopicToQueueSubscription[] QueueSubscriptions { get; }
-    }
+    Topic[] Topics { get; }
+    Queue[] Queues { get; }
+    TopicToTopicSubscription[] TopicSubscriptions { get; }
+    TopicToQueueSubscription[] QueueSubscriptions { get; }
 }

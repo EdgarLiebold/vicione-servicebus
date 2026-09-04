@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface IEventHubDataReceiver :
+    IAgent,
+    DeliveryMetrics
 {
-    using Transports;
-
-
-    public interface IEventHubDataReceiver :
-        IAgent,
-        DeliveryMetrics
-    {
-    }
 }

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.IO;
 using System.Runtime.ExceptionServices;
 using MessagePack;
 
+namespace ViciOne.ServiceBus.Serialization;
 
 public class MessagePackMessageBody<TMessage> :
     MessageBody

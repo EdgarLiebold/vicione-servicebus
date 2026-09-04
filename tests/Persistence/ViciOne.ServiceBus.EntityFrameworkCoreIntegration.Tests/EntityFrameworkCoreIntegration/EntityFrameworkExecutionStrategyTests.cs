@@ -1,13 +1,13 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.EntityFrameworkCoreIntegration;
-
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Reflection;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.EntityFrameworkCoreIntegration;
 
 public sealed class EntityFrameworkExecutionStrategyTests
 {

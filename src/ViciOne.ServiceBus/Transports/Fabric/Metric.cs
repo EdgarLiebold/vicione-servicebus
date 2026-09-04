@@ -1,6 +1,5 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public abstract class Metric
 {
-    public abstract class Metric
-    {
-    }
 }

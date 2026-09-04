@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IScopedConsumeContextProvider
 {
-    using System;
-
-
-    public interface IScopedConsumeContextProvider
-    {
-        bool HasContext { get; }
-        ConsumeContext GetContext();
-        IDisposable PushContext(ConsumeContext context);
-    }
+    bool HasContext { get; }
+    ConsumeContext GetContext();
+    IDisposable PushContext(ConsumeContext context);
 }

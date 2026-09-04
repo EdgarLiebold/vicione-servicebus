@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+/// <summary>
+/// Published when a job is canceled
+/// </summary>
+public interface JobCanceled
+{
+    /// <summary>
+    /// The job identifier
+    /// </summary>
+    Guid JobId { get; }
 
     /// <summary>
-    /// Published when a job is canceled
+    /// The time the job was cancelled
     /// </summary>
-    public interface JobCanceled
-    {
-        /// <summary>
-        /// The job identifier
-        /// </summary>
-        Guid JobId { get; }
+    DateTime Timestamp { get; }
 
-        /// <summary>
-        /// The time the job was cancelled
-        /// </summary>
-        DateTime Timestamp { get; }
-
-        /// <summary>
-        /// THe reason, if specified, the job was canceled
-        /// </summary>
-        string? Reason { get; }
-    }
+    /// <summary>
+    /// THe reason, if specified, the job was canceled
+    /// </summary>
+    string? Reason { get; }
 }

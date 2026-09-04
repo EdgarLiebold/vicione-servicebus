@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IServiceBusSendTopologyConfigurator :
+    ISendTopologyConfigurator,
+    IServiceBusSendTopology
 {
-    using System;
+    Action<IServiceBusEntityConfigurator> ConfigureErrorSettings { set; }
+    Action<IServiceBusEntityConfigurator> ConfigureDeadLetterSettings { set; }
 
-
-    public interface IServiceBusSendTopologyConfigurator :
-        ISendTopologyConfigurator,
-        IServiceBusSendTopology
-    {
-        Action<IServiceBusEntityConfigurator> ConfigureErrorSettings { set; }
-        Action<IServiceBusEntityConfigurator> ConfigureDeadLetterSettings { set; }
-
-        new IServiceBusMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
-            where T : class;
-    }
+    new IServiceBusMessageSendTopologyConfigurator<T> GetMessageTopology<T>()
+        where T : class;
 }

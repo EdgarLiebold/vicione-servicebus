@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IConsumerMetadataCache<T>
 {
-    public interface IConsumerMetadataCache<T>
-    {
-        IMessageInterfaceType[] ConsumerTypes { get; }
-    }
+    IMessageInterfaceType[] ConsumerTypes { get; }
 }

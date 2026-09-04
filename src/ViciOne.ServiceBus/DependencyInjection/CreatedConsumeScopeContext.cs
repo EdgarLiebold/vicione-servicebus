@@ -1,82 +1,80 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class CreatedConsumeScopeContext :
+    IConsumeScopeContext
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly IDisposable _disposable;
+    readonly IServiceScope _scope;
 
-
-    public class CreatedConsumeScopeContext :
-        IConsumeScopeContext
+    public CreatedConsumeScopeContext(IServiceScope scope, ConsumeContext context, IDisposable disposable)
     {
-        readonly IDisposable _disposable;
-        readonly IServiceScope _scope;
-
-        public CreatedConsumeScopeContext(IServiceScope scope, ConsumeContext context, IDisposable disposable)
-        {
-            _scope = scope;
-            _disposable = disposable;
-            Context = context;
-        }
-
-        public ConsumeContext Context { get; }
-
-        public ValueTask DisposeAsync()
-        {
-            _disposable?.Dispose();
-
-            if (_scope is IAsyncDisposable asyncDisposable)
-                return asyncDisposable.DisposeAsync();
-
-            _scope?.Dispose();
-            return default;
-        }
+        _scope = scope;
+        _disposable = disposable;
+        Context = context;
     }
 
+    public ConsumeContext Context { get; }
 
-    public class CreatedConsumeScopeContext<TMessage> :
-        IConsumeScopeContext<TMessage>
-        where TMessage : class
+    public ValueTask DisposeAsync()
     {
-        readonly IDisposable _disposable;
-        readonly IServiceScope _scope;
-        readonly ISetScopedConsumeContext _setter;
+        _disposable?.Dispose();
 
-        public CreatedConsumeScopeContext(IServiceScope scope, ConsumeContext<TMessage> context, IDisposable disposable, ISetScopedConsumeContext setter)
-        {
-            _scope = scope;
-            _disposable = disposable;
-            _setter = setter;
-            Context = context;
-        }
+        if (_scope is IAsyncDisposable asyncDisposable)
+            return asyncDisposable.DisposeAsync();
 
-        public ConsumeContext<TMessage> Context { get; }
+        _scope?.Dispose();
+        return default;
+    }
+}
 
-        public T GetService<T>()
-            where T : class
-        {
-            return ActivatorUtilities.GetServiceOrCreateInstance<T>(_scope.ServiceProvider);
-        }
 
-        public T CreateInstance<T>(params object[] arguments)
-            where T : class
-        {
-            return ActivatorUtilities.CreateInstance<T>(_scope.ServiceProvider, arguments);
-        }
+public class CreatedConsumeScopeContext<TMessage> :
+    IConsumeScopeContext<TMessage>
+    where TMessage : class
+{
+    readonly IDisposable _disposable;
+    readonly IServiceScope _scope;
+    readonly ISetScopedConsumeContext _setter;
 
-        public IDisposable PushConsumeContext(ConsumeContext context)
-        {
-            return _setter.PushContext(_scope, context);
-        }
+    public CreatedConsumeScopeContext(IServiceScope scope, ConsumeContext<TMessage> context, IDisposable disposable, ISetScopedConsumeContext setter)
+    {
+        _scope = scope;
+        _disposable = disposable;
+        _setter = setter;
+        Context = context;
+    }
 
-        public ValueTask DisposeAsync()
-        {
-            _disposable?.Dispose();
+    public ConsumeContext<TMessage> Context { get; }
 
-            if (_scope is IAsyncDisposable asyncDisposable)
-                return asyncDisposable.DisposeAsync();
+    public T GetService<T>()
+        where T : class
+    {
+        return ActivatorUtilities.GetServiceOrCreateInstance<T>(_scope.ServiceProvider);
+    }
 
-            _scope?.Dispose();
-            return default;
-        }
+    public T CreateInstance<T>(params object[] arguments)
+        where T : class
+    {
+        return ActivatorUtilities.CreateInstance<T>(_scope.ServiceProvider, arguments);
+    }
+
+    public IDisposable PushConsumeContext(ConsumeContext context)
+    {
+        return _setter.PushContext(_scope, context);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _disposable?.Dispose();
+
+        if (_scope is IAsyncDisposable asyncDisposable)
+            return asyncDisposable.DisposeAsync();
+
+        _scope?.Dispose();
+        return default;
     }
 }

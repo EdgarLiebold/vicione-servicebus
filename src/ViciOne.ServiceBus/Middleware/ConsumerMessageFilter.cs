@@ -1,82 +1,80 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Consumes a message via Consumer, resolved through the consumer factory and notifies the context that the message was consumed.
+/// </summary>
+/// <typeparam name="TConsumer">The consumer type</typeparam>
+/// <typeparam name="TMessage">The message type</typeparam>
+public class ConsumerMessageFilter<TConsumer, TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TConsumer : class
+    where TMessage : class
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Logging;
+    readonly IConsumerFactory<TConsumer> _consumerFactory;
+    readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _consumerPipe;
 
-
-    /// <summary>
-    /// Consumes a message via Consumer, resolved through the consumer factory and notifies the context that the message was consumed.
-    /// </summary>
-    /// <typeparam name="TConsumer">The consumer type</typeparam>
-    /// <typeparam name="TMessage">The message type</typeparam>
-    public class ConsumerMessageFilter<TConsumer, TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TConsumer : class
-        where TMessage : class
+    public ConsumerMessageFilter(IConsumerFactory<TConsumer> consumerFactory, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> consumerPipe)
     {
-        readonly IConsumerFactory<TConsumer> _consumerFactory;
-        readonly IPipe<ConsumerConsumeContext<TConsumer, TMessage>> _consumerPipe;
+        _consumerFactory = consumerFactory;
+        _consumerPipe = consumerPipe;
+    }
 
-        public ConsumerMessageFilter(IConsumerFactory<TConsumer> consumerFactory, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> consumerPipe)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("consumer");
+        scope.Add("type", TypeCache<TConsumer>.ShortName);
+
+        _consumerFactory.Probe(scope);
+
+        _consumerPipe.Probe(scope);
+    }
+
+    [DebuggerNonUserCode]
+    async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        var timer = Stopwatch.StartNew();
+
+        StartedActivity? activity = LogContext.Current?.StartConsumerActivity<TConsumer, TMessage>(context);
+        var instrument = LogContext.Current?.StartConsumeInstrument<TConsumer, TMessage>(context);
+
+        try
         {
-            _consumerFactory = consumerFactory;
-            _consumerPipe = consumerPipe;
+            await _consumerFactory.Send(context, _consumerPipe).ConfigureAwait(false);
+
+            await context.NotifyConsumed(timer.Elapsed, TypeCache<TConsumer>.ShortName).ConfigureAwait(false);
+
+            await next.Send(context).ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
+                                          && !context.CancellationToken.IsCancellationRequested)
         {
-            var scope = context.CreateScope("consumer");
-            scope.Add("type", TypeCache<TConsumer>.ShortName);
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
 
-            _consumerFactory.Probe(scope);
+            activity?.AddExceptionEvent(exception);
 
-            _consumerPipe.Probe(scope);
+            instrument?.RecordException(exception);
+
+            throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<TConsumer>.ShortName}");
         }
-
-        [DebuggerNonUserCode]
-        async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+        catch (Exception exception)
         {
-            var timer = Stopwatch.StartNew();
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
 
-            StartedActivity? activity = LogContext.Current?.StartConsumerActivity<TConsumer, TMessage>(context);
-            var instrument = LogContext.Current?.StartConsumeInstrument<TConsumer, TMessage>(context);
+            activity?.AddExceptionEvent(exception);
 
-            try
-            {
-                await _consumerFactory.Send(context, _consumerPipe).ConfigureAwait(false);
+            instrument?.RecordException(exception);
 
-                await context.NotifyConsumed(timer.Elapsed, TypeCache<TConsumer>.ShortName).ConfigureAwait(false);
-
-                await next.Send(context).ConfigureAwait(false);
-            }
-            catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                              && !context.CancellationToken.IsCancellationRequested)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(exception);
-
-                instrument?.RecordException(exception);
-
-                throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<TConsumer>.ShortName}");
-            }
-            catch (Exception exception)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TConsumer>.ShortName, exception).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(exception);
-
-                instrument?.RecordException(exception);
-
-                throw;
-            }
-            finally
-            {
-                activity?.Stop();
-                instrument?.Complete();
-            }
+            throw;
+        }
+        finally
+        {
+            activity?.Stop();
+            instrument?.Complete();
         }
     }
 }

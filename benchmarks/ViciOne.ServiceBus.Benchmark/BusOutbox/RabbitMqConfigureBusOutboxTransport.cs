@@ -1,8 +1,7 @@
-namespace ViciOneServiceBusBenchmark.BusOutbox;
-
 using System;
 using ViciOne.ServiceBus;
 
+namespace ViciOneServiceBusBenchmark.BusOutbox;
 
 public class RabbitMqConfigureBusOutboxTransport :
     IConfigureBusOutboxTransport

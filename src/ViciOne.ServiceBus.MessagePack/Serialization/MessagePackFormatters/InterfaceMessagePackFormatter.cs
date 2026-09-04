@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
-
 using System;
 using MessagePack;
 using MessagePack.Formatters;
-using Metadata;
+using ViciOne.ServiceBus.Metadata;
 
+namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
 delegate void SerializeDelegate<TInterface>(object formatter, ref MessagePackWriter writer, TInterface value,
     MessagePackSerializerOptions options);

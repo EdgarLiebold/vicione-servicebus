@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface ICompensateActivityScopeContext<out TActivity, out TLog> :
+    IAsyncDisposable
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    using System;
+    CompensateActivityContext<TActivity, TLog> Context { get; }
 
-
-    public interface ICompensateActivityScopeContext<out TActivity, out TLog> :
-        IAsyncDisposable
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
-    {
-        CompensateActivityContext<TActivity, TLog> Context { get; }
-
-        T GetService<T>()
-            where T : class;
-    }
+    T GetService<T>()
+        where T : class;
 }

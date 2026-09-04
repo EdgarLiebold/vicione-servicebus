@@ -1,46 +1,44 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class SharedProducerContext :
+    ProxyPipeContext,
+    ProducerContext
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Azure.Messaging.EventHubs;
-    using Azure.Messaging.EventHubs.Producer;
-    using ViciOne.ServiceBus.Middleware;
+    readonly ProducerContext _context;
 
-
-    public class SharedProducerContext :
-        ProxyPipeContext,
-        ProducerContext
+    public SharedProducerContext(ProducerContext context, CancellationToken cancellationToken)
+        : base(context)
     {
-        readonly ProducerContext _context;
+        _context = context;
+        CancellationToken = cancellationToken;
+    }
 
-        public SharedProducerContext(ProducerContext context, CancellationToken cancellationToken)
-            : base(context)
-        {
-            _context = context;
-            CancellationToken = cancellationToken;
-        }
+    public override CancellationToken CancellationToken { get; }
 
-        public override CancellationToken CancellationToken { get; }
+    public Task Produce(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
+    {
+        return _context.Produce(eventDataBatch, cancellationToken);
+    }
 
-        public Task Produce(EventDataBatch eventDataBatch, CancellationToken cancellationToken)
-        {
-            return _context.Produce(eventDataBatch, cancellationToken);
-        }
+    public Task Produce(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken)
+    {
+        return _context.Produce(eventData, options, cancellationToken);
+    }
 
-        public Task Produce(IEnumerable<EventData> eventData, SendEventOptions options, CancellationToken cancellationToken)
-        {
-            return _context.Produce(eventData, options, cancellationToken);
-        }
+    public ValueTask<EventDataBatch> CreateBatch(CreateBatchOptions options, CancellationToken cancellationToken)
+    {
+        return _context.CreateBatch(options, cancellationToken);
+    }
 
-        public ValueTask<EventDataBatch> CreateBatch(CreateBatchOptions options, CancellationToken cancellationToken)
-        {
-            return _context.CreateBatch(options, cancellationToken);
-        }
-
-        public ValueTask DisposeAsync()
-        {
-            return _context.DisposeAsync();
-        }
+    public ValueTask DisposeAsync()
+    {
+        return _context.DisposeAsync();
     }
 }

@@ -1,73 +1,71 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class UnscheduleActivity<TSaga> :
+    IStateMachineActivity<TSaga>
+    where TSaga : class, SagaStateMachineInstance
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Schedule<TSaga> _schedule;
 
-
-    public class UnscheduleActivity<TSaga> :
-        IStateMachineActivity<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+    public UnscheduleActivity(Schedule<TSaga> schedule)
     {
-        readonly Schedule<TSaga> _schedule;
+        _schedule = schedule;
+    }
 
-        public UnscheduleActivity(Schedule<TSaga> schedule)
+    public void Accept(StateMachineVisitor inspector)
+    {
+        inspector.Visit(this);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("unschedule");
+    }
+
+    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    {
+        await Execute(context).ConfigureAwait(false);
+
+        await next.Execute(context).ConfigureAwait(false);
+    }
+
+    public async Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
+        where T : class
+    {
+        await Execute(context).ConfigureAwait(false);
+
+        await next.Execute(context).ConfigureAwait(false);
+    }
+
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
+    }
+
+    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+        where T : class
+        where TException : Exception
+    {
+        return next.Faulted(context);
+    }
+
+    async Task Execute(SagaConsumeContext<TSaga> context)
+    {
+        Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
+        if (previousTokenId.HasValue)
         {
-            _schedule = schedule;
-        }
-
-        public void Accept(StateMachineVisitor inspector)
-        {
-            inspector.Visit(this);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("unschedule");
-        }
-
-        public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
-        {
-            await Execute(context).ConfigureAwait(false);
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public async Task Execute<T>(BehaviorContext<TSaga, T> context, IBehavior<TSaga, T> next)
-            where T : class
-        {
-            await Execute(context).ConfigureAwait(false);
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
-
-        public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
-            where T : class
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
-
-        async Task Execute(SagaConsumeContext<TSaga> context)
-        {
-            Guid? previousTokenId = _schedule.GetTokenId(context.Saga);
-            if (previousTokenId.HasValue)
+            Guid? messageTokenId = context.GetSchedulingTokenId();
+            if (!messageTokenId.HasValue || previousTokenId.Value != messageTokenId.Value)
             {
-                Guid? messageTokenId = context.GetSchedulingTokenId();
-                if (!messageTokenId.HasValue || previousTokenId.Value != messageTokenId.Value)
-                {
-                    var schedulerContext = context.GetPayload<MessageSchedulerContext>();
+                var schedulerContext = context.GetPayload<MessageSchedulerContext>();
 
-                    await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
-                        .ConfigureAwait(false);
+                await schedulerContext.CancelScheduledSend(context.ReceiveContext.InputAddress, previousTokenId.Value, context.CancellationToken)
+                    .ConfigureAwait(false);
 
-                    _schedule.SetTokenId(context.Saga, null);
-                }
+                _schedule.SetTokenId(context.Saga, null);
             }
         }
     }

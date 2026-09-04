@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.Tests.Configuration.DependencyInjection;
-
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Tests.Configuration.DependencyInjection;
 
 public sealed class RegistrationConfiguratorExtensionsTests
 {

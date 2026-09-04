@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.DurableSend;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.DurableSend;
 
 public sealed class EntityFrameworkDurableSendStoreTests
 {

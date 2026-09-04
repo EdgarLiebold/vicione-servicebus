@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus;
+
+public interface ILoadSagaRepository<TSaga> :
+    IProbeSite
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
-
-
-    public interface ILoadSagaRepository<TSaga> :
-        IProbeSite
-        where TSaga : class, ISaga
-    {
-        Task<TSaga> Load(Guid correlationId);
-    }
+    Task<TSaga> Load(Guid correlationId);
 }

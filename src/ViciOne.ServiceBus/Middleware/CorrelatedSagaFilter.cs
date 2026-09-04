@@ -1,66 +1,64 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Sends the message through the repository using the specified saga policy.
+/// </summary>
+/// <typeparam name="TSaga">The saga type</typeparam>
+/// <typeparam name="TMessage">The message type</typeparam>
+public class CorrelatedSagaFilter<TSaga, TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _messagePipe;
+    readonly ISagaPolicy<TSaga, TMessage> _policy;
+    readonly ISagaRepository<TSaga> _sagaRepository;
 
-
-    /// <summary>
-    /// Sends the message through the repository using the specified saga policy.
-    /// </summary>
-    /// <typeparam name="TSaga">The saga type</typeparam>
-    /// <typeparam name="TMessage">The message type</typeparam>
-    public class CorrelatedSagaFilter<TSaga, TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public CorrelatedSagaFilter(ISagaRepository<TSaga> sagaRepository, ISagaPolicy<TSaga, TMessage> policy,
+        IPipe<SagaConsumeContext<TSaga, TMessage>> messagePipe)
     {
-        readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _messagePipe;
-        readonly ISagaPolicy<TSaga, TMessage> _policy;
-        readonly ISagaRepository<TSaga> _sagaRepository;
+        _sagaRepository = sagaRepository;
+        _messagePipe = messagePipe;
+        _policy = policy;
+    }
 
-        public CorrelatedSagaFilter(ISagaRepository<TSaga> sagaRepository, ISagaPolicy<TSaga, TMessage> policy,
-            IPipe<SagaConsumeContext<TSaga, TMessage>> messagePipe)
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("saga");
+        scope.Set(new { Correlation = "Id" });
+
+        _sagaRepository.Probe(scope);
+
+        _messagePipe.Probe(scope);
+    }
+
+    public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        var timer = Stopwatch.StartNew();
+        try
         {
-            _sagaRepository = sagaRepository;
-            _messagePipe = messagePipe;
-            _policy = policy;
+            await _sagaRepository.Send(context, _policy, _messagePipe).ConfigureAwait(false);
+
+            await next.Send(context).ConfigureAwait(false);
+
+            await context.NotifyConsumed(timer.Elapsed, TypeCache<TSaga>.ShortName).ConfigureAwait(false);
         }
-
-        public void Probe(ProbeContext context)
+        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
+                                          && !context.CancellationToken.IsCancellationRequested)
         {
-            var scope = context.CreateFilterScope("saga");
-            scope.Set(new { Correlation = "Id" });
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<TSaga>.ShortName, exception).ConfigureAwait(false);
 
-            _sagaRepository.Probe(scope);
-
-            _messagePipe.Probe(scope);
+            throw new ConsumerCanceledException($"The operation was canceled by the saga: {TypeCache<TSaga>.ShortName}");
         }
-
-        public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+        catch (Exception exception)
         {
-            var timer = Stopwatch.StartNew();
-            try
-            {
-                await _sagaRepository.Send(context, _policy, _messagePipe).ConfigureAwait(false);
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<TSaga>.ShortName, exception).ConfigureAwait(false);
 
-                await next.Send(context).ConfigureAwait(false);
-
-                await context.NotifyConsumed(timer.Elapsed, TypeCache<TSaga>.ShortName).ConfigureAwait(false);
-            }
-            catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                              && !context.CancellationToken.IsCancellationRequested)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TSaga>.ShortName, exception).ConfigureAwait(false);
-
-                throw new ConsumerCanceledException($"The operation was canceled by the saga: {TypeCache<TSaga>.ShortName}");
-            }
-            catch (Exception exception)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<TSaga>.ShortName, exception).ConfigureAwait(false);
-
-                throw;
-            }
+            throw;
         }
     }
 }

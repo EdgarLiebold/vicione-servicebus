@@ -1,107 +1,105 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// A dynamic router is a pipe on which additional pipes can be connected and context is
+/// routed through the pipe based upon the output requirements of the connected pipes. It is built
+/// around the dynamic filter, which is the central point of the router.
+/// </summary>
+public class DynamicRouter<TContext> :
+    IDynamicRouter<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IDynamicFilter<TContext> _filter;
+    readonly IPipe<TContext> _pipe;
 
-
-    /// <summary>
-    /// A dynamic router is a pipe on which additional pipes can be connected and context is
-    /// routed through the pipe based upon the output requirements of the connected pipes. It is built
-    /// around the dynamic filter, which is the central point of the router.
-    /// </summary>
-    public class DynamicRouter<TContext> :
-        IDynamicRouter<TContext>
-        where TContext : class, PipeContext
+    public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory)
     {
-        readonly IDynamicFilter<TContext> _filter;
-        readonly IPipe<TContext> _pipe;
+        ArgumentNullException.ThrowIfNull(converterFactory);
 
-        public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory)
-        {
-            ArgumentNullException.ThrowIfNull(converterFactory);
-
-            _filter = new DynamicFilter<TContext>(converterFactory);
-            _pipe = Pipe.New<TContext>(x => x.UseFilter(_filter));
-        }
-
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("dynamicRouter");
-
-            _pipe.Probe(scope);
-        }
-
-        Task IPipe<TContext>.Send(TContext context)
-        {
-            return _pipe.Send(context);
-        }
-
-        public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
-            where T : class, PipeContext
-        {
-            return _filter.ConnectPipe(pipe);
-        }
-
-        ConnectHandle IFilterObserverConnector.ConnectObserver<T>(IFilterObserver<T> observer)
-        {
-            return _filter.ConnectObserver(observer);
-        }
-
-        ConnectHandle IFilterObserverConnector.ConnectObserver(IFilterObserver observer)
-        {
-            return _filter.ConnectObserver(observer);
-        }
+        _filter = new DynamicFilter<TContext>(converterFactory);
+        _pipe = Pipe.New<TContext>(x => x.UseFilter(_filter));
     }
 
-
-    public class DynamicRouter<TContext, TKey> :
-        IDynamicRouter<TContext, TKey>
-        where TContext : class, PipeContext
+    void IProbeSite.Probe(ProbeContext context)
     {
-        readonly IDynamicFilter<TContext, TKey> _filter;
-        readonly IPipe<TContext> _pipe;
+        var scope = context.CreateScope("dynamicRouter");
 
-        public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory, KeyAccessor<TContext, TKey> keyAccessor)
-        {
-            ArgumentNullException.ThrowIfNull(converterFactory);
-            ArgumentNullException.ThrowIfNull(keyAccessor);
+        _pipe.Probe(scope);
+    }
 
-            _filter = new DynamicFilter<TContext, TKey>(converterFactory, keyAccessor);
-            _pipe = Pipe.New<TContext>(x => x.UseFilter(_filter));
-        }
+    Task IPipe<TContext>.Send(TContext context)
+    {
+        return _pipe.Send(context);
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("dynamicRouter");
+    public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
+        where T : class, PipeContext
+    {
+        return _filter.ConnectPipe(pipe);
+    }
 
-            _pipe.Probe(scope);
-        }
+    ConnectHandle IFilterObserverConnector.ConnectObserver<T>(IFilterObserver<T> observer)
+    {
+        return _filter.ConnectObserver(observer);
+    }
 
-        Task IPipe<TContext>.Send(TContext context)
-        {
-            return _pipe.Send(context);
-        }
+    ConnectHandle IFilterObserverConnector.ConnectObserver(IFilterObserver observer)
+    {
+        return _filter.ConnectObserver(observer);
+    }
+}
 
-        public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
-            where T : class, PipeContext
-        {
-            return _filter.ConnectPipe(pipe);
-        }
 
-        ConnectHandle IFilterObserverConnector.ConnectObserver<T>(IFilterObserver<T> observer)
-        {
-            return _filter.ConnectObserver(observer);
-        }
+public class DynamicRouter<TContext, TKey> :
+    IDynamicRouter<TContext, TKey>
+    where TContext : class, PipeContext
+{
+    readonly IDynamicFilter<TContext, TKey> _filter;
+    readonly IPipe<TContext> _pipe;
 
-        ConnectHandle IFilterObserverConnector.ConnectObserver(IFilterObserver observer)
-        {
-            return _filter.ConnectObserver(observer);
-        }
+    public DynamicRouter(IPipeContextConverterFactory<TContext> converterFactory, KeyAccessor<TContext, TKey> keyAccessor)
+    {
+        ArgumentNullException.ThrowIfNull(converterFactory);
+        ArgumentNullException.ThrowIfNull(keyAccessor);
 
-        public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
-            where T : class, PipeContext
-        {
-            return _filter.ConnectPipe(key, pipe);
-        }
+        _filter = new DynamicFilter<TContext, TKey>(converterFactory, keyAccessor);
+        _pipe = Pipe.New<TContext>(x => x.UseFilter(_filter));
+    }
+
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("dynamicRouter");
+
+        _pipe.Probe(scope);
+    }
+
+    Task IPipe<TContext>.Send(TContext context)
+    {
+        return _pipe.Send(context);
+    }
+
+    public ConnectHandle ConnectPipe<T>(IPipe<T> pipe)
+        where T : class, PipeContext
+    {
+        return _filter.ConnectPipe(pipe);
+    }
+
+    ConnectHandle IFilterObserverConnector.ConnectObserver<T>(IFilterObserver<T> observer)
+    {
+        return _filter.ConnectObserver(observer);
+    }
+
+    ConnectHandle IFilterObserverConnector.ConnectObserver(IFilterObserver observer)
+    {
+        return _filter.ConnectObserver(observer);
+    }
+
+    public ConnectHandle ConnectPipe<T>(TKey key, IPipe<T> pipe)
+        where T : class, PipeContext
+    {
+        return _filter.ConnectPipe(key, pipe);
     }
 }

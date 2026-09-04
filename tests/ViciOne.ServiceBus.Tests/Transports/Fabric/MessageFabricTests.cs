@@ -332,7 +332,7 @@ public sealed class MessageFabricTests
         {
         }
 
-        public void ExchangeBindingCreated(object context, string source, string destination, string routingKey = null!)
+        public void ExchangeBindingCreated(object context, string source, string destination, string? routingKey = null)
         {
         }
 

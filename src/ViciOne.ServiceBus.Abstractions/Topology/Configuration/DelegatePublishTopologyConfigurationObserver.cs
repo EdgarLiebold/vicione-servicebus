@@ -1,21 +1,20 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DelegatePublishTopologyConfigurationObserver :
+    IPublishTopologyConfigurationObserver
 {
-    public class DelegatePublishTopologyConfigurationObserver :
-        IPublishTopologyConfigurationObserver
+    readonly IPublishTopologyConfigurator _publishTopology;
+
+    public DelegatePublishTopologyConfigurationObserver(IPublishTopologyConfigurator publishTopology)
     {
-        readonly IPublishTopologyConfigurator _publishTopology;
+        _publishTopology = publishTopology;
+    }
 
-        public DelegatePublishTopologyConfigurationObserver(IPublishTopologyConfigurator publishTopology)
-        {
-            _publishTopology = publishTopology;
-        }
+    public void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
+        where T : class
+    {
+        IMessagePublishTopologyConfigurator<T> publishTopologyConfigurator = _publishTopology.GetMessageTopology<T>();
 
-        public void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
-            where T : class
-        {
-            IMessagePublishTopologyConfigurator<T> publishTopologyConfigurator = _publishTopology.GetMessageTopology<T>();
-
-            configurator.AddDelegate(publishTopologyConfigurator);
-        }
+        configurator.AddDelegate(publishTopologyConfigurator);
     }
 }

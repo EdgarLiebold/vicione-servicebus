@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public enum SqlSubscriptionType
 {
-    public enum SqlSubscriptionType
-    {
-        All = 1,
-        RoutingKey = 2,
-        Pattern = 3
-    }
+    All = 1,
+    RoutingKey = 2,
+    Pattern = 3
 }

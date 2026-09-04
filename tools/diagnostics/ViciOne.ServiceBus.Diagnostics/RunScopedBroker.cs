@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -9,13 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing;
 
-
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// The broker of this run, read from the environment the canonical runner publishes.
 /// <para>
 /// There is deliberately no default host, port or account. A diagnostic that silently addressed
-/// localhost would report about whatever broker happens to run on the machine, and its numbers would
-/// look exactly like the ones from the pinned fixture.
+/// localhost would report about an unrelated broker that happens to run on the machine while still
+/// producing plausible measurements.
 /// </para>
 /// </summary>
 static class RunScopedBroker

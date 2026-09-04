@@ -1,46 +1,44 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InMemoryOutboxSagaConfigurationObserver<TSaga> :
+    ISagaConfigurationObserver
+    where TSaga : class, ISaga
 {
-    using System;
+    readonly ISagaConfigurator<TSaga> _configurator;
+    readonly Action<IOutboxConfigurator> _configure;
+    readonly ISetScopedConsumeContext _setter;
 
-
-    public class InMemoryOutboxSagaConfigurationObserver<TSaga> :
-        ISagaConfigurationObserver
-        where TSaga : class, ISaga
+    public InMemoryOutboxSagaConfigurationObserver(IRegistrationContext context, ISagaConfigurator<TSaga> configurator,
+        Action<IOutboxConfigurator> configure)
+        : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
     {
-        readonly ISagaConfigurator<TSaga> _configurator;
-        readonly Action<IOutboxConfigurator> _configure;
-        readonly ISetScopedConsumeContext _setter;
+    }
 
-        public InMemoryOutboxSagaConfigurationObserver(IRegistrationContext context, ISagaConfigurator<TSaga> configurator,
-            Action<IOutboxConfigurator> configure)
-            : this(context as ISetScopedConsumeContext ?? throw new ArgumentException(nameof(context)), configurator, configure)
-        {
-        }
+    public InMemoryOutboxSagaConfigurationObserver(ISetScopedConsumeContext setter, ISagaConfigurator<TSaga> configurator,
+        Action<IOutboxConfigurator> configure)
+    {
+        _setter = setter;
+        _configurator = configurator;
+        _configure = configure;
+    }
 
-        public InMemoryOutboxSagaConfigurationObserver(ISetScopedConsumeContext setter, ISagaConfigurator<TSaga> configurator,
-            Action<IOutboxConfigurator> configure)
-        {
-            _setter = setter;
-            _configurator = configurator;
-            _configure = configure;
-        }
+    void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
+    {
+    }
 
-        void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
-        {
-        }
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
+        where TInstance : class, ISaga, SagaStateMachineInstance
+    {
+    }
 
-        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance
-        {
-        }
+    void ISagaConfigurationObserver.SagaMessageConfigured<T, TMessage>(ISagaMessageConfigurator<T, TMessage> configurator)
+    {
+        var specification = new InMemoryOutboxSpecification<TMessage>(_setter);
 
-        void ISagaConfigurationObserver.SagaMessageConfigured<T, TMessage>(ISagaMessageConfigurator<T, TMessage> configurator)
-        {
-            var specification = new InMemoryOutboxSpecification<TMessage>(_setter);
+        _configure?.Invoke(specification);
 
-            _configure?.Invoke(specification);
-
-            _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
-        }
+        _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
     }
 }

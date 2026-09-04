@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Threading.Tasks;
-using Contracts.JobService;
+using ViciOne.ServiceBus.Contracts.JobService;
 
+namespace ViciOne.ServiceBus;
 
 public interface INotifyJobContext
 {

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.MessageData
+namespace ViciOne.ServiceBus.MessageData;
+
+public interface IMessageDataReference
 {
-    public interface IMessageDataReference
-    {
-        string Text { set; }
-        byte[] Data { set; }
-    }
+    string? Text { set; }
+    byte[]? Data { set; }
 }

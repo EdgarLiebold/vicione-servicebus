@@ -1,31 +1,29 @@
+using System;
+using ViciOne.ServiceBus.Configuration;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Configuration
+namespace ViciOne.ServiceBus.SqlTransport.Configuration;
+
+public interface ISqlHostConfiguration :
+    IHostConfiguration,
+    IReceiveConfigurator<ISqlReceiveEndpointConfigurator>
 {
-    using System;
-    using ViciOne.ServiceBus.Configuration;
+    IConnectionContextSupervisor ConnectionContextSupervisor { get; }
 
+    SqlHostSettings Settings { get; set; }
 
-    public interface ISqlHostConfiguration :
-        IHostConfiguration,
-        IReceiveConfigurator<ISqlReceiveEndpointConfigurator>
-    {
-        IConnectionContextSupervisor ConnectionContextSupervisor { get; }
+    new ISqlBusTopology Topology { get; }
 
-        SqlHostSettings Settings { get; set; }
+    /// <summary>
+    /// Apply the endpoint definition to the receive endpoint configurator
+    /// </summary>
+    /// <param name="configurator"></param>
+    /// <param name="definition"></param>
+    void ApplyEndpointDefinition(ISqlReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
 
-        new ISqlBusTopology Topology { get; }
+    ISqlReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
+        Action<ISqlReceiveEndpointConfigurator>? configure = null);
 
-        /// <summary>
-        /// Apply the endpoint definition to the receive endpoint configurator
-        /// </summary>
-        /// <param name="configurator"></param>
-        /// <param name="definition"></param>
-        void ApplyEndpointDefinition(ISqlReceiveEndpointConfigurator configurator, IEndpointDefinition definition);
-
-        ISqlReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(string queueName,
-            Action<ISqlReceiveEndpointConfigurator>? configure = null);
-
-        ISqlReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(SqlReceiveSettings settings,
-            ISqlEndpointConfiguration endpointConfiguration, Action<ISqlReceiveEndpointConfigurator>? configure = null);
-    }
+    ISqlReceiveEndpointConfiguration CreateReceiveEndpointConfiguration(SqlReceiveSettings settings,
+        ISqlEndpointConfiguration endpointConfiguration, Action<ISqlReceiveEndpointConfigurator>? configure = null);
 }

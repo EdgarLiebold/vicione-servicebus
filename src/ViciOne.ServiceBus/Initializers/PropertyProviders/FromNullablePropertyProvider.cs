@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyProviders
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyProviders;
+
+public class FromNullablePropertyProvider<TInput, TProperty> :
+    IPropertyProvider<TInput, TProperty>
+    where TInput : class
+    where TProperty : struct
 {
-    using System.Threading.Tasks;
-    using Util;
+    readonly IPropertyProvider<TInput, TProperty?> _provider;
 
-
-    public class FromNullablePropertyProvider<TInput, TProperty> :
-        IPropertyProvider<TInput, TProperty>
-        where TInput : class
-        where TProperty : struct
+    public FromNullablePropertyProvider(IPropertyProvider<TInput, TProperty?> provider)
     {
-        readonly IPropertyProvider<TInput, TProperty?> _provider;
+        _provider = provider;
+    }
 
-        public FromNullablePropertyProvider(IPropertyProvider<TInput, TProperty?> provider)
+    public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
+        where T : class
+    {
+        if (!context.HasInput)
+            return TaskResults.Default<TProperty>();
+
+        Task<TProperty?> propertyTask = _provider.GetProperty(context);
+        if (propertyTask.Status == TaskStatus.RanToCompletion)
+            return Task.FromResult(propertyTask.Result ?? default);
+
+        async Task<TProperty> GetPropertyAsync()
         {
-            _provider = provider;
+            return await propertyTask.ConfigureAwait(false) ?? default;
         }
 
-        public Task<TProperty> GetProperty<T>(InitializeContext<T, TInput> context)
-            where T : class
-        {
-            if (!context.HasInput)
-                return TaskResults.Default<TProperty>();
-
-            Task<TProperty?> propertyTask = _provider.GetProperty(context);
-            if (propertyTask.Status == TaskStatus.RanToCompletion)
-                return Task.FromResult(propertyTask.Result ?? default);
-
-            async Task<TProperty> GetPropertyAsync()
-            {
-                return await propertyTask.ConfigureAwait(false) ?? default;
-            }
-
-            return GetPropertyAsync();
-        }
+        return GetPropertyAsync();
     }
 }

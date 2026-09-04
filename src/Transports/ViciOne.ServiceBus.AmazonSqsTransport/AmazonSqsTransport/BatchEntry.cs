@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class BatchEntry<TEntry>
 {

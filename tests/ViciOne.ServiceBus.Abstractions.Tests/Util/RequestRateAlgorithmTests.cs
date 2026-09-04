@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
 using System.Globalization;
 using Microsoft.Extensions.Time.Testing;
-using ViciOne.ServiceBus.Util;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Util;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Abstractions.Tests.Util;

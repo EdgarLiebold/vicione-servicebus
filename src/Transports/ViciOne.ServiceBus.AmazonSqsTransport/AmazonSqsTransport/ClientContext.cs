@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS.Model;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public interface ClientContext :
     PipeContext

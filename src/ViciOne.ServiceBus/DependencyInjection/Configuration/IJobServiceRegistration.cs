@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IJobServiceRegistration :
+    IRegistration
 {
-    using System;
+    IEndpointRegistrationConfigurator EndpointRegistrationConfigurator { get; }
 
+    IEndpointDefinition EndpointDefinition { get; }
 
-    public interface IJobServiceRegistration :
-        IRegistration
-    {
-        IEndpointRegistrationConfigurator EndpointRegistrationConfigurator { get; }
+    void AddConfigureAction(Action<JobConsumerOptions>? configure);
 
-        IEndpointDefinition EndpointDefinition { get; }
+    void AddReceiveEndpointDependency(IReceiveEndpointConfigurator dependency);
 
-        void AddConfigureAction(Action<JobConsumerOptions> configure);
-
-        void AddReceiveEndpointDependency(IReceiveEndpointConfigurator dependency);
-
-        void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context);
-    }
+    void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context);
 }

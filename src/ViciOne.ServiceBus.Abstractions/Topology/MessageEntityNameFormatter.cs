@@ -1,44 +1,42 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Reflection;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus;
+
+public class MessageEntityNameFormatter<TMessage> :
+    IMessageEntityNameFormatter<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Reflection;
-    using Internals;
+    readonly IEntityNameFormatter _entityNameFormatter;
+    string? _entityName;
 
-
-    public class MessageEntityNameFormatter<TMessage> :
-        IMessageEntityNameFormatter<TMessage>
-        where TMessage : class
+    public MessageEntityNameFormatter(IEntityNameFormatter entityNameFormatter)
     {
-        readonly IEntityNameFormatter _entityNameFormatter;
-        string? _entityName;
+        _entityNameFormatter = entityNameFormatter;
 
-        public MessageEntityNameFormatter(IEntityNameFormatter entityNameFormatter)
+        InitializeEntityNameFromAttributeIfSpecified();
+    }
+
+    /// <summary>
+    /// Not sure it ever makes sense to pass the actual message, but many, someday.
+    /// </summary>
+    /// <returns></returns>
+    public string FormatEntityName()
+    {
+        return _entityName ??= _entityNameFormatter.FormatEntityName<TMessage>();
+    }
+
+    void InitializeEntityNameFromAttributeIfSpecified()
+    {
+        var entityNameAttribute = typeof(TMessage).GetCustomAttribute<EntityNameAttribute>();
+        if (entityNameAttribute != null)
+            _entityName = entityNameAttribute.EntityName;
+        else if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] messageTypes))
         {
-            _entityNameFormatter = entityNameFormatter;
-
-            InitializeEntityNameFromAttributeIfSpecified();
-        }
-
-        /// <summary>
-        /// Not sure it ever makes sense to pass the actual message, but many, someday.
-        /// </summary>
-        /// <returns></returns>
-        public string FormatEntityName()
-        {
-            return _entityName ??= _entityNameFormatter.FormatEntityName<TMessage>();
-        }
-
-        void InitializeEntityNameFromAttributeIfSpecified()
-        {
-            var entityNameAttribute = typeof(TMessage).GetCustomAttribute<EntityNameAttribute>();
-            if (entityNameAttribute != null)
-                _entityName = entityNameAttribute.EntityName;
-            else if (typeof(TMessage).TryGetSingleClosedGenericArguments(typeof(Fault<>), out Type[] messageTypes))
-            {
-                var faultEntityNameAttribute = messageTypes[0].GetCustomAttribute<FaultEntityNameAttribute>();
-                if (faultEntityNameAttribute != null)
-                    _entityName = faultEntityNameAttribute.EntityName;
-            }
+            var faultEntityNameAttribute = messageTypes[0].GetCustomAttribute<FaultEntityNameAttribute>();
+            if (faultEntityNameAttribute != null)
+                _entityName = faultEntityNameAttribute.EntityName;
         }
     }
 }

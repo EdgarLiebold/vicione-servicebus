@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.MessageData.Converters
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus.MessageData.Converters;
+
+public class StringMessageDataConverter :
+    IMessageDataConverter<string>
 {
-    using System.IO;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Metadata;
-
-
-    public class StringMessageDataConverter :
-        IMessageDataConverter<string>
+    public async Task<string> Convert(Stream stream, CancellationToken cancellationToken)
     {
-        public async Task<string> Convert(Stream stream, CancellationToken cancellationToken)
-        {
-            using var ms = new MemoryStream();
+        using var ms = new MemoryStream();
 
-            await stream.CopyToAsync(ms, 4096, cancellationToken).ConfigureAwait(false);
+        await stream.CopyToAsync(ms, 4096, cancellationToken).ConfigureAwait(false);
 
-            return Encoding.UTF8.GetString(ms.ToArray());
-        }
+        return Encoding.UTF8.GetString(ms.ToArray());
     }
 }

@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.Clients
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Clients;
+
+public class HostReceiveEndpointClientFactoryContext :
+    ReceiveEndpointClientFactoryContext,
+    IAsyncDisposable
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly HostReceiveEndpointHandle _handle;
 
-
-    public class HostReceiveEndpointClientFactoryContext :
-        ReceiveEndpointClientFactoryContext,
-        IAsyncDisposable
+    public HostReceiveEndpointClientFactoryContext(
+        HostReceiveEndpointHandle handle,
+        RequestTimeout defaultTimeout = default,
+        TimeProvider timeProvider = null)
+        : base(handle, defaultTimeout, timeProvider)
     {
-        readonly HostReceiveEndpointHandle _handle;
+        _handle = handle;
+    }
 
-        public HostReceiveEndpointClientFactoryContext(
-            HostReceiveEndpointHandle handle,
-            RequestTimeout defaultTimeout = default,
-            TimeProvider timeProvider = null)
-            : base(handle, defaultTimeout, timeProvider)
-        {
-            _handle = handle;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await _handle.StopAsync().ConfigureAwait(false);
-        }
+    public async ValueTask DisposeAsync()
+    {
+        await _handle.StopAsync().ConfigureAwait(false);
     }
 }

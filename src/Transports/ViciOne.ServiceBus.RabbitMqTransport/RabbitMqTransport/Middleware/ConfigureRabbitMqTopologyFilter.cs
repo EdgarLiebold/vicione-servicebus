@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +6,9 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
-using Topology;
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
 
-
+namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 /// <summary>
 /// Configures the broker with the supplied topology once the channel is created, to ensure
 /// that the exchanges, queues, and bindings for the channel are properly configured in RabbitMQ.

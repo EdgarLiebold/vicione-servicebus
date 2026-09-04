@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
-
 using System.Security.Cryptography;
 using System.Text;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 /// <summary>Terminal boundary between native MTP tests and retained engineering utilities.</summary>
 public sealed class VerificationCapabilityDispositionTests
 {
@@ -45,7 +44,9 @@ public sealed class VerificationCapabilityDispositionTests
     {
         string mapPath = Path.Combine(
             RepositoryLayout.Root,
-            ".testagent",
+            "evidence",
+            "native-tests",
+            "obligation-maps",
             "verification-capability-disposition.tsv");
         string[] lines = File.ReadAllLines(mapPath);
         Assert.Equal("legacyPath\tdisposition\tfinalOwner\tclosureEvidence", lines[0]);

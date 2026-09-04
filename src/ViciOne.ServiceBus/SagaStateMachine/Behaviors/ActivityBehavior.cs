@@ -1,76 +1,74 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class ActivityBehavior<TSaga> :
+    IBehavior<TSaga>
+    where TSaga : class, SagaStateMachineInstance
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IStateMachineActivity<TSaga> _activity;
+    readonly IBehavior<TSaga> _next;
 
-
-    public class ActivityBehavior<TSaga> :
-        IBehavior<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+    public ActivityBehavior(IStateMachineActivity<TSaga> activity, IBehavior<TSaga> next)
     {
-        readonly IStateMachineActivity<TSaga> _activity;
-        readonly IBehavior<TSaga> _next;
+        _activity = activity;
+        _next = next;
+    }
 
-        public ActivityBehavior(IStateMachineActivity<TSaga> activity, IBehavior<TSaga> next)
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this, x =>
         {
-            _activity = activity;
-            _next = next;
-        }
+            _activity.Accept(visitor);
+            _next.Accept(visitor);
+        });
+    }
 
-        public void Accept(StateMachineVisitor visitor)
+    public void Probe(ProbeContext context)
+    {
+        _activity.Probe(context);
+        _next.Probe(context);
+    }
+
+    public async Task Execute(BehaviorContext<TSaga> context)
+    {
+        try
         {
-            visitor.Visit(this, x =>
-            {
-                _activity.Accept(visitor);
-                _next.Accept(visitor);
-            });
+            await _activity.Execute(context, _next).ConfigureAwait(false);
         }
-
-        public void Probe(ProbeContext context)
+        catch (Exception exception)
         {
-            _activity.Probe(context);
-            _next.Probe(context);
+            await ExceptionTypeCache.Faulted(_next, context, exception).ConfigureAwait(false);
         }
+    }
 
-        public async Task Execute(BehaviorContext<TSaga> context)
+    public async Task Execute<T>(BehaviorContext<TSaga, T> context)
+        where T : class
+    {
+        var behavior = new DataBehavior<TSaga, T>(_next);
+        try
         {
-            try
-            {
-                await _activity.Execute(context, _next).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                await ExceptionTypeCache.Faulted(_next, context, exception).ConfigureAwait(false);
-            }
+            await _activity.Execute(context, behavior).ConfigureAwait(false);
         }
-
-        public async Task Execute<T>(BehaviorContext<TSaga, T> context)
-            where T : class
+        catch (Exception exception)
         {
-            var behavior = new DataBehavior<TSaga, T>(_next);
-            try
-            {
-                await _activity.Execute(context, behavior).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                await ExceptionTypeCache.Faulted(behavior, context, exception).ConfigureAwait(false);
-            }
+            await ExceptionTypeCache.Faulted(behavior, context, exception).ConfigureAwait(false);
         }
+    }
 
-        public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
-            where T : class
-            where TException : Exception
-        {
-            var behavior = new DataBehavior<TSaga, T>(_next);
+    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context)
+        where T : class
+        where TException : Exception
+    {
+        var behavior = new DataBehavior<TSaga, T>(_next);
 
-            return _activity.Faulted(context, behavior);
-        }
+        return _activity.Faulted(context, behavior);
+    }
 
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context)
-            where TException : Exception
-        {
-            return _activity.Faulted(context, _next);
-        }
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context)
+        where TException : Exception
+    {
+        return _activity.Faulted(context, _next);
     }
 }

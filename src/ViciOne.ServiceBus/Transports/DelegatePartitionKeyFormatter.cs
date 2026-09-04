@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class DelegatePartitionKeyFormatter<TMessage> :
+    IMessagePartitionKeyFormatter<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly Func<SendContext<TMessage>, string> _formatter;
 
-
-    public class DelegatePartitionKeyFormatter<TMessage> :
-        IMessagePartitionKeyFormatter<TMessage>
-        where TMessage : class
+    public DelegatePartitionKeyFormatter(Func<SendContext<TMessage>, string> formatter)
     {
-        readonly Func<SendContext<TMessage>, string> _formatter;
+        _formatter = formatter;
+    }
 
-        public DelegatePartitionKeyFormatter(Func<SendContext<TMessage>, string> formatter)
-        {
-            _formatter = formatter;
-        }
-
-        public string FormatPartitionKey(SendContext<TMessage> context)
-        {
-            return _formatter(context) ?? "";
-        }
+    public string FormatPartitionKey(SendContext<TMessage> context)
+    {
+        return _formatter(context) ?? "";
     }
 }

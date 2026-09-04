@@ -1,46 +1,44 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Testing.Implementations;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public class HandlerTestHarness<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Implementations;
+    readonly ReceivedMessageList<TMessage> _consumed;
+    readonly MessageHandler<TMessage> _handler;
 
-
-    public class HandlerTestHarness<TMessage>
-        where TMessage : class
+    public HandlerTestHarness(BusTestHarness testHarness, MessageHandler<TMessage> handler)
     {
-        readonly ReceivedMessageList<TMessage> _consumed;
-        readonly MessageHandler<TMessage> _handler;
+        _handler = handler;
 
-        public HandlerTestHarness(BusTestHarness testHarness, MessageHandler<TMessage> handler)
+        _consumed = new ReceivedMessageList<TMessage>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
+        ((ITestContextRetention)_consumed).ConfigureRetention(testHarness.ContextSaveMode, testHarness.MaximumSavedContexts);
+
+        testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
+    }
+
+    public IReceivedMessageList<TMessage> Consumed => _consumed;
+
+    void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
+    {
+        configurator.Handler<TMessage>(HandleMessage);
+    }
+
+    async Task HandleMessage(ConsumeContext<TMessage> context)
+    {
+        try
         {
-            _handler = handler;
+            await _handler(context).ConfigureAwait(false);
 
-            _consumed = new ReceivedMessageList<TMessage>(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
-            ((ITestContextRetention)_consumed).ConfigureRetention(testHarness.ContextSaveMode, testHarness.MaximumSavedContexts);
-
-            testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
+            _consumed.Add(context);
         }
-
-        public IReceivedMessageList<TMessage> Consumed => _consumed;
-
-        void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
+        catch (Exception ex)
         {
-            configurator.Handler<TMessage>(HandleMessage);
-        }
-
-        async Task HandleMessage(ConsumeContext<TMessage> context)
-        {
-            try
-            {
-                await _handler(context).ConfigureAwait(false);
-
-                _consumed.Add(context);
-            }
-            catch (Exception ex)
-            {
-                _consumed.Add(context, ex);
-                throw;
-            }
+            _consumed.Add(context, ex);
+            throw;
         }
     }
 }

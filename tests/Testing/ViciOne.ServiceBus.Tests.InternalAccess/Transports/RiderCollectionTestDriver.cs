@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.Transports;
-
 using System.Collections.Concurrent;
 using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.Transports;
 
 public sealed class RiderCollectionTestDriver
 {

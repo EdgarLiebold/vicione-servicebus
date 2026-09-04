@@ -1,37 +1,35 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+public class MessageLatencyConsumer :
+    IConsumer<LatencyTestMessage>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    public static int CurrentConsumerCount;
+    public static int MaxConsumerCount;
+    readonly IReportConsumerMetric _report;
 
-
-    public class MessageLatencyConsumer :
-        IConsumer<LatencyTestMessage>
+    public MessageLatencyConsumer(IReportConsumerMetric report)
     {
-        public static int CurrentConsumerCount;
-        public static int MaxConsumerCount;
-        readonly IReportConsumerMetric _report;
+        _report = report;
+    }
 
-        public MessageLatencyConsumer(IReportConsumerMetric report)
+    public async Task Consume(ConsumeContext<LatencyTestMessage> context)
+    {
+        var current = Interlocked.Increment(ref CurrentConsumerCount);
+        var maxConsumerCount = MaxConsumerCount;
+        if (current > maxConsumerCount)
+            Interlocked.CompareExchange(ref MaxConsumerCount, current, maxConsumerCount);
+
+        try
         {
-            _report = report;
+            await _report.Consumed<LatencyTestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
         }
-
-        public async Task Consume(ConsumeContext<LatencyTestMessage> context)
+        finally
         {
-            var current = Interlocked.Increment(ref CurrentConsumerCount);
-            var maxConsumerCount = MaxConsumerCount;
-            if (current > maxConsumerCount)
-                Interlocked.CompareExchange(ref MaxConsumerCount, current, maxConsumerCount);
-
-            try
-            {
-                await _report.Consumed<LatencyTestMessage>(context.Message.CorrelationId).ConfigureAwait(false);
-            }
-            finally
-            {
-                Interlocked.Decrement(ref CurrentConsumerCount);
-            }
+            Interlocked.Decrement(ref CurrentConsumerCount);
         }
     }
 }

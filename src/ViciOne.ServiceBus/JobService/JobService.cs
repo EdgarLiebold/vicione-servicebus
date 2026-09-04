@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus.JobService;
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
-using Consumer;
-using Contracts.JobService;
-using Messages;
-using Middleware;
-using Util;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Consumer;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.JobService.Messages;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.JobService;
 
 public class JobService :
     IJobService

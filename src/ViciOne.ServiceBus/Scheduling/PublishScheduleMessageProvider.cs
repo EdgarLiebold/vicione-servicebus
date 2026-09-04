@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public class PublishScheduleMessageProvider :
+    BaseScheduleMessageProvider
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly IPublishEndpoint _publishEndpoint;
 
-
-    public class PublishScheduleMessageProvider :
-        BaseScheduleMessageProvider
+    public PublishScheduleMessageProvider(IPublishEndpoint publishEndpoint)
     {
-        readonly IPublishEndpoint _publishEndpoint;
+        _publishEndpoint = publishEndpoint;
+    }
 
-        public PublishScheduleMessageProvider(IPublishEndpoint publishEndpoint)
-        {
-            _publishEndpoint = publishEndpoint;
-        }
+    protected override Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken)
+    {
+        return _publishEndpoint.Publish(message, pipe, cancellationToken);
+    }
 
-        protected override Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken)
+    protected override Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken)
+    {
+        return _publishEndpoint.Publish<CancelScheduledMessage>(new
         {
-            return _publishEndpoint.Publish(message, pipe, cancellationToken);
-        }
-
-        protected override Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken)
-        {
-            return _publishEndpoint.Publish<CancelScheduledMessage>(new
-            {
-                InVar.Timestamp,
-                TokenId = tokenId
-            }, cancellationToken);
-        }
+            InVar.Timestamp,
+            TokenId = tokenId
+        }, cancellationToken);
     }
 }

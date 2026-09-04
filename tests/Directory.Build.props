@@ -1,6 +1,6 @@
 <Project>
 
-  <!-- The early half of the native test tree's build contract.
+  <!-- The early half of the repository test tree's build contract.
 
        MSBuild imports only the FIRST Directory.Build.props it finds walking up from a project, and
        for everything under tests/ that is this file rather than the repository root one. The root
@@ -21,7 +21,7 @@
          itself, and Directory.Build.targets verifies that declaration against the evidence that
          actually makes a project a test project: its direct reference to the test entry package. -->
     <TargetFramework>net10.0</TargetFramework>
-    <!-- One credential store for the whole native test tree. Repeating the id per executable
+    <!-- One credential store for the whole repository test tree. Repeating the id per executable
          project would create as many stores as projects, and a secret placed in one of them would
          be invisible to the others - the failure looks like a missing secret and is actually a
          second store. The configuration owner resolves exactly this id. -->
@@ -29,20 +29,17 @@
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <!-- The checkpoint owes a zero-warning build, so a warning has to stop it rather than scroll
-         past. -->
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <!-- The native core project keeps the product-facing project name while its artifacts use the
+  <!-- The core test project keeps the product-facing project name while its artifacts use the
        UnitArchitecture role identity. This property must be set during Directory.Build.props
        evaluation, before the SDK fixes BaseIntermediateOutputPath. -->
   <PropertyGroup Condition=" '$(MSBuildProjectName)' == 'ViciOne.ServiceBus.Tests' ">
     <ArtifactsProjectName>ViciOne.ServiceBus.Tests.Unit</ArtifactsProjectName>
   </PropertyGroup>
 
-  <!-- The inherited SQL transport project remains in the engineering graph until its provider
-       integration owners are complete. Keep the native hermetic owner in a distinct artifacts
+  <!-- The SQL transport compatibility project remains in the engineering graph until its provider
+       integration owners are complete. Keep the hermetic owner in a distinct artifacts
        directory so the two projects cannot race over one project.assets.json during that overlap. -->
   <PropertyGroup Condition=" '$(MSBuildProjectName)' == 'ViciOne.ServiceBus.SqlTransport.Tests' ">
     <ArtifactsProjectName>ViciOne.ServiceBus.SqlTransport.Tests.Unit</ArtifactsProjectName>

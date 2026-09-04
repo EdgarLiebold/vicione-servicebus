@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using Azure.Messaging.EventHubs;
+using ViciOne.ServiceBus.Logging;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface ProcessorContext :
+    PipeContext
 {
-    using Azure.Messaging.EventHubs;
-    using Logging;
-
-
-    public interface ProcessorContext :
-        PipeContext
-    {
-        ILogContext LogContext { get; }
-        EventProcessorClient GetClient(ProcessorClientBuilderContext context);
-        void ReleaseClient(ProcessorClientBuilderContext processorLockContext);
-    }
+    ILogContext LogContext { get; }
+    EventProcessorClient GetClient(ProcessorClientBuilderContext context);
+    void ReleaseClient(ProcessorClientBuilderContext processorLockContext);
 }

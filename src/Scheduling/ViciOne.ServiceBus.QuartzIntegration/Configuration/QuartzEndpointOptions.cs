@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public class QuartzEndpointOptions
 {
-    using System;
-
-
-    public class QuartzEndpointOptions
-    {
-        public int? PrefetchCount { get; set; } = 32;
-        public int? ConcurrentMessageLimit { get; set; }
-        public string QueueName { get; set; } = "quartz";
-        public Func<string, TimeZoneInfo?>? TimeZoneResolver { get; set; }
-    }
+    public int? PrefetchCount { get; set; } = 32;
+    public int? ConcurrentMessageLimit { get; set; }
+    public string QueueName { get; set; } = "quartz";
+    public Func<string, TimeZoneInfo?>? TimeZoneResolver { get; set; }
 }

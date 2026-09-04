@@ -1,35 +1,33 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class InitiatedByOrOrchestratesSagaConnectorFactory<TSaga, TMessage> :
+    ISagaConnectorFactory
+    where TSaga : class, ISaga, InitiatedByOrOrchestrates<TMessage>
+    where TMessage : class, CorrelatedBy<Guid>
 {
-    using System;
-    using Middleware;
-    using Saga;
+    readonly ISagaMessageConnector<TSaga> _connector;
 
-
-    public class InitiatedByOrOrchestratesSagaConnectorFactory<TSaga, TMessage> :
-        ISagaConnectorFactory
-        where TSaga : class, ISaga, InitiatedByOrOrchestrates<TMessage>
-        where TMessage : class, CorrelatedBy<Guid>
+    public InitiatedByOrOrchestratesSagaConnectorFactory()
     {
-        readonly ISagaMessageConnector<TSaga> _connector;
+        var consumeFilter = new InitiatedByOrOrchestratesSagaMessageFilter<TSaga, TMessage>();
 
-        public InitiatedByOrOrchestratesSagaConnectorFactory()
-        {
-            var consumeFilter = new InitiatedByOrOrchestratesSagaMessageFilter<TSaga, TMessage>();
+        ISagaFactory<TSaga, TMessage> sagaFactory = new DefaultSagaFactory<TSaga, TMessage>();
 
-            ISagaFactory<TSaga, TMessage> sagaFactory = new DefaultSagaFactory<TSaga, TMessage>();
+        var policy = new NewOrExistingSagaPolicy<TSaga, TMessage>(sagaFactory, false);
 
-            var policy = new NewOrExistingSagaPolicy<TSaga, TMessage>(sagaFactory, false);
+        _connector = new SagaConnector<TSaga, TMessage>.CorrelatedSagaMessageConnector(consumeFilter, policy, x => x.Message.CorrelationId);
+    }
 
-            _connector = new SagaConnector<TSaga, TMessage>.CorrelatedSagaMessageConnector(consumeFilter, policy, x => x.Message.CorrelationId);
-        }
+    ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
+    {
+        var connector = _connector as ISagaMessageConnector<T>;
+        if (connector == null)
+            throw new ArgumentException("The saga type did not match the connector type");
 
-        ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
-        {
-            var connector = _connector as ISagaMessageConnector<T>;
-            if (connector == null)
-                throw new ArgumentException("The saga type did not match the connector type");
-
-            return connector;
-        }
+        return connector;
     }
 }

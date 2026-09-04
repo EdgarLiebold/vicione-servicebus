@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public interface IInMemoryConsumeTopology :
+    IConsumeTopology
 {
-    using Configuration;
+    new IInMemoryMessageConsumeTopology<T> GetMessageTopology<T>()
+        where T : class;
 
-
-    public interface IInMemoryConsumeTopology :
-        IConsumeTopology
-    {
-        new IInMemoryMessageConsumeTopology<T> GetMessageTopology<T>()
-            where T : class;
-
-        /// <summary>
-        /// Apply the entire topology to the builder
-        /// </summary>
-        /// <param name="builder"></param>
-        void Apply(IMessageFabricConsumeTopologyBuilder builder);
-    }
+    /// <summary>
+    /// Apply the entire topology to the builder
+    /// </summary>
+    /// <param name="builder"></param>
+    void Apply(IMessageFabricConsumeTopologyBuilder builder);
 }

@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.Initializers.Conventions
+namespace ViciOne.ServiceBus.Initializers.Conventions;
+
+public interface IMessageInputInitializerConvention<in TMessage>
+    where TMessage : class
 {
-    public interface IMessageInputInitializerConvention<in TMessage>
-        where TMessage : class
-    {
-    }
+}
 
 
-    public interface IMessageInitializerConvention
-    {
-    }
+public interface IMessageInitializerConvention
+{
 }

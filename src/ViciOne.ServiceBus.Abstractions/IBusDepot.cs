@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus;
+
+public interface IBusDepot
 {
-    using System.Threading;
-    using System.Threading.Tasks;
+    Task Start(CancellationToken cancellationToken);
 
-
-    public interface IBusDepot
-    {
-        Task Start(CancellationToken cancellationToken);
-
-        Task Stop(CancellationToken cancellationToken);
-    }
+    Task Stop(CancellationToken cancellationToken);
 }

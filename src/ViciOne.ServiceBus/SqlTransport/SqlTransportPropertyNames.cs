@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.SqlTransport
+namespace ViciOne.ServiceBus.SqlTransport;
+
+static class SqlTransportPropertyNames
 {
-    static class SqlTransportPropertyNames
-    {
-        public const string PartitionKey = "SQL-PartitionKey";
-        public const string Priority = "SQL-Priority";
-        public const string RoutingKey = "SQL-RoutingKey";
-    }
+    public const string PartitionKey = "SQL-PartitionKey";
+    public const string Priority = "SQL-Priority";
+    public const string RoutingKey = "SQL-RoutingKey";
 }

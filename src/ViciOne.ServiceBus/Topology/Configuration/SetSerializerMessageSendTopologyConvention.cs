@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Net.Mime;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SetSerializerMessageSendTopologyConvention<TMessage> :
+    ISetSerializerMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using System.Net.Mime;
-    using Topology;
+    ContentType _contentType;
 
-
-    public class SetSerializerMessageSendTopologyConvention<TMessage> :
-        ISetSerializerMessageSendTopologyConvention<TMessage>
-        where TMessage : class
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
     {
-        ContentType _contentType;
+        convention = this as IMessageSendTopologyConvention<T>;
 
-        bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+        return convention != null;
+    }
+
+    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    {
+        if (_contentType != null)
         {
-            convention = this as IMessageSendTopologyConvention<T>;
-
-            return convention != null;
+            messageSendTopology = new SetSerializerMessageSendTopology<TMessage>(_contentType);
+            return true;
         }
 
-        bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
-        {
-            if (_contentType != null)
-            {
-                messageSendTopology = new SetSerializerMessageSendTopology<TMessage>(_contentType);
-                return true;
-            }
+        messageSendTopology = null;
+        return false;
+    }
 
-            messageSendTopology = null;
-            return false;
-        }
-
-        public void SetSerializer(ContentType contentType)
-        {
-            _contentType = contentType;
-        }
+    public void SetSerializer(ContentType contentType)
+    {
+        _contentType = contentType;
     }
 }

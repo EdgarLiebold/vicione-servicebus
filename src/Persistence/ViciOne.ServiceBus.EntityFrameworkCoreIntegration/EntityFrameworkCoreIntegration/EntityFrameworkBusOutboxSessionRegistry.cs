@@ -1,12 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Collections.Generic;
-using DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using ViciOne.ServiceBus.DependencyInjection;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 /// <summary>
 /// Caches exactly one transactional EF bus-outbox session per DbContext type for one bus and DI scope.
 /// Each cached session is also resolved through its own scoped DI descriptor, which owns disposal before the DbContext.

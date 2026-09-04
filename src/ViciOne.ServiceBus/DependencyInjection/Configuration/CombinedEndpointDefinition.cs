@@ -1,84 +1,82 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CombinedEndpointDefinition :
+    IEndpointDefinition
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly IRegistrationContext _context;
+    readonly IReadOnlyList<IEndpointDefinition> _definitions;
+    readonly EndpointTransportQos _transportQos;
 
-
-    public class CombinedEndpointDefinition :
-        IEndpointDefinition
+    internal CombinedEndpointDefinition(IReadOnlyList<IEndpointDefinition> definitions, IRegistrationContext context, string endpointName)
     {
-        readonly IRegistrationContext _context;
-        readonly IReadOnlyList<IEndpointDefinition> _definitions;
-        readonly EndpointTransportQos _transportQos;
+        _definitions = definitions ?? throw new ArgumentNullException(nameof(definitions));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        if (string.IsNullOrWhiteSpace(endpointName))
+            throw new ArgumentException("Endpoint name must not be empty.", nameof(endpointName));
 
-        internal CombinedEndpointDefinition(IReadOnlyList<IEndpointDefinition> definitions, IRegistrationContext context, string endpointName)
+        EndpointQosDeclaration[] qosDeclarations = _definitions
+            .Select(definition => new EndpointQosDeclaration(
+                endpointName,
+                definition is DelegateEndpointDefinition delegated
+                    ? delegated.OwnerType
+                    : definition.GetType(),
+                new EndpointTransportQos
+                {
+                    PrefetchCount = definition.PrefetchCount,
+                    ConcurrentDeliveryLimit = definition.ConcurrentMessageLimit
+                },
+                GetQosOwnership(definition)))
+            .ToArray();
+        _transportQos = new EndpointQosTopologyValidator()
+            .Validate(qosDeclarations)
+            .GetValueOrDefault(endpointName, new EndpointTransportQos());
+
+        if (_definitions.All(x => x.ConfigureConsumeTopology))
+            ConfigureConsumeTopology = true;
+        else if (_definitions.All(x => x.ConfigureConsumeTopology == false))
+            ConfigureConsumeTopology = false;
+        else
         {
-            _definitions = definitions ?? throw new ArgumentNullException(nameof(definitions));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            if (string.IsNullOrWhiteSpace(endpointName))
-                throw new ArgumentException("Endpoint name must not be empty.", nameof(endpointName));
-
-            EndpointQosDeclaration[] qosDeclarations = _definitions
-                .Select(definition => new EndpointQosDeclaration(
-                    endpointName,
-                    definition is DelegateEndpointDefinition delegated
-                        ? delegated.OwnerType
-                        : definition.GetType(),
-                    new EndpointTransportQos
-                    {
-                        PrefetchCount = definition.PrefetchCount,
-                        ConcurrentDeliveryLimit = definition.ConcurrentMessageLimit
-                    },
-                    GetQosOwnership(definition)))
-                .ToArray();
-            _transportQos = new EndpointQosTopologyValidator()
-                .Validate(qosDeclarations)
-                .GetValueOrDefault(endpointName, new EndpointTransportQos());
-
-            if (_definitions.All(x => x.ConfigureConsumeTopology))
-                ConfigureConsumeTopology = true;
-            else if (_definitions.All(x => x.ConfigureConsumeTopology == false))
-                ConfigureConsumeTopology = false;
-            else
-            {
-                throw new ConfigurationException(
-                    $"Endpoints are not aligned on ConfigureConsumeTopology: {string.Join(", ", _definitions.Select(x => TypeCache.GetShortName(x.GetType())))}");
-            }
+            throw new ConfigurationException(
+                $"Endpoints are not aligned on ConfigureConsumeTopology: {string.Join(", ", _definitions.Select(x => TypeCache.GetShortName(x.GetType())))}");
         }
+    }
 
-        public bool IsTemporary => _definitions.All(x => x.IsTemporary);
+    public bool IsTemporary => _definitions.All(x => x.IsTemporary);
 
-        public int? PrefetchCount => _transportQos.PrefetchCount;
+    public int? PrefetchCount => _transportQos.PrefetchCount;
 
-        public int? ConcurrentMessageLimit => _transportQos.ConcurrentDeliveryLimit;
+    public int? ConcurrentMessageLimit => _transportQos.ConcurrentDeliveryLimit;
 
-        public bool ConfigureConsumeTopology { get; }
+    public bool ConfigureConsumeTopology { get; }
 
-        public string GetEndpointName(IEndpointNameFormatter formatter)
-        {
-            return _definitions.FirstOrDefault()?.GetEndpointName(formatter);
-        }
+    public string GetEndpointName(IEndpointNameFormatter formatter)
+    {
+        return _definitions.FirstOrDefault()?.GetEndpointName(formatter);
+    }
 
-        public void Configure<T>(T configurator, IRegistrationContext context)
-            where T : IReceiveEndpointConfigurator
-        {
-            foreach (var definition in _definitions)
-                definition.Configure(configurator, context ?? _context);
-        }
+    public void Configure<T>(T configurator, IRegistrationContext context)
+        where T : IReceiveEndpointConfigurator
+    {
+        foreach (var definition in _definitions)
+            definition.Configure(configurator, context ?? _context);
+    }
 
-        EndpointQosOwnership GetQosOwnership(IEndpointDefinition definition)
-        {
-            if (definition is not DelegateEndpointDefinition delegated)
-                return EndpointQosOwnership.Endpoint;
+    EndpointQosOwnership GetQosOwnership(IEndpointDefinition definition)
+    {
+        if (definition is not DelegateEndpointDefinition delegated)
+            return EndpointQosOwnership.Endpoint;
 
-            int owners = _definitions
-                .OfType<DelegateEndpointDefinition>()
-                .Count(candidate => ReferenceEquals(candidate.EndpointDefinition, delegated.EndpointDefinition));
+        int owners = _definitions
+            .OfType<DelegateEndpointDefinition>()
+            .Count(candidate => ReferenceEquals(candidate.EndpointDefinition, delegated.EndpointDefinition));
 
-            return owners > 1
-                ? EndpointQosOwnership.Endpoint
-                : EndpointQosOwnership.ConsumerDefinition;
-        }
+        return owners > 1
+            ? EndpointQosOwnership.Endpoint
+            : EndpointQosOwnership.ConsumerDefinition;
     }
 }

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IBusInstanceBuilder
 {
-    public interface IBusInstanceBuilder
-    {
-        TResult GetBusInstanceType<TBus, TResult>(IBusInstanceBuilderCallback<TBus, TResult> callback)
-            where TBus : class, IBus;
-    }
+    TResult GetBusInstanceType<TBus, TResult>(IBusInstanceBuilderCallback<TBus, TResult> callback)
+        where TBus : class, IBus;
 }

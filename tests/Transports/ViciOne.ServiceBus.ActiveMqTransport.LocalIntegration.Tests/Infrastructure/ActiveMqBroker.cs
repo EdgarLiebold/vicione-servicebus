@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
-
-using Apache.NMS;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Apache.NMS;
 using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class ActiveMqBroker : IDisposable
 {
@@ -66,33 +66,33 @@ internal sealed class ActiveMqBroker : IDisposable
         {
             case OpenWireFlavor:
             case AmqpFlavor:
-            {
-                options = provider.GetValidatedLocalOptions(LocalTestResource.ActiveMq);
-                ActiveMqLocalOptions activeMq = options.LocalInfrastructure!.ActiveMq!;
-                host = activeMq.Host!;
-                port = flavor == OpenWireFlavor
-                    ? activeMq.OpenWirePort!.Value
-                    : activeMq.AmqpPort!.Value;
-                managementPort = activeMq.JolokiaPort!.Value;
-                userName = activeMq.UserName!;
-                password = activeMq.Password!;
-                scheme = flavor == OpenWireFlavor
-                    ? ActiveMqHostAddress.ActiveMqScheme
-                    : ActiveMqHostAddress.AmqpScheme;
-                break;
-            }
+                {
+                    options = provider.GetValidatedLocalOptions(LocalTestResource.ActiveMq);
+                    ActiveMqLocalOptions activeMq = options.LocalInfrastructure!.ActiveMq!;
+                    host = activeMq.Host!;
+                    port = flavor == OpenWireFlavor
+                        ? activeMq.OpenWirePort!.Value
+                        : activeMq.AmqpPort!.Value;
+                    managementPort = activeMq.JolokiaPort!.Value;
+                    userName = activeMq.UserName!;
+                    password = activeMq.Password!;
+                    scheme = flavor == OpenWireFlavor
+                        ? ActiveMqHostAddress.ActiveMqScheme
+                        : ActiveMqHostAddress.AmqpScheme;
+                    break;
+                }
             case ArtemisFlavor:
-            {
-                options = provider.GetValidatedLocalOptions(LocalTestResource.Artemis);
-                ArtemisLocalOptions artemis = options.LocalInfrastructure!.Artemis!;
-                host = artemis.Host!;
-                port = artemis.Port!.Value;
-                managementPort = artemis.JolokiaPort!.Value;
-                userName = artemis.UserName!;
-                password = artemis.Password!;
-                scheme = ActiveMqHostAddress.AmqpScheme;
-                break;
-            }
+                {
+                    options = provider.GetValidatedLocalOptions(LocalTestResource.Artemis);
+                    ArtemisLocalOptions artemis = options.LocalInfrastructure!.Artemis!;
+                    host = artemis.Host!;
+                    port = artemis.Port!.Value;
+                    managementPort = artemis.JolokiaPort!.Value;
+                    userName = artemis.UserName!;
+                    password = artemis.Password!;
+                    scheme = ActiveMqHostAddress.AmqpScheme;
+                    break;
+                }
             default:
                 throw new ArgumentOutOfRangeException(
                     nameof(flavor),

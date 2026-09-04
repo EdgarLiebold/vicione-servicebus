@@ -1,63 +1,61 @@
-namespace ViciOne.ServiceBus.Clients
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Clients;
+
+/// <summary>
+/// A connection to a request which handles a result, and completes the Task when it's received
+/// </summary>
+/// <typeparam name="TResponse"></typeparam>
+public class ResponseHandlerConnectHandle<TResponse> :
+    HandlerConnectHandle<TResponse>
+    where TResponse : class
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly TaskCompletionSource<ConsumeContext<TResponse>> _completed;
+    readonly ConnectHandle _handle;
+    readonly Task _requestTask;
 
-
-    /// <summary>
-    /// A connection to a request which handles a result, and completes the Task when it's received
-    /// </summary>
-    /// <typeparam name="TResponse"></typeparam>
-    public class ResponseHandlerConnectHandle<TResponse> :
-        HandlerConnectHandle<TResponse>
-        where TResponse : class
+    public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
     {
-        readonly TaskCompletionSource<ConsumeContext<TResponse>> _completed;
-        readonly ConnectHandle _handle;
-        readonly Task _requestTask;
+        _handle = handle;
+        _completed = completed;
+        _requestTask = requestTask;
 
-        public ResponseHandlerConnectHandle(ConnectHandle handle, TaskCompletionSource<ConsumeContext<TResponse>> completed, Task requestTask)
-        {
-            _handle = handle;
-            _completed = completed;
-            _requestTask = requestTask;
+        Task = GetTask();
+    }
 
-            Task = GetTask();
-        }
+    public void Dispose()
+    {
+        _handle.Dispose();
+    }
 
-        public void Dispose()
-        {
-            _handle.Dispose();
-        }
+    public void Disconnect()
+    {
+        _handle.Disconnect();
+    }
 
-        public void Disconnect()
-        {
-            _handle.Disconnect();
-        }
+    public void TrySetException(Exception exception)
+    {
+        _completed.TrySetException(exception);
+        _completed.Task.IgnoreUnobservedExceptions();
+    }
 
-        public void TrySetException(Exception exception)
-        {
-            _completed.TrySetException(exception);
-            _completed.Task.IgnoreUnobservedExceptions();
-        }
+    public void TrySetCanceled(CancellationToken cancellationToken)
+    {
+        _completed.TrySetCanceled(cancellationToken);
+        _completed.Task.IgnoreUnobservedExceptions();
+    }
 
-        public void TrySetCanceled(CancellationToken cancellationToken)
-        {
-            _completed.TrySetCanceled(cancellationToken);
-            _completed.Task.IgnoreUnobservedExceptions();
-        }
+    public Task<Response<TResponse>> Task { get; }
 
-        public Task<Response<TResponse>> Task { get; }
+    async Task<Response<TResponse>> GetTask()
+    {
+        await _requestTask.ConfigureAwait(false);
 
-        async Task<Response<TResponse>> GetTask()
-        {
-            await _requestTask.ConfigureAwait(false);
+        ConsumeContext<TResponse> context = await _completed.Task.ConfigureAwait(false);
 
-            ConsumeContext<TResponse> context = await _completed.Task.ConfigureAwait(false);
-
-            return new MessageResponse<TResponse>(context);
-        }
+        return new MessageResponse<TResponse>(context);
     }
 }

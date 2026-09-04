@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.SqlTransport
+using System;
+using System.ComponentModel;
+
+namespace ViciOne.ServiceBus.SqlTransport;
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public static class Defaults
 {
-    using System;
-    using System.ComponentModel;
+    public static TimeSpan LockDuration { get; } = TimeSpan.FromMinutes(5);
+    public static TimeSpan DefaultMessageTimeToLive { get; } = TimeSpan.FromDays(365 + 1);
+    public static TimeSpan ErrorQueueTimeToLive { get; } = TimeSpan.FromDays(14);
 
+    public static TimeSpan AutoDeleteOnIdle { get; } = TimeSpan.FromDays(427);
+    public static TimeSpan TemporaryAutoDeleteOnIdle { get; } = TimeSpan.FromMinutes(5);
+    public static TimeSpan MaxAutoRenewDuration { get; } = TimeSpan.FromMinutes(5);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class Defaults
-    {
-        public static TimeSpan LockDuration { get; } = TimeSpan.FromMinutes(5);
-        public static TimeSpan DefaultMessageTimeToLive { get; } = TimeSpan.FromDays(365 + 1);
-        public static TimeSpan ErrorQueueTimeToLive { get; } = TimeSpan.FromDays(14);
-
-        public static TimeSpan AutoDeleteOnIdle { get; } = TimeSpan.FromDays(427);
-        public static TimeSpan TemporaryAutoDeleteOnIdle { get; } = TimeSpan.FromMinutes(5);
-        public static TimeSpan MaxAutoRenewDuration { get; } = TimeSpan.FromMinutes(5);
-
-        public static TimeSpan SessionIdleTimeout { get; } = TimeSpan.FromSeconds(10);
-        public static TimeSpan ShutdownTimeout { get; } = TimeSpan.FromMilliseconds(100);
-    }
+    public static TimeSpan SessionIdleTimeout { get; } = TimeSpan.FromSeconds(10);
+    public static TimeSpan ShutdownTimeout { get; } = TimeSpan.FromMilliseconds(100);
 }

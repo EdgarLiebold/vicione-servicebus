@@ -1,38 +1,36 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class OrchestratesSagaConnectorFactory<TSaga, TMessage> :
+    ISagaConnectorFactory
+    where TSaga : class, ISaga, Orchestrates<TMessage>
+    where TMessage : class, CorrelatedBy<Guid>
 {
-    using System;
-    using Middleware;
-    using Saga;
+    readonly ISagaMessageConnector<TSaga> _connector;
 
-
-    public class OrchestratesSagaConnectorFactory<TSaga, TMessage> :
-        ISagaConnectorFactory
-        where TSaga : class, ISaga, Orchestrates<TMessage>
-        where TMessage : class, CorrelatedBy<Guid>
+    public OrchestratesSagaConnectorFactory()
     {
-        readonly ISagaMessageConnector<TSaga> _connector;
+        IPipe<ConsumeContext<TMessage>> missingPipe = Pipe.Execute<ConsumeContext<TMessage>>(context =>
+            throw new SagaException("An existing saga instance was not found", typeof(TSaga), typeof(TMessage), context.CorrelationId ?? Guid.Empty));
 
-        public OrchestratesSagaConnectorFactory()
-        {
-            IPipe<ConsumeContext<TMessage>> missingPipe = Pipe.Execute<ConsumeContext<TMessage>>(context =>
-                throw new SagaException("An existing saga instance was not found", typeof(TSaga), typeof(TMessage), context.CorrelationId ?? Guid.Empty));
+        var policy = new AnyExistingSagaPolicy<TSaga, TMessage>(missingPipe);
 
-            var policy = new AnyExistingSagaPolicy<TSaga, TMessage>(missingPipe);
+        var consumeFilter = new OrchestratesSagaMessageFilter<TSaga, TMessage>();
 
-            var consumeFilter = new OrchestratesSagaMessageFilter<TSaga, TMessage>();
+        _connector = new SagaConnector<TSaga, TMessage>.CorrelatedSagaMessageConnector(consumeFilter, policy, x
+            => x.Message
+                .CorrelationId);
+    }
 
-            _connector = new SagaConnector<TSaga, TMessage>.CorrelatedSagaMessageConnector(consumeFilter, policy, x
-                => x.Message
-                    .CorrelationId);
-        }
+    ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
+    {
+        var connector = _connector as ISagaMessageConnector<T>;
+        if (connector == null)
+            throw new ArgumentException("The saga type did not match the connector type");
 
-        ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
-        {
-            var connector = _connector as ISagaMessageConnector<T>;
-            if (connector == null)
-                throw new ArgumentException("The saga type did not match the connector type");
-
-            return connector;
-        }
+        return connector;
     }
 }

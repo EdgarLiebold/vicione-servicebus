@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Configure the execution of the activity and arguments with some tasty middleware.
+/// </summary>
+/// <typeparam name="TLog"></typeparam>
+public interface ICompensateActivityLogConfigurator<TLog> :
+    IPipeConfigurator<CompensateActivityContext<TLog>>,
+    IConsumeConfigurator
+    where TLog : class
 {
-    /// <summary>
-    /// Configure the execution of the activity and arguments with some tasty middleware.
-    /// </summary>
-    /// <typeparam name="TLog"></typeparam>
-    public interface ICompensateActivityLogConfigurator<TLog> :
-        IPipeConfigurator<CompensateActivityContext<TLog>>,
-        IConsumeConfigurator
-        where TLog : class
-    {
-    }
 }

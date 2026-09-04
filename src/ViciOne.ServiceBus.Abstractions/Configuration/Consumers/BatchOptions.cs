@@ -1,166 +1,164 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Batch options are applied to a <see cref="Batch{T}" /> consumer to configure
+/// the size and time limits for each batch.
+/// </summary>
+public class BatchOptions :
+    IOptions,
+    IConfigureReceiveEndpoint,
+    ISpecification
+{
+    /// <summary>
+    /// Override the default receive endpoint configuration done by the batch options
+    /// </summary>
+    public delegate void ConfigurationCallback(string name, IReceiveEndpointConfigurator configurator);
+
+
+    ConfigurationCallback _configurationCallback;
+
+    public BatchOptions()
+    {
+        ConcurrencyLimit = 1;
+        MessageLimit = 10;
+        TimeLimit = TimeSpan.FromSeconds(1);
+        TimeLimitStart = BatchTimeLimitStart.FromFirst;
+
+        _configurationCallback = DefaultConfigurationCallback;
+    }
 
     /// <summary>
-    /// Batch options are applied to a <see cref="Batch{T}" /> consumer to configure
-    /// the size and time limits for each batch.
+    /// The maximum number of messages in a single batch
     /// </summary>
-    public class BatchOptions :
-        IOptions,
-        IConfigureReceiveEndpoint,
-        ISpecification
+    public int MessageLimit { get; set; }
+
+    /// <summary>
+    /// The number of batches which can be executed concurrently
+    /// </summary>
+    public int ConcurrencyLimit { get; set; }
+
+    /// <summary>
+    /// The maximum time to wait before delivering a partial batch
+    /// </summary>
+    public TimeSpan TimeLimit { get; set; }
+
+    /// <summary>
+    /// The starting point for the <see cref="TimeLimit" />
+    /// </summary>
+    public BatchTimeLimitStart TimeLimitStart { get; set; }
+
+    /// <summary>
+    /// The property to group by
+    /// </summary>
+    public object? GroupKeyProvider { get; private set; }
+
+    public void Configure(string name, IReceiveEndpointConfigurator configurator)
     {
-        /// <summary>
-        /// Override the default receive endpoint configuration done by the batch options
-        /// </summary>
-        public delegate void ConfigurationCallback(string name, IReceiveEndpointConfigurator configurator);
+        _configurationCallback(name, configurator);
+    }
 
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (TimeLimit <= TimeSpan.Zero)
+            yield return this.Failure("Batch", "TimeLimit", "Must be > TimeSpan.Zero");
+        if (MessageLimit <= 0)
+            yield return this.Failure("Batch", "MessageLimit", "Must be > 0");
+        if (ConcurrencyLimit <= 0)
+            yield return this.Failure("Batch", "ConcurrencyLimit", "Must be > 0");
+    }
 
-        ConfigurationCallback _configurationCallback;
+    public BatchOptions SetConfigurationCallback(ConfigurationCallback callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
 
-        public BatchOptions()
-        {
-            ConcurrencyLimit = 1;
-            MessageLimit = 10;
-            TimeLimit = TimeSpan.FromSeconds(1);
-            TimeLimitStart = BatchTimeLimitStart.FromFirst;
+        _configurationCallback = callback;
+        return this;
+    }
 
-            _configurationCallback = DefaultConfigurationCallback;
-        }
+    void DefaultConfigurationCallback(string name, IReceiveEndpointConfigurator configurator)
+    {
+        var messageCapacity = ConcurrencyLimit * MessageLimit;
 
-        /// <summary>
-        /// The maximum number of messages in a single batch
-        /// </summary>
-        public int MessageLimit { get; set; }
+        configurator.PrefetchCount = Math.Max(messageCapacity, configurator.PrefetchCount);
 
-        /// <summary>
-        /// The number of batches which can be executed concurrently
-        /// </summary>
-        public int ConcurrencyLimit { get; set; }
+        if (configurator.ConcurrentMessageLimit < messageCapacity)
+            configurator.ConcurrentMessageLimit = messageCapacity;
+    }
 
-        /// <summary>
-        /// The maximum time to wait before delivering a partial batch
-        /// </summary>
-        public TimeSpan TimeLimit { get; set; }
+    /// <summary>
+    /// Sets the maximum number of messages in a single batch
+    /// </summary>
+    /// <param name="limit">The message limit</param>
+    /// <returns></returns>
+    public BatchOptions SetMessageLimit(int limit)
+    {
+        MessageLimit = limit;
+        return this;
+    }
 
-        /// <summary>
-        /// The starting point for the <see cref="TimeLimit" />
-        /// </summary>
-        public BatchTimeLimitStart TimeLimitStart { get; set; }
+    /// <summary>
+    /// Sets the number of batches which can be executed concurrently
+    /// </summary>
+    /// <param name="limit">The message limit</param>
+    public BatchOptions SetConcurrencyLimit(int limit)
+    {
+        ConcurrencyLimit = limit;
+        return this;
+    }
 
-        /// <summary>
-        /// The property to group by
-        /// </summary>
-        public object? GroupKeyProvider { get; private set; }
+    /// <summary>
+    /// Sets the maximum time to wait before delivering a partial batch
+    /// </summary>
+    /// <param name="limit">The message limit</param>
+    public BatchOptions SetTimeLimit(TimeSpan limit)
+    {
+        TimeLimit = limit;
+        return this;
+    }
 
-        public void Configure(string name, IReceiveEndpointConfigurator configurator)
-        {
-            _configurationCallback(name, configurator);
-        }
+    /// <summary>
+    /// Sets the starting point for the <see cref="TimeLimit" />
+    /// </summary>
+    /// <param name="timeLimitStart">The starting point</param>
+    public BatchOptions SetTimeLimitStart(BatchTimeLimitStart timeLimitStart)
+    {
+        TimeLimitStart = timeLimitStart;
+        return this;
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (TimeLimit <= TimeSpan.Zero)
-                yield return this.Failure("Batch", "TimeLimit", "Must be > TimeSpan.Zero");
-            if (MessageLimit <= 0)
-                yield return this.Failure("Batch", "MessageLimit", "Must be > 0");
-            if (ConcurrencyLimit <= 0)
-                yield return this.Failure("Batch", "ConcurrencyLimit", "Must be > 0");
-        }
+    /// <summary>
+    /// Sets the maximum time to wait before delivering a partial batch
+    /// </summary>
+    public BatchOptions SetTimeLimit(int? ms = default, int? s = default, int? m = default, int? h = default, int? d = default)
+    {
+        var timeSpan = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
+        if (timeSpan <= TimeSpan.Zero)
+            throw new ArgumentException("The timeout must be > 0");
 
-        public BatchOptions SetConfigurationCallback(ConfigurationCallback callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
+        TimeLimit = timeSpan;
+        return this;
+    }
 
-            _configurationCallback = callback;
-            return this;
-        }
+    public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty?> provider)
+        where T : class
+        where TProperty : struct
+    {
+        GroupKeyProvider = new ValueTypeGroupKeyProvider<T, TProperty>(provider);
 
-        void DefaultConfigurationCallback(string name, IReceiveEndpointConfigurator configurator)
-        {
-            var messageCapacity = ConcurrencyLimit * MessageLimit;
+        return this;
+    }
 
-            configurator.PrefetchCount = Math.Max(messageCapacity, configurator.PrefetchCount);
+    public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty> provider)
+        where T : class
+        where TProperty : class
+    {
+        GroupKeyProvider = new GroupKeyProvider<T, TProperty>(provider);
 
-            if (configurator.ConcurrentMessageLimit < messageCapacity)
-                configurator.ConcurrentMessageLimit = messageCapacity;
-        }
-
-        /// <summary>
-        /// Sets the maximum number of messages in a single batch
-        /// </summary>
-        /// <param name="limit">The message limit</param>
-        /// <returns></returns>
-        public BatchOptions SetMessageLimit(int limit)
-        {
-            MessageLimit = limit;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the number of batches which can be executed concurrently
-        /// </summary>
-        /// <param name="limit">The message limit</param>
-        public BatchOptions SetConcurrencyLimit(int limit)
-        {
-            ConcurrencyLimit = limit;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the maximum time to wait before delivering a partial batch
-        /// </summary>
-        /// <param name="limit">The message limit</param>
-        public BatchOptions SetTimeLimit(TimeSpan limit)
-        {
-            TimeLimit = limit;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the starting point for the <see cref="TimeLimit" />
-        /// </summary>
-        /// <param name="timeLimitStart">The starting point</param>
-        public BatchOptions SetTimeLimitStart(BatchTimeLimitStart timeLimitStart)
-        {
-            TimeLimitStart = timeLimitStart;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the maximum time to wait before delivering a partial batch
-        /// </summary>
-        public BatchOptions SetTimeLimit(int? ms = default, int? s = default, int? m = default, int? h = default, int? d = default)
-        {
-            var timeSpan = new TimeSpan(d ?? 0, h ?? 0, m ?? 0, s ?? 0, ms ?? 0);
-            if (timeSpan <= TimeSpan.Zero)
-                throw new ArgumentException("The timeout must be > 0");
-
-            TimeLimit = timeSpan;
-            return this;
-        }
-
-        public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty?> provider)
-            where T : class
-            where TProperty : struct
-        {
-            GroupKeyProvider = new ValueTypeGroupKeyProvider<T, TProperty>(provider);
-
-            return this;
-        }
-
-        public BatchOptions GroupBy<T, TProperty>(Func<ConsumeContext<T>, TProperty> provider)
-            where T : class
-            where TProperty : class
-        {
-            GroupKeyProvider = new GroupKeyProvider<T, TProperty>(provider);
-
-            return this;
-        }
+        return this;
     }
 }

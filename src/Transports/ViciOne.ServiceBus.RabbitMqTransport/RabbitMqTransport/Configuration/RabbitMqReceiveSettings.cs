@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using System;
+using System.Collections.Generic;
+using RabbitMQ.Client;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public class RabbitMqReceiveSettings :
+    QueueBindingConfigurator,
+    ReceiveSettings
 {
-    using System;
-    using System.Collections.Generic;
-    using RabbitMQ.Client;
+    readonly IRabbitMqEndpointConfiguration _configuration;
 
-
-    public class RabbitMqReceiveSettings :
-        QueueBindingConfigurator,
-        ReceiveSettings
+    public RabbitMqReceiveSettings(IRabbitMqEndpointConfiguration configuration, string name, string type, bool durable, bool autoDelete)
+        : base(name, type, durable, autoDelete)
     {
-        readonly IRabbitMqEndpointConfiguration _configuration;
+        _configuration = configuration;
 
-        public RabbitMqReceiveSettings(IRabbitMqEndpointConfiguration configuration, string name, string type, bool durable, bool autoDelete)
-            : base(name, type, durable, autoDelete)
-        {
-            _configuration = configuration;
+        ConsumeArguments = new Dictionary<string, object>();
+    }
 
-            ConsumeArguments = new Dictionary<string, object>();
-        }
+    public int ConsumerPriority
+    {
+        set => ConsumeArguments[RabbitMQ.Client.Headers.XPriority] = value;
+    }
 
-        public int ConsumerPriority
-        {
-            set => ConsumeArguments[Headers.XPriority] = value;
-        }
+    public ushort PrefetchCount
+    {
+        get => (ushort)_configuration.Transport.PrefetchCount;
+        set => _configuration.Transport.Configurator.PrefetchCount = value;
+    }
 
-        public ushort PrefetchCount
-        {
-            get => (ushort)_configuration.Transport.PrefetchCount;
-            set => _configuration.Transport.Configurator.PrefetchCount = value;
-        }
+    public bool PurgeOnStartup { get; set; }
+    public bool ExclusiveConsumer { get; set; }
+    public bool NoAck { get; set; }
 
-        public bool PurgeOnStartup { get; set; }
-        public bool ExclusiveConsumer { get; set; }
-        public bool NoAck { get; set; }
+    public bool BindQueue { get; set; } = true;
 
-        public bool BindQueue { get; set; } = true;
+    public IDictionary<string, object> ConsumeArguments { get; }
 
-        public IDictionary<string, object> ConsumeArguments { get; }
+    public string ConsumerTag { get; set; }
 
-        public string ConsumerTag { get; set; }
-
-        public Uri GetInputAddress(Uri hostAddress)
-        {
-            return GetEndpointAddress(hostAddress);
-        }
+    public Uri GetInputAddress(Uri hostAddress)
+    {
+        return GetEndpointAddress(hostAddress);
     }
 }

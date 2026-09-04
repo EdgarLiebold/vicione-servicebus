@@ -1,7 +1,7 @@
-namespace ViciOne.ServiceBus.QuartzIntegration;
-
 using System;
 using Quartz;
+
+namespace ViciOne.ServiceBus.QuartzIntegration;
 
 internal static class QuartzTriggerKey
 {

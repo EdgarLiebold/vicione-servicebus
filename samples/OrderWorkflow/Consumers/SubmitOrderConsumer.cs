@@ -1,6 +1,6 @@
-namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Consumers;
+using ViciOne.ServiceBus.Samples.OrderWorkflow.Contracts;
 
-using Contracts;
+namespace ViciOne.ServiceBus.Samples.OrderWorkflow.Consumers;
 
 public sealed class SubmitOrderConsumer :
     IConsumer<SubmitOrder>

@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.AmazonSqsTransport;
+
 namespace ViciOne.ServiceBus;
-
-using AmazonSqsTransport;
-
 
 public interface IAmazonSqsSendTopology :
     ISendTopology

@@ -1,50 +1,48 @@
-namespace ViciOne.ServiceBus.SignalR.Consumers
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using ViciOne.ServiceBus.SignalR.Contracts;
+using ViciOne.ServiceBus.SignalR.Utils;
+
+namespace ViciOne.ServiceBus.SignalR.Consumers;
+
+public class UserConsumer<THub> :
+    IConsumer<User<THub>>
+    where THub : Hub
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Contracts;
-    using Microsoft.AspNetCore.SignalR;
-    using Utils;
+    readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
 
-
-    public class UserConsumer<THub> :
-        IConsumer<User<THub>>
-        where THub : Hub
+    public UserConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
     {
-        readonly ViciOneServiceBusHubLifetimeManager<THub> _hubLifetimeManager;
+        _hubLifetimeManager = hubLifetimeManager;
+    }
 
-        public UserConsumer(ViciOneServiceBusHubLifetimeManager<THub> hubLifetimeManager)
+    public Task Consume(ConsumeContext<User<THub>> context)
+    {
+        return Handle(context.Message.UserId, context.Message.Messages);
+    }
+
+    async Task Handle(string userId, IReadOnlyDictionary<string, byte[]> messages)
+    {
+        var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
+
+        var userStore = _hubLifetimeManager.Users[userId];
+
+        if (userStore == null || userStore.Count <= 0)
+            return;
+
+        var tasks = new List<Task>(userStore.Count);
+        foreach (var connection in userStore)
+            tasks.Add(connection.WriteAsync(message.Value).AsTask());
+
+        try
         {
-            _hubLifetimeManager = hubLifetimeManager;
+            await Task.WhenAll(tasks);
         }
-
-        public Task Consume(ConsumeContext<User<THub>> context)
+        catch (Exception e)
         {
-            return Handle(context.Message.UserId, context.Message.Messages);
-        }
-
-        async Task Handle(string userId, IReadOnlyDictionary<string, byte[]> messages)
-        {
-            var message = new Lazy<SerializedHubMessage>(messages.ToSerializedHubMessage);
-
-            var userStore = _hubLifetimeManager.Users[userId];
-
-            if (userStore == null || userStore.Count <= 0)
-                return;
-
-            var tasks = new List<Task>(userStore.Count);
-            foreach (var connection in userStore)
-                tasks.Add(connection.WriteAsync(message.Value).AsTask());
-
-            try
-            {
-                await Task.WhenAll(tasks);
-            }
-            catch (Exception e)
-            {
-                LogContext.Warning?.Log(e, "Failed to write message");
-            }
+            LogContext.Warning?.Log(e, "Failed to write message");
         }
     }
 }

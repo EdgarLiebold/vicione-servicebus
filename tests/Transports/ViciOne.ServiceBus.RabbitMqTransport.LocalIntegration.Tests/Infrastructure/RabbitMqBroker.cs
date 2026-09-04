@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.Infrastructure;
-
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -7,6 +5,8 @@ using System.Text.Json;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class RabbitMqBroker : IDisposable
 {

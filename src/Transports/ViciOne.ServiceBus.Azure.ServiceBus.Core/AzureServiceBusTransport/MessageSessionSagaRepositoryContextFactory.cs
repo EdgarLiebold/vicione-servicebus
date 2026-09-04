@@ -1,39 +1,37 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class MessageSessionSagaRepositoryContextFactory<TSaga> :
+    ISagaRepositoryContextFactory<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
-    using Saga;
+    readonly ISagaConsumeContextFactory<MessageSessionContext, TSaga> _factory;
 
-
-    public class MessageSessionSagaRepositoryContextFactory<TSaga> :
-        ISagaRepositoryContextFactory<TSaga>
-        where TSaga : class, ISaga
+    public MessageSessionSagaRepositoryContextFactory(ISagaConsumeContextFactory<MessageSessionContext, TSaga> factory)
     {
-        readonly ISagaConsumeContextFactory<MessageSessionContext, TSaga> _factory;
+        _factory = factory;
+    }
 
-        public MessageSessionSagaRepositoryContextFactory(ISagaConsumeContextFactory<MessageSessionContext, TSaga> factory)
-        {
-            _factory = factory;
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.Add("persistence", "azure-service-bus-message-session");
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.Add("persistence", "azure-service-bus-message-session");
-        }
+    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+        where T : class
+    {
+        var repositoryContext = new MessageSessionSagaRepositoryContext<TSaga, T>(context, _factory);
 
-        public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
-            where T : class
-        {
-            var repositoryContext = new MessageSessionSagaRepositoryContext<TSaga, T>(context, _factory);
+        await next.Send(repositoryContext).ConfigureAwait(false);
+    }
 
-            await next.Send(repositoryContext).ConfigureAwait(false);
-        }
-
-        public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
-            where T : class
-        {
-            throw new NotImplementedException(
-                $"Query-based saga correlation is not available when using the MessageSession-based saga repository: {TypeCache<TSaga>.ShortName}");
-        }
+    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+        where T : class
+    {
+        throw new NotImplementedException(
+            $"Query-based saga correlation is not available when using the MessageSession-based saga repository: {TypeCache<TSaga>.ShortName}");
     }
 }

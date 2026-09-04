@@ -1,7 +1,7 @@
+using System;
+
 #nullable enable
 namespace ViciOne.ServiceBus.Testing;
-
-using System;
 
 public enum StateMachineEventExecutionStatus
 {

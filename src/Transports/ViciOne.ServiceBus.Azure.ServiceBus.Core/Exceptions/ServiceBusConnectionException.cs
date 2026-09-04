@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public class ServiceBusConnectionException :
+    ConnectionException
 {
-    using System;
-
-
-    public class ServiceBusConnectionException :
-        ConnectionException
+    public ServiceBusConnectionException()
     {
-        public ServiceBusConnectionException()
-        {
-        }
+    }
 
-        public ServiceBusConnectionException(string message)
-            : base(message)
-        {
-        }
+    public ServiceBusConnectionException(string message)
+        : base(message)
+    {
+    }
 
-        public ServiceBusConnectionException(string message, Exception innerException)
-            : base(message, innerException, IsExceptionTransient(innerException))
-        {
-        }
+    public ServiceBusConnectionException(string message, Exception innerException)
+        : base(message, innerException, IsExceptionTransient(innerException))
+    {
+    }
 
-        static bool IsExceptionTransient(Exception exception)
+    static bool IsExceptionTransient(Exception exception)
+    {
+        return exception switch
         {
-            return exception switch
-            {
-                UnauthorizedAccessException _ => false,
-                _ => true
-            };
-        }
+            UnauthorizedAccessException _ => false,
+            _ => true
+        };
     }
 }

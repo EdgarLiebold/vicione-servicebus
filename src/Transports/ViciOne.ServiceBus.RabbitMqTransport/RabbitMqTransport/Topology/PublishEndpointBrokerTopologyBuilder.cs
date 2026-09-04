@@ -1,23 +1,55 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class PublishEndpointBrokerTopologyBuilder :
+    BrokerTopologyBuilder,
+    IPublishEndpointBrokerTopologyBuilder
 {
-    using System.Collections.Generic;
+    readonly PublishBrokerTopologyOptions _options;
+
+    public PublishEndpointBrokerTopologyBuilder(PublishBrokerTopologyOptions options = PublishBrokerTopologyOptions.FlattenHierarchy)
+    {
+        _options = options;
+    }
+
+    /// <summary>
+    /// The exchange to which the published message is sent
+    /// </summary>
+    public ExchangeHandle Exchange { get; set; }
+
+    public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
+    {
+        if (_options.HasFlag(PublishBrokerTopologyOptions.MaintainHierarchy))
+            return new ImplementedBuilder(this, _options);
+
+        return this;
+    }
 
 
-    public class PublishEndpointBrokerTopologyBuilder :
-        BrokerTopologyBuilder,
+    class ImplementedBuilder :
         IPublishEndpointBrokerTopologyBuilder
     {
+        readonly IPublishEndpointBrokerTopologyBuilder _builder;
         readonly PublishBrokerTopologyOptions _options;
+        ExchangeHandle _exchange;
 
-        public PublishEndpointBrokerTopologyBuilder(PublishBrokerTopologyOptions options = PublishBrokerTopologyOptions.FlattenHierarchy)
+        public ImplementedBuilder(IPublishEndpointBrokerTopologyBuilder builder, PublishBrokerTopologyOptions options)
         {
+            _builder = builder;
             _options = options;
         }
 
-        /// <summary>
-        /// The exchange to which the published message is sent
-        /// </summary>
-        public ExchangeHandle Exchange { get; set; }
+        public ExchangeHandle Exchange
+        {
+            get => _exchange;
+            set
+            {
+                _exchange = value;
+                if (_builder.Exchange != null)
+                    _builder.ExchangeBind(_builder.Exchange, _exchange, "", new Dictionary<string, object>());
+            }
+        }
 
         public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
         {
@@ -27,59 +59,25 @@ namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
             return this;
         }
 
-
-        class ImplementedBuilder :
-            IPublishEndpointBrokerTopologyBuilder
+        public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
         {
-            readonly IPublishEndpointBrokerTopologyBuilder _builder;
-            readonly PublishBrokerTopologyOptions _options;
-            ExchangeHandle _exchange;
+            return _builder.ExchangeDeclare(name, type, durable, autoDelete, arguments);
+        }
 
-            public ImplementedBuilder(IPublishEndpointBrokerTopologyBuilder builder, PublishBrokerTopologyOptions options)
-            {
-                _builder = builder;
-                _options = options;
-            }
+        public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey,
+            IDictionary<string, object> arguments)
+        {
+            return _builder.ExchangeBind(source, destination, routingKey, arguments);
+        }
 
-            public ExchangeHandle Exchange
-            {
-                get => _exchange;
-                set
-                {
-                    _exchange = value;
-                    if (_builder.Exchange != null)
-                        _builder.ExchangeBind(_builder.Exchange, _exchange, "", new Dictionary<string, object>());
-                }
-            }
+        public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
+        {
+            return _builder.QueueDeclare(name, durable, autoDelete, exclusive, arguments);
+        }
 
-            public IPublishEndpointBrokerTopologyBuilder CreateImplementedBuilder()
-            {
-                if (_options.HasFlag(PublishBrokerTopologyOptions.MaintainHierarchy))
-                    return new ImplementedBuilder(this, _options);
-
-                return this;
-            }
-
-            public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
-            {
-                return _builder.ExchangeDeclare(name, type, durable, autoDelete, arguments);
-            }
-
-            public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey,
-                IDictionary<string, object> arguments)
-            {
-                return _builder.ExchangeBind(source, destination, routingKey, arguments);
-            }
-
-            public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
-            {
-                return _builder.QueueDeclare(name, durable, autoDelete, exclusive, arguments);
-            }
-
-            public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments)
-            {
-                return _builder.QueueBind(exchange, queue, routingKey, arguments);
-            }
+        public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments)
+        {
+            return _builder.QueueBind(exchange, queue, routingKey, arguments);
         }
     }
 }

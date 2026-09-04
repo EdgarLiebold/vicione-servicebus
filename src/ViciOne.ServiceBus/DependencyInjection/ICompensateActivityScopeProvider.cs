@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface ICompensateActivityScopeProvider<TActivity, TLog> :
+    IProbeSite
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    using System.Threading.Tasks;
+    ValueTask<ICompensateScopeContext<TLog>> GetScope(CompensateContext<TLog> context);
 
-
-    public interface ICompensateActivityScopeProvider<TActivity, TLog> :
-        IProbeSite
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
-    {
-        ValueTask<ICompensateScopeContext<TLog>> GetScope(CompensateContext<TLog> context);
-
-        ValueTask<ICompensateActivityScopeContext<TActivity, TLog>> GetActivityScope(CompensateContext<TLog> context);
-    }
+    ValueTask<ICompensateActivityScopeContext<TActivity, TLog>> GetActivityScope(CompensateContext<TLog> context);
 }

@@ -1,39 +1,37 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class TestReceiveEndpointObserver :
+    IReceiveEndpointObserver
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IPublishObserver _publishObserver;
 
-
-    public class TestReceiveEndpointObserver :
-        IReceiveEndpointObserver
+    public TestReceiveEndpointObserver(IPublishObserver publishObserver)
     {
-        readonly IPublishObserver _publishObserver;
+        _publishObserver = publishObserver ?? throw new ArgumentNullException(nameof(publishObserver));
+    }
 
-        public TestReceiveEndpointObserver(IPublishObserver publishObserver)
-        {
-            _publishObserver = publishObserver ?? throw new ArgumentNullException(nameof(publishObserver));
-        }
+    public Task Ready(ReceiveEndpointReady ready)
+    {
+        ready.ReceiveEndpoint.ConnectPublishObserver(_publishObserver);
 
-        public Task Ready(ReceiveEndpointReady ready)
-        {
-            ready.ReceiveEndpoint.ConnectPublishObserver(_publishObserver);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public Task Stopping(ReceiveEndpointStopping stopping)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task Stopping(ReceiveEndpointStopping stopping)
-        {
-            return Task.CompletedTask;
-        }
+    public Task Completed(ReceiveEndpointCompleted completed)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task Completed(ReceiveEndpointCompleted completed)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task Faulted(ReceiveEndpointFaulted faulted)
-        {
-            return Task.CompletedTask;
-        }
+    public Task Faulted(ReceiveEndpointFaulted faulted)
+    {
+        return Task.CompletedTask;
     }
 }

@@ -1,73 +1,71 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class BindPipeSpecification<TLeft, TRight> :
+    IPipeSpecification<TLeft>,
+    IBindConfigurator<TLeft, TRight>
+    where TLeft : class, PipeContext
+    where TRight : class, PipeContext
 {
-    using System.Collections.Generic;
-    using Context;
-    using Middleware;
+    readonly IPipeConfigurator<TLeft> _contextPipeConfigurator;
+    readonly IBuildPipeConfigurator<BindContext<TLeft, TRight>> _pipeConfigurator;
+    readonly IPipeContextSource<TRight, TLeft> _source;
 
-
-    public class BindPipeSpecification<TLeft, TRight> :
-        IPipeSpecification<TLeft>,
-        IBindConfigurator<TLeft, TRight>
-        where TLeft : class, PipeContext
-        where TRight : class, PipeContext
+    public BindPipeSpecification(IPipeContextSource<TRight, TLeft> source)
     {
-        readonly IPipeConfigurator<TLeft> _contextPipeConfigurator;
-        readonly IBuildPipeConfigurator<BindContext<TLeft, TRight>> _pipeConfigurator;
-        readonly IPipeContextSource<TRight, TLeft> _source;
+        _source = source;
+        _pipeConfigurator = new PipeConfigurator<BindContext<TLeft, TRight>>();
+        _contextPipeConfigurator = new ContextPipeConfigurator(_pipeConfigurator);
+    }
 
-        public BindPipeSpecification(IPipeContextSource<TRight, TLeft> source)
+    IPipeConfigurator<TLeft> IBindConfigurator<TLeft, TRight>.ContextPipe => _contextPipeConfigurator;
+
+    void IPipeConfigurator<BindContext<TLeft, TRight>>.AddPipeSpecification(IPipeSpecification<BindContext<TLeft, TRight>> specification)
+    {
+        _pipeConfigurator.AddPipeSpecification(specification);
+    }
+
+    void IPipeSpecification<TLeft>.Apply(IPipeBuilder<TLeft> builder)
+    {
+        IPipe<BindContext<TLeft, TRight>> pipe = _pipeConfigurator.Build();
+
+        var bindFilter = new PipeContextSourceBindFilter<TLeft, TRight>(pipe, _source);
+
+        builder.AddFilter(bindFilter);
+    }
+
+    IEnumerable<ValidationResult> ISpecification.Validate()
+    {
+        if (_source == null)
+            yield return this.Failure("PipeContextSource", "must not be null");
+
+        foreach (var result in _pipeConfigurator.Validate())
+            yield return result;
+    }
+
+
+    class ContextPipeConfigurator :
+        IPipeConfigurator<TLeft>
+    {
+        readonly IPipeConfigurator<BindContext<TLeft, TRight>> _configurator;
+
+        public ContextPipeConfigurator(IPipeConfigurator<BindContext<TLeft, TRight>> configurator)
         {
-            _source = source;
-            _pipeConfigurator = new PipeConfigurator<BindContext<TLeft, TRight>>();
-            _contextPipeConfigurator = new ContextPipeConfigurator(_pipeConfigurator);
+            _configurator = configurator;
         }
 
-        IPipeConfigurator<TLeft> IBindConfigurator<TLeft, TRight>.ContextPipe => _contextPipeConfigurator;
-
-        void IPipeConfigurator<BindContext<TLeft, TRight>>.AddPipeSpecification(IPipeSpecification<BindContext<TLeft, TRight>> specification)
+        public void AddPipeSpecification(IPipeSpecification<TLeft> specification)
         {
-            _pipeConfigurator.AddPipeSpecification(specification);
-        }
-
-        void IPipeSpecification<TLeft>.Apply(IPipeBuilder<TLeft> builder)
-        {
-            IPipe<BindContext<TLeft, TRight>> pipe = _pipeConfigurator.Build();
-
-            var bindFilter = new PipeContextSourceBindFilter<TLeft, TRight>(pipe, _source);
-
-            builder.AddFilter(bindFilter);
-        }
-
-        IEnumerable<ValidationResult> ISpecification.Validate()
-        {
-            if (_source == null)
-                yield return this.Failure("PipeContextSource", "must not be null");
-
-            foreach (var result in _pipeConfigurator.Validate())
-                yield return result;
-        }
-
-
-        class ContextPipeConfigurator :
-            IPipeConfigurator<TLeft>
-        {
-            readonly IPipeConfigurator<BindContext<TLeft, TRight>> _configurator;
-
-            public ContextPipeConfigurator(IPipeConfigurator<BindContext<TLeft, TRight>> configurator)
+            BindContext<TLeft, TRight> ContextProvider(BindContext<TLeft, TRight> input, TLeft context)
             {
-                _configurator = configurator;
+                return context as BindContext<TLeft, TRight> ?? new BindContextProxy<TLeft, TRight>(context, input.Right);
             }
 
-            public void AddPipeSpecification(IPipeSpecification<TLeft> specification)
-            {
-                BindContext<TLeft, TRight> ContextProvider(BindContext<TLeft, TRight> input, TLeft context)
-                {
-                    return context as BindContext<TLeft, TRight> ?? new BindContextProxy<TLeft, TRight>(context, input.Right);
-                }
-
-                _configurator.AddPipeSpecification(new PipeConfigurator<BindContext<TLeft, TRight>>.SplitFilterPipeSpecification<TLeft>(specification,
-                    ContextProvider, context => context.Left));
-            }
+            _configurator.AddPipeSpecification(new PipeConfigurator<BindContext<TLeft, TRight>>.SplitFilterPipeSpecification<TLeft>(specification,
+                ContextProvider, context => context.Left));
         }
     }
 }

@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus;
+
+public interface IPipeConnectorSpecification :
+    ISpecification
 {
-    using Middleware;
-
-
-    public interface IPipeConnectorSpecification :
-        ISpecification
-    {
-        void Connect(IPipeConnector connector);
-    }
+    void Connect(IPipeConnector connector);
 }

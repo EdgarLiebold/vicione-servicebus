@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class SetScopedConsumeContext :
+    ISetScopedConsumeContext
 {
-    using System;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly Func<IServiceProvider, IScopedConsumeContextProvider> _setterProvider;
 
-
-    public class SetScopedConsumeContext :
-        ISetScopedConsumeContext
+    public SetScopedConsumeContext(Func<IServiceProvider, IScopedConsumeContextProvider> setterProvider)
     {
-        readonly Func<IServiceProvider, IScopedConsumeContextProvider> _setterProvider;
-
-        public SetScopedConsumeContext(Func<IServiceProvider, IScopedConsumeContextProvider> setterProvider)
-        {
-            _setterProvider = setterProvider;
-        }
-
-        public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
-        {
-            return _setterProvider(scope.ServiceProvider).PushContext(context);
-        }
+        _setterProvider = setterProvider;
     }
 
-
-    public class SetScopedConsumeContext<TBus> :
-        ISetScopedConsumeContext
-        where TBus : class, IBus
+    public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
     {
-        readonly Func<IServiceProvider, IScopedConsumeContextProvider> _setterProvider;
+        return _setterProvider(scope.ServiceProvider).PushContext(context);
+    }
+}
 
-        public SetScopedConsumeContext(Func<IServiceProvider, IScopedConsumeContextProvider> setterProvider)
-        {
-            _setterProvider = setterProvider;
-        }
 
-        public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
-        {
-            return _setterProvider(scope.ServiceProvider).PushContext(context);
-        }
+public class SetScopedConsumeContext<TBus> :
+    ISetScopedConsumeContext
+    where TBus : class, IBus
+{
+    readonly Func<IServiceProvider, IScopedConsumeContextProvider> _setterProvider;
+
+    public SetScopedConsumeContext(Func<IServiceProvider, IScopedConsumeContextProvider> setterProvider)
+    {
+        _setterProvider = setterProvider;
+    }
+
+    public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
+    {
+        return _setterProvider(scope.ServiceProvider).PushContext(context);
     }
 }

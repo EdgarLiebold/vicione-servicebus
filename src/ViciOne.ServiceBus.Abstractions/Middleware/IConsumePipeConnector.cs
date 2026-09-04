@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus
-{
-    public interface IConsumePipeConnector
-    {
-        ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
-            where T : class;
+namespace ViciOne.ServiceBus;
 
-        ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-            where T : class;
-    }
+public interface IConsumePipeConnector
+{
+    ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+        where T : class;
+
+    ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+        where T : class;
 }

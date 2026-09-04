@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using Amazon.SimpleNotificationService.Model;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class SnsHeaderValueConverter :
     IHeaderValueConverter<MessageAttributeValue>

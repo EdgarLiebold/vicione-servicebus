@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class PartitionFilter<TContext> :
+    IFilter<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IPartitioner<TContext> _partitioner;
 
-
-    public class PartitionFilter<TContext> :
-        IFilter<TContext>
-        where TContext : class, PipeContext
+    public PartitionFilter(PartitionKeyProvider<TContext> keyProvider, IPartitioner partitioner)
     {
-        readonly IPartitioner<TContext> _partitioner;
+        ArgumentNullException.ThrowIfNull(keyProvider);
+        ArgumentNullException.ThrowIfNull(partitioner);
 
-        public PartitionFilter(PartitionKeyProvider<TContext> keyProvider, IPartitioner partitioner)
-        {
-            ArgumentNullException.ThrowIfNull(keyProvider);
-            ArgumentNullException.ThrowIfNull(partitioner);
+        _partitioner = partitioner.GetPartitioner(keyProvider);
+    }
 
-            _partitioner = partitioner.GetPartitioner(keyProvider);
-        }
+    Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
+    {
+        return _partitioner.Send(context, next);
+    }
 
-        Task IFilter<TContext>.Send(TContext context, IPipe<TContext> next)
-        {
-            return _partitioner.Send(context, next);
-        }
-
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("partition");
-            _partitioner.Probe(scope);
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("partition");
+        _partitioner.Probe(scope);
     }
 }

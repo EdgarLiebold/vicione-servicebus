@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface IScopedBusContextProvider<TBus>
+    where TBus : class, IBus
 {
-    public interface IScopedBusContextProvider<TBus>
-        where TBus : class, IBus
-    {
-        ScopedBusContext Context { get; }
-    }
+    ScopedBusContext Context { get; }
 }

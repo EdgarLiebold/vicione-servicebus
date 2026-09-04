@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.Util.Scanning
+using System;
+
+namespace ViciOne.ServiceBus.Util.Scanning;
+
+public class AssemblyScanRecord
 {
-    using System;
+    public Exception LoadException;
+    public string Name;
 
-
-    public class AssemblyScanRecord
+    public override string ToString()
     {
-        public Exception LoadException;
-        public string Name;
-
-        public override string ToString()
-        {
-            return LoadException == null ? Name : $"{Name} (Failed)";
-        }
+        return LoadException == null ? Name : $"{Name} (Failed)";
     }
 }

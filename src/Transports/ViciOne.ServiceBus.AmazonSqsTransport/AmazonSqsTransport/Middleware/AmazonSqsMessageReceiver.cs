@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,12 +9,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Middleware;
-using Transports;
-using Util;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 /// <summary>
 /// Receives messages from AmazonSQS, pushing them to the InboundPipe of the service endpoint.
 /// </summary>

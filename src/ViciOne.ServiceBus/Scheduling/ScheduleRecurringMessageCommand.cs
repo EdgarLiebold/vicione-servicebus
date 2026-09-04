@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public class ScheduleRecurringMessageCommand<T> :
+    ScheduleRecurringMessage
+    where T : class
 {
-    using System;
-
-
-    public class ScheduleRecurringMessageCommand<T> :
-        ScheduleRecurringMessage
-        where T : class
+    public ScheduleRecurringMessageCommand(RecurringSchedule schedule, Uri destination, T payload)
     {
-        public ScheduleRecurringMessageCommand(RecurringSchedule schedule, Uri destination, T payload)
-        {
-            Schedule = schedule;
+        Schedule = schedule;
 
-            Destination = destination;
-            Payload = payload;
+        Destination = destination;
+        Payload = payload;
 
-            PayloadType = MessageTypeCache<T>.MessageTypeNames;
-        }
-
-        public RecurringSchedule Schedule { get; private set; }
-        public string[] PayloadType { get; private set; }
-        public Uri Destination { get; private set; }
-        public object Payload { get; private set; }
-
-        public override string ToString()
-        {
-            return
-                $"Group: {Schedule.ScheduleGroup}, Id: {Schedule.ScheduleId}, StartTime: {Schedule.StartTime}, EndTime: {Schedule.EndTime}, CronExpression: {Schedule.CronExpression}, TimeZone: {Schedule.TimeZoneId}";
-        }
+        PayloadType = MessageTypeCache<T>.MessageTypeNames;
     }
 
+    public RecurringSchedule Schedule { get; private set; }
+    public string[] PayloadType { get; private set; }
+    public Uri Destination { get; private set; }
+    public object Payload { get; private set; }
 
-    public class ScheduleRecurringMessageCommand :
-        ScheduleRecurringMessage
+    public override string ToString()
     {
-        public RecurringSchedule Schedule { get; set; }
-        public string[] PayloadType { get; set; }
-        public Uri Destination { get; set; }
-        public object Payload { get; set; }
+        return
+            $"Group: {Schedule.ScheduleGroup}, Id: {Schedule.ScheduleId}, StartTime: {Schedule.StartTime}, EndTime: {Schedule.EndTime}, CronExpression: {Schedule.CronExpression}, TimeZone: {Schedule.TimeZoneId}";
     }
+}
+
+
+public class ScheduleRecurringMessageCommand :
+    ScheduleRecurringMessage
+{
+    public RecurringSchedule Schedule { get; set; }
+    public string[] PayloadType { get; set; }
+    public Uri Destination { get; set; }
+    public object Payload { get; set; }
 }

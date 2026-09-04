@@ -2030,7 +2030,7 @@ The frozen set is exactly 95 SQS/SNS obligations (`OBL-R0-CLOUD-0161..0246` plus
 Amazon S3 obligations (`OBL-R0-PER-0600..0605`). Thirty are hermetic UnitArchitecture contracts,
 seventy were initially classified LocalIntegration and eleven require or originally claimed real
 AWS. The final carrier/disposition projection is frozen separately in
-`.testagent/aws-native-obligation-map.tsv`; no inherited test name or project structure is treated
+`evidence/native-tests/obligation-maps/aws-native-obligation-map.tsv`; no inherited test name or project structure is treated
 as the target design.
 
 ### Provider boundary
@@ -2199,7 +2199,7 @@ used by those tests, the canonical broker runner, its outage protocol, the Compo
 113 selected R0 obligations were read. The selected set is `OBL-R0-BLD-0095` plus
 `OBL-R0-BRK-0355..0466`; it expands to 179 inherited execution identities (178 broker variants plus
 the one runner/build obligation). The exact terminal
-projection is frozen in `.testagent/activemq-native-obligation-map.tsv`: 40 UnitArchitecture and 73
+projection is frozen in `evidence/native-tests/obligation-maps/activemq-native-obligation-map.tsv`: 40 UnitArchitecture and 73
 LocalIntegration obligations, all with executing native carriers. Changes of profile are deliberate:
 URI composition is hermetic, while product compression is proven through the real broker rather
 than by retesting third-party compression libraries.

@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class NamedEndpointDefinition :
+    DefaultEndpointDefinition
 {
-    public class NamedEndpointDefinition :
-        DefaultEndpointDefinition
+    readonly string _endpointName;
+
+    public NamedEndpointDefinition(string endpointName)
     {
-        readonly string _endpointName;
+        _endpointName = endpointName;
+    }
 
-        public NamedEndpointDefinition(string endpointName)
-        {
-            _endpointName = endpointName;
-        }
-
-        public override string GetEndpointName(IEndpointNameFormatter formatter)
-        {
-            return _endpointName;
-        }
+    public override string GetEndpointName(IEndpointNameFormatter formatter)
+    {
+        return _endpointName;
     }
 }

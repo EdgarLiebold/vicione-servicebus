@@ -1,20 +1,19 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CompensateActivityLogConfigurator<TActivity, TLog> :
+    ICompensateActivityLogConfigurator<TLog>
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    public class CompensateActivityLogConfigurator<TActivity, TLog> :
-        ICompensateActivityLogConfigurator<TLog>
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
+    readonly IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> _configurator;
+
+    public CompensateActivityLogConfigurator(IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator)
     {
-        readonly IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> _configurator;
+        _configurator = configurator;
+    }
 
-        public CompensateActivityLogConfigurator(IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator)
-        {
-            _configurator = configurator;
-        }
-
-        public void AddPipeSpecification(IPipeSpecification<CompensateActivityContext<TLog>> specification)
-        {
-            _configurator.AddPipeSpecification(specification);
-        }
+    public void AddPipeSpecification(IPipeSpecification<CompensateActivityContext<TLog>> specification)
+    {
+        _configurator.AddPipeSpecification(specification);
     }
 }

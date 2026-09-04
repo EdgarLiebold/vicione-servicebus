@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Internals
+using System;
+
+namespace ViciOne.ServiceBus.Internals;
+
+internal interface IWriteProperty<in T, in TProperty> :
+    IWriteProperty<T>
+    where T : class
 {
-    using System;
+    void Set(T entity, TProperty value);
+}
 
 
-    internal interface IWriteProperty<in T, in TProperty> :
-        IWriteProperty<T>
-        where T : class
-    {
-        void Set(T entity, TProperty value);
-    }
-
-
-    internal interface IWriteProperty<in T>
-        where T : class
-    {
-        Type TargetType { get; }
-    }
+internal interface IWriteProperty<in T>
+    where T : class
+{
+    Type TargetType { get; }
 }

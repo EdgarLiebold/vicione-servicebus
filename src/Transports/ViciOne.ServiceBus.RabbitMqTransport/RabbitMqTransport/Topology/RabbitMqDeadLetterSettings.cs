@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System.Collections.Generic;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class RabbitMqDeadLetterSettings :
+    QueueBindingConfigurator,
+    DeadLetterSettings
 {
-    using System.Collections.Generic;
-    using Configuration;
-
-
-    public class RabbitMqDeadLetterSettings :
-        QueueBindingConfigurator,
-        DeadLetterSettings
+    public RabbitMqDeadLetterSettings(ReceiveSettings source, string name)
+        : base(name, source.ExchangeType, source.Durable, source.AutoDelete)
     {
-        public RabbitMqDeadLetterSettings(ReceiveSettings source, string name)
-            : base(name, source.ExchangeType, source.Durable, source.AutoDelete)
-        {
-            QueueName = name;
+        QueueName = name;
 
-            foreach (KeyValuePair<string, object> argument in source.ExchangeArguments)
-                SetExchangeArgument(argument.Key, argument.Value);
+        foreach (KeyValuePair<string, object> argument in source.ExchangeArguments)
+            SetExchangeArgument(argument.Key, argument.Value);
 
-            foreach (KeyValuePair<string, object> argument in source.QueueArguments)
-                SetQueueArgument(argument.Key, argument.Value);
-        }
+        foreach (KeyValuePair<string, object> argument in source.QueueArguments)
+            SetQueueArgument(argument.Key, argument.Value);
+    }
 
-        public BrokerTopology GetBrokerTopology()
-        {
-            var builder = new PublishEndpointBrokerTopologyBuilder();
+    public BrokerTopology GetBrokerTopology()
+    {
+        var builder = new PublishEndpointBrokerTopologyBuilder();
 
-            builder.Exchange = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);
+        builder.Exchange = builder.ExchangeDeclare(ExchangeName, ExchangeType, Durable, AutoDelete, ExchangeArguments);
 
-            var queue = builder.QueueDeclare(QueueName, Durable, !QueueExpiration.HasValue && AutoDelete, false, QueueArguments);
+        var queue = builder.QueueDeclare(QueueName, Durable, !QueueExpiration.HasValue && AutoDelete, false, QueueArguments);
 
-            builder.QueueBind(builder.Exchange, queue, RoutingKey, BindingArguments);
+        builder.QueueBind(builder.Exchange, queue, RoutingKey, BindingArguments);
 
-            return builder.BuildBrokerTopology();
-        }
+        return builder.BuildBrokerTopology();
     }
 }

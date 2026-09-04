@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
-
 using System.Transactions;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Middleware;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 
 public sealed class TransactionFilterTestDriver
 {

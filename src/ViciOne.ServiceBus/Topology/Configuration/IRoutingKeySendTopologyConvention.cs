@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IRoutingKeySendTopologyConvention :
+    ISendTopologyConvention
 {
-    public interface IRoutingKeySendTopologyConvention :
-        ISendTopologyConvention
-    {
-    }
 }

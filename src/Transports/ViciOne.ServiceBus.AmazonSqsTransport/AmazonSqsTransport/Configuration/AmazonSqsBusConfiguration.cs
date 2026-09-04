@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using ViciOne.ServiceBus.Configuration;
-using Observables;
+using ViciOne.ServiceBus.Observables;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsBusConfiguration :
     AmazonSqsEndpointConfiguration,

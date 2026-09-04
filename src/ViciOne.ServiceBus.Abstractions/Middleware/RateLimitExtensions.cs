@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Contracts;
+
+namespace ViciOne.ServiceBus;
+
+public static class RateLimitExtensions
 {
-    using System.Threading.Tasks;
-    using Contracts;
-
-
-    public static class RateLimitExtensions
+    public static Task SetRateLimit(this IPipe<CommandContext> pipe, int rateLimit)
     {
-        public static Task SetRateLimit(this IPipe<CommandContext> pipe, int rateLimit)
+        return pipe.SendCommand<SetRateLimit>(new Limit(rateLimit));
+    }
+
+
+    class Limit :
+        SetRateLimit
+    {
+        public Limit(int rateLimit)
         {
-            return pipe.SendCommand<SetRateLimit>(new Limit(rateLimit));
+            RateLimit = rateLimit;
         }
 
-
-        class Limit :
-            SetRateLimit
-        {
-            public Limit(int rateLimit)
-            {
-                RateLimit = rateLimit;
-            }
-
-            public int RateLimit { get; }
-        }
+        public int RateLimit { get; }
     }
 }

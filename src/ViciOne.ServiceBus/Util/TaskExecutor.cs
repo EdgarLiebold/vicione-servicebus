@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.Util;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +5,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-
+namespace ViciOne.ServiceBus.Util;
 /// <summary>
 /// Executes asynchronous work with bounded backpressure and a fixed concurrency limit.
 /// </summary>

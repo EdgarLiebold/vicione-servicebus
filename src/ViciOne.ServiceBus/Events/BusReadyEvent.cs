@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus.Events
+namespace ViciOne.ServiceBus.Events;
+
+public class BusReadyEvent :
+    BusReady
 {
-    public class BusReadyEvent :
-        BusReady
+    public BusReadyEvent(HostReady host, IBus bus)
     {
-        public BusReadyEvent(HostReady host, IBus bus)
-        {
-            Host = host;
-            Bus = bus;
-        }
-
-        public IBus Bus { get; }
-
-        public HostReady Host { get; }
+        Host = host;
+        Bus = bus;
     }
+
+    public IBus Bus { get; }
+
+    public HostReady Host { get; }
 }

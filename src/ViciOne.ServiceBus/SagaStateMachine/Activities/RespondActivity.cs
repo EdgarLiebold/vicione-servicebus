@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class RespondActivity<TSaga, TMessage, T> :
+    IStateMachineActivity<TSaga, TMessage>
+    where TSaga : class, SagaStateMachineInstance
+    where TMessage : class
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> _messageFactory;
 
-
-    public class RespondActivity<TSaga, TMessage, T> :
-        IStateMachineActivity<TSaga, TMessage>
-        where TSaga : class, SagaStateMachineInstance
-        where TMessage : class
-        where T : class
+    public RespondActivity(ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> messageFactory)
     {
-        readonly ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> _messageFactory;
+        _messageFactory = messageFactory;
+    }
 
-        public RespondActivity(ContextMessageFactory<BehaviorContext<TSaga, TMessage>, T> messageFactory)
-        {
-            _messageFactory = messageFactory;
-        }
+    public void Accept(StateMachineVisitor inspector)
+    {
+        inspector.Visit(this);
+    }
 
-        public void Accept(StateMachineVisitor inspector)
-        {
-            inspector.Visit(this);
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("respond");
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("respond");
-        }
+    public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
+    {
+        await _messageFactory.Use(context, (ctx, s) => ctx.RespondAsync(s.Message, s.Pipe)).ConfigureAwait(false);
 
-        public async Task Execute(BehaviorContext<TSaga, TMessage> context, IBehavior<TSaga, TMessage> next)
-        {
-            await _messageFactory.Use(context, (ctx, s) => ctx.RespondAsync(s.Message, s.Pipe)).ConfigureAwait(false);
+        await next.Execute(context).ConfigureAwait(false);
+    }
 
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TMessage, TException> context, IBehavior<TSaga, TMessage> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
     }
 }

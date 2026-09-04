@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Linq.Expressions;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class ExpressionCorrelationSagaQueryFactory<TInstance, TData> :
+    ISagaQueryFactory<TInstance, TData>
+    where TInstance : class, SagaStateMachineInstance
+    where TData : class
 {
-    using System;
-    using System.Linq.Expressions;
-    using Saga;
+    readonly Expression<Func<TInstance, ConsumeContext<TData>, bool>> _correlationExpression;
 
-
-    public class ExpressionCorrelationSagaQueryFactory<TInstance, TData> :
-        ISagaQueryFactory<TInstance, TData>
-        where TInstance : class, SagaStateMachineInstance
-        where TData : class
+    public ExpressionCorrelationSagaQueryFactory(Expression<Func<TInstance, ConsumeContext<TData>, bool>> correlationExpression)
     {
-        readonly Expression<Func<TInstance, ConsumeContext<TData>, bool>> _correlationExpression;
+        _correlationExpression = correlationExpression;
+    }
 
-        public ExpressionCorrelationSagaQueryFactory(Expression<Func<TInstance, ConsumeContext<TData>, bool>> correlationExpression)
-        {
-            _correlationExpression = correlationExpression;
-        }
+    public bool TryCreateQuery(ConsumeContext<TData> context, out ISagaQuery<TInstance> query)
+    {
+        Expression<Func<TInstance, bool>> filter = new EventCorrelationExpressionConverter<TInstance, TData>(context)
+            .Convert(_correlationExpression);
 
-        public bool TryCreateQuery(ConsumeContext<TData> context, out ISagaQuery<TInstance> query)
-        {
-            Expression<Func<TInstance, bool>> filter = new EventCorrelationExpressionConverter<TInstance, TData>(context)
-                .Convert(_correlationExpression);
+        query = new SagaQuery<TInstance>(filter);
+        return true;
+    }
 
-            query = new SagaQuery<TInstance>(filter);
-            return true;
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.Add("expression", _correlationExpression.ToString());
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.Add("expression", _correlationExpression.ToString());
     }
 }

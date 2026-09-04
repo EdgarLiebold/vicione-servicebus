@@ -13,9 +13,9 @@ namespace ViciOne.ServiceBus;
 /// Implementations own atomic admission, hard retained-storage enforcement, claim fencing and restart-safe state
 /// transitions. Quarantine is retained state and therefore consumes capacity until explicitly discarded. Successful
 /// delivery removes the record atomically with capacity release. Lease-based terminal/retry transitions return false only
-/// when a concurrent logical consumer completion has already retired the record; an existing record owned by another lease
+/// when a concurrent logical consumer completion has already removed the record; an existing record owned by another lease
 /// is still a fencing violation. Consumer-completion capabilities are additionally fenced by a persisted generation token,
-/// so a stale in-process capability can never retire a later re-admission that reuses the same durable-send id. A durable acceptance may be acknowledged to the caller
+/// so a stale in-process capability can never remove a later re-admission that reuses the same durable-send id. A durable acceptance may be acknowledged to the caller
 /// only after <see cref="AdmitAsync"/> commits successfully.
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Never)]

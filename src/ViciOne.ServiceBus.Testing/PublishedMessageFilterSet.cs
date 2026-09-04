@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public class PublishedMessageFilterSet :
+    FilterSet<IPublishedMessage>
 {
-    using System;
-
-
-    public class PublishedMessageFilterSet :
-        FilterSet<IPublishedMessage>
+    public PublishedMessageFilterSet Add<T>()
+        where T : class
     {
-        public PublishedMessageFilterSet Add<T>()
-            where T : class
+        static bool Filter(IPublishedMessage element)
         {
-            static bool Filter(IPublishedMessage element)
-            {
-                return element is IPublishedMessage<T>;
-            }
-
-            Add(Filter);
-
-            return this;
+            return element is IPublishedMessage<T>;
         }
 
-        public PublishedMessageFilterSet Add<T>(FilterDelegate<IPublishedMessage<T>> filter)
-            where T : class
+        Add(Filter);
+
+        return this;
+    }
+
+    public PublishedMessageFilterSet Add<T>(FilterDelegate<IPublishedMessage<T>> filter)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        bool Filter(IPublishedMessage element)
         {
-            ArgumentNullException.ThrowIfNull(filter);
-
-            bool Filter(IPublishedMessage element)
-            {
-                return element is IPublishedMessage<T> result && filter(result);
-            }
-
-            Add(Filter);
-
-            return this;
+            return element is IPublishedMessage<T> result && filter(result);
         }
+
+        Add(Filter);
+
+        return this;
     }
 }

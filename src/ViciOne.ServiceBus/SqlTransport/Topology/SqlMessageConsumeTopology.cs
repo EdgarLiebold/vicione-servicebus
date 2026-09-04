@@ -1,52 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public class SqlMessageConsumeTopology<TMessage> :
+    MessageConsumeTopology<TMessage>,
+    ISqlMessageConsumeTopologyConfigurator<TMessage>,
+    IDbMessageConsumeTopologyConfigurator
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
+    readonly ISqlMessagePublishTopology<TMessage> _publishTopology;
+    readonly List<ISqlConsumeTopologySpecification> _specifications;
 
-
-    public class SqlMessageConsumeTopology<TMessage> :
-        MessageConsumeTopology<TMessage>,
-        ISqlMessageConsumeTopologyConfigurator<TMessage>,
-        IDbMessageConsumeTopologyConfigurator
-        where TMessage : class
+    public SqlMessageConsumeTopology(ISqlMessagePublishTopology<TMessage> publishTopology)
     {
-        readonly ISqlMessagePublishTopology<TMessage> _publishTopology;
-        readonly List<ISqlConsumeTopologySpecification> _specifications;
+        _publishTopology = publishTopology;
 
-        public SqlMessageConsumeTopology(ISqlMessagePublishTopology<TMessage> publishTopology)
+        _specifications = new List<ISqlConsumeTopologySpecification>();
+    }
+
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
+    }
+
+    public void Subscribe(Action<ISqlTopicSubscriptionConfigurator>? configure = null)
+    {
+        if (!IsBindableMessageType)
         {
-            _publishTopology = publishTopology;
-
-            _specifications = new List<ISqlConsumeTopologySpecification>();
+            _specifications.Add(new InvalidSqlConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a consumable message type"));
+            return;
         }
 
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
-        }
+        var specification = new QueueSubscriptionConsumeTopologySpecification(_publishTopology.Topic);
 
-        public void Subscribe(Action<ISqlTopicSubscriptionConfigurator>? configure = null)
-        {
-            if (!IsBindableMessageType)
-            {
-                _specifications.Add(new InvalidSqlConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a consumable message type"));
-                return;
-            }
+        configure?.Invoke(specification);
 
-            var specification = new QueueSubscriptionConsumeTopologySpecification(_publishTopology.Topic);
+        _specifications.Add(specification);
+    }
 
-            configure?.Invoke(specification);
-
-            _specifications.Add(specification);
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 }

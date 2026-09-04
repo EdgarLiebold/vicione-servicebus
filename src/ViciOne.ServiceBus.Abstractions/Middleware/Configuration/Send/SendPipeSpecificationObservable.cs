@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SendPipeSpecificationObservable :
+    Connectable<ISendPipeSpecificationObserver>,
+    ISendPipeSpecificationObserver
 {
-    using Util;
-
-
-    public class SendPipeSpecificationObservable :
-        Connectable<ISendPipeSpecificationObserver>,
-        ISendPipeSpecificationObserver
+    public void MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
+        where T : class
     {
-        public void MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
-            where T : class
-        {
-            ForEach(observer => observer.MessageSpecificationCreated(specification));
-        }
+        ForEach(observer => observer.MessageSpecificationCreated(specification));
     }
 }

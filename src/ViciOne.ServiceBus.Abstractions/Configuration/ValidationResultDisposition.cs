@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public enum ValidationResultDisposition
 {
-    using System;
-
-
-    [Serializable]
-    public enum ValidationResultDisposition
-    {
-        Success,
-        Warning,
-        Failure,
-    }
+    Success,
+    Warning,
+    Failure,
 }

@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public abstract class ServiceBusEntityConfigurator :
+    IServiceBusEntityConfigurator
 {
-    using System;
-
-
-    public abstract class ServiceBusEntityConfigurator :
-        IServiceBusEntityConfigurator
+    protected ServiceBusEntityConfigurator()
     {
-        protected ServiceBusEntityConfigurator()
-        {
-            DefaultMessageTimeToLive = Defaults.DefaultMessageTimeToLive;
-        }
-
-        public TimeSpan? AutoDeleteOnIdle { get; set; }
-
-        public TimeSpan? DefaultMessageTimeToLive { get; set; }
-
-        public bool? EnableBatchedOperations { get; set; }
-
-        public string UserMetadata { get; set; }
+        DefaultMessageTimeToLive = Defaults.DefaultMessageTimeToLive;
     }
+
+    public TimeSpan? AutoDeleteOnIdle { get; set; }
+
+    public TimeSpan? DefaultMessageTimeToLive { get; set; }
+
+    public bool? EnableBatchedOperations { get; set; }
+
+    public string UserMetadata { get; set; }
 }

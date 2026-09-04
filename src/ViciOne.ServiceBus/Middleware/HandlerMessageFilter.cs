@@ -1,80 +1,78 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Consumes a message via a message handler and reports the message as consumed or faulted
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+public class HandlerMessageFilter<TMessage> :
+    IFilter<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Logging;
+    readonly MessageHandler<TMessage> _handler;
+    long _completed;
+    long _faulted;
 
-
-    /// <summary>
-    /// Consumes a message via a message handler and reports the message as consumed or faulted
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    public class HandlerMessageFilter<TMessage> :
-        IFilter<ConsumeContext<TMessage>>
-        where TMessage : class
+    // TODO this needs a pipe like instance and consumer, to handle things like retry, etc.
+    public HandlerMessageFilter(MessageHandler<TMessage> handler)
     {
-        readonly MessageHandler<TMessage> _handler;
-        long _completed;
-        long _faulted;
+        _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+    }
 
-        // TODO this needs a pipe like instance and consumer, to handle things like retry, etc.
-        public HandlerMessageFilter(MessageHandler<TMessage> handler)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("handler");
+        scope.Add("completed", _completed);
+        scope.Add("faulted", _faulted);
+    }
+
+    [DebuggerNonUserCode]
+    async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        var timer = Stopwatch.StartNew();
+        StartedActivity? activity = LogContext.Current?.StartHandlerActivity(context);
+        var instrument = LogContext.Current?.StartHandlerInstrument(context);
+
+        try
         {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            await _handler(context).ConfigureAwait(false);
+
+            await context.NotifyConsumed(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName).ConfigureAwait(false);
+
+            Interlocked.Increment(ref _completed);
+
+            await next.Send(context).ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
+                                          && !context.CancellationToken.IsCancellationRequested)
         {
-            var scope = context.CreateFilterScope("handler");
-            scope.Add("completed", _completed);
-            scope.Add("faulted", _faulted);
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, exception).ConfigureAwait(false);
+
+            activity?.AddExceptionEvent(exception);
+
+            instrument?.RecordException(exception);
+
+            throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<MessageHandler<TMessage>>.ShortName}");
         }
-
-        [DebuggerNonUserCode]
-        async Task IFilter<ConsumeContext<TMessage>>.Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+        catch (Exception ex)
         {
-            var timer = Stopwatch.StartNew();
-            StartedActivity? activity = LogContext.Current?.StartHandlerActivity(context);
-            var instrument = LogContext.Current?.StartHandlerInstrument(context);
+            await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, ex).ConfigureAwait(false);
 
-            try
-            {
-                await _handler(context).ConfigureAwait(false);
+            activity?.AddExceptionEvent(ex);
+            instrument?.RecordException(ex);
 
-                await context.NotifyConsumed(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName).ConfigureAwait(false);
-
-                Interlocked.Increment(ref _completed);
-
-                await next.Send(context).ConfigureAwait(false);
-            }
-            catch (Exception exception) when ((exception is OperationCanceledException || exception.GetBaseException() is OperationCanceledException)
-                                              && !context.CancellationToken.IsCancellationRequested)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, exception).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(exception);
-
-                instrument?.RecordException(exception);
-
-                throw new ConsumerCanceledException($"The operation was canceled by the consumer: {TypeCache<MessageHandler<TMessage>>.ShortName}");
-            }
-            catch (Exception ex)
-            {
-                await context.NotifyFaulted(timer.Elapsed, TypeCache<MessageHandler<TMessage>>.ShortName, ex).ConfigureAwait(false);
-
-                activity?.AddExceptionEvent(ex);
-                instrument?.RecordException(ex);
-
-                Interlocked.Increment(ref _faulted);
-                throw;
-            }
-            finally
-            {
-                activity?.Stop();
-                instrument?.Complete();
-            }
+            Interlocked.Increment(ref _faulted);
+            throw;
+        }
+        finally
+        {
+            activity?.Stop();
+            instrument?.Complete();
         }
     }
 }

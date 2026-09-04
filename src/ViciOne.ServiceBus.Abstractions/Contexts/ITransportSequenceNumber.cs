@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ITransportSequenceNumber
 {
-    public interface ITransportSequenceNumber
-    {
-        ulong? SequenceNumber { get; }
-    }
+    ulong? SequenceNumber { get; }
 }

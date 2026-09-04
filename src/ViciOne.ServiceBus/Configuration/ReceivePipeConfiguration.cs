@@ -1,86 +1,84 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ReceivePipeConfiguration :
+    IReceivePipeConfiguration,
+    IReceivePipeConfigurator,
+    ISpecification
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Middleware;
-    using Transports;
+    readonly IBuildPipeConfigurator<ReceiveContext> _configurator;
+    bool _created;
 
-
-    public class ReceivePipeConfiguration :
-        IReceivePipeConfiguration,
-        IReceivePipeConfigurator,
-        ISpecification
+    public ReceivePipeConfiguration()
     {
-        readonly IBuildPipeConfigurator<ReceiveContext> _configurator;
-        bool _created;
+        _configurator = new PipeConfigurator<ReceiveContext>();
+        DeadLetterConfigurator = new PipeConfigurator<ReceiveContext>();
+        ErrorConfigurator = new PipeConfigurator<ExceptionReceiveContext>();
+    }
 
-        public ReceivePipeConfiguration()
+    public ISpecification Specification => _configurator;
+
+    public IReceivePipeConfigurator Configurator => this;
+
+    public IBuildPipeConfigurator<ReceiveContext> DeadLetterConfigurator { get; }
+
+    public IBuildPipeConfigurator<ExceptionReceiveContext> ErrorConfigurator { get; }
+
+    public IReceivePipe CreatePipe(IConsumePipe consumePipe, ISerialization serializers)
+    {
+        if (_created)
+            throw new ConfigurationException("The ReceivePipeConfiguration can only be used once.");
+
+        _configurator.UseDeadLetter(CreateDeadLetterPipe());
+        _configurator.UseRescue(CreateErrorPipe(), x =>
         {
-            _configurator = new PipeConfigurator<ReceiveContext>();
-            DeadLetterConfigurator = new PipeConfigurator<ReceiveContext>();
-            ErrorConfigurator = new PipeConfigurator<ExceptionReceiveContext>();
-        }
+            x.Ignore<OperationCanceledException>();
+        });
 
-        public ISpecification Specification => _configurator;
+        _configurator.UseFilter(new DeserializeFilter(serializers, consumePipe));
 
-        public IReceivePipeConfigurator Configurator => this;
+        _created = true;
 
-        public IBuildPipeConfigurator<ReceiveContext> DeadLetterConfigurator { get; }
+        return new ReceivePipe(_configurator.Build(), consumePipe);
+    }
 
-        public IBuildPipeConfigurator<ExceptionReceiveContext> ErrorConfigurator { get; }
+    public void AddPipeSpecification(IPipeSpecification<ReceiveContext> specification)
+    {
+        _configurator.AddPipeSpecification(specification);
+    }
 
-        public IReceivePipe CreatePipe(IConsumePipe consumePipe, ISerialization serializers)
-        {
-            if (_created)
-                throw new ConfigurationException("The ReceivePipeConfiguration can only be used once.");
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _configurator.Validate()
+            .Concat(DeadLetterConfigurator.Validate())
+            .Concat(ErrorConfigurator.Validate());
+    }
 
-            _configurator.UseDeadLetter(CreateDeadLetterPipe());
-            _configurator.UseRescue(CreateErrorPipe(), x =>
-            {
-                x.Ignore<OperationCanceledException>();
-            });
+    IPipe<ReceiveContext> CreateDeadLetterPipe()
+    {
+        IPipe<ReceiveContext> deadLetterPipe = DeadLetterConfigurator.Build();
+        if (deadLetterPipe.IsNotEmpty())
+            return deadLetterPipe;
 
-            _configurator.UseFilter(new DeserializeFilter(serializers, consumePipe));
+        DeadLetterConfigurator.UseFilter(new DeadLetterTransportFilter());
 
-            _created = true;
+        return DeadLetterConfigurator.Build();
+    }
 
-            return new ReceivePipe(_configurator.Build(), consumePipe);
-        }
+    IPipe<ExceptionReceiveContext> CreateErrorPipe()
+    {
+        IPipe<ExceptionReceiveContext> errorPipe = ErrorConfigurator.Build();
+        if (errorPipe.IsNotEmpty())
+            return errorPipe;
 
-        public void AddPipeSpecification(IPipeSpecification<ReceiveContext> specification)
-        {
-            _configurator.AddPipeSpecification(specification);
-        }
+        ErrorConfigurator.UseFilter(new GenerateFaultFilter());
+        ErrorConfigurator.UseFilter(new ErrorTransportFilter());
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            return _configurator.Validate()
-                .Concat(DeadLetterConfigurator.Validate())
-                .Concat(ErrorConfigurator.Validate());
-        }
-
-        IPipe<ReceiveContext> CreateDeadLetterPipe()
-        {
-            IPipe<ReceiveContext> deadLetterPipe = DeadLetterConfigurator.Build();
-            if (deadLetterPipe.IsNotEmpty())
-                return deadLetterPipe;
-
-            DeadLetterConfigurator.UseFilter(new DeadLetterTransportFilter());
-
-            return DeadLetterConfigurator.Build();
-        }
-
-        IPipe<ExceptionReceiveContext> CreateErrorPipe()
-        {
-            IPipe<ExceptionReceiveContext> errorPipe = ErrorConfigurator.Build();
-            if (errorPipe.IsNotEmpty())
-                return errorPipe;
-
-            ErrorConfigurator.UseFilter(new GenerateFaultFilter());
-            ErrorConfigurator.UseFilter(new ErrorTransportFilter());
-
-            return ErrorConfigurator.Build();
-        }
+        return ErrorConfigurator.Build();
     }
 }

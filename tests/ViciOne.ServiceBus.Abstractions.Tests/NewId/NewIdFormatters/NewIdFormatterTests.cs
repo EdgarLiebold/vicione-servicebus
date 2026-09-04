@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters;
-
 using System.Text.Json;
 using ViciOne.ServiceBus.NewIdFormatters;
 using ViciOne.ServiceBus.NewIdParsers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 using NewIdValue = global::ViciOne.ServiceBus.NewId;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests.NewId.NewIdFormatters;
 
 public sealed class NewIdFormatterTests
 {

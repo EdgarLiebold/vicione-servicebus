@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqMessageSendTopology<TMessage> :
+    IMessageSendTopology<TMessage>
+    where TMessage : class
 {
-    public interface IActiveMqMessageSendTopology<TMessage> :
-        IMessageSendTopology<TMessage>
-        where TMessage : class
-    {
-    }
 }

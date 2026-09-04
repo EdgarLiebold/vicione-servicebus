@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
-
 using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
 using ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 public sealed class ActiveMqTopicEndpointTests
 {
@@ -28,7 +28,7 @@ public sealed class ActiveMqTopicEndpointTests
             virtualTopic ? "virtual-topic" : "topic");
         string inputQueue = fixture.Name("input");
         string topicName = virtualTopic
-            ? $"VirtualTopic.{fixture.Name("private")}" 
+            ? $"VirtualTopic.{fixture.Name("private")}"
             : fixture.Name("private");
         Guid flowId = Guid.NewGuid();
         var delivered = NewObservation<Guid>();

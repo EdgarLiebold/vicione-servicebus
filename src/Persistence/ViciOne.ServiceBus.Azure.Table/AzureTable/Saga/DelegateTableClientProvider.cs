@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
+using System;
+using Azure.Data.Tables;
+
+namespace ViciOne.ServiceBus.AzureTable.Saga;
+
+internal sealed class DelegateTableClientProvider<TSaga> :
+    ITableClientProvider<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using Azure.Data.Tables;
+    readonly Func<TableClient> _tableClientFactory;
 
-
-    internal sealed class DelegateTableClientProvider<TSaga> :
-        ITableClientProvider<TSaga>
-        where TSaga : class, ISaga
+    public DelegateTableClientProvider(Func<TableClient> tableClientFactory)
     {
-        readonly Func<TableClient> _tableClientFactory;
+        ArgumentNullException.ThrowIfNull(tableClientFactory);
+        _tableClientFactory = tableClientFactory;
+    }
 
-        public DelegateTableClientProvider(Func<TableClient> tableClientFactory)
-        {
-            ArgumentNullException.ThrowIfNull(tableClientFactory);
-            _tableClientFactory = tableClientFactory;
-        }
-
-        public TableClient GetTableClient()
-        {
-            return _tableClientFactory()
-                ?? throw new InvalidOperationException("The Azure Table client factory returned null.");
-        }
+    public TableClient GetTableClient()
+    {
+        return _tableClientFactory()
+            ?? throw new InvalidOperationException("The Azure Table client factory returned null.");
     }
 }

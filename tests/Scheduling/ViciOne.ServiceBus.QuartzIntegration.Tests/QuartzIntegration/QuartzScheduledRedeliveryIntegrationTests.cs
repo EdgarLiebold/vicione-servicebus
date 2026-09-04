@@ -1,8 +1,8 @@
+using System.Collections.Concurrent;
 using ViciOne.ServiceBus.QuartzIntegration.Tests.Testing;
 using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using System.Collections.Concurrent;
 using Xunit;
 
 namespace ViciOne.ServiceBus.QuartzIntegration.Tests.QuartzIntegration;

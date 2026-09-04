@@ -1,67 +1,65 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Dispatches a missing saga message to the saga policy, calling Add if necessary
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TSaga"></typeparam>
+public class MissingSagaPipe<TSaga, TMessage> :
+    IPipe<SagaConsumeContext<TSaga, TMessage>>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Logging;
-    using Saga;
+    readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _next;
+    readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
 
-
-    /// <summary>
-    /// Dispatches a missing saga message to the saga policy, calling Add if necessary
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <typeparam name="TSaga"></typeparam>
-    public class MissingSagaPipe<TSaga, TMessage> :
-        IPipe<SagaConsumeContext<TSaga, TMessage>>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public MissingSagaPipe(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
     {
-        readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _next;
-        readonly SagaRepositoryContext<TSaga, TMessage> _repositoryContext;
+        _repositoryContext = repositoryContext;
+        _next = next;
+    }
 
-        public MissingSagaPipe(SagaRepositoryContext<TSaga, TMessage> repositoryContext, IPipe<SagaConsumeContext<TSaga, TMessage>> next)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        _next.Probe(context);
+    }
+
+    public async Task Send(SagaConsumeContext<TSaga, TMessage> context)
+    {
+        SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _repositoryContext.Add(context.Saga).ConfigureAwait(false);
+
+        sagaConsumeContext.LogAdded();
+
+        try
         {
-            _repositoryContext = repositoryContext;
-            _next = next;
-        }
+            await _next.Send(sagaConsumeContext).ConfigureAwait(false);
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            _next.Probe(context);
-        }
-
-        public async Task Send(SagaConsumeContext<TSaga, TMessage> context)
-        {
-            SagaConsumeContext<TSaga, TMessage> sagaConsumeContext = await _repositoryContext.Add(context.Saga).ConfigureAwait(false);
-
-            sagaConsumeContext.LogAdded();
-
-            try
-            {
-                await _next.Send(sagaConsumeContext).ConfigureAwait(false);
-
-                if (sagaConsumeContext.IsCompleted)
-                    await _repositoryContext.Discard(sagaConsumeContext).ConfigureAwait(false);
-                else
-                    await _repositoryContext.Save(sagaConsumeContext).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
+            if (sagaConsumeContext.IsCompleted)
                 await _repositoryContext.Discard(sagaConsumeContext).ConfigureAwait(false);
+            else
+                await _repositoryContext.Save(sagaConsumeContext).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            await _repositoryContext.Discard(sagaConsumeContext).ConfigureAwait(false);
 
-                throw;
-            }
-            finally
+            throw;
+        }
+        finally
+        {
+            switch (sagaConsumeContext)
             {
-                switch (sagaConsumeContext)
-                {
-                    case IAsyncDisposable asyncDisposable:
-                        await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                        break;
-                    case IDisposable disposable:
-                        disposable.Dispose();
-                        break;
-                }
+                case IAsyncDisposable asyncDisposable:
+                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                    break;
+                case IDisposable disposable:
+                    disposable.Dispose();
+                    break;
             }
         }
     }

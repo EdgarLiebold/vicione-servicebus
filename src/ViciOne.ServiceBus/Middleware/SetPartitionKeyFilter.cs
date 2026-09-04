@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class SetPartitionKeyFilter<TMessage> :
+    IFilter<SendContext<TMessage>>
+    where TMessage : class
 {
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IMessagePartitionKeyFormatter<TMessage> _routingKeyFormatter;
 
-
-    public class SetPartitionKeyFilter<TMessage> :
-        IFilter<SendContext<TMessage>>
-        where TMessage : class
+    public SetPartitionKeyFilter(IMessagePartitionKeyFormatter<TMessage> routingKeyFormatter)
     {
-        readonly IMessagePartitionKeyFormatter<TMessage> _routingKeyFormatter;
+        _routingKeyFormatter = routingKeyFormatter;
+    }
 
-        public SetPartitionKeyFilter(IMessagePartitionKeyFormatter<TMessage> routingKeyFormatter)
-        {
-            _routingKeyFormatter = routingKeyFormatter;
-        }
+    public Task Send(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
+    {
+        var routingKey = _routingKeyFormatter.FormatPartitionKey(context);
 
-        public Task Send(SendContext<TMessage> context, IPipe<SendContext<TMessage>> next)
-        {
-            var routingKey = _routingKeyFormatter.FormatPartitionKey(context);
+        if (context.TryGetPayload(out PartitionKeySendContext routingKeySendContext))
+            routingKeySendContext.PartitionKey = routingKey;
 
-            if (context.TryGetPayload(out PartitionKeySendContext routingKeySendContext))
-                routingKeySendContext.PartitionKey = routingKey;
+        return next.Send(context);
+    }
 
-            return next.Send(context);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("setPartitionKey");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("setPartitionKey");
     }
 }

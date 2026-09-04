@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface RiderHandle
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-
-
-    public interface RiderHandle
-    {
-        Task Ready { get; }
-        Task StopAsync(CancellationToken cancellationToken);
-    }
+    Task Ready { get; }
+    Task StopAsync(CancellationToken cancellationToken);
 }

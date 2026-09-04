@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Linq.Expressions;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ObservesSagaConnectorFactory<TSaga, TMessage> :
+    ISagaConnectorFactory
+    where TSaga : class, ISaga, Observes<TMessage, TSaga>
+    where TMessage : class
 {
-    using System;
-    using System.Linq.Expressions;
-    using Middleware;
-    using Saga;
+    readonly ISagaMessageConnector<TSaga> _connector;
 
-
-    public class ObservesSagaConnectorFactory<TSaga, TMessage> :
-        ISagaConnectorFactory
-        where TSaga : class, ISaga, Observes<TMessage, TSaga>
-        where TMessage : class
+    public ObservesSagaConnectorFactory()
     {
-        readonly ISagaMessageConnector<TSaga> _connector;
+        var policy = new AnyExistingSagaPolicy<TSaga, TMessage>();
 
-        public ObservesSagaConnectorFactory()
-        {
-            var policy = new AnyExistingSagaPolicy<TSaga, TMessage>();
+        ISagaQueryFactory<TSaga, TMessage> queryFactory = new ExpressionSagaQueryFactory<TSaga, TMessage>(GetFilterExpression());
 
-            ISagaQueryFactory<TSaga, TMessage> queryFactory = new ExpressionSagaQueryFactory<TSaga, TMessage>(GetFilterExpression());
+        var consumeFilter = new ObservesSagaMessageFilter<TSaga, TMessage>();
 
-            var consumeFilter = new ObservesSagaMessageFilter<TSaga, TMessage>();
+        _connector = new SagaConnector<TSaga, TMessage>.QuerySagaMessageConnector(consumeFilter, policy, queryFactory);
+    }
 
-            _connector = new SagaConnector<TSaga, TMessage>.QuerySagaMessageConnector(consumeFilter, policy, queryFactory);
-        }
+    ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
+    {
+        var connector = _connector as ISagaMessageConnector<T>;
+        if (connector == null)
+            throw new ArgumentException("The saga type did not match the connector type");
 
-        ISagaMessageConnector<T> ISagaConnectorFactory.CreateMessageConnector<T>()
-        {
-            var connector = _connector as ISagaMessageConnector<T>;
-            if (connector == null)
-                throw new ArgumentException("The saga type did not match the connector type");
+        return connector;
+    }
 
-            return connector;
-        }
+    static Expression<Func<TSaga, TMessage, bool>> GetFilterExpression()
+    {
+        var instance = SagaMetadataCache<TSaga>.FactoryMethod(NewId.NextGuid());
 
-        static Expression<Func<TSaga, TMessage, bool>> GetFilterExpression()
-        {
-            var instance = SagaMetadataCache<TSaga>.FactoryMethod(NewId.NextGuid());
-
-            return instance.CorrelationExpression;
-        }
+        return instance.CorrelationExpression;
     }
 }

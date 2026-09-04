@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using ViciOne.ServiceBus.Saga;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public static class MessageSessionSagaRepository
 {
-    using Saga;
-
-
-    public static class MessageSessionSagaRepository
+    public static ISagaRepository<T> Create<T>()
+        where T : class, ISaga
     {
-        public static ISagaRepository<T> Create<T>()
-            where T : class, ISaga
-        {
-            var consumeContextFactory = new SagaConsumeContextFactory<MessageSessionContext, T>();
+        var consumeContextFactory = new SagaConsumeContextFactory<MessageSessionContext, T>();
 
-            var repositoryFactory = new MessageSessionSagaRepositoryContextFactory<T>(consumeContextFactory);
+        var repositoryFactory = new MessageSessionSagaRepositoryContextFactory<T>(consumeContextFactory);
 
-            return new SagaRepository<T>(repositoryFactory);
-        }
+        return new SagaRepository<T>(repositoryFactory);
     }
 }

@@ -1,9 +1,9 @@
 using System.Text;
 using System.Text.Json;
-using Timestamp = Google.Protobuf.WellKnownTypes.Timestamp;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Serialization.Protobuf;
 using Xunit;
+using Timestamp = Google.Protobuf.WellKnownTypes.Timestamp;
 
 namespace ViciOne.ServiceBus.Tests.Serialization;
 

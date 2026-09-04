@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.Middleware.Outbox
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Middleware.Outbox;
+
+public abstract class OutboxConsumeContextProxy<TMessage> :
+    ConsumeContextProxy<TMessage>,
+    OutboxConsumeContext<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Context;
+    readonly IServiceProvider _provider;
 
-
-    public abstract class OutboxConsumeContextProxy<TMessage> :
-        ConsumeContextProxy<TMessage>,
-        OutboxConsumeContext<TMessage>
-        where TMessage : class
+    protected OutboxConsumeContextProxy(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider)
+        : base(context)
     {
-        readonly IServiceProvider _provider;
+        CapturedContext = context;
+        Options = options;
+        _provider = provider;
 
-        protected OutboxConsumeContextProxy(ConsumeContext<TMessage> context, OutboxConsumeOptions options, IServiceProvider provider)
-            : base(context)
+        var outboxReceiveContext = new OutboxReceiveContext(this, context.ReceiveContext);
+
+        ReceiveContext = outboxReceiveContext;
+        PublishEndpointProvider = outboxReceiveContext.PublishEndpointProvider;
+
+        if (context.TryGetPayload(out MessageSchedulerContext schedulerContext))
         {
-            CapturedContext = context;
-            Options = options;
-            _provider = provider;
-
-            var outboxReceiveContext = new OutboxReceiveContext(this, context.ReceiveContext);
-
-            ReceiveContext = outboxReceiveContext;
-            PublishEndpointProvider = outboxReceiveContext.PublishEndpointProvider;
-
-            if (context.TryGetPayload(out MessageSchedulerContext schedulerContext))
-            {
-                context.AddOrUpdatePayload<MessageSchedulerContext>(
-                    () => new ConsumeMessageSchedulerContext(this, schedulerContext.SchedulerFactory),
-                    existing => new ConsumeMessageSchedulerContext(this, existing.SchedulerFactory));
-            }
+            context.AddOrUpdatePayload<MessageSchedulerContext>(
+                () => new ConsumeMessageSchedulerContext(this, schedulerContext.SchedulerFactory),
+                existing => new ConsumeMessageSchedulerContext(this, existing.SchedulerFactory));
         }
+    }
 
-        protected OutboxConsumeOptions Options { get; }
+    protected OutboxConsumeOptions Options { get; }
 
-        protected Guid ConsumerId => Options.ConsumerId;
+    protected Guid ConsumerId => Options.ConsumerId;
 
-        public ConsumeContext CapturedContext { get; }
+    public ConsumeContext CapturedContext { get; }
 
-        public abstract bool ContinueProcessing { get; set; }
-        public abstract bool IsMessageConsumed { get; }
-        public abstract bool IsOutboxDelivered { get; }
-        public abstract int ReceiveCount { get; }
-        public abstract long? LastSequenceNumber { get; }
+    public abstract bool ContinueProcessing { get; set; }
+    public abstract bool IsMessageConsumed { get; }
+    public abstract bool IsOutboxDelivered { get; }
+    public abstract int ReceiveCount { get; }
+    public abstract long? LastSequenceNumber { get; }
 
-        public abstract Task SetConsumed();
-        public abstract Task SetDelivered();
+    public abstract Task SetConsumed();
+    public abstract Task SetDelivered();
 
-        public abstract Task<List<OutboxMessageContext>> LoadOutboxMessages();
+    public abstract Task<List<OutboxMessageContext>> LoadOutboxMessages();
 
-        public abstract Task NotifyOutboxMessageDelivered(OutboxMessageContext message);
+    public abstract Task NotifyOutboxMessageDelivered(OutboxMessageContext message);
 
-        public abstract Task RemoveOutboxMessages();
+    public abstract Task RemoveOutboxMessages();
 
-        public abstract Task AddSend<T>(SendContext<T> context)
-            where T : class;
+    public abstract Task AddSend<T>(SendContext<T> context)
+        where T : class;
 
-        public object GetService(Type serviceType)
-        {
-            return _provider.GetService(serviceType);
-        }
+    public object GetService(Type serviceType)
+    {
+        return _provider.GetService(serviceType);
     }
 }

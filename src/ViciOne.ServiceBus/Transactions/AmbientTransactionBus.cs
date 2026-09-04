@@ -1,83 +1,81 @@
-namespace ViciOne.ServiceBus.Transactions
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Transactions;
+
+namespace ViciOne.ServiceBus.Transactions;
+
+internal sealed class AmbientTransactionBus :
+    DeferredBus,
+    IAmbientTransactionBus
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Transactions;
+    readonly ConcurrentDictionary<Transaction, Lazy<AmbientTransactionNotification>> _pendingActions;
 
-
-    internal sealed class AmbientTransactionBus :
-        DeferredBus,
-        IAmbientTransactionBus
+    public AmbientTransactionBus(IBus bus)
+        : base(bus)
     {
-        readonly ConcurrentDictionary<Transaction, Lazy<AmbientTransactionNotification>> _pendingActions;
+        _pendingActions = new ConcurrentDictionary<Transaction, Lazy<AmbientTransactionNotification>>();
+    }
 
-        public AmbientTransactionBus(IBus bus)
-            : base(bus)
+    internal int PendingTransactionCount => _pendingActions.Count;
+
+    internal override Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken)
+    {
+        if (action == null)
+            throw new ArgumentNullException(nameof(action));
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Transaction transaction = Transaction.Current;
+        if (transaction == null)
+            return action(cancellationToken);
+
+        GetOrCreateEnlistment(transaction).Add(action);
+        return Task.CompletedTask;
+    }
+
+    void ClearTransaction(Transaction transaction)
+    {
+        if (_pendingActions.TryRemove(transaction, out _))
+            transaction.TransactionCompleted -= TransactionCompleted;
+    }
+
+    AmbientTransactionNotification GetOrCreateEnlistment(Transaction transaction)
+    {
+        Lazy<AmbientTransactionNotification> notification = _pendingActions.GetOrAdd(transaction, current =>
+            new Lazy<AmbientTransactionNotification>(() => CreateNotification(current), LazyThreadSafetyMode.ExecutionAndPublication));
+
+        try
         {
-            _pendingActions = new ConcurrentDictionary<Transaction, Lazy<AmbientTransactionNotification>>();
+            return notification.Value;
         }
-
-        internal int PendingTransactionCount => _pendingActions.Count;
-
-        internal override Task Add(Func<CancellationToken, Task> action, CancellationToken cancellationToken)
+        catch
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            Transaction transaction = Transaction.Current;
-            if (transaction == null)
-                return action(cancellationToken);
-
-            GetOrCreateEnlistment(transaction).Add(action);
-            return Task.CompletedTask;
+            _pendingActions.TryRemove(transaction, out _);
+            throw;
         }
+    }
 
-        void ClearTransaction(Transaction transaction)
+    AmbientTransactionNotification CreateNotification(Transaction transaction)
+    {
+        var notification = new AmbientTransactionNotification();
+
+        transaction.TransactionCompleted += TransactionCompleted;
+        try
         {
-            if (_pendingActions.TryRemove(transaction, out _))
-                transaction.TransactionCompleted -= TransactionCompleted;
+            transaction.EnlistVolatile(notification, EnlistmentOptions.None);
+            return notification;
         }
-
-        AmbientTransactionNotification GetOrCreateEnlistment(Transaction transaction)
+        catch
         {
-            Lazy<AmbientTransactionNotification> notification = _pendingActions.GetOrAdd(transaction, current =>
-                new Lazy<AmbientTransactionNotification>(() => CreateNotification(current), LazyThreadSafetyMode.ExecutionAndPublication));
-
-            try
-            {
-                return notification.Value;
-            }
-            catch
-            {
-                _pendingActions.TryRemove(transaction, out _);
-                throw;
-            }
+            transaction.TransactionCompleted -= TransactionCompleted;
+            throw;
         }
+    }
 
-        AmbientTransactionNotification CreateNotification(Transaction transaction)
-        {
-            var notification = new AmbientTransactionNotification();
-
-            transaction.TransactionCompleted += TransactionCompleted;
-            try
-            {
-                transaction.EnlistVolatile(notification, EnlistmentOptions.None);
-                return notification;
-            }
-            catch
-            {
-                transaction.TransactionCompleted -= TransactionCompleted;
-                throw;
-            }
-        }
-
-        void TransactionCompleted(object sender, TransactionEventArgs e)
-        {
-            ClearTransaction(e.Transaction);
-        }
+    void TransactionCompleted(object sender, TransactionEventArgs e)
+    {
+        ClearTransaction(e.Transaction);
     }
 }

@@ -1,50 +1,48 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+class InMemoryMessageLatencyTransport : IMessageLatencyTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    readonly InMemoryOptionSet _optionSet;
+    readonly IMessageLatencySettings _settings;
+    IBusControl _busControl;
+    Uri _targetAddress;
+    ISendEndpoint _targetEndpoint;
 
-
-    class InMemoryMessageLatencyTransport : IMessageLatencyTransport
+    public InMemoryMessageLatencyTransport(InMemoryOptionSet optionSet, IMessageLatencySettings settings)
     {
-        readonly InMemoryOptionSet _optionSet;
-        readonly IMessageLatencySettings _settings;
-        IBusControl _busControl;
-        Uri _targetAddress;
-        ISendEndpoint _targetEndpoint;
+        _optionSet = optionSet;
+        _settings = settings;
+    }
 
-        public InMemoryMessageLatencyTransport(InMemoryOptionSet optionSet, IMessageLatencySettings settings)
-        {
-            _optionSet = optionSet;
-            _settings = settings;
-        }
+    public Task Send(LatencyTestMessage message)
+    {
+        return _targetEndpoint.Send(message);
+    }
 
-        public Task Send(LatencyTestMessage message)
-        {
-            return _targetEndpoint.Send(message);
-        }
+    public async ValueTask DisposeAsync()
+    {
+        await _busControl.StopAsync();
+    }
 
-        public async ValueTask DisposeAsync()
+    public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    {
+        _busControl = Bus.Factory.CreateUsingInMemory(x =>
         {
-            await _busControl.StopAsync();
-        }
+            x.ConcurrentMessageLimit = _optionSet.TransportConcurrencyLimit;
 
-        public async Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
-        {
-            _busControl = Bus.Factory.CreateUsingInMemory(x =>
+            x.ReceiveEndpoint("latency_consumer", e =>
             {
-                x.ConcurrentMessageLimit = _optionSet.TransportConcurrencyLimit;
-
-                x.ReceiveEndpoint("latency_consumer", e =>
-                {
-                    callback(e);
-                    _targetAddress = e.InputAddress;
-                });
+                callback(e);
+                _targetAddress = e.InputAddress;
             });
+        });
 
-            await _busControl.StartAsync();
+        await _busControl.StartAsync();
 
-            _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
-        }
+        _targetEndpoint = await _busControl.GetSendEndpoint(_targetAddress);
     }
 }

@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace ViciOne.ServiceBus;
+
+public class ArrayMessageBody :
+    MessageBody
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+    readonly ArraySegment<byte> _bytes;
 
-
-    public class ArrayMessageBody :
-        MessageBody
+    public ArrayMessageBody(ArraySegment<byte> bytes)
     {
-        readonly ArraySegment<byte> _bytes;
+        _bytes = bytes;
+    }
 
-        public ArrayMessageBody(ArraySegment<byte> bytes)
-        {
-            _bytes = bytes;
-        }
+    public long? Length => _bytes.Count;
 
-        public long? Length => _bytes.Count;
+    public Stream GetStream()
+    {
+        return new MemoryStream(_bytes.Array ?? throw new InvalidOperationException("Array not accessible"), _bytes.Offset, _bytes.Count, false);
+    }
 
-        public Stream GetStream()
-        {
-            return new MemoryStream(_bytes.Array ?? throw new InvalidOperationException("Array not accessible"), _bytes.Offset, _bytes.Count, false);
-        }
+    public byte[] GetBytes()
+    {
+        return _bytes.ToArray();
+    }
 
-        public byte[] GetBytes()
-        {
-            return _bytes.ToArray();
-        }
-
-        public string GetString()
-        {
-            return Encoding.UTF8.GetString(_bytes.Array ?? throw new InvalidOperationException("Array not accessible"), _bytes.Offset, _bytes.Count);
-        }
+    public string GetString()
+    {
+        return Encoding.UTF8.GetString(_bytes.Array ?? throw new InvalidOperationException("Array not accessible"), _bytes.Offset, _bytes.Count);
     }
 }

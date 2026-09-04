@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.Infrastructure;
-
 using Azure.Messaging.EventHubs.Producer;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class EventHubLocalFixture : IAsyncDisposable
 {

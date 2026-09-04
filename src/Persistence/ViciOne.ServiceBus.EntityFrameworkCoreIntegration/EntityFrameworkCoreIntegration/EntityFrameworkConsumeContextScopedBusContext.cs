@@ -1,13 +1,12 @@
+using System;
+using Microsoft.EntityFrameworkCore;
+using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.ProviderAbstractions;
+
 #nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
-using System;
-using Clients;
-using DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Middleware.Outbox;
-using ProviderAbstractions;
-
 
 internal class EntityFrameworkConsumeContextScopedBusContext<TBus, TDbContext> :
     EntityFrameworkScopedBusContext<TBus, TDbContext>

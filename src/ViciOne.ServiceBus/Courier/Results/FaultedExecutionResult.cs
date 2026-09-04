@@ -1,79 +1,77 @@
-namespace ViciOne.ServiceBus.Courier.Results
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Courier.Messages;
+using ViciOne.ServiceBus.Events;
+
+namespace ViciOne.ServiceBus.Courier.Results;
+
+class FaultedExecutionResult<TArguments> :
+    BaseExecutionResult<TArguments>,
+    FaultedActivityOptions
+    where TArguments : class
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Contracts;
-    using Events;
-    using Messages;
+    readonly ActivityException _activityException;
+    readonly TimeSpan _elapsed;
+    readonly Exception _exception;
+    readonly ExceptionInfo _exceptionInfo;
 
-
-    class FaultedExecutionResult<TArguments> :
-        BaseExecutionResult<TArguments>,
-        FaultedActivityOptions
-        where TArguments : class
+    public FaultedExecutionResult(ExecuteContext<TArguments> context, IRoutingSlipEventPublisher publisher, Activity activity, RoutingSlip routingSlip,
+        Exception exception)
+        : base(context, publisher, activity, routingSlip)
     {
-        readonly ActivityException _activityException;
-        readonly TimeSpan _elapsed;
-        readonly Exception _exception;
-        readonly ExceptionInfo _exceptionInfo;
+        _exception = exception;
+        _exceptionInfo = new FaultExceptionInfo(exception);
+        _elapsed = Context.Elapsed;
 
-        public FaultedExecutionResult(ExecuteContext<TArguments> context, IRoutingSlipEventPublisher publisher, Activity activity, RoutingSlip routingSlip,
-            Exception exception)
-            : base(context, publisher, activity, routingSlip)
+        _activityException = new RoutingSlipActivityException(Activity.Name, Context.Host, Context.ExecutionId,
+            Context.Timestamp, _elapsed, _exceptionInfo);
+    }
+
+    public override async Task Evaluate()
+    {
+        var builder = CreateRoutingSlipBuilder(RoutingSlip);
+
+        Build(builder);
+
+        var routingSlip = builder.Build();
+
+        await Publisher.PublishRoutingSlipActivityFaulted(Context.ActivityName, Context.ExecutionId, Context.Timestamp,
+            _elapsed, _exceptionInfo, routingSlip.Variables, Activity.Arguments).ConfigureAwait(false);
+
+        if (HasCompensationLogs(routingSlip))
+            await Context.Forward(routingSlip.GetNextCompensateAddress(), routingSlip).ConfigureAwait(false);
+        else
         {
-            _exception = exception;
-            _exceptionInfo = new FaultExceptionInfo(exception);
-            _elapsed = Context.Elapsed;
+            var faultedTimestamp = Context.Timestamp + _elapsed;
+            var faultedDuration = faultedTimestamp - routingSlip.CreateTimestamp;
 
-            _activityException = new RoutingSlipActivityException(Activity.Name, Context.Host, Context.ExecutionId,
-                Context.Timestamp, _elapsed, _exceptionInfo);
+            await Publisher.PublishRoutingSlipFaulted(faultedTimestamp, faultedDuration, routingSlip.Variables, _activityException).ConfigureAwait(false);
         }
+    }
 
-        public override async Task Evaluate()
-        {
-            var builder = CreateRoutingSlipBuilder(RoutingSlip);
+    public override bool IsFaulted(out Exception exception)
+    {
+        exception = _exception;
+        return true;
+    }
 
-            Build(builder);
+    static bool HasCompensationLogs(RoutingSlip routingSlip)
+    {
+        return routingSlip.CompensateLogs is { Count: > 0 };
+    }
 
-            var routingSlip = builder.Build();
+    protected virtual void Build(RoutingSlipBuilder builder)
+    {
+        builder.AddActivityException(_activityException);
 
-            await Publisher.PublishRoutingSlipActivityFaulted(Context.ActivityName, Context.ExecutionId, Context.Timestamp,
-                _elapsed, _exceptionInfo, routingSlip.Variables, Activity.Arguments).ConfigureAwait(false);
+        if (Variables?.Any() ?? false)
+            builder.SetVariables(Variables);
+    }
 
-            if (HasCompensationLogs(routingSlip))
-                await Context.Forward(routingSlip.GetNextCompensateAddress(), routingSlip).ConfigureAwait(false);
-            else
-            {
-                var faultedTimestamp = Context.Timestamp + _elapsed;
-                var faultedDuration = faultedTimestamp - routingSlip.CreateTimestamp;
-
-                await Publisher.PublishRoutingSlipFaulted(faultedTimestamp, faultedDuration, routingSlip.Variables, _activityException).ConfigureAwait(false);
-            }
-        }
-
-        public override bool IsFaulted(out Exception exception)
-        {
-            exception = _exception;
-            return true;
-        }
-
-        static bool HasCompensationLogs(RoutingSlip routingSlip)
-        {
-            return routingSlip.CompensateLogs is { Count: > 0 };
-        }
-
-        protected virtual void Build(RoutingSlipBuilder builder)
-        {
-            builder.AddActivityException(_activityException);
-
-            if (Variables?.Any() ?? false)
-                builder.SetVariables(Variables);
-        }
-
-        static RoutingSlipBuilder CreateRoutingSlipBuilder(RoutingSlip routingSlip)
-        {
-            return new RoutingSlipBuilder(routingSlip, routingSlip.Itinerary, []);
-        }
+    static RoutingSlipBuilder CreateRoutingSlipBuilder(RoutingSlip routingSlip)
+    {
+        return new RoutingSlipBuilder(routingSlip, routingSlip.Itinerary, []);
     }
 }

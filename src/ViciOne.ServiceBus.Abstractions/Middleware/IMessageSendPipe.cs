@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Middleware
+namespace ViciOne.ServiceBus.Middleware;
+
+public interface IMessageSendPipe<in TMessage> :
+    IPipe<SendContext<TMessage>>
+    where TMessage : class
 {
-    public interface IMessageSendPipe<in TMessage> :
-        IPipe<SendContext<TMessage>>
-        where TMessage : class
-    {
-    }
 }

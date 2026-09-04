@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.DurableSend;
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.ProviderAbstractions;
+
+namespace ViciOne.ServiceBus.DurableSend;
 
 internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
     where TBus : class, IBus

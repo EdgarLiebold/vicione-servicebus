@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.MessageData.Configuration
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.PropertyConverters;
+using ViciOne.ServiceBus.Initializers.PropertyProviders;
+
+namespace ViciOne.ServiceBus.MessageData.Configuration;
+
+public class GetMessageDataObjectArrayTransformConfiguration<TInput, TProperty, TElement> :
+    IMessageDataTransformConfiguration<TInput>
+    where TInput : class
+    where TElement : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Initializers;
-    using Initializers.PropertyConverters;
-    using Initializers.PropertyProviders;
+    readonly PropertyInfo _property;
+    readonly GetMessageDataTransformSpecification<TElement> _transformConfigurator;
 
-
-    public class GetMessageDataObjectArrayTransformConfiguration<TInput, TProperty, TElement> :
-        IMessageDataTransformConfiguration<TInput>
-        where TInput : class
-        where TElement : class
+    public GetMessageDataObjectArrayTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
     {
-        readonly PropertyInfo _property;
-        readonly GetMessageDataTransformSpecification<TElement> _transformConfigurator;
+        _property = property;
 
-        public GetMessageDataObjectArrayTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
+        _transformConfigurator = new GetMessageDataTransformSpecification<TElement>(repository, knownTypes);
+    }
+
+    public void Apply(ITransformConfigurator<TInput> configurator)
+    {
+        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TElement, TElement> converter))
         {
-            _property = property;
+            var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
 
-            _transformConfigurator = new GetMessageDataTransformSpecification<TElement>(repository, knownTypes);
-        }
+            IPropertyConverter<TProperty, TProperty> arrayConverter = typeof(TProperty).IsArray
+                ? new ArrayPropertyConverter<TElement, TElement>(converter) as IPropertyConverter<TProperty, TProperty>
+                : new ListPropertyConverter<TElement, TElement>(converter) as IPropertyConverter<TProperty, TProperty>;
 
-        public void Apply(ITransformConfigurator<TInput> configurator)
-        {
-            if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TElement, TElement> converter))
-            {
-                var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
+            var provider = new PropertyConverterPropertyProvider<TInput, TProperty, TProperty>(arrayConverter, inputPropertyProvider);
 
-                IPropertyConverter<TProperty, TProperty> arrayConverter = typeof(TProperty).IsArray
-                    ? new ArrayPropertyConverter<TElement, TElement>(converter) as IPropertyConverter<TProperty, TProperty>
-                    : new ListPropertyConverter<TElement, TElement>(converter) as IPropertyConverter<TProperty, TProperty>;
-
-                var provider = new PropertyConverterPropertyProvider<TInput, TProperty, TProperty>(arrayConverter, inputPropertyProvider);
-
-                configurator.Set(_property, provider);
-            }
+            configurator.Set(_property, provider);
         }
     }
 }

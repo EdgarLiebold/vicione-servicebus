@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!-- Microsoft Testing Platform test projects are executables: the artifact starts, runs the
          tests and owns the process exit code. -->
     <OutputType>Exe</OutputType>

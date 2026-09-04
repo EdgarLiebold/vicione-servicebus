@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConsumeMessageConnectorFactory<TConsumer, TMessage> :
+    IMessageConnectorFactory
+    where TConsumer : class, IConsumer<TMessage>
+    where TMessage : class
 {
-    using System;
-    using Middleware;
+    readonly ConsumerMessageConnector<TConsumer, TMessage> _consumerConnector;
+    readonly InstanceMessageConnector<TConsumer, TMessage> _instanceConnector;
 
-
-    public class ConsumeMessageConnectorFactory<TConsumer, TMessage> :
-        IMessageConnectorFactory
-        where TConsumer : class, IConsumer<TMessage>
-        where TMessage : class
+    public ConsumeMessageConnectorFactory()
     {
-        readonly ConsumerMessageConnector<TConsumer, TMessage> _consumerConnector;
-        readonly InstanceMessageConnector<TConsumer, TMessage> _instanceConnector;
+        var filter = new MethodConsumerMessageFilter<TConsumer, TMessage>();
 
-        public ConsumeMessageConnectorFactory()
-        {
-            var filter = new MethodConsumerMessageFilter<TConsumer, TMessage>();
+        _consumerConnector = new ConsumerMessageConnector<TConsumer, TMessage>(filter);
+        _instanceConnector = new InstanceMessageConnector<TConsumer, TMessage>(filter);
+    }
 
-            _consumerConnector = new ConsumerMessageConnector<TConsumer, TMessage>(filter);
-            _instanceConnector = new InstanceMessageConnector<TConsumer, TMessage>(filter);
-        }
+    public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
+        where T : class
+    {
+        return _consumerConnector as IConsumerMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
+    }
 
-        public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
-            where T : class
-        {
-            return _consumerConnector as IConsumerMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
-        }
-
-        IInstanceMessageConnector<T> IMessageConnectorFactory.CreateInstanceConnector<T>()
-        {
-            return _instanceConnector as IInstanceMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
-        }
+    IInstanceMessageConnector<T> IMessageConnectorFactory.CreateInstanceConnector<T>()
+    {
+        return _instanceConnector as IInstanceMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
     }
 }

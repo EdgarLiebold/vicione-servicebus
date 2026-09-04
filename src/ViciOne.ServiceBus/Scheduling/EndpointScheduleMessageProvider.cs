@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public class EndpointScheduleMessageProvider :
+    BaseScheduleMessageProvider
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly Func<Task<ISendEndpoint>> _schedulerEndpoint;
 
-
-    public class EndpointScheduleMessageProvider :
-        BaseScheduleMessageProvider
+    public EndpointScheduleMessageProvider(Func<Task<ISendEndpoint>> schedulerEndpoint)
     {
-        readonly Func<Task<ISendEndpoint>> _schedulerEndpoint;
+        _schedulerEndpoint = schedulerEndpoint;
+    }
 
-        public EndpointScheduleMessageProvider(Func<Task<ISendEndpoint>> schedulerEndpoint)
+    protected override async Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken)
+    {
+        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+
+        await endpoint.Send(message, pipe, cancellationToken).ConfigureAwait(false);
+    }
+
+    protected override async Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken)
+    {
+        var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
+
+        await endpoint.Send<CancelScheduledMessage>(new
         {
-            _schedulerEndpoint = schedulerEndpoint;
-        }
-
-        protected override async Task ScheduleSend(ScheduleMessage message, IPipe<SendContext<ScheduleMessage>> pipe, CancellationToken cancellationToken)
-        {
-            var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
-
-            await endpoint.Send(message, pipe, cancellationToken).ConfigureAwait(false);
-        }
-
-        protected override async Task CancelScheduledSend(Guid tokenId, Uri destinationAddress, CancellationToken cancellationToken)
-        {
-            var endpoint = await _schedulerEndpoint().ConfigureAwait(false);
-
-            await endpoint.Send<CancelScheduledMessage>(new
-            {
-                InVar.Timestamp,
-                TokenId = tokenId
-            }, cancellationToken)
-                .ConfigureAwait(false);
-        }
+            InVar.Timestamp,
+            TokenId = tokenId
+        }, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

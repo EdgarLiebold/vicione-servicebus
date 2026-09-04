@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IPostgresSqlHostConfigurator :
+    ISqlHostConfigurator
 {
-    public interface IPostgresSqlHostConfigurator :
-        ISqlHostConfigurator
-    {
-    }
 }

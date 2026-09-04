@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.MessageData.Configuration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.MessageData.Configuration;
+
+public class CourierMessageDataConfigurationObserver :
+    ConfigurationObserver,
+    IMessageConfigurationObserver
 {
-    using System;
-    using ViciOne.ServiceBus.Configuration;
+    readonly bool _includeMessages;
+    readonly IMessageDataRepository _repository;
 
-
-    public class CourierMessageDataConfigurationObserver :
-        ConfigurationObserver,
-        IMessageConfigurationObserver
+    public CourierMessageDataConfigurationObserver(IConsumePipeConfigurator configurator, IMessageDataRepository repository, bool includeMessages)
+        : base(configurator)
     {
-        readonly bool _includeMessages;
-        readonly IMessageDataRepository _repository;
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
+        if (repository == null)
+            throw new ArgumentNullException(nameof(repository));
 
-        public CourierMessageDataConfigurationObserver(IConsumePipeConfigurator configurator, IMessageDataRepository repository, bool includeMessages)
-            : base(configurator)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
-            if (repository == null)
-                throw new ArgumentNullException(nameof(repository));
+        _repository = repository;
+        _includeMessages = includeMessages;
 
-            _repository = repository;
-            _includeMessages = includeMessages;
+        Connect(this);
+    }
 
-            Connect(this);
-        }
+    public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
+        where TMessage : class
+    {
+        if (!_includeMessages)
+            return;
 
-        public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
-            where TMessage : class
-        {
-            if (!_includeMessages)
-                return;
+        IPipeSpecification<ConsumeContext<TMessage>> specification = new GetMessageDataTransformSpecification<TMessage>(_repository);
 
-            IPipeSpecification<ConsumeContext<TMessage>> specification = new GetMessageDataTransformSpecification<TMessage>(_repository);
+        configurator.AddPipeSpecification(specification);
+    }
 
-            configurator.AddPipeSpecification(specification);
-        }
+    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+    {
+        IPipeSpecification<ExecuteContext<TArguments>> specification = new GetMessageDataTransformSpecification<TArguments>(_repository);
 
-        public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-        {
-            IPipeSpecification<ExecuteContext<TArguments>> specification = new GetMessageDataTransformSpecification<TArguments>(_repository);
+        configurator.Arguments(x => x.AddPipeSpecification(specification));
+    }
 
-            configurator.Arguments(x => x.AddPipeSpecification(specification));
-        }
+    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+    {
+        IPipeSpecification<ExecuteContext<TArguments>> specification = new GetMessageDataTransformSpecification<TArguments>(_repository);
 
-        public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        {
-            IPipeSpecification<ExecuteContext<TArguments>> specification = new GetMessageDataTransformSpecification<TArguments>(_repository);
+        configurator.Arguments(x => x.AddPipeSpecification(specification));
+    }
 
-            configurator.Arguments(x => x.AddPipeSpecification(specification));
-        }
+    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+    {
+        IPipeSpecification<CompensateContext<TLog>> specification = new GetMessageDataTransformSpecification<TLog>(_repository);
 
-        public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        {
-            IPipeSpecification<CompensateContext<TLog>> specification = new GetMessageDataTransformSpecification<TLog>(_repository);
-
-            configurator.Log(x => x.AddPipeSpecification(specification));
-        }
+        configurator.Log(x => x.AddPipeSpecification(specification));
     }
 }

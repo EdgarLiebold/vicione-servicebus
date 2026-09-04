@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Topology
+namespace ViciOne.ServiceBus.Topology;
+
+public interface EntityHandle
 {
-    public interface EntityHandle
-    {
-        long Id { get; }
-    }
+    long Id { get; }
 }

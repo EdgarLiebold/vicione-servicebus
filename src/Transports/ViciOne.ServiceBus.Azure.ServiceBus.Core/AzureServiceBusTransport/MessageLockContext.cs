@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface MessageLockContext
 {
-    using System;
-    using System.Threading.Tasks;
+    Task Complete();
 
-
-    public interface MessageLockContext
-    {
-        Task Complete();
-
-        Task Abandon(Exception exception);
-        Task DeadLetter();
-        Task DeadLetter(Exception exception);
-    }
+    Task Abandon(Exception exception);
+    Task DeadLetter();
+    Task DeadLetter(Exception exception);
 }

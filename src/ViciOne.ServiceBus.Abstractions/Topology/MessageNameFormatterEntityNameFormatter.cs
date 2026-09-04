@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus;
+
+public class MessageNameFormatterEntityNameFormatter :
+    IEntityNameFormatter
 {
-    using Transports;
+    readonly IMessageNameFormatter _formatter;
 
-
-    public class MessageNameFormatterEntityNameFormatter :
-        IEntityNameFormatter
+    public MessageNameFormatterEntityNameFormatter(IMessageNameFormatter formatter)
     {
-        readonly IMessageNameFormatter _formatter;
+        _formatter = formatter;
+    }
 
-        public MessageNameFormatterEntityNameFormatter(IMessageNameFormatter formatter)
-        {
-            _formatter = formatter;
-        }
-
-        string IEntityNameFormatter.FormatEntityName<T>()
-        {
-            return _formatter.GetMessageName(typeof(T));
-        }
+    string IEntityNameFormatter.FormatEntityName<T>()
+    {
+        return _formatter.GetMessageName(typeof(T));
     }
 }

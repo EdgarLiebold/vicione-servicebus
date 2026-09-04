@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
-
 using MessagePack;
 using MessagePack.Formatters;
 
+namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 
 public class InterfaceConcreteMapFormatter<TInterface, TImplementation> :
     IMessagePackFormatter<TInterface>

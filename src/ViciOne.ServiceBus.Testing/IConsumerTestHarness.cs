@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Testing
+namespace ViciOne.ServiceBus.Testing;
+
+public interface IConsumerTestHarness<TConsumer>
+    where TConsumer : class, IConsumer
 {
-    public interface IConsumerTestHarness<TConsumer>
-        where TConsumer : class, IConsumer
-    {
-        IReceivedMessageList Consumed { get; }
-    }
+    IReceivedMessageList Consumed { get; }
 }

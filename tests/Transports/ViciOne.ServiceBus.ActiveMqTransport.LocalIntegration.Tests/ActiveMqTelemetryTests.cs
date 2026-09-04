@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
-
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests.Infrastructure;
@@ -8,6 +6,8 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.LocalIntegration.Tests;
 
 [Collection(ActiveMqTelemetryCollection.Name)]
 public sealed class ActiveMqTelemetryTests

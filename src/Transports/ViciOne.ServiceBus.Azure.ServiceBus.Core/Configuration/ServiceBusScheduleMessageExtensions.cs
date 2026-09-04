@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public static class ServiceBusScheduleMessageExtensions
 {
-    using System;
-    using Configuration;
-
-
-    public static class ServiceBusScheduleMessageExtensions
+    /// <summary>
+    /// Uses the Enqueue time of Service Bus messages to schedule future delivery of messages instead
+    /// of using Quartz. A natively supported feature that is highly reliable.
+    /// </summary>
+    /// <param name="configurator"></param>
+    public static void UseServiceBusMessageScheduler(this IBusFactoryConfigurator configurator)
     {
-        /// <summary>
-        /// Uses the Enqueue time of Service Bus messages to schedule future delivery of messages instead
-        /// of using Quartz. A natively supported feature that is highly reliable.
-        /// </summary>
-        /// <param name="configurator"></param>
-        public static void UseServiceBusMessageScheduler(this IBusFactoryConfigurator configurator)
-        {
-            if (configurator == null)
-                throw new ArgumentNullException(nameof(configurator));
+        if (configurator == null)
+            throw new ArgumentNullException(nameof(configurator));
 
-            var pipeBuilderConfigurator = new ServiceBusMessageSchedulerSpecification();
+        var pipeBuilderConfigurator = new ServiceBusMessageSchedulerSpecification();
 
-            configurator.AddPrePipeSpecification(pipeBuilderConfigurator);
-        }
+        configurator.AddPrePipeSpecification(pipeBuilderConfigurator);
     }
 }

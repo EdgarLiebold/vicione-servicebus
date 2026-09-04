@@ -1,9 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Middleware;
-
 using System;
 using System.Threading.Tasks;
-using CircuitBreaker;
+using ViciOne.ServiceBus.Middleware.CircuitBreaker;
+
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware;
 
 internal sealed class CircuitBreakerFilter<TContext> : IFilter<TContext>
     where TContext : class, PipeContext

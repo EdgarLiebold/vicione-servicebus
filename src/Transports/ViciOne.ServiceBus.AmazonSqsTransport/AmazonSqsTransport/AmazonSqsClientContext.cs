@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +8,12 @@ using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Internals;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Middleware;
-using Topology;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class AmazonSqsClientContext :
     ScopePipeContext,
@@ -191,9 +190,7 @@ public class AmazonSqsClientContext :
         {
             MaxNumberOfMessages = messageLimit,
             WaitTimeSeconds = waitTime,
-            #pragma warning disable CS0618 // Type or member is obsolete
-            AttributeNames = ["All"],
-            #pragma warning restore CS0618 // Type or member is obsolete
+            MessageSystemAttributeNames = ["All"],
             MessageAttributeNames = ["All"]
         };
 

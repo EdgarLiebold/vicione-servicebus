@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +5,7 @@ using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.Middleware;
 
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
 
 public class SharedConnectionContext :
     ProxyPipeContext,

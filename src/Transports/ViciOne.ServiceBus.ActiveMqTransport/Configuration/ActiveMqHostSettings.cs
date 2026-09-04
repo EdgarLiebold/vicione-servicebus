@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
-    using Apache.NMS;
+using System;
+using Apache.NMS;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Settings to configure a ActiveMQ host explicitly without requiring the fluent interface
+/// </summary>
+public interface ActiveMqHostSettings
+{
+    /// <summary>
+    /// The ActiveMQ host to connect to (should be a valid hostname)
+    /// </summary>
+    string Host { get; }
 
     /// <summary>
-    /// Settings to configure a ActiveMQ host explicitly without requiring the fluent interface
+    /// The ActiveMQ port to connect
     /// </summary>
-    public interface ActiveMqHostSettings
-    {
-        /// <summary>
-        /// The ActiveMQ host to connect to (should be a valid hostname)
-        /// </summary>
-        string Host { get; }
+    int Port { get; }
 
-        /// <summary>
-        /// The ActiveMQ port to connect
-        /// </summary>
-        int Port { get; }
+    /// <summary>
+    /// The logical host scope used when formatting endpoint addresses.
+    /// </summary>
+    string VirtualHost { get; }
 
-        /// <summary>
-        /// The logical host scope used when formatting endpoint addresses.
-        /// </summary>
-        string VirtualHost { get; }
+    /// <summary>
+    /// The Username for connecting to the host
+    /// </summary>
+    string Username { get; }
 
-        /// <summary>
-        /// The Username for connecting to the host
-        /// </summary>
-        string Username { get; }
+    /// <summary>
+    /// The password for connection to the host
+    /// MAYBE this should be a SecureString instead of a regular string
+    /// </summary>
+    string Password { get; }
 
-        /// <summary>
-        /// The password for connection to the host
-        /// MAYBE this should be a SecureString instead of a regular string
-        /// </summary>
-        string Password { get; }
+    /// <summary>
+    /// Returns the host address
+    /// </summary>
+    Uri HostAddress { get; }
 
-        /// <summary>
-        /// Returns the host address
-        /// </summary>
-        Uri HostAddress { get; }
+    bool UseSsl { get; }
 
-        bool UseSsl { get; }
+    Uri BrokerAddress { get; }
 
-        Uri BrokerAddress { get; }
-
-        IConnection CreateConnection();
-    }
+    IConnection CreateConnection();
 }

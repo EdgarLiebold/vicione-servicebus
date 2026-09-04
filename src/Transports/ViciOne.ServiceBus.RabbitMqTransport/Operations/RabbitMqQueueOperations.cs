@@ -1,15 +1,14 @@
-#nullable enable
-namespace ViciOne.ServiceBus.RabbitMqTransport.Operations;
-
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
 using RabbitMQ.Client;
-using Transports;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
 
+#nullable enable
+namespace ViciOne.ServiceBus.RabbitMqTransport.Operations;
 
 internal sealed class RabbitMqQueueOperations : IRabbitMqQueueOperations
 {

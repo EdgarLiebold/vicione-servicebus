@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Immutable policy controlling how message data is inlined and persisted.
+/// </summary>
+public sealed record MessageDataPolicy
 {
-    using System;
+    public static MessageDataPolicy Default { get; } = new();
 
-
-    /// <summary>
-    /// Immutable policy controlling how message data is inlined and persisted.
-    /// </summary>
-    public sealed record MessageDataPolicy
+    public MessageDataPolicy(
+        bool alwaysWriteToRepository = true,
+        int threshold = 4096,
+        TimeSpan? timeToLive = null,
+        TimeSpan? extraTimeToLive = null)
     {
-        public static MessageDataPolicy Default { get; } = new();
+        if (threshold < 0)
+            throw new ArgumentOutOfRangeException(nameof(threshold));
+        if (timeToLive.HasValue && timeToLive.Value <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(timeToLive));
+        if (extraTimeToLive.HasValue && extraTimeToLive.Value <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(extraTimeToLive));
 
-        public MessageDataPolicy(
-            bool alwaysWriteToRepository = true,
-            int threshold = 4096,
-            TimeSpan? timeToLive = null,
-            TimeSpan? extraTimeToLive = null)
-        {
-            if (threshold < 0)
-                throw new ArgumentOutOfRangeException(nameof(threshold));
-            if (timeToLive.HasValue && timeToLive.Value <= TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(timeToLive));
-            if (extraTimeToLive.HasValue && extraTimeToLive.Value <= TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(extraTimeToLive));
-
-            AlwaysWriteToRepository = alwaysWriteToRepository;
-            Threshold = threshold;
-            TimeToLive = timeToLive;
-            ExtraTimeToLive = extraTimeToLive;
-        }
-
-        public bool AlwaysWriteToRepository { get; }
-        public int Threshold { get; }
-        public TimeSpan? TimeToLive { get; }
-        public TimeSpan? ExtraTimeToLive { get; }
+        AlwaysWriteToRepository = alwaysWriteToRepository;
+        Threshold = threshold;
+        TimeToLive = timeToLive;
+        ExtraTimeToLive = extraTimeToLive;
     }
+
+    public bool AlwaysWriteToRepository { get; }
+    public int Threshold { get; }
+    public TimeSpan? TimeToLive { get; }
+    public TimeSpan? ExtraTimeToLive { get; }
 }

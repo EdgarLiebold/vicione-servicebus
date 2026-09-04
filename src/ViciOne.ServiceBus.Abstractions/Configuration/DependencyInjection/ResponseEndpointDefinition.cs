@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Specifies a temporary endpoint, with the prefix "response"
+/// </summary>
+public class ResponseEndpointDefinition :
+    TemporaryEndpointDefinition
 {
-    /// <summary>
-    /// Specifies a temporary endpoint, with the prefix "response"
-    /// </summary>
-    public class ResponseEndpointDefinition :
-        TemporaryEndpointDefinition
+    public ResponseEndpointDefinition()
+        : base("response")
     {
-        public ResponseEndpointDefinition()
-            : base("response")
-        {
-        }
     }
 }

@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class BusTestPublishObserver :
+    InactivityTestObserver,
+    IPublishObserver
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly PublishedMessageList _messages;
 
-
-    public class BusTestPublishObserver :
-        InactivityTestObserver,
-        IPublishObserver
+    public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted = default)
+        : this(timeout, inactivityTimout, testCompleted, TimeProvider.System)
     {
-        readonly PublishedMessageList _messages;
+    }
 
-        public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted = default)
-            : this(timeout, inactivityTimout, testCompleted, TimeProvider.System)
-        {
-        }
+    public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted, TimeProvider timeProvider)
+        : base(timeProvider)
+    {
+        _messages = new PublishedMessageList(timeout, testCompleted, timeProvider);
 
-        public BusTestPublishObserver(TimeSpan timeout, TimeSpan inactivityTimout, CancellationToken testCompleted, TimeProvider timeProvider)
-            : base(timeProvider)
-        {
-            _messages = new PublishedMessageList(timeout, testCompleted, timeProvider);
+        StartTimer(inactivityTimout);
+    }
 
-            StartTimer(inactivityTimout);
-        }
+    public IPublishedMessageList Messages => _messages;
 
-        public IPublishedMessageList Messages => _messages;
+    Task IPublishObserver.PrePublish<T>(PublishContext<T> context)
+    {
+        return RestartTimer();
+    }
 
-        Task IPublishObserver.PrePublish<T>(PublishContext<T> context)
-        {
-            return RestartTimer();
-        }
+    Task IPublishObserver.PostPublish<T>(PublishContext<T> context)
+    {
+        _messages.Add(context);
 
-        Task IPublishObserver.PostPublish<T>(PublishContext<T> context)
-        {
-            _messages.Add(context);
+        return RestartTimer(false);
+    }
 
-            return RestartTimer(false);
-        }
+    Task IPublishObserver.PublishFault<T>(PublishContext<T> context, Exception exception)
+    {
+        _messages.Add(context, exception);
 
-        Task IPublishObserver.PublishFault<T>(PublishContext<T> context, Exception exception)
-        {
-            _messages.Add(context, exception);
-
-            return RestartTimer(false);
-        }
+        return RestartTimer(false);
     }
 }

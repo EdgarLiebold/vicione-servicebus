@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Provides one context-scoped source of time for message-pipeline decisions. A context without an
 /// explicit provider uses <see cref="TimeProvider.System" />.
@@ -33,8 +31,8 @@ public static class PipeContextTimeProviderExtensions
     }
 
     /// <summary>
-    /// Sets the provider used by subsequent time-dependent decisions on this context. Middleware and
-    /// deterministic tests can use the standard .NET abstraction without introducing another clock.
+    /// Sets the provider used by subsequent time-dependent decisions on this context, keeping all
+    /// context timing behind the standard .NET clock abstraction.
     /// </summary>
     public static void SetTimeProvider(this PipeContext context, TimeProvider timeProvider)
     {

@@ -1,5 +1,5 @@
-using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Components;
+using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

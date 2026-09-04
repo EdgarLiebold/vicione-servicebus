@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class NoRetryPolicy :
+    IRetryPolicy
 {
-    using System;
+    readonly IExceptionFilter _filter;
 
-
-    public class NoRetryPolicy :
-        IRetryPolicy
+    public NoRetryPolicy(IExceptionFilter filter)
     {
-        readonly IExceptionFilter _filter;
+        _filter = filter ?? throw new ArgumentNullException(nameof(filter));
+    }
 
-        public NoRetryPolicy(IExceptionFilter filter)
-        {
-            _filter = filter ?? throw new ArgumentNullException(nameof(filter));
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.Set(new { Policy = "None" });
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.Set(new { Policy = "None" });
-        }
+    RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
+    {
+        return new NoRetryPolicyContext<T>(this, context);
+    }
 
-        RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
-        {
-            return new NoRetryPolicyContext<T>(this, context);
-        }
+    bool IRetryPolicy.IsHandled(Exception exception)
+    {
+        return _filter.Match(exception);
+    }
 
-        bool IRetryPolicy.IsHandled(Exception exception)
-        {
-            return _filter.Match(exception);
-        }
-
-        public override string ToString()
-        {
-            return "None";
-        }
+    public override string ToString()
+    {
+        return "None";
     }
 }

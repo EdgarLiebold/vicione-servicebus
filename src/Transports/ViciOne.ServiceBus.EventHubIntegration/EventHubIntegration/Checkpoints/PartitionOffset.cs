@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints
+using Azure.Messaging.EventHubs.Processor;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.Checkpoints;
+
+// ReSharper disable NotAccessedField.Local
+public readonly struct PartitionOffset
 {
-    using Azure.Messaging.EventHubs.Processor;
+    readonly string _partitionId;
+    readonly string _offsetString;
 
-
-    // ReSharper disable NotAccessedField.Local
-    public readonly struct PartitionOffset
+    PartitionOffset(string partitionId, string offsetString)
     {
-        readonly string _partitionId;
-        readonly string _offsetString;
+        _partitionId = partitionId;
+        _offsetString = offsetString;
+    }
 
-        PartitionOffset(string partitionId, string offsetString)
-        {
-            _partitionId = partitionId;
-            _offsetString = offsetString;
-        }
+    public override string ToString()
+    {
+        return $"{_partitionId}/{_offsetString}";
+    }
 
-        public override string ToString()
-        {
-            return $"{_partitionId}/{_offsetString}";
-        }
-
-        public static implicit operator PartitionOffset(in ProcessEventArgs args)
-        {
-            return new PartitionOffset(args.Partition.PartitionId, args.Data.OffsetString);
-        }
+    public static implicit operator PartitionOffset(in ProcessEventArgs args)
+    {
+        return new PartitionOffset(args.Partition.PartitionId, args.Data.OffsetString);
     }
 }

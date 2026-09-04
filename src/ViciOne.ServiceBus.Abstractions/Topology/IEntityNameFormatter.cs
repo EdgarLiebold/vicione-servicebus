@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Used to build entity names for the publish topology
+/// </summary>
+public interface IEntityNameFormatter
 {
     /// <summary>
-    /// Used to build entity names for the publish topology
+    /// Formats the entity name for the given message type
     /// </summary>
-    public interface IEntityNameFormatter
-    {
-        /// <summary>
-        /// Formats the entity name for the given message type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        string FormatEntityName<T>();
-    }
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    string FormatEntityName<T>();
 }

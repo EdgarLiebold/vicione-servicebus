@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus
+using System;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus;
+
+public interface ISetScopedConsumeContext
 {
-    using System;
-    using Microsoft.Extensions.DependencyInjection;
-
-
-    public interface ISetScopedConsumeContext
-    {
-        IDisposable PushContext(IServiceScope serviceProvider, ConsumeContext context);
-    }
+    IDisposable PushContext(IServiceScope serviceProvider, ConsumeContext context);
 }

@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface ScheduledMessage
 {
-    using System;
+    Guid TokenId { get; }
+    DateTime ScheduledTime { get; }
+    Uri Destination { get; }
+}
 
 
-    public interface ScheduledMessage
-    {
-        Guid TokenId { get; }
-        DateTime ScheduledTime { get; }
-        Uri Destination { get; }
-    }
-
-
-    public interface ScheduledMessage<out T> :
-        ScheduledMessage
-        where T : class
-    {
-        T Payload { get; }
-    }
+public interface ScheduledMessage<out T> :
+    ScheduledMessage
+    where T : class
+{
+    T Payload { get; }
 }

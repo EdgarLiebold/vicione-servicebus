@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus;
+
+public static class PartitionKeyConventionExtensions
 {
-    using System;
-    using Configuration;
-    using Transports;
-
-
-    public static class PartitionKeyConventionExtensions
+    public static void UsePartitionKeyFormatter<T>(this IMessageSendTopologyConfigurator<T> configurator, IMessagePartitionKeyFormatter<T> formatter)
+        where T : class
     {
-        public static void UsePartitionKeyFormatter<T>(this IMessageSendTopologyConfigurator<T> configurator, IMessagePartitionKeyFormatter<T> formatter)
-            where T : class
+        configurator.UpdateConvention<IPartitionKeyMessageSendTopologyConvention<T>>(update =>
         {
-            configurator.UpdateConvention<IPartitionKeyMessageSendTopologyConvention<T>>(update =>
-            {
-                update.SetFormatter(formatter);
+            update.SetFormatter(formatter);
 
-                return update;
-            });
-        }
+            return update;
+        });
+    }
 
-        /// <summary>
-        /// Use the partition key formatter for the specified message type
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="configurator"></param>
-        /// <param name="formatter"></param>
-        public static void UsePartitionKeyFormatter<T>(this ISendTopologyConfigurator configurator, IMessagePartitionKeyFormatter<T> formatter)
-            where T : class
-        {
-            configurator.GetMessageTopology<T>().UsePartitionKeyFormatter(formatter);
-        }
+    /// <summary>
+    /// Use the partition key formatter for the specified message type
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="configurator"></param>
+    /// <param name="formatter"></param>
+    public static void UsePartitionKeyFormatter<T>(this ISendTopologyConfigurator configurator, IMessagePartitionKeyFormatter<T> formatter)
+        where T : class
+    {
+        configurator.GetMessageTopology<T>().UsePartitionKeyFormatter(formatter);
+    }
 
-        /// <summary>
-        /// Use the delegate to format the partition key, using Empty if the string is null upon return
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="configurator"></param>
-        /// <param name="formatter"></param>
-        public static void UsePartitionKeyFormatter<T>(this ISendTopologyConfigurator configurator, Func<SendContext<T>, string> formatter)
-            where T : class
-        {
-            configurator.GetMessageTopology<T>().UsePartitionKeyFormatter(new DelegatePartitionKeyFormatter<T>(formatter));
-        }
+    /// <summary>
+    /// Use the delegate to format the partition key, using Empty if the string is null upon return
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="configurator"></param>
+    /// <param name="formatter"></param>
+    public static void UsePartitionKeyFormatter<T>(this ISendTopologyConfigurator configurator, Func<SendContext<T>, string> formatter)
+        where T : class
+    {
+        configurator.GetMessageTopology<T>().UsePartitionKeyFormatter(new DelegatePartitionKeyFormatter<T>(formatter));
+    }
 
-        /// <summary>
-        /// Use the delegate to format the partition key, using Empty if the string is null upon return
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="configurator"></param>
-        /// <param name="formatter"></param>
-        public static void UsePartitionKeyFormatter<T>(this IMessageSendTopologyConfigurator<T> configurator, Func<SendContext<T>, string> formatter)
-            where T : class
-        {
-            configurator.UsePartitionKeyFormatter(new DelegatePartitionKeyFormatter<T>(formatter));
-        }
+    /// <summary>
+    /// Use the delegate to format the partition key, using Empty if the string is null upon return
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="configurator"></param>
+    /// <param name="formatter"></param>
+    public static void UsePartitionKeyFormatter<T>(this IMessageSendTopologyConfigurator<T> configurator, Func<SendContext<T>, string> formatter)
+        where T : class
+    {
+        configurator.UsePartitionKeyFormatter(new DelegatePartitionKeyFormatter<T>(formatter));
     }
 }

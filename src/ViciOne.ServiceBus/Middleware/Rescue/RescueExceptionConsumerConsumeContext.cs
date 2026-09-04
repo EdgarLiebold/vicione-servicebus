@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Middleware.Rescue
+using System;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Events;
+
+namespace ViciOne.ServiceBus.Middleware.Rescue;
+
+public class RescueExceptionConsumerConsumeContext<TConsumer> :
+    ConsumeContextProxy,
+    ExceptionConsumerConsumeContext<TConsumer>
+    where TConsumer : class
 {
-    using System;
-    using Context;
-    using Events;
+    readonly ConsumerConsumeContext<TConsumer> _context;
+    ExceptionInfo _exceptionInfo;
 
-
-    public class RescueExceptionConsumerConsumeContext<TConsumer> :
-        ConsumeContextProxy,
-        ExceptionConsumerConsumeContext<TConsumer>
-        where TConsumer : class
+    public RescueExceptionConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, Exception exception)
+        : base(context)
     {
-        readonly ConsumerConsumeContext<TConsumer> _context;
-        ExceptionInfo _exceptionInfo;
+        _context = context;
+        Exception = exception;
+    }
 
-        public RescueExceptionConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, Exception exception)
-            : base(context)
-        {
-            _context = context;
-            Exception = exception;
-        }
+    public TConsumer Consumer => _context.Consumer;
 
-        public TConsumer Consumer => _context.Consumer;
+    public Exception Exception { get; }
 
-        public Exception Exception { get; }
-
-        public ExceptionInfo ExceptionInfo
-        {
-            get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
-        }
+    public ExceptionInfo ExceptionInfo
+    {
+        get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
     }
 }

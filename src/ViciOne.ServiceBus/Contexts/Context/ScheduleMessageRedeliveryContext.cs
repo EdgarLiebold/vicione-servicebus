@@ -1,40 +1,38 @@
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Middleware;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Context
+namespace ViciOne.ServiceBus.Context;
+
+/// <summary>
+/// Used to schedule message redelivery using the message scheduler
+/// </summary>
+/// <typeparam name="TMessage">The message type</typeparam>
+public class ScheduleMessageRedeliveryContext<TMessage> :
+    MessageRedeliveryContext
+    where TMessage : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Middleware;
+    readonly ConsumeContext<TMessage> _context;
+    readonly RedeliveryOptions _options;
 
-
-    /// <summary>
-    /// Used to schedule message redelivery using the message scheduler
-    /// </summary>
-    /// <typeparam name="TMessage">The message type</typeparam>
-    public class ScheduleMessageRedeliveryContext<TMessage> :
-        MessageRedeliveryContext
-        where TMessage : class
+    public ScheduleMessageRedeliveryContext(ConsumeContext<TMessage> context, RedeliveryOptions options)
     {
-        readonly ConsumeContext<TMessage> _context;
-        readonly RedeliveryOptions _options;
+        _context = context;
+        _options = options;
+    }
 
-        public ScheduleMessageRedeliveryContext(ConsumeContext<TMessage> context, RedeliveryOptions options)
+    public Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)
+    {
+        var schedulerContext = _context.GetPayload<MessageSchedulerContext>();
+
+        void SendCallback(ConsumeContext consumeContext, SendContext sendContext)
         {
-            _context = context;
-            _options = options;
+            sendContext.ApplyRedeliveryOptions(consumeContext, _options);
+
+            callback?.Invoke(consumeContext, sendContext);
         }
 
-        public Task ScheduleRedelivery(TimeSpan delay, Action<ConsumeContext, SendContext>? callback)
-        {
-            var schedulerContext = _context.GetPayload<MessageSchedulerContext>();
-
-            void SendCallback(ConsumeContext consumeContext, SendContext sendContext)
-            {
-                sendContext.ApplyRedeliveryOptions(consumeContext, _options);
-
-                callback?.Invoke(consumeContext, sendContext);
-            }
-
-            return schedulerContext.ScheduleSend(delay, _context.Message, new CopyContextPipe(_context, SendCallback));
-        }
+        return schedulerContext.ScheduleSend(delay, _context.Message, new CopyContextPipe(_context, SendCallback));
     }
 }

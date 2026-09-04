@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISagaConnectorFactory
 {
-    public interface ISagaConnectorFactory
-    {
-        ISagaMessageConnector<T> CreateMessageConnector<T>()
-            where T : class, ISaga;
-    }
+    ISagaMessageConnector<T> CreateMessageConnector<T>()
+        where T : class, ISaga;
 }

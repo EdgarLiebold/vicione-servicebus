@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Testing
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public interface IAsyncElementList<out TElement>
+    where TElement : class, IAsyncListElement
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
+    int Count { get; }
 
+    TestContextSaveMode SaveMode { get; }
 
-    public interface IAsyncElementList<out TElement>
-        where TElement : class, IAsyncListElement
-    {
-        int Count { get; }
+    int MaximumSavedElements { get; }
 
-        TestContextSaveMode SaveMode { get; }
+    IReadOnlyList<TElement> Snapshot();
 
-        int MaximumSavedElements { get; }
+    IEnumerable<TElement> Select(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 
-        IReadOnlyList<TElement> Snapshot();
+    IAsyncEnumerable<TElement> SelectAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 
-        IEnumerable<TElement> Select(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
-
-        IAsyncEnumerable<TElement> SelectAsync(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
-
-        Task<bool> Any(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
-    }
+    Task<bool> Any(FilterDelegate<TElement> filter, CancellationToken cancellationToken = default);
 }

@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.MessageData.Configuration
+using System;
+using System.Reflection;
+using ViciOne.ServiceBus.Initializers.PropertyProviders;
+using ViciOne.ServiceBus.MessageData.PropertyProviders;
+
+namespace ViciOne.ServiceBus.MessageData.Configuration;
+
+public class GetMessageDataTransformConfiguration<TInput, TValue> :
+    IMessageDataTransformConfiguration<TInput>
+    where TInput : class
 {
-    using System;
-    using System.Reflection;
-    using Initializers.PropertyProviders;
-    using PropertyProviders;
+    readonly PropertyInfo _property;
+    readonly IMessageDataRepository _repository;
 
-
-    public class GetMessageDataTransformConfiguration<TInput, TValue> :
-        IMessageDataTransformConfiguration<TInput>
-        where TInput : class
+    public GetMessageDataTransformConfiguration(IMessageDataRepository repository, PropertyInfo property)
     {
-        readonly PropertyInfo _property;
-        readonly IMessageDataRepository _repository;
+        if (repository == null)
+            throw new ArgumentNullException(nameof(repository));
 
-        public GetMessageDataTransformConfiguration(IMessageDataRepository repository, PropertyInfo property)
-        {
-            if (repository == null)
-                throw new ArgumentNullException(nameof(repository));
+        _property = property;
+        _repository = repository;
+    }
 
-            _property = property;
-            _repository = repository;
-        }
+    public void Apply(ITransformConfigurator<TInput> configurator)
+    {
+        var inputPropertyProvider = new InputPropertyProvider<TInput, MessageData<TValue>>(_property);
 
-        public void Apply(ITransformConfigurator<TInput> configurator)
-        {
-            var inputPropertyProvider = new InputPropertyProvider<TInput, MessageData<TValue>>(_property);
+        var provider = new GetMessageDataPropertyProvider<TInput, TValue>(inputPropertyProvider, _repository);
 
-            var provider = new GetMessageDataPropertyProvider<TInput, TValue>(inputPropertyProvider, _repository);
-
-            configurator.Set(_property, provider);
-        }
+        configurator.Set(_property, provider);
     }
 }

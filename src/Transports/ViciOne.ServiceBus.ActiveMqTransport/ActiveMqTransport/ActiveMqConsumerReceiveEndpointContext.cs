@@ -1,77 +1,75 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System;
+using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class ActiveMqConsumerReceiveEndpointContext :
+    BaseReceiveEndpointContext,
+    ActiveMqReceiveEndpointContext
 {
-    using System;
-    using Configuration;
-    using Topology;
-    using Transports;
-    using Util;
+    readonly IActiveMqReceiveEndpointConfiguration _configuration;
+    readonly IActiveMqHostConfiguration _hostConfiguration;
+    readonly Recycle<ISessionContextSupervisor> _sessionContext;
 
-
-    public class ActiveMqConsumerReceiveEndpointContext :
-        BaseReceiveEndpointContext,
-        ActiveMqReceiveEndpointContext
+    public ActiveMqConsumerReceiveEndpointContext(IActiveMqHostConfiguration hostConfiguration, IActiveMqReceiveEndpointConfiguration configuration,
+        BrokerTopology brokerTopology)
+        : base(hostConfiguration, configuration)
     {
-        readonly IActiveMqReceiveEndpointConfiguration _configuration;
-        readonly IActiveMqHostConfiguration _hostConfiguration;
-        readonly Recycle<ISessionContextSupervisor> _sessionContext;
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+        BrokerTopology = brokerTopology;
 
-        public ActiveMqConsumerReceiveEndpointContext(IActiveMqHostConfiguration hostConfiguration, IActiveMqReceiveEndpointConfiguration configuration,
-            BrokerTopology brokerTopology)
-            : base(hostConfiguration, configuration)
+        _sessionContext = new Recycle<ISessionContextSupervisor>(() => new SessionContextSupervisor(hostConfiguration.ConnectionContextSupervisor));
+    }
+
+    public BrokerTopology BrokerTopology { get; }
+
+    public IConnectionContextSupervisor ConnectionContextSupervisor => _hostConfiguration.ConnectionContextSupervisor;
+
+    public ISessionContextSupervisor SessionContextSupervisor => _sessionContext.Supervisor;
+
+    public override void AddSendAgent(IAgent agent)
+    {
+        _sessionContext.Supervisor.AddSendAgent(agent);
+    }
+
+    public override void AddConsumeAgent(IAgent agent)
+    {
+        _sessionContext.Supervisor.AddConsumeAgent(agent);
+    }
+
+    public override Exception ConvertException(Exception exception, string message)
+    {
+        return new ActiveMqConnectionException(message + _hostConfiguration.Settings.ToDescription(), exception);
+    }
+
+    public override void Probe(ProbeContext context)
+    {
+        context.Add("type", "ActiveMQ");
+        context.Set(new
         {
-            _hostConfiguration = hostConfiguration;
-            _configuration = configuration;
-            BrokerTopology = brokerTopology;
+            _configuration.Settings.EntityName,
+            _configuration.Settings.Durable,
+            _configuration.Settings.AutoDelete,
+            _configuration.Settings.PrefetchCount,
+            _configuration.Settings.ConcurrentMessageLimit
+        });
 
-            _sessionContext = new Recycle<ISessionContextSupervisor>(() => new SessionContextSupervisor(hostConfiguration.ConnectionContextSupervisor));
-        }
+        var topologyScope = context.CreateScope("topology");
 
-        public BrokerTopology BrokerTopology { get; }
+        BrokerTopology.Probe(topologyScope);
+    }
 
-        public IConnectionContextSupervisor ConnectionContextSupervisor => _hostConfiguration.ConnectionContextSupervisor;
+    protected override ISendTransportProvider CreateSendTransportProvider()
+    {
+        return new ActiveMqSendTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
+    }
 
-        public ISessionContextSupervisor SessionContextSupervisor => _sessionContext.Supervisor;
-
-        public override void AddSendAgent(IAgent agent)
-        {
-            _sessionContext.Supervisor.AddSendAgent(agent);
-        }
-
-        public override void AddConsumeAgent(IAgent agent)
-        {
-            _sessionContext.Supervisor.AddConsumeAgent(agent);
-        }
-
-        public override Exception ConvertException(Exception exception, string message)
-        {
-            return new ActiveMqConnectionException(message + _hostConfiguration.Settings.ToDescription(), exception);
-        }
-
-        public override void Probe(ProbeContext context)
-        {
-            context.Add("type", "ActiveMQ");
-            context.Set(new
-            {
-                _configuration.Settings.EntityName,
-                _configuration.Settings.Durable,
-                _configuration.Settings.AutoDelete,
-                _configuration.Settings.PrefetchCount,
-                _configuration.Settings.ConcurrentMessageLimit
-            });
-
-            var topologyScope = context.CreateScope("topology");
-
-            BrokerTopology.Probe(topologyScope);
-        }
-
-        protected override ISendTransportProvider CreateSendTransportProvider()
-        {
-            return new ActiveMqSendTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
-        }
-
-        protected override IPublishTransportProvider CreatePublishTransportProvider()
-        {
-            return new ActiveMqPublishTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
-        }
+    protected override IPublishTransportProvider CreatePublishTransportProvider()
+    {
+        return new ActiveMqPublishTransportProvider(_hostConfiguration.ConnectionContextSupervisor, this);
     }
 }

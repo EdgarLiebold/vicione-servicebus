@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
-
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
 
 public class ServiceBusSendContextFilter<T> :
     IFilter<SendContext<T>>

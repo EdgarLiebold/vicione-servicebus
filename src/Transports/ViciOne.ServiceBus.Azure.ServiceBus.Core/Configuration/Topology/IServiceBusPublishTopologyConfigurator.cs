@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IServiceBusPublishTopologyConfigurator :
+    IPublishTopologyConfigurator,
+    IServiceBusPublishTopology
 {
-    using System;
+    new IServiceBusMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
+        where T : class;
 
-
-    public interface IServiceBusPublishTopologyConfigurator :
-        IPublishTopologyConfigurator,
-        IServiceBusPublishTopology
-    {
-        new IServiceBusMessagePublishTopologyConfigurator<T> GetMessageTopology<T>()
-            where T : class;
-
-        new IServiceBusMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
-    }
+    new IServiceBusMessagePublishTopologyConfigurator GetMessageTopology(Type messageType);
 }

@@ -1,51 +1,49 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Configuration
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Configuration;
+
+class EntityFrameworkSagaRepository :
+    IEntityFrameworkSagaRepository
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using Microsoft.EntityFrameworkCore;
+    readonly ConcurrentDictionary<Type, ISagaClassMap> _configurations;
+    readonly DbContextOptions _dbContextOptions;
 
-
-    class EntityFrameworkSagaRepository :
-        IEntityFrameworkSagaRepository
+    public EntityFrameworkSagaRepository(DbContextOptions dbContextOptions)
     {
-        readonly ConcurrentDictionary<Type, ISagaClassMap> _configurations;
-        readonly DbContextOptions _dbContextOptions;
+        _dbContextOptions = dbContextOptions;
+        _configurations = new ConcurrentDictionary<Type, ISagaClassMap>();
+    }
 
-        public EntityFrameworkSagaRepository(DbContextOptions dbContextOptions)
+    public void AddSagaClassMap<TSaga>(ISagaClassMap<TSaga> sagaClassMap)
+        where TSaga : class, ISaga
+    {
+        if (sagaClassMap == null)
+            throw new ArgumentNullException(nameof(sagaClassMap));
+        _configurations.GetOrAdd(sagaClassMap.SagaType, sagaClassMap);
+    }
+
+    public DbContext GetDbContext()
+    {
+        return new RepositorySagaDbContext(_dbContextOptions, _configurations.Values);
+    }
+
+    public static DbContextOptionsBuilder CreateOptionsBuilder()
+    {
+        return new DbContextOptionsBuilder<RepositorySagaDbContext>();
+    }
+
+
+    class RepositorySagaDbContext : SagaDbContext
+    {
+        public RepositorySagaDbContext(DbContextOptions options, IEnumerable<ISagaClassMap> configurations)
+            : base(options)
         {
-            _dbContextOptions = dbContextOptions;
-            _configurations = new ConcurrentDictionary<Type, ISagaClassMap>();
+            Configurations = configurations;
         }
 
-        public void AddSagaClassMap<TSaga>(ISagaClassMap<TSaga> sagaClassMap)
-            where TSaga : class, ISaga
-        {
-            if (sagaClassMap == null)
-                throw new ArgumentNullException(nameof(sagaClassMap));
-            _configurations.GetOrAdd(sagaClassMap.SagaType, sagaClassMap);
-        }
-
-        public DbContext GetDbContext()
-        {
-            return new RepositorySagaDbContext(_dbContextOptions, _configurations.Values);
-        }
-
-        public static DbContextOptionsBuilder CreateOptionsBuilder()
-        {
-            return new DbContextOptionsBuilder<RepositorySagaDbContext>();
-        }
-
-
-        class RepositorySagaDbContext : SagaDbContext
-        {
-            public RepositorySagaDbContext(DbContextOptions options, IEnumerable<ISagaClassMap> configurations)
-                : base(options)
-            {
-                Configurations = configurations;
-            }
-
-            protected override IEnumerable<ISagaClassMap> Configurations { get; }
-        }
+        protected override IEnumerable<ISagaClassMap> Configurations { get; }
     }
 }

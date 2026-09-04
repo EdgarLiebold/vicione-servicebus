@@ -1,61 +1,59 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Observables;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Executes an activity as part of an activity execute host pipe
+/// </summary>
+/// <typeparam name="TArguments"></typeparam>
+/// <typeparam name="TActivity"></typeparam>
+public class ExecuteActivityFilter<TActivity, TArguments> :
+    IFilter<ExecuteActivityContext<TActivity, TArguments>>
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Internals;
-    using Observables;
+    readonly ActivityObservable _observers;
 
-
-    /// <summary>
-    /// Executes an activity as part of an activity execute host pipe
-    /// </summary>
-    /// <typeparam name="TArguments"></typeparam>
-    /// <typeparam name="TActivity"></typeparam>
-    public class ExecuteActivityFilter<TActivity, TArguments> :
-        IFilter<ExecuteActivityContext<TActivity, TArguments>>
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
+    public ExecuteActivityFilter(ActivityObservable observers)
     {
-        readonly ActivityObservable _observers;
+        _observers = observers;
+    }
 
-        public ExecuteActivityFilter(ActivityObservable observers)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("execute");
+    }
+
+    public async Task Send(ExecuteActivityContext<TActivity, TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    {
+        try
         {
-            _observers = observers;
+            if (_observers.Count > 0)
+                await _observers.PreExecute(context).ConfigureAwait(false);
+
+            var result = context.Result = await context.Activity.Execute(context).ConfigureAwait(false)
+                ?? context.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
+
+            if (result.IsFaulted(out var exception))
+                exception.Rethrow();
+
+            await next.Send(context).ConfigureAwait(false);
+
+            if (_observers.Count > 0)
+                await _observers.PostExecute(context).ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        catch (Exception exception)
         {
-            context.CreateFilterScope("execute");
-        }
+            if (context.Result == null || !context.Result.IsFaulted(out var faultException) || faultException != exception)
+                context.Result = context.Faulted(exception);
 
-        public async Task Send(ExecuteActivityContext<TActivity, TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
-        {
-            try
-            {
-                if (_observers.Count > 0)
-                    await _observers.PreExecute(context).ConfigureAwait(false);
+            if (_observers.Count > 0)
+                await _observers.ExecuteFault(context, exception).ConfigureAwait(false);
 
-                var result = context.Result = await context.Activity.Execute(context).ConfigureAwait(false)
-                    ?? context.Faulted(new ActivityExecutionException("The activity execute did not return a result"));
-
-                if (result.IsFaulted(out var exception))
-                    exception.Rethrow();
-
-                await next.Send(context).ConfigureAwait(false);
-
-                if (_observers.Count > 0)
-                    await _observers.PostExecute(context).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                if (context.Result == null || !context.Result.IsFaulted(out var faultException) || faultException != exception)
-                    context.Result = context.Faulted(exception);
-
-                if (_observers.Count > 0)
-                    await _observers.ExecuteFault(context, exception).ConfigureAwait(false);
-
-                throw;
-            }
+            throw;
         }
     }
 }

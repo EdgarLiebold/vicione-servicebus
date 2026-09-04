@@ -1,83 +1,81 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class MessagePublishTopologyPipeSpecification<TMessage> :
+    ISpecificationPipeSpecification<PublishContext<TMessage>>
+    where TMessage : class
 {
-    using System.Collections.Generic;
+    readonly IMessagePublishTopology<TMessage> _messagePublishTopology;
 
-
-    public class MessagePublishTopologyPipeSpecification<TMessage> :
-        ISpecificationPipeSpecification<PublishContext<TMessage>>
-        where TMessage : class
+    public MessagePublishTopologyPipeSpecification(IMessagePublishTopology<TMessage> messagePublishTopology)
     {
-        readonly IMessagePublishTopology<TMessage> _messagePublishTopology;
+        _messagePublishTopology = messagePublishTopology;
+    }
 
-        public MessagePublishTopologyPipeSpecification(IMessagePublishTopology<TMessage> messagePublishTopology)
+    public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
+    {
+        var typeBuilder = new Builder(builder);
+
+        _messagePublishTopology.Apply(typeBuilder);
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        yield break;
+    }
+
+
+    class Builder :
+        ITopologyPipeBuilder<PublishContext<TMessage>>
+    {
+        readonly ISpecificationPipeBuilder<PublishContext<TMessage>> _builder;
+
+        public Builder(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
         {
-            _messagePublishTopology = messagePublishTopology;
+            _builder = builder;
         }
 
-        public void Apply(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
+        public void AddFilter(IFilter<PublishContext<TMessage>> filter)
         {
-            var typeBuilder = new Builder(builder);
-
-            _messagePublishTopology.Apply(typeBuilder);
+            _builder.AddFilter(filter);
         }
 
-        public IEnumerable<ValidationResult> Validate()
+        public bool IsDelegated => _builder.IsDelegated;
+        public bool IsImplemented => _builder.IsImplemented;
+
+        public ITopologyPipeBuilder<PublishContext<TMessage>> CreateDelegatedBuilder()
         {
-            yield break;
+            return new ChildBuilder<PublishContext<TMessage>>(this, IsImplemented, true);
         }
 
 
-        class Builder :
-            ITopologyPipeBuilder<PublishContext<TMessage>>
+        class ChildBuilder<T> :
+            ITopologyPipeBuilder<T>
+            where T : class, PipeContext
         {
-            readonly ISpecificationPipeBuilder<PublishContext<TMessage>> _builder;
+            readonly ITopologyPipeBuilder<T> _builder;
 
-            public Builder(ISpecificationPipeBuilder<PublishContext<TMessage>> builder)
+            public ChildBuilder(ITopologyPipeBuilder<T> builder, bool isImplemented, bool isDelegated)
             {
                 _builder = builder;
+
+                IsDelegated = isDelegated;
+                IsImplemented = isImplemented;
             }
 
-            public void AddFilter(IFilter<PublishContext<TMessage>> filter)
+            public void AddFilter(IFilter<T> filter)
             {
                 _builder.AddFilter(filter);
             }
 
-            public bool IsDelegated => _builder.IsDelegated;
-            public bool IsImplemented => _builder.IsImplemented;
+            public bool IsDelegated { get; }
 
-            public ITopologyPipeBuilder<PublishContext<TMessage>> CreateDelegatedBuilder()
+            public bool IsImplemented { get; }
+
+            public ITopologyPipeBuilder<T> CreateDelegatedBuilder()
             {
-                return new ChildBuilder<PublishContext<TMessage>>(this, IsImplemented, true);
-            }
-
-
-            class ChildBuilder<T> :
-                ITopologyPipeBuilder<T>
-                where T : class, PipeContext
-            {
-                readonly ITopologyPipeBuilder<T> _builder;
-
-                public ChildBuilder(ITopologyPipeBuilder<T> builder, bool isImplemented, bool isDelegated)
-                {
-                    _builder = builder;
-
-                    IsDelegated = isDelegated;
-                    IsImplemented = isImplemented;
-                }
-
-                public void AddFilter(IFilter<T> filter)
-                {
-                    _builder.AddFilter(filter);
-                }
-
-                public bool IsDelegated { get; }
-
-                public bool IsImplemented { get; }
-
-                public ITopologyPipeBuilder<T> CreateDelegatedBuilder()
-                {
-                    return new ChildBuilder<T>(this, IsImplemented, true);
-                }
+                return new ChildBuilder<T>(this, IsImplemented, true);
             }
         }
     }

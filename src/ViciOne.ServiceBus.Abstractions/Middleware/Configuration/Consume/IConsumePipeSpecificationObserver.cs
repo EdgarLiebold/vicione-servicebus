@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IConsumePipeSpecificationObserver
 {
-    public interface IConsumePipeSpecificationObserver
-    {
-        void MessageSpecificationCreated<T>(IMessageConsumePipeSpecification<T> specification)
-            where T : class;
-    }
+    void MessageSpecificationCreated<T>(IMessageConsumePipeSpecification<T> specification)
+        where T : class;
 }

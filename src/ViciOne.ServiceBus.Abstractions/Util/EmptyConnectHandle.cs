@@ -1,17 +1,16 @@
-namespace ViciOne.ServiceBus.Util
-{
-    /// <summary>
-    /// A do-nothing connect handle, simply to satisfy
-    /// </summary>
-    public class EmptyConnectHandle :
-        ConnectHandle
-    {
-        public void Dispose()
-        {
-        }
+namespace ViciOne.ServiceBus.Util;
 
-        public void Disconnect()
-        {
-        }
+/// <summary>
+/// A do-nothing connect handle, simply to satisfy
+/// </summary>
+public class EmptyConnectHandle :
+    ConnectHandle
+{
+    public void Dispose()
+    {
+    }
+
+    public void Disconnect()
+    {
     }
 }

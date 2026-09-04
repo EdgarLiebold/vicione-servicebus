@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+public class JobServiceSagaDbContext :
+    SagaDbContext
 {
-    using System.Collections.Generic;
-    using Microsoft.EntityFrameworkCore;
-
-
-    public class JobServiceSagaDbContext :
-        SagaDbContext
+    public JobServiceSagaDbContext(DbContextOptions<JobServiceSagaDbContext> options)
+        : base(options)
     {
-        public JobServiceSagaDbContext(DbContextOptions<JobServiceSagaDbContext> options)
-            : base(options)
-        {
-        }
+    }
 
-        protected override IEnumerable<ISagaClassMap> Configurations
+    protected override IEnumerable<ISagaClassMap> Configurations
+    {
+        get
         {
-            get
-            {
-                yield return new JobTypeSagaMap(false);
-                yield return new JobSagaMap(false);
-                yield return new JobAttemptSagaMap(false);
-            }
+            yield return new JobTypeSagaMap(false);
+            yield return new JobSagaMap(false);
+            yield return new JobAttemptSagaMap(false);
         }
     }
 }

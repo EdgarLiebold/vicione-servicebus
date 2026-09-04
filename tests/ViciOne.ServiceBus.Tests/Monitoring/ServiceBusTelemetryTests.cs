@@ -2,8 +2,8 @@ using System.Diagnostics.Metrics;
 using System.Reflection;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Monitoring;
-using ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Monitoring;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Monitoring;

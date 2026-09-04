@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PropertyCorrelationIdSelector<T> :
+    ICorrelationIdSelector<T>
+    where T : class
 {
-    using System;
-    using Internals;
-    using Topology;
+    readonly string _propertyName;
 
-
-    public class PropertyCorrelationIdSelector<T> :
-        ICorrelationIdSelector<T>
-        where T : class
+    public PropertyCorrelationIdSelector(string propertyName)
     {
-        readonly string _propertyName;
+        _propertyName = propertyName;
+    }
 
-        public PropertyCorrelationIdSelector(string propertyName)
+    public bool TryGetSetCorrelationId(out IMessageCorrelationId<T> messageCorrelationId)
+    {
+        if (ReadPropertyCache<T>.TryGetProperty(_propertyName, out IReadProperty<T, Guid> property))
         {
-            _propertyName = propertyName;
+            messageCorrelationId = new PropertyMessageCorrelationId<T>(property);
+            return true;
         }
 
-        public bool TryGetSetCorrelationId(out IMessageCorrelationId<T> messageCorrelationId)
+        if (ReadPropertyCache<T>.TryGetProperty(_propertyName, out IReadProperty<T, Guid?> nullableProperty))
         {
-            if (ReadPropertyCache<T>.TryGetProperty(_propertyName, out IReadProperty<T, Guid> property))
-            {
-                messageCorrelationId = new PropertyMessageCorrelationId<T>(property);
-                return true;
-            }
-
-            if (ReadPropertyCache<T>.TryGetProperty(_propertyName, out IReadProperty<T, Guid?> nullableProperty))
-            {
-                messageCorrelationId = new NullablePropertyMessageCorrelationId<T>(nullableProperty);
-                return true;
-            }
-
-            messageCorrelationId = null;
-            return false;
+            messageCorrelationId = new NullablePropertyMessageCorrelationId<T>(nullableProperty);
+            return true;
         }
+
+        messageCorrelationId = null;
+        return false;
     }
 }

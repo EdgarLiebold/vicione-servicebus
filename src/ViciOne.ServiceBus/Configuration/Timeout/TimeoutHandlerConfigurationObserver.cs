@@ -1,26 +1,24 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+internal sealed class TimeoutHandlerConfigurationObserver :
+    IHandlerConfigurationObserver
 {
-    using System;
+    readonly Action<ITimeoutConfigurator> _configure;
 
-
-    internal sealed class TimeoutHandlerConfigurationObserver :
-        IHandlerConfigurationObserver
+    public TimeoutHandlerConfigurationObserver(Action<ITimeoutConfigurator> configure)
     {
-        readonly Action<ITimeoutConfigurator> _configure;
+        _configure = configure;
+    }
 
-        public TimeoutHandlerConfigurationObserver(Action<ITimeoutConfigurator> configure)
-        {
-            _configure = configure;
-        }
+    void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
+    {
+        var specification = new TimeoutSpecification<T>();
 
-        void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
-        {
-            var specification = new TimeoutSpecification<T>();
+        _configure(specification);
 
-            _configure(specification);
-
-            configurator.AddPipeSpecification(specification);
-        }
+        configurator.AddPipeSpecification(specification);
     }
 }

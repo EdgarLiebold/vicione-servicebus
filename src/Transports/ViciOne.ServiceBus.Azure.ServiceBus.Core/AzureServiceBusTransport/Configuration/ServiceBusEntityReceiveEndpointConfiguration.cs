@@ -1,164 +1,162 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public abstract class ServiceBusEntityReceiveEndpointConfiguration :
+    ReceiveEndpointConfiguration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using ViciOne.ServiceBus.Configuration;
-    using ViciOne.ServiceBus.Middleware;
-    using Middleware;
-    using Topology;
-    using Transports;
-    using Util;
+    readonly IServiceBusEndpointEntityConfigurator _configurator;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
+    readonly BaseClientSettings _settings;
+    protected readonly IBuildPipeConfigurator<ClientContext> ClientPipeConfigurator;
 
-
-    public abstract class ServiceBusEntityReceiveEndpointConfiguration :
-        ReceiveEndpointConfiguration
+    protected ServiceBusEntityReceiveEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration, BaseClientSettings settings,
+        IServiceBusEndpointConfiguration endpointConfiguration)
+        : base(hostConfiguration, endpointConfiguration)
     {
-        readonly IServiceBusEndpointEntityConfigurator _configurator;
-        readonly IServiceBusHostConfiguration _hostConfiguration;
-        readonly BaseClientSettings _settings;
-        protected readonly IBuildPipeConfigurator<ClientContext> ClientPipeConfigurator;
+        _hostConfiguration = hostConfiguration;
+        _settings = settings;
+        _configurator = settings.Configurator;
 
-        protected ServiceBusEntityReceiveEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration, BaseClientSettings settings,
-            IServiceBusEndpointConfiguration endpointConfiguration)
-            : base(hostConfiguration, endpointConfiguration)
+        ClientPipeConfigurator = new PipeConfigurator<ClientContext>();
+    }
+
+    public int MaxConcurrentCalls
+    {
+        set => ConcurrentMessageLimit = value;
+    }
+
+    public TimeSpan AutoDeleteOnIdle
+    {
+        set
         {
-            _hostConfiguration = hostConfiguration;
-            _settings = settings;
-            _configurator = settings.Configurator;
+            _configurator.AutoDeleteOnIdle = value;
 
-            ClientPipeConfigurator = new PipeConfigurator<ClientContext>();
+            Changed(nameof(AutoDeleteOnIdle));
+        }
+    }
+
+    public TimeSpan DefaultMessageTimeToLive
+    {
+        set => _configurator.DefaultMessageTimeToLive = value;
+    }
+
+    public bool EnableBatchedOperations
+    {
+        set => _configurator.EnableBatchedOperations = value;
+    }
+
+    public bool EnableDeadLetteringOnMessageExpiration
+    {
+        set => _configurator.EnableDeadLetteringOnMessageExpiration = value;
+    }
+
+    public string ForwardDeadLetteredMessagesTo
+    {
+        set => _configurator.ForwardDeadLetteredMessagesTo = value;
+    }
+
+    public TimeSpan LockDuration
+    {
+        set => _configurator.LockDuration = value;
+    }
+
+    public int MaxDeliveryCount
+    {
+        set => _configurator.MaxDeliveryCount = value;
+    }
+
+    public bool RequiresSession
+    {
+        set => _configurator.RequiresSession = value;
+    }
+
+    public int MaxConcurrentSessions
+    {
+        set => _configurator.MaxConcurrentSessions = value;
+    }
+
+    public int MaxConcurrentCallsPerSession
+    {
+        set => _configurator.MaxConcurrentCallsPerSession = value;
+    }
+
+    public string UserMetadata
+    {
+        set => _configurator.UserMetadata = value;
+    }
+
+    public TimeSpan MessageWaitTimeout
+    {
+        set => _settings.SessionIdleTimeout = value;
+    }
+
+    public TimeSpan? SessionIdleTimeout
+    {
+        set => _settings.SessionIdleTimeout = value;
+    }
+
+    public TimeSpan MaxAutoRenewDuration
+    {
+        set => _settings.MaxAutoRenewDuration = value;
+    }
+
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return ClientPipeConfigurator.Validate()
+            .Concat(ValidateSettings())
+            .Concat(base.Validate());
+    }
+
+    IEnumerable<ValidationResult> ValidateSettings()
+    {
+        if (_settings.PrefetchCount < 0)
+            yield return this.Failure("PrefetchCount", "must be >= 0");
+
+        if (_settings.MaxConcurrentCalls <= 0)
+            yield return this.Failure("MaxConcurrentCalls", "must be > 0");
+    }
+
+    protected void CreateReceiveEndpoint(IHost host, ServiceBusReceiveEndpointContext receiveEndpointContext)
+    {
+        if (_hostConfiguration.DeployTopologyOnly)
+            ClientPipeConfigurator.UseFilter(new TransportReadyFilter<ClientContext>(receiveEndpointContext));
+        else
+        {
+            ClientPipeConfigurator.UseFilter(new ReceiveEndpointDependencyFilter<ClientContext>(receiveEndpointContext));
+            ClientPipeConfigurator.UseFilter(_settings.RequiresSession
+                ? new MessageSessionReceiverFilter(receiveEndpointContext)
+                : new MessageReceiverFilter(receiveEndpointContext));
         }
 
-        public int MaxConcurrentCalls
+        IPipe<ClientContext> clientPipe = ClientPipeConfigurator.Build();
+
+        var transport = new ReceiveTransport<ClientContext>(_hostConfiguration, receiveEndpointContext, () => receiveEndpointContext
+            .ClientContextSupervisor, clientPipe);
+
+        if (IsBusEndpoint && _hostConfiguration.DeployPublishTopology)
         {
-            set => ConcurrentMessageLimit = value;
+            var publishTopology = _hostConfiguration.Topology.PublishTopology;
+
+            var brokerTopology = publishTopology.GetPublishBrokerTopology();
+
+            transport.PreStartPipe = new ConfigureServiceBusTopologyFilter<IPublishTopology>(publishTopology, brokerTopology).ToPipe<ClientContext>();
         }
 
-        public TimeSpan AutoDeleteOnIdle
-        {
-            set
-            {
-                _configurator.AutoDeleteOnIdle = value;
+        var receiveEndpoint = new ReceiveEndpoint(transport, receiveEndpointContext);
 
-                Changed(nameof(AutoDeleteOnIdle));
-            }
-        }
+        var queueName = _settings.Path ?? NewId.Next().ToString(FormatUtil.Formatter);
 
-        public TimeSpan DefaultMessageTimeToLive
-        {
-            set => _configurator.DefaultMessageTimeToLive = value;
-        }
+        host.AddReceiveEndpoint(queueName, receiveEndpoint);
 
-        public bool EnableBatchedOperations
-        {
-            set => _configurator.EnableBatchedOperations = value;
-        }
-
-        public bool EnableDeadLetteringOnMessageExpiration
-        {
-            set => _configurator.EnableDeadLetteringOnMessageExpiration = value;
-        }
-
-        public string ForwardDeadLetteredMessagesTo
-        {
-            set => _configurator.ForwardDeadLetteredMessagesTo = value;
-        }
-
-        public TimeSpan LockDuration
-        {
-            set => _configurator.LockDuration = value;
-        }
-
-        public int MaxDeliveryCount
-        {
-            set => _configurator.MaxDeliveryCount = value;
-        }
-
-        public bool RequiresSession
-        {
-            set => _configurator.RequiresSession = value;
-        }
-
-        public int MaxConcurrentSessions
-        {
-            set => _configurator.MaxConcurrentSessions = value;
-        }
-
-        public int MaxConcurrentCallsPerSession
-        {
-            set => _configurator.MaxConcurrentCallsPerSession = value;
-        }
-
-        public string UserMetadata
-        {
-            set => _configurator.UserMetadata = value;
-        }
-
-        public TimeSpan MessageWaitTimeout
-        {
-            set => _settings.SessionIdleTimeout = value;
-        }
-
-        public TimeSpan? SessionIdleTimeout
-        {
-            set => _settings.SessionIdleTimeout = value;
-        }
-
-        public TimeSpan MaxAutoRenewDuration
-        {
-            set => _settings.MaxAutoRenewDuration = value;
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return ClientPipeConfigurator.Validate()
-                .Concat(ValidateSettings())
-                .Concat(base.Validate());
-        }
-
-        IEnumerable<ValidationResult> ValidateSettings()
-        {
-            if (_settings.PrefetchCount < 0)
-                yield return this.Failure("PrefetchCount", "must be >= 0");
-
-            if (_settings.MaxConcurrentCalls <= 0)
-                yield return this.Failure("MaxConcurrentCalls", "must be > 0");
-        }
-
-        protected void CreateReceiveEndpoint(IHost host, ServiceBusReceiveEndpointContext receiveEndpointContext)
-        {
-            if (_hostConfiguration.DeployTopologyOnly)
-                ClientPipeConfigurator.UseFilter(new TransportReadyFilter<ClientContext>(receiveEndpointContext));
-            else
-            {
-                ClientPipeConfigurator.UseFilter(new ReceiveEndpointDependencyFilter<ClientContext>(receiveEndpointContext));
-                ClientPipeConfigurator.UseFilter(_settings.RequiresSession
-                    ? new MessageSessionReceiverFilter(receiveEndpointContext)
-                    : new MessageReceiverFilter(receiveEndpointContext));
-            }
-
-            IPipe<ClientContext> clientPipe = ClientPipeConfigurator.Build();
-
-            var transport = new ReceiveTransport<ClientContext>(_hostConfiguration, receiveEndpointContext, () => receiveEndpointContext
-                .ClientContextSupervisor, clientPipe);
-
-            if (IsBusEndpoint && _hostConfiguration.DeployPublishTopology)
-            {
-                var publishTopology = _hostConfiguration.Topology.PublishTopology;
-
-                var brokerTopology = publishTopology.GetPublishBrokerTopology();
-
-                transport.PreStartPipe = new ConfigureServiceBusTopologyFilter<IPublishTopology>(publishTopology, brokerTopology).ToPipe<ClientContext>();
-            }
-
-            var receiveEndpoint = new ReceiveEndpoint(transport, receiveEndpointContext);
-
-            var queueName = _settings.Path ?? NewId.Next().ToString(FormatUtil.Formatter);
-
-            host.AddReceiveEndpoint(queueName, receiveEndpoint);
-
-            ReceiveEndpoint = receiveEndpoint;
-        }
+        ReceiveEndpoint = receiveEndpoint;
     }
 }

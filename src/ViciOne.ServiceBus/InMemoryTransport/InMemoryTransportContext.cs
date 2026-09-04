@@ -1,6 +1,5 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public interface InMemoryTransportContext
 {
-    public interface InMemoryTransportContext
-    {
-    }
 }

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ICompensateTransformSpecification<TLog> :
+    IPipeSpecification<CompensateContext<TLog>>
+    where TLog : class
 {
-    public interface ICompensateTransformSpecification<TLog> :
-        IPipeSpecification<CompensateContext<TLog>>
-        where TLog : class
-    {
-    }
 }

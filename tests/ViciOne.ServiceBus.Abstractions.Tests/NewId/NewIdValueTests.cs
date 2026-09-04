@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.NewId;
-
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 using NewIdValue = global::ViciOne.ServiceBus.NewId;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests.NewId;
 
 public sealed class NewIdValueTests
 {

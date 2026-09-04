@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
-using AmazonSqsTransport;
-using AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
+namespace ViciOne.ServiceBus;
 
 public interface IAmazonSqsMessagePublishTopology<TMessage> :
     IMessagePublishTopology<TMessage>,

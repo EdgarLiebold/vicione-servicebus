@@ -1,97 +1,95 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class TransportBusInstance<TEndpointConfigurator> :
+    IBusInstance,
+    IReceiveEndpointConnector<TEndpointConfigurator>
+    where TEndpointConfigurator : class, IReceiveEndpointConfigurator
 {
-    using System;
-    using Configuration;
+    readonly IHost<TEndpointConfigurator> _host;
 
-
-    public class TransportBusInstance<TEndpointConfigurator> :
-        IBusInstance,
-        IReceiveEndpointConnector<TEndpointConfigurator>
-        where TEndpointConfigurator : class, IReceiveEndpointConfigurator
+    public TransportBusInstance(IBusControl busControl, IHost<TEndpointConfigurator> host, IHostConfiguration hostConfiguration, IBusRegistrationContext
+        busRegistrationContext)
     {
-        readonly IHost<TEndpointConfigurator> _host;
+        _host = host;
+        RegistrationContext = busRegistrationContext;
 
-        public TransportBusInstance(IBusControl busControl, IHost<TEndpointConfigurator> host, IHostConfiguration hostConfiguration, IBusRegistrationContext
-            busRegistrationContext)
+        BusControl = busControl;
+        HostConfiguration = hostConfiguration;
+    }
+
+    protected IBusRegistrationContext RegistrationContext { get; }
+
+    public string Name => "vicione-servicebus-bus";
+    public Type InstanceType => typeof(IBus);
+    public IBus Bus => BusControl;
+    public IBusControl BusControl { get; }
+
+    public IHostConfiguration HostConfiguration { get; }
+
+    public void Connect<TRider>(IRiderControl riderControl)
+        where TRider : IRider
+    {
+        var name = GetRiderName<TRider>();
+        _host.AddRider(name, riderControl);
+    }
+
+    public TRider GetRider<TRider>()
+        where TRider : IRider
+    {
+        var name = GetRiderName<TRider>();
+        return (TRider)_host.GetRider(name);
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+    {
+        return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
         {
-            _host = host;
-            RegistrationContext = busRegistrationContext;
+            RegistrationContext.GetConfigureReceiveEndpoints()
+                .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
 
-            BusControl = busControl;
-            HostConfiguration = hostConfiguration;
-        }
+            configure?.Invoke(RegistrationContext, configurator);
+        });
+    }
 
-        protected IBusRegistrationContext RegistrationContext { get; }
-
-        public string Name => "vicione-servicebus-bus";
-        public Type InstanceType => typeof(IBus);
-        public IBus Bus => BusControl;
-        public IBusControl BusControl { get; }
-
-        public IHostConfiguration HostConfiguration { get; }
-
-        public void Connect<TRider>(IRiderControl riderControl)
-            where TRider : IRider
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
+        Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+    {
+        return _host.ConnectReceiveEndpoint(queueName, configurator =>
         {
-            var name = GetRiderName<TRider>();
-            _host.AddRider(name, riderControl);
-        }
+            RegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
 
-        public TRider GetRider<TRider>()
-            where TRider : IRider
+            configure?.Invoke(RegistrationContext, configurator);
+        });
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        Action<IBusRegistrationContext, TEndpointConfigurator> configure = null)
+    {
+        return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
         {
-            var name = GetRiderName<TRider>();
-            return (TRider)_host.GetRider(name);
-        }
+            RegistrationContext.GetConfigureReceiveEndpoints().Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
+            configure?.Invoke(RegistrationContext, configurator);
+        });
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, TEndpointConfigurator> configure = null)
+    {
+        return _host.ConnectReceiveEndpoint(queueName, configurator =>
         {
-            return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
-            {
-                RegistrationContext.GetConfigureReceiveEndpoints()
-                    .Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
+            RegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
 
-                configure?.Invoke(RegistrationContext, configurator);
-            });
-        }
+            configure?.Invoke(RegistrationContext, configurator);
+        });
+    }
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName,
-            Action<IBusRegistrationContext, IReceiveEndpointConfigurator> configure = null)
-        {
-            return _host.ConnectReceiveEndpoint(queueName, configurator =>
-            {
-                RegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
-
-                configure?.Invoke(RegistrationContext, configurator);
-            });
-        }
-
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IBusRegistrationContext, TEndpointConfigurator> configure = null)
-        {
-            return _host.ConnectReceiveEndpoint(definition, endpointNameFormatter, configurator =>
-            {
-                RegistrationContext.GetConfigureReceiveEndpoints().Configure(definition.GetEndpointName(endpointNameFormatter), configurator);
-
-                configure?.Invoke(RegistrationContext, configurator);
-            });
-        }
-
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IBusRegistrationContext, TEndpointConfigurator> configure = null)
-        {
-            return _host.ConnectReceiveEndpoint(queueName, configurator =>
-            {
-                RegistrationContext.GetConfigureReceiveEndpoints().Configure(queueName, configurator);
-
-                configure?.Invoke(RegistrationContext, configurator);
-            });
-        }
-
-        static string GetRiderName<TRider>()
-            where TRider : IRider
-        {
-            return TypeCache<TRider>.ShortName;
-        }
+    static string GetRiderName<TRider>()
+        where TRider : IRider
+    {
+        return TypeCache<TRider>.ShortName;
     }
 }

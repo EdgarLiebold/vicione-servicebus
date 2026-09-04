@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using Azure.Messaging.EventHubs.Producer;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public interface ConnectionContext :
+    PipeContext
 {
-    using Azure.Messaging.EventHubs.Producer;
-
-
-    public interface ConnectionContext :
-        PipeContext
-    {
-        EventHubProducerClient CreateEventHubClient(string eventHubName);
-    }
+    EventHubProducerClient CreateEventHubClient(string eventHubName);
 }

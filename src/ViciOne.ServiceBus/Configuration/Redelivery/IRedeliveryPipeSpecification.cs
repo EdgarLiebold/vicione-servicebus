@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IRedeliveryPipeSpecification
 {
-    public interface IRedeliveryPipeSpecification
-    {
-        RedeliveryOptions Options { get; set; }
-    }
+    RedeliveryOptions Options { get; set; }
 }

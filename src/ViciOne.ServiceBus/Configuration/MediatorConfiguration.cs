@@ -1,37 +1,36 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class MediatorConfiguration :
+    ReceivePipeDispatcherConfiguration,
+    IMediatorConfigurator
 {
-    public class MediatorConfiguration :
-        ReceivePipeDispatcherConfiguration,
-        IMediatorConfigurator
+    readonly IHostConfiguration _hostConfiguration;
+
+    public MediatorConfiguration(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration endpointConfiguration)
+        : base(hostConfiguration, endpointConfiguration)
     {
-        readonly IHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
 
-        public MediatorConfiguration(IHostConfiguration hostConfiguration, IReceiveEndpointConfiguration endpointConfiguration)
-            : base(hostConfiguration, endpointConfiguration)
+        if (_hostConfiguration.LogContext == null)
         {
-            _hostConfiguration = hostConfiguration;
+            LogContext.ConfigureCurrentLogContext();
 
-            if (_hostConfiguration.LogContext == null)
-            {
-                LogContext.ConfigureCurrentLogContext();
-
-                _hostConfiguration.LogContext = LogContext.Current;
-            }
+            _hostConfiguration.LogContext = LogContext.Current;
         }
+    }
 
-        public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
-        {
-            return _hostConfiguration.ConnectConsumeObserver(observer);
-        }
+    public ConnectHandle ConnectConsumeObserver(IConsumeObserver observer)
+    {
+        return _hostConfiguration.ConnectConsumeObserver(observer);
+    }
 
-        public ConnectHandle ConnectSendObserver(ISendObserver observer)
-        {
-            return _hostConfiguration.ConnectSendObserver(observer);
-        }
+    public ConnectHandle ConnectSendObserver(ISendObserver observer)
+    {
+        return _hostConfiguration.ConnectSendObserver(observer);
+    }
 
-        public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
-        {
-            return _hostConfiguration.ConnectPublishObserver(observer);
-        }
+    public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
+    {
+        return _hostConfiguration.ConnectPublishObserver(observer);
     }
 }

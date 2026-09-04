@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class RequestTimeoutException :
+    RequestException
 {
-    using System;
-
-
-    [Serializable]
-    public class RequestTimeoutException :
-        RequestException
+    public RequestTimeoutException()
     {
-        public RequestTimeoutException()
-        {
-        }
+    }
 
-        public RequestTimeoutException(string requestId)
-            : base(FormatMessage(requestId))
-        {
-        }
+    public RequestTimeoutException(string requestId)
+        : base(FormatMessage(requestId))
+    {
+    }
 
-        public RequestTimeoutException(string requestId, Exception innerException)
-            : base(FormatMessage(requestId), innerException)
-        {
-        }
+    public RequestTimeoutException(string requestId, Exception innerException)
+        : base(FormatMessage(requestId), innerException)
+    {
+    }
 
-        static string FormatMessage(string requestId)
-        {
-            return $"Timeout waiting for response, RequestId: {requestId}";
-        }
+    static string FormatMessage(string requestId)
+    {
+        return $"Timeout waiting for response, RequestId: {requestId}";
     }
 }

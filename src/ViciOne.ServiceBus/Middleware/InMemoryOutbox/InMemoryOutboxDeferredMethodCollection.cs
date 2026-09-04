@@ -1,13 +1,12 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Util;
+using ViciOne.ServiceBus.Util;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
 public class InMemoryOutboxDeferredMethodCollection
 {
@@ -45,7 +44,10 @@ public class InMemoryOutboxDeferredMethodCollection
     {
         InMemoryOutboxDeferredMethod[] pendingActions;
         lock (_pendingMethods)
+        {
             pendingActions = _pendingMethods.ToArray();
+            _pendingMethods.Clear();
+        }
 
         try
         {

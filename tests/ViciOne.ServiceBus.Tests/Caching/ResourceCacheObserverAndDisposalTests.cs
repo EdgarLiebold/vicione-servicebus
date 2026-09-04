@@ -4,8 +4,6 @@ using Xunit;
 
 // Observer/disposal cancellation and the no-token overloads are part of the cache contract exercised here;
 // every potentially blocking assertion is independently bounded by OperationTimeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.Tests.Caching;
 
 public sealed class ResourceCacheObserverAndDisposalTests
@@ -25,7 +23,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
 
         await cache.AddAsync(expected, TestContext.Current.CancellationToken);
 
-        Assert.Same(expected, await index.GetAsync("one"));
+        Assert.Same(expected, await index.GetAsync("one", TestContext.Current.CancellationToken));
         Assert.Equal(["add:one"], recording.Events);
         Assert.Equal(1, cache.Statistics.Count);
     }
@@ -37,7 +35,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var expected = new Resource("one");
-        await cache.AddAsync(expected);
+        await cache.AddAsync(expected, TestContext.Current.CancellationToken);
         var faulting = new DelegateObserver(onRemoved: (_, _) => ValueTask.FromException(new ObserverException("remove failed")));
         var recording = new RecordingObserver();
         using ConnectHandle firstConnection = cache.Connect(faulting);
@@ -56,7 +54,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     {
         await using var cache = CreateCache();
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
         var faulting = new DelegateObserver(onCleared: _ => ValueTask.FromException(new ObserverException("clear failed")));
         var recording = new RecordingObserver();
         using ConnectHandle firstConnection = cache.Connect(faulting);
@@ -65,8 +63,8 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await cache.ClearAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(["clear"], recording.Events);
-        Assert.Empty(await cache.GetValuesAsync());
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one"));
+        Assert.Empty(await cache.GetValuesAsync(TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -75,7 +73,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
     {
         await using var cache = CreateCache();
         var disposal = new AsyncDisposalProbe("one");
-        await cache.AddAsync(disposal);
+        await cache.AddAsync(disposal, TestContext.Current.CancellationToken);
 
         Task clear = cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
         await disposal.Started.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
@@ -96,13 +94,13 @@ public sealed class ResourceCacheObserverAndDisposalTests
         using ConnectHandle connection = cache.Connect(new DelegateObserver(
             onAdded: (_, _) => ValueTask.FromException(new ObserverException("add failed"))));
 
-        await cache.AddAsync(new Resource("one"));
-        await cache.AddAsync(new Resource("two"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
+        await cache.AddAsync(new Resource("two"), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, cache.Statistics.Count);
         Assert.Equal(1, cache.Statistics.Evictions);
-        Assert.Equal("two", (await index.GetAsync("two")).Id);
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one"));
+        Assert.Equal("two", (await index.GetAsync("two", TestContext.Current.CancellationToken)).Id);
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -111,11 +109,11 @@ public sealed class ResourceCacheObserverAndDisposalTests
     {
         await using var cache = CreateCache(capacity: 1);
         var first = new Resource("one");
-        await cache.AddAsync(first);
+        await cache.AddAsync(first, TestContext.Current.CancellationToken);
         using ConnectHandle connection = cache.Connect(new DelegateObserver(
             onRemoved: (_, _) => ValueTask.FromException(new ObserverException("remove failed"))));
 
-        await cache.AddAsync(new Resource("two"));
+        await cache.AddAsync(new Resource("two"), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, first.DisposeCount);
         Assert.Equal(1, cache.Statistics.Count);
@@ -167,14 +165,14 @@ public sealed class ResourceCacheObserverAndDisposalTests
         using ConnectHandle connection = cache.Connect(new DelegateObserver(onAdded: async (_, _) =>
         {
             observed = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await cache.AddAsync(new Resource("reentrant")));
+                await cache.AddAsync(new Resource("reentrant"), TestContext.Current.CancellationToken));
         }));
 
-        await cache.AddAsync(new Resource("original"));
+        await cache.AddAsync(new Resource("original"), TestContext.Current.CancellationToken);
 
         Assert.NotNull(observed);
         Assert.Contains("must not re-enter", observed.Message, StringComparison.Ordinal);
-        Assert.Equal(["original"], (await cache.GetValuesAsync()).Select(x => x.Id).ToArray());
+        Assert.Equal(["original"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).ToArray());
     }
 
     [Fact]
@@ -183,11 +181,11 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await using var cache = CreateCache();
         var observer = new RecordingObserver();
         ConnectHandle connection = cache.Connect(observer);
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
 
         connection.Disconnect();
         connection.Disconnect();
-        await cache.AddAsync(new Resource("two"));
+        await cache.AddAsync(new Resource("two"), TestContext.Current.CancellationToken);
 
         Assert.Equal(["add:one"], observer.Events);
         Assert.Equal(2, cache.Statistics.Count);
@@ -198,15 +196,15 @@ public sealed class ResourceCacheObserverAndDisposalTests
     {
         await using var cache = CreateCache(capacity: 1);
         var disposal = new AsyncDisposalProbe("one");
-        await cache.AddAsync(disposal);
+        await cache.AddAsync(disposal, TestContext.Current.CancellationToken);
 
-        Task addReplacement = cache.AddAsync(new Resource("two")).AsTask();
-        await disposal.Started.WaitAsync(OperationTimeout);
+        Task addReplacement = cache.AddAsync(new Resource("two"), TestContext.Current.CancellationToken).AsTask();
+        await disposal.Started.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.False(addReplacement.IsCompleted);
         Assert.Equal(1, cache.Statistics.Count);
         disposal.Release();
-        await addReplacement.WaitAsync(OperationTimeout);
+        await addReplacement.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Assert.Equal(1, disposal.DisposeCount);
     }
 
@@ -216,8 +214,8 @@ public sealed class ResourceCacheObserverAndDisposalTests
         var cache = CreateCache();
         var first = new Resource("one");
         var second = new Resource("two");
-        await cache.AddAsync(first);
-        await cache.AddAsync(second);
+        await cache.AddAsync(first, TestContext.Current.CancellationToken);
+        await cache.AddAsync(second, TestContext.Current.CancellationToken);
 
         await cache.DisposeAsync();
         await cache.DisposeAsync();
@@ -225,7 +223,7 @@ public sealed class ResourceCacheObserverAndDisposalTests
         Assert.Equal(1, first.DisposeCount);
         Assert.Equal(1, second.DisposeCount);
         Assert.Throws<ObjectDisposedException>(() => cache.AddIndex("late", value => value.Id));
-        await Assert.ThrowsAsync<ObjectDisposedException>(async () => await cache.GetValuesAsync());
+        await Assert.ThrowsAsync<ObjectDisposedException>(async () => await cache.GetValuesAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -234,8 +232,8 @@ public sealed class ResourceCacheObserverAndDisposalTests
         var cache = CreateCache();
         var faulting = new FaultingDisposableResource("faulting");
         var healthy = new Resource("healthy");
-        await cache.AddAsync(faulting);
-        await cache.AddAsync(healthy);
+        await cache.AddAsync(faulting, TestContext.Current.CancellationToken);
+        await cache.AddAsync(healthy, TestContext.Current.CancellationToken);
 
         await cache.DisposeAsync();
 

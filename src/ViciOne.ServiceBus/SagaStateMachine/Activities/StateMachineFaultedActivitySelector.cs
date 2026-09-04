@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class StateMachineFaultedActivitySelector<TSaga, TException> :
+    IStateMachineFaultedActivitySelector<TSaga, TException>
+    where TSaga : class, SagaStateMachineInstance
+    where TException : Exception
 {
-    using System;
+    readonly ExceptionActivityBinder<TSaga, TException> _binder;
 
-
-    public class StateMachineFaultedActivitySelector<TSaga, TException> :
-        IStateMachineFaultedActivitySelector<TSaga, TException>
-        where TSaga : class, SagaStateMachineInstance
-        where TException : Exception
+    public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TException> binder)
     {
-        readonly ExceptionActivityBinder<TSaga, TException> _binder;
-
-        public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TException> binder)
-        {
-            _binder = binder;
-        }
-
-        public ExceptionActivityBinder<TSaga, TException> OfType<TActivity>()
-            where TActivity : class, IStateMachineActivity<TSaga>
-        {
-            var activity = new FaultedContainerFactoryActivity<TSaga, TException, TActivity>();
-
-            return _binder.Add(activity);
-        }
+        _binder = binder;
     }
 
-
-    public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
-        IStateMachineFaultedActivitySelector<TSaga, TMessage, TException>
-        where TSaga : class, SagaStateMachineInstance
-        where TMessage : class
-        where TException : Exception
+    public ExceptionActivityBinder<TSaga, TException> OfType<TActivity>()
+        where TActivity : class, IStateMachineActivity<TSaga>
     {
-        readonly ExceptionActivityBinder<TSaga, TMessage, TException> _binder;
+        var activity = new FaultedContainerFactoryActivity<TSaga, TException, TActivity>();
 
-        public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TMessage, TException> binder)
-        {
-            _binder = binder;
-        }
+        return _binder.Add(activity);
+    }
+}
 
-        public ExceptionActivityBinder<TSaga, TMessage, TException> OfType<TActivity>()
-            where TActivity : class, IStateMachineActivity<TSaga, TMessage>
-        {
-            var activity = new FaultedContainerFactoryActivity<TSaga, TMessage, TException, TActivity>();
 
-            return _binder.Add(activity);
-        }
+public class StateMachineFaultedActivitySelector<TSaga, TMessage, TException> :
+    IStateMachineFaultedActivitySelector<TSaga, TMessage, TException>
+    where TSaga : class, SagaStateMachineInstance
+    where TMessage : class
+    where TException : Exception
+{
+    readonly ExceptionActivityBinder<TSaga, TMessage, TException> _binder;
 
-        public ExceptionActivityBinder<TSaga, TMessage, TException> OfInstanceType<TActivity>()
-            where TActivity : class, IStateMachineActivity<TSaga>
-        {
-            var activity = new FaultedContainerFactoryActivity<TSaga, TException, TActivity>();
+    public StateMachineFaultedActivitySelector(ExceptionActivityBinder<TSaga, TMessage, TException> binder)
+    {
+        _binder = binder;
+    }
 
-            return _binder.Add(activity);
-        }
+    public ExceptionActivityBinder<TSaga, TMessage, TException> OfType<TActivity>()
+        where TActivity : class, IStateMachineActivity<TSaga, TMessage>
+    {
+        var activity = new FaultedContainerFactoryActivity<TSaga, TMessage, TException, TActivity>();
+
+        return _binder.Add(activity);
+    }
+
+    public ExceptionActivityBinder<TSaga, TMessage, TException> OfInstanceType<TActivity>()
+        where TActivity : class, IStateMachineActivity<TSaga>
+    {
+        var activity = new FaultedContainerFactoryActivity<TSaga, TException, TActivity>();
+
+        return _binder.Add(activity);
     }
 }

@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
-using ViciOne.ServiceBus.Middleware;
 using RabbitMQ.Client;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 
 public class SharedConnectionContext :
     ProxyPipeContext,

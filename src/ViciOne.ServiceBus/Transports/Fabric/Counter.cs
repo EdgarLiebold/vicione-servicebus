@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+using System.Threading;
+
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class Counter :
+    Metric
 {
-    using System.Threading;
+    long _count;
 
-
-    public class Counter :
-        Metric
+    public void Add()
     {
-        long _count;
-
-        public void Add()
-        {
-            Interlocked.Increment(ref _count);
-        }
+        Interlocked.Increment(ref _count);
     }
 }

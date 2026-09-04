@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +6,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// Deliberately started diagnostics. Neither scenario gates anything: the exit code is non zero only
 /// when the scenario could not run at all, never because a number was worse than another number.
@@ -146,9 +144,8 @@ internal static class Program
     /// <para>
     /// The scenario succeeding and the caller receiving the result are two things, and this is the
     /// second one: a run that could not write the file it was told to write did not do what was asked,
-    /// whatever it measured. Named rather than written into the success path, because both scenarios of
-    /// this tool need the pinned fixture, so there is no run without a broker in which the scenario
-    /// succeeds - and a decision no case can reach is a decision nobody has checked.
+    /// whatever it measured. Both scenarios require a broker, so the delivery result is named and
+    /// handled explicitly instead of being hidden in an unreachable no-broker success branch.
     /// </para>
     /// </summary>
     internal static async Task<int> Deliver(object result, string? sink, CancellationToken cancellationToken,

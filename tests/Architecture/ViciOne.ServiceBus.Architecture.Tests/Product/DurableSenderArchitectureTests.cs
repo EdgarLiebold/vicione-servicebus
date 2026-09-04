@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Reflection;
-using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Architecture.Tests.Repository;
-using ViciOne.ServiceBus.DurableSend;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

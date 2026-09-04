@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IInstanceConnectorCache<T>
+    where T : class
 {
-    public interface IInstanceConnectorCache<T>
-        where T : class
-    {
-        IInstanceConnector Connector { get; }
-    }
+    IInstanceConnector Connector { get; }
 }

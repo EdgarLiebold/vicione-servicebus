@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Topology
+using System;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Topology;
+
+internal class NullablePropertyMessageCorrelationId<T> :
+    IMessageCorrelationId<T>
+    where T : class
 {
-    using System;
-    using Internals;
+    readonly IReadProperty<T, Guid?> _property;
 
-
-    internal class NullablePropertyMessageCorrelationId<T> :
-        IMessageCorrelationId<T>
-        where T : class
+    public NullablePropertyMessageCorrelationId(IReadProperty<T, Guid?> property)
     {
-        readonly IReadProperty<T, Guid?> _property;
+        _property = property;
+    }
 
-        public NullablePropertyMessageCorrelationId(IReadProperty<T, Guid?> property)
+    public bool TryGetCorrelationId(T message, out Guid correlationId)
+    {
+        Guid? id = _property.Get(message);
+        if (id.HasValue && id.Value != Guid.Empty)
         {
-            _property = property;
+            correlationId = id.Value;
+            return true;
         }
 
-        public bool TryGetCorrelationId(T message, out Guid correlationId)
-        {
-            Guid? id = _property.Get(message);
-            if (id.HasValue && id.Value != Guid.Empty)
-            {
-                correlationId = id.Value;
-                return true;
-            }
-
-            correlationId = Guid.Empty;
-            return false;
-        }
+        correlationId = Guid.Empty;
+        return false;
     }
 }

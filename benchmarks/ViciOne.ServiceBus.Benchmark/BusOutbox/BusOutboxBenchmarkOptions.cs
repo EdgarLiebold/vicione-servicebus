@@ -1,8 +1,7 @@
-namespace ViciOneServiceBusBenchmark.BusOutbox;
-
 using System;
 using NDesk.Options;
 
+namespace ViciOneServiceBusBenchmark.BusOutbox;
 
 public class BusOutboxBenchmarkOptions :
     OptionSet

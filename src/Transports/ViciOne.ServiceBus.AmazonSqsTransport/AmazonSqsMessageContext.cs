@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System.Collections.Generic;
 using Amazon.SQS.Model;
 
+namespace ViciOne.ServiceBus;
 
 public interface AmazonSqsMessageContext
 {

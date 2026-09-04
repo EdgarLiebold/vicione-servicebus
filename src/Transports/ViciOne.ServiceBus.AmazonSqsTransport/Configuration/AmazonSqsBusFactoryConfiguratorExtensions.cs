@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.Runtime.Credentials;
-using AmazonSqsTransport;
-using AmazonSqsTransport.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.AmazonSqsTransport;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
+namespace ViciOne.ServiceBus;
 
 public static class AmazonSqsBusFactoryConfiguratorExtensions
 {

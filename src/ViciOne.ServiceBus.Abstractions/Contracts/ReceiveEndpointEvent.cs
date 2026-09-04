@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface ReceiveEndpointEvent
 {
-    using System;
+    /// <summary>
+    /// The input address of the receive endpoint
+    /// </summary>
+    Uri InputAddress { get; }
 
-
-    public interface ReceiveEndpointEvent
-    {
-        /// <summary>
-        /// The input address of the receive endpoint
-        /// </summary>
-        Uri InputAddress { get; }
-
-        /// <summary>
-        /// The receive endpoint upon which the event occurred
-        /// </summary>
-        IReceiveEndpoint ReceiveEndpoint { get; }
-    }
+    /// <summary>
+    /// The receive endpoint upon which the event occurred
+    /// </summary>
+    IReceiveEndpoint ReceiveEndpoint { get; }
 }

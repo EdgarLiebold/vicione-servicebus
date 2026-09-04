@@ -1,8 +1,8 @@
+using System;
+
 #nullable enable
 
 namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
-using System;
 
 internal sealed class DurableSendRecord
 {

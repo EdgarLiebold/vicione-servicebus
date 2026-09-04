@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Collections.Generic;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IRiderControl :
+    IRider
 {
-    using System.Collections.Generic;
-    using System.Threading;
+    RiderHandle Start(CancellationToken cancellationToken = default);
 
-
-    public interface IRiderControl :
-        IRider
-    {
-        RiderHandle Start(CancellationToken cancellationToken = default);
-
-        IEnumerable<EndpointHealthResult> CheckEndpointHealth();
-    }
+    IEnumerable<EndpointHealthResult> CheckEndpointHealth();
 }

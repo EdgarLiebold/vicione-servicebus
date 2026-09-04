@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class ServiceBusEndpointConfiguration :
+    EndpointConfiguration,
+    IServiceBusEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public class ServiceBusEndpointConfiguration :
-        EndpointConfiguration,
-        IServiceBusEndpointConfiguration
+    protected ServiceBusEndpointConfiguration(IServiceBusTopologyConfiguration topologyConfiguration)
+        : base(topologyConfiguration)
     {
-        protected ServiceBusEndpointConfiguration(IServiceBusTopologyConfiguration topologyConfiguration)
-            : base(topologyConfiguration)
-        {
-            Topology = topologyConfiguration;
-        }
+        Topology = topologyConfiguration;
+    }
 
-        ServiceBusEndpointConfiguration(IServiceBusEndpointConfiguration parentConfiguration, IServiceBusTopologyConfiguration topologyConfiguration,
-            bool isBusEndpoint)
-            : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
-        {
-            Topology = topologyConfiguration;
-        }
+    ServiceBusEndpointConfiguration(IServiceBusEndpointConfiguration parentConfiguration, IServiceBusTopologyConfiguration topologyConfiguration,
+        bool isBusEndpoint)
+        : base(parentConfiguration, topologyConfiguration, isBusEndpoint)
+    {
+        Topology = topologyConfiguration;
+    }
 
-        public new IServiceBusTopologyConfiguration Topology { get; }
+    public new IServiceBusTopologyConfiguration Topology { get; }
 
-        public IServiceBusEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
-        {
-            var topologyConfiguration = new ServiceBusTopologyConfiguration(Topology);
+    public IServiceBusEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint)
+    {
+        var topologyConfiguration = new ServiceBusTopologyConfiguration(Topology);
 
-            return new ServiceBusEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
-        }
+        return new ServiceBusEndpointConfiguration(this, topologyConfiguration, isBusEndpoint);
     }
 }

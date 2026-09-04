@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.SignalR
+using System;
+using Microsoft.AspNetCore.SignalR;
+using ViciOne.ServiceBus.SignalR.Utils;
+
+namespace ViciOne.ServiceBus.SignalR;
+
+public class HubLifetimeManagerOptions<THub> :
+    IHubLifetimeManagerOptions<THub>
+    where THub : Hub
 {
-    using System;
-    using Microsoft.AspNetCore.SignalR;
-    using Utils;
-
-
-    public class HubLifetimeManagerOptions<THub> :
-        IHubLifetimeManagerOptions<THub>
-        where THub : Hub
+    public HubLifetimeManagerOptions()
     {
-        public HubLifetimeManagerOptions()
-        {
-            ServerName = $"{Environment.MachineName}_{NewId.NextGuid():N}";
-            RequestTimeout = TimeSpan.FromSeconds(20);
-            ConnectionStore = new HubConnectionStore();
-            GroupsSubscriptionManager = new ViciOneServiceBusSubscriptionManager();
-            UsersSubscriptionManager = new ViciOneServiceBusSubscriptionManager();
-        }
-
-        public HubConnectionStore ConnectionStore { get; }
-        public ViciOneServiceBusSubscriptionManager GroupsSubscriptionManager { get; }
-        public ViciOneServiceBusSubscriptionManager UsersSubscriptionManager { get; }
-
-        public string ServerName { get; set; }
-        public RequestTimeout RequestTimeout { get; set; }
+        ServerName = $"{Environment.MachineName}_{NewId.NextGuid():N}";
+        RequestTimeout = TimeSpan.FromSeconds(20);
+        ConnectionStore = new HubConnectionStore();
+        GroupsSubscriptionManager = new ViciOneServiceBusSubscriptionManager();
+        UsersSubscriptionManager = new ViciOneServiceBusSubscriptionManager();
     }
+
+    public HubConnectionStore ConnectionStore { get; }
+    public ViciOneServiceBusSubscriptionManager GroupsSubscriptionManager { get; }
+    public ViciOneServiceBusSubscriptionManager UsersSubscriptionManager { get; }
+
+    public string ServerName { get; set; }
+    public RequestTimeout RequestTimeout { get; set; }
 }

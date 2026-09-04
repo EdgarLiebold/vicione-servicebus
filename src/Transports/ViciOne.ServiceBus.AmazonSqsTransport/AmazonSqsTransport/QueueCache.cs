@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Caching;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Caching;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public sealed class QueueCache :
     IAsyncDisposable

@@ -1,32 +1,31 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PartitionMessageConfigurationObserver :
+    ConfigurationObserver,
+    IMessageConfigurationObserver
 {
-    public class PartitionMessageConfigurationObserver :
-        ConfigurationObserver,
-        IMessageConfigurationObserver
+    readonly IPartitioner _partitioner;
+
+    public PartitionMessageConfigurationObserver(IConsumePipeConfigurator configurator, IPartitioner partitioner)
+        : base(configurator)
     {
-        readonly IPartitioner _partitioner;
+        _partitioner = partitioner;
 
-        public PartitionMessageConfigurationObserver(IConsumePipeConfigurator configurator, IPartitioner partitioner)
-            : base(configurator)
-        {
-            _partitioner = partitioner;
+        Connect(this);
+    }
 
-            Connect(this);
-        }
+    public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
+        where TMessage : class
+    {
+        var specification = new PartitionMessageSpecification<TMessage>(_partitioner);
 
-        public void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
-            where TMessage : class
-        {
-            var specification = new PartitionMessageSpecification<TMessage>(_partitioner);
+        configurator.AddPipeSpecification(specification);
+    }
 
-            configurator.AddPipeSpecification(specification);
-        }
+    public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
+    {
+        var specification = new PartitionMessageSpecification<Batch<TMessage>>(_partitioner);
 
-        public override void BatchConsumerConfigured<TConsumer, TMessage>(IConsumerMessageConfigurator<TConsumer, Batch<TMessage>> configurator)
-        {
-            var specification = new PartitionMessageSpecification<Batch<TMessage>>(_partitioner);
-
-            configurator.Message(m => m.AddPipeSpecification(specification));
-        }
+        configurator.Message(m => m.AddPipeSpecification(specification));
     }
 }

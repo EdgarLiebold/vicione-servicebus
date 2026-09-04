@@ -1,7 +1,3 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.ProviderAbstractions;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 /// <summary>
 /// EF Core persistent durable-send store with atomic retained-storage admission and fenced delivery ownership.
 /// </summary>
@@ -407,7 +406,7 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
                 .SetProperty(x => x.LeaseExpiresAt, (DateTime?)null), cancellationToken)
             .ConfigureAwait(false);
 
-        // Quarantine already consumed capacity, therefore no capacity mutation is necessary or allowed here.
+        // Quarantine already consumed capacity, therefore no capacity change is necessary or allowed here.
         if (updated == 1)
             return new DurableSendOperationResult(id, DurableSendOperationOutcome.Requeued);
 

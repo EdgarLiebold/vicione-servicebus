@@ -1,7 +1,5 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
-{
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.Transports.Fabric;
 
-    public delegate Task ZeroActiveHandler();
-}
+public delegate Task ZeroActiveHandler();

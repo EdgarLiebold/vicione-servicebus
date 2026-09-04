@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 using BenchmarkDotNet.Attributes;
-using Context;
-using Serialization;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Serialization;
 
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 
 [MemoryDiagnoser]
 public class DeserializationBenchmark

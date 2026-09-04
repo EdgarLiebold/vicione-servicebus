@@ -1,9 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
-
 using System;
 using Azure;
 using Azure.Data.Tables;
+
+#nullable enable
+namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 
 internal sealed class MessageJournalCapacityLease : ITableEntity
 {

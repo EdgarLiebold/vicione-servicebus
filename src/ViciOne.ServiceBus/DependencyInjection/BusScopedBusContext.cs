@@ -1,76 +1,74 @@
+using System;
+using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.DependencyInjection
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class BusScopedBusContext<TBus> :
+    ScopedBusContext
+    where TBus : class, IBus
 {
-    using System;
-    using Clients;
-    using Transports;
+    readonly TBus _bus;
+    readonly IClientFactory _clientFactory;
+    readonly IServiceProvider _provider;
+    IPublishEndpoint? _publishEndpoint;
+    IScopedClientFactory? _scopedClientFactory;
+    ISendEndpointProvider? _sendEndpointProvider;
 
-
-    public class BusScopedBusContext<TBus> :
-        ScopedBusContext
-        where TBus : class, IBus
+    public BusScopedBusContext(TBus bus, IClientFactory clientFactory, IServiceProvider provider)
     {
-        readonly TBus _bus;
-        readonly IClientFactory _clientFactory;
-        readonly IServiceProvider _provider;
-        IPublishEndpoint? _publishEndpoint;
-        IScopedClientFactory? _scopedClientFactory;
-        ISendEndpointProvider? _sendEndpointProvider;
-
-        public BusScopedBusContext(TBus bus, IClientFactory clientFactory, IServiceProvider provider)
-        {
-            _bus = bus;
-            _clientFactory = clientFactory;
-            _provider = provider;
-        }
-
-        public ISendEndpointProvider SendEndpointProvider
-        {
-            get { return _sendEndpointProvider ??= new ScopedSendEndpointProvider(_bus, _provider); }
-        }
-
-        public IPublishEndpoint PublishEndpoint
-        {
-            get { return _publishEndpoint ??= new PublishEndpoint(new ScopedPublishEndpointProvider(_bus, _provider)); }
-        }
-
-        public IScopedClientFactory ClientFactory
-        {
-            get
-            {
-                return _scopedClientFactory ??=
-                    new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
-            }
-        }
+        _bus = bus;
+        _clientFactory = clientFactory;
+        _provider = provider;
     }
 
-
-    public class BusScopedBusContext :
-        ScopedBusContext
+    public ISendEndpointProvider SendEndpointProvider
     {
-        readonly IClientFactory _clientFactory;
-        readonly IServiceProvider _provider;
-        readonly ScopedBusContext _scopedBusContext;
-        IScopedClientFactory? _scopedClientFactory;
+        get { return _sendEndpointProvider ??= new ScopedSendEndpointProvider(_bus, _provider); }
+    }
 
-        public BusScopedBusContext(ScopedBusContext scopedBusContext, IClientFactory clientFactory, IServiceProvider provider)
+    public IPublishEndpoint PublishEndpoint
+    {
+        get { return _publishEndpoint ??= new PublishEndpoint(new ScopedPublishEndpointProvider(_bus, _provider)); }
+    }
+
+    public IScopedClientFactory ClientFactory
+    {
+        get
         {
-            _scopedBusContext = scopedBusContext;
-            _clientFactory = clientFactory;
-            _provider = provider;
+            return _scopedClientFactory ??=
+                new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
         }
+    }
+}
 
-        public ISendEndpointProvider SendEndpointProvider => _scopedBusContext.SendEndpointProvider;
 
-        public IPublishEndpoint PublishEndpoint => _scopedBusContext.PublishEndpoint;
+public class BusScopedBusContext :
+    ScopedBusContext
+{
+    readonly IClientFactory _clientFactory;
+    readonly IServiceProvider _provider;
+    readonly ScopedBusContext _scopedBusContext;
+    IScopedClientFactory? _scopedClientFactory;
 
-        public IScopedClientFactory ClientFactory
+    public BusScopedBusContext(ScopedBusContext scopedBusContext, IClientFactory clientFactory, IServiceProvider provider)
+    {
+        _scopedBusContext = scopedBusContext;
+        _clientFactory = clientFactory;
+        _provider = provider;
+    }
+
+    public ISendEndpointProvider SendEndpointProvider => _scopedBusContext.SendEndpointProvider;
+
+    public IPublishEndpoint PublishEndpoint => _scopedBusContext.PublishEndpoint;
+
+    public IScopedClientFactory ClientFactory
+    {
+        get
         {
-            get
-            {
-                return _scopedClientFactory ??=
-                    new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
-            }
+            return _scopedClientFactory ??=
+                new ScopedClientFactory(new ClientFactory(new ScopedClientFactoryContext(_clientFactory, _provider)), null);
         }
     }
 }

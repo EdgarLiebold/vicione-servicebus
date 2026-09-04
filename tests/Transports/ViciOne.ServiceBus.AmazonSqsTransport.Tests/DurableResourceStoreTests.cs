@@ -4,8 +4,6 @@ using Xunit;
 
 // Caller and store-lifetime cancellation are the behavior under test; every coordination
 // point that is not deliberately cancellation-controlled is bounded by OperationTimeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.AmazonSqsTransport.Tests;
 
 public sealed class DurableResourceStoreTests

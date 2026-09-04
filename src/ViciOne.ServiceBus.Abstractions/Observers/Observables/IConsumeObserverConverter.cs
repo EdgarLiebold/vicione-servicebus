@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.Observables
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Observables;
+
+/// <summary>
+/// Calls the generic version of the IPublishEndpoint.Send method with the object's type
+/// </summary>
+public interface IConsumeObserverConverter
 {
-    using System;
-    using System.Threading.Tasks;
+    Task PreConsume(IConsumeObserver observer, object context);
 
+    Task PostConsume(IConsumeObserver observer, object context);
 
-    /// <summary>
-    /// Calls the generic version of the IPublishEndpoint.Send method with the object's type
-    /// </summary>
-    public interface IConsumeObserverConverter
-    {
-        Task PreConsume(IConsumeObserver observer, object context);
-
-        Task PostConsume(IConsumeObserver observer, object context);
-
-        Task ConsumeFault(IConsumeObserver observer, object context, Exception exception);
-    }
+    Task ConsumeFault(IConsumeObserver observer, object context, Exception exception);
 }

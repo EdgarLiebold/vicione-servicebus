@@ -1,51 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Initializers.Conventions;
+
 #nullable enable
 
-namespace ViciOne.ServiceBus.Initializers
+namespace ViciOne.ServiceBus.Initializers;
+
+internal sealed class InitializerConventionRegistry
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Conventions;
+    readonly List<IInitializerConvention> _conventions;
+    readonly object _lock = new();
+    IInitializerConvention[]? _snapshot;
+    bool _frozen;
 
-
-    internal sealed class InitializerConventionRegistry
+    internal InitializerConventionRegistry(IEnumerable<IInitializerConvention> conventions)
     {
-        readonly List<IInitializerConvention> _conventions;
-        readonly object _lock = new();
-        IInitializerConvention[]? _snapshot;
-        bool _frozen;
+        ArgumentNullException.ThrowIfNull(conventions);
+        _conventions = conventions.ToList();
+    }
 
-        internal InitializerConventionRegistry(IEnumerable<IInitializerConvention> conventions)
-        {
-            ArgumentNullException.ThrowIfNull(conventions);
-            _conventions = conventions.ToList();
-        }
-
-        internal IReadOnlyList<IInitializerConvention> Conventions
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    _frozen = true;
-                    return _snapshot ??= _conventions.ToArray();
-                }
-            }
-        }
-
-        internal void Add<T>()
-            where T : IInitializerConvention, new()
+    internal IReadOnlyList<IInitializerConvention> Conventions
+    {
+        get
         {
             lock (_lock)
             {
-                if (_frozen)
-                    throw new InvalidOperationException("Message initializer conventions are immutable after the first initializer is created.");
-
-                if (_conventions.Any(static convention => convention.GetType() == typeof(T)))
-                    return;
-
-                _conventions.Add(new T());
+                _frozen = true;
+                return _snapshot ??= _conventions.ToArray();
             }
+        }
+    }
+
+    internal void Add<T>()
+        where T : IInitializerConvention, new()
+    {
+        lock (_lock)
+        {
+            if (_frozen)
+                throw new InvalidOperationException("Message initializer conventions are immutable after the first initializer is created.");
+
+            if (_conventions.Any(static convention => convention.GetType() == typeof(T)))
+                return;
+
+            _conventions.Add(new T());
         }
     }
 }

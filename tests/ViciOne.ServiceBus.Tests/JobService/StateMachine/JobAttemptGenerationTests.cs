@@ -4,8 +4,8 @@ using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.SagaStateMachine;
-using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.JobService.StateMachine;

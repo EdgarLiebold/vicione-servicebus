@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class DuplicateKeyPipeConfigurationException :
+    PipeConfigurationException
 {
-    using System;
-
-
-    [Serializable]
-    public class DuplicateKeyPipeConfigurationException :
-        PipeConfigurationException
+    public DuplicateKeyPipeConfigurationException()
     {
-        public DuplicateKeyPipeConfigurationException()
-        {
-        }
+    }
 
-        public DuplicateKeyPipeConfigurationException(string message)
-            : base(message)
-        {
-        }
+    public DuplicateKeyPipeConfigurationException(string message)
+        : base(message)
+    {
+    }
 
-        public DuplicateKeyPipeConfigurationException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public DuplicateKeyPipeConfigurationException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

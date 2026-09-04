@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public interface IActiveMqHost :
+    IHost<IActiveMqReceiveEndpointConfigurator>
 {
-    using Transports;
-
-
-    public interface IActiveMqHost :
-        IHost<IActiveMqReceiveEndpointConfigurator>
-    {
-    }
 }

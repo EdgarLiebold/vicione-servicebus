@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ScopedFilterSpecificationObserver :
+    ISendPipeSpecificationObserver,
+    IPublishPipeSpecificationObserver
 {
-    using System;
-    using DependencyInjection;
-    using Internals;
-    using Middleware;
-    using Serialization;
+    readonly Type _filterType;
+    readonly CompositeFilter<Type> _messageTypeFilter;
+    readonly IServiceProvider _provider;
 
-
-    public class ScopedFilterSpecificationObserver :
-        ISendPipeSpecificationObserver,
-        IPublishPipeSpecificationObserver
+    public ScopedFilterSpecificationObserver(Type filterType, IServiceProvider provider, CompositeFilter<Type> messageTypeFilter)
     {
-        readonly Type _filterType;
-        readonly CompositeFilter<Type> _messageTypeFilter;
-        readonly IServiceProvider _provider;
+        _filterType = filterType;
+        _provider = provider;
+        _messageTypeFilter = messageTypeFilter;
+        _messageTypeFilter.Excludes += type => type.ImplementsInterface<Fault>();
+        _messageTypeFilter.Excludes += type => type.ImplementsInterface<ReceiveFault>();
+        // do not create filters for scheduled/outbox messages
+        _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
+    }
 
-        public ScopedFilterSpecificationObserver(Type filterType, IServiceProvider provider, CompositeFilter<Type> messageTypeFilter)
-        {
-            _filterType = filterType;
-            _provider = provider;
-            _messageTypeFilter = messageTypeFilter;
-            _messageTypeFilter.Excludes += type => type.ImplementsInterface<Fault>();
-            _messageTypeFilter.Excludes += type => type.ImplementsInterface<ReceiveFault>();
-            // do not create filters for scheduled/outbox messages
-            _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
-        }
+    public void MessageSpecificationCreated<T>(IMessagePublishPipeSpecification<T> specification)
+        where T : class
+    {
+        AddScopedFilter<PublishContext<T>, T>(specification);
+    }
 
-        public void MessageSpecificationCreated<T>(IMessagePublishPipeSpecification<T> specification)
-            where T : class
-        {
-            AddScopedFilter<PublishContext<T>, T>(specification);
-        }
+    public void MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
+        where T : class
+    {
+        AddScopedFilter<SendContext<T>, T>(specification);
+    }
 
-        public void MessageSpecificationCreated<T>(IMessageSendPipeSpecification<T> specification)
-            where T : class
-        {
-            AddScopedFilter<SendContext<T>, T>(specification);
-        }
+    void AddScopedFilter<TContext, T>(IPipeConfigurator<TContext> configurator)
+        where TContext : class, PipeContext
+        where T : class
+    {
+        if (!_messageTypeFilter.Matches(typeof(T)))
+            return;
 
-        void AddScopedFilter<TContext, T>(IPipeConfigurator<TContext> configurator)
-            where TContext : class, PipeContext
-            where T : class
-        {
-            if (!_messageTypeFilter.Matches(typeof(T)))
-                return;
+        var filterType = _filterType.ImplementsInterface<IFilter<TContext>>()
+            ? _filterType
+            : _filterType.MakeGenericType(typeof(T));
 
-            var filterType = _filterType.ImplementsInterface<IFilter<TContext>>()
-                ? _filterType
-                : _filterType.MakeGenericType(typeof(T));
+        if (!filterType.ImplementsInterface(typeof(IFilter<TContext>)))
+            throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<TContext>>.ShortName} ");
 
-            if (!filterType.ImplementsInterface(typeof(IFilter<TContext>)))
-                throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<TContext>>.ShortName} ");
+        var scopeProviderType = typeof(FilterScopeProvider<,>).MakeGenericType(filterType, typeof(TContext));
 
-            var scopeProviderType = typeof(FilterScopeProvider<,>).MakeGenericType(filterType, typeof(TContext));
+        var scopeProvider = (IFilterScopeProvider<TContext>)Activator.CreateInstance(scopeProviderType, _provider);
 
-            var scopeProvider = (IFilterScopeProvider<TContext>)Activator.CreateInstance(scopeProviderType, _provider);
+        var filter = new ScopedFilter<TContext>(scopeProvider);
+        var specification = new FilterPipeSpecification<TContext>(filter);
 
-            var filter = new ScopedFilter<TContext>(scopeProvider);
-            var specification = new FilterPipeSpecification<TContext>(filter);
-
-            configurator.AddPipeSpecification(specification);
-        }
+        configurator.AddPipeSpecification(specification);
     }
 }

@@ -1,72 +1,70 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ReceiverConfiguration :
+    EndpointConfiguration,
+    IReceiveEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Transports;
+    readonly IReceiveEndpointConfiguration _configuration;
+    protected readonly List<IReceiveEndpointSpecification> Specifications;
 
-
-    public class ReceiverConfiguration :
-        EndpointConfiguration,
-        IReceiveEndpointConfigurator
+    protected ReceiverConfiguration(IReceiveEndpointConfiguration endpointConfiguration)
+        : base(endpointConfiguration)
     {
-        readonly IReceiveEndpointConfiguration _configuration;
-        protected readonly List<IReceiveEndpointSpecification> Specifications;
+        _configuration = endpointConfiguration;
 
-        protected ReceiverConfiguration(IReceiveEndpointConfiguration endpointConfiguration)
-            : base(endpointConfiguration)
-        {
-            _configuration = endpointConfiguration;
+        Specifications = new List<IReceiveEndpointSpecification>();
 
-            Specifications = new List<IReceiveEndpointSpecification>();
+        this.ThrowOnSkippedMessages();
+        this.RethrowFaultedMessages();
+    }
 
-            this.ThrowOnSkippedMessages();
-            this.RethrowFaultedMessages();
-        }
+    public Uri InputAddress => _configuration.InputAddress;
 
-        public Uri InputAddress => _configuration.InputAddress;
+    public bool ConfigureConsumeTopology
+    {
+        set { }
+    }
 
-        public bool ConfigureConsumeTopology
-        {
-            set { }
-        }
+    public bool PublishFaults
+    {
+        set { }
+    }
 
-        public bool PublishFaults
-        {
-            set { }
-        }
+    public void AddDependency(IReceiveEndpointDependency dependent)
+    {
+    }
 
-        public void AddDependency(IReceiveEndpointDependency dependent)
-        {
-        }
+    ConnectHandle IReceiveEndpointObserverConnector.ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
+    {
+        return _configuration.ConnectReceiveEndpointObserver(observer);
+    }
 
-        ConnectHandle IReceiveEndpointObserverConnector.ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
-        {
-            return _configuration.ConnectReceiveEndpointObserver(observer);
-        }
+    public void AddDependent(IReceiveEndpointDependent dependent)
+    {
+    }
 
-        public void AddDependent(IReceiveEndpointDependent dependent)
-        {
-        }
+    public void ConfigureMessageTopology<T>(bool enabled = true)
+        where T : class
+    {
+    }
 
-        public void ConfigureMessageTopology<T>(bool enabled = true)
-            where T : class
-        {
-        }
+    public void ConfigureMessageTopology(Type messageType, bool enabled = true)
+    {
+    }
 
-        public void ConfigureMessageTopology(Type messageType, bool enabled = true)
-        {
-        }
+    public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
+    {
+        Specifications.Add(specification);
+    }
 
-        public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
-        {
-            Specifications.Add(specification);
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return Specifications.SelectMany(x => x.Validate())
-                .Concat(base.Validate());
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return Specifications.SelectMany(x => x.Validate())
+            .Concat(base.Validate());
     }
 }

@@ -1,30 +1,29 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public class SimpleHeaderValueConverter :
+    IHeaderValueConverter
 {
-    public class SimpleHeaderValueConverter :
-        IHeaderValueConverter
+    public bool TryConvert(HeaderValue headerValue, out HeaderValue result)
     {
-        public bool TryConvert(HeaderValue headerValue, out HeaderValue result)
+        if (headerValue.IsSimpleValue(out var simpleValue))
         {
-            if (headerValue.IsSimpleValue(out var simpleValue))
-            {
-                result = simpleValue;
-                return true;
-            }
-
-            result = default;
-            return false;
+            result = simpleValue;
+            return true;
         }
 
-        public bool TryConvert<T>(HeaderValue<T> headerValue, out HeaderValue result)
-        {
-            if (headerValue.IsSimpleValue(out var simpleValue))
-            {
-                result = simpleValue;
-                return true;
-            }
+        result = default;
+        return false;
+    }
 
-            result = default;
-            return false;
+    public bool TryConvert<T>(HeaderValue<T> headerValue, out HeaderValue result)
+    {
+        if (headerValue.IsSimpleValue(out var simpleValue))
+        {
+            result = simpleValue;
+            return true;
         }
+
+        result = default;
+        return false;
     }
 }

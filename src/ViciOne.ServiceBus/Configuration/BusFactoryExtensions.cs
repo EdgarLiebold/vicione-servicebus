@@ -1,56 +1,54 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public static class BusFactoryExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
-
-
-    public static class BusFactoryExtensions
+    public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration, IEnumerable<ISpecification> dependencies)
     {
-        public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration, IEnumerable<ISpecification> dependencies)
+        return Build(factory, busConfiguration, factory.Validate()
+            .Concat(dependencies.SelectMany(x => x.Validate())));
+    }
+
+    public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration)
+    {
+        return Build(factory, busConfiguration, factory.Validate());
+    }
+
+    static IBusControl Build(IBusFactory factory, IBusConfiguration busConfiguration, IEnumerable<ValidationResult> validationResult)
+    {
+        if (LogContext.Current == null)
+            LogContext.ConfigureCurrentLogContext();
+
+        busConfiguration.HostConfiguration.LogContext = LogContext.Current;
+
+        if (busConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
+            throw new ConfigurationException("The bus must own a MessageRouteTable instance.");
+
+        messageRoutes.Freeze();
+
+        IReadOnlyList<ValidationResult> result = validationResult.ThrowIfContainsFailure("The bus configuration is invalid:");
+
+        try
         {
-            return Build(factory, busConfiguration, factory.Validate()
-                .Concat(dependencies.SelectMany(x => x.Validate())));
+            var busReceiveEndpointConfiguration = factory.CreateBusEndpointConfiguration(x => x.ConfigureConsumeTopology = false);
+
+            var host = busConfiguration.HostConfiguration.Build();
+
+            var bus = new ViciOneServiceBusBus(host, busConfiguration.BusObservers, busReceiveEndpointConfiguration);
+
+            busConfiguration.BusObservers.PostCreate(bus);
+
+            return bus;
         }
-
-        public static IBusControl Build(this IBusFactory factory, IBusConfiguration busConfiguration)
+        catch (Exception ex)
         {
-            return Build(factory, busConfiguration, factory.Validate());
-        }
+            busConfiguration.BusObservers.CreateFaulted(ex);
 
-        static IBusControl Build(IBusFactory factory, IBusConfiguration busConfiguration, IEnumerable<ValidationResult> validationResult)
-        {
-            if (LogContext.Current == null)
-                LogContext.ConfigureCurrentLogContext();
-
-            busConfiguration.HostConfiguration.LogContext = LogContext.Current;
-
-            if (busConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
-                throw new ConfigurationException("The bus must own a MessageRouteTable instance.");
-
-            messageRoutes.Freeze();
-
-            IReadOnlyList<ValidationResult> result = validationResult.ThrowIfContainsFailure("The bus configuration is invalid:");
-
-            try
-            {
-                var busReceiveEndpointConfiguration = factory.CreateBusEndpointConfiguration(x => x.ConfigureConsumeTopology = false);
-
-                var host = busConfiguration.HostConfiguration.Build();
-
-                var bus = new ViciOneServiceBusBus(host, busConfiguration.BusObservers, busReceiveEndpointConfiguration);
-
-                busConfiguration.BusObservers.PostCreate(bus);
-
-                return bus;
-            }
-            catch (Exception ex)
-            {
-                busConfiguration.BusObservers.CreateFaulted(ex);
-
-                throw new ConfigurationException(result, "An exception occurred during bus creation", ex);
-            }
+            throw new ConfigurationException(result, "An exception occurred during bus creation", ex);
         }
     }
 }

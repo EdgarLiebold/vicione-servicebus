@@ -1,9 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Testing;
-
 using System;
 using System.Threading.Tasks;
-using Implementations;
+using ViciOne.ServiceBus.Testing.Implementations;
+
+#nullable enable
+namespace ViciOne.ServiceBus.Testing;
 
 public static class ActiveTestHarnessExtensions
 {

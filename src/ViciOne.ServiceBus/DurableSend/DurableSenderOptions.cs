@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.DurableSend;
-
 using System;
 
+namespace ViciOne.ServiceBus.DurableSend;
 /// <summary>Mutable bootstrap options for one typed bus; validated and frozen before its durable sender starts.</summary>
 public sealed class DurableSenderOptions<TBus>
     where TBus : class, IBus

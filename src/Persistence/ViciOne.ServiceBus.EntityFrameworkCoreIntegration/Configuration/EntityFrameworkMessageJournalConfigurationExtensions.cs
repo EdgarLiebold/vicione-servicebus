@@ -1,10 +1,10 @@
+using System;
+using Microsoft.EntityFrameworkCore;
+using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
+using ViciOne.ServiceBus.MessageJournal;
+
 #nullable enable
 namespace ViciOne.ServiceBus;
-
-using System;
-using EntityFrameworkCoreIntegration.MessageJournal;
-using Microsoft.EntityFrameworkCore;
-using ViciOne.ServiceBus.MessageJournal;
 
 public static class EntityFrameworkMessageJournalConfigurationExtensions
 {

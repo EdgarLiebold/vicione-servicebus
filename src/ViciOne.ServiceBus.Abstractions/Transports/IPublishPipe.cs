@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IPublishPipe :
+    IProbeSite
 {
-    using System.Threading.Tasks;
-
-
-    public interface IPublishPipe :
-        IProbeSite
-    {
-        Task Send<T>(PublishContext<T> context)
-            where T : class;
-    }
+    Task Send<T>(PublishContext<T> context)
+        where T : class;
 }

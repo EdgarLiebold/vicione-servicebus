@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobSubmitted
 {
-    using System;
-    using System.Collections.Generic;
+    /// <summary>
+    /// The job identifier
+    /// </summary>
+    Guid JobId { get; }
 
+    Guid JobTypeId { get; }
 
-    public interface JobSubmitted
-    {
-        /// <summary>
-        /// The job identifier
-        /// </summary>
-        Guid JobId { get; }
+    /// <summary>
+    /// The time the job was submitted
+    /// </summary>
+    DateTime Timestamp { get; }
 
-        Guid JobTypeId { get; }
+    /// <summary>
+    /// Timeout when running job
+    /// </summary>
+    TimeSpan JobTimeout { get; }
 
-        /// <summary>
-        /// The time the job was submitted
-        /// </summary>
-        DateTime Timestamp { get; }
+    /// <summary>
+    /// The job, as an object dictionary
+    /// </summary>
+    Dictionary<string, object> Job { get; }
 
-        /// <summary>
-        /// Timeout when running job
-        /// </summary>
-        TimeSpan JobTimeout { get; }
+    /// <summary>
+    /// The job properties
+    /// </summary>
+    Dictionary<string, object>? JobProperties { get; }
 
-        /// <summary>
-        /// The job, as an object dictionary
-        /// </summary>
-        Dictionary<string, object> Job { get; }
-
-        /// <summary>
-        /// The job properties
-        /// </summary>
-        Dictionary<string, object>? JobProperties { get; }
-
-        /// <summary>
-        /// If the job is a recurring job, the schedule for the job
-        /// </summary>
-        RecurringJobSchedule? Schedule { get; }
-    }
+    /// <summary>
+    /// If the job is a recurring job, the schedule for the job
+    /// </summary>
+    RecurringJobSchedule? Schedule { get; }
 }

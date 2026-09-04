@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class CompensateActivityFactoryFilter<TActivity, TLog> :
+    IFilter<CompensateContext<TLog>>
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    using System.Threading.Tasks;
+    readonly ICompensateActivityFactory<TActivity, TLog> _factory;
+    readonly IPipe<CompensateActivityContext<TActivity, TLog>> _pipe;
 
-
-    public class CompensateActivityFactoryFilter<TActivity, TLog> :
-        IFilter<CompensateContext<TLog>>
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
+    public CompensateActivityFactoryFilter(ICompensateActivityFactory<TActivity, TLog> factory, IPipe<CompensateActivityContext<TActivity, TLog>> pipe)
     {
-        readonly ICompensateActivityFactory<TActivity, TLog> _factory;
-        readonly IPipe<CompensateActivityContext<TActivity, TLog>> _pipe;
+        _factory = factory;
+        _pipe = pipe;
+    }
 
-        public CompensateActivityFactoryFilter(ICompensateActivityFactory<TActivity, TLog> factory, IPipe<CompensateActivityContext<TActivity, TLog>> pipe)
-        {
-            _factory = factory;
-            _pipe = pipe;
-        }
+    public async Task Send(CompensateContext<TLog> context, IPipe<CompensateContext<TLog>> next)
+    {
+        await _factory.Compensate(context, _pipe).ConfigureAwait(false);
 
-        public async Task Send(CompensateContext<TLog> context, IPipe<CompensateContext<TLog>> next)
-        {
-            await _factory.Compensate(context, _pipe).ConfigureAwait(false);
+        await next.Send(context).ConfigureAwait(false);
+    }
 
-            await next.Send(context).ConfigureAwait(false);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            _factory.Probe(context);
-        }
+    public void Probe(ProbeContext context)
+    {
+        _factory.Probe(context);
     }
 }

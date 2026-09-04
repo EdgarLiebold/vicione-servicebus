@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface JobRetryDelayElapsed
 {
-    using System;
-
-
-    public interface JobRetryDelayElapsed
-    {
-        Guid JobId { get; }
-    }
+    Guid JobId { get; }
 }

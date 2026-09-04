@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Logging;
-
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
@@ -9,13 +6,15 @@ using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Transports;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Logging;
 
 public static class LogContextInstrumentationExtensions
 {

@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SetRoutingKeyMessageSendTopology<TMessage> :
+    IMessageSendTopology<TMessage>
+    where TMessage : class
 {
-    using System;
-    using Middleware;
-    using Transports;
+    readonly IFilter<SendContext<TMessage>> _filter;
 
-
-    public class SetRoutingKeyMessageSendTopology<TMessage> :
-        IMessageSendTopology<TMessage>
-        where TMessage : class
+    public SetRoutingKeyMessageSendTopology(IMessageRoutingKeyFormatter<TMessage> routingKeyFormatter)
     {
-        readonly IFilter<SendContext<TMessage>> _filter;
+        if (routingKeyFormatter == null)
+            throw new ArgumentNullException(nameof(routingKeyFormatter));
 
-        public SetRoutingKeyMessageSendTopology(IMessageRoutingKeyFormatter<TMessage> routingKeyFormatter)
-        {
-            if (routingKeyFormatter == null)
-                throw new ArgumentNullException(nameof(routingKeyFormatter));
+        _filter = new SetRoutingKeyFilter<TMessage>(routingKeyFormatter);
+    }
 
-            _filter = new SetRoutingKeyFilter<TMessage>(routingKeyFormatter);
-        }
-
-        public void Apply(ITopologyPipeBuilder<SendContext<TMessage>> builder)
-        {
-            builder.AddFilter(_filter);
-        }
+    public void Apply(ITopologyPipeBuilder<SendContext<TMessage>> builder)
+    {
+        builder.AddFilter(_filter);
     }
 }

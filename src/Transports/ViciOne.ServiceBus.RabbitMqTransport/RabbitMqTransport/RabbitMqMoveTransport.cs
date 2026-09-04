@@ -1,14 +1,13 @@
-#nullable enable
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Middleware;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
+using ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 
+#nullable enable
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 
 public class RabbitMqMoveTransport<TSettings>
     where TSettings : class
@@ -50,7 +49,7 @@ public class RabbitMqMoveTransport<TSettings>
         if (context.TryGetPayload(out RabbitMqBasicConsumeContext? basicConsumeContext))
         {
             properties = new BasicProperties(basicConsumeContext.Properties);
-            routingKey = basicConsumeContext.RoutingKey;
+            routingKey = basicConsumeContext.RoutingKey!;
             body = context.GetBody();
         }
         else

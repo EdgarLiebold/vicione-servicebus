@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.Mediator
+namespace ViciOne.ServiceBus.Mediator;
+
+public interface IMediator :
+    ISendEndpoint,
+    IPublishEndpoint,
+    IPublishEndpointProvider,
+    IClientFactory,
+    IConsumePipeConnector,
+    IRequestPipeConnector,
+    IConsumeObserverConnector,
+    IConsumeMessageObserverConnector
 {
-    public interface IMediator :
-        ISendEndpoint,
-        IPublishEndpoint,
-        IPublishEndpointProvider,
-        IClientFactory,
-        IConsumePipeConnector,
-        IRequestPipeConnector,
-        IConsumeObserverConnector,
-        IConsumeMessageObserverConnector
-    {
-    }
 }

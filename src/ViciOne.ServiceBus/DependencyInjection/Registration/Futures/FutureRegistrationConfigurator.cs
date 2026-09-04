@@ -1,53 +1,51 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class FutureRegistrationConfigurator<TFuture> :
+    IFutureRegistrationConfigurator<TFuture>
+    where TFuture : class, SagaStateMachine<FutureState>
 {
-    using System;
-    using Configuration;
+    readonly IRegistrationConfigurator _configurator;
+    readonly IFutureRegistration _registration;
 
-
-    public class FutureRegistrationConfigurator<TFuture> :
-        IFutureRegistrationConfigurator<TFuture>
-        where TFuture : class, SagaStateMachine<FutureState>
+    public FutureRegistrationConfigurator(IRegistrationConfigurator configurator, IFutureRegistration registration)
     {
-        readonly IRegistrationConfigurator _configurator;
-        readonly IFutureRegistration _registration;
+        _configurator = configurator;
+        _registration = registration;
+    }
 
-        public FutureRegistrationConfigurator(IRegistrationConfigurator configurator, IFutureRegistration registration)
-        {
-            _configurator = configurator;
-            _registration = registration;
-        }
+    IFutureRegistrationConfigurator IFutureRegistrationConfigurator.Endpoint(Action<IEndpointRegistrationConfigurator> configure)
+    {
+        return Endpoint(configure);
+    }
 
-        IFutureRegistrationConfigurator IFutureRegistrationConfigurator.Endpoint(Action<IEndpointRegistrationConfigurator> configure)
-        {
-            return Endpoint(configure);
-        }
+    public void ExcludeFromConfigureEndpoints()
+    {
+        _registration.IncludeInConfigureEndpoints = false;
+    }
 
-        public void ExcludeFromConfigureEndpoints()
-        {
-            _registration.IncludeInConfigureEndpoints = false;
-        }
+    public IFutureRegistrationConfigurator<TFuture> Endpoint(Action<IEndpointRegistrationConfigurator> configure)
+    {
+        if (!_registration.IncludeInConfigureEndpoints)
+            throw new ConfigurationException("Feature is excluded from ConfigureEndpoints");
 
-        public IFutureRegistrationConfigurator<TFuture> Endpoint(Action<IEndpointRegistrationConfigurator> configure)
-        {
-            if (!_registration.IncludeInConfigureEndpoints)
-                throw new ConfigurationException("Feature is excluded from ConfigureEndpoints");
+        var configurator = new EndpointRegistrationConfigurator<TFuture>();
 
-            var configurator = new EndpointRegistrationConfigurator<TFuture>();
+        configure?.Invoke(configurator);
 
-            configure?.Invoke(configurator);
+        _configurator.AddEndpoint<FutureEndpointDefinition<TFuture>, TFuture>(_registration, configurator.Settings);
 
-            _configurator.AddEndpoint<FutureEndpointDefinition<TFuture>, TFuture>(_registration, configurator.Settings);
+        return this;
+    }
 
-            return this;
-        }
+    public IFutureRegistrationConfigurator<TFuture> Repository(Action<ISagaRepositoryRegistrationConfigurator<FutureState>> configure)
+    {
+        var configurator = new SagaRepositoryRegistrationConfigurator<FutureState>(_configurator);
 
-        public IFutureRegistrationConfigurator<TFuture> Repository(Action<ISagaRepositoryRegistrationConfigurator<FutureState>> configure)
-        {
-            var configurator = new SagaRepositoryRegistrationConfigurator<FutureState>(_configurator);
+        configure?.Invoke(configurator);
 
-            configure?.Invoke(configurator);
-
-            return this;
-        }
+        return this;
     }
 }

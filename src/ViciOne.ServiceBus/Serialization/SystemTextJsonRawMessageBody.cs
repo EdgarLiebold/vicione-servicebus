@@ -1,96 +1,94 @@
+using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Text.Json;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public class SystemTextJsonRawMessageBody<TMessage> :
+    MessageBody
+    where TMessage : class
 {
-    using System;
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Text.Json;
+    readonly SendContext<TMessage> _context;
+    readonly object? _message;
+    readonly JsonSerializerOptions _options;
+    byte[]? _bytes;
+    string? _string;
 
-
-    public class SystemTextJsonRawMessageBody<TMessage> :
-        MessageBody
-        where TMessage : class
+    public SystemTextJsonRawMessageBody(SendContext<TMessage> context, JsonSerializerOptions options, object? message = null)
     {
-        readonly SendContext<TMessage> _context;
-        readonly object? _message;
-        readonly JsonSerializerOptions _options;
-        byte[]? _bytes;
-        string? _string;
+        _context = context;
+        _options = options;
+        _message = message ?? context.Message;
+    }
 
-        public SystemTextJsonRawMessageBody(SendContext<TMessage> context, JsonSerializerOptions options, object? message = null)
+    /// <summary>
+    /// The number of bytes this body transmits, which is by definition the length of what
+    /// <see cref="GetBytes" /> returns, whichever accessor ran first. Answering from whichever
+    /// representation happened to exist reported a character count after a string read and nothing
+    /// at all before the first read, so the same body gave three different answers.
+    /// </summary>
+    public long? Length => GetBytes().LongLength;
+
+    public Stream GetStream()
+    {
+        return new MemoryStream(GetBytes(), false);
+    }
+
+    public byte[] GetBytes()
+    {
+        if (_bytes != null)
+            return _bytes;
+
+        if (_string != null)
         {
-            _context = context;
-            _options = options;
-            _message = message ?? context.Message;
+            _bytes = Encoding.UTF8.GetBytes(_string);
+            return _bytes;
         }
 
-        /// <summary>
-        /// The number of bytes this body transmits, which is by definition the length of what
-        /// <see cref="GetBytes" /> returns, whichever accessor ran first. Answering from whichever
-        /// representation happened to exist reported a character count after a string read and nothing
-        /// at all before the first read, so the same body gave three different answers.
-        /// </summary>
-        public long? Length => GetBytes().LongLength;
-
-        public Stream GetStream()
+        try
         {
-            return new MemoryStream(GetBytes(), false);
+            if (!_context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
+            {
+                _bytes = JsonSerializer.SerializeToUtf8Bytes(_message, _options);
+                return _bytes;
+            }
+
+            IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
+            using (var writer = new Utf8JsonWriter(bodyBuffer))
+                JsonSerializer.Serialize(writer, _message, _message?.GetType() ?? typeof(object), _options);
+
+            _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
+
+            // Raw JSON has no wrapper object: the application body is also the final transport
+            // envelope. Copying the already bounded bytes into the independently bounded envelope
+            // owner preserves single-pass application serialization while enforcing both limits.
+            IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
+            bodyBuffer.WrittenMemory.Span.CopyTo(envelopeBuffer.GetSpan(bodyBuffer.WrittenCount));
+            envelopeBuffer.Advance(bodyBuffer.WrittenCount);
+            admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
+            _bytes = envelopeBuffer.WrittenMemory.ToArray();
+
+            return _bytes;
         }
-
-        public byte[] GetBytes()
+        catch (PayloadAdmissionException)
         {
-            if (_bytes != null)
-                return _bytes;
-
-            if (_string != null)
-            {
-                _bytes = Encoding.UTF8.GetBytes(_string);
-                return _bytes;
-            }
-
-            try
-            {
-                if (!_context.TryGetPayload(out PayloadAdmissionSerializationContext? admission))
-                {
-                    _bytes = JsonSerializer.SerializeToUtf8Bytes(_message, _options);
-                    return _bytes;
-                }
-
-                IPayloadSerializationBuffer bodyBuffer = admission.Runtime.CreateSerializedBodyBuffer();
-                using (var writer = new Utf8JsonWriter(bodyBuffer))
-                    JsonSerializer.Serialize(writer, _message, _message?.GetType() ?? typeof(object), _options);
-
-                _ = admission.Runtime.EvaluateSerializedBody(bodyBuffer.WrittenMemory, admission.MessageDataOffloadObserved);
-
-                // Raw JSON has no wrapper object: the application body is also the final transport
-                // envelope. Copying the already bounded bytes into the independently bounded envelope
-                // owner preserves single-pass application serialization while enforcing both limits.
-                IPayloadSerializationBuffer envelopeBuffer = admission.Runtime.CreateTransportEnvelopeBuffer();
-                bodyBuffer.WrittenMemory.Span.CopyTo(envelopeBuffer.GetSpan(bodyBuffer.WrittenCount));
-                envelopeBuffer.Advance(bodyBuffer.WrittenCount);
-                admission.Runtime.ValidateTransportEnvelope(envelopeBuffer.WrittenMemory);
-                _bytes = envelopeBuffer.WrittenMemory.ToArray();
-
-                return _bytes;
-            }
-            catch (PayloadAdmissionException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to serialize message", ex);
-            }
+            throw;
         }
-
-        public string GetString()
+        catch (Exception ex)
         {
-            if (_string != null)
-                return _string;
+            throw new SerializationException("Failed to serialize message", ex);
+        }
+    }
 
-            _string = Encoding.UTF8.GetString(GetBytes());
+    public string GetString()
+    {
+        if (_string != null)
             return _string;
-        }
+
+        _string = Encoding.UTF8.GetString(GetBytes());
+        return _string;
     }
 }

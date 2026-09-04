@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System.ComponentModel;
 
+namespace ViciOne.ServiceBus;
 /// <summary>Acceptance semantics reported by a durable-send transport adapter.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public readonly record struct DurableSendDispatchResult(DurableSendCompletionMode CompletionMode)

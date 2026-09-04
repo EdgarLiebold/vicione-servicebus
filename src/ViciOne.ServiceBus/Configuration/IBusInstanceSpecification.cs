@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IBusInstanceSpecification :
+    ISpecification
 {
-    using Transports;
-
-
-    public interface IBusInstanceSpecification :
-        ISpecification
-    {
-        void Configure(IBusInstance busInstance);
-    }
+    void Configure(IBusInstance busInstance);
 }

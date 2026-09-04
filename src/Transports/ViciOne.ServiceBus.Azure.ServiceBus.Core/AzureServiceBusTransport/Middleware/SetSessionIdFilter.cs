@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+
+public class SetSessionIdFilter<T> :
+    IFilter<ServiceBusSendContext<T>>
+    where T : class
 {
-    using System.Threading.Tasks;
+    readonly IMessageSessionIdFormatter<T> _sessionIdFormatter;
 
-
-    public class SetSessionIdFilter<T> :
-        IFilter<ServiceBusSendContext<T>>
-        where T : class
+    public SetSessionIdFilter(IMessageSessionIdFormatter<T> sessionIdFormatter)
     {
-        readonly IMessageSessionIdFormatter<T> _sessionIdFormatter;
+        _sessionIdFormatter = sessionIdFormatter;
+    }
 
-        public SetSessionIdFilter(IMessageSessionIdFormatter<T> sessionIdFormatter)
-        {
-            _sessionIdFormatter = sessionIdFormatter;
-        }
+    public Task Send(ServiceBusSendContext<T> context, IPipe<ServiceBusSendContext<T>> next)
+    {
+        var sessionId = _sessionIdFormatter.FormatSessionId(context);
 
-        public Task Send(ServiceBusSendContext<T> context, IPipe<ServiceBusSendContext<T>> next)
-        {
-            var sessionId = _sessionIdFormatter.FormatSessionId(context);
+        if (!string.IsNullOrWhiteSpace(sessionId))
+            context.SessionId = sessionId;
 
-            if (!string.IsNullOrWhiteSpace(sessionId))
-                context.SessionId = sessionId;
+        return next.Send(context);
+    }
 
-            return next.Send(context);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope("setSessionId");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope("setSessionId");
     }
 }

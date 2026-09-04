@@ -1,48 +1,46 @@
+using System;
+using System.Net.Mime;
+using System.Text.Json;
+using ViciOne.ServiceBus.Serialization;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SystemTextJsonMessageSerializerFactory :
+    ISerializerFactory,
+    IJsonSerializerFactory
 {
-    using System;
-    using System.Net.Mime;
-    using System.Text.Json;
-    using Serialization;
+    readonly Lazy<SystemTextJsonMessageSerializer>? _serializer;
 
-
-    public class SystemTextJsonMessageSerializerFactory :
-        ISerializerFactory,
-        IJsonSerializerFactory
+    public SystemTextJsonMessageSerializerFactory()
     {
-        readonly Lazy<SystemTextJsonMessageSerializer>? _serializer;
+    }
 
-        public SystemTextJsonMessageSerializerFactory()
-        {
-        }
+    SystemTextJsonMessageSerializerFactory(JsonSerializerOptions options)
+    {
+        _serializer = new Lazy<SystemTextJsonMessageSerializer>(() => new SystemTextJsonMessageSerializer(options));
+    }
 
-        SystemTextJsonMessageSerializerFactory(JsonSerializerOptions options)
-        {
-            _serializer = new Lazy<SystemTextJsonMessageSerializer>(() => new SystemTextJsonMessageSerializer(options));
-        }
+    public ContentType ContentType => SystemTextJsonMessageSerializer.JsonContentType;
 
-        public ContentType ContentType => SystemTextJsonMessageSerializer.JsonContentType;
+    public IMessageSerializer CreateSerializer()
+    {
+        return GetSerializer();
+    }
 
-        public IMessageSerializer CreateSerializer()
-        {
-            return GetSerializer();
-        }
+    public IMessageDeserializer CreateDeserializer()
+    {
+        return GetSerializer();
+    }
 
-        public IMessageDeserializer CreateDeserializer()
-        {
-            return GetSerializer();
-        }
+    ISerializerFactory IJsonSerializerFactory.Bind(JsonSerializerOptions options)
+    {
+        return new SystemTextJsonMessageSerializerFactory(options);
+    }
 
-        ISerializerFactory IJsonSerializerFactory.Bind(JsonSerializerOptions options)
-        {
-            return new SystemTextJsonMessageSerializerFactory(options);
-        }
-
-        SystemTextJsonMessageSerializer GetSerializer()
-        {
-            return _serializer?.Value
-                ?? throw new ConfigurationException("The System.Text.Json serializer factory must be bound to a serialization configuration before use.");
-        }
+    SystemTextJsonMessageSerializer GetSerializer()
+    {
+        return _serializer?.Value
+            ?? throw new ConfigurationException("The System.Text.Json serializer factory must be bound to a serialization configuration before use.");
     }
 }

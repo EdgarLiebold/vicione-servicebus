@@ -1,11 +1,11 @@
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Protocol;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.SignalR.Consumers;
 using ViciOne.ServiceBus.SignalR.Contracts;
 using ViciOne.ServiceBus.SignalR.Scoping;
 using ViciOne.ServiceBus.Testing;
-using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.Logging;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Protocol;
 
 namespace ViciOne.ServiceBus.SignalR.Tests;
 

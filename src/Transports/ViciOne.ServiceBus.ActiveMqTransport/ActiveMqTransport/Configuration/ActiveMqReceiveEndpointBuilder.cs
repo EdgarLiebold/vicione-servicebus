@@ -1,78 +1,76 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using ViciOne.ServiceBus.ActiveMqTransport.Middleware;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public class ActiveMqReceiveEndpointBuilder :
+    ReceiveEndpointBuilder
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Middleware;
-    using Topology;
-    using Transports;
+    readonly IActiveMqReceiveEndpointConfiguration _configuration;
+    readonly IActiveMqHostConfiguration _hostConfiguration;
 
-
-    public class ActiveMqReceiveEndpointBuilder :
-        ReceiveEndpointBuilder
+    public ActiveMqReceiveEndpointBuilder(IActiveMqHostConfiguration hostConfiguration, IActiveMqReceiveEndpointConfiguration configuration)
+        : base(configuration)
     {
-        readonly IActiveMqReceiveEndpointConfiguration _configuration;
-        readonly IActiveMqHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+    }
 
-        public ActiveMqReceiveEndpointBuilder(IActiveMqHostConfiguration hostConfiguration, IActiveMqReceiveEndpointConfiguration configuration)
-            : base(configuration)
+    public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+    {
+        if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
         {
-            _hostConfiguration = hostConfiguration;
-            _configuration = configuration;
+            IActiveMqMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
+            if (topology.ConfigureConsumeTopology)
+                topology.Bind();
         }
 
-        public override ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-        {
-            if (_configuration.ConfigureConsumeTopology && options.HasFlag(ConnectPipeOptions.ConfigureConsumeTopology))
-            {
-                IActiveMqMessageConsumeTopologyConfigurator<T> topology = _configuration.Topology.Consume.GetMessageTopology<T>();
-                if (topology.ConfigureConsumeTopology)
-                    topology.Bind();
-            }
+        return base.ConnectConsumePipe(pipe, options);
+    }
 
-            return base.ConnectConsumePipe(pipe, options);
-        }
+    public ActiveMqReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        var brokerTopology = BuildTopology(_configuration.Settings);
 
-        public ActiveMqReceiveEndpointContext CreateReceiveEndpointContext()
-        {
-            var brokerTopology = BuildTopology(_configuration.Settings);
+        var context = new ActiveMqConsumerReceiveEndpointContext(_hostConfiguration, _configuration, brokerTopology);
 
-            var context = new ActiveMqConsumerReceiveEndpointContext(_hostConfiguration, _configuration, brokerTopology);
-
-            var deadLetterTransport = CreateDeadLetterTransport(context);
-            var errorTransport = CreateErrorTransport(context);
+        var deadLetterTransport = CreateDeadLetterTransport(context);
+        var errorTransport = CreateErrorTransport(context);
 
 
-            context.GetOrAddPayload(() => deadLetterTransport);
-            context.GetOrAddPayload(() => errorTransport);
-            context.GetOrAddPayload(() => _hostConfiguration.Topology);
+        context.GetOrAddPayload(() => deadLetterTransport);
+        context.GetOrAddPayload(() => errorTransport);
+        context.GetOrAddPayload(() => _hostConfiguration.Topology);
 
-            return context;
-        }
+        return context;
+    }
 
-        IErrorTransport CreateErrorTransport(ActiveMqReceiveEndpointContext context)
-        {
-            var settings = _configuration.Topology.Send.GetErrorSettings(_configuration.Settings);
-            var filter = new ConfigureActiveMqTopologyFilter<ErrorSettings>(settings, settings.GetBrokerTopology(), context);
+    IErrorTransport CreateErrorTransport(ActiveMqReceiveEndpointContext context)
+    {
+        var settings = _configuration.Topology.Send.GetErrorSettings(_configuration.Settings);
+        var filter = new ConfigureActiveMqTopologyFilter<ErrorSettings>(settings, settings.GetBrokerTopology(), context);
 
-            return new ActiveMqErrorTransport(new QueueEntity(0, settings.EntityName, settings.Durable, settings.AutoDelete), filter);
-        }
+        return new ActiveMqErrorTransport(new QueueEntity(0, settings.EntityName, settings.Durable, settings.AutoDelete), filter);
+    }
 
-        IDeadLetterTransport CreateDeadLetterTransport(ActiveMqReceiveEndpointContext context)
-        {
-            var settings = _configuration.Topology.Send.GetDeadLetterSettings(_configuration.Settings);
-            var filter = new ConfigureActiveMqTopologyFilter<DeadLetterSettings>(settings, settings.GetBrokerTopology(), context);
+    IDeadLetterTransport CreateDeadLetterTransport(ActiveMqReceiveEndpointContext context)
+    {
+        var settings = _configuration.Topology.Send.GetDeadLetterSettings(_configuration.Settings);
+        var filter = new ConfigureActiveMqTopologyFilter<DeadLetterSettings>(settings, settings.GetBrokerTopology(), context);
 
-            return new ActiveMqDeadLetterTransport(new QueueEntity(0, settings.EntityName, settings.Durable, settings.AutoDelete), filter);
-        }
+        return new ActiveMqDeadLetterTransport(new QueueEntity(0, settings.EntityName, settings.Durable, settings.AutoDelete), filter);
+    }
 
-        BrokerTopology BuildTopology(ReceiveSettings settings)
-        {
-            var topologyBuilder = new ReceiveEndpointBrokerTopologyBuilder();
+    BrokerTopology BuildTopology(ReceiveSettings settings)
+    {
+        var topologyBuilder = new ReceiveEndpointBrokerTopologyBuilder();
 
-            topologyBuilder.Queue = topologyBuilder.CreateQueue(settings.EntityName, settings.Durable, settings.AutoDelete);
+        topologyBuilder.Queue = topologyBuilder.CreateQueue(settings.EntityName, settings.Durable, settings.AutoDelete);
 
-            _configuration.Topology.Consume.Apply(topologyBuilder);
+        _configuration.Topology.Consume.Apply(topologyBuilder);
 
-            return topologyBuilder.BuildTopologyLayout();
-        }
+        return topologyBuilder.BuildTopologyLayout();
     }
 }

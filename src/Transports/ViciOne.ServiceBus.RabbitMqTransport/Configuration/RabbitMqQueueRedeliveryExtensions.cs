@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Linq;
-using RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public static class RabbitMqQueueRedeliveryExtensions
 {

@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
-
 using System;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Internals;
 using MessagePack;
 using MessagePack.Formatters;
+using ViciOne.ServiceBus.Internals;
 
-
+namespace ViciOne.ServiceBus.Serialization.MessagePackFormatters;
 /// <summary>
 /// Everything one concrete type needs, compiled once: how to obtain its formatter from a resolver, and
 /// how to call that formatter without reflection. The formatter itself is a parameter rather than a
@@ -53,9 +51,8 @@ sealed class ConcreteFormatterAccess<TInterface>
 /// one compilation instead of starting a second.
 /// </para>
 /// <para>
-/// The cache is an instance rather than a static member of the formatter, so a first use can be a first
-/// use: the concurrency spec builds its own and is genuinely cold, instead of measuring state that an
-/// earlier test in the same run had already warmed.
+/// The cache is an instance rather than a static member of the formatter, so each owner controls its
+/// own lifetime and observes a genuinely cold first use.
 /// </para>
 /// </summary>
 sealed class ConcreteFormatterCache<TInterface>
@@ -71,10 +68,9 @@ sealed class ConcreteFormatterCache<TInterface>
     }
 
     /// <summary>
-    /// The build step is a parameter so that what this table holds can be observed without compiling
-    /// for it. Compiling a delegate over a runtime generated type roots that type in the runtime's own
-    /// tables, and so does asking a resolver for its formatter, so a test that did either would be
-    /// measuring those rather than this table.
+    /// The build step is injectable so the table's ownership can be observed independently of
+    /// compilation. Compiled delegates and resolved formatters may root generated types in runtime
+    /// tables outside this cache.
     /// </summary>
     internal ConcreteFormatterCache(Func<Type, ConcreteFormatterAccess<TInterface>> build)
     {

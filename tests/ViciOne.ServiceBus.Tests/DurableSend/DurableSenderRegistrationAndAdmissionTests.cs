@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -5,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
-using System.Text;
-using System.Reflection;
 using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;

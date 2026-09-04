@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Initializers
+namespace ViciOne.ServiceBus.Initializers;
+
+public interface IMessageInitializerFactory<TMessage>
+    where TMessage : class
 {
-    public interface IMessageInitializerFactory<TMessage>
-        where TMessage : class
-    {
-        IMessageInitializer<TMessage> CreateMessageInitializer();
-    }
+    IMessageInitializer<TMessage> CreateMessageInitializer();
 }

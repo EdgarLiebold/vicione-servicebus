@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class MessageSessionSagaRepositoryRegistrationProvider :
+    ISagaRepositoryRegistrationProvider
 {
-    public class MessageSessionSagaRepositoryRegistrationProvider :
-        ISagaRepositoryRegistrationProvider
+    public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
+        where TSaga : class, ISaga
     {
-        public virtual void Configure<TSaga>(ISagaRegistrationConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga
-        {
-            configurator.MessageSessionRepository();
-        }
+        configurator.MessageSessionRepository();
     }
 }

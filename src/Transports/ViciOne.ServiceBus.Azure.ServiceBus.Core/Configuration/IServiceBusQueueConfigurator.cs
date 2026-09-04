@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus;
+
+public interface IServiceBusQueueConfigurator :
+    IServiceBusMessageEntityConfigurator,
+    IServiceBusEndpointEntityConfigurator,
+    ISpecification
 {
-    using Azure.Messaging.ServiceBus.Administration;
+    /// <summary>
+    /// Move messages to the dead letter queue on filter evaluation exception
+    /// </summary>
+    bool? EnableDeadLetteringOnFilterEvaluationExceptions { set; }
 
+    /// <summary>
+    /// Sets the path where messages are forwarded to
+    /// </summary>
+    string ForwardTo { set; }
 
-    public interface IServiceBusQueueConfigurator :
-        IServiceBusMessageEntityConfigurator,
-        IServiceBusEndpointEntityConfigurator,
-        ISpecification
-    {
-        /// <summary>
-        /// Move messages to the dead letter queue on filter evaluation exception
-        /// </summary>
-        bool? EnableDeadLetteringOnFilterEvaluationExceptions { set; }
-
-        /// <summary>
-        /// Sets the path where messages are forwarded to
-        /// </summary>
-        string ForwardTo { set; }
-
-        /// <summary>
-        /// Create the CreateQueueOptions for the configuration
-        /// </summary>
-        /// <returns></returns>
-        CreateQueueOptions GetCreateQueueOptions();
-    }
+    /// <summary>
+    /// Create the CreateQueueOptions for the configuration
+    /// </summary>
+    /// <returns></returns>
+    CreateQueueOptions GetCreateQueueOptions();
 }

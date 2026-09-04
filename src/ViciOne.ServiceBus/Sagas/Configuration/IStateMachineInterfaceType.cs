@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IStateMachineInterfaceType
 {
-    public interface IStateMachineInterfaceType
-    {
-        ISagaMessageConnector<T> GetConnector<T>()
-            where T : class, ISaga;
-    }
+    ISagaMessageConnector<T> GetConnector<T>()
+        where T : class, ISaga;
 }

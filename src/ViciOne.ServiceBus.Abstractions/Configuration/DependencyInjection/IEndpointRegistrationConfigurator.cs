@@ -1,56 +1,54 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.Courier.Contracts;
+
+namespace ViciOne.ServiceBus;
+
+public interface IEndpointRegistrationConfigurator
 {
-    using System;
-    using Courier.Contracts;
+    /// <summary>
+    /// Set the endpoint name, overriding the default endpoint name formatter
+    /// </summary>
+    string Name { set; }
 
+    /// <summary>
+    /// True if the endpoint should be removed after the endpoint is stopped
+    /// </summary>
+    bool Temporary { set; }
 
-    public interface IEndpointRegistrationConfigurator
-    {
-        /// <summary>
-        /// Set the endpoint name, overriding the default endpoint name formatter
-        /// </summary>
-        string Name { set; }
+    /// <summary>
+    /// Only specify when required, use <see cref="ConcurrentMessageLimit" /> first and
+    /// only specific a <see cref="PrefetchCount" /> when the default is not appropriate
+    /// </summary>
+    int? PrefetchCount { set; }
 
-        /// <summary>
-        /// True if the endpoint should be removed after the endpoint is stopped
-        /// </summary>
-        bool Temporary { set; }
+    /// <summary>
+    /// The maximum number of concurrent messages processing at one time on the endpoint. Is
+    /// used to configure the transport efficiently.
+    /// </summary>
+    int? ConcurrentMessageLimit { set; }
 
-        /// <summary>
-        /// Only specify when required, use <see cref="ConcurrentMessageLimit" /> first and
-        /// only specific a <see cref="PrefetchCount" /> when the default is not appropriate
-        /// </summary>
-        int? PrefetchCount { set; }
+    /// <summary>
+    /// Defaults to true, which connects topics/exchanges/etc. to the endpoint queue at the broker.
+    /// If set to false, no broker topology is configured (automatically set to false for courier
+    /// activities since <see cref="RoutingSlip" /> should never be published).
+    /// </summary>
+    bool ConfigureConsumeTopology { set; }
 
-        /// <summary>
-        /// The maximum number of concurrent messages processing at one time on the endpoint. Is
-        /// used to configure the transport efficiently.
-        /// </summary>
-        int? ConcurrentMessageLimit { set; }
+    /// <summary>
+    /// Specifies an identifier that uniquely identifies the endpoint instance, which is appended to the
+    /// end of the endpoint name.
+    /// </summary>
+    string InstanceId { set; }
 
-        /// <summary>
-        /// Defaults to true, which connects topics/exchanges/etc. to the endpoint queue at the broker.
-        /// If set to false, no broker topology is configured (automatically set to false for courier
-        /// activities since <see cref="RoutingSlip" /> should never be published).
-        /// </summary>
-        bool ConfigureConsumeTopology { set; }
+    /// <summary>
+    /// Add an endpoint configuration callback to the registration
+    /// </summary>
+    /// <param name="callback"></param>
+    void AddConfigureEndpointCallback(Action<IReceiveEndpointConfigurator>? callback);
 
-        /// <summary>
-        /// Specifies an identifier that uniquely identifies the endpoint instance, which is appended to the
-        /// end of the endpoint name.
-        /// </summary>
-        string InstanceId { set; }
-
-        /// <summary>
-        /// Add an endpoint configuration callback to the registration
-        /// </summary>
-        /// <param name="callback"></param>
-        void AddConfigureEndpointCallback(Action<IReceiveEndpointConfigurator>? callback);
-
-        /// <summary>
-        /// Add an endpoint configuration callback to the registration
-        /// </summary>
-        /// <param name="callback"></param>
-        void AddConfigureEndpointCallback(Action<IRegistrationContext, IReceiveEndpointConfigurator>? callback);
-    }
+    /// <summary>
+    /// Add an endpoint configuration callback to the registration
+    /// </summary>
+    /// <param name="callback"></param>
+    void AddConfigureEndpointCallback(Action<IRegistrationContext, IReceiveEndpointConfigurator>? callback);
 }

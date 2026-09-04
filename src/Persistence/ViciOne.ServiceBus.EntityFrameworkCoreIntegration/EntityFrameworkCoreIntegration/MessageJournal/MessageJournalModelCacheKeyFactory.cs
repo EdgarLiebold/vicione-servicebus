@@ -1,8 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.MessageJournal;
 
 internal sealed class MessageJournalModelCacheKeyFactory : IModelCacheKeyFactory
 {

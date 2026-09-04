@@ -1,11 +1,9 @@
+using System.Text.Json;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+internal interface IJsonSerializerFactory
 {
-    using System.Text.Json;
-
-
-    internal interface IJsonSerializerFactory
-    {
-        ISerializerFactory Bind(JsonSerializerOptions options);
-    }
+    ISerializerFactory Bind(JsonSerializerOptions options);
 }

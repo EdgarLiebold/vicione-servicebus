@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Concurrent;
 using System.Text;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class AmazonSqsMessageNameFormatter :
     IMessageNameFormatter

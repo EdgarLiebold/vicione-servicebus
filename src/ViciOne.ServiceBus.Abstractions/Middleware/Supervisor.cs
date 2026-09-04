@@ -1,106 +1,105 @@
-namespace ViciOne.ServiceBus.Middleware
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Internals;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Supervises a set of agents, allowing for graceful Start, Stop, and Ready state management
+/// </summary>
+public class Supervisor :
+    Agent,
+    ISupervisor
+{
+    readonly Dictionary<long, IAgent> _agents;
+    long _nextId;
 
     /// <summary>
-    /// Supervises a set of agents, allowing for graceful Start, Stop, and Ready state management
+    /// Creates a Supervisor
     /// </summary>
-    public class Supervisor :
-        Agent,
-        ISupervisor
+    public Supervisor()
     {
-        readonly Dictionary<long, IAgent> _agents;
-        long _nextId;
+        _agents = new Dictionary<long, IAgent>();
+    }
 
-        /// <summary>
-        /// Creates a Supervisor
-        /// </summary>
-        public Supervisor()
+    /// <inheritdoc />
+    public void Add(IAgent agent)
+    {
+        if (IsStopping)
+            throw new OperationCanceledException("The agent is stopped or has been stopped, no additional provocateurs can be created.");
+
+        var id = Interlocked.Increment(ref _nextId);
+        lock (_agents)
         {
-            _agents = new Dictionary<long, IAgent>();
+            _agents.Add(id, agent);
+
+            TotalCount++;
+            var currentActiveCount = _agents.Count;
+
+            if (currentActiveCount > PeakActiveCount)
+                PeakActiveCount = currentActiveCount;
+
+            SetReady();
         }
 
-        /// <inheritdoc />
-        public void Add(IAgent agent)
+        void RemoveAgent(Task task)
         {
-            if (IsStopping)
-                throw new OperationCanceledException("The agent is stopped or has been stopped, no additional provocateurs can be created.");
-
-            var id = Interlocked.Increment(ref _nextId);
-            lock (_agents)
-            {
-                _agents.Add(id, agent);
-
-                TotalCount++;
-                var currentActiveCount = _agents.Count;
-
-                if (currentActiveCount > PeakActiveCount)
-                    PeakActiveCount = currentActiveCount;
-
-                SetReady();
-            }
-
-            void RemoveAgent(Task task)
-            {
-                Remove(id);
-            }
-
-            agent.Completed.ContinueWith(RemoveAgent, TaskScheduler.Default);
+            Remove(id);
         }
 
-        /// <inheritdoc />
-        public int PeakActiveCount { get; private set; }
+        agent.Completed.ContinueWith(RemoveAgent, TaskScheduler.Default);
+    }
 
-        /// <inheritdoc />
-        public long TotalCount { get; private set; }
+    /// <inheritdoc />
+    public int PeakActiveCount { get; private set; }
 
-        /// <inheritdoc />
-        public override void SetReady()
+    /// <inheritdoc />
+    public long TotalCount { get; private set; }
+
+    /// <inheritdoc />
+    public override void SetReady()
+    {
+        if (IsAlreadyReady)
+            return;
+
+        lock (_agents)
         {
-            if (IsAlreadyReady)
-                return;
+            SetReady(_agents.Count == 0
+                ? Task.CompletedTask
+                : Task.WhenAll(_agents.Values.Select(x => x.Ready).ToArray()));
+        }
+    }
 
-            lock (_agents)
-            {
-                SetReady(_agents.Count == 0
-                    ? Task.CompletedTask
-                    : Task.WhenAll(_agents.Values.Select(x => x.Ready).ToArray()));
-            }
+    /// <inheritdoc />
+    protected override Task StopAgent(StopContext context)
+    {
+        IAgent[] agents;
+        lock (_agents)
+        {
+            agents = _agents.Count == 0
+                ? []
+                : _agents.Values.Where(x => !x.Completed.IsCompleted).ToArray();
         }
 
-        /// <inheritdoc />
-        protected override Task StopAgent(StopContext context)
+        return StopSupervisor(new Context(context, agents));
+    }
+
+    protected virtual async Task StopSupervisor(StopSupervisorContext context)
+    {
+        switch (context.Agents.Length)
         {
-            IAgent[] agents;
-            lock (_agents)
-            {
-                agents = _agents.Count == 0
-                    ? []
-                    : _agents.Values.Where(x => !x.Completed.IsCompleted).ToArray();
-            }
+            case 0:
+                SetCompleted(Task.CompletedTask);
+                break;
+            case 1:
+                SetCompleted(context.Agents[0].Completed);
 
-            return StopSupervisor(new Context(context, agents));
-        }
-
-        protected virtual async Task StopSupervisor(StopSupervisorContext context)
-        {
-            switch (context.Agents.Length)
-            {
-                case 0:
-                    SetCompleted(Task.CompletedTask);
-                    break;
-                case 1:
-                    SetCompleted(context.Agents[0].Completed);
-
-                    await context.Agents[0].Stop(context).OrCanceled(context.CancellationToken).ConfigureAwait(false);
-                    break;
-                case > 1:
+                await context.Agents[0].Stop(context).OrCanceled(context.CancellationToken).ConfigureAwait(false);
+                break;
+            case > 1:
                 {
                     var completedTasks = new Task[context.Agents.Length];
                     for (var i = 0; i < context.Agents.Length; i++)
@@ -115,34 +114,33 @@ namespace ViciOne.ServiceBus.Middleware
                     await Task.WhenAll(stopTasks).OrCanceled(context.CancellationToken).ConfigureAwait(false);
                     break;
                 }
-            }
-
-            await Completed.OrCanceled(context.CancellationToken).ConfigureAwait(false);
         }
 
-        void Remove(long id)
+        await Completed.OrCanceled(context.CancellationToken).ConfigureAwait(false);
+    }
+
+    void Remove(long id)
+    {
+        lock (_agents)
+            _agents.Remove(id);
+    }
+
+
+    class Context :
+        ProxyPipeContext,
+        StopSupervisorContext
+    {
+        readonly StopContext _context;
+
+        public Context(StopContext context, IAgent[] agents)
+            : base(context)
         {
-            lock (_agents)
-                _agents.Remove(id);
+            _context = context;
+            Agents = agents;
         }
 
+        string StopContext.Reason => _context.Reason;
 
-        class Context :
-            ProxyPipeContext,
-            StopSupervisorContext
-        {
-            readonly StopContext _context;
-
-            public Context(StopContext context, IAgent[] agents)
-                : base(context)
-            {
-                _context = context;
-                Agents = agents;
-            }
-
-            string StopContext.Reason => _context.Reason;
-
-            public IAgent[] Agents { get; }
-        }
+        public IAgent[] Agents { get; }
     }
 }

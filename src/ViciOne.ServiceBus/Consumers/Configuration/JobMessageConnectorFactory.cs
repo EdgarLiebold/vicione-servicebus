@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class JobMessageConnectorFactory<TConsumer, TJob> :
+    IMessageConnectorFactory
+    where TConsumer : class, IJobConsumer<TJob>
+    where TJob : class
 {
-    using System;
+    readonly IConsumerMessageConnector<TConsumer> _jobConsumerConnector;
 
-
-    public class JobMessageConnectorFactory<TConsumer, TJob> :
-        IMessageConnectorFactory
-        where TConsumer : class, IJobConsumer<TJob>
-        where TJob : class
+    public JobMessageConnectorFactory()
     {
-        readonly IConsumerMessageConnector<TConsumer> _jobConsumerConnector;
+        _jobConsumerConnector = new JobConsumerMessageConnector<TConsumer, TJob>();
+    }
 
-        public JobMessageConnectorFactory()
-        {
-            _jobConsumerConnector = new JobConsumerMessageConnector<TConsumer, TJob>();
-        }
+    public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
+        where T : class
+    {
+        return _jobConsumerConnector as IConsumerMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
+    }
 
-        public IConsumerMessageConnector<T> CreateConsumerConnector<T>()
-            where T : class
-        {
-            return _jobConsumerConnector as IConsumerMessageConnector<T> ?? throw new ArgumentException("The consumer type did not match the connector type");
-        }
-
-        IInstanceMessageConnector<T> IMessageConnectorFactory.CreateInstanceConnector<T>()
-        {
-            throw new NotSupportedException($"{TypeCache<TJob>.ShortName} jobs cannot be connected to consumer instances.");
-        }
+    IInstanceMessageConnector<T> IMessageConnectorFactory.CreateInstanceConnector<T>()
+    {
+        throw new NotSupportedException($"{TypeCache<TJob>.ShortName} jobs cannot be connected to consumer instances.");
     }
 }

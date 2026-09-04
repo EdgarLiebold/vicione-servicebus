@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+/// <summary>
+/// Dispatches a prepared <see cref="ReceiveContext" /> to a <see cref="IReceivePipe" />.
+/// </summary>
+public interface IReceivePipeDispatcher :
+    IConsumePipeConnector,
+    IConsumeObserverConnector,
+    IConsumeMessageObserverConnector,
+    IRequestPipeConnector,
+    IDispatchMetrics,
+    IReceiveObserverConnector,
+    IProbeSite
 {
-    using System.Threading.Tasks;
-
-
-    /// <summary>
-    /// Dispatches a prepared <see cref="ReceiveContext" /> to a <see cref="IReceivePipe" />.
-    /// </summary>
-    public interface IReceivePipeDispatcher :
-        IConsumePipeConnector,
-        IConsumeObserverConnector,
-        IConsumeMessageObserverConnector,
-        IRequestPipeConnector,
-        IDispatchMetrics,
-        IReceiveObserverConnector,
-        IProbeSite
-    {
-        Task Dispatch(ReceiveContext context, ReceiveLockContext receiveLock);
-    }
+    Task Dispatch(ReceiveContext context, ReceiveLockContext receiveLock);
 }

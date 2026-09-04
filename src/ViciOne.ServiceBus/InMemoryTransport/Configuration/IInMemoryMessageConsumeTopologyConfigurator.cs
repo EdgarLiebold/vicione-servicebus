@@ -1,29 +1,27 @@
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports.Fabric;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IInMemoryMessageConsumeTopologyConfigurator<TMessage> :
+    IMessageConsumeTopologyConfigurator<TMessage>,
+    IInMemoryMessageConsumeTopology<TMessage>
+    where TMessage : class
 {
-    using Configuration;
-    using Transports.Fabric;
+    /// <summary>
+    /// Adds the exchange bindings for this message type
+    /// </summary>
+    void Bind(ExchangeType? exchangeType = default, string? routingKey = null);
+}
 
 
-    public interface IInMemoryMessageConsumeTopologyConfigurator<TMessage> :
-        IMessageConsumeTopologyConfigurator<TMessage>,
-        IInMemoryMessageConsumeTopology<TMessage>
-        where TMessage : class
-    {
-        /// <summary>
-        /// Adds the exchange bindings for this message type
-        /// </summary>
-        void Bind(ExchangeType? exchangeType = default, string? routingKey = null);
-    }
-
-
-    public interface IInMemoryMessageConsumeTopologyConfigurator :
-        IMessageConsumeTopologyConfigurator
-    {
-        /// <summary>
-        /// Apply the message topology to the builder
-        /// </summary>
-        /// <param name="builder"></param>
-        void Apply(IMessageFabricConsumeTopologyBuilder builder);
-    }
+public interface IInMemoryMessageConsumeTopologyConfigurator :
+    IMessageConsumeTopologyConfigurator
+{
+    /// <summary>
+    /// Apply the message topology to the builder
+    /// </summary>
+    /// <param name="builder"></param>
+    void Apply(IMessageFabricConsumeTopologyBuilder builder);
 }

@@ -1,43 +1,41 @@
-namespace ViciOne.ServiceBus.Serialization
+using System;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Serialization;
+
+internal static class ForwardingExpiration
 {
-    using System;
-    using Transports;
-
-
-    internal static class ForwardingExpiration
+    public static bool MarkIfExpired(SendContext context, DateTime? inheritedExpirationTime, TimeProvider timeProvider)
     {
-        public static bool MarkIfExpired(SendContext context, DateTime? inheritedExpirationTime, TimeProvider timeProvider)
-        {
-            ArgumentNullException.ThrowIfNull(timeProvider);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
-            TimeSpan? timeToLive = context.TimeToLive;
-            bool hasExpiredTimeToLive = timeToLive.HasValue && timeToLive.Value <= TimeSpan.Zero;
-            bool hasExpiredInheritedTime = !timeToLive.HasValue
-                && inheritedExpirationTime.HasValue
-                && inheritedExpirationTime.Value.ToUniversalTime() <= timeProvider.GetUtcNow().UtcDateTime;
+        TimeSpan? timeToLive = context.TimeToLive;
+        bool hasExpiredTimeToLive = timeToLive.HasValue && timeToLive.Value <= TimeSpan.Zero;
+        bool hasExpiredInheritedTime = !timeToLive.HasValue
+            && inheritedExpirationTime.HasValue
+            && inheritedExpirationTime.Value.ToUniversalTime() <= timeProvider.GetUtcNow().UtcDateTime;
 
-            if (!hasExpiredTimeToLive && !hasExpiredInheritedTime)
-                return false;
+        if (!hasExpiredTimeToLive && !hasExpiredInheritedTime)
+            return false;
 
-            context.GetOrAddPayload(() => new ExpiredForwarding(
-                inheritedExpirationTime?.ToUniversalTime(),
-                timeToLive));
-            return true;
-        }
-
-        public static bool TryDiscard<T>(SendContext<T> context)
-            where T : class
-        {
-            if (!context.TryGetPayload(out ExpiredForwarding expiration))
-                return false;
-
-            context.LogExpiredForward(expiration.InheritedExpirationTime, expiration.TimeToLive);
-            return true;
-        }
+        context.GetOrAddPayload(() => new ExpiredForwarding(
+            inheritedExpirationTime?.ToUniversalTime(),
+            timeToLive));
+        return true;
     }
 
+    public static bool TryDiscard<T>(SendContext<T> context)
+        where T : class
+    {
+        if (!context.TryGetPayload(out ExpiredForwarding expiration))
+            return false;
 
-    internal sealed record ExpiredForwarding(
-        DateTime? InheritedExpirationTime,
-        TimeSpan? TimeToLive);
+        context.LogExpiredForward(expiration.InheritedExpirationTime, expiration.TimeToLive);
+        return true;
+    }
 }
+
+
+internal sealed record ExpiredForwarding(
+    DateTime? InheritedExpirationTime,
+    TimeSpan? TimeToLive);

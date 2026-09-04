@@ -1,17 +1,15 @@
-#nullable enable
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Configuration;
 using RabbitMQ.Client;
-using Topology;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 /// <summary>
 /// Immutable RabbitMQ-native technical redelivery topology for one receive queue.
 /// </summary>

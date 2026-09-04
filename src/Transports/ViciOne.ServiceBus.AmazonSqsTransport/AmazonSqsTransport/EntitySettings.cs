@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public interface EntitySettings
 {

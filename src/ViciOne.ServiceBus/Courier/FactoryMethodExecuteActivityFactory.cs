@@ -1,50 +1,48 @@
-namespace ViciOne.ServiceBus.Courier
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Courier;
+
+public class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
+    IExecuteActivityFactory<TActivity, TArguments>
+    where TActivity : class, IExecuteActivity<TArguments>
+    where TArguments : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Func<TArguments, TActivity> _executeFactory;
 
-
-    public class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
-        IExecuteActivityFactory<TActivity, TArguments>
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
+    public FactoryMethodExecuteActivityFactory(Func<TArguments, TActivity> executeFactory)
     {
-        readonly Func<TArguments, TActivity> _executeFactory;
+        _executeFactory = executeFactory;
+    }
 
-        public FactoryMethodExecuteActivityFactory(Func<TArguments, TActivity> executeFactory)
+    public async Task Execute(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+    {
+        TActivity activity = null;
+        try
         {
-            _executeFactory = executeFactory;
+            activity = _executeFactory(context.Arguments);
+
+            ExecuteActivityContext<TActivity, TArguments> activityContext = context.CreateActivityContext(activity);
+
+            await next.Send(activityContext).ConfigureAwait(false);
         }
-
-        public async Task Execute(ExecuteContext<TArguments> context, IPipe<ExecuteActivityContext<TActivity, TArguments>> next)
+        finally
         {
-            TActivity activity = null;
-            try
+            switch (activity)
             {
-                activity = _executeFactory(context.Arguments);
-
-                ExecuteActivityContext<TActivity, TArguments> activityContext = context.CreateActivityContext(activity);
-
-                await next.Send(activityContext).ConfigureAwait(false);
-            }
-            finally
-            {
-                switch (activity)
-                {
-                    // ReSharper disable once SuspiciousTypeConversion.Global
-                    case IAsyncDisposable asyncDisposable:
-                        await asyncDisposable.DisposeAsync().ConfigureAwait(false);
-                        break;
-                    case IDisposable disposable:
-                        disposable.Dispose();
-                        break;
-                }
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                case IAsyncDisposable asyncDisposable:
+                    await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+                    break;
+                case IDisposable disposable:
+                    disposable.Dispose();
+                    break;
             }
         }
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("factoryMethod");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("factoryMethod");
     }
 }

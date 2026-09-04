@@ -1,15 +1,14 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
-using Middleware;
-using Topology;
-using Transports;
-using Util;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsReceiveEndpointConfiguration :
     ReceiveEndpointConfiguration,
@@ -42,7 +41,7 @@ public class AmazonSqsReceiveEndpointConfiguration :
     public override Uri HostAddress => _hostConfiguration.HostAddress;
     public override Uri InputAddress => _inputAddress.Value;
 
-    public override ReceiveEndpointContext? CreateReceiveEndpointContext()
+    public override ReceiveEndpointContext CreateReceiveEndpointContext()
     {
         return CreateSqsReceiveEndpointContext();
     }

@@ -1,52 +1,50 @@
-namespace ViciOne.ServiceBus.Initializers.Conventions
+using System;
+using System.Collections.Concurrent;
+
+namespace ViciOne.ServiceBus.Initializers.Conventions;
+
+public class ConventionTypeCache<TValue> :
+    IConventionTypeCache<TValue>
+    where TValue : class
 {
-    using System;
-    using System.Collections.Concurrent;
+    readonly IInitializerConvention _convention;
+    readonly ConcurrentDictionary<Type, Cached> _dictionary;
+    readonly IConventionTypeCacheFactory<TValue> _typeFactory;
 
-
-    public class ConventionTypeCache<TValue> :
-        IConventionTypeCache<TValue>
-        where TValue : class
+    public ConventionTypeCache(IConventionTypeCacheFactory<TValue> typeFactory, IInitializerConvention convention)
     {
-        readonly IInitializerConvention _convention;
-        readonly ConcurrentDictionary<Type, Cached> _dictionary;
-        readonly IConventionTypeCacheFactory<TValue> _typeFactory;
+        _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));
+        _convention = convention;
 
-        public ConventionTypeCache(IConventionTypeCacheFactory<TValue> typeFactory, IInitializerConvention convention)
+        _dictionary = new ConcurrentDictionary<Type, Cached>();
+    }
+
+    TResult IConventionTypeCache<TValue>.GetOrAdd<T, TResult>()
+    {
+        var result = _dictionary.GetOrAdd(typeof(T), add => new CachedValue(() => _typeFactory.Create<T>(_convention))).Value as TResult;
+        if (result == null)
+            throw new ArgumentException($"The specified result type was invalid: {TypeCache<TResult>.ShortName}");
+
+        return result;
+    }
+
+
+    interface Cached
+    {
+        TValue Value { get; }
+    }
+
+
+    class CachedValue :
+        Cached
+    {
+        readonly Lazy<TValue> _value;
+
+        public CachedValue(Func<TValue> valueFactory)
         {
-            _typeFactory = typeFactory ?? throw new ArgumentNullException(nameof(typeFactory));
-            _convention = convention;
-
-            _dictionary = new ConcurrentDictionary<Type, Cached>();
+            _value = new Lazy<TValue>(valueFactory);
         }
 
-        TResult IConventionTypeCache<TValue>.GetOrAdd<T, TResult>()
-        {
-            var result = _dictionary.GetOrAdd(typeof(T), add => new CachedValue(() => _typeFactory.Create<T>(_convention))).Value as TResult;
-            if (result == null)
-                throw new ArgumentException($"The specified result type was invalid: {TypeCache<TResult>.ShortName}");
-
-            return result;
-        }
-
-
-        interface Cached
-        {
-            TValue Value { get; }
-        }
-
-
-        class CachedValue :
-            Cached
-        {
-            readonly Lazy<TValue> _value;
-
-            public CachedValue(Func<TValue> valueFactory)
-            {
-                _value = new Lazy<TValue>(valueFactory);
-            }
-
-            public TValue Value => _value.Value;
-        }
+        public TValue Value => _value.Value;
     }
 }

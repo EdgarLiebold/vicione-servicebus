@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IMessageConfigurationObserver
 {
-    public interface IMessageConfigurationObserver
-    {
-        /// <summary>
-        /// Called when a message pipeline is configured, for the very first time
-        /// </summary>
-        /// <typeparam name="TMessage"></typeparam>
-        /// <param name="configurator"></param>
-        void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
-            where TMessage : class;
-    }
+    /// <summary>
+    /// Called when a message pipeline is configured, for the very first time
+    /// </summary>
+    /// <typeparam name="TMessage"></typeparam>
+    /// <param name="configurator"></param>
+    void MessageConfigured<TMessage>(IConsumePipeConfigurator configurator)
+        where TMessage : class;
 }

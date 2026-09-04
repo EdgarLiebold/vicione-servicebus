@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ScopeConsumerFactory<TConsumer> :
+    IConsumerFactory<TConsumer>
+    where TConsumer : class
 {
-    using System.Threading.Tasks;
+    readonly IConsumeScopeProvider _scopeProvider;
 
-
-    public class ScopeConsumerFactory<TConsumer> :
-        IConsumerFactory<TConsumer>
-        where TConsumer : class
+    public ScopeConsumerFactory(IConsumeScopeProvider scopeProvider)
     {
-        readonly IConsumeScopeProvider _scopeProvider;
+        _scopeProvider = scopeProvider;
+    }
 
-        public ScopeConsumerFactory(IConsumeScopeProvider scopeProvider)
-        {
-            _scopeProvider = scopeProvider;
-        }
+    public async Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
+        where TMessage : class
+    {
+        await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScope<TConsumer, TMessage>(context);
 
-        public async Task Send<TMessage>(ConsumeContext<TMessage> context, IPipe<ConsumerConsumeContext<TConsumer, TMessage>> next)
-            where TMessage : class
-        {
-            await using IConsumerConsumeScopeContext<TConsumer, TMessage> scope = await _scopeProvider.GetScope<TConsumer, TMessage>(context);
+        await next.Send(scope.Context).ConfigureAwait(false);
+    }
 
-            await next.Send(scope.Context).ConfigureAwait(false);
-        }
-
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateConsumerFactoryScope<TConsumer>("scope");
-            _scopeProvider.Probe(scope);
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateConsumerFactoryScope<TConsumer>("scope");
+        _scopeProvider.Probe(scope);
     }
 }

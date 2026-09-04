@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
-
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Architecture.Tests.Repository;
 
 public sealed class BenchmarkObligationProjectionTests
 {
@@ -15,7 +15,12 @@ public sealed class BenchmarkObligationProjectionTests
     [RequirementCoverage("REQ-TEST-205", "benchmark-obligations-are-terminal-and-carrier-bound")]
     public void BenchmarkObligations_AreExactTerminalAndBoundToNativeCarriers()
     {
-        string mapPath = Path.Combine(RepositoryLayout.Root, ".testagent", "benchmark-native-obligation-map.tsv");
+        string mapPath = Path.Combine(
+            RepositoryLayout.Root,
+            "evidence",
+            "native-tests",
+            "obligation-maps",
+            "benchmark-native-obligation-map.tsv");
         string[] lines = File.ReadAllLines(mapPath);
         Assert.Equal("legacyIdentity\tdisposition\tprofile\ttargetProject\ttargetMethod", lines[0]);
         MapRow[] rows = lines.Skip(1).Select(Parse).ToArray();

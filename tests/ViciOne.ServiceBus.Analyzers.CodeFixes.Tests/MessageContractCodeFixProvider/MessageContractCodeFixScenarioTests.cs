@@ -98,9 +98,9 @@ public sealed class MessageContractCodeFixScenarioTests
                     break;
 
                 case ImplicitArrayCreationExpressionSyntax
-                    {
-                        Initializer.Expressions: [AnonymousObjectCreationExpressionSyntax element, ..]
-                    }:
+                {
+                    Initializer.Expressions: [AnonymousObjectCreationExpressionSyntax element, ..]
+                }:
                     AddLeaves(leaves, childPath, element);
                     break;
 

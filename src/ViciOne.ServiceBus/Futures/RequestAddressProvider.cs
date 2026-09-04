@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus;
 
-    public delegate Uri RequestAddressProvider<in TMessage>(BehaviorContext<FutureState, TMessage> context)
-        where TMessage : class;
-}
+public delegate Uri RequestAddressProvider<in TMessage>(BehaviorContext<FutureState, TMessage> context)
+    where TMessage : class;

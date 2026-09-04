@@ -1,15 +1,14 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Clients;
-using Contracts.JobService;
-using Initializers;
-using JobService.Messages;
-using Serialization;
+using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.JobService.Messages;
+using ViciOne.ServiceBus.Serialization;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public static class JobServiceExtensions
 {
@@ -38,7 +37,7 @@ public static class JobServiceExtensions
         Response<JobState> response = await client.GetResponse<JobState>(new GetJobStateRequest { JobId = jobId });
 
         if (response is MessageResponse<JobState> messageResponse)
-            return new JobStateResponse<T>(response.Message, messageResponse.DeserializeObject<T>(response.Message.JobState));
+            return new JobStateResponse<T>(response.Message, messageResponse.DeserializeObject<T>(response.Message.JobState!));
 
         return new JobStateResponse<T>(response.Message);
     }

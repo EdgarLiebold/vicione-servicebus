@@ -3,6 +3,8 @@
   <!-- Product-specific, framework-neutral Roslyn fixtures shared by analyzer and code-fix tests. -->
 
   <PropertyGroup>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!-- The assembly name identifies its consumer; the namespace identifies its architectural
          owner inside the common framework-neutral test infrastructure. -->
     <RootNamespace>ViciOne.ServiceBus.Tests.Infrastructure.Analyzers</RootNamespace>

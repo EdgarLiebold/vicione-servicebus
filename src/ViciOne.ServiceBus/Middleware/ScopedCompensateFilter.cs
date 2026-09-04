@@ -1,38 +1,36 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class ScopedCompensateFilter<TActivity, TArguments, TFilter> :
+    IFilter<CompensateContext<TArguments>>
+    where TActivity : class, ICompensateActivity<TArguments>
+    where TArguments : class
+    where TFilter : class, IFilter<CompensateContext<TArguments>>
 {
-    using System.Threading.Tasks;
-    using DependencyInjection;
-    using Metadata;
+    readonly ICompensateActivityScopeProvider<TActivity, TArguments> _scopeProvider;
 
-
-    public class ScopedCompensateFilter<TActivity, TArguments, TFilter> :
-        IFilter<CompensateContext<TArguments>>
-        where TActivity : class, ICompensateActivity<TArguments>
-        where TArguments : class
-        where TFilter : class, IFilter<CompensateContext<TArguments>>
+    public ScopedCompensateFilter(ICompensateActivityScopeProvider<TActivity, TArguments> scopeProvider)
     {
-        readonly ICompensateActivityScopeProvider<TActivity, TArguments> _scopeProvider;
+        _scopeProvider = scopeProvider;
+    }
 
-        public ScopedCompensateFilter(ICompensateActivityScopeProvider<TActivity, TArguments> scopeProvider)
-        {
-            _scopeProvider = scopeProvider;
-        }
+    public async Task Send(CompensateContext<TArguments> context, IPipe<CompensateContext<TArguments>> next)
+    {
+        await using ICompensateScopeContext<TArguments> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
 
-        public async Task Send(CompensateContext<TArguments> context, IPipe<CompensateContext<TArguments>> next)
-        {
-            await using ICompensateScopeContext<TArguments> scope = await _scopeProvider.GetScope(context).ConfigureAwait(false);
+        var filter = scope.GetService<TFilter>();
 
-            var filter = scope.GetService<TFilter>();
+        await filter.Send(scope.Context, next).ConfigureAwait(false);
+    }
 
-            await filter.Send(scope.Context, next).ConfigureAwait(false);
-        }
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("scopedFilter");
+        scope.Add("filter", TypeMetadataCache<TFilter>.ShortName);
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("scopedFilter");
-            scope.Add("filter", TypeMetadataCache<TFilter>.ShortName);
-
-            _scopeProvider.Probe(scope);
-        }
+        _scopeProvider.Probe(scope);
     }
 }

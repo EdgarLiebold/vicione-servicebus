@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Scheduling;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Adds the scheduler to the consume context, so that it can be used for message redelivery
+/// </summary>
+public class MessageSchedulerFilter :
+    IFilter<ConsumeContext>
 {
-    using System;
-    using System.Threading.Tasks;
-    using Context;
-    using Scheduling;
+    readonly Uri _schedulerAddress;
 
-
-    /// <summary>
-    /// Adds the scheduler to the consume context, so that it can be used for message redelivery
-    /// </summary>
-    public class MessageSchedulerFilter :
-        IFilter<ConsumeContext>
+    public MessageSchedulerFilter(Uri schedulerAddress)
     {
-        readonly Uri _schedulerAddress;
+        _schedulerAddress = schedulerAddress;
+    }
 
-        public MessageSchedulerFilter(Uri schedulerAddress)
-        {
-            _schedulerAddress = schedulerAddress;
-        }
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("scheduler");
+        scope.Add("type", "send");
+        scope.Add("address", _schedulerAddress);
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("scheduler");
-            scope.Add("type", "send");
-            scope.Add("address", _schedulerAddress);
-        }
+    public Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    {
+        context.GetOrAddPayload<MessageSchedulerContext>(() => new ConsumeMessageSchedulerContext(context, SchedulerFactory));
 
-        public Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
-        {
-            context.GetOrAddPayload<MessageSchedulerContext>(() => new ConsumeMessageSchedulerContext(context, SchedulerFactory));
+        return next.Send(context);
+    }
 
-            return next.Send(context);
-        }
-
-        IMessageScheduler SchedulerFactory(ConsumeContext context)
-        {
-            return new MessageScheduler(new EndpointScheduleMessageProvider(() => context.GetSendEndpoint(_schedulerAddress)),
-                context.GetPayload<IBusTopology>(), context.GetTimeProvider());
-        }
+    IMessageScheduler SchedulerFactory(ConsumeContext context)
+    {
+        return new MessageScheduler(new EndpointScheduleMessageProvider(() => context.GetSendEndpoint(_schedulerAddress)),
+            context.GetPayload<IBusTopology>(), context.GetTimeProvider());
     }
 }

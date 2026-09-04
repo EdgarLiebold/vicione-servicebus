@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// A job consumer
+/// </summary>
+public class JobInterfaceType :
+    IMessageInterfaceType
 {
-    using System;
+    readonly Lazy<IMessageConnectorFactory> _consumeConnectorFactory;
 
-
-    /// <summary>
-    /// A job consumer
-    /// </summary>
-    public class JobInterfaceType :
-        IMessageInterfaceType
+    public JobInterfaceType(Type messageType, Type consumerType)
     {
-        readonly Lazy<IMessageConnectorFactory> _consumeConnectorFactory;
+        MessageType = messageType;
 
-        public JobInterfaceType(Type messageType, Type consumerType)
-        {
-            MessageType = messageType;
+        _consumeConnectorFactory = new Lazy<IMessageConnectorFactory>(() => (IMessageConnectorFactory)
+            Activator.CreateInstance(typeof(JobMessageConnectorFactory<,>).MakeGenericType(consumerType, messageType)));
+    }
 
-            _consumeConnectorFactory = new Lazy<IMessageConnectorFactory>(() => (IMessageConnectorFactory)
-                Activator.CreateInstance(typeof(JobMessageConnectorFactory<,>).MakeGenericType(consumerType, messageType)));
-        }
+    public Type MessageType { get; }
 
-        public Type MessageType { get; }
+    public IConsumerMessageConnector<T> GetConsumerConnector<T>()
+        where T : class
+    {
+        return _consumeConnectorFactory.Value.CreateConsumerConnector<T>();
+    }
 
-        public IConsumerMessageConnector<T> GetConsumerConnector<T>()
-            where T : class
-        {
-            return _consumeConnectorFactory.Value.CreateConsumerConnector<T>();
-        }
-
-        public IInstanceMessageConnector<T> GetInstanceConnector<T>()
-            where T : class
-        {
-            return _consumeConnectorFactory.Value.CreateInstanceConnector<T>();
-        }
+    public IInstanceMessageConnector<T> GetInstanceConnector<T>()
+        where T : class
+    {
+        return _consumeConnectorFactory.Value.CreateInstanceConnector<T>();
     }
 }

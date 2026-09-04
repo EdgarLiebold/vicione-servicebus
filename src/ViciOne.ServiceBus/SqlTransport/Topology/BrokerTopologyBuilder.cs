@@ -1,81 +1,79 @@
+using System;
+using System.Threading;
+using ViciOne.ServiceBus.Topology;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public abstract class BrokerTopologyBuilder
 {
-    using System;
-    using System.Threading;
-    using ViciOne.ServiceBus.Topology;
+    readonly NamedEntityCollection<QueueEntity, QueueHandle> _queues;
+    readonly EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle> _queueSubscriptions;
+    readonly NamedEntityCollection<TopicEntity, TopicHandle> _topics;
+    readonly EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> _topicSubscriptions;
+    long _nextId;
 
-
-    public abstract class BrokerTopologyBuilder
+    protected BrokerTopologyBuilder()
     {
-        readonly NamedEntityCollection<QueueEntity, QueueHandle> _queues;
-        readonly EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle> _queueSubscriptions;
-        readonly NamedEntityCollection<TopicEntity, TopicHandle> _topics;
-        readonly EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle> _topicSubscriptions;
-        long _nextId;
+        _topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
+        _queues = new NamedEntityCollection<QueueEntity, QueueHandle>(QueueEntity.QueueComparer, QueueEntity.NameComparer);
 
-        protected BrokerTopologyBuilder()
-        {
-            _topics = new NamedEntityCollection<TopicEntity, TopicHandle>(TopicEntity.EntityComparer, TopicEntity.NameComparer);
-            _queues = new NamedEntityCollection<QueueEntity, QueueHandle>(QueueEntity.QueueComparer, QueueEntity.NameComparer);
+        _topicSubscriptions = new EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle>(TopicSubscriptionEntity.EntityComparer);
+        _queueSubscriptions = new EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle>(QueueSubscriptionEntity.EntityComparer);
+    }
 
-            _topicSubscriptions = new EntityCollection<TopicSubscriptionEntity, TopicSubscriptionHandle>(TopicSubscriptionEntity.EntityComparer);
-            _queueSubscriptions = new EntityCollection<QueueSubscriptionEntity, QueueSubscriptionHandle>(QueueSubscriptionEntity.EntityComparer);
-        }
+    long GetNextId()
+    {
+        return Interlocked.Increment(ref _nextId);
+    }
 
-        long GetNextId()
-        {
-            return Interlocked.Increment(ref _nextId);
-        }
+    public TopicHandle CreateTopic(string name)
+    {
+        var id = GetNextId();
 
-        public TopicHandle CreateTopic(string name)
-        {
-            var id = GetNextId();
+        var exchange = new TopicEntity(id, name);
 
-            var exchange = new TopicEntity(id, name);
+        return _topics.GetOrAdd(exchange);
+    }
 
-            return _topics.GetOrAdd(exchange);
-        }
+    public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, SqlSubscriptionType subscriptionType,
+        string? routingKey)
+    {
+        var id = GetNextId();
 
-        public TopicSubscriptionHandle CreateTopicSubscription(TopicHandle source, TopicHandle destination, SqlSubscriptionType subscriptionType,
-            string? routingKey)
-        {
-            var id = GetNextId();
+        var sourceExchange = _topics.Get(source);
 
-            var sourceExchange = _topics.Get(source);
+        var destinationExchange = _topics.Get(destination);
 
-            var destinationExchange = _topics.Get(destination);
+        var binding = new TopicSubscriptionEntity(id, sourceExchange, destinationExchange, subscriptionType, routingKey);
 
-            var binding = new TopicSubscriptionEntity(id, sourceExchange, destinationExchange, subscriptionType, routingKey);
+        return _topicSubscriptions.GetOrAdd(binding);
+    }
 
-            return _topicSubscriptions.GetOrAdd(binding);
-        }
+    public QueueHandle CreateQueue(string name, TimeSpan? autoDeleteOnIdle = null, int? maxDeliveryCount = null)
+    {
+        var id = GetNextId();
 
-        public QueueHandle CreateQueue(string name, TimeSpan? autoDeleteOnIdle = null, int? maxDeliveryCount = null)
-        {
-            var id = GetNextId();
+        var queue = new QueueEntity(id, name, autoDeleteOnIdle, maxDeliveryCount);
 
-            var queue = new QueueEntity(id, name, autoDeleteOnIdle, maxDeliveryCount);
+        return _queues.GetOrAdd(queue);
+    }
 
-            return _queues.GetOrAdd(queue);
-        }
+    public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle topic, QueueHandle queue, SqlSubscriptionType subscriptionType, string? routingKey)
+    {
+        var id = GetNextId();
 
-        public QueueSubscriptionHandle CreateQueueSubscription(TopicHandle topic, QueueHandle queue, SqlSubscriptionType subscriptionType, string? routingKey)
-        {
-            var id = GetNextId();
+        var exchangeEntity = _topics.Get(topic);
 
-            var exchangeEntity = _topics.Get(topic);
+        var queueEntity = _queues.Get(queue);
 
-            var queueEntity = _queues.Get(queue);
+        var binding = new QueueSubscriptionEntity(id, exchangeEntity, queueEntity, subscriptionType, routingKey);
 
-            var binding = new QueueSubscriptionEntity(id, exchangeEntity, queueEntity, subscriptionType, routingKey);
+        return _queueSubscriptions.GetOrAdd(binding);
+    }
 
-            return _queueSubscriptions.GetOrAdd(binding);
-        }
-
-        public BrokerTopology BuildBrokerTopology()
-        {
-            return new SqlBrokerTopology(_topics, _topicSubscriptions, _queues, _queueSubscriptions);
-        }
+    public BrokerTopology BuildBrokerTopology()
+    {
+        return new SqlBrokerTopology(_topics, _topicSubscriptions, _queues, _queueSubscriptions);
     }
 }

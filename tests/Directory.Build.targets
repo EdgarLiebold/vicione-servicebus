@@ -1,6 +1,6 @@
 <Project InitialTargets="AssertNativeTestTreeInheritsRootBuildContract">
 
-  <!-- The late half of the native test tree's build contract.
+  <!-- The late half of the repository test tree's build contract.
 
        Like the props file, this is the FIRST Directory.Build.targets found walking up from a
        project under tests/, so the repository root one is not imported automatically. The import

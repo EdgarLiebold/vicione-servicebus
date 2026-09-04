@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.AmazonS3.Tests.AmazonS3.MessageData;
-
 using System.Reflection;
 using global::Amazon.S3;
 using global::Amazon.S3.Model;
 using ViciOne.ServiceBus.AmazonS3.MessageData;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonS3.Tests.AmazonS3.MessageData;
 
 public sealed class AmazonS3MessageDataObserverTests
 {
@@ -78,6 +78,13 @@ public sealed class AmazonS3MessageDataObserverTests
             Expiration = new LifecycleRuleExpiration { Days = 365 },
             Transitions = [foreignTransition],
         };
+        var legacyForeign = new LifecycleRule
+        {
+            Id = "caller-owned-legacy-prefix",
+            Status = LifecycleRuleStatus.Enabled,
+            Expiration = new LifecycleRuleExpiration { Days = 180 },
+        };
+        typeof(LifecycleRule).GetProperty("Prefix")!.SetValue(legacyForeign, "legacy/");
         var ownedWithUnconfiguredAction = new LifecycleRule
         {
             Id = AmazonS3MessageDataRepository.LifecycleRuleId,
@@ -98,7 +105,7 @@ public sealed class AmazonS3MessageDataObserverTests
         };
         IAmazonS3 client = DispatchProxy.Create<IAmazonS3, LifecycleS3DispatchProxy>();
         var proxy = (LifecycleS3DispatchProxy)(object)client;
-        proxy.Rules = [foreign, ownedWithUnconfiguredAction];
+        proxy.Rules = [foreign, legacyForeign, ownedWithUnconfiguredAction];
         var repository = new AmazonS3MessageDataRepository(
             client,
             new AmazonS3MessageDataRepositoryOptions("canonical-lifecycle", lifecycleExpirationDays: 14));
@@ -114,6 +121,13 @@ public sealed class AmazonS3MessageDataObserverTests
         LifecycleTransition actualForeignTransition = Assert.Single(actualForeign.Transitions);
         Assert.Equal(90, actualForeignTransition.Days);
         Assert.Equal(S3StorageClass.Glacier, actualForeignTransition.StorageClass);
+        LifecycleRule actualLegacyForeign = Assert.Single(
+            request.Configuration.Rules,
+            rule => rule.Id == legacyForeign.Id);
+        Assert.Equal(
+            "legacy/",
+            Assert.IsType<LifecyclePrefixPredicate>(actualLegacyForeign.Filter.LifecycleFilterPredicate).Prefix);
+        Assert.Equal(180, actualLegacyForeign.Expiration.Days);
         LifecycleRule actualOwned = Assert.Single(
             request.Configuration.Rules,
             rule => rule.Id == AmazonS3MessageDataRepository.LifecycleRuleId);

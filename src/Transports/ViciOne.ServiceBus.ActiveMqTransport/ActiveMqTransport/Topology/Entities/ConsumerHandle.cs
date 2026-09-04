@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public interface ConsumerHandle :
+    EntityHandle
 {
-    using ViciOne.ServiceBus.Topology;
-
-
-    public interface ConsumerHandle :
-        EntityHandle
-    {
-        Consumer Consumer { get; }
-    }
+    Consumer Consumer { get; }
 }

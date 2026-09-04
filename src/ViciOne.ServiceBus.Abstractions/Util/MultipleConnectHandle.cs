@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Util
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Util;
+
+public class MultipleConnectHandle :
+    ConnectHandle
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly ConnectHandle[] _handles;
 
-
-    public class MultipleConnectHandle :
-        ConnectHandle
+    public MultipleConnectHandle(IEnumerable<ConnectHandle> handles)
     {
-        readonly ConnectHandle[] _handles;
+        _handles = handles.ToArray();
+    }
 
-        public MultipleConnectHandle(IEnumerable<ConnectHandle> handles)
-        {
-            _handles = handles.ToArray();
-        }
+    public MultipleConnectHandle(params ConnectHandle[] handles)
+    {
+        _handles = handles;
+    }
 
-        public MultipleConnectHandle(params ConnectHandle[] handles)
-        {
-            _handles = handles;
-        }
+    public void Disconnect()
+    {
+        for (var i = 0; i < _handles.Length; i++)
+            _handles[i].Disconnect();
+    }
 
-        public void Disconnect()
-        {
-            for (var i = 0; i < _handles.Length; i++)
-                _handles[i].Disconnect();
-        }
-
-        public void Dispose()
-        {
-            Disconnect();
-        }
+    public void Dispose()
+    {
+        Disconnect();
     }
 }

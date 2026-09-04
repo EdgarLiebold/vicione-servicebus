@@ -1,12 +1,11 @@
-namespace ViciOneServiceBusBenchmark.Latency;
-
 using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using BusOutbox;
-using ViciOne.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus;
+using ViciOneServiceBusBenchmark.BusOutbox;
 
+namespace ViciOneServiceBusBenchmark.Latency;
 
 public class SqlMessageLatencyTransport :
     IMessageLatencyTransport

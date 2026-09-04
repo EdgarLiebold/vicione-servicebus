@@ -1,159 +1,157 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Middleware;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConsumerSpecification<TConsumer> :
+    OptionsSet,
+    IConsumerSpecification<TConsumer>
+    where TConsumer : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Middleware;
+    readonly ConnectHandle[] _handles;
+    readonly IReadOnlyDictionary<Type, IConsumerMessageSpecification<TConsumer>> _messageTypes;
+    readonly ConsumerConfigurationObservable _observers;
+    readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
+    readonly HashSet<Type> _partitionedMessageTypes = [];
+    ConsumerConcurrencyGate<object>? _concurrencyGate;
+    ConsumerConcurrencyPolicy? _concurrencyPolicy;
 
-
-    public class ConsumerSpecification<TConsumer> :
-        OptionsSet,
-        IConsumerSpecification<TConsumer>
-        where TConsumer : class
+    public ConsumerSpecification(IEnumerable<IConsumerMessageSpecification<TConsumer>> messageSpecifications)
     {
-        readonly ConnectHandle[] _handles;
-        readonly IReadOnlyDictionary<Type, IConsumerMessageSpecification<TConsumer>> _messageTypes;
-        readonly ConsumerConfigurationObservable _observers;
-        readonly ConfigurationObserverNotification _configurationNotification = new ConfigurationObserverNotification();
-        readonly HashSet<Type> _partitionedMessageTypes = [];
-        ConsumerConcurrencyGate<object>? _concurrencyGate;
-        ConsumerConcurrencyPolicy? _concurrencyPolicy;
+        _messageTypes = messageSpecifications.ToDictionary(x => x.MessageType);
 
-        public ConsumerSpecification(IEnumerable<IConsumerMessageSpecification<TConsumer>> messageSpecifications)
+        _observers = new ConsumerConfigurationObservable();
+        _handles = _messageTypes.Values.Select(x => x.ConnectConsumerConfigurationObserver(_observers)).ToArray();
+    }
+
+    public int? ConcurrentMessageLimit
+    {
+        get => _concurrencyPolicy?.Mode == ConsumerConcurrencyMode.Parallel
+            ? _concurrencyPolicy.Concurrency
+            : null;
+        set
         {
-            _messageTypes = messageSpecifications.ToDictionary(x => x.MessageType);
+            if (value.HasValue)
+                SetConcurrencyPolicy(ConsumerConcurrencyPolicy.Parallel(value.Value));
+        }
+    }
 
-            _observers = new ConsumerConfigurationObservable();
-            _handles = _messageTypes.Values.Select(x => x.ConnectConsumerConfigurationObserver(_observers)).ToArray();
+    public ConsumerConcurrencyPolicy ConcurrencyPolicy
+    {
+        set => SetConcurrencyPolicy(value);
+    }
+
+    public void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure)
+        where T : class
+    {
+        IConsumerMessageSpecification<TConsumer, T> specification = GetMessageSpecification<T>();
+
+        configure?.Invoke(specification);
+    }
+
+    public void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TConsumer, T>>? configure)
+        where T : class
+    {
+        IConsumerMessageSpecification<TConsumer, T> specification = GetMessageSpecification<T>();
+
+        configure?.Invoke(specification);
+    }
+
+    public IConsumerMessageSpecification<TConsumer, T> GetMessageSpecification<T>()
+        where T : class
+    {
+        foreach (IConsumerMessageSpecification<TConsumer> messageSpecification in _messageTypes.Values)
+        {
+            if (messageSpecification.TryGetMessageSpecification(out IConsumerMessageSpecification<TConsumer, T> result))
+                return result;
         }
 
-        public int? ConcurrentMessageLimit
+        throw new ArgumentException($"MessageType {TypeCache<T>.ShortName} is not consumed by {TypeCache<TConsumer>.ShortName}");
+    }
+
+    public void ConfigureMessagePipe<T>(IPipeConfigurator<ConsumeContext<T>> pipeConfigurator)
+        where T : class
+    {
+        if (_concurrencyPolicy is null)
+            return;
+
+        _concurrencyGate ??= new ConsumerConcurrencyGate<object>(_concurrencyPolicy);
+        pipeConfigurator.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<T>(_concurrencyGate, _concurrencyPolicy));
+    }
+
+    public void UsePartitionedConcurrency<TMessage, TKey>(
+        int partitionCount,
+        ConsumerPartitionKeySelector<TMessage, TKey> selector,
+        IEqualityComparer<TKey>? comparer = null)
+        where TMessage : class
+        where TKey : notnull
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+        ConsumerConcurrencyPolicy policy = ConsumerConcurrencyPolicy.Partitioned(partitionCount);
+        IConsumerMessageSpecification<TConsumer, TMessage> specification = GetMessageSpecification<TMessage>();
+
+        if (_concurrencyPolicy is not null)
         {
-            get => _concurrencyPolicy?.Mode == ConsumerConcurrencyMode.Parallel
-                ? _concurrencyPolicy.Concurrency
-                : null;
-            set
-            {
-                if (value.HasValue)
-                    SetConcurrencyPolicy(ConsumerConcurrencyPolicy.Parallel(value.Value));
-            }
+            throw new ConfigurationException(
+                $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine a consumer-wide concurrency policy with partitioned message concurrency.");
         }
 
-        public ConsumerConcurrencyPolicy ConcurrencyPolicy
+        if (!_partitionedMessageTypes.Add(typeof(TMessage)))
         {
-            set => SetConcurrencyPolicy(value);
+            throw new ConfigurationException(
+                $"Consumer '{TypeCache<TConsumer>.ShortName}' already has a concurrency policy for message '{TypeCache<TMessage>.ShortName}'.");
         }
 
-        public void Message<T>(Action<IConsumerMessageConfigurator<T>>? configure)
-            where T : class
-        {
-            IConsumerMessageSpecification<TConsumer, T> specification = GetMessageSpecification<T>();
+        var gate = new PartitionedConsumerConcurrencyGate<TMessage, TKey>(partitionCount, selector, comparer);
+        specification.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<TMessage>(gate, policy));
+    }
 
-            configure?.Invoke(specification);
+    public IEnumerable<ValidationResult> Validate()
+    {
+        _configurationNotification.EnsureNotified(() =>
+            _observers.ForEach(observer => observer.ConsumerConfigured(this)));
+
+        return _messageTypes.Values.SelectMany(x => x.Validate())
+            .Concat(ValidateOptions())
+            .ToArray();
+    }
+
+    public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
+    {
+        foreach (IConsumerMessageSpecification<TConsumer> messageSpecification in _messageTypes.Values)
+            messageSpecification.AddPipeSpecification(specification);
+    }
+
+    public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
+    {
+        return _observers.Connect(observer);
+    }
+
+    private void SetConcurrencyPolicy(ConsumerConcurrencyPolicy policy)
+    {
+        ArgumentNullException.ThrowIfNull(policy);
+        if (policy.Mode == ConsumerConcurrencyMode.Partitioned)
+        {
+            throw new ArgumentException(
+                "Partitioned concurrency requires a strongly typed message and partition-key selector.",
+                nameof(policy));
         }
 
-        public void ConsumerMessage<T>(Action<IConsumerMessageConfigurator<TConsumer, T>>? configure)
-            where T : class
+        if (_partitionedMessageTypes.Count > 0)
         {
-            IConsumerMessageSpecification<TConsumer, T> specification = GetMessageSpecification<T>();
-
-            configure?.Invoke(specification);
+            throw new ConfigurationException(
+                $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine partitioned message concurrency with a consumer-wide concurrency policy.");
         }
 
-        public IConsumerMessageSpecification<TConsumer, T> GetMessageSpecification<T>()
-            where T : class
+        if (_concurrencyPolicy is not null && _concurrencyPolicy != policy)
         {
-            foreach (IConsumerMessageSpecification<TConsumer> messageSpecification in _messageTypes.Values)
-            {
-                if (messageSpecification.TryGetMessageSpecification(out IConsumerMessageSpecification<TConsumer, T> result))
-                    return result;
-            }
-
-            throw new ArgumentException($"MessageType {TypeCache<T>.ShortName} is not consumed by {TypeCache<TConsumer>.ShortName}");
+            throw new ConfigurationException(
+                $"Consumer '{TypeCache<TConsumer>.ShortName}' has conflicting consumer concurrency policies '{_concurrencyPolicy}' and '{policy}'.");
         }
 
-        public void ConfigureMessagePipe<T>(IPipeConfigurator<ConsumeContext<T>> pipeConfigurator)
-            where T : class
-        {
-            if (_concurrencyPolicy is null)
-                return;
-
-            _concurrencyGate ??= new ConsumerConcurrencyGate<object>(_concurrencyPolicy);
-            pipeConfigurator.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<T>(_concurrencyGate, _concurrencyPolicy));
-        }
-
-        public void UsePartitionedConcurrency<TMessage, TKey>(
-            int partitionCount,
-            ConsumerPartitionKeySelector<TMessage, TKey> selector,
-            IEqualityComparer<TKey>? comparer = null)
-            where TMessage : class
-            where TKey : notnull
-        {
-            ArgumentNullException.ThrowIfNull(selector);
-            ConsumerConcurrencyPolicy policy = ConsumerConcurrencyPolicy.Partitioned(partitionCount);
-            IConsumerMessageSpecification<TConsumer, TMessage> specification = GetMessageSpecification<TMessage>();
-
-            if (_concurrencyPolicy is not null)
-            {
-                throw new ConfigurationException(
-                    $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine a consumer-wide concurrency policy with partitioned message concurrency.");
-            }
-
-            if (!_partitionedMessageTypes.Add(typeof(TMessage)))
-            {
-                throw new ConfigurationException(
-                    $"Consumer '{TypeCache<TConsumer>.ShortName}' already has a concurrency policy for message '{TypeCache<TMessage>.ShortName}'.");
-            }
-
-            var gate = new PartitionedConsumerConcurrencyGate<TMessage, TKey>(partitionCount, selector, comparer);
-            specification.AddPipeSpecification(new ConsumerConcurrencyPipeSpecification<TMessage>(gate, policy));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            _configurationNotification.EnsureNotified(() =>
-                _observers.ForEach(observer => observer.ConsumerConfigured(this)));
-
-            return _messageTypes.Values.SelectMany(x => x.Validate())
-                .Concat(ValidateOptions())
-                .ToArray();
-        }
-
-        public void AddPipeSpecification(IPipeSpecification<ConsumerConsumeContext<TConsumer>> specification)
-        {
-            foreach (IConsumerMessageSpecification<TConsumer> messageSpecification in _messageTypes.Values)
-                messageSpecification.AddPipeSpecification(specification);
-        }
-
-        public ConnectHandle ConnectConsumerConfigurationObserver(IConsumerConfigurationObserver observer)
-        {
-            return _observers.Connect(observer);
-        }
-
-        private void SetConcurrencyPolicy(ConsumerConcurrencyPolicy policy)
-        {
-            ArgumentNullException.ThrowIfNull(policy);
-            if (policy.Mode == ConsumerConcurrencyMode.Partitioned)
-            {
-                throw new ArgumentException(
-                    "Partitioned concurrency requires a strongly typed message and partition-key selector.",
-                    nameof(policy));
-            }
-
-            if (_partitionedMessageTypes.Count > 0)
-            {
-                throw new ConfigurationException(
-                    $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine partitioned message concurrency with a consumer-wide concurrency policy.");
-            }
-
-            if (_concurrencyPolicy is not null && _concurrencyPolicy != policy)
-            {
-                throw new ConfigurationException(
-                    $"Consumer '{TypeCache<TConsumer>.ShortName}' has conflicting consumer concurrency policies '{_concurrencyPolicy}' and '{policy}'.");
-            }
-
-            _concurrencyPolicy = policy;
-        }
+        _concurrencyPolicy = policy;
     }
 }

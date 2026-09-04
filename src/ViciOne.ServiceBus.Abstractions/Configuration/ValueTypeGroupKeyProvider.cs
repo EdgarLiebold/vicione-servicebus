@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ValueTypeGroupKeyProvider<TMessage, TKey> :
+    IGroupKeyProvider<TMessage, TKey>
+    where TMessage : class
+    where TKey : struct
 {
-    using System;
+    readonly Func<ConsumeContext<TMessage>, TKey?> _provider;
 
-
-    public class ValueTypeGroupKeyProvider<TMessage, TKey> :
-        IGroupKeyProvider<TMessage, TKey>
-        where TMessage : class
-        where TKey : struct
+    public ValueTypeGroupKeyProvider(Func<ConsumeContext<TMessage>, TKey?> provider)
     {
-        readonly Func<ConsumeContext<TMessage>, TKey?> _provider;
+        _provider = provider;
+    }
 
-        public ValueTypeGroupKeyProvider(Func<ConsumeContext<TMessage>, TKey?> provider)
+    public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
+    {
+        TKey? property = _provider(context);
+
+        if (property.HasValue)
         {
-            _provider = provider;
+            key = property.Value;
+            return true;
         }
 
-        public bool TryGetKey(ConsumeContext<TMessage> context, out TKey key)
-        {
-            TKey? property = _provider(context);
-
-            if (property.HasValue)
-            {
-                key = property.Value;
-                return true;
-            }
-
-            key = default;
-            return false;
-        }
+        key = default;
+        return false;
     }
 }

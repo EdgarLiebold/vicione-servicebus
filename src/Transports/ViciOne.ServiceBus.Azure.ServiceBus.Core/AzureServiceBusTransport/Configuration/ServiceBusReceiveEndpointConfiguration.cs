@@ -1,150 +1,148 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class ServiceBusReceiveEndpointConfiguration :
+    ServiceBusEntityReceiveEndpointConfiguration,
+    IServiceBusReceiveEndpointConfiguration,
+    IServiceBusReceiveEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using ViciOne.ServiceBus.Configuration;
-    using Middleware;
-    using Topology;
-    using Transports;
+    readonly IServiceBusEndpointConfiguration _endpointConfiguration;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
+    readonly Lazy<Uri> _inputAddress;
+    readonly ReceiveEndpointSettings _settings;
 
-
-    public class ServiceBusReceiveEndpointConfiguration :
-        ServiceBusEntityReceiveEndpointConfiguration,
-        IServiceBusReceiveEndpointConfiguration,
-        IServiceBusReceiveEndpointConfigurator
+    public ServiceBusReceiveEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration, ReceiveEndpointSettings settings,
+        IServiceBusEndpointConfiguration endpointConfiguration)
+        : base(hostConfiguration, settings, endpointConfiguration)
     {
-        readonly IServiceBusEndpointConfiguration _endpointConfiguration;
-        readonly IServiceBusHostConfiguration _hostConfiguration;
-        readonly Lazy<Uri> _inputAddress;
-        readonly ReceiveEndpointSettings _settings;
+        _hostConfiguration = hostConfiguration;
+        _endpointConfiguration = endpointConfiguration;
+        _settings = settings;
 
-        public ServiceBusReceiveEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration, ReceiveEndpointSettings settings,
-            IServiceBusEndpointConfiguration endpointConfiguration)
-            : base(hostConfiguration, settings, endpointConfiguration)
-        {
-            _hostConfiguration = hostConfiguration;
-            _endpointConfiguration = endpointConfiguration;
-            _settings = settings;
+        _settings.QueueConfigurator.BasePath = hostConfiguration.BasePath;
 
-            _settings.QueueConfigurator.BasePath = hostConfiguration.BasePath;
+        _inputAddress = new Lazy<Uri>(FormatInputAddress);
+    }
 
-            _inputAddress = new Lazy<Uri>(FormatInputAddress);
-        }
+    public ReceiveSettings Settings => _settings;
 
-        public ReceiveSettings Settings => _settings;
+    public override Uri HostAddress => _hostConfiguration.HostAddress;
 
-        public override Uri HostAddress => _hostConfiguration.HostAddress;
+    public override Uri InputAddress => _inputAddress.Value;
 
-        public override Uri InputAddress => _inputAddress.Value;
+    public override ReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        return CreateServiceBusReceiveEndpointContext();
+    }
 
-        public override ReceiveEndpointContext CreateReceiveEndpointContext()
-        {
-            return CreateServiceBusReceiveEndpointContext();
-        }
+    IServiceBusTopologyConfiguration IServiceBusEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-        IServiceBusTopologyConfiguration IServiceBusEndpointConfiguration.Topology => _endpointConfiguration.Topology;
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return _settings.QueueConfigurator.Validate()
+            .Concat(base.Validate());
+    }
 
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return _settings.QueueConfigurator.Validate()
-                .Concat(base.Validate());
-        }
+    public void Build(IHost host)
+    {
+        var context = CreateServiceBusReceiveEndpointContext();
 
-        public void Build(IHost host)
-        {
-            var context = CreateServiceBusReceiveEndpointContext();
+        ClientPipeConfigurator.UseFilter(new ConfigureServiceBusTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology,
+            _settings.RemoveSubscriptions, context));
 
-            ClientPipeConfigurator.UseFilter(new ConfigureServiceBusTopologyFilter<ReceiveSettings>(_settings, context.BrokerTopology,
-                _settings.RemoveSubscriptions, context));
+        var errorTransport = CreateErrorTransport();
+        var deadLetterTransport = CreateDeadLetterTransport();
 
-            var errorTransport = CreateErrorTransport();
-            var deadLetterTransport = CreateDeadLetterTransport();
+        context.GetOrAddPayload(() => deadLetterTransport);
+        context.GetOrAddPayload(() => errorTransport);
 
-            context.GetOrAddPayload(() => deadLetterTransport);
-            context.GetOrAddPayload(() => errorTransport);
+        CreateReceiveEndpoint(host, context);
+    }
 
-            CreateReceiveEndpoint(host, context);
-        }
+    public TimeSpan DuplicateDetectionHistoryTimeWindow
+    {
+        set => _settings.QueueConfigurator.DuplicateDetectionHistoryTimeWindow = value;
+    }
 
-        public TimeSpan DuplicateDetectionHistoryTimeWindow
-        {
-            set => _settings.QueueConfigurator.DuplicateDetectionHistoryTimeWindow = value;
-        }
+    public void EnableDuplicateDetection(TimeSpan historyTimeWindow)
+    {
+        _settings.QueueConfigurator.RequiresDuplicateDetection = true;
+        _settings.QueueConfigurator.DuplicateDetectionHistoryTimeWindow = historyTimeWindow;
+    }
 
-        public void EnableDuplicateDetection(TimeSpan historyTimeWindow)
-        {
-            _settings.QueueConfigurator.RequiresDuplicateDetection = true;
-            _settings.QueueConfigurator.DuplicateDetectionHistoryTimeWindow = historyTimeWindow;
-        }
+    public bool EnablePartitioning
+    {
+        set => _settings.QueueConfigurator.EnablePartitioning = value;
+    }
 
-        public bool EnablePartitioning
-        {
-            set => _settings.QueueConfigurator.EnablePartitioning = value;
-        }
+    public long MaxSizeInMegabytes
+    {
+        set => _settings.QueueConfigurator.MaxSizeInMegabytes = value;
+    }
 
-        public long MaxSizeInMegabytes
-        {
-            set => _settings.QueueConfigurator.MaxSizeInMegabytes = value;
-        }
+    public long MaxMessageSizeInKilobytes
+    {
+        set => _settings.QueueConfigurator.MaxMessageSizeInKilobytes = value;
+    }
 
-        public long MaxMessageSizeInKilobytes
-        {
-            set => _settings.QueueConfigurator.MaxMessageSizeInKilobytes = value;
-        }
+    public bool RequiresDuplicateDetection
+    {
+        set => _settings.QueueConfigurator.RequiresDuplicateDetection = value;
+    }
 
-        public bool RequiresDuplicateDetection
-        {
-            set => _settings.QueueConfigurator.RequiresDuplicateDetection = value;
-        }
+    public bool RemoveSubscriptions
+    {
+        set => _settings.RemoveSubscriptions = value;
+    }
 
-        public bool RemoveSubscriptions
-        {
-            set => _settings.RemoveSubscriptions = value;
-        }
+    public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback)
+    {
+        _endpointConfiguration.Topology.Consume.Subscribe(topicName, subscriptionName, callback);
+    }
 
-        public void Subscribe(string topicName, string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback)
-        {
-            _endpointConfiguration.Topology.Consume.Subscribe(topicName, subscriptionName, callback);
-        }
+    public void Subscribe<T>(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback)
+        where T : class
+    {
+        _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Subscribe(subscriptionName, callback);
+    }
 
-        public void Subscribe<T>(string subscriptionName, Action<IServiceBusSubscriptionConfigurator> callback)
-            where T : class
-        {
-            _endpointConfiguration.Topology.Consume.GetMessageTopology<T>().Subscribe(subscriptionName, callback);
-        }
+    ServiceBusReceiveEndpointContext CreateServiceBusReceiveEndpointContext()
+    {
+        var builder = new ServiceBusReceiveEndpointBuilder(_hostConfiguration, this);
 
-        ServiceBusReceiveEndpointContext CreateServiceBusReceiveEndpointContext()
-        {
-            var builder = new ServiceBusReceiveEndpointBuilder(_hostConfiguration, this);
+        ApplySpecifications(builder);
 
-            ApplySpecifications(builder);
+        return builder.CreateReceiveEndpointContext();
+    }
 
-            return builder.CreateReceiveEndpointContext();
-        }
+    Uri FormatInputAddress()
+    {
+        return _settings.GetInputAddress(_hostConfiguration.HostAddress, _settings.Path);
+    }
 
-        Uri FormatInputAddress()
-        {
-            return _settings.GetInputAddress(_hostConfiguration.HostAddress, _settings.Path);
-        }
+    protected override bool IsAlreadyConfigured()
+    {
+        return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
+    }
 
-        protected override bool IsAlreadyConfigured()
-        {
-            return _inputAddress.IsValueCreated || base.IsAlreadyConfigured();
-        }
+    IErrorTransport CreateErrorTransport()
+    {
+        var settings = _endpointConfiguration.Topology.Send.GetErrorSettings(_settings.QueueConfigurator);
 
-        IErrorTransport CreateErrorTransport()
-        {
-            var settings = _endpointConfiguration.Topology.Send.GetErrorSettings(_settings.QueueConfigurator);
+        return new ServiceBusQueueErrorTransport(_hostConfiguration.ConnectionContextSupervisor, settings);
+    }
 
-            return new ServiceBusQueueErrorTransport(_hostConfiguration.ConnectionContextSupervisor, settings);
-        }
+    IDeadLetterTransport CreateDeadLetterTransport()
+    {
+        var settings = _endpointConfiguration.Topology.Send.GetDeadLetterSettings(_settings.QueueConfigurator);
 
-        IDeadLetterTransport CreateDeadLetterTransport()
-        {
-            var settings = _endpointConfiguration.Topology.Send.GetDeadLetterSettings(_settings.QueueConfigurator);
-
-            return new ServiceBusQueueDeadLetterTransport(_hostConfiguration.ConnectionContextSupervisor, settings);
-        }
+        return new ServiceBusQueueDeadLetterTransport(_hostConfiguration.ConnectionContextSupervisor, settings);
     }
 }

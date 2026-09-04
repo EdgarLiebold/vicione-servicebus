@@ -1,8 +1,6 @@
-namespace ViciOne.ServiceBus.Saga
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus.Saga;
 
-    public delegate TSaga SagaInstanceFactoryMethod<out TSaga>(Guid correlationId)
-        where TSaga : class, ISaga;
-}
+public delegate TSaga SagaInstanceFactoryMethod<out TSaga>(Guid correlationId)
+    where TSaga : class, ISaga;

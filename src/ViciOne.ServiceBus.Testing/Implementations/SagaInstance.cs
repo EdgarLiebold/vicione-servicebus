@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class SagaInstance<T> :
+    ISagaInstance<T>
+    where T : class, ISaga
 {
-    using System;
-
-
-    public class SagaInstance<T> :
-        ISagaInstance<T>
-        where T : class, ISaga
+    public SagaInstance(T saga)
     {
-        public SagaInstance(T saga)
-        {
-            Saga = saga;
-        }
-
-        public T Saga { get; }
-
-        public Guid? ElementId => Saga.CorrelationId;
+        Saga = saga;
     }
+
+    public T Saga { get; }
+
+    public Guid? ElementId => Saga.CorrelationId;
 }

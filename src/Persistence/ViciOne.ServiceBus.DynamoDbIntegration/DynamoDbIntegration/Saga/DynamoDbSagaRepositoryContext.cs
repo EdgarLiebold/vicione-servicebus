@@ -1,127 +1,125 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Saga;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga;
+
+public class DynamoDbSagaRepositoryContext<TSaga, TMessage> :
+    ConsumeContextScope<TMessage>,
+    SagaRepositoryContext<TSaga, TMessage>,
+    IDisposable
+    where TSaga : class, ISagaVersion
+    where TMessage : class
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Context;
-    using Logging;
-    using ViciOne.ServiceBus.Saga;
-    using Middleware;
-    using Util;
+    readonly ConsumeContext<TMessage> _consumeContext;
+    readonly DatabaseContext<TSaga> _context;
+    readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
 
-
-    public class DynamoDbSagaRepositoryContext<TSaga, TMessage> :
-        ConsumeContextScope<TMessage>,
-        SagaRepositoryContext<TSaga, TMessage>,
-        IDisposable
-        where TSaga : class, ISagaVersion
-        where TMessage : class
+    public DynamoDbSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
+        ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
+        : base(consumeContext)
     {
-        readonly ConsumeContext<TMessage> _consumeContext;
-        readonly DatabaseContext<TSaga> _context;
-        readonly ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> _factory;
+        _context = context;
+        _consumeContext = consumeContext;
+        _factory = factory;
+    }
 
-        public DynamoDbSagaRepositoryContext(DatabaseContext<TSaga> context, ConsumeContext<TMessage> consumeContext,
-            ISagaConsumeContextFactory<DatabaseContext<TSaga>, TSaga> factory)
-            : base(consumeContext)
+    public void Dispose()
+    {
+        _context.Dispose();
+    }
+
+    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
+    {
+        return _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
+    }
+
+    public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    {
+        try
         {
-            _context = context;
-            _consumeContext = consumeContext;
-            _factory = factory;
+            await _context.Insert(instance, _consumeContext.CancellationToken).ConfigureAwait(false);
+
+            _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
+
+            return await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
         }
-
-        public void Dispose()
+        catch (Exception ex)
         {
-            _context.Dispose();
-        }
+            _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
 
-        public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
-        {
-            return _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Add);
-        }
-
-        public async Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
-        {
-            try
-            {
-                await _context.Insert(instance, _consumeContext.CancellationToken).ConfigureAwait(false);
-
-                _consumeContext.LogInsert<TSaga, TMessage>(instance.CorrelationId);
-
-                return await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Insert).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _consumeContext.LogInsertFault<TSaga, TMessage>(ex, instance.CorrelationId);
-
-                throw;
-            }
-        }
-
-        public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
-        {
-            var instance = await _context.Load(correlationId, _consumeContext.CancellationToken).ConfigureAwait(false);
-            if (instance == null)
-                return default;
-
-            return await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
-        }
-
-        public Task Save(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Add(context.Saga, context.CancellationToken);
-        }
-
-        public Task Update(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Update(context.Saga, context.CancellationToken);
-        }
-
-        public Task Delete(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Delete(context.Saga, context.CancellationToken);
-        }
-
-        public Task Discard(SagaConsumeContext<TSaga> context)
-        {
-            return TaskResults.Completed;
-        }
-
-        public Task Undo(SagaConsumeContext<TSaga> context)
-        {
-            return TaskResults.Completed;
-        }
-
-        public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
-            where T : class
-        {
-            return _factory.CreateSagaConsumeContext(_context, consumeContext, instance, mode);
+            throw;
         }
     }
 
-
-    public class DynamoDbSagaRepositoryContext<TSaga> :
-        BasePipeContext,
-        LoadSagaRepositoryContext<TSaga>,
-        IDisposable
-        where TSaga : class, ISagaVersion
+    public async Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
     {
-        readonly DatabaseContext<TSaga> _context;
+        var instance = await _context.Load(correlationId, _consumeContext.CancellationToken).ConfigureAwait(false);
+        if (instance == null)
+            return default;
 
-        public DynamoDbSagaRepositoryContext(DatabaseContext<TSaga> context, CancellationToken cancellationToken)
-            : base(cancellationToken)
-        {
-            _context = context;
-        }
+        return await _factory.CreateSagaConsumeContext(_context, _consumeContext, instance, SagaConsumeContextMode.Load).ConfigureAwait(false);
+    }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+    public Task Save(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Add(context.Saga, context.CancellationToken);
+    }
 
-        public Task<TSaga> Load(Guid correlationId)
-        {
-            return _context.Load(correlationId, CancellationToken);
-        }
+    public Task Update(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Update(context.Saga, context.CancellationToken);
+    }
+
+    public Task Delete(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Delete(context.Saga, context.CancellationToken);
+    }
+
+    public Task Discard(SagaConsumeContext<TSaga> context)
+    {
+        return TaskResults.Completed;
+    }
+
+    public Task Undo(SagaConsumeContext<TSaga> context)
+    {
+        return TaskResults.Completed;
+    }
+
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+        where T : class
+    {
+        return _factory.CreateSagaConsumeContext(_context, consumeContext, instance, mode);
+    }
+}
+
+
+public class DynamoDbSagaRepositoryContext<TSaga> :
+    BasePipeContext,
+    LoadSagaRepositoryContext<TSaga>,
+    IDisposable
+    where TSaga : class, ISagaVersion
+{
+    readonly DatabaseContext<TSaga> _context;
+
+    public DynamoDbSagaRepositoryContext(DatabaseContext<TSaga> context, CancellationToken cancellationToken)
+        : base(cancellationToken)
+    {
+        _context = context;
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
+    }
+
+    public Task<TSaga> Load(Guid correlationId)
+    {
+        return _context.Load(correlationId, CancellationToken);
     }
 }

@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using System.Collections.Generic;
-using Internals;
-using Topology;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+using ViciOne.ServiceBus.Internals;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 /// <summary>
 /// Used to by a TopicSubscription destination to the receive endpoint, via an additional message consumer
 /// </summary>

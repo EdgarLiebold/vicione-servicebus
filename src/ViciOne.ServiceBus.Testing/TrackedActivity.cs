@@ -1,13 +1,12 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Testing;
-
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Util;
+using ViciOne.ServiceBus.Util;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Testing;
 
 class TrackedActivity :
     IAsyncDisposable

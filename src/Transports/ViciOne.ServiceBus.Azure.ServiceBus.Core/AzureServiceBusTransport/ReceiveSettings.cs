@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface ReceiveSettings :
+    ClientSettings
 {
-    using Azure.Messaging.ServiceBus.Administration;
-
-
-    public interface ReceiveSettings :
-        ClientSettings
-    {
-        CreateQueueOptions GetCreateQueueOptions();
-    }
+    CreateQueueOptions GetCreateQueueOptions();
 }

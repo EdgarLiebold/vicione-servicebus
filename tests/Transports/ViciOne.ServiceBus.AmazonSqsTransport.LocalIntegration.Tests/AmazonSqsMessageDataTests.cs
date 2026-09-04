@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
 using System.Text;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
@@ -8,6 +6,8 @@ using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructur
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 public sealed class AmazonSqsMessageDataTests
 {

@@ -1,145 +1,143 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Observables;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public abstract class ReceiveEndpointConfiguration :
+    EndpointConfiguration,
+    IReceiveEndpointConfiguration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Observables;
-    using Transports;
+    readonly Lazy<IConsumePipe> _consumePipe;
+    readonly HashSet<IReceiveEndpointDependency> _dependencies;
+    readonly HashSet<IReceiveEndpointDependent> _dependents;
+    readonly List<string> _lateConfigurationKeys;
+    readonly List<IReceiveEndpointSpecification> _specifications;
+    IReceiveEndpoint _receiveEndpoint;
 
-
-    public abstract class ReceiveEndpointConfiguration :
-        EndpointConfiguration,
-        IReceiveEndpointConfiguration
+    protected ReceiveEndpointConfiguration(IHostConfiguration hostConfiguration, IEndpointConfiguration endpointConfiguration)
+        : base(endpointConfiguration)
     {
-        readonly Lazy<IConsumePipe> _consumePipe;
-        readonly HashSet<IReceiveEndpointDependency> _dependencies;
-        readonly HashSet<IReceiveEndpointDependent> _dependents;
-        readonly List<string> _lateConfigurationKeys;
-        readonly List<IReceiveEndpointSpecification> _specifications;
-        IReceiveEndpoint _receiveEndpoint;
+        ConfigureConsumeTopology = true;
+        PublishFaults = true;
 
-        protected ReceiveEndpointConfiguration(IHostConfiguration hostConfiguration, IEndpointConfiguration endpointConfiguration)
-            : base(endpointConfiguration)
+        _consumePipe = new Lazy<IConsumePipe>(() => Consume.Specification.BuildConsumePipe());
+        _specifications = new List<IReceiveEndpointSpecification>();
+        _lateConfigurationKeys = new List<string>();
+        _dependencies = new HashSet<IReceiveEndpointDependency>();
+        _dependents = new HashSet<IReceiveEndpointDependent>();
+
+        EndpointObservers = new ReceiveEndpointObservable();
+        ReceiveObservers = new ReceiveObservable();
+        TransportObservers = new ReceiveTransportObservable();
+
+        ConnectConsumerConfigurationObserver(hostConfiguration.BusConfiguration);
+        ConnectSagaConfigurationObserver(hostConfiguration.BusConfiguration);
+        ConnectHandlerConfigurationObserver(hostConfiguration.BusConfiguration);
+        ConnectActivityConfigurationObserver(hostConfiguration.BusConfiguration);
+    }
+
+    public ReceiveEndpointObservable EndpointObservers { get; }
+    public ReceiveObservable ReceiveObservers { get; }
+    public ReceiveTransportObservable TransportObservers { get; }
+
+    public bool ConfigureConsumeTopology { get; set; }
+    public bool PublishFaults { get; set; }
+
+    public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
+    {
+        return EndpointObservers.Connect(observer);
+    }
+
+    public void AddDependent(IReceiveEndpointDependent dependent)
+    {
+        _dependents.Add(dependent);
+    }
+
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        foreach (var result in _specifications.SelectMany(x => x.Validate()))
+            yield return result;
+
+        foreach (var result in _lateConfigurationKeys.Select(x => this.Failure(x, "was modified after being used")))
+            yield return result;
+
+        foreach (var result in base.Validate())
+            yield return result;
+    }
+
+    public IConsumePipe ConsumePipe => _consumePipe.Value;
+
+    public abstract Uri HostAddress { get; }
+    public abstract Uri InputAddress { get; }
+
+    public virtual IReceiveEndpoint ReceiveEndpoint
+    {
+        get
         {
-            ConfigureConsumeTopology = true;
-            PublishFaults = true;
+            if (_receiveEndpoint == null)
+                throw new InvalidOperationException("The receive endpoint has not been built.");
 
-            _consumePipe = new Lazy<IConsumePipe>(() => Consume.Specification.BuildConsumePipe());
-            _specifications = new List<IReceiveEndpointSpecification>();
-            _lateConfigurationKeys = new List<string>();
-            _dependencies = new HashSet<IReceiveEndpointDependency>();
-            _dependents = new HashSet<IReceiveEndpointDependent>();
-
-            EndpointObservers = new ReceiveEndpointObservable();
-            ReceiveObservers = new ReceiveObservable();
-            TransportObservers = new ReceiveTransportObservable();
-
-            ConnectConsumerConfigurationObserver(hostConfiguration.BusConfiguration);
-            ConnectSagaConfigurationObserver(hostConfiguration.BusConfiguration);
-            ConnectHandlerConfigurationObserver(hostConfiguration.BusConfiguration);
-            ConnectActivityConfigurationObserver(hostConfiguration.BusConfiguration);
+            return _receiveEndpoint;
         }
 
-        public ReceiveEndpointObservable EndpointObservers { get; }
-        public ReceiveObservable ReceiveObservers { get; }
-        public ReceiveTransportObservable TransportObservers { get; }
+        protected set => _receiveEndpoint = value;
+    }
 
-        public bool ConfigureConsumeTopology { get; set; }
-        public bool PublishFaults { get; set; }
+    public virtual IReceivePipe CreateReceivePipe()
+    {
+        return Receive.CreatePipe(CreateConsumePipe(), Serialization.CreateSerializerCollection());
+    }
 
-        public ConnectHandle ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
-        {
-            return EndpointObservers.Connect(observer);
-        }
+    public abstract ReceiveEndpointContext CreateReceiveEndpointContext();
 
-        public void AddDependent(IReceiveEndpointDependent dependent)
-        {
-            _dependents.Add(dependent);
-        }
+    public Task DependenciesReady => Task.WhenAll(_dependencies.Select(x => x.Ready));
 
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            foreach (var result in _specifications.SelectMany(x => x.Validate()))
-                yield return result;
+    public Task DependentsCompleted => Task.WhenAll(_dependents.Select(x => x.Completed));
 
-            foreach (var result in _lateConfigurationKeys.Select(x => this.Failure(x, "was modified after being used")))
-                yield return result;
+    public void ConfigureMessageTopology<T>(bool enabled = true)
+        where T : class
+    {
+        Topology.Consume.GetMessageTopology<T>().ConfigureConsumeTopology = enabled;
+    }
 
-            foreach (var result in base.Validate())
-                yield return result;
-        }
+    public void ConfigureMessageTopology(Type messageType, bool enabled = true)
+    {
+        Topology.Consume.GetMessageTopology(messageType).ConfigureConsumeTopology = enabled;
+    }
 
-        public IConsumePipe ConsumePipe => _consumePipe.Value;
+    public void AddDependency(IReceiveEndpointDependency dependency)
+    {
+        _dependencies.Add(dependency);
+    }
 
-        public abstract Uri HostAddress { get; }
-        public abstract Uri InputAddress { get; }
+    protected void ApplySpecifications(IReceiveEndpointBuilder builder)
+    {
+        for (var i = 0; i < _specifications.Count; i++)
+            _specifications[i].Configure(builder);
+    }
 
-        public virtual IReceiveEndpoint ReceiveEndpoint
-        {
-            get
-            {
-                if (_receiveEndpoint == null)
-                    throw new InvalidOperationException("The receive endpoint has not been built.");
+    public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
+    {
+        _specifications.Add(specification);
+    }
 
-                return _receiveEndpoint;
-            }
+    protected virtual IConsumePipe CreateConsumePipe()
+    {
+        return _consumePipe.Value;
+    }
 
-            protected set => _receiveEndpoint = value;
-        }
+    protected void Changed(string key)
+    {
+        if (IsAlreadyConfigured())
+            _lateConfigurationKeys.Add(key);
+    }
 
-        public virtual IReceivePipe CreateReceivePipe()
-        {
-            return Receive.CreatePipe(CreateConsumePipe(), Serialization.CreateSerializerCollection());
-        }
-
-        public abstract ReceiveEndpointContext CreateReceiveEndpointContext();
-
-        public Task DependenciesReady => Task.WhenAll(_dependencies.Select(x => x.Ready));
-
-        public Task DependentsCompleted => Task.WhenAll(_dependents.Select(x => x.Completed));
-
-        public void ConfigureMessageTopology<T>(bool enabled = true)
-            where T : class
-        {
-            Topology.Consume.GetMessageTopology<T>().ConfigureConsumeTopology = enabled;
-        }
-
-        public void ConfigureMessageTopology(Type messageType, bool enabled = true)
-        {
-            Topology.Consume.GetMessageTopology(messageType).ConfigureConsumeTopology = enabled;
-        }
-
-        public void AddDependency(IReceiveEndpointDependency dependency)
-        {
-            _dependencies.Add(dependency);
-        }
-
-        protected void ApplySpecifications(IReceiveEndpointBuilder builder)
-        {
-            for (var i = 0; i < _specifications.Count; i++)
-                _specifications[i].Configure(builder);
-        }
-
-        public void AddEndpointSpecification(IReceiveEndpointSpecification specification)
-        {
-            _specifications.Add(specification);
-        }
-
-        protected virtual IConsumePipe CreateConsumePipe()
-        {
-            return _consumePipe.Value;
-        }
-
-        protected void Changed(string key)
-        {
-            if (IsAlreadyConfigured())
-                _lateConfigurationKeys.Add(key);
-        }
-
-        protected virtual bool IsAlreadyConfigured()
-        {
-            return false;
-        }
+    protected virtual bool IsAlreadyConfigured()
+    {
+        return false;
     }
 }

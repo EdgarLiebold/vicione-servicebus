@@ -1,23 +1,22 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// The reason this batch was made ready for consumption
+/// </summary>
+public enum BatchCompletionMode
 {
     /// <summary>
-    /// The reason this batch was made ready for consumption
+    /// The time limit for receiving messages in the batch was reached
     /// </summary>
-    public enum BatchCompletionMode
-    {
-        /// <summary>
-        /// The time limit for receiving messages in the batch was reached
-        /// </summary>
-        Time = 0,
+    Time = 0,
 
-        /// <summary>
-        /// The maximum number of messages in the batch was reached
-        /// </summary>
-        Size = 1,
+    /// <summary>
+    /// The maximum number of messages in the batch was reached
+    /// </summary>
+    Size = 1,
 
-        /// <summary>
-        /// A batch was forced, likely due to a previously faulted message being retried
-        /// </summary>
-        Forced = 2
-    }
+    /// <summary>
+    /// A batch was forced, likely due to a previously faulted message being retried
+    /// </summary>
+    Forced = 2
 }

@@ -1,131 +1,129 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Payloads;
+
+namespace ViciOne.ServiceBus.Context;
+
+public class ConsumeContextScope :
+    ConsumeContextProxy
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Payloads;
+    readonly ConsumeContext _context;
+    IPayloadCache _payloadCache;
 
-
-    public class ConsumeContextScope :
-        ConsumeContextProxy
+    public ConsumeContextScope(ConsumeContext context)
+        : base(context)
     {
-        readonly ConsumeContext _context;
-        IPayloadCache _payloadCache;
+        _context = context;
+    }
 
-        public ConsumeContextScope(ConsumeContext context)
-            : base(context)
+    public ConsumeContextScope(ConsumeContext context, params object[] payloads)
+        : base(context)
+    {
+        _context = context;
+
+        _payloadCache = new ListPayloadCache(payloads);
+    }
+
+    public override CancellationToken CancellationToken => _context.CancellationToken;
+
+    IPayloadCache PayloadCache
+    {
+        get
         {
-            _context = context;
-        }
-
-        public ConsumeContextScope(ConsumeContext context, params object[] payloads)
-            : base(context)
-        {
-            _context = context;
-
-            _payloadCache = new ListPayloadCache(payloads);
-        }
-
-        public override CancellationToken CancellationToken => _context.CancellationToken;
-
-        IPayloadCache PayloadCache
-        {
-            get
-            {
-                if (_payloadCache != null)
-                    return _payloadCache;
-
-                while (Volatile.Read(ref _payloadCache) == null)
-                    Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
-
+            if (_payloadCache != null)
                 return _payloadCache;
-            }
-        }
 
-        public override bool HasPayloadType(Type payloadType)
-        {
-            return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
-        }
+            while (Volatile.Read(ref _payloadCache) == null)
+                Interlocked.CompareExchange(ref _payloadCache, new ListPayloadCache(), null);
 
-        public override bool TryGetPayload<T>([NotNullWhen(true)] out T payload)
-            where T : class
-        {
-            if (this is T context)
-            {
-                payload = context;
-                return true;
-            }
-
-            return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
-        }
-
-        public override T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
-        {
-            if (this is T context)
-                return context;
-
-            if (PayloadCache.TryGetPayload<T>(out var payload))
-                return payload;
-
-            if (_context.TryGetPayload(out payload))
-                return payload;
-
-            return PayloadCache.GetOrAddPayload(payloadFactory);
-        }
-
-        public override T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
-        {
-            if (this is T context)
-                return context;
-
-            if (PayloadCache.TryGetPayload<T>(out var payload))
-                return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
-
-            if (_context.TryGetPayload(out payload))
-            {
-                T Add()
-                {
-                    return updateFactory(payload);
-                }
-
-                return PayloadCache.AddOrUpdatePayload(Add, updateFactory);
-            }
-
-            return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
+            return _payloadCache;
         }
     }
 
-
-    public class ConsumeContextScope<TMessage> :
-        ConsumeContextScope,
-        ConsumeContext<TMessage>
-        where TMessage : class
+    public override bool HasPayloadType(Type payloadType)
     {
-        readonly ConsumeContext<TMessage> _context;
+        return payloadType.IsInstanceOfType(this) || PayloadCache.HasPayloadType(payloadType) || _context.HasPayloadType(payloadType);
+    }
 
-        public ConsumeContextScope(ConsumeContext<TMessage> context)
-            : base(context)
+    public override bool TryGetPayload<T>([NotNullWhen(true)] out T payload)
+        where T : class
+    {
+        if (this is T context)
         {
-            _context = context;
+            payload = context;
+            return true;
         }
 
-        public ConsumeContextScope(ConsumeContext<TMessage> context, params object[] payloads)
-            : base(context, payloads)
+        return PayloadCache.TryGetPayload(out payload) || _context.TryGetPayload(out payload);
+    }
+
+    public override T GetOrAddPayload<T>(PayloadFactory<T> payloadFactory)
+    {
+        if (this is T context)
+            return context;
+
+        if (PayloadCache.TryGetPayload<T>(out var payload))
+            return payload;
+
+        if (_context.TryGetPayload(out payload))
+            return payload;
+
+        return PayloadCache.GetOrAddPayload(payloadFactory);
+    }
+
+    public override T AddOrUpdatePayload<T>(PayloadFactory<T> addFactory, UpdatePayloadFactory<T> updateFactory)
+    {
+        if (this is T context)
+            return context;
+
+        if (PayloadCache.TryGetPayload<T>(out var payload))
+            return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
+
+        if (_context.TryGetPayload(out payload))
         {
-            _context = context;
+            T Add()
+            {
+                return updateFactory(payload);
+            }
+
+            return PayloadCache.AddOrUpdatePayload(Add, updateFactory);
         }
 
-        public TMessage Message => _context.Message;
+        return PayloadCache.AddOrUpdatePayload(addFactory, updateFactory);
+    }
+}
 
-        public virtual Task NotifyConsumed(TimeSpan duration, string consumerType)
-        {
-            return NotifyConsumed(this, duration, consumerType);
-        }
 
-        public virtual Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
-        {
-            return NotifyFaulted(this, duration, consumerType, exception);
-        }
+public class ConsumeContextScope<TMessage> :
+    ConsumeContextScope,
+    ConsumeContext<TMessage>
+    where TMessage : class
+{
+    readonly ConsumeContext<TMessage> _context;
+
+    public ConsumeContextScope(ConsumeContext<TMessage> context)
+        : base(context)
+    {
+        _context = context;
+    }
+
+    public ConsumeContextScope(ConsumeContext<TMessage> context, params object[] payloads)
+        : base(context, payloads)
+    {
+        _context = context;
+    }
+
+    public TMessage Message => _context.Message;
+
+    public virtual Task NotifyConsumed(TimeSpan duration, string consumerType)
+    {
+        return NotifyConsumed(this, duration, consumerType);
+    }
+
+    public virtual Task NotifyFaulted(TimeSpan duration, string consumerType, Exception exception)
+    {
+        return NotifyFaulted(this, duration, consumerType, exception);
     }
 }

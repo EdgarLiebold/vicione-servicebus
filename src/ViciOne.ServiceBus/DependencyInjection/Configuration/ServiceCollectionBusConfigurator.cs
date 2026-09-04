@@ -1,254 +1,252 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Courier;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ServiceCollectionBusConfigurator :
+    RegistrationConfigurator,
+    IBusRegistrationConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Clients;
-    using Context;
-    using Courier;
-    using DependencyInjection;
-    using DependencyInjection.Registration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Transports;
-
-
-    public class ServiceCollectionBusConfigurator :
-        RegistrationConfigurator,
-        IBusRegistrationConfigurator
+    public ServiceCollectionBusConfigurator(IServiceCollection collection)
+        : this(collection, new DependencyInjectionContainerRegistrar(collection))
     {
-        public ServiceCollectionBusConfigurator(IServiceCollection collection)
-            : this(collection, new DependencyInjectionContainerRegistrar(collection))
+        IBusRegistrationContext CreateRegistrationContext(IServiceProvider provider)
         {
-            IBusRegistrationContext CreateRegistrationContext(IServiceProvider provider)
-            {
-                var setter = provider.GetRequiredService<Bind<IBus, ISetScopedConsumeContext>>();
-                return new BusRegistrationContext(provider, Registrar, setter.Value, typeof(IBus));
-            }
-
-            static Bind<IBus, IScopedConsumeContextProvider> CreateScopeProvider(IServiceProvider provider)
-            {
-                var global = provider.GetRequiredService<IScopedConsumeContextProvider>();
-                return Bind<IBus>.Create((IScopedConsumeContextProvider)new TypedScopedConsumeContextProvider(global));
-            }
-
-            collection.AddScoped(CreateScopeProvider);
-            collection.AddSingleton(_ =>
-                Bind<IBus>.Create((ISetScopedConsumeContext)new SetScopedConsumeContext<IBus>(provider =>
-                    provider.GetRequiredService<Bind<IBus, IScopedConsumeContextProvider>>().Value)));
-
-            collection.AddSingleton(provider => Bind<IBus>.Create(CreateRegistrationContext(provider)));
-            collection.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value);
-
-            collection.TryAdd(ServiceDescriptor.Singleton(typeof(IReceiveEndpointDispatcher<>), typeof(ReceiveEndpointDispatcher<>)));
-            collection.TryAddSingleton<IReceiveEndpointDispatcherFactory>(provider =>
-            {
-                var context = provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value;
-                var busInstance = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value;
-
-                return new ReceiveEndpointDispatcherFactory(context, busInstance);
-            });
-
-            collection.TryAddSingleton(provider => Bind<IBus>.Create(CreateClientFactory(provider.GetRequiredService<IBus>(), DefaultRequestTimeout)));
-            collection.TryAddSingleton(provider => provider.GetRequiredService<Bind<IBus, IClientFactory>>().Value);
-
-            collection.TryAddScoped<IScopedBusContextProvider<IBus>, ScopedBusContextProvider<IBus>>();
-            collection.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider));
-            collection.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint));
-
-            collection.TryAddScoped<IRoutingSlipExecutor>(provider => new RoutingSlipExecutor(
-                provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider,
-                provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint,
-                provider.GetService<TimeProvider>() ?? TimeProvider.System));
+            var setter = provider.GetRequiredService<Bind<IBus, ISetScopedConsumeContext>>();
+            return new BusRegistrationContext(provider, Registrar, setter.Value, typeof(IBus));
         }
 
-        protected ServiceCollectionBusConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
-            : base(collection, registrar)
+        static Bind<IBus, IScopedConsumeContextProvider> CreateScopeProvider(IServiceProvider provider)
         {
-            AddViciOneServiceBusComponents(collection);
+            var global = provider.GetRequiredService<IScopedConsumeContextProvider>();
+            return Bind<IBus>.Create((IScopedConsumeContextProvider)new TypedScopedConsumeContextProvider(global));
         }
 
-        protected Func<IBus, RequestTimeout, IClientFactory> CreateClientFactory { get; private set; } = DefaultClientFactory;
+        collection.AddScoped(CreateScopeProvider);
+        collection.AddSingleton(_ =>
+            Bind<IBus>.Create((ISetScopedConsumeContext)new SetScopedConsumeContext<IBus>(provider =>
+                provider.GetRequiredService<Bind<IBus, IScopedConsumeContextProvider>>().Value)));
 
-        public virtual void SetBusFactory<T>(T busFactory)
-            where T : class, IRegistrationBusFactory
+        collection.AddSingleton(provider => Bind<IBus>.Create(CreateRegistrationContext(provider)));
+        collection.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value);
+
+        collection.TryAdd(ServiceDescriptor.Singleton(typeof(IReceiveEndpointDispatcher<>), typeof(ReceiveEndpointDispatcher<>)));
+        collection.TryAddSingleton<IReceiveEndpointDispatcherFactory>(provider =>
         {
-            if (busFactory == null)
-                throw new ArgumentNullException(nameof(busFactory));
+            var context = provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value;
+            var busInstance = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value;
 
-            ThrowIfAlreadyConfigured(nameof(SetBusFactory));
+            return new ReceiveEndpointDispatcherFactory(context, busInstance);
+        });
 
-            this.AddSingleton(provider => Bind<IBus>.Create(CreateBus(busFactory, provider)));
+        collection.TryAddSingleton(provider => Bind<IBus>.Create(CreateClientFactory(provider.GetRequiredService<IBus>(), DefaultRequestTimeout)));
+        collection.TryAddSingleton(provider => provider.GetRequiredService<Bind<IBus, IClientFactory>>().Value);
 
-            this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
-            this.AddSingleton<IReceiveEndpointConnector>(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
-            this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.BusControl);
-            this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.Bus);
+        collection.TryAddScoped<IScopedBusContextProvider<IBus>, ScopedBusContextProvider<IBus>>();
+        collection.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider));
+        collection.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint));
 
-            Registrar.RegisterScopedClientFactory();
-        }
-
-        public virtual void AddRider(Action<IRiderRegistrationConfigurator> configure)
-        {
-            var configurator = new ServiceCollectionRiderConfigurator(this, new DependencyInjectionRiderContainerRegistrar<IBus>(this));
-            configure?.Invoke(configurator);
-        }
-
-        public virtual void AddConfigureEndpointsCallback(ConfigureEndpointsCallback callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
-
-            this.AddSingleton(_ => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
-        }
-
-        public virtual void AddConfigureEndpointsCallback(ConfigureEndpointsProviderCallback callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
-
-            this.AddSingleton(provider => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
-                provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value, callback)));
-        }
-
-        public virtual void SetRequestClientFactory(Func<IBus, RequestTimeout, IClientFactory> clientFactory)
-        {
-            if (clientFactory == null)
-                throw new ArgumentNullException(nameof(clientFactory));
-
-            CreateClientFactory = clientFactory;
-        }
-
-        static IBusInstance CreateBus<T>(T busFactory, IServiceProvider provider)
-            where T : IRegistrationBusFactory
-        {
-            IEnumerable<IBusInstanceSpecification> specifications = provider.GetServices<Bind<IBus, IBusInstanceSpecification>>().Select(x => x.Value);
-
-            var busInstance = busFactory.CreateBus(provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value, specifications, string.Empty);
-
-            return busInstance;
-        }
-
-        static void AddViciOneServiceBusComponents(IServiceCollection collection)
-        {
-            collection.TryAddSingleton<IBusDepot, BusDepot>();
-
-            collection.TryAddScoped<ScopedConsumeContextProvider>();
-            collection.TryAddScoped<IScopedConsumeContextProvider>(provider => provider.GetRequiredService<ScopedConsumeContextProvider>());
-
-            collection.TryAddScoped(provider => provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider);
-            collection.TryAddScoped(provider => provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint);
-
-            collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? MissingConsumeContext.Instance);
-
-            collection.TryAddScoped(typeof(IRequestClient<>), typeof(GenericRequestClient<>));
-        }
-
-        /// <summary>
-        /// This is the default client factory, which can be overridden by configuration
-        /// </summary>
-        /// <param name="bus"></param>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
-        static IClientFactory DefaultClientFactory(IBus bus, RequestTimeout timeout = default)
-        {
-            return new ClientFactory(new BusClientFactoryContext(bus, timeout));
-        }
+        collection.TryAddScoped<IRoutingSlipExecutor>(provider => new RoutingSlipExecutor(
+            provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider,
+            provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint,
+            provider.GetService<TimeProvider>() ?? TimeProvider.System));
     }
 
-
-    public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
-        ServiceCollectionBusConfigurator,
-        IBusRegistrationConfigurator<TBus>
-        where TBus : class, IBus
-        where TBusInstance : BusInstance<TBus>, TBus
+    protected ServiceCollectionBusConfigurator(IServiceCollection collection, IContainerRegistrar registrar)
+        : base(collection, registrar)
     {
-        public ServiceCollectionBusConfigurator(IServiceCollection collection)
-            : base(collection, new DependencyInjectionContainerRegistrar<TBus>(collection))
+        AddViciOneServiceBusComponents(collection);
+    }
+
+    protected Func<IBus, RequestTimeout, IClientFactory> CreateClientFactory { get; private set; } = DefaultClientFactory;
+
+    public virtual void SetBusFactory<T>(T busFactory)
+        where T : class, IRegistrationBusFactory
+    {
+        if (busFactory == null)
+            throw new ArgumentNullException(nameof(busFactory));
+
+        ThrowIfAlreadyConfigured(nameof(SetBusFactory));
+
+        this.AddSingleton(provider => Bind<IBus>.Create(CreateBus(busFactory, provider)));
+
+        this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
+        this.AddSingleton<IReceiveEndpointConnector>(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value);
+        this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.BusControl);
+        this.AddSingleton(provider => provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value.Bus);
+
+        Registrar.RegisterScopedClientFactory();
+    }
+
+    public virtual void AddRider(Action<IRiderRegistrationConfigurator> configure)
+    {
+        var configurator = new ServiceCollectionRiderConfigurator(this, new DependencyInjectionRiderContainerRegistrar<IBus>(this));
+        configure?.Invoke(configurator);
+    }
+
+    public virtual void AddConfigureEndpointsCallback(ConfigureEndpointsCallback callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        this.AddSingleton(_ => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
+    }
+
+    public virtual void AddConfigureEndpointsCallback(ConfigureEndpointsProviderCallback callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        this.AddSingleton(provider => Bind<IBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
+            provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value, callback)));
+    }
+
+    public virtual void SetRequestClientFactory(Func<IBus, RequestTimeout, IClientFactory> clientFactory)
+    {
+        if (clientFactory == null)
+            throw new ArgumentNullException(nameof(clientFactory));
+
+        CreateClientFactory = clientFactory;
+    }
+
+    static IBusInstance CreateBus<T>(T busFactory, IServiceProvider provider)
+        where T : IRegistrationBusFactory
+    {
+        IEnumerable<IBusInstanceSpecification> specifications = provider.GetServices<Bind<IBus, IBusInstanceSpecification>>().Select(x => x.Value);
+
+        var busInstance = busFactory.CreateBus(provider.GetRequiredService<Bind<IBus, IBusRegistrationContext>>().Value, specifications, string.Empty);
+
+        return busInstance;
+    }
+
+    static void AddViciOneServiceBusComponents(IServiceCollection collection)
+    {
+        collection.TryAddSingleton<IBusDepot, BusDepot>();
+
+        collection.TryAddScoped<ScopedConsumeContextProvider>();
+        collection.TryAddScoped<IScopedConsumeContextProvider>(provider => provider.GetRequiredService<ScopedConsumeContextProvider>());
+
+        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider);
+        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint);
+
+        collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? MissingConsumeContext.Instance);
+
+        collection.TryAddScoped(typeof(IRequestClient<>), typeof(GenericRequestClient<>));
+    }
+
+    /// <summary>
+    /// This is the default client factory, which can be overridden by configuration
+    /// </summary>
+    /// <param name="bus"></param>
+    /// <param name="timeout"></param>
+    /// <returns></returns>
+    static IClientFactory DefaultClientFactory(IBus bus, RequestTimeout timeout = default)
+    {
+        return new ClientFactory(new BusClientFactoryContext(bus, timeout));
+    }
+}
+
+
+public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
+    ServiceCollectionBusConfigurator,
+    IBusRegistrationConfigurator<TBus>
+    where TBus : class, IBus
+    where TBusInstance : BusInstance<TBus>, TBus
+{
+    public ServiceCollectionBusConfigurator(IServiceCollection collection)
+        : base(collection, new DependencyInjectionContainerRegistrar<TBus>(collection))
+    {
+        IBusRegistrationContext CreateRegistrationContext(IServiceProvider provider)
         {
-            IBusRegistrationContext CreateRegistrationContext(IServiceProvider provider)
-            {
-                var setter = provider.GetRequiredService<Bind<TBus, ISetScopedConsumeContext>>();
-                return new BusRegistrationContext(provider, Registrar, setter.Value, typeof(TBus));
-            }
-
-            static Bind<TBus, IScopedConsumeContextProvider> CreateScopeProvider(IServiceProvider provider)
-            {
-                var global = provider.GetRequiredService<IScopedConsumeContextProvider>();
-                return Bind<TBus>.Create((IScopedConsumeContextProvider)new TypedScopedConsumeContextProvider(global));
-            }
-
-            collection.TryAddScoped(CreateScopeProvider);
-
-            collection.AddSingleton(_ =>
-                Bind<TBus>.Create((ISetScopedConsumeContext)new SetScopedConsumeContext<TBus>(provider =>
-                    provider.GetRequiredService<Bind<TBus, IScopedConsumeContextProvider>>().Value)));
-            collection.TryAddSingleton(provider => Bind<TBus>.Create(CreateClientFactory(provider.GetRequiredService<TBus>(), DefaultRequestTimeout)));
-
-            collection.TryAddScoped<IScopedBusContextProvider<TBus>, ScopedBusContextProvider<TBus>>();
-            collection.TryAddScoped(provider => Bind<TBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider));
-            collection.TryAddScoped(provider => Bind<TBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint));
-
-            collection.TryAddScoped(provider => Bind<TBus>.Create<IRoutingSlipExecutor>(new RoutingSlipExecutor(
-                provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider,
-                provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint,
-                provider.GetService<TimeProvider>() ?? TimeProvider.System)));
-
-            collection.AddSingleton(provider => Bind<TBus>.Create(CreateRegistrationContext(provider)));
+            var setter = provider.GetRequiredService<Bind<TBus, ISetScopedConsumeContext>>();
+            return new BusRegistrationContext(provider, Registrar, setter.Value, typeof(TBus));
         }
 
-        public override void SetBusFactory<T>(T busFactory)
+        static Bind<TBus, IScopedConsumeContextProvider> CreateScopeProvider(IServiceProvider provider)
         {
-            if (busFactory == null)
-                throw new ArgumentNullException(nameof(busFactory));
-
-            ThrowIfAlreadyConfigured(nameof(SetBusFactory));
-
-            this.AddSingleton(provider => CreateBus(busFactory, provider));
-
-            this.AddSingleton<IBusInstance>(provider => provider.GetRequiredService<IBusInstance<TBus>>());
-            this.AddSingleton(provider => Bind<TBus>.Create<IReceiveEndpointConnector>(provider.GetRequiredService<IBusInstance<TBus>>()));
-            this.AddSingleton(provider => provider.GetRequiredService<IBusInstance<TBus>>().Bus);
-
-            Registrar.RegisterScopedClientFactory();
+            var global = provider.GetRequiredService<IScopedConsumeContextProvider>();
+            return Bind<TBus>.Create((IScopedConsumeContextProvider)new TypedScopedConsumeContextProvider(global));
         }
 
-        public override void AddRider(Action<IRiderRegistrationConfigurator> configure)
-        {
-            AddRider(configurator => configure.Invoke(configurator));
-        }
+        collection.TryAddScoped(CreateScopeProvider);
 
-        public void AddRider(Action<IRiderRegistrationConfigurator<TBus>> configure)
-        {
-            var configurator = new ServiceCollectionRiderConfigurator<TBus>(this, new DependencyInjectionRiderContainerRegistrar<TBus>(this));
-            configure?.Invoke(configurator);
-        }
+        collection.AddSingleton(_ =>
+            Bind<TBus>.Create((ISetScopedConsumeContext)new SetScopedConsumeContext<TBus>(provider =>
+                provider.GetRequiredService<Bind<TBus, IScopedConsumeContextProvider>>().Value)));
+        collection.TryAddSingleton(provider => Bind<TBus>.Create(CreateClientFactory(provider.GetRequiredService<TBus>(), DefaultRequestTimeout)));
 
-        public override void AddConfigureEndpointsCallback(ConfigureEndpointsCallback callback)
-        {
-            this.AddSingleton(_ => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
-        }
+        collection.TryAddScoped<IScopedBusContextProvider<TBus>, ScopedBusContextProvider<TBus>>();
+        collection.TryAddScoped(provider => Bind<TBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider));
+        collection.TryAddScoped(provider => Bind<TBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint));
 
-        public override void AddConfigureEndpointsCallback(ConfigureEndpointsProviderCallback callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException(nameof(callback));
+        collection.TryAddScoped(provider => Bind<TBus>.Create<IRoutingSlipExecutor>(new RoutingSlipExecutor(
+            provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider,
+            provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint,
+            provider.GetService<TimeProvider>() ?? TimeProvider.System)));
 
-            this.AddSingleton(provider => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
-                provider.GetRequiredService<Bind<TBus, IBusRegistrationContext>>().Value,
-                callback)));
-        }
+        collection.AddSingleton(provider => Bind<TBus>.Create(CreateRegistrationContext(provider)));
+    }
 
-        static IBusInstance<TBus> CreateBus<T>(T busFactory, IServiceProvider provider)
-            where T : IRegistrationBusFactory
-        {
-            IEnumerable<IBusInstanceSpecification> specifications = provider.GetServices<Bind<TBus, IBusInstanceSpecification>>().Select(x => x.Value);
+    public override void SetBusFactory<T>(T busFactory)
+    {
+        if (busFactory == null)
+            throw new ArgumentNullException(nameof(busFactory));
 
-            var instance = busFactory.CreateBus(provider.GetRequiredService<Bind<TBus, IBusRegistrationContext>>().Value, specifications, typeof(TBus).Name);
+        ThrowIfAlreadyConfigured(nameof(SetBusFactory));
 
-            var busInstance = provider.GetService<TBusInstance>() ?? ActivatorUtilities.CreateInstance<TBusInstance>(provider, instance.BusControl);
+        this.AddSingleton(provider => CreateBus(busFactory, provider));
 
-            return new MultiBusInstance<TBus>(busInstance, instance);
-        }
+        this.AddSingleton<IBusInstance>(provider => provider.GetRequiredService<IBusInstance<TBus>>());
+        this.AddSingleton(provider => Bind<TBus>.Create<IReceiveEndpointConnector>(provider.GetRequiredService<IBusInstance<TBus>>()));
+        this.AddSingleton(provider => provider.GetRequiredService<IBusInstance<TBus>>().Bus);
+
+        Registrar.RegisterScopedClientFactory();
+    }
+
+    public override void AddRider(Action<IRiderRegistrationConfigurator> configure)
+    {
+        AddRider(configurator => configure.Invoke(configurator));
+    }
+
+    public void AddRider(Action<IRiderRegistrationConfigurator<TBus>> configure)
+    {
+        var configurator = new ServiceCollectionRiderConfigurator<TBus>(this, new DependencyInjectionRiderContainerRegistrar<TBus>(this));
+        configure?.Invoke(configurator);
+    }
+
+    public override void AddConfigureEndpointsCallback(ConfigureEndpointsCallback callback)
+    {
+        this.AddSingleton(_ => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegate(callback)));
+    }
+
+    public override void AddConfigureEndpointsCallback(ConfigureEndpointsProviderCallback callback)
+    {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        this.AddSingleton(provider => Bind<TBus>.Create<IConfigureReceiveEndpoint>(new ConfigureReceiveEndpointDelegateProvider(
+            provider.GetRequiredService<Bind<TBus, IBusRegistrationContext>>().Value,
+            callback)));
+    }
+
+    static IBusInstance<TBus> CreateBus<T>(T busFactory, IServiceProvider provider)
+        where T : IRegistrationBusFactory
+    {
+        IEnumerable<IBusInstanceSpecification> specifications = provider.GetServices<Bind<TBus, IBusInstanceSpecification>>().Select(x => x.Value);
+
+        var instance = busFactory.CreateBus(provider.GetRequiredService<Bind<TBus, IBusRegistrationContext>>().Value, specifications, typeof(TBus).Name);
+
+        var busInstance = provider.GetService<TBusInstance>() ?? ActivatorUtilities.CreateInstance<TBusInstance>(provider, instance.BusControl);
+
+        return new MultiBusInstance<TBus>(busInstance, instance);
     }
 }

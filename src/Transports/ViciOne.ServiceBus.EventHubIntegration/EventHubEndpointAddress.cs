@@ -1,35 +1,34 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Diagnostics;
+
+namespace ViciOne.ServiceBus;
+
+[DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
+public readonly struct EventHubEndpointAddress
 {
-    using System;
-    using System.Diagnostics;
+    public const string PathPrefix = "event-hub";
 
+    public readonly string EventHubName;
 
-    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public readonly struct EventHubEndpointAddress
+    public readonly string Host;
+    public readonly string Scheme;
+    public readonly int? Port;
+
+    public EventHubEndpointAddress(Uri hostAddress, Uri address)
     {
-        public const string PathPrefix = "event-hub";
+        Host = default;
+        EventHubName = default;
+        Scheme = default;
+        Port = default;
 
-        public readonly string EventHubName;
-
-        public readonly string Host;
-        public readonly string Scheme;
-        public readonly int? Port;
-
-        public EventHubEndpointAddress(Uri hostAddress, Uri address)
+        var scheme = address.Scheme.ToLowerInvariant();
+        switch (scheme)
         {
-            Host = default;
-            EventHubName = default;
-            Scheme = default;
-            Port = default;
-
-            var scheme = address.Scheme.ToLowerInvariant();
-            switch (scheme)
-            {
-                case "topic":
-                    ParseLeft(hostAddress, out Scheme, out Host, out Port);
-                    EventHubName = address.AbsolutePath;
-                    break;
-                default:
+            case "topic":
+                ParseLeft(hostAddress, out Scheme, out Host, out Port);
+                EventHubName = address.AbsolutePath;
+                break;
+            default:
                 {
                     if (string.Equals(address.Scheme, hostAddress.Scheme, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -41,36 +40,35 @@ namespace ViciOne.ServiceBus
 
                     break;
                 }
-            }
         }
-
-        public EventHubEndpointAddress(Uri hostAddress, string eventHubName)
-        {
-            ParseLeft(hostAddress, out Scheme, out Host, out Port);
-
-            EventHubName = eventHubName;
-        }
-
-        static void ParseLeft(Uri address, out string scheme, out string host, out int? port)
-        {
-            scheme = address.Scheme;
-            host = address.Host;
-            port = address.Port;
-        }
-
-        public static implicit operator Uri(in EventHubEndpointAddress address)
-        {
-            var builder = new UriBuilder
-            {
-                Scheme = address.Scheme,
-                Host = address.Host,
-                Port = address.Port ?? 0,
-                Path = $"{PathPrefix}/{address.EventHubName}"
-            };
-
-            return builder.Uri;
-        }
-
-        Uri DebuggerDisplay => this;
     }
+
+    public EventHubEndpointAddress(Uri hostAddress, string eventHubName)
+    {
+        ParseLeft(hostAddress, out Scheme, out Host, out Port);
+
+        EventHubName = eventHubName;
+    }
+
+    static void ParseLeft(Uri address, out string scheme, out string host, out int? port)
+    {
+        scheme = address.Scheme;
+        host = address.Host;
+        port = address.Port;
+    }
+
+    public static implicit operator Uri(in EventHubEndpointAddress address)
+    {
+        var builder = new UriBuilder
+        {
+            Scheme = address.Scheme,
+            Host = address.Host,
+            Port = address.Port ?? 0,
+            Path = $"{PathPrefix}/{address.EventHubName}"
+        };
+
+        return builder.Uri;
+    }
+
+    Uri DebuggerDisplay => this;
 }

@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
-{
-    public interface IInactivityObservationSource
-    {
-        /// <summary>
-        /// True if the inactivity source is currently inactive
-        /// </summary>
-        bool IsInactive { get; }
+namespace ViciOne.ServiceBus.Testing.Implementations;
 
-        ConnectHandle ConnectInactivityObserver(IInactivityObserver observer);
-    }
+public interface IInactivityObservationSource
+{
+    /// <summary>
+    /// True if the inactivity source is currently inactive
+    /// </summary>
+    bool IsInactive { get; }
+
+    ConnectHandle ConnectInactivityObserver(IInactivityObserver observer);
 }

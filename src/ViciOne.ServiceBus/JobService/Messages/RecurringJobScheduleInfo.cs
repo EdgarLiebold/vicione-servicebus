@@ -1,11 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService.Messages;
-
 using System;
 using System.Collections.Generic;
-using Contracts.JobService;
-using Scheduling;
+using ViciOne.ServiceBus.Contracts.JobService;
+using ViciOne.ServiceBus.JobService.Scheduling;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService.Messages;
 
 public class RecurringJobScheduleInfo :
     RecurringJobSchedule,

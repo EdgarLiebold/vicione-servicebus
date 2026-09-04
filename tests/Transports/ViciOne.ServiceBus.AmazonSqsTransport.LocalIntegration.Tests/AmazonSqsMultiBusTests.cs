@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
 using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +6,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 public sealed class AmazonSqsMultiBusTests
 {
@@ -51,10 +51,10 @@ public sealed class AmazonSqsMultiBusTests
                 });
             }));
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
-            {
-                ValidateOnBuild = true,
-                ValidateScopes = true,
-            });
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
         IBus firstBus = provider.GetRequiredService<IBus>();
         ISecondBus secondBus = provider.GetRequiredService<ISecondBus>();
         IHostedService[] hostedServices =

@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ContextFilterPipeSpecification<TContext> :
+    IPipeSpecification<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Middleware;
+    readonly Func<TContext, Task<bool>> _filter;
 
-
-    public class ContextFilterPipeSpecification<TContext> :
-        IPipeSpecification<TContext>
-        where TContext : class, PipeContext
+    public ContextFilterPipeSpecification(Func<TContext, Task<bool>> filter)
     {
-        readonly Func<TContext, Task<bool>> _filter;
+        _filter = filter;
+    }
 
-        public ContextFilterPipeSpecification(Func<TContext, Task<bool>> filter)
-        {
-            _filter = filter;
-        }
+    public void Apply(IPipeBuilder<TContext> builder)
+    {
+        builder.AddFilter(new ContextFilter<TContext>(_filter));
+    }
 
-        public void Apply(IPipeBuilder<TContext> builder)
-        {
-            builder.AddFilter(new ContextFilter<TContext>(_filter));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_filter == null)
-                yield return this.Failure("Filter", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_filter == null)
+            yield return this.Failure("Filter", "must not be null");
     }
 }

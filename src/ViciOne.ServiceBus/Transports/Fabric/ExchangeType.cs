@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public enum ExchangeType
 {
-    public enum ExchangeType
-    {
-        FanOut = 0,
-        Direct = 1,
-        Topic = 2,
-    }
+    FanOut = 0,
+    Direct = 1,
+    Topic = 2,
 }

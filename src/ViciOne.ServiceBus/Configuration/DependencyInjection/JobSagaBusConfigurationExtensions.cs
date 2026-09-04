@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.Contracts.JobService;
+
 namespace ViciOne.ServiceBus;
-
-using Contracts.JobService;
-
 
 public static class JobSagaBusConfigurationExtensions
 {

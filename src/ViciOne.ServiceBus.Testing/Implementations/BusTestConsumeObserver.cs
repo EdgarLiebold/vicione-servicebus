@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class BusTestConsumeObserver :
+    InactivityTestObserver,
+    IConsumeObserver
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly ReceivedMessageList _messages;
+    int _activeCount;
 
-
-    public class BusTestConsumeObserver :
-        InactivityTestObserver,
-        IConsumeObserver
+    public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted)
+        : this(timeout, testCompleted, TimeProvider.System)
     {
-        readonly ReceivedMessageList _messages;
-        int _activeCount;
+    }
 
-        public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted)
-            : this(timeout, testCompleted, TimeProvider.System)
-        {
-        }
+    public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
+        : base(timeProvider)
+    {
+        _messages = new ReceivedMessageList(timeout, testCompleted, timeProvider);
+    }
 
-        public BusTestConsumeObserver(TimeSpan timeout, CancellationToken testCompleted, TimeProvider timeProvider)
-            : base(timeProvider)
-        {
-            _messages = new ReceivedMessageList(timeout, testCompleted, timeProvider);
-        }
+    public IReceivedMessageList Messages => _messages;
 
-        public IReceivedMessageList Messages => _messages;
+    public override bool IsInactive => _activeCount == 0;
 
-        public override bool IsInactive => _activeCount == 0;
+    public Task PreConsume<T>(ConsumeContext<T> context)
+        where T : class
+    {
+        Interlocked.Increment(ref _activeCount);
 
-        public Task PreConsume<T>(ConsumeContext<T> context)
-            where T : class
-        {
-            Interlocked.Increment(ref _activeCount);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public Task PostConsume<T>(ConsumeContext<T> context)
+        where T : class
+    {
+        _messages.Add(context);
 
-        public Task PostConsume<T>(ConsumeContext<T> context)
-            where T : class
-        {
-            _messages.Add(context);
+        return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactive() : Task.CompletedTask;
+    }
 
-            return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactive() : Task.CompletedTask;
-        }
+    public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+        where T : class
+    {
+        _messages.Add(context, exception);
 
-        public Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
-            where T : class
-        {
-            _messages.Add(context, exception);
-
-            return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactive() : Task.CompletedTask;
-        }
+        return Interlocked.Decrement(ref _activeCount) == 0 ? NotifyInactive() : Task.CompletedTask;
     }
 }

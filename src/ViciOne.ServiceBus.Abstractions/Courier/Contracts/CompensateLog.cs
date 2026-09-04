@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.Courier.Contracts
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Courier.Contracts;
+
+public interface CompensateLog
 {
-    using System;
-    using System.Collections.Generic;
+    /// <summary>
+    /// The tracking number for completion of the activity
+    /// </summary>
+    Guid ExecutionId { get; }
 
+    /// <summary>
+    /// The compensation address where the routing slip should be sent for compensation
+    /// </summary>
+    Uri Address { get; }
 
-    public interface CompensateLog
-    {
-        /// <summary>
-        /// The tracking number for completion of the activity
-        /// </summary>
-        Guid ExecutionId { get; }
-
-        /// <summary>
-        /// The compensation address where the routing slip should be sent for compensation
-        /// </summary>
-        Uri Address { get; }
-
-        /// <summary>
-        /// The results of the activity saved for compensation
-        /// </summary>
-        IDictionary<string, object> Data { get; }
-    }
+    /// <summary>
+    /// The results of the activity saved for compensation
+    /// </summary>
+    IDictionary<string, object> Data { get; }
 }

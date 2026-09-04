@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Topology
+using System;
+
+namespace ViciOne.ServiceBus.Topology;
+
+public class NullableDelegateMessageCorrelationId<T> :
+    IMessageCorrelationId<T>
+    where T : class
 {
-    using System;
+    readonly Func<T, Guid?> _getCorrelationId;
 
-
-    public class NullableDelegateMessageCorrelationId<T> :
-        IMessageCorrelationId<T>
-        where T : class
+    public NullableDelegateMessageCorrelationId(Func<T, Guid?> getCorrelationId)
     {
-        readonly Func<T, Guid?> _getCorrelationId;
+        _getCorrelationId = getCorrelationId;
+    }
 
-        public NullableDelegateMessageCorrelationId(Func<T, Guid?> getCorrelationId)
+    public bool TryGetCorrelationId(T message, out Guid correlationId)
+    {
+        Guid? id = _getCorrelationId(message);
+        if (id.HasValue && id.Value != Guid.Empty)
         {
-            _getCorrelationId = getCorrelationId;
+            correlationId = id.Value;
+            return true;
         }
 
-        public bool TryGetCorrelationId(T message, out Guid correlationId)
-        {
-            Guid? id = _getCorrelationId(message);
-            if (id.HasValue && id.Value != Guid.Empty)
-            {
-                correlationId = id.Value;
-                return true;
-            }
-
-            correlationId = Guid.Empty;
-            return false;
-        }
+        correlationId = Guid.Empty;
+        return false;
     }
 }

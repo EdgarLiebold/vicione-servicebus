@@ -1,19 +1,17 @@
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Transports.Fabric;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IInMemoryConsumeTopologyConfigurator :
+    IConsumeTopologyConfigurator,
+    IInMemoryConsumeTopology
 {
-    using InMemoryTransport.Configuration;
-    using Transports.Fabric;
+    new IInMemoryMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
+        where T : class;
 
+    void AddSpecification(IInMemoryConsumeTopologySpecification specification);
 
-    public interface IInMemoryConsumeTopologyConfigurator :
-        IConsumeTopologyConfigurator,
-        IInMemoryConsumeTopology
-    {
-        new IInMemoryMessageConsumeTopologyConfigurator<T> GetMessageTopology<T>()
-            where T : class;
-
-        void AddSpecification(IInMemoryConsumeTopologySpecification specification);
-
-        void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default);
-    }
+    void Bind(string exchangeName, ExchangeType exchangeType = ExchangeType.FanOut, string? routingKey = default);
 }

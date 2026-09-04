@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public class InMemorySendTransportProvider :
+    ISendTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly ReceiveEndpointContext _context;
+    readonly IInMemoryTransportProvider _transportProvider;
 
-
-    public class InMemorySendTransportProvider :
-        ISendTransportProvider
+    public InMemorySendTransportProvider(IInMemoryTransportProvider transportProvider, ReceiveEndpointContext context)
     {
-        readonly ReceiveEndpointContext _context;
-        readonly IInMemoryTransportProvider _transportProvider;
+        _transportProvider = transportProvider;
+        _context = context;
+    }
 
-        public InMemorySendTransportProvider(IInMemoryTransportProvider transportProvider, ReceiveEndpointContext context)
-        {
-            _transportProvider = transportProvider;
-            _context = context;
-        }
+    public Uri NormalizeAddress(Uri address)
+    {
+        return _transportProvider.NormalizeAddress(address);
+    }
 
-        public Uri NormalizeAddress(Uri address)
-        {
-            return _transportProvider.NormalizeAddress(address);
-        }
-
-        public Task<ISendTransport> GetSendTransport(Uri address)
-        {
-            return _transportProvider.CreateSendTransport(_context, address);
-        }
+    public Task<ISendTransport> GetSendTransport(Uri address)
+    {
+        return _transportProvider.CreateSendTransport(_context, address);
     }
 }

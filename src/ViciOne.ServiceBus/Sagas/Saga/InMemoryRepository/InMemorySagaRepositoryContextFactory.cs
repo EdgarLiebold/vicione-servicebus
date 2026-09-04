@@ -1,79 +1,77 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Saga;
+
+/// <summary>
+/// Supports the InMemorySagaRepository
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+public class InMemorySagaRepositoryContextFactory<TSaga> :
+    ISagaRepositoryContextFactory<TSaga>,
+    IQuerySagaRepositoryContextFactory<TSaga>,
+    ILoadSagaRepositoryContextFactory<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> _factory;
+    readonly IndexedSagaDictionary<TSaga> _sagas;
 
-
-    /// <summary>
-    /// Supports the InMemorySagaRepository
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    public class InMemorySagaRepositoryContextFactory<TSaga> :
-        ISagaRepositoryContextFactory<TSaga>,
-        IQuerySagaRepositoryContextFactory<TSaga>,
-        ILoadSagaRepositoryContextFactory<TSaga>
-        where TSaga : class, ISaga
+    public InMemorySagaRepositoryContextFactory(IndexedSagaDictionary<TSaga> sagas, ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> factory)
     {
-        readonly ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> _factory;
-        readonly IndexedSagaDictionary<TSaga> _sagas;
+        _sagas = sagas;
+        _factory = factory;
+    }
 
-        public InMemorySagaRepositoryContextFactory(IndexedSagaDictionary<TSaga> sagas, ISagaConsumeContextFactory<IndexedSagaDictionary<TSaga>, TSaga> factory)
-        {
-            _sagas = sagas;
-            _factory = factory;
-        }
+    public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return ExecuteAsyncMethod(asyncMethod, cancellationToken);
+    }
 
-        public Task<T> Execute<T>(Func<LoadSagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return ExecuteAsyncMethod(asyncMethod, cancellationToken);
-        }
+    public Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+        where T : class
+    {
+        return ExecuteAsyncMethod(asyncMethod, cancellationToken);
+    }
 
-        public Task<T> Execute<T>(Func<QuerySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
-            where T : class
-        {
-            return ExecuteAsyncMethod(asyncMethod, cancellationToken);
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.Add("count", _sagas.Count);
+        context.Add("persistence", "memory");
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.Add("count", _sagas.Count);
-            context.Add("persistence", "memory");
-        }
+    public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
+        where T : class
+    {
+        await _sagas.MarkInUse(context.CancellationToken).ConfigureAwait(false);
 
-        public async Task Send<T>(ConsumeContext<T> context, IPipe<SagaRepositoryContext<TSaga, T>> next)
-            where T : class
-        {
-            await _sagas.MarkInUse(context.CancellationToken).ConfigureAwait(false);
+        using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
 
-            using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
+        await next.Send(repositoryContext).ConfigureAwait(false);
+    }
 
-            await next.Send(repositoryContext).ConfigureAwait(false);
-        }
+    public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
+        where T : class
+    {
+        await _sagas.MarkInUse(context.CancellationToken).ConfigureAwait(false);
 
-        public async Task SendQuery<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
-            where T : class
-        {
-            await _sagas.MarkInUse(context.CancellationToken).ConfigureAwait(false);
+        using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
 
-            using var repositoryContext = new InMemorySagaRepositoryContext<TSaga, T>(_sagas, _factory, context);
+        List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();
 
-            List<Guid> matchingInstances = _sagas.Where(query).Select(x => x.Instance.CorrelationId).ToList();
+        var queryContext = new DefaultSagaRepositoryQueryContext<TSaga, T>(repositoryContext, matchingInstances);
 
-            var queryContext = new DefaultSagaRepositoryQueryContext<TSaga, T>(repositoryContext, matchingInstances);
+        await next.Send(queryContext).ConfigureAwait(false);
+    }
 
-            await next.Send(queryContext).ConfigureAwait(false);
-        }
+    Task<T> ExecuteAsyncMethod<T>(Func<InMemorySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
+        where T : class
+    {
+        var repositoryContext = new InMemorySagaRepositoryContext<TSaga>(_sagas, cancellationToken);
 
-        Task<T> ExecuteAsyncMethod<T>(Func<InMemorySagaRepositoryContext<TSaga>, Task<T>> asyncMethod, CancellationToken cancellationToken)
-            where T : class
-        {
-            var repositoryContext = new InMemorySagaRepositoryContext<TSaga>(_sagas, cancellationToken);
-
-            return asyncMethod(repositoryContext);
-        }
+        return asyncMethod(repositoryContext);
     }
 }

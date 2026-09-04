@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface ExceptionConsumeContext :
+    ConsumeContext
 {
-    using System;
+    /// <summary>
+    /// The exception that was thrown
+    /// </summary>
+    Exception Exception { get; }
+
+    /// <summary>
+    /// The exception info, suitable for inclusion in a fault message
+    /// </summary>
+    ExceptionInfo ExceptionInfo { get; }
+}
 
 
-    public interface ExceptionConsumeContext :
-        ConsumeContext
-    {
-        /// <summary>
-        /// The exception that was thrown
-        /// </summary>
-        Exception Exception { get; }
-
-        /// <summary>
-        /// The exception info, suitable for inclusion in a fault message
-        /// </summary>
-        ExceptionInfo ExceptionInfo { get; }
-    }
-
-
-    public interface ExceptionConsumeContext<out T> :
-        ExceptionConsumeContext,
-        ConsumeContext<T>
-        where T : class
-    {
-    }
+public interface ExceptionConsumeContext<out T> :
+    ExceptionConsumeContext,
+    ConsumeContext<T>
+    where T : class
+{
 }

@@ -1,10 +1,10 @@
-namespace ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga;
-
 using global::Azure.Data.Tables;
 using ViciOne.ServiceBus.AzureTable;
 using ViciOne.ServiceBus.AzureTable.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.Tests.AzureTable.Saga;
 
 public sealed class SagaKeyFormatterTests
 {

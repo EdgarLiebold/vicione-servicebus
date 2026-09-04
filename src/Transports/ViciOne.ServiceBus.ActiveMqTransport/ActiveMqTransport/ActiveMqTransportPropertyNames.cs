@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+static class ActiveMqTransportPropertyNames
 {
-    static class ActiveMqTransportPropertyNames
-    {
-        public const string Priority = "AMQ-Priority";
-        public const string GroupId = "AMQ-GroupId";
-        public const string GroupSequence = "AMQ-GroupSequence";
-    }
+    public const string Priority = "AMQ-Priority";
+    public const string GroupId = "AMQ-GroupId";
+    public const string GroupSequence = "AMQ-GroupSequence";
 }

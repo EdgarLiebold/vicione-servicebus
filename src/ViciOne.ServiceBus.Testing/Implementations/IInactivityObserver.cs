@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public interface IInactivityObserver
 {
-    using System.Threading.Tasks;
+    void Connected(IInactivityObservationSource source);
 
+    Task NoActivity();
 
-    public interface IInactivityObserver
-    {
-        void Connected(IInactivityObservationSource source);
-
-        Task NoActivity();
-
-        void ForceInactive();
-    }
+    void ForceInactive();
 }

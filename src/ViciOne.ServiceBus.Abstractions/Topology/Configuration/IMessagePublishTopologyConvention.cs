@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IMessagePublishTopologyConvention<TMessage> :
+    IMessagePublishTopologyConvention
+    where TMessage : class
 {
-    public interface IMessagePublishTopologyConvention<TMessage> :
-        IMessagePublishTopologyConvention
-        where TMessage : class
-    {
-        bool TryGetMessagePublishTopology(out IMessagePublishTopology<TMessage> messagePublishTopology);
-    }
+    bool TryGetMessagePublishTopology(out IMessagePublishTopology<TMessage> messagePublishTopology);
+}
 
 
-    public interface IMessagePublishTopologyConvention
-    {
-        bool TryGetMessagePublishTopologyConvention<T>(out IMessagePublishTopologyConvention<T> convention)
-            where T : class;
-    }
+public interface IMessagePublishTopologyConvention
+{
+    bool TryGetMessagePublishTopologyConvention<T>(out IMessagePublishTopologyConvention<T> convention)
+        where T : class;
 }

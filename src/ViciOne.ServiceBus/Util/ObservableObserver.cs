@@ -1,53 +1,51 @@
-namespace ViciOne.ServiceBus.Util
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Util;
+
+public class ObservableObserver<T> :
+    IObservable<T>,
+    IObserver<T>
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Connectable<IObserver<T>> _observers;
 
-
-    public class ObservableObserver<T> :
-        IObservable<T>,
-        IObserver<T>
+    public ObservableObserver()
     {
-        readonly Connectable<IObserver<T>> _observers;
+        _observers = new Connectable<IObserver<T>>();
+    }
 
-        public ObservableObserver()
+    public IDisposable Subscribe(IObserver<T> observer)
+    {
+        return _observers.Connect(observer);
+    }
+
+    public void OnNext(T value)
+    {
+        _observers.ForEachAsync(x =>
         {
-            _observers = new Connectable<IObserver<T>>();
-        }
+            x.OnNext(value);
 
-        public IDisposable Subscribe(IObserver<T> observer)
+            return Task.CompletedTask;
+        });
+    }
+
+    public void OnError(Exception error)
+    {
+        _observers.ForEachAsync(x =>
         {
-            return _observers.Connect(observer);
-        }
+            x.OnError(error);
 
-        public void OnNext(T value)
+            return Task.CompletedTask;
+        });
+    }
+
+    public void OnCompleted()
+    {
+        _observers.ForEachAsync(x =>
         {
-            _observers.ForEachAsync(x =>
-            {
-                x.OnNext(value);
+            x.OnCompleted();
 
-                return Task.CompletedTask;
-            });
-        }
-
-        public void OnError(Exception error)
-        {
-            _observers.ForEachAsync(x =>
-            {
-                x.OnError(error);
-
-                return Task.CompletedTask;
-            });
-        }
-
-        public void OnCompleted()
-        {
-            _observers.ForEachAsync(x =>
-            {
-                x.OnCompleted();
-
-                return Task.CompletedTask;
-            });
-        }
+            return Task.CompletedTask;
+        });
     }
 }

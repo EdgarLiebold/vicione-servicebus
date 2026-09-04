@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public interface IRabbitMqReceiveEndpointConfiguration :
+    IReceiveEndpointConfiguration,
+    IRabbitMqEndpointConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
-    using Transports;
+    ReceiveSettings Settings { get; }
 
-
-    public interface IRabbitMqReceiveEndpointConfiguration :
-        IReceiveEndpointConfiguration,
-        IRabbitMqEndpointConfiguration
-    {
-        ReceiveSettings Settings { get; }
-
-        void Build(IHost host);
-    }
+    void Build(IHost host);
 }

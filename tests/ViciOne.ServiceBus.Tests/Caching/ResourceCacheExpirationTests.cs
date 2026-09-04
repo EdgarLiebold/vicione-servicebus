@@ -5,8 +5,6 @@ using Xunit;
 
 // The no-token overloads are part of the cache contract exercised here; asynchronous
 // coordination points use the xUnit cancellation token or an explicit bounded timeout.
-#pragma warning disable xUnit1051
-
 namespace ViciOne.ServiceBus.Tests.Caching;
 
 public sealed class ResourceCacheExpirationTests
@@ -25,8 +23,8 @@ public sealed class ResourceCacheExpirationTests
 
         Assert.Equal(3, cache.Statistics.Count);
         Assert.Equal(0, cache.Statistics.Evictions);
-        Assert.Equal(["one", "three", "two"], (await cache.GetValuesAsync()).Select(x => x.Id).Order().ToArray());
-        Assert.Equal("one", (await index.GetAsync("one")).Id);
+        Assert.Equal(["one", "three", "two"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
+        Assert.Equal("one", (await index.GetAsync("one", TestContext.Current.CancellationToken)).Id);
     }
 
     [Fact]
@@ -37,7 +35,7 @@ public sealed class ResourceCacheExpirationTests
         await using var cache = CreateCache(8, time, maxAge: TimeSpan.FromMinutes(1));
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var expired = new Resource("expired");
-        await cache.AddAsync(expired);
+        await cache.AddAsync(expired, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromMinutes(1) + TimeSpan.FromTicks(1));
 
         await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
@@ -45,7 +43,7 @@ public sealed class ResourceCacheExpirationTests
         Assert.Equal(1, expired.DisposeCount);
         Assert.Equal(0, cache.Statistics.Count);
         Assert.Equal(1, cache.Statistics.Evictions);
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("expired"));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("expired", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -58,16 +56,16 @@ public sealed class ResourceCacheExpirationTests
         var one = new Resource("one");
         var two = new Resource("two");
         var three = new Resource("three");
-        await cache.AddAsync(one);
+        await cache.AddAsync(one, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(two);
+        await cache.AddAsync(two, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(three);
+        await cache.AddAsync(three, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        Assert.Same(one, await index.GetAsync("one"));
+        Assert.Same(one, await index.GetAsync("one", TestContext.Current.CancellationToken));
 
         var four = new Resource("four");
-        await cache.AddAsync(four);
+        await cache.AddAsync(four, TestContext.Current.CancellationToken);
 
         Assert.Equal(3, cache.Statistics.Count);
         Assert.Equal(1, cache.Statistics.Evictions);
@@ -75,7 +73,7 @@ public sealed class ResourceCacheExpirationTests
         Assert.Equal(0, one.DisposeCount);
         Assert.Equal(0, three.DisposeCount);
         Assert.Equal(0, four.DisposeCount);
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("two"));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("two", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -87,16 +85,16 @@ public sealed class ResourceCacheExpirationTests
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var first = new Resource("first");
         var second = new Resource("second");
-        await cache.AddAsync(first);
+        await cache.AddAsync(first, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(second);
+        await cache.AddAsync(second, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
 
         first.Use();
-        await cache.AddAsync(new Resource("third"));
+        await cache.AddAsync(new Resource("third"), TestContext.Current.CancellationToken);
 
-        Assert.Same(first, await index.GetAsync("first"));
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("second"));
+        Assert.Same(first, await index.GetAsync("first", TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("second", TestContext.Current.CancellationToken));
         Assert.Equal(1, second.DisposeCount);
         Assert.Equal(2, cache.Statistics.Count);
     }
@@ -108,15 +106,15 @@ public sealed class ResourceCacheExpirationTests
         var time = NewClock();
         await using var cache = CreateCache(2, time);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("first"));
+        await cache.AddAsync(new Resource("first"), TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(new Resource("second"));
+        await cache.AddAsync(new Resource("second"), TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
 
-        await index.GetAsync("first");
-        await cache.AddAsync(new Resource("third"));
+        await index.GetAsync("first", TestContext.Current.CancellationToken);
+        await cache.AddAsync(new Resource("third"), TestContext.Current.CancellationToken);
 
-        Assert.Equal(["first", "third"], (await cache.GetValuesAsync()).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(["first", "third"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
     }
 
     [Fact]
@@ -127,20 +125,20 @@ public sealed class ResourceCacheExpirationTests
         await using var cache = CreateCache(1, time);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var oldGeneration = new Resource("same");
-        await cache.AddAsync(oldGeneration);
+        await cache.AddAsync(oldGeneration, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(new Resource("replacement"));
+        await cache.AddAsync(new Resource("replacement"), TestContext.Current.CancellationToken);
         var newGeneration = new Resource("same");
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(newGeneration);
+        await cache.AddAsync(newGeneration, TestContext.Current.CancellationToken);
 
         oldGeneration.Use();
         time.Advance(TimeSpan.FromSeconds(1));
-        await cache.AddAsync(new Resource("other"));
+        await cache.AddAsync(new Resource("other"), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, oldGeneration.DisposeCount);
         Assert.Equal(1, newGeneration.DisposeCount);
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("same"));
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("same", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -154,7 +152,7 @@ public sealed class ResourceCacheExpirationTests
 
         for (var index = 0; index < additions; index++)
         {
-            await cache.AddAsync(new Resource($"item-{index:D3}"));
+            await cache.AddAsync(new Resource($"item-{index:D3}"), TestContext.Current.CancellationToken);
             time.Advance(TimeSpan.FromTicks(1));
         }
 
@@ -171,15 +169,15 @@ public sealed class ResourceCacheExpirationTests
         await using var cache = CreateCache(1, time);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         var evicted = new Resource("old");
-        await cache.AddAsync(evicted);
+        await cache.AddAsync(evicted, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromTicks(1));
 
-        await cache.AddAsync(new Resource("new"));
+        await cache.AddAsync(new Resource("new"), TestContext.Current.CancellationToken);
 
         Assert.Equal(1, evicted.DisposeCount);
-        Assert.DoesNotContain(await cache.GetValuesAsync(), value => value.Id == "old");
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("old"));
-        Assert.Equal("new", (await index.GetAsync("new")).Id);
+        Assert.DoesNotContain(await cache.GetValuesAsync(TestContext.Current.CancellationToken), value => value.Id == "old");
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("old", TestContext.Current.CancellationToken));
+        Assert.Equal("new", (await index.GetAsync("new", TestContext.Current.CancellationToken)).Id);
     }
 
     [Fact]
@@ -194,15 +192,15 @@ public sealed class ResourceCacheExpirationTests
             maxAge: TimeSpan.FromMinutes(2),
             expirationMode: ResourceCacheExpirationMode.Absolute);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
 
         time.Advance(TimeSpan.FromMinutes(2));
-        await cache.CleanupExpiredAsync();
-        Assert.Equal("one", (await index.GetAsync("one")).Id);
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        Assert.Equal("one", (await index.GetAsync("one", TestContext.Current.CancellationToken)).Id);
 
         time.Advance(TimeSpan.FromTicks(1));
-        await cache.CleanupExpiredAsync();
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one"));
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -216,15 +214,15 @@ public sealed class ResourceCacheExpirationTests
             maxAge: TimeSpan.FromMinutes(1),
             expirationMode: ResourceCacheExpirationMode.Absolute);
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("boundary"));
+        await cache.AddAsync(new Resource("boundary"), TestContext.Current.CancellationToken);
 
         time.Advance(TimeSpan.FromMinutes(1));
-        await cache.CleanupExpiredAsync();
-        Assert.Equal("boundary", (await index.GetAsync("boundary")).Id);
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        Assert.Equal("boundary", (await index.GetAsync("boundary", TestContext.Current.CancellationToken)).Id);
 
         time.Advance(TimeSpan.FromTicks(1));
-        await cache.CleanupExpiredAsync();
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("boundary"));
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("boundary", TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -238,7 +236,7 @@ public sealed class ResourceCacheExpirationTests
             maxAge: TimeSpan.FromSeconds(1),
             cleanupInterval: TimeSpan.FromSeconds(1));
         var value = new Resource("expired");
-        await cache.AddAsync(value);
+        await cache.AddAsync(value, TestContext.Current.CancellationToken);
 
         time.Advance(TimeSpan.FromSeconds(2));
 
@@ -259,17 +257,17 @@ public sealed class ResourceCacheExpirationTests
             maxAge: TimeSpan.FromSeconds(2),
             cleanupInterval: TimeSpan.FromSeconds(1));
         var expired = new Resource("expired");
-        await cache.AddAsync(expired);
+        await cache.AddAsync(expired, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
         var live = new Resource("live");
-        await cache.AddAsync(live);
+        await cache.AddAsync(live, TestContext.Current.CancellationToken);
 
         time.Advance(TimeSpan.FromSeconds(2));
-        await expired.Disposed.WaitAsync(OperationTimeout);
+        await expired.Disposed.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
 
         Assert.Equal(1, expired.DisposeCount);
         Assert.Equal(0, live.DisposeCount);
-        Assert.Equal(["live"], (await cache.GetValuesAsync()).Select(x => x.Id).ToArray());
+        Assert.Equal(["live"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).ToArray());
     }
 
     [Fact]
@@ -283,10 +281,10 @@ public sealed class ResourceCacheExpirationTests
             maxAge: TimeSpan.FromSeconds(1),
             cleanupInterval: TimeSpan.FromDays(1));
         var expired = new Resource("expired");
-        await cache.AddAsync(expired);
+        await cache.AddAsync(expired, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(2));
 
-        await cache.CleanupExpiredAsync();
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(1, expired.DisposeCount);
         Assert.Equal(0, cache.Statistics.Count);
@@ -299,11 +297,11 @@ public sealed class ResourceCacheExpirationTests
         var time = NewClock();
         await using var cache = CreateCache(2, time, maxAge: TimeSpan.FromSeconds(1));
         var expired = new Resource("expired");
-        await cache.AddAsync(expired);
+        await cache.AddAsync(expired, TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(2));
 
-        await cache.CleanupExpiredAsync();
-        await cache.CleanupExpiredAsync();
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(1, expired.DisposeCount);
         Assert.Equal(1, cache.Statistics.Evictions);
@@ -319,7 +317,7 @@ public sealed class ResourceCacheExpirationTests
 
         for (var index = 0; index < 100; index++)
         {
-            await cache.AddAsync(new Resource($"item-{index}"));
+            await cache.AddAsync(new Resource($"item-{index}"), TestContext.Current.CancellationToken);
             Assert.InRange(cache.Statistics.Count + cache.Statistics.PendingCreations, 0, capacity);
             time.Advance(TimeSpan.FromTicks(1));
         }
@@ -338,12 +336,12 @@ public sealed class ResourceCacheExpirationTests
 
         for (var index = 0; index < 25; index++)
         {
-            await cache.AddAsync(new Resource($"item-{index:D2}"));
+            await cache.AddAsync(new Resource($"item-{index:D2}"), TestContext.Current.CancellationToken);
             time.Advance(TimeSpan.FromTicks(1));
         }
 
         string[] expected = Enumerable.Range(15, capacity).Select(index => $"item-{index:D2}").ToArray();
-        Assert.Equal(expected, (await cache.GetValuesAsync()).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(expected, (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
         Assert.Equal(capacity, cache.Statistics.Count);
         Assert.Equal(15, cache.Statistics.Evictions);
     }
@@ -357,13 +355,13 @@ public sealed class ResourceCacheExpirationTests
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
         await AddAsync(cache, "one", "two", "three");
         time.Advance(TimeSpan.FromSeconds(1));
-        await index.GetAsync("one");
+        await index.GetAsync("one", TestContext.Current.CancellationToken);
         time.Advance(TimeSpan.FromSeconds(1));
-        await index.GetAsync("two");
+        await index.GetAsync("two", TestContext.Current.CancellationToken);
 
-        await cache.AddAsync(new Resource("four"));
+        await cache.AddAsync(new Resource("four"), TestContext.Current.CancellationToken);
 
-        Assert.Equal(["four", "one", "two"], (await cache.GetValuesAsync()).Select(x => x.Id).Order().ToArray());
+        Assert.Equal(["four", "one", "two"], (await cache.GetValuesAsync(TestContext.Current.CancellationToken)).Select(x => x.Id).Order().ToArray());
     }
 
     [Fact]
@@ -378,7 +376,7 @@ public sealed class ResourceCacheExpirationTests
         for (var operation = 0; operation < accesses; operation++)
         {
             string key = $"item-{operation % distinct:D2}";
-            await index.GetOrAddAsync(key, (id, _) => ValueTask.FromResult(new Resource(id)));
+            await index.GetOrAddAsync(key, (id, _) => ValueTask.FromResult(new Resource(id)), TestContext.Current.CancellationToken);
         }
 
         ResourceCacheStatistics statistics = cache.Statistics;
@@ -403,7 +401,7 @@ public sealed class ResourceCacheExpirationTests
         {
             var resource = new Resource($"item-{index}");
             resources.Add(resource);
-            await cache.AddAsync(resource);
+            await cache.AddAsync(resource, TestContext.Current.CancellationToken);
             time.Advance(TimeSpan.FromTicks(1));
         }
 
@@ -427,7 +425,7 @@ public sealed class ResourceCacheExpirationTests
             {
                 Interlocked.Increment(ref calls);
                 return ValueTask.FromResult(new Resource(key));
-            });
+            }, TestContext.Current.CancellationToken);
             time.Advance(TimeSpan.FromSeconds(2));
         }
 
@@ -450,15 +448,15 @@ public sealed class ResourceCacheExpirationTests
             timeProvider: time,
             cleanupInterval: TimeSpan.FromDays(1)));
         IResourceCacheIndex<string, Resource> index = cache.AddIndex("id", value => value.Id);
-        await cache.AddAsync(new Resource("one"));
+        await cache.AddAsync(new Resource("one"), TestContext.Current.CancellationToken);
 
         time.AdvanceTimestamp(30_000);
-        await cache.CleanupExpiredAsync();
-        Assert.Equal("one", (await index.GetAsync("one")).Id);
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        Assert.Equal("one", (await index.GetAsync("one", TestContext.Current.CancellationToken)).Id);
 
         time.AdvanceTimestamp(1);
-        await cache.CleanupExpiredAsync();
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one"));
+        await cache.CleanupExpiredAsync(TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () => await index.GetAsync("one", TestContext.Current.CancellationToken));
     }
 
     private static FakeTimeProvider NewClock() => new(DateTimeOffset.UnixEpoch);

@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
-
 using System.Collections.Generic;
-using Middleware;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
 
 public sealed class RabbitMqQueueRedeliveryPipeSpecification<TMessage> :
     IRedeliveryPipeSpecification,

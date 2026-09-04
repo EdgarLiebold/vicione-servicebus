@@ -1,46 +1,44 @@
+using System.Threading.Tasks;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public abstract class SendContextPipeAdapter<TMessage> :
+    IPipe<SendContext<TMessage>>,
+    ISendPipe
+    where TMessage : class
 {
-    using System.Threading.Tasks;
+    readonly IPipe<SendContext<TMessage>>? _pipe;
 
-
-    public abstract class SendContextPipeAdapter<TMessage> :
-        IPipe<SendContext<TMessage>>,
-        ISendPipe
-        where TMessage : class
+    protected SendContextPipeAdapter(IPipe<SendContext<TMessage>>? pipe)
     {
-        readonly IPipe<SendContext<TMessage>>? _pipe;
-
-        protected SendContextPipeAdapter(IPipe<SendContext<TMessage>>? pipe)
-        {
-            _pipe = pipe;
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            _pipe?.Probe(context);
-        }
-
-        Task IPipe<SendContext<TMessage>>.Send(SendContext<TMessage> context)
-        {
-            Send(context);
-
-            return _pipe.IsNotEmpty() ? _pipe!.Send(context) : Task.CompletedTask;
-        }
-
-        Task ISendContextPipe.Send<T>(SendContext<T> context)
-            where T : class
-        {
-            Send(context);
-
-            return _pipe is ISendContextPipe sendContextPipe
-                ? sendContextPipe.Send(context)
-                : Task.CompletedTask;
-        }
-
-        protected abstract void Send(SendContext<TMessage> context);
-
-        protected abstract void Send<T>(SendContext<T> context)
-            where T : class;
+        _pipe = pipe;
     }
+
+    public void Probe(ProbeContext context)
+    {
+        _pipe?.Probe(context);
+    }
+
+    Task IPipe<SendContext<TMessage>>.Send(SendContext<TMessage> context)
+    {
+        Send(context);
+
+        return _pipe.IsNotEmpty() ? _pipe!.Send(context) : Task.CompletedTask;
+    }
+
+    Task ISendContextPipe.Send<T>(SendContext<T> context)
+        where T : class
+    {
+        Send(context);
+
+        return _pipe is ISendContextPipe sendContextPipe
+            ? sendContextPipe.Send(context)
+            : Task.CompletedTask;
+    }
+
+    protected abstract void Send(SendContext<TMessage> context);
+
+    protected abstract void Send<T>(SendContext<T> context)
+        where T : class;
 }

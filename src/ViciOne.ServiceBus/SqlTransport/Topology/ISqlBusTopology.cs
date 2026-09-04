@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ISqlBusTopology :
+    IBusTopology
 {
-    public interface ISqlBusTopology :
-        IBusTopology
-    {
-        new ISqlPublishTopology PublishTopology { get; }
+    new ISqlPublishTopology PublishTopology { get; }
 
-        new ISqlSendTopology SendTopology { get; }
+    new ISqlSendTopology SendTopology { get; }
 
-        new ISqlMessagePublishTopology<T> Publish<T>()
-            where T : class;
+    new ISqlMessagePublishTopology<T> Publish<T>()
+        where T : class;
 
-        new ISqlMessageSendTopology<T> Send<T>()
-            where T : class;
-    }
+    new ISqlMessageSendTopology<T> Send<T>()
+        where T : class;
 }

@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IConsumerRegistration :
+    IRegistration
 {
-    using System;
+    void AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure)
+        where T : class, IConsumer;
 
+    void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context);
 
-    public interface IConsumerRegistration :
-        IRegistration
-    {
-        void AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>> configure)
-            where T : class, IConsumer;
+    IConsumerDefinition GetDefinition(IRegistrationContext context);
 
-        void Configure(IReceiveEndpointConfigurator configurator, IRegistrationContext context);
-
-        IConsumerDefinition GetDefinition(IRegistrationContext context);
-
-        IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator);
-    }
+    IConsumerRegistrationConfigurator GetConsumerRegistrationConfigurator(IRegistrationConfigurator registrationConfigurator);
 }

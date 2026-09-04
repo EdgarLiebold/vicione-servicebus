@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Util
+using ViciOne.ServiceBus.NewIdFormatters;
+
+namespace ViciOne.ServiceBus.Util;
+
+public static class FormatUtil
 {
-    using NewIdFormatters;
-
-
-    public static class FormatUtil
-    {
-        public static readonly INewIdFormatter Formatter = new ZBase32Formatter();
-    }
+    public static readonly INewIdFormatter Formatter = new ZBase32Formatter();
 }

@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+using System;
+
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public interface RetryJob
 {
-    using System;
-
-
-    public interface RetryJob
-    {
-        /// <summary>
-        /// The job identifier
-        /// </summary>
-        Guid JobId { get; }
-    }
+    /// <summary>
+    /// The job identifier
+    /// </summary>
+    Guid JobId { get; }
 }

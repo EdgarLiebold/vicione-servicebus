@@ -1,83 +1,81 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Context;
+
+public class RetryExecuteContext<TArguments> :
+    ExecuteContextScope<TArguments>,
+    ConsumeRetryContext
+    where TArguments : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly ExecuteContext<TArguments> _context;
+    readonly ExecutionResult _existingResult;
+    readonly IRetryPolicy _retryPolicy;
 
-
-    public class RetryExecuteContext<TArguments> :
-        ExecuteContextScope<TArguments>,
-        ConsumeRetryContext
-        where TArguments : class
+    public RetryExecuteContext(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+        : base(context)
     {
-        readonly ExecuteContext<TArguments> _context;
-        readonly ExecutionResult _existingResult;
-        readonly IRetryPolicy _retryPolicy;
+        _retryPolicy = retryPolicy;
+        _context = context;
 
-        public RetryExecuteContext(ExecuteContext<TArguments> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-            : base(context)
+        if (retryContext is RetryContext<ExecuteContext<TArguments>> executeRetryContext)
+            _existingResult = executeRetryContext.Context.Result;
+
+        Result = new RetryExecutionResult();
+
+        if (retryContext != null)
         {
-            _retryPolicy = retryPolicy;
-            _context = context;
+            RetryAttempt = retryContext.RetryAttempt;
+            RetryCount = retryContext.RetryCount;
+        }
+        else if (context.TryGetPayload<ConsumeRetryContext>(out var existingRetryContext))
+        {
+            RetryCount = existingRetryContext.RetryCount;
+            RetryAttempt = existingRetryContext.RetryAttempt;
+        }
+    }
 
-            if (retryContext is RetryContext<ExecuteContext<TArguments>> executeRetryContext)
-                _existingResult = executeRetryContext.Context.Result;
+    public int RetryAttempt { get; }
 
-            Result = new RetryExecutionResult();
+    public int RetryCount { get; }
 
-            if (retryContext != null)
-            {
-                RetryAttempt = retryContext.RetryAttempt;
-                RetryCount = retryContext.RetryCount;
-            }
-            else if (context.TryGetPayload<ConsumeRetryContext>(out var existingRetryContext))
-            {
-                RetryCount = existingRetryContext.RetryCount;
-                RetryAttempt = existingRetryContext.RetryAttempt;
-            }
+    public TContext CreateNext<TContext>(RetryContext retryContext)
+        where TContext : class, ConsumeRetryContext
+    {
+        if (retryContext is RetryContext<ExecuteContext<TArguments>> executeRetryContext && _existingResult != null)
+            executeRetryContext.Context.Result = _existingResult;
+
+        return new RetryExecuteContext<TArguments>(_context, _retryPolicy, retryContext) as TContext;
+    }
+
+    public Task NotifyPendingFaults()
+    {
+        if (_existingResult != null && Result is RetryExecutionResult)
+            Result = _existingResult;
+
+        return Task.CompletedTask;
+    }
+
+
+    class RetryExecutionResult :
+        ExecutionResult
+    {
+        readonly Exception _exception;
+
+        public RetryExecutionResult(Exception exception = null)
+        {
+            _exception = exception;
         }
 
-        public int RetryAttempt { get; }
-
-        public int RetryCount { get; }
-
-        public TContext CreateNext<TContext>(RetryContext retryContext)
-            where TContext : class, ConsumeRetryContext
+        public Task Evaluate()
         {
-            if (retryContext is RetryContext<ExecuteContext<TArguments>> executeRetryContext && _existingResult != null)
-                executeRetryContext.Context.Result = _existingResult;
-
-            return new RetryExecuteContext<TArguments>(_context, _retryPolicy, retryContext) as TContext;
-        }
-
-        public Task NotifyPendingFaults()
-        {
-            if (_existingResult != null && Result is RetryExecutionResult)
-                Result = _existingResult;
-
             return Task.CompletedTask;
         }
 
-
-        class RetryExecutionResult :
-            ExecutionResult
+        public bool IsFaulted(out Exception exception)
         {
-            readonly Exception _exception;
-
-            public RetryExecutionResult(Exception exception = null)
-            {
-                _exception = exception;
-            }
-
-            public Task Evaluate()
-            {
-                return Task.CompletedTask;
-            }
-
-            public bool IsFaulted(out Exception exception)
-            {
-                exception = _exception;
-                return exception != null;
-            }
+            exception = _exception;
+            return exception != null;
         }
     }
 }

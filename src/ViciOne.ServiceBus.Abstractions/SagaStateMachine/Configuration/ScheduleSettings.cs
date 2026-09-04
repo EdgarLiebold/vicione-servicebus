@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// The schedule settings, including the default delay for the message
+/// </summary>
+public interface ScheduleSettings<TInstance, TMessage>
+    where TInstance : class, SagaStateMachineInstance
+    where TMessage : class
+{
+    /// <summary>
+    /// Provides the delay for the message
+    /// </summary>
+    ScheduleDelayProvider<TInstance> DelayProvider { get; }
 
     /// <summary>
-    /// The schedule settings, including the default delay for the message
+    /// Configure the received correlation
     /// </summary>
-    public interface ScheduleSettings<TInstance, TMessage>
-        where TInstance : class, SagaStateMachineInstance
-        where TMessage : class
-    {
-        /// <summary>
-        /// Provides the delay for the message
-        /// </summary>
-        ScheduleDelayProvider<TInstance> DelayProvider { get; }
-
-        /// <summary>
-        /// Configure the received correlation
-        /// </summary>
-        Action<IEventCorrelationConfigurator<TInstance, TMessage>> Received { get; }
-    }
+    Action<IEventCorrelationConfigurator<TInstance, TMessage>> Received { get; }
 }

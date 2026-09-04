@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ConsumerFaultContext
 {
-    public interface ConsumerFaultContext
-    {
-        string MessageType { get; }
-        string ConsumerType { get; }
-    }
+    string MessageType { get; }
+    string ConsumerType { get; }
 }

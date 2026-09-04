@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+
+public class AmqpHostSettings :
+    ConfigurationHostSettings
 {
-    using System;
-
-
-    public class AmqpHostSettings :
-        ConfigurationHostSettings
+    public AmqpHostSettings(Uri address)
+        : base(address)
     {
-        public AmqpHostSettings(Uri address)
-            : base(address)
-        {
-        }
-
-        public override string HostScheme => UseSsl ? $"{NmsScheme}s" : NmsScheme;
-
-        public override string FailoverScheme => "failover";
-
-        public override string Scheme => HostScheme;
-
-        public override string NmsScheme => "amqp";
-
-        public override string FailoverConnectionSettingPrefix => "failover.";
     }
+
+    public override string HostScheme => UseSsl ? $"{NmsScheme}s" : NmsScheme;
+
+    public override string FailoverScheme => "failover";
+
+    public override string Scheme => HostScheme;
+
+    public override string NmsScheme => "amqp";
+
+    public override string FailoverConnectionSettingPrefix => "failover.";
 }

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using ViciOne.ServiceBus.Configuration;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public interface IAmazonSqsReceiveEndpointConfiguration :
     IReceiveEndpointConfiguration,

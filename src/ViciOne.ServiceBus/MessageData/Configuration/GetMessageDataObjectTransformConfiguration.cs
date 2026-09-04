@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.MessageData.Configuration
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Initializers.PropertyProviders;
+
+namespace ViciOne.ServiceBus.MessageData.Configuration;
+
+public class GetMessageDataObjectTransformConfiguration<TInput, TProperty> :
+    IMessageDataTransformConfiguration<TInput>
+    where TInput : class
+    where TProperty : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Initializers;
-    using Initializers.PropertyProviders;
+    readonly PropertyInfo _property;
+    readonly GetMessageDataTransformSpecification<TProperty> _transformConfigurator;
 
-
-    public class GetMessageDataObjectTransformConfiguration<TInput, TProperty> :
-        IMessageDataTransformConfiguration<TInput>
-        where TInput : class
-        where TProperty : class
+    public GetMessageDataObjectTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
     {
-        readonly PropertyInfo _property;
-        readonly GetMessageDataTransformSpecification<TProperty> _transformConfigurator;
+        _property = property;
 
-        public GetMessageDataObjectTransformConfiguration(IMessageDataRepository repository, IEnumerable<Type> knownTypes, PropertyInfo property)
+        _transformConfigurator = new GetMessageDataTransformSpecification<TProperty>(repository, knownTypes);
+    }
+
+    public void Apply(ITransformConfigurator<TInput> configurator)
+    {
+        if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TProperty, TProperty> converter))
         {
-            _property = property;
+            var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
 
-            _transformConfigurator = new GetMessageDataTransformSpecification<TProperty>(repository, knownTypes);
-        }
+            var provider = new PropertyConverterPropertyProvider<TInput, TProperty, TProperty>(converter, inputPropertyProvider);
 
-        public void Apply(ITransformConfigurator<TInput> configurator)
-        {
-            if (_transformConfigurator.TryGetConverter(out IPropertyConverter<TProperty, TProperty> converter))
-            {
-                var inputPropertyProvider = new InputPropertyProvider<TInput, TProperty>(_property);
-
-                var provider = new PropertyConverterPropertyProvider<TInput, TProperty, TProperty>(converter, inputPropertyProvider);
-
-                configurator.Set(_property, provider);
-            }
+            configurator.Set(_property, provider);
         }
     }
 }

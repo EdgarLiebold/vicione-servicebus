@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ReceiveEndpointStopping :
+    ReceiveEndpointEvent
 {
-    public interface ReceiveEndpointStopping :
-        ReceiveEndpointEvent
-    {
-        bool Removed { get; }
-    }
+    bool Removed { get; }
 }

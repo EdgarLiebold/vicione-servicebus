@@ -1,75 +1,73 @@
-namespace ViciOne.ServiceBus.MessageData.Values
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus.MessageData.Values;
+
+public class BytesInlineMessageData :
+    MessageData<byte[]>,
+    IInlineMessageData
 {
-    using System;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Metadata;
+    readonly byte[] _value;
 
-
-    public class BytesInlineMessageData :
-        MessageData<byte[]>,
-        IInlineMessageData
+    public BytesInlineMessageData(byte[] value, Uri? address = null)
     {
-        readonly byte[] _value;
+        Address = address;
+        _value = value;
 
-        public BytesInlineMessageData(byte[] value, Uri address = null)
-        {
-            Address = address;
-            _value = value;
-
-            Value = Task.FromResult(value);
-        }
-
-        public void Set(IMessageDataReference reference)
-        {
-            reference.Text = default;
-            reference.Data = _value;
-        }
-
-        public Uri Address { get; }
-
-        public bool HasValue => true;
-
-        public Task<byte[]> Value { get; }
+        Value = Task.FromResult(value);
     }
 
-
-    public class BytesInlineMessageData<T> :
-        MessageData<T>,
-        IInlineMessageData
+    public void Set(IMessageDataReference reference)
     {
-        readonly IMessageDataConverter<T> _converter;
-        readonly byte[] _value;
-        readonly Lazy<Task<T>> _valueTask;
+        reference.Text = default;
+        reference.Data = _value;
+    }
 
-        public BytesInlineMessageData(IMessageDataConverter<T> converter, byte[] value, Uri address = null)
-        {
-            Address = address;
-            _value = value;
+    public Uri? Address { get; }
 
-            _valueTask = new Lazy<Task<T>>(() => GetValue());
+    public bool HasValue => true;
 
-            _converter = converter;
-        }
+    public Task<byte[]> Value { get; }
+}
 
-        public void Set(IMessageDataReference reference)
-        {
-            reference.Text = default;
-            reference.Data = _value;
-        }
 
-        public Uri Address { get; }
+public class BytesInlineMessageData<T> :
+    MessageData<T>,
+    IInlineMessageData
+{
+    readonly IMessageDataConverter<T> _converter;
+    readonly byte[] _value;
+    readonly Lazy<Task<T>> _valueTask;
 
-        public bool HasValue => true;
+    public BytesInlineMessageData(IMessageDataConverter<T> converter, byte[] value, Uri? address = null)
+    {
+        Address = address;
+        _value = value;
 
-        public Task<T> Value => _valueTask.Value;
+        _valueTask = new Lazy<Task<T>>(() => GetValue());
 
-        async Task<T> GetValue()
-        {
-            using var stream = new MemoryStream(_value, false);
+        _converter = converter;
+    }
 
-            return await _converter.Convert(stream, CancellationToken.None).ConfigureAwait(false);
-        }
+    public void Set(IMessageDataReference reference)
+    {
+        reference.Text = default;
+        reference.Data = _value;
+    }
+
+    public Uri? Address { get; }
+
+    public bool HasValue => true;
+
+    public Task<T> Value => _valueTask.Value;
+
+    async Task<T> GetValue()
+    {
+        using var stream = new MemoryStream(_value, false);
+
+        return await _converter.Convert(stream, CancellationToken.None).ConfigureAwait(false);
     }
 }

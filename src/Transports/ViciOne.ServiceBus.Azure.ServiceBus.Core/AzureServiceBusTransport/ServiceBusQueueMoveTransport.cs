@@ -1,62 +1,60 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using ViciOne.ServiceBus.Serialization;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusQueueMoveTransport
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Azure.Messaging.ServiceBus;
-    using Serialization;
-    using Transports;
-    using Util;
+    readonly Recycle<ISendEndpointContextSupervisor> _sendEndpointContext;
 
-
-    public class ServiceBusQueueMoveTransport
+    protected ServiceBusQueueMoveTransport(IConnectionContextSupervisor supervisor, SendSettings settings)
     {
-        readonly Recycle<ISendEndpointContextSupervisor> _sendEndpointContext;
+        _sendEndpointContext = new Recycle<ISendEndpointContextSupervisor>(() => supervisor.CreateSendEndpointContextSupervisor(settings));
+    }
 
-        protected ServiceBusQueueMoveTransport(IConnectionContextSupervisor supervisor, SendSettings settings)
+    protected Task Move(ReceiveContext context, Action<ServiceBusMessage, SendHeaders> preSend)
+    {
+        IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAsync<SendEndpointContext>(async clientContext =>
         {
-            _sendEndpointContext = new Recycle<ISendEndpointContextSupervisor>(() => supervisor.CreateSendEndpointContextSupervisor(settings));
-        }
+            if (!context.TryGetPayload(out ServiceBusMessageContext messageContext))
+                throw new ArgumentException("The ReceiveContext must contain a BrokeredMessageContext (from Azure Service Bus)", nameof(context));
 
-        protected Task Move(ReceiveContext context, Action<ServiceBusMessage, SendHeaders> preSend)
-        {
-            IPipe<SendEndpointContext> clientPipe = Pipe.ExecuteAsync<SendEndpointContext>(async clientContext =>
+            var body = context.GetBody();
+
+            var message = new ServiceBusMessage(body)
             {
-                if (!context.TryGetPayload(out ServiceBusMessageContext messageContext))
-                    throw new ArgumentException("The ReceiveContext must contain a BrokeredMessageContext (from Azure Service Bus)", nameof(context));
+                ContentType = context.ContentType?.MediaType,
+                TimeToLive = messageContext.TimeToLive,
+                CorrelationId = messageContext.CorrelationId,
+                MessageId = messageContext.MessageId,
+                Subject = messageContext.Label,
+                PartitionKey = messageContext.PartitionKey,
+                ReplyTo = messageContext.ReplyTo
+            };
 
-                var body = context.GetBody();
+            if (!string.IsNullOrWhiteSpace(messageContext.SessionId))
+                message.SessionId = messageContext.SessionId;
+            if (!string.IsNullOrWhiteSpace(messageContext.ReplyToSessionId))
+                message.ReplyToSessionId = messageContext.ReplyToSessionId;
 
-                var message = new ServiceBusMessage(body)
-                {
-                    ContentType = context.ContentType?.MediaType,
-                    TimeToLive = messageContext.TimeToLive,
-                    CorrelationId = messageContext.CorrelationId,
-                    MessageId = messageContext.MessageId,
-                    Subject = messageContext.Label,
-                    PartitionKey = messageContext.PartitionKey,
-                    ReplyTo = messageContext.ReplyTo
-                };
+            foreach (KeyValuePair<string, object> property in messageContext.Properties.Where(x => !x.Key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal)))
+                message.ApplicationProperties.Set(new HeaderValue(property.Key, property.Value));
 
-                if (!string.IsNullOrWhiteSpace(messageContext.SessionId))
-                    message.SessionId = messageContext.SessionId;
-                if (!string.IsNullOrWhiteSpace(messageContext.ReplyToSessionId))
-                    message.ReplyToSessionId = messageContext.ReplyToSessionId;
+            var sendHeaders = new DictionarySendHeaders(message.ApplicationProperties, true);
 
-                foreach (KeyValuePair<string, object> property in messageContext.Properties.Where(x => !x.Key.StartsWith(MessageHeaders.Prefix, StringComparison.Ordinal)))
-                    message.ApplicationProperties.Set(new HeaderValue(property.Key, property.Value));
+            sendHeaders.SetHostHeaders();
 
-                var sendHeaders = new DictionarySendHeaders(message.ApplicationProperties, true);
+            preSend(message, sendHeaders);
 
-                sendHeaders.SetHostHeaders();
+            await clientContext.Send(message, clientContext.CancellationToken).ConfigureAwait(false);
+        });
 
-                preSend(message, sendHeaders);
-
-                await clientContext.Send(message, clientContext.CancellationToken).ConfigureAwait(false);
-            });
-
-            return _sendEndpointContext.Supervisor.Send(clientPipe, context.CancellationToken);
-        }
+        return _sendEndpointContext.Supervisor.Send(clientPipe, context.CancellationToken);
     }
 }

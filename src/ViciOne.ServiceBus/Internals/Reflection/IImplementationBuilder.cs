@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.Internals
+using System;
+
+namespace ViciOne.ServiceBus.Internals;
+
+internal interface IImplementationBuilder
 {
-    using System;
-
-
-    internal interface IImplementationBuilder
-    {
-        Type GetImplementationType(Type interfaceType);
-    }
+    Type GetImplementationType(Type interfaceType);
 }

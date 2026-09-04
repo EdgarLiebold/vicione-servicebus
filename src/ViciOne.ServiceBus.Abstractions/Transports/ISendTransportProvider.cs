@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface ISendTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
+    Task<ISendTransport> GetSendTransport(Uri address);
 
-
-    public interface ISendTransportProvider
-    {
-        Task<ISendTransport> GetSendTransport(Uri address);
-
-        Uri NormalizeAddress(Uri address);
-    }
+    Uri NormalizeAddress(Uri address);
 }

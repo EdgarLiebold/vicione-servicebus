@@ -1,10 +1,9 @@
-namespace ViciOneServiceBusBenchmark.BusOutbox;
-
 using System.Threading;
 using System.Threading.Tasks;
-using Latency;
 using ViciOne.ServiceBus;
+using ViciOneServiceBusBenchmark.Latency;
 
+namespace ViciOneServiceBusBenchmark.BusOutbox;
 
 public class BusOutboxMessageConsumer :
     IConsumer<BusOutboxMessage>

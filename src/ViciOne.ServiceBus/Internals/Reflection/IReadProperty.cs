@@ -1,14 +1,13 @@
-namespace ViciOne.ServiceBus.Internals
+namespace ViciOne.ServiceBus.Internals;
+
+internal interface IReadProperty<in T, out TProperty> :
+    IReadProperty<T>
+    where T : class
 {
-    internal interface IReadProperty<in T, out TProperty> :
-        IReadProperty<T>
-        where T : class
-    {
-        TProperty Get(T entity);
-    }
+    TProperty Get(T entity);
+}
 
 
-    internal interface IReadProperty<in T>
-    {
-    }
+internal interface IReadProperty<in T>
+{
 }

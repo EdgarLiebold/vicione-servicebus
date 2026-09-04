@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IProcessIdProvider
 {
-    public interface IProcessIdProvider
-    {
-        byte[] GetProcessId();
-    }
+    byte[] GetProcessId();
 }

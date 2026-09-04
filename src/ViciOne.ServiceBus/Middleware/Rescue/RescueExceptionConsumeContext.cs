@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.Middleware.Rescue
+using System;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Events;
+
+namespace ViciOne.ServiceBus.Middleware.Rescue;
+
+public class RescueExceptionConsumeContext<TMessage> :
+    ConsumeContextProxy<TMessage>,
+    ExceptionConsumeContext<TMessage>
+    where TMessage : class
 {
-    using System;
-    using Context;
-    using Events;
+    ExceptionInfo _exceptionInfo;
 
-
-    public class RescueExceptionConsumeContext<TMessage> :
-        ConsumeContextProxy<TMessage>,
-        ExceptionConsumeContext<TMessage>
-        where TMessage : class
+    public RescueExceptionConsumeContext(ConsumeContext<TMessage> context, Exception exception)
+        : base(context)
     {
-        ExceptionInfo _exceptionInfo;
-
-        public RescueExceptionConsumeContext(ConsumeContext<TMessage> context, Exception exception)
-            : base(context)
-        {
-            Exception = exception;
-        }
-
-        public Exception Exception { get; }
-
-        public ExceptionInfo ExceptionInfo
-        {
-            get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
-        }
+        Exception = exception;
     }
 
+    public Exception Exception { get; }
 
-    public class RescueExceptionConsumeContext :
-        ConsumeContextProxy,
-        ExceptionConsumeContext
+    public ExceptionInfo ExceptionInfo
     {
-        ExceptionInfo _exceptionInfo;
+        get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
+    }
+}
 
-        public RescueExceptionConsumeContext(ConsumeContext context, Exception exception)
-            : base(context)
-        {
-            Exception = exception;
-        }
 
-        public Exception Exception { get; }
+public class RescueExceptionConsumeContext :
+    ConsumeContextProxy,
+    ExceptionConsumeContext
+{
+    ExceptionInfo _exceptionInfo;
 
-        public ExceptionInfo ExceptionInfo
-        {
-            get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
-        }
+    public RescueExceptionConsumeContext(ConsumeContext context, Exception exception)
+        : base(context)
+    {
+        Exception = exception;
+    }
+
+    public Exception Exception { get; }
+
+    public ExceptionInfo ExceptionInfo
+    {
+        get { return _exceptionInfo ??= new FaultExceptionInfo(Exception); }
     }
 }

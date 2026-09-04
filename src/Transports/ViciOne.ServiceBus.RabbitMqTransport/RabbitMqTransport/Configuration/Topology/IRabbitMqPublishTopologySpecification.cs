@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public interface IRabbitMqPublishTopologySpecification :
+    ISpecification
 {
-    using Topology;
-
-
-    public interface IRabbitMqPublishTopologySpecification :
-        ISpecification
-    {
-        void Apply(IPublishEndpointBrokerTopologyBuilder builder);
-    }
+    void Apply(IPublishEndpointBrokerTopologyBuilder builder);
 }

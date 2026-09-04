@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
-
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 public class SqlServerSqlTransportConnection :
     ISqlServerSqlTransportConnection

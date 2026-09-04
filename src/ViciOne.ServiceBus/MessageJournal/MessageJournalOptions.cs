@@ -1,9 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.MessageJournal;
-
 using System;
 using System.Threading;
 
+#nullable enable
+namespace ViciOne.ServiceBus.MessageJournal;
 /// <summary>
 /// Immutable runtime limits for an explicitly connected message journal.
 /// </summary>

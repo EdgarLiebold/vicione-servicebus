@@ -1,44 +1,42 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Merges the out-of-band message back into the pipe
+/// </summary>
+/// <typeparam name="TSaga"></typeparam>
+/// <typeparam name="TMessage"></typeparam>
+public class SagaMergePipe<TSaga, TMessage> :
+    IPipe<SagaConsumeContext<TSaga>>
+    where TMessage : class
+    where TSaga : class, ISaga
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _output;
 
-
-    /// <summary>
-    /// Merges the out-of-band message back into the pipe
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <typeparam name="TMessage"></typeparam>
-    public class SagaMergePipe<TSaga, TMessage> :
-        IPipe<SagaConsumeContext<TSaga>>
-        where TMessage : class
-        where TSaga : class, ISaga
+    public SagaMergePipe(IPipe<SagaConsumeContext<TSaga, TMessage>> output)
     {
-        readonly IPipe<SagaConsumeContext<TSaga, TMessage>> _output;
+        _output = output;
+    }
 
-        public SagaMergePipe(IPipe<SagaConsumeContext<TSaga, TMessage>> output)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("merge");
+        scope.Set(new
         {
-            _output = output;
-        }
+            SagaType = TypeCache<TSaga>.ShortName,
+            MessageType = TypeCache<TMessage>.ShortName
+        });
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateFilterScope("merge");
-            scope.Set(new
-            {
-                SagaType = TypeCache<TSaga>.ShortName,
-                MessageType = TypeCache<TMessage>.ShortName
-            });
+        _output.Probe(scope);
+    }
 
-            _output.Probe(scope);
-        }
+    public Task Send(SagaConsumeContext<TSaga> context)
+    {
+        if (context is SagaConsumeContext<TSaga, TMessage> consumerContext)
+            return _output.Send(consumerContext);
 
-        public Task Send(SagaConsumeContext<TSaga> context)
-        {
-            if (context is SagaConsumeContext<TSaga, TMessage> consumerContext)
-                return _output.Send(consumerContext);
-
-            throw new ArgumentException($"The message could not be retrieved: {TypeCache<TMessage>.ShortName}", nameof(context));
-        }
+        throw new ArgumentException($"The message could not be retrieved: {TypeCache<TMessage>.ShortName}", nameof(context));
     }
 }

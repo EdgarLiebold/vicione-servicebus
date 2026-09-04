@@ -1,21 +1,20 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ParentConsumePipeSpecificationObserver :
+    IConsumePipeSpecificationObserver
 {
-    public class ParentConsumePipeSpecificationObserver :
-        IConsumePipeSpecificationObserver
+    readonly IConsumePipeSpecification _specification;
+
+    public ParentConsumePipeSpecificationObserver(IConsumePipeSpecification specification)
     {
-        readonly IConsumePipeSpecification _specification;
+        _specification = specification;
+    }
 
-        public ParentConsumePipeSpecificationObserver(IConsumePipeSpecification specification)
-        {
-            _specification = specification;
-        }
+    public void MessageSpecificationCreated<T>(IMessageConsumePipeSpecification<T> specification)
+        where T : class
+    {
+        IMessageConsumePipeSpecification<T> messageSpecification = _specification.GetMessageSpecification<T>();
 
-        public void MessageSpecificationCreated<T>(IMessageConsumePipeSpecification<T> specification)
-            where T : class
-        {
-            IMessageConsumePipeSpecification<T> messageSpecification = _specification.GetMessageSpecification<T>();
-
-            specification.AddParentMessageSpecification(messageSpecification);
-        }
+        specification.AddParentMessageSpecification(messageSpecification);
     }
 }

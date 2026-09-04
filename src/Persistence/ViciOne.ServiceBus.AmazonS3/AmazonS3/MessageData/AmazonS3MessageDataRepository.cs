@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonS3.MessageData;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,9 +8,9 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using Util;
+using ViciOne.ServiceBus.Util;
 
-
+namespace ViciOne.ServiceBus.AmazonS3.MessageData;
 /// <summary>
 /// Stores message payloads in one caller-owned Amazon S3 bucket.
 /// </summary>
@@ -241,9 +239,8 @@ public sealed class AmazonS3MessageDataRepository :
         LifecycleFilter? filter = source.Filter;
         if (filter is null)
         {
-            // The AWS response model still exposes legacy Prefix-only configurations. Convert that
-            // wire-compatible input once and emit only the current Filter representation.
-#pragma warning disable CS0618
+            // Prefix is the AWS SDK's only representation of lifecycle rules returned in the older wire format.
+#pragma warning disable CS0618 // Reading the deprecated SDK property is required to preserve an existing rule while rewriting it with Filter.
             string prefix = source.Prefix ?? string.Empty;
 #pragma warning restore CS0618
             filter = new LifecycleFilter

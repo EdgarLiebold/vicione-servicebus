@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Internals.GraphValidation
+namespace ViciOne.ServiceBus.Internals.GraphValidation;
+
+internal interface ITarjanNodeProperties
 {
-    internal interface ITarjanNodeProperties
-    {
-        int Index { get; set; }
-        int LowLink { get; set; }
-    }
+    int Index { get; set; }
+    int LowLink { get; set; }
 }

@@ -1,21 +1,19 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+public class LatencyTestMessage
 {
-    using System;
-
-
-    public class LatencyTestMessage
+    public LatencyTestMessage()
     {
-        public LatencyTestMessage()
-        {
-        }
-
-        public LatencyTestMessage(Guid correlationId, string payload)
-        {
-            CorrelationId = correlationId;
-            Payload = payload;
-        }
-
-        public Guid CorrelationId { get; set; }
-        public string Payload { get; set; }
     }
+
+    public LatencyTestMessage(Guid correlationId, string payload)
+    {
+        CorrelationId = correlationId;
+        Payload = payload;
+    }
+
+    public Guid CorrelationId { get; set; }
+    public string Payload { get; set; }
 }

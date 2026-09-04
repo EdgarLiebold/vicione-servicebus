@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ScopedSendPipeAdapter<TMessage> :
+    SendContextPipeAdapter<TMessage>
+    where TMessage : class
 {
-    using System;
-    using Transports;
+    readonly IServiceProvider _provider;
 
-
-    public class ScopedSendPipeAdapter<TMessage> :
-        SendContextPipeAdapter<TMessage>
-        where TMessage : class
+    public ScopedSendPipeAdapter(IServiceProvider provider, IPipe<SendContext<TMessage>> pipe)
+        : base(pipe)
     {
-        readonly IServiceProvider _provider;
+        _provider = provider;
+    }
 
-        public ScopedSendPipeAdapter(IServiceProvider provider, IPipe<SendContext<TMessage>> pipe)
-            : base(pipe)
-        {
-            _provider = provider;
-        }
+    protected override void Send<T>(SendContext<T> context)
+    {
+        context.GetOrAddPayload(() => _provider);
+    }
 
-        protected override void Send<T>(SendContext<T> context)
-        {
-            context.GetOrAddPayload(() => _provider);
-        }
-
-        protected override void Send(SendContext<TMessage> context)
-        {
-        }
+    protected override void Send(SendContext<TMessage> context)
+    {
     }
 }

@@ -1,47 +1,45 @@
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
 #nullable enable
-namespace ViciOne.ServiceBus.JobService
+namespace ViciOne.ServiceBus.JobService;
+
+public class ConsumerJobHandle<T> :
+    JobHandle
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly ConsumeJobContext<T> _context;
+    readonly TimeSpan _jobCancellationTimeout;
 
-
-    public class ConsumerJobHandle<T> :
-        JobHandle
-        where T : class
+    public ConsumerJobHandle(ConsumeJobContext<T> context, Task task, TimeSpan jobCancellationTimeout)
     {
-        readonly ConsumeJobContext<T> _context;
-        readonly TimeSpan _jobCancellationTimeout;
+        _context = context;
+        _jobCancellationTimeout = jobCancellationTimeout;
+        JobTask = task;
+    }
 
-        public ConsumerJobHandle(ConsumeJobContext<T> context, Task task, TimeSpan jobCancellationTimeout)
+    public Guid JobId => _context.JobId;
+    public Task JobTask { get; }
+
+    public async Task Cancel(string? reason)
+    {
+        if (_context.CancellationToken.IsCancellationRequested)
+            return;
+
+        _context.Cancel(reason);
+
+        try
         {
-            _context = context;
-            _jobCancellationTimeout = jobCancellationTimeout;
-            JobTask = task;
+            await JobTask.OrTimeout(_jobCancellationTimeout, _context.GetTimeProvider()).ConfigureAwait(false);
         }
-
-        public Guid JobId => _context.JobId;
-        public Task JobTask { get; }
-
-        public async Task Cancel(string? reason)
+        catch (OperationCanceledException)
         {
-            if (_context.CancellationToken.IsCancellationRequested)
-                return;
-
-            _context.Cancel(reason);
-
-            try
-            {
-                await JobTask.OrTimeout(_jobCancellationTimeout, _context.GetTimeProvider()).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-            }
         }
+    }
 
-        public ValueTask DisposeAsync()
-        {
-            return _context.DisposeAsync();
-        }
+    public ValueTask DisposeAsync()
+    {
+        return _context.DisposeAsync();
     }
 }

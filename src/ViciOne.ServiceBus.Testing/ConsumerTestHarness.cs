@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+using ViciOne.ServiceBus.Testing.Implementations;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public class ConsumerTestHarness<TConsumer> :
+    IConsumerTestHarness<TConsumer>
+    where TConsumer : class, IConsumer
 {
-    using System;
-    using Implementations;
+    readonly Action<IConsumerConfigurator<TConsumer>> _configure;
+    readonly ReceivedMessageList _consumed;
+    readonly IConsumerFactory<TConsumer> _consumerFactory;
 
-
-    public class ConsumerTestHarness<TConsumer> :
-        IConsumerTestHarness<TConsumer>
-        where TConsumer : class, IConsumer
+    public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
+        Action<IConsumerConfigurator<TConsumer>> configure, string queueName)
+        : this(testHarness, consumerFactory, queueName)
     {
-        readonly Action<IConsumerConfigurator<TConsumer>> _configure;
-        readonly ReceivedMessageList _consumed;
-        readonly IConsumerFactory<TConsumer> _consumerFactory;
+        _configure = configure;
+    }
 
-        public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
-            Action<IConsumerConfigurator<TConsumer>> configure, string queueName)
-            : this(testHarness, consumerFactory, queueName)
-        {
-            _configure = configure;
-        }
+    public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory, string queueName)
+        : this(testHarness, consumerFactory)
+    {
+        if (string.IsNullOrWhiteSpace(queueName))
+            testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
+        else
+            testHarness.OnConfigureBus += configurator => ConfigureNamedReceiveEndpoint(configurator, queueName);
+    }
 
-        public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory, string queueName)
-            : this(testHarness, consumerFactory)
-        {
-            if (string.IsNullOrWhiteSpace(queueName))
-                testHarness.OnConfigureReceiveEndpoint += ConfigureReceiveEndpoint;
-            else
-                testHarness.OnConfigureBus += configurator => ConfigureNamedReceiveEndpoint(configurator, queueName);
-        }
+    public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
+        Action<IConsumerConfigurator<TConsumer>> configure)
+        : this(testHarness, consumerFactory)
+    {
+        _configure = configure;
+    }
 
-        public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory,
-            Action<IConsumerConfigurator<TConsumer>> configure)
-            : this(testHarness, consumerFactory)
-        {
-            _configure = configure;
-        }
+    public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory)
+    {
+        _consumerFactory = consumerFactory;
 
-        public ConsumerTestHarness(BusTestHarness testHarness, IConsumerFactory<TConsumer> consumerFactory)
-        {
-            _consumerFactory = consumerFactory;
+        _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
+        ((ITestContextRetention)_consumed).ConfigureRetention(testHarness.ContextSaveMode, testHarness.MaximumSavedContexts);
+    }
 
-            _consumed = new ReceivedMessageList(testHarness.TestTimeout, testHarness.InactivityToken, testHarness.TimeProvider);
-            ((ITestContextRetention)_consumed).ConfigureRetention(testHarness.ContextSaveMode, testHarness.MaximumSavedContexts);
-        }
+    public IReceivedMessageList Consumed => _consumed;
 
-        public IReceivedMessageList Consumed => _consumed;
+    protected virtual void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
+    {
+        var decorator = new TestConsumerFactoryDecorator<TConsumer>(_consumerFactory, _consumed);
 
-        protected virtual void ConfigureReceiveEndpoint(IReceiveEndpointConfigurator configurator)
+        configurator.Consumer(decorator, c => _configure?.Invoke(c));
+    }
+
+    protected virtual void ConfigureNamedReceiveEndpoint(IBusFactoryConfigurator configurator, string queueName)
+    {
+        configurator.ReceiveEndpoint(queueName, x =>
         {
             var decorator = new TestConsumerFactoryDecorator<TConsumer>(_consumerFactory, _consumed);
 
-            configurator.Consumer(decorator, c => _configure?.Invoke(c));
-        }
-
-        protected virtual void ConfigureNamedReceiveEndpoint(IBusFactoryConfigurator configurator, string queueName)
-        {
-            configurator.ReceiveEndpoint(queueName, x =>
-            {
-                var decorator = new TestConsumerFactoryDecorator<TConsumer>(_consumerFactory, _consumed);
-
-                x.Consumer(decorator, c => _configure?.Invoke(c));
-            });
-        }
+            x.Consumer(decorator, c => _configure?.Invoke(c));
+        });
     }
 }

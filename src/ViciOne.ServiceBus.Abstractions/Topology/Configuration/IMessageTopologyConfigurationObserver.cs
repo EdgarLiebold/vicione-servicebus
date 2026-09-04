@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Observes the configuration of message-specific topology
+/// </summary>
+public interface IMessageTopologyConfigurationObserver
 {
-    /// <summary>
-    /// Observes the configuration of message-specific topology
-    /// </summary>
-    public interface IMessageTopologyConfigurationObserver
-    {
-        void MessageTopologyCreated<T>(IMessageTopologyConfigurator<T> configuration)
-            where T : class;
-    }
+    void MessageTopologyCreated<T>(IMessageTopologyConfigurator<T> configuration)
+        where T : class;
 }

@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Threading;
+using ViciOne.ServiceBus.RetryPolicies;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Configures a message retry for a handler, on the handler configurator, which is constrained to
+/// the message types for that handler, and only applies to the handler.
+/// </summary>
+public class MessageRetryHandlerConfigurationObserver :
+    IHandlerConfigurationObserver
 {
-    using System;
-    using System.Threading;
-    using RetryPolicies;
+    readonly CancellationToken _cancellationToken;
+    readonly Action<IRetryConfigurator> _configure;
 
-
-    /// <summary>
-    /// Configures a message retry for a handler, on the handler configurator, which is constrained to
-    /// the message types for that handler, and only applies to the handler.
-    /// </summary>
-    public class MessageRetryHandlerConfigurationObserver :
-        IHandlerConfigurationObserver
+    public MessageRetryHandlerConfigurationObserver(CancellationToken cancellationToken,
+        Action<IRetryConfigurator> configure)
     {
-        readonly CancellationToken _cancellationToken;
-        readonly Action<IRetryConfigurator> _configure;
+        _cancellationToken = cancellationToken;
+        _configure = configure ?? throw new ArgumentNullException(nameof(configure));
+    }
 
-        public MessageRetryHandlerConfigurationObserver(CancellationToken cancellationToken,
-            Action<IRetryConfigurator> configure)
-        {
-            _cancellationToken = cancellationToken;
-            _configure = configure ?? throw new ArgumentNullException(nameof(configure));
-        }
+    void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
+    {
+        var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory, _cancellationToken);
 
-        void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
-        {
-            var specification = new ConsumeContextRetryPipeSpecification<ConsumeContext<T>, RetryConsumeContext<T>>(Factory, _cancellationToken);
+        _configure(specification);
 
-            _configure(specification);
+        configurator.AddPipeSpecification(specification);
+    }
 
-            configurator.AddPipeSpecification(specification);
-        }
-
-        static RetryConsumeContext<T> Factory<T>(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-            where T : class
-        {
-            return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
-        }
+    static RetryConsumeContext<T> Factory<T>(ConsumeContext<T> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+        where T : class
+    {
+        return new RetryConsumeContext<T>(context, retryPolicy, retryContext);
     }
 }

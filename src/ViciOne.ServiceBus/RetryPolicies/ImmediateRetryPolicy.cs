@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class ImmediateRetryPolicy :
+    IRetryPolicy
 {
-    using System;
+    readonly IExceptionFilter _filter;
 
-
-    public class ImmediateRetryPolicy :
-        IRetryPolicy
+    public ImmediateRetryPolicy(IExceptionFilter filter, int retryLimit)
     {
-        readonly IExceptionFilter _filter;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
 
-        public ImmediateRetryPolicy(IExceptionFilter filter, int retryLimit)
+        _filter = filter ?? throw new ArgumentNullException(nameof(filter));
+        RetryLimit = retryLimit;
+    }
+
+    public int RetryLimit { get; }
+
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        context.Set(new
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(retryLimit);
+            Policy = "Immediate",
+            Limit = RetryLimit
+        });
 
-            _filter = filter ?? throw new ArgumentNullException(nameof(filter));
-            RetryLimit = retryLimit;
-        }
+        _filter.Probe(context);
+    }
 
-        public int RetryLimit { get; }
+    RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
+    {
+        return new ImmediateRetryPolicyContext<T>(this, context);
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            context.Set(new
-            {
-                Policy = "Immediate",
-                Limit = RetryLimit
-            });
-
-            _filter.Probe(context);
-        }
-
-        RetryPolicyContext<T> IRetryPolicy.CreatePolicyContext<T>(T context)
-        {
-            return new ImmediateRetryPolicyContext<T>(this, context);
-        }
-
-        public bool IsHandled(Exception exception)
-        {
-            return _filter.Match(exception);
-        }
+    public bool IsHandled(Exception exception)
+    {
+        return _filter.Match(exception);
     }
 }

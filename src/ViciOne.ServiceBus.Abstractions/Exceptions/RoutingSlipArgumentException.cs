@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class RoutingSlipArgumentException :
+    RoutingSlipException
 {
-    using System;
-
-
-    [Serializable]
-    public class RoutingSlipArgumentException :
-        RoutingSlipException
+    public RoutingSlipArgumentException()
     {
-        public RoutingSlipArgumentException()
-        {
-        }
+    }
 
-        public RoutingSlipArgumentException(string message)
-            : base(message)
-        {
-        }
+    public RoutingSlipArgumentException(string message)
+        : base(message)
+    {
+    }
 
-        public RoutingSlipArgumentException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public RoutingSlipArgumentException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

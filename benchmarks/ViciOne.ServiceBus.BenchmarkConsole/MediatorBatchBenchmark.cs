@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using Mediator;
+using ViciOne.ServiceBus.Mediator;
 
-
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 /// <summary>
 /// Measures completion time and allocation cost for a concurrently submitted mediator batch. BenchmarkDotNet reports
 /// one complete batch as one operation; the result is not a per-message throughput figure.

@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public interface IRabbitMqTopologyConfiguration :
+    ITopologyConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    new IRabbitMqPublishTopologyConfigurator Publish { get; }
 
+    new IRabbitMqSendTopologyConfigurator Send { get; }
 
-    public interface IRabbitMqTopologyConfiguration :
-        ITopologyConfiguration
-    {
-        new IRabbitMqPublishTopologyConfigurator Publish { get; }
-
-        new IRabbitMqSendTopologyConfigurator Send { get; }
-
-        new IRabbitMqConsumeTopologyConfigurator Consume { get; }
-    }
+    new IRabbitMqConsumeTopologyConfigurator Consume { get; }
 }

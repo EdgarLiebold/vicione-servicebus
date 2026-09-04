@@ -1,11 +1,11 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions;
-
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using global::ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests.Internals.Extensions;
 
 public sealed class TypeRelationshipExtensionsTests
 {

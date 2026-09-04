@@ -1,9 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
-
 using System;
 using Microsoft.Data.SqlClient;
 
+#nullable enable
+namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 /// <summary>
 /// Classifies SQL Server send failures from the provider's numeric error codes.
 /// </summary>

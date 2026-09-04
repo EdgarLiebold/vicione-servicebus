@@ -1,9 +1,9 @@
-namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Requirements;
-
 using System.Reflection;
 using System.Text.Json;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.QuartzIntegration.Tests.Requirements;
 
 public sealed class InheritedBehaviorDispositionTests
 {

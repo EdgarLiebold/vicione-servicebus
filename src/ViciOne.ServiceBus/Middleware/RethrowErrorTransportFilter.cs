@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class RethrowErrorTransportFilter :
+    IFilter<ExceptionReceiveContext>
 {
-    using System.Threading.Tasks;
-    using Internals;
-
-
-    public class RethrowErrorTransportFilter :
-        IFilter<ExceptionReceiveContext>
+    public async Task Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
     {
-        public async Task Send(ExceptionReceiveContext context, IPipe<ExceptionReceiveContext> next)
-        {
-            if (!context.IsFaulted)
-                await context.NotifyFaulted(context.Exception).ConfigureAwait(false);
+        if (!context.IsFaulted)
+            await context.NotifyFaulted(context.Exception).ConfigureAwait(false);
 
-            context.Exception.Rethrow();
-        }
+        context.Exception.Rethrow();
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("log-fault");
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("log-fault");
     }
 }

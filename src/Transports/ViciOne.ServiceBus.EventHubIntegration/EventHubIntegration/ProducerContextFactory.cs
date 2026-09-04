@@ -1,56 +1,54 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class ProducerContextFactory :
+    IPipeContextFactory<ProducerContext>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Agents;
-    using Internals;
+    readonly IConnectionContextSupervisor _contextSupervisor;
+    readonly string _eventHubName;
 
-
-    public class ProducerContextFactory :
-        IPipeContextFactory<ProducerContext>
+    public ProducerContextFactory(IConnectionContextSupervisor contextSupervisor, string eventHubName)
     {
-        readonly IConnectionContextSupervisor _contextSupervisor;
-        readonly string _eventHubName;
+        _contextSupervisor = contextSupervisor;
+        _eventHubName = eventHubName;
+    }
 
-        public ProducerContextFactory(IConnectionContextSupervisor contextSupervisor, string eventHubName)
+    public IActivePipeContextAgent<ProducerContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProducerContext> context,
+        CancellationToken cancellationToken)
+    {
+        return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
+    }
+
+    public IPipeContextAgent<ProducerContext> CreateContext(ISupervisor supervisor)
+    {
+        IAsyncPipeContextAgent<ProducerContext> asyncContext = supervisor.AddAsyncContext<ProducerContext>();
+
+        CreateProcessor(asyncContext, supervisor.Stopped);
+
+        return asyncContext;
+    }
+
+    static async Task<ProducerContext> CreateSharedConnection(Task<ProducerContext> context,
+        CancellationToken cancellationToken)
+    {
+        return context.IsCompletedSuccessfully()
+            ? new SharedProducerContext(context.Result, cancellationToken)
+            : new SharedProducerContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
+    }
+
+    void CreateProcessor(IAsyncPipeContextAgent<ProducerContext> asyncContext, CancellationToken cancellationToken)
+    {
+        Task<ProducerContext> Create(ConnectionContext connectionContext, CancellationToken createCancellationToken)
         {
-            _contextSupervisor = contextSupervisor;
-            _eventHubName = eventHubName;
+            var client = connectionContext.CreateEventHubClient(_eventHubName);
+            ProducerContext context = new EventHubProducerContext(client, createCancellationToken);
+            return Task.FromResult(context);
         }
 
-        public IActivePipeContextAgent<ProducerContext> CreateActiveContext(ISupervisor supervisor, PipeContextHandle<ProducerContext> context,
-            CancellationToken cancellationToken)
-        {
-            return supervisor.AddActiveContext(context, CreateSharedConnection(context.Context, cancellationToken));
-        }
-
-        public IPipeContextAgent<ProducerContext> CreateContext(ISupervisor supervisor)
-        {
-            IAsyncPipeContextAgent<ProducerContext> asyncContext = supervisor.AddAsyncContext<ProducerContext>();
-
-            CreateProcessor(asyncContext, supervisor.Stopped);
-
-            return asyncContext;
-        }
-
-        static async Task<ProducerContext> CreateSharedConnection(Task<ProducerContext> context,
-            CancellationToken cancellationToken)
-        {
-            return context.IsCompletedSuccessfully()
-                ? new SharedProducerContext(context.Result, cancellationToken)
-                : new SharedProducerContext(await context.OrCanceled(cancellationToken).ConfigureAwait(false), cancellationToken);
-        }
-
-        void CreateProcessor(IAsyncPipeContextAgent<ProducerContext> asyncContext, CancellationToken cancellationToken)
-        {
-            Task<ProducerContext> Create(ConnectionContext connectionContext, CancellationToken createCancellationToken)
-            {
-                var client = connectionContext.CreateEventHubClient(_eventHubName);
-                ProducerContext context = new EventHubProducerContext(client, createCancellationToken);
-                return Task.FromResult(context);
-            }
-
-            _contextSupervisor.StartAgent(asyncContext, Create, cancellationToken);
-        }
+        _contextSupervisor.StartAgent(asyncContext, Create, cancellationToken);
     }
 }

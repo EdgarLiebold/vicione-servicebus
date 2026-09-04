@@ -1,87 +1,85 @@
-namespace ViciOne.ServiceBus.Courier
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Courier.Results;
+
+namespace ViciOne.ServiceBus.Courier;
+
+public class HostCompensateContext<TLog> :
+    BaseCourierContext,
+    CompensateContext<TLog>
+    where TLog : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Context;
-    using Contracts;
-    using Results;
+    readonly ActivityLog _activityLog;
+    readonly CompensateLog _compensateLog;
 
-
-    public class HostCompensateContext<TLog> :
-        BaseCourierContext,
-        CompensateContext<TLog>
-        where TLog : class
+    public HostCompensateContext(ConsumeContext<RoutingSlip> context)
+        : base(context)
     {
-        readonly ActivityLog _activityLog;
-        readonly CompensateLog _compensateLog;
+        if (RoutingSlip.CompensateLogs.Count == 0)
+            throw new ArgumentException("The routingSlip must contain at least one activity log");
 
-        public HostCompensateContext(ConsumeContext<RoutingSlip> context)
-            : base(context)
+        _compensateLog = RoutingSlip.CompensateLogs.Last();
+
+        _activityLog = RoutingSlip.ActivityLogs.SingleOrDefault(x => x.ExecutionId == _compensateLog.ExecutionId);
+        if (_activityLog == null)
         {
-            if (RoutingSlip.CompensateLogs.Count == 0)
-                throw new ArgumentException("The routingSlip must contain at least one activity log");
-
-            _compensateLog = RoutingSlip.CompensateLogs.Last();
-
-            _activityLog = RoutingSlip.ActivityLogs.SingleOrDefault(x => x.ExecutionId == _compensateLog.ExecutionId);
-            if (_activityLog == null)
-            {
-                throw new RoutingSlipException("The compensation log did not have a matching activity log entry: "
-                    + _compensateLog.ExecutionId);
-            }
-
-            Log = RoutingSlip.GetCompensateLogData<TLog>();
+            throw new RoutingSlipException("The compensation log did not have a matching activity log entry: "
+                + _compensateLog.ExecutionId);
         }
 
-        public override string ActivityName => _activityLog.Name;
-        public TLog Log { get; }
+        Log = RoutingSlip.GetCompensateLogData<TLog>();
+    }
 
-        public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
-            where TActivity : class, ICompensateActivity<TLog>
-        {
-            return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
-        }
+    public override string ActivityName => _activityLog.Name;
+    public TLog Log { get; }
 
-        public CompensationResult Result { get; set; }
+    public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
+        where TActivity : class, ICompensateActivity<TLog>
+    {
+        return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
+    }
 
-        CompensationResult CompensateContext.Compensated()
-        {
-            return new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
-        }
+    public CompensationResult Result { get; set; }
 
-        CompensationResult CompensateContext.Compensated(object values)
-        {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+    CompensationResult CompensateContext.Compensated()
+    {
+        return new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
+    }
 
-            var result = new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
+    CompensationResult CompensateContext.Compensated(object values)
+    {
+        if (values == null)
+            throw new ArgumentNullException(nameof(values));
 
-            result.SetVariables(values);
+        var result = new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
 
-            return result;
-        }
+        result.SetVariables(values);
 
-        CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
-        {
-            if (variables == null)
-                throw new ArgumentNullException(nameof(variables));
+        return result;
+    }
 
-            var result = new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
+    CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
+    {
+        if (variables == null)
+            throw new ArgumentNullException(nameof(variables));
 
-            result.SetVariables(variables);
+        var result = new CompensatedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip);
 
-            return result;
-        }
+        result.SetVariables(variables);
 
-        CompensationResult CompensateContext.Failed()
-        {
-            return Failed(new RoutingSlipException("The routing slip compensation failed"));
-        }
+        return result;
+    }
 
-        public CompensationResult Failed(Exception exception)
-        {
-            return new FailedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip, exception);
-        }
+    CompensationResult CompensateContext.Failed()
+    {
+        return Failed(new RoutingSlipException("The routing slip compensation failed"));
+    }
+
+    public CompensationResult Failed(Exception exception)
+    {
+        return new FailedCompensationResult<TLog>(this, Publisher, _compensateLog, RoutingSlip, exception);
     }
 }

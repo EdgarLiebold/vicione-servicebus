@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus;
-
 using System;
-using Configuration;
-using Transports.Components;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports.Components;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Configures the endpoint kill switch. The configuration is captured as an immutable snapshot
 /// when <see cref="KillSwitchConfigurationExtensions.UseKillSwitch(IBusFactoryConfigurator, Action{KillSwitchOptions}?)" />

@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class EmptyPipe<TContext> :
+    IPipe<TContext>
+    where TContext : class, PipeContext
 {
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-
-
-    public class EmptyPipe<TContext> :
-        IPipe<TContext>
-        where TContext : class, PipeContext
+    [DebuggerNonUserCode]
+    Task IPipe<TContext>.Send(TContext context)
     {
-        [DebuggerNonUserCode]
-        Task IPipe<TContext>.Send(TContext context)
-        {
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
     }
 }

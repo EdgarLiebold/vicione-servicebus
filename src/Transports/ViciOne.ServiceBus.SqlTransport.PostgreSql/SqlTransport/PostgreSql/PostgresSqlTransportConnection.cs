@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
 
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 public class PostgresSqlTransportConnection :
     IPostgresSqlTransportConnection

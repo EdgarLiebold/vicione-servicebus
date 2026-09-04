@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.AzureTable
+using System;
+using Azure.Data.Tables;
+
+namespace ViciOne.ServiceBus.AzureTable;
+
+public interface DatabaseContext<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
-    using Azure.Data.Tables;
+    ISagaKeyFormatter<TSaga> Formatter { get; }
 
+    TableClient Table { get; }
 
-    public interface DatabaseContext<TSaga>
-        where TSaga : class, ISaga
-    {
-        ISagaKeyFormatter<TSaga> Formatter { get; }
+    IEntityConverter<TSaga> Converter { get; }
 
-        TableClient Table { get; }
-
-        IEntityConverter<TSaga> Converter { get; }
-
-        (string partitionKey, string rowKey) Format(Guid correlationId);
-    }
+    (string partitionKey, string rowKey) Format(Guid correlationId);
 }

@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface ISagaMessageConnector
 {
-    using System;
+    Type MessageType { get; }
+}
 
 
-    public interface ISagaMessageConnector
-    {
-        Type MessageType { get; }
-    }
+public interface ISagaMessageConnector<TSaga> :
+    ISagaMessageConnector
+    where TSaga : class, ISaga
+{
+    ISagaMessageSpecification<TSaga> CreateSagaMessageSpecification();
 
-
-    public interface ISagaMessageConnector<TSaga> :
-        ISagaMessageConnector
-        where TSaga : class, ISaga
-    {
-        ISagaMessageSpecification<TSaga> CreateSagaMessageSpecification();
-
-        ConnectHandle ConnectSaga(IConsumePipeConnector consumePipe, ISagaRepository<TSaga> repository, ISagaSpecification<TSaga> specification);
-    }
+    ConnectHandle ConnectSaga(IConsumePipeConnector consumePipe, ISagaRepository<TSaga> repository, ISagaSpecification<TSaga> specification);
 }

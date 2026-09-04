@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public class InMemoryBusTopology :
+    BusTopology,
+    IInMemoryBusTopology
 {
-    using Configuration;
-    using Transports;
+    readonly IInMemoryTopologyConfiguration _configuration;
 
-
-    public class InMemoryBusTopology :
-        BusTopology,
-        IInMemoryBusTopology
+    public InMemoryBusTopology(IInMemoryHostConfiguration hostConfiguration, IInMemoryTopologyConfiguration configuration)
+        : base(hostConfiguration, configuration)
     {
-        readonly IInMemoryTopologyConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public InMemoryBusTopology(IInMemoryHostConfiguration hostConfiguration, IInMemoryTopologyConfiguration configuration)
-            : base(hostConfiguration, configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public new IInMemoryMessagePublishTopology<T> Publish<T>()
-            where T : class
-        {
-            return _configuration.Publish.GetMessageTopology<T>();
-        }
+    public new IInMemoryMessagePublishTopology<T> Publish<T>()
+        where T : class
+    {
+        return _configuration.Publish.GetMessageTopology<T>();
     }
 }

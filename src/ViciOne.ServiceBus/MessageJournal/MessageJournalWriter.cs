@@ -1,9 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.MessageJournal;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
+namespace ViciOne.ServiceBus.MessageJournal;
 
 internal sealed class MessageJournalWriter
 {

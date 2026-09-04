@@ -1,10 +1,9 @@
+using System;
+using RabbitMQ.Client;
+using ViciOne.ServiceBus.Internals;
+
 #nullable enable
 namespace ViciOne.ServiceBus;
-
-using System;
-using Internals;
-using RabbitMQ.Client;
-
 
 public static class RabbitMqConsumeContextExtensions
 {

@@ -1,8 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
-
 using System;
 using System.Threading;
+
+#nullable enable
+namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 internal sealed class CircuitBreakerStateMachine
 {

@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqQueueBindingConfigurator :
+    IActiveMqQueueConfigurator
 {
-    public interface IActiveMqQueueBindingConfigurator :
-        IActiveMqQueueConfigurator
-    {
-        /// <summary>
-        /// A routing key for the exchange binding
-        /// </summary>
-        string Selector { set; }
-    }
+    /// <summary>
+    /// A routing key for the exchange binding
+    /// </summary>
+    string Selector { set; }
 }

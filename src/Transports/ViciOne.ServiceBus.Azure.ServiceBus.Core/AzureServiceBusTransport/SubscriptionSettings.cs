@@ -1,17 +1,15 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using Azure.Messaging.ServiceBus.Administration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface SubscriptionSettings :
+    ClientSettings
 {
-    using Azure.Messaging.ServiceBus.Administration;
+    CreateTopicOptions CreateTopicOptions { get; }
 
+    CreateSubscriptionOptions CreateSubscriptionOptions { get; }
 
-    public interface SubscriptionSettings :
-        ClientSettings
-    {
-        CreateTopicOptions CreateTopicOptions { get; }
+    CreateRuleOptions Rule { get; }
 
-        CreateSubscriptionOptions CreateSubscriptionOptions { get; }
-
-        CreateRuleOptions Rule { get; }
-
-        RuleFilter Filter { get; }
-    }
+    RuleFilter Filter { get; }
 }

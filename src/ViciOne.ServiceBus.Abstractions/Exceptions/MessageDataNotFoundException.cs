@@ -1,19 +1,17 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class MessageDataNotFoundException :
+    MessageDataException
 {
-    using System;
-
-
-    [Serializable]
-    public class MessageDataNotFoundException :
-        MessageDataException
+    public MessageDataNotFoundException()
     {
-        public MessageDataNotFoundException()
-        {
-        }
+    }
 
-        public MessageDataNotFoundException(Uri address)
-            : base($"The message data was not found: {address}")
-        {
-        }
+    public MessageDataNotFoundException(Uri address)
+        : base($"The message data was not found: {address}")
+    {
     }
 }

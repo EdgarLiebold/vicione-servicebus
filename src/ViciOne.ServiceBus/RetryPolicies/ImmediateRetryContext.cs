@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class ImmediateRetryContext<TContext> :
+    BaseRetryContext<TContext>,
+    RetryContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
+    readonly ImmediateRetryPolicy _policy;
 
-
-    public class ImmediateRetryContext<TContext> :
-        BaseRetryContext<TContext>,
-        RetryContext<TContext>
-        where TContext : class, PipeContext
+    public ImmediateRetryContext(ImmediateRetryPolicy policy, TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
+        : base(context, exception, retryCount, cancellationToken)
     {
-        readonly ImmediateRetryPolicy _policy;
+        _policy = policy;
+    }
 
-        public ImmediateRetryContext(ImmediateRetryPolicy policy, TContext context, Exception exception, int retryCount, CancellationToken cancellationToken)
-            : base(context, exception, retryCount, cancellationToken)
-        {
-            _policy = policy;
-        }
+    bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
+    {
+        retryContext = new ImmediateRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
 
-        bool RetryContext<TContext>.CanRetry(Exception exception, out RetryContext<TContext> retryContext)
-        {
-            retryContext = new ImmediateRetryContext<TContext>(_policy, Context, Exception, RetryCount + 1, CancellationToken);
-
-            return RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
-        }
+        return RetryAttempt < _policy.RetryLimit && _policy.IsHandled(exception);
     }
 }

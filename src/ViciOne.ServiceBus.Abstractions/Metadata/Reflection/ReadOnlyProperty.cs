@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Metadata;
-
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
+namespace ViciOne.ServiceBus.Metadata;
 
 public class ReadOnlyProperty
 {

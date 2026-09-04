@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface ISendPipe :
+    ISendContextPipe,
+    IProbeSite
 {
-    public interface ISendPipe :
-        ISendContextPipe,
-        IProbeSite
-    {
-    }
 }

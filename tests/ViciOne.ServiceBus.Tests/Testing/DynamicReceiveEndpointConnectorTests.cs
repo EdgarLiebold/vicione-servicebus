@@ -1,5 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

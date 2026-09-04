@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Monitoring
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Monitoring;
+
+public class ConfigureBusHealthCheckServiceOptions :
+    IConfigureOptions<HealthCheckServiceOptions>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Configuration;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Microsoft.Extensions.Options;
-    using Transports;
+    readonly IEnumerable<IBusInstance> _busInstances;
+    readonly IServiceProvider _provider;
+    readonly string[] _tags;
 
-
-    public class ConfigureBusHealthCheckServiceOptions :
-        IConfigureOptions<HealthCheckServiceOptions>
+    public ConfigureBusHealthCheckServiceOptions(IEnumerable<IBusInstance> busInstances, IServiceProvider provider)
     {
-        readonly IEnumerable<IBusInstance> _busInstances;
-        readonly IServiceProvider _provider;
-        readonly string[] _tags;
+        _busInstances = busInstances;
+        _provider = provider;
+        _tags = new[] { "ready", "vicione-servicebus" };
+    }
 
-        public ConfigureBusHealthCheckServiceOptions(IEnumerable<IBusInstance> busInstances, IServiceProvider provider)
+    public void Configure(HealthCheckServiceOptions options)
+    {
+        foreach (var busInstance in _busInstances)
         {
-            _busInstances = busInstances;
-            _provider = provider;
-            _tags = new[] { "ready", "vicione-servicebus" };
-        }
+            var type = typeof(ViciOneServiceBusHealthCheckOptions<>).MakeGenericType(busInstance.InstanceType);
+            var optionsType = typeof(IOptions<>).MakeGenericType(type);
 
-        public void Configure(HealthCheckServiceOptions options)
-        {
-            foreach (var busInstance in _busInstances)
+            var name = busInstance.Name;
+            HealthStatus? minimalFailureStatus = HealthStatus.Unhealthy;
+            var tags = new HashSet<string>(_tags, StringComparer.OrdinalIgnoreCase);
+
+            var busOptions = _provider.GetService(optionsType);
+            if (busOptions != null)
             {
-                var type = typeof(ViciOneServiceBusHealthCheckOptions<>).MakeGenericType(busInstance.InstanceType);
-                var optionsType = typeof(IOptions<>).MakeGenericType(type);
+                var healthCheckOptions = (IHealthCheckOptions)optionsType.GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)
+                    .GetValue(busOptions, null);
 
-                var name = busInstance.Name;
-                HealthStatus? minimalFailureStatus = HealthStatus.Unhealthy;
-                var tags = new HashSet<string>(_tags, StringComparer.OrdinalIgnoreCase);
+                if (!string.IsNullOrWhiteSpace(healthCheckOptions.Name))
+                    name = healthCheckOptions.Name;
 
-                var busOptions = _provider.GetService(optionsType);
-                if (busOptions != null)
-                {
-                    var healthCheckOptions = (IHealthCheckOptions)optionsType.GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)
-                        .GetValue(busOptions, null);
+                if (healthCheckOptions.MinimalFailureStatus.HasValue)
+                    minimalFailureStatus = healthCheckOptions.MinimalFailureStatus.Value;
 
-                    if (!string.IsNullOrWhiteSpace(healthCheckOptions.Name))
-                        name = healthCheckOptions.Name;
-
-                    if (healthCheckOptions.MinimalFailureStatus.HasValue)
-                        minimalFailureStatus = healthCheckOptions.MinimalFailureStatus.Value;
-
-                    if (healthCheckOptions.Tags.Any())
-                        tags = healthCheckOptions.Tags;
-                }
-
-                options.Registrations.Add(new HealthCheckRegistration(name, new BusHealthCheck(busInstance), minimalFailureStatus, tags));
+                if (healthCheckOptions.Tags.Any())
+                    tags = healthCheckOptions.Tags;
             }
+
+            options.Registrations.Add(new HealthCheckRegistration(name, new BusHealthCheck(busInstance), minimalFailureStatus, tags));
         }
     }
 }

@@ -64,7 +64,7 @@ the native MTP command form without a legacy runner argument separator:
 ```bash
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx \
   -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 3490 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3496 \
   --max-parallel-test-modules 1
 
 VICIONE_TESTS__Profile=LocalIntegration \

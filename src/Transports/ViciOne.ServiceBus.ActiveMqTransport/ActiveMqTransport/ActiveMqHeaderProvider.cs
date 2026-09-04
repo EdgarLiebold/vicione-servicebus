@@ -1,67 +1,65 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System;
+using System.Collections.Generic;
+using Apache.NMS;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class ActiveMqHeaderProvider :
+    IHeaderProvider
 {
-    using System;
-    using System.Collections.Generic;
-    using Apache.NMS;
-    using Internals;
-    using Transports;
+    readonly IMessage _message;
 
-
-    public class ActiveMqHeaderProvider :
-        IHeaderProvider
+    public ActiveMqHeaderProvider(IMessage message)
     {
-        readonly IMessage _message;
+        _message = message;
+    }
 
-        public ActiveMqHeaderProvider(IMessage message)
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        yield return new KeyValuePair<string, object>(MessageHeaders.TransportMessageId, _message.NMSMessageId);
+        yield return new KeyValuePair<string, object>(nameof(MessageContext.CorrelationId), _message.NMSCorrelationID);
+
+        foreach (string key in _message.Properties.Keys)
         {
-            _message = message;
+            var value = _message.Properties[key];
+
+            yield return new KeyValuePair<string, object>(key, value);
+        }
+    }
+
+    public bool TryGetHeader(string key, out object value)
+    {
+        if (MessageHeaders.TransportMessageId.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            value = _message.NMSMessageId;
+            return true;
         }
 
-        public IEnumerable<KeyValuePair<string, object>> GetAll()
+        if (nameof(MessageContext.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
         {
-            yield return new KeyValuePair<string, object>(MessageHeaders.TransportMessageId, _message.NMSMessageId);
-            yield return new KeyValuePair<string, object>(nameof(MessageContext.CorrelationId), _message.NMSCorrelationID);
+            value = _message.NMSCorrelationID;
+            return true;
+        }
 
-            foreach (string key in _message.Properties.Keys)
+        if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
+        {
+            if (_message.NMSTimestamp > DateTimeConstants.Epoch)
             {
-                var value = _message.Properties[key];
-
-                yield return new KeyValuePair<string, object>(key, value);
+                value = _message.NMSTimestamp;
+                return true;
             }
         }
 
-        public bool TryGetHeader(string key, out object value)
+        var found = _message.Properties.Contains(key);
+        if (found)
         {
-            if (MessageHeaders.TransportMessageId.Equals(key, StringComparison.OrdinalIgnoreCase))
-            {
-                value = _message.NMSMessageId;
-                return true;
-            }
-
-            if (nameof(MessageContext.CorrelationId).Equals(key, StringComparison.OrdinalIgnoreCase))
-            {
-                value = _message.NMSCorrelationID;
-                return true;
-            }
-
-            if (MessageHeaders.TransportSentTime.Equals(key, StringComparison.OrdinalIgnoreCase))
-            {
-                if (_message.NMSTimestamp > DateTimeConstants.Epoch)
-                {
-                    value = _message.NMSTimestamp;
-                    return true;
-                }
-            }
-
-            var found = _message.Properties.Contains(key);
-            if (found)
-            {
-                value = _message.Properties[key];
-                return true;
-            }
-
-            value = null;
-            return false;
+            value = _message.Properties[key];
+            return true;
         }
+
+        value = null;
+        return false;
     }
 }

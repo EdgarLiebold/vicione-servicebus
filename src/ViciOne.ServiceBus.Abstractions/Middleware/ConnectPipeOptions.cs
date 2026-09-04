@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Flags]
+public enum ConnectPipeOptions
 {
-    using System;
+    ConfigureConsumeTopology = 1,
 
-
-    [Flags]
-    public enum ConnectPipeOptions
-    {
-        ConfigureConsumeTopology = 1,
-
-        All = ConfigureConsumeTopology
-    }
+    All = ConfigureConsumeTopology
 }

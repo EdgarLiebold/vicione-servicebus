@@ -1,29 +1,27 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public class PublishSendPipeAdapter<T> :
+    IPipe<SendContext<T>>
+    where T : class
 {
-    using System.Threading.Tasks;
+    readonly IPipe<PublishContext<T>> _pipe;
 
-
-    public class PublishSendPipeAdapter<T> :
-        IPipe<SendContext<T>>
-        where T : class
+    public PublishSendPipeAdapter(IPipe<PublishContext<T>> pipe)
     {
-        readonly IPipe<PublishContext<T>> _pipe;
+        _pipe = pipe;
+    }
 
-        public PublishSendPipeAdapter(IPipe<PublishContext<T>> pipe)
-        {
-            _pipe = pipe;
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        _pipe.Probe(context);
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            _pipe.Probe(context);
-        }
+    public Task Send(SendContext<T> context)
+    {
+        var publishContext = context.GetPayload<PublishContext<T>>();
 
-        public Task Send(SendContext<T> context)
-        {
-            var publishContext = context.GetPayload<PublishContext<T>>();
-
-            return _pipe.Send(publishContext);
-        }
+        return _pipe.Send(publishContext);
     }
 }

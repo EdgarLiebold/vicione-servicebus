@@ -1,7 +1,3 @@
-#nullable enable
-
-namespace Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -9,11 +5,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
-using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.Diagnostics;
+using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.ProviderAbstractions;
 using ViciOne.ServiceBus.Serialization;
 
+#nullable enable
+
+namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>DI registration for the generic producer-side durable sender.</summary>
 public static class DurableSenderServiceCollectionExtensions
 {

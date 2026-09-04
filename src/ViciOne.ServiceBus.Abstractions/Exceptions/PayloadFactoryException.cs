@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class PayloadFactoryException :
+    PayloadException
 {
-    using System;
-
-
-    [Serializable]
-    public class PayloadFactoryException :
-        PayloadException
+    public PayloadFactoryException()
     {
-        public PayloadFactoryException()
-        {
-        }
+    }
 
-        public PayloadFactoryException(string message)
-            : base(message)
-        {
-        }
+    public PayloadFactoryException(string message)
+        : base(message)
+    {
+    }
 
-        public PayloadFactoryException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public PayloadFactoryException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

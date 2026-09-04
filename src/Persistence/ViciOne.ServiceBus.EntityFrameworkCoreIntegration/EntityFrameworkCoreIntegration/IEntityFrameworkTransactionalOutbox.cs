@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 /// <summary>
 /// Explicit transactional messaging session bound to one bus and the caller's DbContext. Commit persists business
 /// changes and staged outbox records through that same DbContext; Abort detaches only this session's staged outbox records.

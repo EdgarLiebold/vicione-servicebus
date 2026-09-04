@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
-
 using ViciOne.ServiceBus.MessageJournal;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.MessageJournal;
 /// <summary>Creates immutable runtime entries without widening the product constructor.</summary>
 public static class MessageJournalEntryTestFactory
 {

@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus
+using System.IO;
+
+namespace ViciOne.ServiceBus;
+
+public interface MessageBody
 {
-    using System.IO;
+    long? Length { get; }
 
+    /// <summary>
+    /// Return the message body as a stream
+    /// </summary>
+    /// <returns></returns>
+    Stream GetStream();
 
-    public interface MessageBody
-    {
-        long? Length { get; }
+    /// <summary>
+    /// Return the message body as a byte array
+    /// </summary>
+    /// <returns></returns>
+    byte[] GetBytes();
 
-        /// <summary>
-        /// Return the message body as a stream
-        /// </summary>
-        /// <returns></returns>
-        Stream GetStream();
-
-        /// <summary>
-        /// Return the message body as a byte array
-        /// </summary>
-        /// <returns></returns>
-        byte[] GetBytes();
-
-        /// <summary>
-        /// Return the message body as a string
-        /// </summary>
-        /// <returns></returns>
-        string GetString();
-    }
+    /// <summary>
+    /// Return the message body as a string
+    /// </summary>
+    /// <returns></returns>
+    string GetString();
 }

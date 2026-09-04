@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using System.Net.Mime;
+
+namespace ViciOne.ServiceBus;
+
+public interface ISerializerFactory
 {
-    using System.Net.Mime;
+    ContentType ContentType { get; }
 
+    IMessageSerializer CreateSerializer();
 
-    public interface ISerializerFactory
-    {
-        ContentType ContentType { get; }
-
-        IMessageSerializer CreateSerializer();
-
-        IMessageDeserializer CreateDeserializer();
-    }
+    IMessageDeserializer CreateDeserializer();
 }

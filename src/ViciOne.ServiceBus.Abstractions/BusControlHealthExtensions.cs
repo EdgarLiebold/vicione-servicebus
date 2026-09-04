@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Waits for one or more bus controls to reach a specific health status.
 /// </summary>

@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.InMemoryTransport;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.InMemoryTransport;
 
 public class InMemoryBusInstance :
     TransportBusInstance<IInMemoryReceiveEndpointConfigurator>,

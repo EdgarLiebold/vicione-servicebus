@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class SubscriptionEndpointBrokerTopologyBuilder :
+    BrokerTopologyBuilder,
+    ISubscriptionEndpointBrokerTopologyBuilder
 {
-    public class SubscriptionEndpointBrokerTopologyBuilder :
-        BrokerTopologyBuilder,
-        ISubscriptionEndpointBrokerTopologyBuilder
-    {
-        public TopicHandle Topic { get; set; }
-    }
+    public TopicHandle Topic { get; set; }
 }

@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.SignalR.Utils
+using System;
+
+namespace ViciOne.ServiceBus.SignalR.Utils;
+
+public class ViciOneServiceBusFeature : IViciOneServiceBusFeature
 {
-    using System;
-
-
-    public class ViciOneServiceBusFeature : IViciOneServiceBusFeature
-    {
-        public ConcurrentHashSet<string> Groups { get; } = new ConcurrentHashSet<string>(StringComparer.OrdinalIgnoreCase);
-    }
+    public ConcurrentHashSet<string> Groups { get; } = new ConcurrentHashSet<string>(StringComparer.OrdinalIgnoreCase);
 }

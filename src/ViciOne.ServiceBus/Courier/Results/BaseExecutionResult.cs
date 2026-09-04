@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Courier.Results;
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts;
+using ViciOne.ServiceBus.Courier.Contracts;
 
+namespace ViciOne.ServiceBus.Courier.Results;
 
 abstract class BaseExecutionResult<TArguments> :
     ExecutionResult

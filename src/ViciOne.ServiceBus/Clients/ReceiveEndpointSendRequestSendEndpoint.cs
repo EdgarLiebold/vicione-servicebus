@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Clients;
-
 using System;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.Clients;
 
 public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
     RequestSendEndpoint<TRequest>
@@ -11,7 +10,7 @@ public class ReceiveEndpointSendRequestSendEndpoint<TRequest> :
     readonly Uri _destinationAddress;
     readonly HostReceiveEndpointHandle _handle;
 
-    public ReceiveEndpointSendRequestSendEndpoint(HostReceiveEndpointHandle handle, Uri destinationAddress, ConsumeContext consumeContext)
+    public ReceiveEndpointSendRequestSendEndpoint(HostReceiveEndpointHandle handle, Uri destinationAddress, ConsumeContext? consumeContext)
         : base(consumeContext)
     {
         _handle = handle;

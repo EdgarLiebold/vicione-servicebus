@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +7,8 @@ using Azure;
 using Azure.Data.Tables;
 using ViciOne.ServiceBus.MessageJournal;
 
+#nullable enable
+namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 /// <summary>
 /// Stores sanitized journal entries in one bounded Azure Table partition. A shared ETag lease makes
 /// capacity pruning and append one atomic entity-group transaction; conflicts fail the optional
@@ -86,7 +85,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
     {
         try
         {
-            Response<MessageJournalCapacityLease> response = await _table
+            Azure.Response<MessageJournalCapacityLease> response = await _table
                 .GetEntityAsync<MessageJournalCapacityLease>(
                     _partitionKey,
                     MessageJournalCapacityLease.RowKeyValue,
@@ -106,7 +105,7 @@ public sealed class AzureTableMessageJournalStore : IMessageJournalStore
                 // A concurrent writer created the single lease. Read its server ETag below.
             }
 
-            Response<MessageJournalCapacityLease> response = await _table
+            Azure.Response<MessageJournalCapacityLease> response = await _table
                 .GetEntityAsync<MessageJournalCapacityLease>(
                     _partitionKey,
                     MessageJournalCapacityLease.RowKeyValue,

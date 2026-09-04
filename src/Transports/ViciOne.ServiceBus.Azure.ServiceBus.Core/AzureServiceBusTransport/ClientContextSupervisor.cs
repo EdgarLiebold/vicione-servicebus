@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ClientContextSupervisor :
+    TransportPipeContextSupervisor<ClientContext>,
+    IClientContextSupervisor
 {
-    using Agents;
-    using Transports;
-
-
-    public class ClientContextSupervisor :
-        TransportPipeContextSupervisor<ClientContext>,
-        IClientContextSupervisor
+    public ClientContextSupervisor(IPipeContextFactory<ClientContext> contextFactory)
+        : base(contextFactory)
     {
-        public ClientContextSupervisor(IPipeContextFactory<ClientContext> contextFactory)
-            : base(contextFactory)
-        {
-        }
     }
 }

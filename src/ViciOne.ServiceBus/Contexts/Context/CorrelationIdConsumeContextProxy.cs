@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.Context
+using System;
+
+namespace ViciOne.ServiceBus.Context;
+
+/// <summary>
+/// A consumer instance merged with a message consume context
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+public class CorrelationIdConsumeContextProxy<TMessage> :
+    ConsumeContextProxy<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly Guid _correlationId;
 
-
-    /// <summary>
-    /// A consumer instance merged with a message consume context
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    public class CorrelationIdConsumeContextProxy<TMessage> :
-        ConsumeContextProxy<TMessage>
-        where TMessage : class
+    public CorrelationIdConsumeContextProxy(ConsumeContext<TMessage> context, Guid correlationId)
+        : base(context)
     {
-        readonly Guid _correlationId;
-
-        public CorrelationIdConsumeContextProxy(ConsumeContext<TMessage> context, Guid correlationId)
-            : base(context)
-        {
-            _correlationId = correlationId;
-        }
-
-        public override Guid? CorrelationId => _correlationId;
+        _correlationId = correlationId;
     }
+
+    public override Guid? CorrelationId => _correlationId;
 }

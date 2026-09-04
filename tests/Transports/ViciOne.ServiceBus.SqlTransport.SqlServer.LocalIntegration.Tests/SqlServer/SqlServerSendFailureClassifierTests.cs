@@ -1,6 +1,6 @@
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.SqlTransport.SqlServer;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

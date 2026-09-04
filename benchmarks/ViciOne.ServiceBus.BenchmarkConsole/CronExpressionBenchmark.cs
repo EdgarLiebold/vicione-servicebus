@@ -1,14 +1,11 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole;
-
 using System;
 using BenchmarkDotNet.Attributes;
-using JobService.Scheduling;
+using ViciOne.ServiceBus.JobService.Scheduling;
 
-
+namespace ViciOne.ServiceBus.BenchmarkConsole;
 /// <summary>
-/// The cost of walking a cron expression forward, moved here from a retired test case that measured a million iterations
-/// with a stopwatch and wrote the result to the console. A throughput measurement has no pass or fail statement, so
-/// it belongs in the benchmark tool and not in the required test run.
+/// Measures the cost of advancing a cron expression over many iterations and reports throughput
+/// without treating performance variation as a functional assertion.
 /// </summary>
 [MemoryDiagnoser]
 public class CronExpressionBenchmark

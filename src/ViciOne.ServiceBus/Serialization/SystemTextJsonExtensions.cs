@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Text.Json;
-using Metadata;
+using ViciOne.ServiceBus.Metadata;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Serialization;
 
 public static class SystemTextJsonExtensions
 {

@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public class SentMessageFilterSet :
+    FilterSet<ISentMessage>
 {
-    using System;
-
-
-    public class SentMessageFilterSet :
-        FilterSet<ISentMessage>
+    public SentMessageFilterSet Add<T>()
+        where T : class
     {
-        public SentMessageFilterSet Add<T>()
-            where T : class
+        static bool Filter(ISentMessage element)
         {
-            static bool Filter(ISentMessage element)
-            {
-                return element is ISentMessage<T>;
-            }
-
-            Add(Filter);
-
-            return this;
+            return element is ISentMessage<T>;
         }
 
-        public SentMessageFilterSet Add<T>(FilterDelegate<ISentMessage<T>> filter)
-            where T : class
+        Add(Filter);
+
+        return this;
+    }
+
+    public SentMessageFilterSet Add<T>(FilterDelegate<ISentMessage<T>> filter)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        bool Filter(ISentMessage element)
         {
-            ArgumentNullException.ThrowIfNull(filter);
-
-            bool Filter(ISentMessage element)
-            {
-                return element is ISentMessage<T> result && filter(result);
-            }
-
-            Add(Filter);
-
-            return this;
+            return element is ISentMessage<T> result && filter(result);
         }
+
+        Add(Filter);
+
+        return this;
     }
 }

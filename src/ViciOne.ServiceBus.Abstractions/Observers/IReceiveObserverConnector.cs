@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IReceiveObserverConnector
 {
-    public interface IReceiveObserverConnector
-    {
-        /// <summary>
-        /// Connect an observer to the receiving endpoint
-        /// </summary>
-        /// <param name="observer"></param>
-        /// <returns></returns>
-        ConnectHandle ConnectReceiveObserver(IReceiveObserver observer);
-    }
+    /// <summary>
+    /// Connect an observer to the receiving endpoint
+    /// </summary>
+    /// <param name="observer"></param>
+    /// <returns></returns>
+    ConnectHandle ConnectReceiveObserver(IReceiveObserver observer);
 }

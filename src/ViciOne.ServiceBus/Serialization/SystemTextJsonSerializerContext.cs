@@ -1,111 +1,109 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public class SystemTextJsonSerializerContext :
+    BaseSerializerContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Net.Mime;
-    using System.Text.Json;
-    using System.Text.Json.Nodes;
+    readonly MessageEnvelope? _envelope;
 
-
-    public class SystemTextJsonSerializerContext :
-        BaseSerializerContext
+    public SystemTextJsonSerializerContext(IObjectDeserializer objectDeserializer, JsonSerializerOptions options, ContentType contentType,
+        MessageContext messageContext, string[] messageTypes, MessageEnvelope? envelope = null, object? message = null)
+        : base(objectDeserializer, messageContext, messageTypes)
     {
-        readonly MessageEnvelope? _envelope;
+        _envelope = envelope;
+        ContentType = contentType;
+        Message = message ?? envelope?.Message ?? throw new ArgumentNullException(nameof(envelope));
+        Options = options;
+    }
 
-        public SystemTextJsonSerializerContext(IObjectDeserializer objectDeserializer, JsonSerializerOptions options, ContentType contentType,
-            MessageContext messageContext, string[] messageTypes, MessageEnvelope? envelope = null, object? message = null)
-            : base(objectDeserializer, messageContext, messageTypes)
+    protected object Message { get; }
+    protected ContentType ContentType { get; }
+    protected JsonSerializerOptions Options { get; }
+
+    public override bool TryGetMessage<T>(out T? message)
+        where T : class
+    {
+        var jsonElement = GetJsonElement(Message);
+
+        if (typeof(T) == typeof(JsonObject))
         {
-            _envelope = envelope;
-            ContentType = contentType;
-            Message = message ?? envelope?.Message ?? throw new ArgumentNullException(nameof(envelope));
-            Options = options;
-        }
-
-        protected object Message { get; }
-        protected ContentType ContentType { get; }
-        protected JsonSerializerOptions Options { get; }
-
-        public override bool TryGetMessage<T>(out T? message)
-            where T : class
-        {
-            var jsonElement = GetJsonElement(Message);
-
-            if (typeof(T) == typeof(JsonObject))
-            {
-                message = JsonObject.Create(jsonElement) as T;
-                return message != null;
-            }
-
-            if (IsSupportedMessageType<T>())
-            {
-                if (Message is T messageOfT)
-                {
-                    message = messageOfT;
-                    return true;
-                }
-
-                message = jsonElement.Deserialize<T>(Options);
-                return message != null;
-            }
-
-            message = null;
-            return false;
-        }
-
-        public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
-        {
-            var jsonElement = GetJsonElement(Message);
-
-            message = jsonElement.Deserialize(messageType, Options);
-
+            message = JsonObject.Create(jsonElement) as T;
             return message != null;
         }
 
-        public override IMessageSerializer GetMessageSerializer()
+        if (IsSupportedMessageType<T>())
         {
-            if (_envelope == null)
-                throw new InvalidOperationException("This should be overloaded");
+            if (Message is T messageOfT)
+            {
+                message = messageOfT;
+                return true;
+            }
 
-            return new SystemTextJsonBodyMessageSerializer(_envelope, ContentType, Options);
+            message = jsonElement.Deserialize<T>(Options);
+            return message != null;
         }
 
-        public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
-        {
-            var serializer = new SystemTextJsonBodyMessageSerializer(envelope, ContentType, Options);
+        message = null;
+        return false;
+    }
 
-            serializer.Overlay(message);
+    public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
+    {
+        var jsonElement = GetJsonElement(Message);
 
-            return serializer;
-        }
+        message = jsonElement.Deserialize(messageType, Options);
 
-        public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
-        {
-            if (message == null)
-                throw new ArgumentNullException(nameof(message));
+        return message != null;
+    }
 
-            var envelope = new JsonMessageEnvelope(this, message, messageTypes);
+    public override IMessageSerializer GetMessageSerializer()
+    {
+        if (_envelope == null)
+            throw new InvalidOperationException("This should be overloaded");
 
-            return new SystemTextJsonBodyMessageSerializer(envelope, ContentType, Options, messageTypes);
-        }
+        return new SystemTextJsonBodyMessageSerializer(_envelope, ContentType, Options);
+    }
 
-        public override Dictionary<string, object> ToDictionary<T>(T? message)
-            where T : class
-        {
-            return message == null
-                ? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
-                : JsonSerializer.SerializeToElement(message, Options).Deserialize<Dictionary<string, object>>()!;
-        }
+    public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
+    {
+        var serializer = new SystemTextJsonBodyMessageSerializer(envelope, ContentType, Options);
 
-        static JsonElement GetJsonElement(object message)
-        {
-            return message is JsonElement element
-                ? element.ValueKind == JsonValueKind.Null
-                    ? new JsonElement()
-                    : element
-                : new JsonElement();
-        }
+        serializer.Overlay(message);
+
+        return serializer;
+    }
+
+    public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
+    {
+        if (message == null)
+            throw new ArgumentNullException(nameof(message));
+
+        var envelope = new JsonMessageEnvelope(this, message, messageTypes);
+
+        return new SystemTextJsonBodyMessageSerializer(envelope, ContentType, Options, messageTypes);
+    }
+
+    public override Dictionary<string, object> ToDictionary<T>(T? message)
+        where T : class
+    {
+        return message == null
+            ? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            : JsonSerializer.SerializeToElement(message, Options).Deserialize<Dictionary<string, object>>()!;
+    }
+
+    static JsonElement GetJsonElement(object message)
+    {
+        return message is JsonElement element
+            ? element.ValueKind == JsonValueKind.Null
+                ? new JsonElement()
+                : element
+            : new JsonElement();
     }
 }

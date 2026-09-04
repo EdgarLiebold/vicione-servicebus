@@ -1,68 +1,66 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public static class TransportStartExtensions
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Internals;
-
-
-    public static class TransportStartExtensions
+    public static async Task OnTransportStartup<T>(this ReceiveEndpointContext context, ITransportSupervisor<T> supervisor,
+        CancellationToken cancellationToken)
+        where T : class, PipeContext
     {
-        public static async Task OnTransportStartup<T>(this ReceiveEndpointContext context, ITransportSupervisor<T> supervisor,
-            CancellationToken cancellationToken)
-            where T : class, PipeContext
+        using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, supervisor.ConsumeStopping);
+
+        var pipe = new WaitForConnectionPipe<T>(context, tokenSource.Token);
+
+        await supervisor.Send(pipe, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    class WaitForConnectionPipe<T> :
+        IPipe<T>
+        where T : class, PipeContext
+    {
+        readonly ReceiveEndpointContext _context;
+        readonly CancellationToken _stopping;
+
+        public WaitForConnectionPipe(ReceiveEndpointContext context, CancellationToken stopping)
         {
-            using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, supervisor.ConsumeStopping);
-
-            var pipe = new WaitForConnectionPipe<T>(context, tokenSource.Token);
-
-            await supervisor.Send(pipe, cancellationToken).ConfigureAwait(false);
+            _context = context;
+            _stopping = stopping;
         }
 
-
-        class WaitForConnectionPipe<T> :
-            IPipe<T>
-            where T : class, PipeContext
+        public async Task Send(T context)
         {
-            readonly ReceiveEndpointContext _context;
-            readonly CancellationToken _stopping;
+            await _context.TransportObservers.NotifyReady(_context.InputAddress, false).ConfigureAwait(false);
 
-            public WaitForConnectionPipe(ReceiveEndpointContext context, CancellationToken stopping)
+            try
             {
-                _context = context;
-                _stopping = stopping;
+                await _context.ReceivePipe.Connected.OrCanceled(_stopping).ConfigureAwait(false);
             }
-
-            public async Task Send(T context)
+            catch (OperationCanceledException ex) when (ex.CancellationToken == _stopping)
             {
-                await _context.TransportObservers.NotifyReady(_context.InputAddress, false).ConfigureAwait(false);
-
-                try
-                {
-                    await _context.ReceivePipe.Connected.OrCanceled(_stopping).ConfigureAwait(false);
-                }
-                catch (OperationCanceledException ex) when (ex.CancellationToken == _stopping)
-                {
-                    await _context.TransportObservers.NotifyCompleted(_context.InputAddress, Metrics.None).ConfigureAwait(false);
-                }
-                catch (OperationCanceledException)
-                {
-                }
+                await _context.TransportObservers.NotifyCompleted(_context.InputAddress, Metrics.None).ConfigureAwait(false);
             }
-
-            public void Probe(ProbeContext context)
+            catch (OperationCanceledException)
             {
             }
         }
 
-
-        class Metrics :
-            DeliveryMetrics
+        public void Probe(ProbeContext context)
         {
-            public static readonly DeliveryMetrics None = new Metrics();
-
-            public long DeliveryCount => 0;
-            public int ConcurrentDeliveryCount => 0;
         }
+    }
+
+
+    class Metrics :
+        DeliveryMetrics
+    {
+        public static readonly DeliveryMetrics None = new Metrics();
+
+        public long DeliveryCount => 0;
+        public int ConcurrentDeliveryCount => 0;
     }
 }

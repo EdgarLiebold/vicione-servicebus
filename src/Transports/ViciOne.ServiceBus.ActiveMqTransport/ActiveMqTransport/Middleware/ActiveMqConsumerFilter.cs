@@ -1,202 +1,200 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
+
+/// <summary>
+/// A filter that uses the model context to create a basic consumer and connect it to the model
+/// </summary>
+public class ActiveMqConsumerFilter :
+    IFilter<SessionContext>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus.Middleware;
-    using Topology;
-    using Transports;
-    using Util;
+    readonly ActiveMqReceiveEndpointContext _context;
 
-
-    /// <summary>
-    /// A filter that uses the model context to create a basic consumer and connect it to the model
-    /// </summary>
-    public class ActiveMqConsumerFilter :
-        IFilter<SessionContext>
+    public ActiveMqConsumerFilter(ActiveMqReceiveEndpointContext context)
     {
-        readonly ActiveMqReceiveEndpointContext _context;
+        _context = context;
+    }
 
-        public ActiveMqConsumerFilter(ActiveMqReceiveEndpointContext context)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+    }
+
+    async Task IFilter<SessionContext>.Send(SessionContext context, IPipe<SessionContext> next)
+    {
+        var receiveSettings = context.GetPayload<ReceiveSettings>();
+
+        var executor = new TaskExecutor(receiveSettings.PrefetchCount, receiveSettings.ConcurrentMessageLimit);
+
+        var consumers = new List<Task<ActiveMqConsumer>>
         {
-            _context = context;
+            CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings), receiveSettings.Durable,
+                receiveSettings.AutoDelete), receiveSettings.Selector, executor)
+        };
+
+        consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination == null).Select(x =>
+            CreateConsumer(context, new TopicEntity(0, GetReceiveEntityName(receiveSettings, x.Source.EntityName), x.Source.Durable,
+                x.Source.AutoDelete), x.Selector, x.ConsumerName, x.IsShared, receiveSettings.Durable, executor)));
+
+        consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination != null).Select(x =>
+            CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings, x.Destination.EntityName), x.Destination.Durable,
+                x.Destination.AutoDelete), x.Selector, executor)));
+
+        ActiveMqConsumer[] actualConsumers = await Task.WhenAll(consumers).ConfigureAwait(false);
+
+        var supervisor = CreateConsumerSupervisor(context, actualConsumers);
+
+        await supervisor.Ready.ConfigureAwait(false);
+
+        LogContext.Debug?.Log("Consumers Ready: {InputAddress}", _context.InputAddress);
+
+        _context.AddConsumeAgent(supervisor);
+
+        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+
+        try
+        {
+            await supervisor.Completed.ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        finally
         {
+            DeliveryMetrics[] consumerMetrics = actualConsumers.Cast<DeliveryMetrics>().ToArray();
+
+            DeliveryMetrics metrics = new CombinedDeliveryMetrics(consumerMetrics.Sum(x => x.DeliveryCount),
+                consumerMetrics.Max(x => x.ConcurrentDeliveryCount));
+
+            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
+
+            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
+
+            await executor.DisposeAsync().ConfigureAwait(false);
         }
+    }
 
-        async Task IFilter<SessionContext>.Send(SessionContext context, IPipe<SessionContext> next)
+    string GetReceiveEntityName(ReceiveSettings settings, string entityName = null)
+    {
+        return settings.AutoDelete
+            ? entityName ?? settings.EntityName
+            : $"{entityName ?? settings.EntityName}?consumer.prefetchSize={settings.PrefetchCount}";
+    }
+
+    Supervisor CreateConsumerSupervisor(SessionContext context, ActiveMqConsumer[] actualConsumers)
+    {
+        var supervisor = new ConsumerSupervisor(actualConsumers);
+
+        var connectionStopLock = new object();
+        Task connectionStopTask = null;
+
+        void HandleException(Exception exception)
         {
-            var receiveSettings = context.GetPayload<ReceiveSettings>();
-
-            var executor = new TaskExecutor(receiveSettings.PrefetchCount, receiveSettings.ConcurrentMessageLimit);
-
-            var consumers = new List<Task<ActiveMqConsumer>>
+            lock (connectionStopLock)
             {
-                CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings), receiveSettings.Durable,
-                    receiveSettings.AutoDelete), receiveSettings.Selector, executor)
-            };
+                if (connectionStopTask == null || connectionStopTask.IsCompleted)
+                    connectionStopTask = StopAfterConnectionException(exception);
+            }
+        }
 
-            consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination == null).Select(x =>
-                CreateConsumer(context, new TopicEntity(0, GetReceiveEntityName(receiveSettings, x.Source.EntityName), x.Source.Durable,
-                    x.Source.AutoDelete), x.Selector, x.ConsumerName, x.IsShared, receiveSettings.Durable, executor)));
-
-            consumers.AddRange(_context.BrokerTopology.Consumers.Where(x => x.Destination != null).Select(x =>
-                CreateConsumer(context, new QueueEntity(0, GetReceiveEntityName(receiveSettings, x.Destination.EntityName), x.Destination.Durable,
-                    x.Destination.AutoDelete), x.Selector, executor)));
-
-            ActiveMqConsumer[] actualConsumers = await Task.WhenAll(consumers).ConfigureAwait(false);
-
-            var supervisor = CreateConsumerSupervisor(context, actualConsumers);
-
-            await supervisor.Ready.ConfigureAwait(false);
-
-            LogContext.Debug?.Log("Consumers Ready: {InputAddress}", _context.InputAddress);
-
-            _context.AddConsumeAgent(supervisor);
-
-            await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+        async Task StopAfterConnectionException(Exception exception)
+        {
+            await Task.Yield();
 
             try
             {
-                await supervisor.Completed.ConfigureAwait(false);
+                await supervisor.Stop(exception.Message).ConfigureAwait(false);
             }
-            finally
+            catch (Exception stopException)
             {
-                DeliveryMetrics[] consumerMetrics = actualConsumers.Cast<DeliveryMetrics>().ToArray();
-
-                DeliveryMetrics metrics = new CombinedDeliveryMetrics(consumerMetrics.Sum(x => x.DeliveryCount),
-                    consumerMetrics.Max(x => x.ConcurrentDeliveryCount));
-
-                await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
-
-                _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
-
-                await executor.DisposeAsync().ConfigureAwait(false);
+                LogContext.Warning?.Log(stopException, "Stop Faulted");
             }
         }
 
-        string GetReceiveEntityName(ReceiveSettings settings, string entityName = null)
+        context.ConnectionContext.Connection.ExceptionListener += HandleException;
+
+        supervisor.SetReady();
+
+        supervisor.Completed.GetAwaiter().OnCompleted(() =>
+            context.ConnectionContext.Connection.ExceptionListener -= HandleException);
+
+        return supervisor;
+    }
+
+    async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Queue entity, string selector,
+        TaskExecutor executor)
+    {
+        var queue = await context.GetQueue(entity).ConfigureAwait(false);
+
+        var messageConsumer = await context.CreateMessageConsumer(queue, selector, false).ConfigureAwait(false);
+
+        LogContext.Debug?.Log("Created consumer for {InputAddress}: {Queue}", _context.InputAddress, entity.EntityName);
+
+        var consumer = new ActiveMqConsumer(context, messageConsumer, _context, executor);
+
+        return consumer;
+    }
+
+    async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Topic entity, string selector,
+        string consumerName, bool shared, bool durable, TaskExecutor executor)
+    {
+        var topic = await context.GetTopic(entity).ConfigureAwait(false);
+
+        var messageConsumer = await context.CreateMessageConsumer(topic, selector, false, consumerName, shared, durable).ConfigureAwait(false);
+
+        LogContext.Debug?.Log("Created consumer for {InputAddress}: {Topic}", _context.InputAddress, entity.EntityName);
+
+        var consumer = new ActiveMqConsumer(context, messageConsumer, _context, executor);
+
+        return consumer;
+    }
+
+
+    class ConsumerSupervisor :
+        Supervisor
+    {
+        public ConsumerSupervisor(ActiveMqConsumer[] consumers)
         {
-            return settings.AutoDelete
-                ? entityName ?? settings.EntityName
-                : $"{entityName ?? settings.EntityName}?consumer.prefetchSize={settings.PrefetchCount}";
-        }
-
-        Supervisor CreateConsumerSupervisor(SessionContext context, ActiveMqConsumer[] actualConsumers)
-        {
-            var supervisor = new ConsumerSupervisor(actualConsumers);
-
-            var connectionStopLock = new object();
-            Task connectionStopTask = null;
-
-            void HandleException(Exception exception)
+            foreach (var consumer in consumers)
             {
-                lock (connectionStopLock)
-                {
-                    if (connectionStopTask == null || connectionStopTask.IsCompleted)
-                        connectionStopTask = StopAfterConnectionException(exception);
-                }
+                if (IsStopping)
+                    return;
+
+                _ = ObserveConsumerCompletion(consumer);
+                Add(consumer);
             }
-
-            async Task StopAfterConnectionException(Exception exception)
-            {
-                await Task.Yield();
-
-                try
-                {
-                    await supervisor.Stop(exception.Message).ConfigureAwait(false);
-                }
-                catch (Exception stopException)
-                {
-                    LogContext.Warning?.Log(stopException, "Stop Faulted");
-                }
-            }
-
-            context.ConnectionContext.Connection.ExceptionListener += HandleException;
-
-            supervisor.SetReady();
-
-            supervisor.Completed.GetAwaiter().OnCompleted(() =>
-                context.ConnectionContext.Connection.ExceptionListener -= HandleException);
-
-            return supervisor;
         }
 
-        async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Queue entity, string selector,
-            TaskExecutor executor)
+        async Task ObserveConsumerCompletion(ActiveMqConsumer consumer)
         {
-            var queue = await context.GetQueue(entity).ConfigureAwait(false);
-
-            var messageConsumer = await context.CreateMessageConsumer(queue, selector, false).ConfigureAwait(false);
-
-            LogContext.Debug?.Log("Created consumer for {InputAddress}: {Queue}", _context.InputAddress, entity.EntityName);
-
-            var consumer = new ActiveMqConsumer(context, messageConsumer, _context, executor);
-
-            return consumer;
-        }
-
-        async Task<ActiveMqConsumer> CreateConsumer(SessionContext context, Topic entity, string selector,
-            string consumerName, bool shared, bool durable, TaskExecutor executor)
-        {
-            var topic = await context.GetTopic(entity).ConfigureAwait(false);
-
-            var messageConsumer = await context.CreateMessageConsumer(topic, selector, false, consumerName, shared, durable).ConfigureAwait(false);
-
-            LogContext.Debug?.Log("Created consumer for {InputAddress}: {Topic}", _context.InputAddress, entity.EntityName);
-
-            var consumer = new ActiveMqConsumer(context, messageConsumer, _context, executor);
-
-            return consumer;
-        }
-
-
-        class ConsumerSupervisor :
-            Supervisor
-        {
-            public ConsumerSupervisor(ActiveMqConsumer[] consumers)
+            try
             {
-                foreach (var consumer in consumers)
-                {
-                    if (IsStopping)
-                        return;
+                await consumer.Completed.ConfigureAwait(false);
 
-                    _ = ObserveConsumerCompletion(consumer);
-                    Add(consumer);
-                }
+                if (!IsStopping)
+                    await this.Stop("Consumer stopped, stopping supervisor").ConfigureAwait(false);
             }
-
-            async Task ObserveConsumerCompletion(ActiveMqConsumer consumer)
+            catch (Exception exception)
             {
-                try
-                {
-                    await consumer.Completed.ConfigureAwait(false);
-
-                    if (!IsStopping)
-                        await this.Stop("Consumer stopped, stopping supervisor").ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    LogContext.Warning?.Log(exception, "Stop Faulted");
-                }
+                LogContext.Warning?.Log(exception, "Stop Faulted");
             }
         }
+    }
 
 
-        class CombinedDeliveryMetrics :
-            DeliveryMetrics
+    class CombinedDeliveryMetrics :
+        DeliveryMetrics
+    {
+        public CombinedDeliveryMetrics(long deliveryCount, int concurrentDeliveryCount)
         {
-            public CombinedDeliveryMetrics(long deliveryCount, int concurrentDeliveryCount)
-            {
-                DeliveryCount = deliveryCount;
-                ConcurrentDeliveryCount = concurrentDeliveryCount;
-            }
-
-            public long DeliveryCount { get; }
-            public int ConcurrentDeliveryCount { get; }
+            DeliveryCount = deliveryCount;
+            ConcurrentDeliveryCount = concurrentDeliveryCount;
         }
+
+        public long DeliveryCount { get; }
+        public int ConcurrentDeliveryCount { get; }
     }
 }

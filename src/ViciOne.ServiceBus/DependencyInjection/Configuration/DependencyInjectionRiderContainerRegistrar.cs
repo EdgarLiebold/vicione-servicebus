@@ -1,40 +1,38 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+abstract class Rider
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection;
+}
 
 
-    abstract class Rider
+public class DependencyInjectionRiderContainerRegistrar<TBus> :
+    DependencyInjectionContainerRegistrar
+{
+    public DependencyInjectionRiderContainerRegistrar(IServiceCollection collection)
+        : base(collection)
     {
     }
 
-
-    public class DependencyInjectionRiderContainerRegistrar<TBus> :
-        DependencyInjectionContainerRegistrar
+    public override IEnumerable<T> GetRegistrations<T>()
     {
-        public DependencyInjectionRiderContainerRegistrar(IServiceCollection collection)
-            : base(collection)
-        {
-        }
+        return Collection.Where(x => x.ServiceType == typeof(Bind<TBus, Rider, T>))
+            .Select(x => x.ImplementationInstance).Cast<Bind<TBus, Rider, T>>()
+            .Select(x => x.Value);
+    }
 
-        public override IEnumerable<T> GetRegistrations<T>()
-        {
-            return Collection.Where(x => x.ServiceType == typeof(Bind<TBus, Rider, T>))
-                .Select(x => x.ImplementationInstance).Cast<Bind<TBus, Rider, T>>()
-                .Select(x => x.Value);
-        }
+    public override IEnumerable<T> GetRegistrations<T>(IServiceProvider provider)
+    {
+        return provider.GetService<IEnumerable<Bind<TBus, Rider, T>>>().Select(x => x.Value) ?? [];
+    }
 
-        public override IEnumerable<T> GetRegistrations<T>(IServiceProvider provider)
-        {
-            return provider.GetService<IEnumerable<Bind<TBus, Rider, T>>>().Select(x => x.Value) ?? [];
-        }
-
-        protected override void AddRegistration<T>(T value)
-        {
-            Collection.Add(ServiceDescriptor.Singleton(Bind<TBus, Rider>.Create(value)));
-        }
+    protected override void AddRegistration<T>(T value)
+    {
+        Collection.Add(ServiceDescriptor.Singleton(Bind<TBus, Rider>.Create(value)));
     }
 }

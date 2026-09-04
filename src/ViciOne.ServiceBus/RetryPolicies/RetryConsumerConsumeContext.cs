@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class RetryConsumerConsumeContext<TConsumer> :
+    RetryConsumeContext,
+    ConsumerConsumeContext<TConsumer>
+    where TConsumer : class
 {
-    using System;
+    readonly ConsumerConsumeContext<TConsumer> _context;
 
-
-    public class RetryConsumerConsumeContext<TConsumer> :
-        RetryConsumeContext,
-        ConsumerConsumeContext<TConsumer>
-        where TConsumer : class
+    public RetryConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+        : base(context, retryPolicy, retryContext)
     {
-        readonly ConsumerConsumeContext<TConsumer> _context;
+        _context = context;
+    }
 
-        public RetryConsumerConsumeContext(ConsumerConsumeContext<TConsumer> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-            : base(context, retryPolicy, retryContext)
-        {
-            _context = context;
-        }
+    public TConsumer Consumer => _context.Consumer;
 
-        public TConsumer Consumer => _context.Consumer;
-
-        public override TContext CreateNext<TContext>(RetryContext retryContext)
-        {
-            return new RetryConsumerConsumeContext<TConsumer>(_context, RetryPolicy, retryContext) as TContext
-                ?? throw new ArgumentException($"The context type is not valid: {TypeCache<TContext>.ShortName}");
-        }
+    public override TContext CreateNext<TContext>(RetryContext retryContext)
+    {
+        return new RetryConsumerConsumeContext<TConsumer>(_context, RetryPolicy, retryContext) as TContext
+            ?? throw new ArgumentException($"The context type is not valid: {TypeCache<TContext>.ShortName}");
     }
 }

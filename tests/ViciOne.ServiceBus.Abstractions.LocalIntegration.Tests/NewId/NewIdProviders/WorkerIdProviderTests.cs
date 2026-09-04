@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.NewId.NewIdProviders;
-
 using ViciOne.ServiceBus.NewIdProviders;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.NewId.NewIdProviders;
 
 public sealed class WorkerIdProviderTests
 {

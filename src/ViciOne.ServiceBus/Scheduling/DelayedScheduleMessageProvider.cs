@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public class DelayedScheduleMessageProvider :
+    IScheduleMessageProvider
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly ISendEndpointProvider _sendEndpointProvider;
+    readonly TimeProvider _timeProvider;
 
-
-    public class DelayedScheduleMessageProvider :
-        IScheduleMessageProvider
+    public DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider)
     {
-        readonly ISendEndpointProvider _sendEndpointProvider;
-        readonly TimeProvider _timeProvider;
+        _sendEndpointProvider = sendEndpointProvider;
+    }
 
-        public DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider)
-        {
-            _sendEndpointProvider = sendEndpointProvider;
-        }
+    internal DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider, TimeProvider timeProvider)
+    {
+        _sendEndpointProvider = sendEndpointProvider;
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+    }
 
-        internal DelayedScheduleMessageProvider(ISendEndpointProvider sendEndpointProvider, TimeProvider timeProvider)
-        {
-            _sendEndpointProvider = sendEndpointProvider;
-            _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-        }
+    public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
+        CancellationToken cancellationToken)
+        where T : class
+    {
+        if (!MessageTypeCache<T>.IsValidMessageType)
+            throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
 
-        public async Task<ScheduledMessage<T>> ScheduleSend<T>(Uri destinationAddress, DateTime scheduledTime, T message, IPipe<SendContext<T>> pipe,
-            CancellationToken cancellationToken)
-            where T : class
-        {
-            if (!MessageTypeCache<T>.IsValidMessageType)
-                throw new ArgumentException(MessageTypeCache<T>.InvalidMessageTypeReason, nameof(T));
+        var scheduleMessagePipe = _timeProvider == null
+            ? new ScheduleSendPipe<T>(pipe, scheduledTime)
+            : new ScheduleSendPipe<T>(pipe, scheduledTime, _timeProvider);
 
-            var scheduleMessagePipe = _timeProvider == null
-                ? new ScheduleSendPipe<T>(pipe, scheduledTime)
-                : new ScheduleSendPipe<T>(pipe, scheduledTime, _timeProvider);
+        var tokenId = ScheduleTokenIdCache<T>.GetTokenId(message);
 
-            var tokenId = ScheduleTokenIdCache<T>.GetTokenId(message);
+        scheduleMessagePipe.ScheduledMessageId = tokenId;
 
-            scheduleMessagePipe.ScheduledMessageId = tokenId;
+        var schedulerEndpoint = await _sendEndpointProvider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
 
-            var schedulerEndpoint = await _sendEndpointProvider.GetSendEndpoint(destinationAddress).ConfigureAwait(false);
+        await schedulerEndpoint.Send(message, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
 
-            await schedulerEndpoint.Send(message, scheduleMessagePipe, cancellationToken).ConfigureAwait(false);
+        return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), scheduledTime, destinationAddress, message);
+    }
 
-            return new ScheduledMessageHandle<T>(scheduleMessagePipe.ScheduledMessageId ?? NewId.NextGuid(), scheduledTime, destinationAddress, message);
-        }
+    public Task CancelScheduledSend(Guid tokenId, CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
 
-        public Task CancelScheduledSend(Guid tokenId, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
+    public Task CancelScheduledSend(Uri destinationAddress, Guid tokenId, CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
     }
 }

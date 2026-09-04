@@ -1,30 +1,28 @@
+using System;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public class SqlMessageNameFormatter :
+    IMessageNameFormatter
 {
-    using System;
-    using Transports;
+    readonly IMessageNameFormatter _formatter;
 
-
-    public class SqlMessageNameFormatter :
-        IMessageNameFormatter
+    public SqlMessageNameFormatter(string? namespaceSeparator = null)
+        : this(true, namespaceSeparator)
     {
-        readonly IMessageNameFormatter _formatter;
+    }
 
-        public SqlMessageNameFormatter(string? namespaceSeparator = null)
-            : this(true, namespaceSeparator)
-        {
-        }
+    public SqlMessageNameFormatter(bool includeNamespace, string? namespaceSeparator = null)
+    {
+        _formatter = string.IsNullOrWhiteSpace(namespaceSeparator)
+            ? new DefaultMessageNameFormatter("::", "--", ":", "-", includeNamespace)
+            : new DefaultMessageNameFormatter("::", "--", namespaceSeparator, "-", includeNamespace);
+    }
 
-        public SqlMessageNameFormatter(bool includeNamespace, string? namespaceSeparator = null)
-        {
-            _formatter = string.IsNullOrWhiteSpace(namespaceSeparator)
-                ? new DefaultMessageNameFormatter("::", "--", ":", "-", includeNamespace)
-                : new DefaultMessageNameFormatter("::", "--", namespaceSeparator, "-", includeNamespace);
-        }
-
-        public string GetMessageName(Type type)
-        {
-            return _formatter.GetMessageName(type);
-        }
+    public string GetMessageName(Type type)
+    {
+        return _formatter.GetMessageName(type);
     }
 }

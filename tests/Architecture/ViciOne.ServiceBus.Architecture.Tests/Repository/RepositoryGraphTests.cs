@@ -167,7 +167,7 @@ public sealed class RepositoryGraphTests
     [Fact]
     public void UnitArchitectureProfile_HasExactlyTheExpectedProjectClosure()
     {
-        // Exact rather than "contains": a profile that quietly lost a cohort would still contain
+        // Exact rather than "contains": a profile that quietly lost a project would still contain
         // everything this list names, and the run would go green having executed less. The product
         // projects are members rather than mere ProjectReference targets, because only membership
         // puts them into the solution configuration mapping.

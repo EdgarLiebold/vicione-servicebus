@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+
 namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
-using Topology;
-
 
 public class AmazonSqsTopicSubscriptionConfigurator :
     AmazonSqsTopicConfigurator,

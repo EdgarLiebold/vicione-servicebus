@@ -1,27 +1,25 @@
-namespace ViciOne.ServiceBus.MessageData.Converters
+using System.IO;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus.MessageData.Converters;
+
+public class SystemTextJsonObjectMessageDataConverter<T> :
+    IMessageDataConverter<T>
 {
-    using System.IO;
-    using System.Text.Json;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Metadata;
+    readonly JsonSerializerOptions _options;
 
-
-    public class SystemTextJsonObjectMessageDataConverter<T> :
-        IMessageDataConverter<T>
+    public SystemTextJsonObjectMessageDataConverter(JsonSerializerOptions options)
     {
-        readonly JsonSerializerOptions _options;
+        _options = options;
+    }
 
-        public SystemTextJsonObjectMessageDataConverter(JsonSerializerOptions options)
-        {
-            _options = options;
-        }
+    public async Task<T> Convert(Stream stream, CancellationToken cancellationToken)
+    {
+        var result = await JsonSerializer.DeserializeAsync<T>(stream, _options, cancellationToken).ConfigureAwait(false);
 
-        public async Task<T> Convert(Stream stream, CancellationToken cancellationToken)
-        {
-            var result = await JsonSerializer.DeserializeAsync<T>(stream, _options, cancellationToken).ConfigureAwait(false);
-
-            return result;
-        }
+        return result;
     }
 }

@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
+
 namespace ViciOne.ServiceBus;
-
-using AmazonSqsTransport.Topology;
-
 
 public interface IAmazonSqsConsumeTopologySpecification :
     ISpecification

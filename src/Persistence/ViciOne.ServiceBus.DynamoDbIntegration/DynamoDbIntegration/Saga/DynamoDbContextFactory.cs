@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga;
-
 using System;
 using Amazon.DynamoDBv2.DataModel;
 
+namespace ViciOne.ServiceBus.DynamoDbIntegration.Saga;
 
 internal sealed class DynamoDbContextFactory<TSaga>
     where TSaga : class, ISagaVersion

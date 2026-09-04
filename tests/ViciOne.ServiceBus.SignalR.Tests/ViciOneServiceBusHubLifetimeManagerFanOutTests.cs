@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.SignalR.Protocol;
 using ViciOne.ServiceBus.SignalR.Contracts;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
-using Microsoft.AspNetCore.SignalR.Protocol;
 using Xunit;
 
 namespace ViciOne.ServiceBus.SignalR.Tests;

@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.MessageData.Conventions
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.MessageData.Conventions;
+
+public interface IMessageDataMessageSendTopologyConvention<TMessage> :
+    IMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public interface IMessageDataMessageSendTopologyConvention<TMessage> :
-        IMessageSendTopologyConvention<TMessage>
-        where TMessage : class
-    {
-    }
 }

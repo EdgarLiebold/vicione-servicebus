@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Configuration;
-
 using System.Data;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +10,8 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Transactions;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Configuration;
 
 public sealed class EntityFrameworkProviderConfigurationTests
 {

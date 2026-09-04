@@ -1,17 +1,15 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public interface PauseScheduledRecurringMessage
 {
-    using System;
+    /// <summary>
+    /// The date/time this message was created
+    /// </summary>
+    DateTime Timestamp { get; }
 
+    string ScheduleId { get; }
 
-    public interface PauseScheduledRecurringMessage
-    {
-        /// <summary>
-        /// The date/time this message was created
-        /// </summary>
-        DateTime Timestamp { get; }
-
-        string ScheduleId { get; }
-
-        string ScheduleGroup { get; }
-    }
+    string ScheduleGroup { get; }
 }

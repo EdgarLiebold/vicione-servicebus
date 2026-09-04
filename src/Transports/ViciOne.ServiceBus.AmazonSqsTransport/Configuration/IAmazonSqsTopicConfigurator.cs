@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.Collections.Generic;
 
-
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Configures an exchange for AmazonSQS
 /// </summary>

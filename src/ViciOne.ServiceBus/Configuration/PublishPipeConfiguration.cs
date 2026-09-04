@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class PublishPipeConfiguration :
+    IPublishPipeConfiguration
 {
-    using System;
-    using Middleware;
-    using Transports;
+    readonly PublishPipeSpecification _specification;
 
-
-    public class PublishPipeConfiguration :
-        IPublishPipeConfiguration
+    public PublishPipeConfiguration(IPublishTopology publishTopology)
     {
-        readonly PublishPipeSpecification _specification;
+        ArgumentNullException.ThrowIfNull(publishTopology);
 
-        public PublishPipeConfiguration(IPublishTopology publishTopology)
-        {
-            ArgumentNullException.ThrowIfNull(publishTopology);
+        _specification = new PublishPipeSpecification();
+        _specification.ConnectPublishPipeSpecificationObserver(new TopologyPublishPipeSpecificationObserver(publishTopology));
+    }
 
-            _specification = new PublishPipeSpecification();
-            _specification.ConnectPublishPipeSpecificationObserver(new TopologyPublishPipeSpecificationObserver(publishTopology));
-        }
+    public PublishPipeConfiguration(IPublishPipeSpecification parentSpecification)
+    {
+        ArgumentNullException.ThrowIfNull(parentSpecification);
 
-        public PublishPipeConfiguration(IPublishPipeSpecification parentSpecification)
-        {
-            ArgumentNullException.ThrowIfNull(parentSpecification);
+        _specification = new PublishPipeSpecification();
+        _specification.ConnectPublishPipeSpecificationObserver(new ParentPublishPipeSpecificationObserver(parentSpecification));
+    }
 
-            _specification = new PublishPipeSpecification();
-            _specification.ConnectPublishPipeSpecificationObserver(new ParentPublishPipeSpecificationObserver(parentSpecification));
-        }
+    public IPublishPipeSpecification Specification => _specification;
+    public IPublishPipeConfigurator Configurator => _specification;
 
-        public IPublishPipeSpecification Specification => _specification;
-        public IPublishPipeConfigurator Configurator => _specification;
-
-        public IPublishPipe CreatePipe()
-        {
-            return new PublishPipe(_specification);
-        }
+    public IPublishPipe CreatePipe()
+    {
+        return new PublishPipe(_specification);
     }
 }

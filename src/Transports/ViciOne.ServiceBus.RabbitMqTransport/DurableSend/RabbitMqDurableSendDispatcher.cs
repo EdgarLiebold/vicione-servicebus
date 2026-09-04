@@ -1,7 +1,3 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Net.Mime;
@@ -10,6 +6,9 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.DurableSend;
 using ViciOne.ServiceBus.Serialization;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 /// <summary>
 /// Replays the exact retained envelope through RabbitMQ and reports only its durable broker-acceptance boundary.
 /// </summary>

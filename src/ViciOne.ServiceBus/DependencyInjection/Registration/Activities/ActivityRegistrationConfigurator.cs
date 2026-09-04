@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
+    IActivityRegistrationConfigurator<TActivity, TArguments, TLog>
+    where TActivity : class, IActivity<TArguments, TLog>
+    where TArguments : class
+    where TLog : class
 {
-    using System;
-    using Configuration;
+    readonly IRegistrationConfigurator _configurator;
+    readonly IActivityRegistration _registration;
 
-
-    public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
-        IActivityRegistrationConfigurator<TActivity, TArguments, TLog>
-        where TActivity : class, IActivity<TArguments, TLog>
-        where TArguments : class
-        where TLog : class
+    public ActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IActivityRegistration registration)
     {
-        readonly IRegistrationConfigurator _configurator;
-        readonly IActivityRegistration _registration;
+        _configurator = configurator;
+        _registration = registration;
+    }
 
-        public ActivityRegistrationConfigurator(IRegistrationConfigurator configurator, IActivityRegistration registration)
-        {
-            _configurator = configurator;
-            _registration = registration;
-        }
+    public IActivityRegistrationConfigurator ExecuteEndpoint(Action<IEndpointRegistrationConfigurator> configureExecute)
+    {
+        if (!_registration.IncludeInConfigureEndpoints)
+            throw new ConfigurationException("Activity is excluded from ConfigureEndpoints");
 
-        public IActivityRegistrationConfigurator ExecuteEndpoint(Action<IEndpointRegistrationConfigurator> configureExecute)
-        {
-            if (!_registration.IncludeInConfigureEndpoints)
-                throw new ConfigurationException("Activity is excluded from ConfigureEndpoints");
+        var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
 
-            var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
+        configureExecute?.Invoke(configurator);
 
-            configureExecute?.Invoke(configurator);
+        _configurator.AddEndpoint<ExecuteActivityEndpointDefinition<TActivity, TArguments>, IExecuteActivity<TArguments>>(_registration,
+            configurator.Settings);
 
-            _configurator.AddEndpoint<ExecuteActivityEndpointDefinition<TActivity, TArguments>, IExecuteActivity<TArguments>>(_registration,
-                configurator.Settings);
+        return this;
+    }
 
-            return this;
-        }
+    public IActivityRegistrationConfigurator CompensateEndpoint(Action<IEndpointRegistrationConfigurator> configureCompensate)
+    {
+        if (!_registration.IncludeInConfigureEndpoints)
+            throw new ConfigurationException("Activity is excluded from ConfigureEndpoints");
 
-        public IActivityRegistrationConfigurator CompensateEndpoint(Action<IEndpointRegistrationConfigurator> configureCompensate)
-        {
-            if (!_registration.IncludeInConfigureEndpoints)
-                throw new ConfigurationException("Activity is excluded from ConfigureEndpoints");
+        var compensateConfigurator = new EndpointRegistrationConfigurator<ICompensateActivity<TLog>> { ConfigureConsumeTopology = false };
 
-            var compensateConfigurator = new EndpointRegistrationConfigurator<ICompensateActivity<TLog>> { ConfigureConsumeTopology = false };
+        configureCompensate?.Invoke(compensateConfigurator);
 
-            configureCompensate?.Invoke(compensateConfigurator);
+        _configurator.AddEndpoint<CompensateActivityEndpointDefinition<TActivity, TLog>, ICompensateActivity<TLog>>(_registration,
+            compensateConfigurator.Settings);
 
-            _configurator.AddEndpoint<CompensateActivityEndpointDefinition<TActivity, TLog>, ICompensateActivity<TLog>>(_registration,
-                compensateConfigurator.Settings);
+        return this;
+    }
 
-            return this;
-        }
-
-        public void ExcludeFromConfigureEndpoints()
-        {
-            _registration.IncludeInConfigureEndpoints = false;
-        }
+    public void ExcludeFromConfigureEndpoints()
+    {
+        _registration.IncludeInConfigureEndpoints = false;
     }
 }

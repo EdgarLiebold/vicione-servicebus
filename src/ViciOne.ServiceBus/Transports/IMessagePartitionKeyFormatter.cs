@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IMessagePartitionKeyFormatter<in TMessage>
+    where TMessage : class
 {
-    public interface IMessagePartitionKeyFormatter<in TMessage>
-        where TMessage : class
-    {
-        string FormatPartitionKey(SendContext<TMessage> context);
-    }
+    string FormatPartitionKey(SendContext<TMessage> context);
 }

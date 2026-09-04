@@ -1,17 +1,15 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+public interface IRabbitMqBusConfiguration :
+    IBusConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    new IRabbitMqHostConfiguration HostConfiguration { get; }
 
+    new IRabbitMqEndpointConfiguration BusEndpointConfiguration { get; }
 
-    public interface IRabbitMqBusConfiguration :
-        IBusConfiguration
-    {
-        new IRabbitMqHostConfiguration HostConfiguration { get; }
+    new IRabbitMqTopologyConfiguration Topology { get; }
 
-        new IRabbitMqEndpointConfiguration BusEndpointConfiguration { get; }
-
-        new IRabbitMqTopologyConfiguration Topology { get; }
-
-        IRabbitMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint = false);
-    }
+    IRabbitMqEndpointConfiguration CreateEndpointConfiguration(bool isBusEndpoint = false);
 }

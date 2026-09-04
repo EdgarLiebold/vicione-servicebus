@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class AsyncConsumerConvention :
+    IConsumerConvention
 {
-    public class AsyncConsumerConvention :
-        IConsumerConvention
+    IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>()
     {
-        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>()
-        {
-            return new AsyncConsumerMessageConvention<T>();
-        }
+        return new AsyncConsumerMessageConvention<T>();
     }
 }

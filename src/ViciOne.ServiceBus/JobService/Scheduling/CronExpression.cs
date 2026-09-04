@@ -1,14 +1,13 @@
-#nullable enable
-namespace ViciOne.ServiceBus.JobService.Scheduling;
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Internals;
+using ViciOne.ServiceBus.Internals;
 
+#nullable enable
+namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 public sealed class CronExpression :
     IEquatable<CronExpression>

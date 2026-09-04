@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public enum JobSlotDisposition
 {
-    public enum JobSlotDisposition
-    {
-        Completed = 0,
-        Faulted = 1,
-        Canceled = 2,
-        Suspect = 3,
-    }
+    Completed = 0,
+    Faulted = 1,
+    Canceled = 2,
+    Suspect = 3,
 }

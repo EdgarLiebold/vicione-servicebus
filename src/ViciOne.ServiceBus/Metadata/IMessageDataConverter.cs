@@ -1,12 +1,10 @@
-namespace ViciOne.ServiceBus.Metadata
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Metadata;
+
+public interface IMessageDataConverter<T>
 {
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-
-    public interface IMessageDataConverter<T>
-    {
-        Task<T> Convert(Stream stream, CancellationToken cancellationToken);
-    }
+    Task<T> Convert(Stream stream, CancellationToken cancellationToken);
 }

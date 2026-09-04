@@ -1,94 +1,92 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System.Collections.Generic;
+using System.Threading;
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public abstract class BrokerTopologyBuilder
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using ViciOne.ServiceBus.Topology;
+    readonly EntityCollection<ExchangeBindingEntity, ExchangeBindingHandle> _exchangeBindings;
+    readonly NamedEntityCollection<ExchangeEntity, ExchangeHandle> _exchanges;
+    readonly EntityCollection<QueueBindingEntity, QueueBindingHandle> _queueBindings;
+    readonly NamedEntityCollection<QueueEntity, QueueHandle> _queues;
+    long _nextId;
 
-
-    public abstract class BrokerTopologyBuilder
+    protected BrokerTopologyBuilder()
     {
-        readonly EntityCollection<ExchangeBindingEntity, ExchangeBindingHandle> _exchangeBindings;
-        readonly NamedEntityCollection<ExchangeEntity, ExchangeHandle> _exchanges;
-        readonly EntityCollection<QueueBindingEntity, QueueBindingHandle> _queueBindings;
-        readonly NamedEntityCollection<QueueEntity, QueueHandle> _queues;
-        long _nextId;
+        _exchanges = new NamedEntityCollection<ExchangeEntity, ExchangeHandle>(ExchangeEntity.EntityComparer, ExchangeEntity.NameComparer);
+        _queues = new NamedEntityCollection<QueueEntity, QueueHandle>(QueueEntity.QueueComparer, QueueEntity.NameComparer);
 
-        protected BrokerTopologyBuilder()
+        _exchangeBindings = new EntityCollection<ExchangeBindingEntity, ExchangeBindingHandle>(ExchangeBindingEntity.EntityComparer);
+        _queueBindings = new EntityCollection<QueueBindingEntity, QueueBindingHandle>(QueueBindingEntity.EntityComparer);
+    }
+
+    long GetNextId()
+    {
+        return Interlocked.Increment(ref _nextId);
+    }
+
+    public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
+    {
+        var id = GetNextId();
+
+        var exchange = new ExchangeEntity(id, name, type, durable, autoDelete, arguments);
+
+        return _exchanges.GetOrAdd(exchange);
+    }
+
+    public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object> arguments)
+    {
+        var id = GetNextId();
+
+        var sourceExchange = _exchanges.Get(source);
+
+        var destinationExchange = _exchanges.Get(destination);
+
+        var binding = new ExchangeBindingEntity(id, sourceExchange, destinationExchange, routingKey, arguments);
+
+        return _exchangeBindings.GetOrAdd(binding);
+    }
+
+    public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
+    {
+        var id = GetNextId();
+
+        var queueArguments = new Dictionary<string, object>(arguments);
+
+        var queueAutoDelete = autoDelete;
+        if (queueArguments.TryGetValue(RabbitMQ.Client.Headers.XExpires, out _))
         {
-            _exchanges = new NamedEntityCollection<ExchangeEntity, ExchangeHandle>(ExchangeEntity.EntityComparer, ExchangeEntity.NameComparer);
-            _queues = new NamedEntityCollection<QueueEntity, QueueHandle>(QueueEntity.QueueComparer, QueueEntity.NameComparer);
-
-            _exchangeBindings = new EntityCollection<ExchangeBindingEntity, ExchangeBindingHandle>(ExchangeBindingEntity.EntityComparer);
-            _queueBindings = new EntityCollection<QueueBindingEntity, QueueBindingHandle>(QueueBindingEntity.EntityComparer);
+            queueAutoDelete = false;
+            autoDelete = true;
         }
 
-        long GetNextId()
-        {
-            return Interlocked.Increment(ref _nextId);
-        }
+        var isQuorumQueue = queueArguments.TryGetValue(RabbitMQ.Client.Headers.XQueueType, out var queueType) && queueType.Equals("quorum");
 
-        public ExchangeHandle ExchangeDeclare(string name, string type, bool durable, bool autoDelete, IDictionary<string, object> arguments)
-        {
-            var id = GetNextId();
+        var durableQueue = durable || isQuorumQueue;
 
-            var exchange = new ExchangeEntity(id, name, type, durable, autoDelete, arguments);
+        exclusive = exclusive || autoDelete && !durableQueue;
 
-            return _exchanges.GetOrAdd(exchange);
-        }
+        var queue = new QueueEntity(id, name, durableQueue, queueAutoDelete, exclusive, arguments);
 
-        public ExchangeBindingHandle ExchangeBind(ExchangeHandle source, ExchangeHandle destination, string routingKey, IDictionary<string, object> arguments)
-        {
-            var id = GetNextId();
+        return _queues.GetOrAdd(queue);
+    }
 
-            var sourceExchange = _exchanges.Get(source);
+    public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments)
+    {
+        var id = GetNextId();
 
-            var destinationExchange = _exchanges.Get(destination);
+        var exchangeEntity = _exchanges.Get(exchange);
 
-            var binding = new ExchangeBindingEntity(id, sourceExchange, destinationExchange, routingKey, arguments);
+        var queueEntity = _queues.Get(queue);
 
-            return _exchangeBindings.GetOrAdd(binding);
-        }
+        var binding = new QueueBindingEntity(id, exchangeEntity, queueEntity, routingKey, arguments);
 
-        public QueueHandle QueueDeclare(string name, bool durable, bool autoDelete, bool exclusive, IDictionary<string, object> arguments)
-        {
-            var id = GetNextId();
+        return _queueBindings.GetOrAdd(binding);
+    }
 
-            var queueArguments = new Dictionary<string, object>(arguments);
-
-            var queueAutoDelete = autoDelete;
-            if (queueArguments.TryGetValue(RabbitMQ.Client.Headers.XExpires, out _))
-            {
-                queueAutoDelete = false;
-                autoDelete = true;
-            }
-
-            var isQuorumQueue = queueArguments.TryGetValue(RabbitMQ.Client.Headers.XQueueType, out var queueType) && queueType.Equals("quorum");
-
-            var durableQueue = durable || isQuorumQueue;
-
-            exclusive = exclusive || autoDelete && !durableQueue;
-
-            var queue = new QueueEntity(id, name, durableQueue, queueAutoDelete, exclusive, arguments);
-
-            return _queues.GetOrAdd(queue);
-        }
-
-        public QueueBindingHandle QueueBind(ExchangeHandle exchange, QueueHandle queue, string routingKey, IDictionary<string, object> arguments)
-        {
-            var id = GetNextId();
-
-            var exchangeEntity = _exchanges.Get(exchange);
-
-            var queueEntity = _queues.Get(queue);
-
-            var binding = new QueueBindingEntity(id, exchangeEntity, queueEntity, routingKey, arguments);
-
-            return _queueBindings.GetOrAdd(binding);
-        }
-
-        public BrokerTopology BuildBrokerTopology()
-        {
-            return new RabbitMqBrokerTopology(_exchanges, _exchangeBindings, _queues, _queueBindings);
-        }
+    public BrokerTopology BuildBrokerTopology()
+    {
+        return new RabbitMqBrokerTopology(_exchanges, _exchangeBindings, _queues, _queueBindings);
     }
 }

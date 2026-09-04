@@ -1,10 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.MessageJournal;
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Context;
+using ViciOne.ServiceBus.Context;
+
+#nullable enable
+namespace ViciOne.ServiceBus.MessageJournal;
 
 internal static class MessageJournalCaptureFactory
 {

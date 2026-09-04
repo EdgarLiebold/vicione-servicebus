@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using ViciOne.ServiceBus.Topology;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public interface QueueSubscriptionHandle :
+    EntityHandle
 {
-    using ViciOne.ServiceBus.Topology;
-
-
-    public interface QueueSubscriptionHandle :
-        EntityHandle
-    {
-        QueueSubscription QueueSubscription { get; }
-    }
+    QueueSubscription QueueSubscription { get; }
 }

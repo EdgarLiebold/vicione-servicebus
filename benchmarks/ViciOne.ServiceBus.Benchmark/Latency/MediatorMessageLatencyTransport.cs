@@ -1,41 +1,39 @@
-namespace ViciOneServiceBusBenchmark.Latency
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Mediator;
+
+namespace ViciOneServiceBusBenchmark.Latency;
+
+public class MediatorMessageLatencyTransport :
+    IMessageLatencyTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
-    using ViciOne.ServiceBus.Mediator;
+    readonly IMessageLatencySettings _settings;
+    IMediator _mediator;
 
-
-    public class MediatorMessageLatencyTransport :
-        IMessageLatencyTransport
+    public MediatorMessageLatencyTransport(IMessageLatencySettings settings)
     {
-        readonly IMessageLatencySettings _settings;
-        IMediator _mediator;
+        _settings = settings;
+    }
 
-        public MediatorMessageLatencyTransport(IMessageLatencySettings settings)
+    public Task Send(LatencyTestMessage message)
+    {
+        return _mediator.Send(message);
+    }
+
+    public Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
+    {
+        _mediator = Bus.Factory.CreateMediator(callback);
+
+        return Task.CompletedTask;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return _mediator switch
         {
-            _settings = settings;
-        }
-
-        public Task Send(LatencyTestMessage message)
-        {
-            return _mediator.Send(message);
-        }
-
-        public Task Start(Action<IReceiveEndpointConfigurator> callback, IReportConsumerMetric reportConsumerMetric)
-        {
-            _mediator = Bus.Factory.CreateMediator(callback);
-
-            return Task.CompletedTask;
-        }
-
-        public ValueTask DisposeAsync()
-        {
-            return _mediator switch
-            {
-                IAsyncDisposable disposable => disposable.DisposeAsync(),
-                _ => default
-            };
-        }
+            IAsyncDisposable disposable => disposable.DisposeAsync(),
+            _ => default
+        };
     }
 }

@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
+using System;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Customize the redelivery experience
+/// </summary>
+[Flags]
+public enum RedeliveryOptions
+{
+    None = 0,
 
     /// <summary>
-    /// Customize the redelivery experience
+    /// Generate a new MessageId for the redelivered message (typically to avoid
+    /// broker deduplication logic)
     /// </summary>
-    [Flags]
-    public enum RedeliveryOptions
-    {
-        None = 0,
+    ReplaceMessageId = 1,
 
-        /// <summary>
-        /// Generate a new MessageId for the redelivered message (typically to avoid
-        /// broker deduplication logic)
-        /// </summary>
-        ReplaceMessageId = 1,
-
-        /// <summary>
-        /// If specified, use the message scheduler context instead of the redelivery context (only use when transport-level redelivery is not available)
-        /// </summary>
-        UseMessageScheduler = 2,
-    }
+    /// <summary>
+    /// If specified, use the message scheduler context instead of the redelivery context (only use when transport-level redelivery is not available)
+    /// </summary>
+    UseMessageScheduler = 2,
 }

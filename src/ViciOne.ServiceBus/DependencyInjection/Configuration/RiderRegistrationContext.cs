@@ -1,102 +1,100 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RiderRegistrationContext :
+    ISetScopedConsumeContext,
+    IRiderRegistrationContext
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly RegistrationContext _registration;
 
+    readonly IContainerSelector _selector;
 
-    public class RiderRegistrationContext :
-        ISetScopedConsumeContext,
-        IRiderRegistrationContext
+    public RiderRegistrationContext(RegistrationContext registration, IContainerSelector selector)
     {
-        readonly RegistrationContext _registration;
+        _registration = registration;
+        _selector = selector;
+    }
 
-        readonly IContainerSelector _selector;
+    public IEnumerable<T> GetRegistrations<T>()
+        where T : class, IRegistration
+    {
+        return _selector.GetRegistrations<T>(_registration);
+    }
 
-        public RiderRegistrationContext(RegistrationContext registration, IContainerSelector selector)
-        {
-            _registration = registration;
-            _selector = selector;
-        }
+    public object GetService(Type serviceType)
+    {
+        return _registration.GetService(serviceType);
+    }
 
-        public IEnumerable<T> GetRegistrations<T>()
-            where T : class, IRegistration
-        {
-            return _selector.GetRegistrations<T>(_registration);
-        }
+    public void ConfigureConsumer(Type consumerType, IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureConsumer(consumerType, configurator);
+    }
 
-        public object GetService(Type serviceType)
-        {
-            return _registration.GetService(serviceType);
-        }
+    public void ConfigureConsumer<T>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<T>> configure = null)
+        where T : class, IConsumer
+    {
+        _registration.ConfigureConsumer(configurator, configure);
+    }
 
-        public void ConfigureConsumer(Type consumerType, IReceiveEndpointConfigurator configurator)
-        {
-            _registration.ConfigureConsumer(consumerType, configurator);
-        }
+    public void ConfigureConsumers(IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureConsumers(configurator);
+    }
 
-        public void ConfigureConsumer<T>(IReceiveEndpointConfigurator configurator, Action<IConsumerConfigurator<T>> configure = null)
-            where T : class, IConsumer
-        {
-            _registration.ConfigureConsumer(configurator, configure);
-        }
+    public void ConfigureSaga(Type sagaType, IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureSaga(sagaType, configurator);
+    }
 
-        public void ConfigureConsumers(IReceiveEndpointConfigurator configurator)
-        {
-            _registration.ConfigureConsumers(configurator);
-        }
+    public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>> configure = null)
+        where T : class, ISaga
+    {
+        _registration.ConfigureSaga(configurator, configure);
+    }
 
-        public void ConfigureSaga(Type sagaType, IReceiveEndpointConfigurator configurator)
-        {
-            _registration.ConfigureSaga(sagaType, configurator);
-        }
+    public void ConfigureSagas(IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureSagas(configurator);
+    }
 
-        public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>> configure = null)
-            where T : class, ISaga
-        {
-            _registration.ConfigureSaga(configurator, configure);
-        }
+    public void ConfigureExecuteActivity(Type activityType, IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureExecuteActivity(activityType, configurator);
+    }
 
-        public void ConfigureSagas(IReceiveEndpointConfigurator configurator)
-        {
-            _registration.ConfigureSagas(configurator);
-        }
+    public void ConfigureActivity(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator,
+        IReceiveEndpointConfigurator compensateEndpointConfigurator)
+    {
+        _registration.ConfigureActivity(activityType, executeEndpointConfigurator, compensateEndpointConfigurator);
+    }
 
-        public void ConfigureExecuteActivity(Type activityType, IReceiveEndpointConfigurator configurator)
-        {
-            _registration.ConfigureExecuteActivity(activityType, configurator);
-        }
+    public void ConfigureActivityExecute(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator, Uri compensateAddress)
+    {
+        _registration.ConfigureActivityExecute(activityType, executeEndpointConfigurator, compensateAddress);
+    }
 
-        public void ConfigureActivity(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator,
-            IReceiveEndpointConfigurator compensateEndpointConfigurator)
-        {
-            _registration.ConfigureActivity(activityType, executeEndpointConfigurator, compensateEndpointConfigurator);
-        }
+    public void ConfigureActivityCompensate(Type activityType, IReceiveEndpointConfigurator compensateEndpointConfigurator)
+    {
+        _registration.ConfigureActivityCompensate(activityType, compensateEndpointConfigurator);
+    }
 
-        public void ConfigureActivityExecute(Type activityType, IReceiveEndpointConfigurator executeEndpointConfigurator, Uri compensateAddress)
-        {
-            _registration.ConfigureActivityExecute(activityType, executeEndpointConfigurator, compensateAddress);
-        }
+    public void ConfigureFuture(Type futureType, IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureFuture(futureType, configurator);
+    }
 
-        public void ConfigureActivityCompensate(Type activityType, IReceiveEndpointConfigurator compensateEndpointConfigurator)
-        {
-            _registration.ConfigureActivityCompensate(activityType, compensateEndpointConfigurator);
-        }
+    public void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
+        where T : class, ISaga
+    {
+        _registration.ConfigureFuture<T>(configurator);
+    }
 
-        public void ConfigureFuture(Type futureType, IReceiveEndpointConfigurator configurator)
-        {
-            _registration.ConfigureFuture(futureType, configurator);
-        }
-
-        public void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
-            where T : class, ISaga
-        {
-            _registration.ConfigureFuture<T>(configurator);
-        }
-
-        public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
-        {
-            return _registration.PushContext(scope, context);
-        }
+    public IDisposable PushContext(IServiceScope scope, ConsumeContext context)
+    {
+        return _registration.PushContext(scope, context);
     }
 }

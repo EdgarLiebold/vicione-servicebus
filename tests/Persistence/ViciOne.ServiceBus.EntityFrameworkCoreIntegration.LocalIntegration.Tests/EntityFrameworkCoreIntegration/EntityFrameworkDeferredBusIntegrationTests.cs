@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration;
-
 using System.Collections.Concurrent;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +7,8 @@ using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.Transactions;
 using ViciOne.ServiceBus.Transactions;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.LocalIntegration.Tests.EntityFrameworkCoreIntegration;
 
 public sealed class EntityFrameworkDeferredBusIntegrationTests
 {

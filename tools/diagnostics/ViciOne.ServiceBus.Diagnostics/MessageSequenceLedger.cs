@@ -1,6 +1,3 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,7 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// The exact set of identities a run published, and what was actually observed against it.
 /// <para>

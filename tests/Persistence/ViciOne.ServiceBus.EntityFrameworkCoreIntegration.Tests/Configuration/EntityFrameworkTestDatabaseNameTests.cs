@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Configuration;
-
 using ViciOne.ServiceBus.Tests.Infrastructure.Databases;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Configuration;
 
 public sealed class EntityFrameworkTestDatabaseNameTests
 {

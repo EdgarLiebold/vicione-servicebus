@@ -1,19 +1,18 @@
-namespace ViciOne.ServiceBus.Context
+namespace ViciOne.ServiceBus.Context;
+
+public class HostCompensateActivityContext<TActivity, TLog> :
+    CompensateContextProxy<TLog>,
+    CompensateActivityContext<TActivity, TLog>
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    public class HostCompensateActivityContext<TActivity, TLog> :
-        CompensateContextProxy<TLog>,
-        CompensateActivityContext<TActivity, TLog>
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
+    readonly TActivity _activity;
+
+    public HostCompensateActivityContext(TActivity activity, CompensateContext<TLog> context)
+        : base(context)
     {
-        readonly TActivity _activity;
-
-        public HostCompensateActivityContext(TActivity activity, CompensateContext<TLog> context)
-            : base(context)
-        {
-            _activity = activity;
-        }
-
-        TActivity CompensateActivityContext<TActivity, TLog>.Activity => _activity;
+        _activity = activity;
     }
+
+    TActivity CompensateActivityContext<TActivity, TLog>.Activity => _activity;
 }

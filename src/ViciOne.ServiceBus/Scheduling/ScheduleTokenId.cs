@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Scheduling
+namespace ViciOne.ServiceBus.Scheduling;
+
+public static class ScheduleTokenId
 {
-    public static class ScheduleTokenId
+    public static void UseTokenId<T>(ScheduleTokenIdCache<T>.TokenIdSelector tokenIdSelector)
+        where T : class
     {
-        public static void UseTokenId<T>(ScheduleTokenIdCache<T>.TokenIdSelector tokenIdSelector)
-            where T : class
-        {
-            ScheduleTokenIdCache<T>.UseTokenId(tokenIdSelector);
-        }
+        ScheduleTokenIdCache<T>.UseTokenId(tokenIdSelector);
     }
 }

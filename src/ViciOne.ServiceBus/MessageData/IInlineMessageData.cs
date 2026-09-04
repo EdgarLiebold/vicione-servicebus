@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.MessageData
+namespace ViciOne.ServiceBus.MessageData;
+
+public interface IInlineMessageData
 {
-    public interface IInlineMessageData
-    {
-        void Set(IMessageDataReference reference);
-    }
+    void Set(IMessageDataReference reference);
 }

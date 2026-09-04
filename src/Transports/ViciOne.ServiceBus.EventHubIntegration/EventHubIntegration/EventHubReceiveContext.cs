@@ -1,12 +1,11 @@
-namespace ViciOne.ServiceBus.EventHubIntegration;
-
 using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Processor;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.EventHubIntegration;
 
 public sealed class EventHubReceiveContext :
     BaseReceiveContext,

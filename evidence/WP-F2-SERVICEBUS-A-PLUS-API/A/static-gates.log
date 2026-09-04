@@ -1,0 +1,9 @@
+git_diff_check_exit_code=0
+forbidden_comment_lines=0
+product_nullable_disable_files=0
+testagent_directories=0
+warning_disable_regions=1
+warning_disable_detail=AmazonS3MessageDataRepository.cs CS0618, immediately restored and locally justified
+review_status=untracked and untouched
+modifications_status=unchanged
+changelist_status=unchanged

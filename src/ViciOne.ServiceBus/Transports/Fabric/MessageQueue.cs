@@ -1,194 +1,192 @@
+using System;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.InMemoryTransport;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Util;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class MessageQueue<TContext, T> :
+    Agent,
+    IMessageQueue<TContext, T>
+    where T : class
+    where TContext : class
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Channels;
-    using System.Threading.Tasks;
-    using InMemoryTransport;
-    using Middleware;
-    using Util;
+    readonly Channel<DeliveryContext<T>> _channel;
+    readonly IInMemoryDelayProvider _delayProvider;
+    readonly SemaphoreSlim _delayedCapacity;
+    readonly PendingTaskCollection _delayedDeliveries;
+    readonly Task _dispatcher;
+    readonly QueueMetric _metrics;
+    readonly IMessageFabricObserver<TContext> _observer;
+    readonly MessageReceiverCollection<T> _receivers;
 
-
-    public class MessageQueue<TContext, T> :
-        Agent,
-        IMessageQueue<TContext, T>
-        where T : class
-        where TContext : class
+    public MessageQueue(IMessageFabricObserver<TContext> observer, string name, IInMemoryDelayProvider delayProvider, int capacity = 1024)
     {
-        readonly Channel<DeliveryContext<T>> _channel;
-        readonly IInMemoryDelayProvider _delayProvider;
-        readonly SemaphoreSlim _delayedCapacity;
-        readonly PendingTaskCollection _delayedDeliveries;
-        readonly Task _dispatcher;
-        readonly QueueMetric _metrics;
-        readonly IMessageFabricObserver<TContext> _observer;
-        readonly MessageReceiverCollection<T> _receivers;
+        if (capacity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Queue capacity must be greater than zero.");
 
-        public MessageQueue(IMessageFabricObserver<TContext> observer, string name, IInMemoryDelayProvider delayProvider, int capacity = 1024)
+        _observer = observer;
+        _delayProvider = delayProvider;
+        Name = name;
+
+        _receivers = new MessageReceiverCollection<T>(receivers => new RoundRobinReceiverLoadBalancer<T>(receivers));
+        _metrics = new QueueMetric(name);
+        _delayedCapacity = new SemaphoreSlim(capacity, capacity);
+        _delayedDeliveries = new PendingTaskCollection(capacity);
+
+        _channel = Channel.CreateBounded<DeliveryContext<T>>(new BoundedChannelOptions(capacity)
         {
-            if (capacity <= 0)
-                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Queue capacity must be greater than zero.");
+            SingleWriter = false,
+            SingleReader = true,
+            AllowSynchronousContinuations = false,
+            FullMode = BoundedChannelFullMode.Wait
+        });
 
-            _observer = observer;
-            _delayProvider = delayProvider;
-            Name = name;
+        _dispatcher = StartDispatcher();
+    }
 
-            _receivers = new MessageReceiverCollection<T>(receivers => new RoundRobinReceiverLoadBalancer<T>(receivers));
-            _metrics = new QueueMetric(name);
-            _delayedCapacity = new SemaphoreSlim(capacity, capacity);
-            _delayedDeliveries = new PendingTaskCollection(capacity);
+    public string Name { get; }
 
-            _channel = Channel.CreateBounded<DeliveryContext<T>>(new BoundedChannelOptions(capacity)
-            {
-                SingleWriter = false,
-                SingleReader = true,
-                AllowSynchronousContinuations = false,
-                FullMode = BoundedChannelFullMode.Wait
-            });
+    public TopologyHandle ConnectMessageReceiver(TContext nodeContext, IMessageReceiver<T> receiver)
+    {
+        try
+        {
+            var handle = _receivers.Connect(receiver);
 
-            _dispatcher = StartDispatcher();
+            handle = _observer.ConsumerConnected(nodeContext, handle, Name);
+
+            return handle;
         }
-
-        public string Name { get; }
-
-        public TopologyHandle ConnectMessageReceiver(TContext nodeContext, IMessageReceiver<T> receiver)
+        catch (Exception exception)
         {
-            try
-            {
-                var handle = _receivers.Connect(receiver);
-
-                handle = _observer.ConsumerConnected(nodeContext, handle, Name);
-
-                return handle;
-            }
-            catch (Exception exception)
-            {
-                throw new ConfigurationException($"Only a single consumer can be connected to a queue: {Name}", exception);
-            }
+            throw new ConfigurationException($"Only a single consumer can be connected to a queue: {Name}", exception);
         }
+    }
 
-        public async Task Deliver(DeliveryContext<T> context)
+    public async Task Deliver(DeliveryContext<T> context)
+    {
+        if (context.WasAlreadyDelivered(this))
+            return;
+
+        if (context.EnqueueTime.HasValue)
         {
-            if (context.WasAlreadyDelivered(this))
+            await _delayedCapacity.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+
+            Task delivery = DeliverWithDelay(context);
+            _delayedDeliveries.Add(delivery);
+        }
+        else
+        {
+            await _channel.Writer.WriteAsync(context, context.CancellationToken).ConfigureAwait(false);
+
+            _metrics.MessageCount.Add();
+        }
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("queue");
+        scope.Add("name", Name);
+
+        _receivers.Probe(scope);
+    }
+
+    protected override async Task StopAgent(StopContext context)
+    {
+        await _delayedDeliveries.Completed().ConfigureAwait(false);
+
+        _channel.Writer.TryComplete();
+
+        await _channel.Reader.Completion.ConfigureAwait(false);
+
+        await _dispatcher.ConfigureAwait(false);
+
+        _delayedCapacity.Dispose();
+
+        await base.StopAgent(context).ConfigureAwait(false);
+    }
+
+    async Task DeliverWithDelay(DeliveryContext<T> context)
+    {
+        var delayed = false;
+        try
+        {
+            if (context.CancellationToken.IsCancellationRequested)
                 return;
 
-            if (context.EnqueueTime.HasValue)
+            var enqueueTime = new DateTimeOffset(DateTime.SpecifyKind(context.EnqueueTime!.Value, DateTimeKind.Utc));
+            if (enqueueTime > _delayProvider.UtcNow)
             {
-                await _delayedCapacity.WaitAsync(context.CancellationToken).ConfigureAwait(false);
+                _metrics.DelayedMessageCount.Add();
+                delayed = true;
 
-                Task delivery = DeliverWithDelay(context);
-                _delayedDeliveries.Add(delivery);
+                await _delayProvider.Delay(enqueueTime, Stopping).ConfigureAwait(false);
             }
-            else
+
+            await _channel.Writer.WriteAsync(context, Stopping).ConfigureAwait(false);
+
+            _metrics.MessageCount.Add();
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception exception)
+        {
+            LogContext.Error?.Log(exception, "Message delivery faulted: {Queue}", Name);
+        }
+        finally
+        {
+            if (delayed)
+                await _metrics.DelayedMessageCount.Remove().ConfigureAwait(false);
+
+            _delayedCapacity.Release();
+        }
+    }
+
+    async Task StartDispatcher()
+    {
+        try
+        {
+            while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
             {
-                await _channel.Writer.WriteAsync(context, context.CancellationToken).ConfigureAwait(false);
+                if (!_channel.Reader.TryRead(out DeliveryContext<T>? context))
+                    continue;
 
-                _metrics.MessageCount.Add();
-            }
-        }
+                await _metrics.MessageCount.Remove().ConfigureAwait(false);
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("queue");
-            scope.Add("name", Name);
-
-            _receivers.Probe(scope);
-        }
-
-        protected override async Task StopAgent(StopContext context)
-        {
-            await _delayedDeliveries.Completed().ConfigureAwait(false);
-
-            _channel.Writer.TryComplete();
-
-            await _channel.Reader.Completion.ConfigureAwait(false);
-
-            await _dispatcher.ConfigureAwait(false);
-
-            _delayedCapacity.Dispose();
-
-            await base.StopAgent(context).ConfigureAwait(false);
-        }
-
-        async Task DeliverWithDelay(DeliveryContext<T> context)
-        {
-            var delayed = false;
-            try
-            {
-                if (context.CancellationToken.IsCancellationRequested)
-                    return;
-
-                var enqueueTime = new DateTimeOffset(DateTime.SpecifyKind(context.EnqueueTime!.Value, DateTimeKind.Utc));
-                if (enqueueTime > _delayProvider.UtcNow)
+                try
                 {
-                    _metrics.DelayedMessageCount.Add();
-                    delayed = true;
+                    IMessageReceiver<T>? receiver = null;
 
-                    await _delayProvider.Delay(enqueueTime, Stopping).ConfigureAwait(false);
+                    if (context.ReceiverId.HasValue)
+                    {
+                        if (!_receivers.TryGetReceiver(context.ReceiverId.Value, out receiver))
+                            LogContext.Debug?.Log("Receiver not found: {Queue}, {ReceiverId}", Name, context.ReceiverId.Value);
+                    }
+
+                    receiver ??= await _receivers.Next(context.Message, Stopping).ConfigureAwait(false);
+                    if (receiver != null)
+                        await receiver.Deliver(context.Message, Stopping).ConfigureAwait(false);
                 }
-
-                await _channel.Writer.WriteAsync(context, Stopping).ConfigureAwait(false);
-
-                _metrics.MessageCount.Add();
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception exception)
-            {
-                LogContext.Error?.Log(exception, "Message delivery faulted: {Queue}", Name);
-            }
-            finally
-            {
-                if (delayed)
-                    await _metrics.DelayedMessageCount.Remove().ConfigureAwait(false);
-
-                _delayedCapacity.Release();
-            }
-        }
-
-        async Task StartDispatcher()
-        {
-            try
-            {
-                while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
+                catch (OperationCanceledException)
                 {
-                    if (!_channel.Reader.TryRead(out DeliveryContext<T>? context))
-                        continue;
-
-                    await _metrics.MessageCount.Remove().ConfigureAwait(false);
-
-                    try
-                    {
-                        IMessageReceiver<T>? receiver = null;
-
-                        if (context.ReceiverId.HasValue)
-                        {
-                            if (!_receivers.TryGetReceiver(context.ReceiverId.Value, out receiver))
-                                LogContext.Debug?.Log("Receiver not found: {Queue}, {ReceiverId}", Name, context.ReceiverId.Value);
-                        }
-
-                        receiver ??= await _receivers.Next(context.Message, Stopping).ConfigureAwait(false);
-                        if (receiver != null)
-                            await receiver.Deliver(context.Message, Stopping).ConfigureAwait(false);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                    }
-                    catch (Exception exception)
-                    {
-                        LogContext.Warning?.Log(exception, "Failed to dispatch message");
-                    }
+                }
+                catch (Exception exception)
+                {
+                    LogContext.Warning?.Log(exception, "Failed to dispatch message");
                 }
             }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception exception)
-            {
-                LogContext.Warning?.Log(exception, "Queue dispatcher faulted: {Queue}", Name);
-            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception exception)
+        {
+            LogContext.Warning?.Log(exception, "Queue dispatcher faulted: {Queue}", Name);
         }
     }
 }

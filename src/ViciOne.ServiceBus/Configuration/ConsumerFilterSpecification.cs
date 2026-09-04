@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ConsumerFilterSpecification<TConsumer, TMessage> :
+    IPipeSpecification<ConsumerConsumeContext<TConsumer, TMessage>>
+    where TConsumer : class
+    where TMessage : class
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IFilter<ConsumerConsumeContext<TConsumer, TMessage>> _filter;
 
-
-    public class ConsumerFilterSpecification<TConsumer, TMessage> :
-        IPipeSpecification<ConsumerConsumeContext<TConsumer, TMessage>>
-        where TConsumer : class
-        where TMessage : class
+    public ConsumerFilterSpecification(IFilter<ConsumerConsumeContext<TConsumer>> filter)
     {
-        readonly IFilter<ConsumerConsumeContext<TConsumer, TMessage>> _filter;
+        _filter = new ConsumerSplitFilter<TConsumer, TMessage>(filter);
+    }
 
-        public ConsumerFilterSpecification(IFilter<ConsumerConsumeContext<TConsumer>> filter)
-        {
-            _filter = new ConsumerSplitFilter<TConsumer, TMessage>(filter);
-        }
+    public void Apply(IPipeBuilder<ConsumerConsumeContext<TConsumer, TMessage>> builder)
+    {
+        builder.AddFilter(_filter);
+    }
 
-        public void Apply(IPipeBuilder<ConsumerConsumeContext<TConsumer, TMessage>> builder)
-        {
-            builder.AddFilter(_filter);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_filter == null)
-                yield return this.Failure("Filter", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_filter == null)
+            yield return this.Failure("Filter", "must not be null");
     }
 }

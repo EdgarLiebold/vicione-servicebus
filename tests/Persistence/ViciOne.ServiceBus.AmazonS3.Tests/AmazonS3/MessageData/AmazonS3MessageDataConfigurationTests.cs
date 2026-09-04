@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonS3.Tests.AmazonS3.MessageData;
-
 using System.Reflection;
 using global::Amazon.Runtime;
 using global::Amazon.S3;
@@ -7,6 +5,8 @@ using ViciOne.ServiceBus.AmazonS3.MessageData;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonS3.Tests.AmazonS3.MessageData;
 
 public sealed class AmazonS3MessageDataConfigurationTests
 {

@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+
+public class ServiceBusBusTopology :
+    BusTopology,
+    IServiceBusBusTopology
 {
-    using Configuration;
-    using Transports;
+    readonly IServiceBusTopologyConfiguration _configuration;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
 
-
-    public class ServiceBusBusTopology :
-        BusTopology,
-        IServiceBusBusTopology
+    public ServiceBusBusTopology(IServiceBusHostConfiguration hostConfiguration, IServiceBusTopologyConfiguration configuration)
+        : base(hostConfiguration, configuration)
     {
-        readonly IServiceBusTopologyConfiguration _configuration;
-        readonly IServiceBusHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        _configuration = configuration;
+    }
 
-        public ServiceBusBusTopology(IServiceBusHostConfiguration hostConfiguration, IServiceBusTopologyConfiguration configuration)
-            : base(hostConfiguration, configuration)
-        {
-            _hostConfiguration = hostConfiguration;
-            _configuration = configuration;
-        }
+    IServiceBusPublishTopology IServiceBusBusTopology.PublishTopology => _configuration.Publish;
+    IServiceBusSendTopology IServiceBusBusTopology.SendTopology => _configuration.Send;
 
-        IServiceBusPublishTopology IServiceBusBusTopology.PublishTopology => _configuration.Publish;
-        IServiceBusSendTopology IServiceBusBusTopology.SendTopology => _configuration.Send;
+    IServiceBusMessagePublishTopology<T> IServiceBusBusTopology.Publish<T>()
+    {
+        return _configuration.Publish.GetMessageTopology<T>();
+    }
 
-        IServiceBusMessagePublishTopology<T> IServiceBusBusTopology.Publish<T>()
-        {
-            return _configuration.Publish.GetMessageTopology<T>();
-        }
-
-        IServiceBusMessageSendTopology<T> IServiceBusBusTopology.Send<T>()
-        {
-            return _configuration.Send.GetMessageTopology<T>();
-        }
+    IServiceBusMessageSendTopology<T> IServiceBusBusTopology.Send<T>()
+    {
+        return _configuration.Send.GetMessageTopology<T>();
     }
 }

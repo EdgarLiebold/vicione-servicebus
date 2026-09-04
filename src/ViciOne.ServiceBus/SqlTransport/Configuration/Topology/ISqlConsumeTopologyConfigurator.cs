@@ -1,10 +1,9 @@
-#nullable enable
-namespace ViciOne.ServiceBus;
-
 using System;
 using System.ComponentModel;
-using SqlTransport.Configuration;
+using ViciOne.ServiceBus.SqlTransport.Configuration;
 
+#nullable enable
+namespace ViciOne.ServiceBus;
 
 public interface ISqlConsumeTopologyConfigurator :
     IConsumeTopologyConfigurator,

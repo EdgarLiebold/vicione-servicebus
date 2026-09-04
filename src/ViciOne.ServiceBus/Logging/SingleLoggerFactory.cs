@@ -1,30 +1,28 @@
+using Microsoft.Extensions.Logging;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Logging
+namespace ViciOne.ServiceBus.Logging;
+
+public class SingleLoggerFactory :
+    ILoggerFactory
 {
-    using Microsoft.Extensions.Logging;
+    readonly ILogger _logger;
 
-
-    public class SingleLoggerFactory :
-        ILoggerFactory
+    public SingleLoggerFactory(ILogger logger)
     {
-        readonly ILogger _logger;
+        _logger = logger;
+    }
 
-        public SingleLoggerFactory(ILogger logger)
-        {
-            _logger = logger;
-        }
+    public ILogger CreateLogger(string name)
+    {
+        return _logger;
+    }
 
-        public ILogger CreateLogger(string name)
-        {
-            return _logger;
-        }
+    public void AddProvider(ILoggerProvider provider)
+    {
+    }
 
-        public void AddProvider(ILoggerProvider provider)
-        {
-        }
-
-        public void Dispose()
-        {
-        }
+    public void Dispose()
+    {
     }
 }

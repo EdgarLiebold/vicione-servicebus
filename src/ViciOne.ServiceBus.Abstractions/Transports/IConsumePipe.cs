@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IConsumePipe :
+    IPipe<ConsumeContext>,
+    IConsumePipeConnector,
+    IRequestPipeConnector,
+    IConsumeMessageObserverConnector,
+    IConsumeObserverConnector
 {
-    using System.Threading.Tasks;
-
-
-    public interface IConsumePipe :
-        IPipe<ConsumeContext>,
-        IConsumePipeConnector,
-        IRequestPipeConnector,
-        IConsumeMessageObserverConnector,
-        IConsumeObserverConnector
-    {
-        /// <summary>
-        /// Task is completed once a connection has been made to the consume pipe (any type of consumer, response handler, etc.
-        /// </summary>
-        Task Connected { get; }
-    }
+    /// <summary>
+    /// Task is completed once a connection has been made to the consume pipe (any type of consumer, response handler, etc.
+    /// </summary>
+    Task Connected { get; }
 }

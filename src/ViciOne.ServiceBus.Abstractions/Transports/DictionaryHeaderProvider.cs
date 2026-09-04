@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Transports
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+namespace ViciOne.ServiceBus.Transports;
+
+/// <summary>
+/// A simple in-memory header collection for use with the in memory transport
+/// </summary>
+public class DictionaryHeaderProvider :
+    IHeaderProvider
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    readonly IDictionary<string, object> _headers;
 
-
-    /// <summary>
-    /// A simple in-memory header collection for use with the in memory transport
-    /// </summary>
-    public class DictionaryHeaderProvider :
-        IHeaderProvider
+    public DictionaryHeaderProvider(IDictionary<string, object>? headers = default)
     {
-        readonly IDictionary<string, object> _headers;
+        _headers = headers ?? new Dictionary<string, object>();
+    }
 
-        public DictionaryHeaderProvider(IDictionary<string, object>? headers = default)
-        {
-            _headers = headers ?? new Dictionary<string, object>();
-        }
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        return _headers;
+    }
 
-        public IEnumerable<KeyValuePair<string, object>> GetAll()
-        {
-            return _headers;
-        }
-
-        public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
-        {
-            return _headers.TryGetValue(key, out value);
-        }
+    public bool TryGetHeader(string key, [NotNullWhen(true)] out object? value)
+    {
+        return _headers.TryGetValue(key, out value);
     }
 }

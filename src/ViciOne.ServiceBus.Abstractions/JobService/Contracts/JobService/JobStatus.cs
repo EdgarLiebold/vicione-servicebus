@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Contracts.JobService
+namespace ViciOne.ServiceBus.Contracts.JobService;
+
+public enum JobStatus
 {
-    public enum JobStatus
-    {
-        Running,
-        Faulted,
-        Completed,
-        Canceled
-    }
+    Running,
+    Faulted,
+    Completed,
+    Canceled
 }

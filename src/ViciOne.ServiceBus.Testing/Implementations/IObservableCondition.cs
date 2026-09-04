@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+/// <summary>
+/// Represents a boolean condition which may be observed.
+/// </summary>
+public interface IObservableCondition : ICondition
 {
-    /// <summary>
-    /// Represents a boolean condition which may be observed.
-    /// </summary>
-    public interface IObservableCondition : ICondition
-    {
-        ConnectHandle ConnectConditionObserver(IConditionObserver observer);
-    }
+    ConnectHandle ConnectConditionObserver(IConditionObserver observer);
 }

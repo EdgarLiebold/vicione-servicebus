@@ -1,12 +1,11 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Util;
-
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Middleware;
+using ViciOne.ServiceBus.Middleware;
 
+#nullable enable
+namespace ViciOne.ServiceBus.Util;
 
 public sealed class PartitionedTaskExecutor<T> :
     IPartitionedTaskExecutor<T>

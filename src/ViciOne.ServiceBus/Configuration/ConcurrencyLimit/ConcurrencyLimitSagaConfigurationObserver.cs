@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Configures a concurrency limit for a consumer, on the consumer configurator, which is constrained to
+/// the message types for that consumer, and only applies to the consumer prior to the consumer factory.
+/// </summary>
+/// <typeparam name="TSaga">The consumer type</typeparam>
+public class ConcurrencyLimitSagaConfigurationObserver<TSaga> :
+    ISagaConfigurationObserver
+    where TSaga : class, ISaga
 {
-    using Middleware;
+    readonly ISagaConfigurator<TSaga> _configurator;
 
-
-    /// <summary>
-    /// Configures a concurrency limit for a consumer, on the consumer configurator, which is constrained to
-    /// the message types for that consumer, and only applies to the consumer prior to the consumer factory.
-    /// </summary>
-    /// <typeparam name="TSaga">The consumer type</typeparam>
-    public class ConcurrencyLimitSagaConfigurationObserver<TSaga> :
-        ISagaConfigurationObserver
-        where TSaga : class, ISaga
+    public ConcurrencyLimitSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit, string id = null)
     {
-        readonly ISagaConfigurator<TSaga> _configurator;
+        _configurator = configurator;
+        Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
+    }
 
-        public ConcurrencyLimitSagaConfigurationObserver(ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit, string id = null)
-        {
-            _configurator = configurator;
-            Limiter = new ConcurrencyLimiter(concurrentMessageLimit, id);
-        }
+    public IConcurrencyLimiter Limiter { get; }
 
-        public IConcurrencyLimiter Limiter { get; }
+    void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
+    {
+    }
 
-        void ISagaConfigurationObserver.SagaConfigured<T>(ISagaConfigurator<T> configurator)
-        {
-        }
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
+        where TInstance : class, ISaga, SagaStateMachineInstance
+    {
+    }
 
-        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance
-        {
-        }
+    void ISagaConfigurationObserver.SagaMessageConfigured<T, TMessage>(ISagaMessageConfigurator<T, TMessage> configurator)
+    {
+        var specification = new ConcurrencyLimitConsumePipeSpecification<TMessage>(Limiter);
 
-        void ISagaConfigurationObserver.SagaMessageConfigured<T, TMessage>(ISagaMessageConfigurator<T, TMessage> configurator)
-        {
-            var specification = new ConcurrencyLimitConsumePipeSpecification<TMessage>(Limiter);
-
-            _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
-        }
+        _configurator.Message<TMessage>(x => x.AddPipeSpecification(specification));
     }
 }

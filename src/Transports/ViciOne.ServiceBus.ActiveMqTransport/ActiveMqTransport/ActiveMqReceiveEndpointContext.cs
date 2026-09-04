@@ -1,16 +1,14 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using ViciOne.ServiceBus.ActiveMqTransport.Topology;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public interface ActiveMqReceiveEndpointContext :
+    ReceiveEndpointContext
 {
-    using Topology;
-    using Transports;
+    BrokerTopology BrokerTopology { get; }
 
+    IConnectionContextSupervisor ConnectionContextSupervisor { get; }
 
-    public interface ActiveMqReceiveEndpointContext :
-        ReceiveEndpointContext
-    {
-        BrokerTopology BrokerTopology { get; }
-
-        IConnectionContextSupervisor ConnectionContextSupervisor { get; }
-
-        ISessionContextSupervisor SessionContextSupervisor { get; }
-    }
+    ISessionContextSupervisor SessionContextSupervisor { get; }
 }

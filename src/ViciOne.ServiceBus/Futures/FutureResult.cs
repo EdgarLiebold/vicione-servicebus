@@ -1,68 +1,66 @@
-namespace ViciOne.ServiceBus.Futures
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.SagaStateMachine;
+
+namespace ViciOne.ServiceBus.Futures;
+
+public class FutureResult<TCommand, TResult, TInput> :
+    ISpecification
+    where TCommand : class
+    where TResult : class
+    where TInput : class
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using SagaStateMachine;
+    ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> _factory;
 
-
-    public class FutureResult<TCommand, TResult, TInput> :
-        ISpecification
-        where TCommand : class
-        where TResult : class
-        where TInput : class
+    public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> Factory
     {
-        ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> _factory;
-
-        public ContextMessageFactory<BehaviorContext<FutureState, TInput>, TResult> Factory
-        {
-            set => _factory = value;
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_factory == null)
-                yield return this.Failure("Response", "Factory", "Init or Create must be configured");
-        }
-
-        public async Task SetResult(BehaviorContext<FutureState, TInput> context)
-        {
-            context.SetCompleted(context.Saga.CorrelationId);
-
-            var result = await context.SendMessageToSubscriptions(_factory,
-                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
-
-            context.SetResult(context.Saga.CorrelationId, result);
-        }
+        set => _factory = value;
     }
 
-
-    public class FutureResult<TCommand, TResult> :
-        ISpecification
-        where TCommand : class
-        where TResult : class
+    public IEnumerable<ValidationResult> Validate()
     {
-        ContextMessageFactory<BehaviorContext<FutureState>, TResult> _factory;
+        if (_factory == null)
+            yield return this.Failure("Response", "Factory", "Init or Create must be configured");
+    }
 
-        public ContextMessageFactory<BehaviorContext<FutureState>, TResult> Factory
-        {
-            set => _factory = value;
-        }
+    public async Task SetResult(BehaviorContext<FutureState, TInput> context)
+    {
+        context.SetCompleted(context.Saga.CorrelationId);
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_factory == null)
-                yield return this.Failure("Response", "Factory", "Init or Create must be configured");
-        }
+        var result = await context.SendMessageToSubscriptions(_factory,
+            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
 
-        public async Task SetResult(BehaviorContext<FutureState> context)
-        {
-            context.SetCompleted(context.Saga.CorrelationId);
+        context.SetResult(context.Saga.CorrelationId, result);
+    }
+}
 
-            var result = await context.SendMessageToSubscriptions(_factory,
-                context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
 
-            context.SetResult(context.Saga.CorrelationId, result);
-        }
+public class FutureResult<TCommand, TResult> :
+    ISpecification
+    where TCommand : class
+    where TResult : class
+{
+    ContextMessageFactory<BehaviorContext<FutureState>, TResult> _factory;
+
+    public ContextMessageFactory<BehaviorContext<FutureState>, TResult> Factory
+    {
+        set => _factory = value;
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_factory == null)
+            yield return this.Failure("Response", "Factory", "Init or Create must be configured");
+    }
+
+    public async Task SetResult(BehaviorContext<FutureState> context)
+    {
+        context.SetCompleted(context.Saga.CorrelationId);
+
+        var result = await context.SendMessageToSubscriptions(_factory,
+            context.Saga.HasSubscriptions() ? context.Saga.Subscriptions.ToArray() : []);
+
+        context.SetResult(context.Saga.CorrelationId, result);
     }
 }

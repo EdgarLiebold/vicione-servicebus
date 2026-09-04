@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus;
-
 using System;
 
+namespace ViciOne.ServiceBus;
 /// <summary>
 /// Classifies exceptions for infrastructure retry and redelivery without relying on exception text.
 /// </summary>

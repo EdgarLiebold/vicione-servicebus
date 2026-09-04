@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.Contracts
+using System;
+
+namespace ViciOne.ServiceBus.Contracts;
+
+public interface RequestTimeoutExpired<out TRequest>
+    where TRequest : class
 {
-    using System;
+    /// <summary>
+    /// The correlationId of the state machine
+    /// </summary>
+    Guid CorrelationId { get; }
 
+    /// <summary>
+    /// When the request expired
+    /// </summary>
+    DateTime Timestamp { get; }
 
-    public interface RequestTimeoutExpired<out TRequest>
-        where TRequest : class
-    {
-        /// <summary>
-        /// The correlationId of the state machine
-        /// </summary>
-        Guid CorrelationId { get; }
+    /// <summary>
+    /// The expiration time that was scheduled for the request
+    /// </summary>
+    DateTime ExpirationTime { get; }
 
-        /// <summary>
-        /// When the request expired
-        /// </summary>
-        DateTime Timestamp { get; }
+    /// <summary>
+    /// The requestId of the request
+    /// </summary>
+    Guid RequestId { get; }
 
-        /// <summary>
-        /// The expiration time that was scheduled for the request
-        /// </summary>
-        DateTime ExpirationTime { get; }
-
-        /// <summary>
-        /// The requestId of the request
-        /// </summary>
-        Guid RequestId { get; }
-
-        /// <summary>
-        /// The  original request message.
-        /// </summary>
-        TRequest? Message { get; }
-    }
+    /// <summary>
+    /// The  original request message.
+    /// </summary>
+    TRequest? Message { get; }
 }

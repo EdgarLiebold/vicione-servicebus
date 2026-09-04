@@ -1,36 +1,34 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Topology
+using System;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport.Topology;
+
+public sealed class ActiveMqHostEqualityComparer :
+    IEqualityComparer<ActiveMqHostSettings>
 {
-    using System;
-    using System.Collections.Generic;
+    public static IEqualityComparer<ActiveMqHostSettings> Default { get; } = new ActiveMqHostEqualityComparer();
 
-
-    public sealed class ActiveMqHostEqualityComparer :
-        IEqualityComparer<ActiveMqHostSettings>
+    public bool Equals(ActiveMqHostSettings x, ActiveMqHostSettings y)
     {
-        public static IEqualityComparer<ActiveMqHostSettings> Default { get; } = new ActiveMqHostEqualityComparer();
+        if (ReferenceEquals(x, y))
+            return true;
 
-        public bool Equals(ActiveMqHostSettings x, ActiveMqHostSettings y)
+        if (ReferenceEquals(x, null))
+            return false;
+
+        if (ReferenceEquals(y, null))
+            return false;
+
+        return string.Equals(x.Host, y.Host, StringComparison.OrdinalIgnoreCase) && x.Port == y.Port;
+    }
+
+    public int GetHashCode(ActiveMqHostSettings obj)
+    {
+        unchecked
         {
-            if (ReferenceEquals(x, y))
-                return true;
-
-            if (ReferenceEquals(x, null))
-                return false;
-
-            if (ReferenceEquals(y, null))
-                return false;
-
-            return string.Equals(x.Host, y.Host, StringComparison.OrdinalIgnoreCase) && x.Port == y.Port;
-        }
-
-        public int GetHashCode(ActiveMqHostSettings obj)
-        {
-            unchecked
-            {
-                var hashCode = obj.Host?.GetHashCode() ?? 0;
-                hashCode = (hashCode * 397) ^ obj.Port;
-                return hashCode;
-            }
+            var hashCode = obj.Host?.GetHashCode() ?? 0;
+            hashCode = (hashCode * 397) ^ obj.Port;
+            return hashCode;
         }
     }
 }

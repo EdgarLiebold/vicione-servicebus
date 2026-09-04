@@ -1,14 +1,13 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
-using Clients;
-using DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Middleware.Outbox;
-using ProviderAbstractions;
+using ViciOne.ServiceBus.Clients;
+using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Middleware.Outbox;
+using ViciOne.ServiceBus.ProviderAbstractions;
 
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 internal sealed class EntityFrameworkScopedBusContextFactory<TBus, TDbContext> :
     IEntityFrameworkScopedBusContextFactory<TBus>

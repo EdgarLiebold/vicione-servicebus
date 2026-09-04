@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using Azure;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class SharedAccessSignatureTokenProviderConfigurator :
+    ISharedAccessSignatureTokenProviderConfigurator
 {
-    using Azure;
-
-
-    public class SharedAccessSignatureTokenProviderConfigurator :
-        ISharedAccessSignatureTokenProviderConfigurator
-    {
-        public AzureSasCredential SasCredential { get; set; }
-    }
+    public AzureSasCredential SasCredential { get; set; }
 }

@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface IClientContextSupervisor :
+    ITransportSupervisor<ClientContext>
 {
-    using Transports;
-
-
-    public interface IClientContextSupervisor :
-        ITransportSupervisor<ClientContext>
-    {
-    }
 }

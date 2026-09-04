@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus;
+
+public partial class ViciOneServiceBusStateMachine<TInstance>
+    where TInstance : class, SagaStateMachineInstance
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
-
-
-    public partial class ViciOneServiceBusStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
+    class StateMachineSagaSpecification :
+        SagaSpecification<TInstance>
     {
-        class StateMachineSagaSpecification :
-            SagaSpecification<TInstance>
+        readonly SagaStateMachine<TInstance> _stateMachine;
+        readonly ConfigurationObserverNotification _stateMachineConfigurationNotification = new ConfigurationObserverNotification();
+
+        public StateMachineSagaSpecification(SagaStateMachine<TInstance> stateMachine,
+            IEnumerable<ISagaMessageSpecification<TInstance>> messageSpecifications)
+            : base(messageSpecifications)
         {
-            readonly SagaStateMachine<TInstance> _stateMachine;
-            readonly ConfigurationObserverNotification _stateMachineConfigurationNotification = new ConfigurationObserverNotification();
+            _stateMachine = stateMachine;
+        }
 
-            public StateMachineSagaSpecification(SagaStateMachine<TInstance> stateMachine,
-                IEnumerable<ISagaMessageSpecification<TInstance>> messageSpecifications)
-                : base(messageSpecifications)
-            {
-                _stateMachine = stateMachine;
-            }
+        public override IEnumerable<ValidationResult> Validate()
+        {
+            _stateMachineConfigurationNotification.EnsureNotified(() =>
+                Observers.ForEach(observer => observer.StateMachineSagaConfigured(this, _stateMachine)));
 
-            public override IEnumerable<ValidationResult> Validate()
-            {
-                _stateMachineConfigurationNotification.EnsureNotified(() =>
-                    Observers.ForEach(observer => observer.StateMachineSagaConfigured(this, _stateMachine)));
-
-                return base.Validate().ToArray();
-            }
+            return base.Validate().ToArray();
         }
     }
 }

@@ -1,38 +1,36 @@
-namespace ViciOne.ServiceBus.Clients
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.Clients;
+
+/// <summary>
+/// The fault handler for the request client
+/// </summary>
+public class FaultHandlerConnectHandle :
+    HandlerConnectHandle
 {
-    using System;
-    using System.Threading;
+    readonly ConnectHandle _handle;
 
-
-    /// <summary>
-    /// The fault handler for the request client
-    /// </summary>
-    public class FaultHandlerConnectHandle :
-        HandlerConnectHandle
+    public FaultHandlerConnectHandle(ConnectHandle handle)
     {
-        readonly ConnectHandle _handle;
+        _handle = handle;
+    }
 
-        public FaultHandlerConnectHandle(ConnectHandle handle)
-        {
-            _handle = handle;
-        }
+    public void Dispose()
+    {
+        _handle.Dispose();
+    }
 
-        public void Dispose()
-        {
-            _handle.Dispose();
-        }
+    public void Disconnect()
+    {
+        _handle.Disconnect();
+    }
 
-        public void Disconnect()
-        {
-            _handle.Disconnect();
-        }
+    public void TrySetException(Exception exception)
+    {
+    }
 
-        public void TrySetException(Exception exception)
-        {
-        }
-
-        public void TrySetCanceled(CancellationToken cancellationToken)
-        {
-        }
+    public void TrySetCanceled(CancellationToken cancellationToken)
+    {
     }
 }

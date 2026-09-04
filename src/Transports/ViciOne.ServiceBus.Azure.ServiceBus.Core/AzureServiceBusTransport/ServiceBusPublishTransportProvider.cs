@@ -1,27 +1,25 @@
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusPublishTransportProvider :
+    IPublishTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
+    readonly ReceiveEndpointContext _context;
 
-
-    public class ServiceBusPublishTransportProvider :
-        IPublishTransportProvider
+    public ServiceBusPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ReceiveEndpointContext context)
     {
-        readonly IConnectionContextSupervisor _connectionContextSupervisor;
-        readonly ReceiveEndpointContext _context;
+        _connectionContextSupervisor = connectionContextSupervisor;
+        _context = context;
+    }
 
-        public ServiceBusPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ReceiveEndpointContext context)
-        {
-            _connectionContextSupervisor = connectionContextSupervisor;
-            _context = context;
-        }
-
-        public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
-            where T : class
-        {
-            return _connectionContextSupervisor.CreatePublishTransport<T>(_context, publishAddress);
-        }
+    public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+        where T : class
+    {
+        return _connectionContextSupervisor.CreatePublishTransport<T>(_context, publishAddress!);
     }
 }

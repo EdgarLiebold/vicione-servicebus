@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Abstractions.Tests.Requirements;
 /// into this assembly.
 /// </summary>
 /// <remarks>
-/// This is the one Fact of the cohort that carries no <see cref="RequirementCoverageAttribute" />,
+/// This is the one Fact in this project that carries no <see cref="RequirementCoverageAttribute" />,
 /// and deliberately so: it is the method that reads every attribute, so attributing it would make it
 /// part of the set it is comparing and it would confirm its own entry.
 /// <para>

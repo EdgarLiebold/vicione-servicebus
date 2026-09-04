@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Configures a message retry for a handler, on the handler configurator, which is constrained to
+/// the message types for that handler, and only applies to the handler.
+/// </summary>
+public class DelayedRedeliveryHandlerConfigurationObserver :
+    IHandlerConfigurationObserver
 {
-    using System;
+    readonly Action<IRedeliveryConfigurator> _configure;
 
-
-    /// <summary>
-    /// Configures a message retry for a handler, on the handler configurator, which is constrained to
-    /// the message types for that handler, and only applies to the handler.
-    /// </summary>
-    public class DelayedRedeliveryHandlerConfigurationObserver :
-        IHandlerConfigurationObserver
+    public DelayedRedeliveryHandlerConfigurationObserver(Action<IRedeliveryConfigurator> configure)
     {
-        readonly Action<IRedeliveryConfigurator> _configure;
+        _configure = configure;
+    }
 
-        public DelayedRedeliveryHandlerConfigurationObserver(Action<IRedeliveryConfigurator> configure)
-        {
-            _configure = configure;
-        }
+    void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
+    {
+        var redeliverySpecification = new DelayedRedeliveryPipeSpecification<T>();
+        var retrySpecification = new RedeliveryRetryPipeSpecification<T>(redeliverySpecification);
 
-        void IHandlerConfigurationObserver.HandlerConfigured<T>(IHandlerConfigurator<T> configurator)
-        {
-            var redeliverySpecification = new DelayedRedeliveryPipeSpecification<T>();
-            var retrySpecification = new RedeliveryRetryPipeSpecification<T>(redeliverySpecification);
+        _configure?.Invoke(retrySpecification);
 
-            _configure?.Invoke(retrySpecification);
-
-            configurator.AddPipeSpecification(redeliverySpecification);
-            configurator.AddPipeSpecification(retrySpecification);
-        }
+        configurator.AddPipeSpecification(redeliverySpecification);
+        configurator.AddPipeSpecification(retrySpecification);
     }
 }

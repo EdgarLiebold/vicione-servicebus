@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.BenchmarkConsole.Throughput
+using System;
+
+namespace ViciOne.ServiceBus.BenchmarkConsole.Throughput;
+
+public interface TestContext :
+    PipeContext
 {
-    using System;
+    Guid CorrelationId { get; }
 
-
-    public interface TestContext :
-        PipeContext
-    {
-        Guid CorrelationId { get; }
-
-        int Attempts { get; set; }
-    }
+    int Attempts { get; set; }
 }

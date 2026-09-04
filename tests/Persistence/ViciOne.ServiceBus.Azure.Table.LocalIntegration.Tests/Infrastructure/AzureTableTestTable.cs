@@ -1,7 +1,7 @@
-namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Infrastructure;
-
 using global::Azure.Data.Tables;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
+
+namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Infrastructure;
 
 internal sealed class AzureTableTestTable : IAsyncDisposable
 {

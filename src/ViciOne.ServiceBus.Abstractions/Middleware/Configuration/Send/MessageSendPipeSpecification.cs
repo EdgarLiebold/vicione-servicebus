@@ -1,150 +1,148 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+internal sealed class MessageSendPipeSpecification<TMessage> :
+    IMessageSendPipeSpecification<TMessage>,
+    IMessageSendPipeSpecification
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    readonly List<IPipeSpecification<SendContext>> _baseSpecifications;
+    readonly List<ISpecificationPipeSpecification<SendContext<TMessage>>> _implementedMessageTypeSpecifications;
+    readonly List<ISpecificationPipeSpecification<SendContext<TMessage>>> _parentMessageSpecifications;
+    readonly List<IPipeSpecification<SendContext<TMessage>>> _specifications;
 
-
-    internal sealed class MessageSendPipeSpecification<TMessage> :
-        IMessageSendPipeSpecification<TMessage>,
-        IMessageSendPipeSpecification
-        where TMessage : class
+    public MessageSendPipeSpecification()
     {
-        readonly List<IPipeSpecification<SendContext>> _baseSpecifications;
-        readonly List<ISpecificationPipeSpecification<SendContext<TMessage>>> _implementedMessageTypeSpecifications;
-        readonly List<ISpecificationPipeSpecification<SendContext<TMessage>>> _parentMessageSpecifications;
-        readonly List<IPipeSpecification<SendContext<TMessage>>> _specifications;
+        _specifications = new List<IPipeSpecification<SendContext<TMessage>>>();
+        _baseSpecifications = new List<IPipeSpecification<SendContext>>();
+        _implementedMessageTypeSpecifications = new List<ISpecificationPipeSpecification<SendContext<TMessage>>>();
+        _parentMessageSpecifications = new List<ISpecificationPipeSpecification<SendContext<TMessage>>>();
+    }
 
-        public MessageSendPipeSpecification()
+    public void AddPipeSpecification(IPipeSpecification<SendContext> specification)
+    {
+        ArgumentNullException.ThrowIfNull(specification);
+
+        _baseSpecifications.Add(specification);
+    }
+
+    IMessageSendPipeSpecification<T> IMessageSendPipeSpecification.GetMessageSpecification<T>()
+    {
+        if (this is IMessageSendPipeSpecification<T> result)
+            return result;
+
+        throw new ArgumentException($"The expected message type was invalid: {TypeCache<T>.ShortName}");
+    }
+
+    public void AddPipeSpecification(IPipeSpecification<SendContext<TMessage>> specification)
+    {
+        ArgumentNullException.ThrowIfNull(specification);
+
+        _specifications.Add(specification);
+    }
+
+    public IEnumerable<ValidationResult> Validate()
+    {
+        return _specifications.SelectMany(x => x.Validate());
+    }
+
+    public void Apply(ISpecificationPipeBuilder<SendContext<TMessage>> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        if (!builder.IsDelegated && _implementedMessageTypeSpecifications.Count > 0)
         {
-            _specifications = new List<IPipeSpecification<SendContext<TMessage>>>();
-            _baseSpecifications = new List<IPipeSpecification<SendContext>>();
-            _implementedMessageTypeSpecifications = new List<ISpecificationPipeSpecification<SendContext<TMessage>>>();
-            _parentMessageSpecifications = new List<ISpecificationPipeSpecification<SendContext<TMessage>>>();
+            ISpecificationPipeBuilder<SendContext<TMessage>> implementedBuilder = builder.CreateImplementedBuilder();
+
+            for (var index = _implementedMessageTypeSpecifications.Count - 1; index >= 0; index--)
+                _implementedMessageTypeSpecifications[index].Apply(implementedBuilder);
         }
 
-        public void AddPipeSpecification(IPipeSpecification<SendContext> specification)
+        var parentCount = _parentMessageSpecifications.Count;
+        if (parentCount > 0)
         {
-            ArgumentNullException.ThrowIfNull(specification);
+            ISpecificationPipeBuilder<SendContext<TMessage>> delegatedBuilder = builder.CreateDelegatedBuilder();
 
-            _baseSpecifications.Add(specification);
+            for (var index = 0; index < parentCount; index++)
+                _parentMessageSpecifications[index].Apply(delegatedBuilder);
         }
 
-        IMessageSendPipeSpecification<T> IMessageSendPipeSpecification.GetMessageSpecification<T>()
-        {
-            if (this is IMessageSendPipeSpecification<T> result)
-                return result;
+        for (var index = 0; index < _specifications.Count; index++)
+            _specifications[index].Apply(builder);
 
-            throw new ArgumentException($"The expected message type was invalid: {TypeCache<T>.ShortName}");
+        if (!builder.IsImplemented)
+        {
+            for (var index = 0; index < _baseSpecifications.Count; index++)
+            {
+                var split = new PipeConfigurator<SendContext<TMessage>>.SplitFilterPipeSpecification<SendContext>(_baseSpecifications[index], MergeContext,
+                    FilterContext);
+
+                split.Apply(builder);
+            }
         }
+    }
 
-        public void AddPipeSpecification(IPipeSpecification<SendContext<TMessage>> specification)
+    public IPipe<SendContext<TMessage>> BuildMessagePipe()
+    {
+        var pipeBuilder = new PipeConfigurator<SendContext<TMessage>>.SpecificationPipeBuilder();
+
+        Apply(pipeBuilder);
+
+        return pipeBuilder.Build();
+    }
+
+    public void AddParentMessageSpecification(ISpecificationPipeSpecification<SendContext<TMessage>> parentSpecification)
+    {
+        ArgumentNullException.ThrowIfNull(parentSpecification);
+
+        _parentMessageSpecifications.Add(parentSpecification);
+    }
+
+    public void AddImplementedMessageSpecification<T>(ISpecificationPipeSpecification<SendContext<T>> implementedSpecification)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(implementedSpecification);
+
+        var adapter = new ImplementedTypeAdapter<T>(implementedSpecification);
+
+        _implementedMessageTypeSpecifications.Add(adapter);
+    }
+
+    static SendContext FilterContext(SendContext<TMessage> context)
+    {
+        return context;
+    }
+
+    static SendContext<TMessage> MergeContext(SendContext<TMessage> input, SendContext context)
+    {
+        return context.GetPayload<SendContext<TMessage>>();
+    }
+
+
+    class ImplementedTypeAdapter<T> :
+        ISpecificationPipeSpecification<SendContext<TMessage>>
+        where T : class
+    {
+        readonly ISpecificationPipeSpecification<SendContext<T>> _specification;
+
+        public ImplementedTypeAdapter(ISpecificationPipeSpecification<SendContext<T>> specification)
         {
-            ArgumentNullException.ThrowIfNull(specification);
-
-            _specifications.Add(specification);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            return _specifications.SelectMany(x => x.Validate());
+            _specification = specification;
         }
 
         public void Apply(ISpecificationPipeBuilder<SendContext<TMessage>> builder)
         {
-            ArgumentNullException.ThrowIfNull(builder);
+            var specification = new MessageSendPipeSplitFilterSpecification<TMessage, T>(_specification);
 
-            if (!builder.IsDelegated && _implementedMessageTypeSpecifications.Count > 0)
-            {
-                ISpecificationPipeBuilder<SendContext<TMessage>> implementedBuilder = builder.CreateImplementedBuilder();
-
-                for (var index = _implementedMessageTypeSpecifications.Count - 1; index >= 0; index--)
-                    _implementedMessageTypeSpecifications[index].Apply(implementedBuilder);
-            }
-
-            var parentCount = _parentMessageSpecifications.Count;
-            if (parentCount > 0)
-            {
-                ISpecificationPipeBuilder<SendContext<TMessage>> delegatedBuilder = builder.CreateDelegatedBuilder();
-
-                for (var index = 0; index < parentCount; index++)
-                    _parentMessageSpecifications[index].Apply(delegatedBuilder);
-            }
-
-            for (var index = 0; index < _specifications.Count; index++)
-                _specifications[index].Apply(builder);
-
-            if (!builder.IsImplemented)
-            {
-                for (var index = 0; index < _baseSpecifications.Count; index++)
-                {
-                    var split = new PipeConfigurator<SendContext<TMessage>>.SplitFilterPipeSpecification<SendContext>(_baseSpecifications[index], MergeContext,
-                        FilterContext);
-
-                    split.Apply(builder);
-                }
-            }
+            specification.Apply(builder);
         }
 
-        public IPipe<SendContext<TMessage>> BuildMessagePipe()
+        public IEnumerable<ValidationResult> Validate()
         {
-            var pipeBuilder = new PipeConfigurator<SendContext<TMessage>>.SpecificationPipeBuilder();
-
-            Apply(pipeBuilder);
-
-            return pipeBuilder.Build();
-        }
-
-        public void AddParentMessageSpecification(ISpecificationPipeSpecification<SendContext<TMessage>> parentSpecification)
-        {
-            ArgumentNullException.ThrowIfNull(parentSpecification);
-
-            _parentMessageSpecifications.Add(parentSpecification);
-        }
-
-        public void AddImplementedMessageSpecification<T>(ISpecificationPipeSpecification<SendContext<T>> implementedSpecification)
-            where T : class
-        {
-            ArgumentNullException.ThrowIfNull(implementedSpecification);
-
-            var adapter = new ImplementedTypeAdapter<T>(implementedSpecification);
-
-            _implementedMessageTypeSpecifications.Add(adapter);
-        }
-
-        static SendContext FilterContext(SendContext<TMessage> context)
-        {
-            return context;
-        }
-
-        static SendContext<TMessage> MergeContext(SendContext<TMessage> input, SendContext context)
-        {
-            return context.GetPayload<SendContext<TMessage>>();
-        }
-
-
-        class ImplementedTypeAdapter<T> :
-            ISpecificationPipeSpecification<SendContext<TMessage>>
-            where T : class
-        {
-            readonly ISpecificationPipeSpecification<SendContext<T>> _specification;
-
-            public ImplementedTypeAdapter(ISpecificationPipeSpecification<SendContext<T>> specification)
-            {
-                _specification = specification;
-            }
-
-            public void Apply(ISpecificationPipeBuilder<SendContext<TMessage>> builder)
-            {
-                var specification = new MessageSendPipeSplitFilterSpecification<TMessage, T>(_specification);
-
-                specification.Apply(builder);
-            }
-
-            public IEnumerable<ValidationResult> Validate()
-            {
-                yield break;
-            }
+            yield break;
         }
     }
 }

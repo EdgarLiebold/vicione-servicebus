@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests;
-
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests;
 
 public sealed class TypeCacheTests
 {

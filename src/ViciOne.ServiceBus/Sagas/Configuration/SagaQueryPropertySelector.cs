@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SagaQueryPropertySelector<TData, TProperty> :
+    ISagaQueryPropertySelector<TData, TProperty>
+    where TData : class
+    where TProperty : class
 {
-    using System;
+    readonly Func<ConsumeContext<TData>, TProperty> _selector;
 
-
-    public class SagaQueryPropertySelector<TData, TProperty> :
-        ISagaQueryPropertySelector<TData, TProperty>
-        where TData : class
-        where TProperty : class
+    public SagaQueryPropertySelector(Func<ConsumeContext<TData>, TProperty> selector)
     {
-        readonly Func<ConsumeContext<TData>, TProperty> _selector;
+        _selector = selector;
+    }
 
-        public SagaQueryPropertySelector(Func<ConsumeContext<TData>, TProperty> selector)
-        {
-            _selector = selector;
-        }
+    public bool TryGetProperty(ConsumeContext<TData> context, out TProperty property)
+    {
+        property = _selector(context);
 
-        public bool TryGetProperty(ConsumeContext<TData> context, out TProperty property)
-        {
-            property = _selector(context);
-
-            return property != null;
-        }
+        return property != null;
     }
 }

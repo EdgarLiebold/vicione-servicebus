@@ -21,7 +21,7 @@ public sealed class BytesMessageBodyTests
     private static readonly byte[] NonAsciiBytes = [0x61, 0xC3, 0xA4, 0xE3, 0x81, 0x82, 0x62];
 
     /// <summary>
-    /// The exact text those bytes decode to. Written as escapes because this cohort asserts exact
+    /// The exact text those bytes decode to. Written as escapes because this test asserts exact
     /// bytes, and an escape cannot be changed by whatever encoding a tool decides this file has.
     /// </summary>
     private const string NonAsciiText = "a\u00E4\u3042b";

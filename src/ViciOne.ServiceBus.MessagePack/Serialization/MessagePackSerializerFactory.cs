@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Net.Mime;
 
+namespace ViciOne.ServiceBus.Serialization;
 
 public class MessagePackSerializerFactory
     : ISerializerFactory

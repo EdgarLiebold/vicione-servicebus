@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class JobConsumerConvention :
+    IConsumerConvention
 {
-    public class JobConsumerConvention :
-        IConsumerConvention
+    IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>()
     {
-        IConsumerMessageConvention IConsumerConvention.GetConsumerMessageConvention<T>()
-        {
-            return new JobConsumerMessageConvention<T>();
-        }
+        return new JobConsumerMessageConvention<T>();
     }
 }

@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
-
 using System.Linq;
-using Configuration;
+using ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 
 public class QueueDeadLetterSettings :
     AmazonSqsQueueSubscriptionConfigurator,

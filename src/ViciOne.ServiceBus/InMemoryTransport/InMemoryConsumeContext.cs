@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public interface InMemoryConsumeContext :
+    RoutingKeyConsumeContext
 {
-    public interface InMemoryConsumeContext :
-        RoutingKeyConsumeContext
-    {
-    }
 }

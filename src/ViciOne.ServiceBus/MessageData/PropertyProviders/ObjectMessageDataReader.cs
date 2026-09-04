@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.MessageData.PropertyProviders
+using System;
+using System.Threading;
+using ViciOne.ServiceBus.MessageData.Converters;
+using ViciOne.ServiceBus.MessageData.Values;
+using ViciOne.ServiceBus.Metadata;
+using ViciOne.ServiceBus.Serialization;
+
+namespace ViciOne.ServiceBus.MessageData.PropertyProviders;
+
+public class ObjectMessageDataReader<T> :
+    IMessageDataReader<T>
 {
-    using System;
-    using System.Threading;
-    using Converters;
-    using Metadata;
-    using Serialization;
-    using Values;
+    readonly IMessageDataConverter<T> _converter;
 
-
-    public class ObjectMessageDataReader<T> :
-        IMessageDataReader<T>
+    public ObjectMessageDataReader()
     {
-        readonly IMessageDataConverter<T> _converter;
+        _converter = new SystemTextJsonObjectMessageDataConverter<T>(ServiceBusMetadataJson.Options);
+    }
 
-        public ObjectMessageDataReader()
-        {
-            _converter = new SystemTextJsonObjectMessageDataConverter<T>(ServiceBusMetadataJson.Options);
-        }
-
-        public MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken)
-        {
-            return new GetMessageData<T>(address, repository, _converter, cancellationToken);
-        }
+    public MessageData<T> GetMessageData(IMessageDataRepository repository, Uri address, CancellationToken cancellationToken)
+    {
+        return new GetMessageData<T>(address, repository, _converter, cancellationToken);
     }
 }

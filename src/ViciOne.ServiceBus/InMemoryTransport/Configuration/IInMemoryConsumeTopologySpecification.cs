@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public interface IInMemoryConsumeTopologySpecification :
+    ISpecification
 {
-    using ViciOne.ServiceBus.Configuration;
-
-
-    public interface IInMemoryConsumeTopologySpecification :
-        ISpecification
-    {
-        void Apply(IMessageFabricConsumeTopologyBuilder builder);
-    }
+    void Apply(IMessageFabricConsumeTopologyBuilder builder);
 }

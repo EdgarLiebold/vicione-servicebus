@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+
+public class FutureStateMap :
+    SagaClassMap<FutureState>
 {
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    readonly bool _optimistic;
 
-
-    public class FutureStateMap :
-        SagaClassMap<FutureState>
+    public FutureStateMap(bool optimistic)
     {
-        readonly bool _optimistic;
+        _optimistic = optimistic;
+    }
 
-        public FutureStateMap(bool optimistic)
+    protected override void Configure(EntityTypeBuilder<FutureState> entity, ModelBuilder model)
+    {
+        entity.Property(x => x.CurrentState);
+
+        if (_optimistic)
         {
-            _optimistic = optimistic;
+            entity.Property(x => x.RowVersion)
+                .IsRowVersion();
         }
+        else
+            entity.Ignore(x => x.RowVersion);
 
-        protected override void Configure(EntityTypeBuilder<FutureState> entity, ModelBuilder model)
-        {
-            entity.Property(x => x.CurrentState);
+        entity.Property(x => x.Created);
+        entity.Property(x => x.Completed);
+        entity.Property(x => x.Faulted);
 
-            if (_optimistic)
-            {
-                entity.Property(x => x.RowVersion)
-                    .IsRowVersion();
-            }
-            else
-                entity.Ignore(x => x.RowVersion);
+        entity.Property(x => x.Location);
 
-            entity.Property(x => x.Created);
-            entity.Property(x => x.Completed);
-            entity.Property(x => x.Faulted);
-
-            entity.Property(x => x.Location);
-
-            entity.Property(x => x.Command)
-                .HasJsonConversion();
-            entity.Property(x => x.Pending)
-                .HasJsonConversion();
-            entity.Property(x => x.Subscriptions)
-                .HasJsonConversion();
-            entity.Property(x => x.Variables)
-                .HasJsonConversion();
-            entity.Property(x => x.Results)
-                .HasJsonConversion();
-            entity.Property(x => x.Faults)
-                .HasJsonConversion();
-        }
+        entity.Property(x => x.Command)
+            .HasJsonConversion();
+        entity.Property(x => x.Pending)
+            .HasJsonConversion();
+        entity.Property(x => x.Subscriptions)
+            .HasJsonConversion();
+        entity.Property(x => x.Variables)
+            .HasJsonConversion();
+        entity.Property(x => x.Results)
+            .HasJsonConversion();
+        entity.Property(x => x.Faults)
+            .HasJsonConversion();
     }
 }

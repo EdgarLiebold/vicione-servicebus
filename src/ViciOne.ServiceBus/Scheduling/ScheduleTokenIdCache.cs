@@ -1,64 +1,62 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+/// <summary>
+/// A cache of convention-based CorrelationId mappers, used unless overridden by some mystical force
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class ScheduleTokenIdCache<T> :
+    IScheduleTokenIdCache<T>
+    where T : class
 {
-    using System;
+    public delegate Guid? TokenIdSelector(T instance);
 
 
-    /// <summary>
-    /// A cache of convention-based CorrelationId mappers, used unless overridden by some mystical force
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ScheduleTokenIdCache<T> :
-        IScheduleTokenIdCache<T>
-        where T : class
+    readonly TokenIdSelector _selector;
+
+    ScheduleTokenIdCache(TokenIdSelector selector)
     {
-        public delegate Guid? TokenIdSelector(T instance);
+        _selector = selector;
+    }
 
+    ScheduleTokenIdCache()
+    {
+        _selector = x => default;
+    }
 
-        readonly TokenIdSelector _selector;
-
-        ScheduleTokenIdCache(TokenIdSelector selector)
+    public bool TryGetTokenId(T message, out Guid tokenId)
+    {
+        Guid? result = _selector(message);
+        if (result.HasValue)
         {
-            _selector = selector;
+            tokenId = result.Value;
+            return true;
         }
 
-        ScheduleTokenIdCache()
-        {
-            _selector = x => default;
-        }
+        tokenId = default;
+        return false;
+    }
 
-        public bool TryGetTokenId(T message, out Guid tokenId)
-        {
-            Guid? result = _selector(message);
-            if (result.HasValue)
-            {
-                tokenId = result.Value;
-                return true;
-            }
+    public static Guid GetTokenId(T message, Guid? defaultValue = default)
+    {
+        if (Cached.Metadata.Value.TryGetTokenId(message, out var tokenId))
+            return tokenId;
 
-            tokenId = default;
-            return false;
-        }
+        return defaultValue ?? NewId.NextGuid();
+    }
 
-        public static Guid GetTokenId(T message, Guid? defaultValue = default)
-        {
-            if (Cached.Metadata.Value.TryGetTokenId(message, out var tokenId))
-                return tokenId;
+    internal static void UseTokenId(TokenIdSelector tokenIdSelector)
+    {
+        if (Cached.Metadata.IsValueCreated)
+            return;
 
-            return defaultValue ?? NewId.NextGuid();
-        }
-
-        internal static void UseTokenId(TokenIdSelector tokenIdSelector)
-        {
-            if (Cached.Metadata.IsValueCreated)
-                return;
-
-            Cached.Metadata = new Lazy<IScheduleTokenIdCache<T>>(() => new ScheduleTokenIdCache<T>(tokenIdSelector));
-        }
+        Cached.Metadata = new Lazy<IScheduleTokenIdCache<T>>(() => new ScheduleTokenIdCache<T>(tokenIdSelector));
+    }
 
 
-        static class Cached
-        {
-            internal static Lazy<IScheduleTokenIdCache<T>> Metadata = new Lazy<IScheduleTokenIdCache<T>>(() => new ScheduleTokenIdCache<T>());
-        }
+    static class Cached
+    {
+        internal static Lazy<IScheduleTokenIdCache<T>> Metadata = new Lazy<IScheduleTokenIdCache<T>>(() => new ScheduleTokenIdCache<T>());
     }
 }

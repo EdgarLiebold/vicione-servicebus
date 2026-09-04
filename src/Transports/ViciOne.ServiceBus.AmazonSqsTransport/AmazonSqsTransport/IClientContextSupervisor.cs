@@ -1,8 +1,6 @@
+using ViciOne.ServiceBus.Transports;
+
 namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
-using Transports;
-
-
 /// <summary>
 /// Creates and caches a model on the connection
 /// </summary>

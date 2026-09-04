@@ -1,32 +1,30 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class FutureResultPipe<T> :
+    IPipe<SendContext<T>>
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IPipe<SendContext<T>> _pipe;
+    readonly Guid _requestId;
 
-
-    public class FutureResultPipe<T> :
-        IPipe<SendContext<T>>
-        where T : class
+    public FutureResultPipe(IPipe<SendContext<T>> pipe, Guid requestId)
     {
-        readonly IPipe<SendContext<T>> _pipe;
-        readonly Guid _requestId;
+        _pipe = pipe;
+        _requestId = requestId;
+    }
 
-        public FutureResultPipe(IPipe<SendContext<T>> pipe, Guid requestId)
-        {
-            _pipe = pipe;
-            _requestId = requestId;
-        }
+    public Task Send(SendContext<T> context)
+    {
+        context.RequestId = _requestId;
 
-        public Task Send(SendContext<T> context)
-        {
-            context.RequestId = _requestId;
+        return _pipe.IsNotEmpty() ? _pipe.Send(context) : Task.CompletedTask;
+    }
 
-            return _pipe.IsNotEmpty() ? _pipe.Send(context) : Task.CompletedTask;
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateFilterScope(nameof(FutureResultPipe<T>));
-        }
+    public void Probe(ProbeContext context)
+    {
+        context.CreateFilterScope(nameof(FutureResultPipe<T>));
     }
 }

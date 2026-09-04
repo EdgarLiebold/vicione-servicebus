@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public class ExistingCompensateActivityScopeContext<TActivity, TLog> :
+    ICompensateActivityScopeContext<TActivity, TLog>
+    where TActivity : class, ICompensateActivity<TLog>
+    where TLog : class
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly IDisposable _disposable;
+    readonly IServiceScope _scope;
 
-
-    public class ExistingCompensateActivityScopeContext<TActivity, TLog> :
-        ICompensateActivityScopeContext<TActivity, TLog>
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class
+    public ExistingCompensateActivityScopeContext(CompensateActivityContext<TActivity, TLog> context, IServiceScope scope, IDisposable disposable)
     {
-        readonly IDisposable _disposable;
-        readonly IServiceScope _scope;
+        _scope = scope;
+        _disposable = disposable;
+        Context = context;
+    }
 
-        public ExistingCompensateActivityScopeContext(CompensateActivityContext<TActivity, TLog> context, IServiceScope scope, IDisposable disposable)
-        {
-            _scope = scope;
-            _disposable = disposable;
-            Context = context;
-        }
+    public CompensateActivityContext<TActivity, TLog> Context { get; }
 
-        public CompensateActivityContext<TActivity, TLog> Context { get; }
+    public ValueTask DisposeAsync()
+    {
+        _disposable?.Dispose();
+        return default;
+    }
 
-        public ValueTask DisposeAsync()
-        {
-            _disposable?.Dispose();
-            return default;
-        }
-
-        public T GetService<T>()
-            where T : class
-        {
-            return ActivatorUtilities.GetServiceOrCreateInstance<T>(_scope.ServiceProvider);
-        }
+    public T GetService<T>()
+        where T : class
+    {
+        return ActivatorUtilities.GetServiceOrCreateInstance<T>(_scope.ServiceProvider);
     }
 }

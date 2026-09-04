@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.InMemoryTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
+
+public interface IInMemoryTopologyConfiguration :
+    ITopologyConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    new IInMemoryPublishTopologyConfigurator Publish { get; }
 
-
-    public interface IInMemoryTopologyConfiguration :
-        ITopologyConfiguration
-    {
-        new IInMemoryPublishTopologyConfigurator Publish { get; }
-
-        new IInMemoryConsumeTopologyConfigurator Consume { get; }
-    }
+    new IInMemoryConsumeTopologyConfigurator Consume { get; }
 }

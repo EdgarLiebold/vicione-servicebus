@@ -1,157 +1,155 @@
-namespace ViciOne.ServiceBus.Testing
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Testing.Implementations;
+
+namespace ViciOne.ServiceBus.Testing;
+
+public static class StateMachineSagaTestHarnessExtensions
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Implementations;
-
-
-    public static class StateMachineSagaTestHarnessExtensions
+    public static ISagaStateMachineTestHarness<TStateMachine, TInstance> StateMachineSaga<TInstance, TStateMachine>(this BusTestHarness harness,
+        TStateMachine stateMachine, string queueName = null)
+        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : SagaStateMachine<TInstance>
     {
-        public static ISagaStateMachineTestHarness<TStateMachine, TInstance> StateMachineSaga<TInstance, TStateMachine>(this BusTestHarness harness,
-            TStateMachine stateMachine, string queueName = null)
-            where TInstance : class, SagaStateMachineInstance
-            where TStateMachine : SagaStateMachine<TInstance>
-        {
-            if (stateMachine == null)
-                throw new ArgumentNullException(nameof(stateMachine));
+        if (stateMachine == null)
+            throw new ArgumentNullException(nameof(stateMachine));
 
-            var repository = new InMemorySagaRepository<TInstance>();
+        var repository = new InMemorySagaRepository<TInstance>();
 
-            return new StateMachineSagaTestHarness<TInstance, TStateMachine>(harness, repository, repository, repository, stateMachine, queueName);
-        }
+        return new StateMachineSagaTestHarness<TInstance, TStateMachine>(harness, repository, repository, repository, stateMachine, queueName);
+    }
 
-        public static ISagaStateMachineTestHarness<TStateMachine, TInstance> StateMachineSaga<TInstance, TStateMachine>(this BusTestHarness harness,
-            TStateMachine stateMachine, ISagaRepository<TInstance> repository, string queueName = null)
-            where TInstance : class, SagaStateMachineInstance
-            where TStateMachine : SagaStateMachine<TInstance>
-        {
-            if (stateMachine == null)
-                throw new ArgumentNullException(nameof(stateMachine));
+    public static ISagaStateMachineTestHarness<TStateMachine, TInstance> StateMachineSaga<TInstance, TStateMachine>(this BusTestHarness harness,
+        TStateMachine stateMachine, ISagaRepository<TInstance> repository, string queueName = null)
+        where TInstance : class, SagaStateMachineInstance
+        where TStateMachine : SagaStateMachine<TInstance>
+    {
+        if (stateMachine == null)
+            throw new ArgumentNullException(nameof(stateMachine));
 
-            if (repository == null)
-                throw new ArgumentNullException(nameof(repository));
+        if (repository == null)
+            throw new ArgumentNullException(nameof(repository));
 
-            var querySagaRepository = repository as IQuerySagaRepository<TInstance>;
-            var loadSagaRepository = repository as ILoadSagaRepository<TInstance>;
-            return new StateMachineSagaTestHarness<TInstance, TStateMachine>(harness, repository, querySagaRepository, loadSagaRepository, stateMachine,
-                queueName);
-        }
+        var querySagaRepository = repository as IQuerySagaRepository<TInstance>;
+        var loadSagaRepository = repository as ILoadSagaRepository<TInstance>;
+        return new StateMachineSagaTestHarness<TInstance, TStateMachine>(harness, repository, querySagaRepository, loadSagaRepository, stateMachine,
+            queueName);
+    }
 
-        public static TInstance ContainsInState<TStateMachine, TInstance>(this ISagaList<TInstance> sagas, Guid correlationId, TStateMachine machine,
-            Func<TStateMachine, State> stateSelector)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            var state = stateSelector(machine);
+    public static TInstance ContainsInState<TStateMachine, TInstance>(this ISagaList<TInstance> sagas, Guid correlationId, TStateMachine machine,
+        Func<TStateMachine, State> stateSelector)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        var state = stateSelector(machine);
 
-            return ContainsInState(sagas, correlationId, machine, state);
-        }
+        return ContainsInState(sagas, correlationId, machine, state);
+    }
 
-        public static T ContainsInState<T>(this ISagaList<T> sagas, Guid correlationId, SagaStateMachine<T> machine, State state)
-            where T : class, SagaStateMachineInstance
-        {
-            Func<T, bool> filter = machine.CreateSagaFilter(x => x.CorrelationId == correlationId, state);
+    public static T ContainsInState<T>(this ISagaList<T> sagas, Guid correlationId, SagaStateMachine<T> machine, State state)
+        where T : class, SagaStateMachineInstance
+    {
+        Func<T, bool> filter = machine.CreateSagaFilter(x => x.CorrelationId == correlationId, state);
 
-            var any = sagas.Select(x => filter(x)).Any();
-            return any ? sagas.Contains(correlationId) : null;
-        }
+        var any = sagas.Select(x => filter(x)).Any();
+        return any ? sagas.Contains(correlationId) : null;
+    }
 
-        public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
-            TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            return ShouldContainSagaInState(repository, correlationId, machine, stateSelector, timeout, TimeProvider.System);
-        }
+    public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
+        TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        return ShouldContainSagaInState(repository, correlationId, machine, stateSelector, timeout, TimeProvider.System);
+    }
 
-        public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
-            TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout, TimeProvider timeProvider)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            var state = stateSelector(machine);
+    public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
+        TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout, TimeProvider timeProvider)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        var state = stateSelector(machine);
 
-            return ShouldContainSagaInState(repository, correlationId, machine, state, timeout, timeProvider);
-        }
+        return ShouldContainSagaInState(repository, correlationId, machine, state, timeout, timeProvider);
+    }
 
-        public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
-            TStateMachine machine, State state, TimeSpan timeout)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            return ShouldContainSagaInState(repository, correlationId, machine, state, timeout, TimeProvider.System);
-        }
+    public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
+        TStateMachine machine, State state, TimeSpan timeout)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        return ShouldContainSagaInState(repository, correlationId, machine, state, timeout, TimeProvider.System);
+    }
 
-        public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
-            TStateMachine machine, State state, TimeSpan timeout, TimeProvider timeProvider)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            return ShouldContainSagaInState(repository, x => x.CorrelationId == correlationId, machine, state, timeout, timeProvider);
-        }
+    public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository, Guid correlationId,
+        TStateMachine machine, State state, TimeSpan timeout, TimeProvider timeProvider)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        return ShouldContainSagaInState(repository, x => x.CorrelationId == correlationId, machine, state, timeout, timeProvider);
+    }
 
-        public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-            Expression<Func<TInstance, bool>> expression, TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            return ShouldContainSagaInState(repository, expression, machine, stateSelector, timeout, TimeProvider.System);
-        }
+    public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
+        Expression<Func<TInstance, bool>> expression, TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        return ShouldContainSagaInState(repository, expression, machine, stateSelector, timeout, TimeProvider.System);
+    }
 
-        public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-            Expression<Func<TInstance, bool>> expression, TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout,
-            TimeProvider timeProvider)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            var state = stateSelector(machine);
+    public static Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
+        Expression<Func<TInstance, bool>> expression, TStateMachine machine, Func<TStateMachine, State> stateSelector, TimeSpan timeout,
+        TimeProvider timeProvider)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        var state = stateSelector(machine);
 
-            return ShouldContainSagaInState(repository, expression, machine, state, timeout, timeProvider);
-        }
+        return ShouldContainSagaInState(repository, expression, machine, state, timeout, timeProvider);
+    }
 
-        public static async Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-            Expression<Func<TInstance, bool>> expression, TStateMachine machine, State state, TimeSpan timeout)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            return await ShouldContainSagaInState(repository, expression, machine, state, timeout, TimeProvider.System).ConfigureAwait(false);
-        }
+    public static async Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
+        Expression<Func<TInstance, bool>> expression, TStateMachine machine, State state, TimeSpan timeout)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        return await ShouldContainSagaInState(repository, expression, machine, state, timeout, TimeProvider.System).ConfigureAwait(false);
+    }
 
-        public static async Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
-            Expression<Func<TInstance, bool>> expression, TStateMachine machine, State state, TimeSpan timeout, TimeProvider timeProvider)
-            where TStateMachine : SagaStateMachine<TInstance>
-            where TInstance : class, SagaStateMachineInstance
-        {
-            ArgumentNullException.ThrowIfNull(repository);
-            ArgumentNullException.ThrowIfNull(expression);
-            ArgumentNullException.ThrowIfNull(machine);
-            ArgumentNullException.ThrowIfNull(state);
-            ArgumentNullException.ThrowIfNull(timeProvider);
+    public static async Task<Guid?> ShouldContainSagaInState<TStateMachine, TInstance>(this ISagaRepository<TInstance> repository,
+        Expression<Func<TInstance, bool>> expression, TStateMachine machine, State state, TimeSpan timeout, TimeProvider timeProvider)
+        where TStateMachine : SagaStateMachine<TInstance>
+        where TInstance : class, SagaStateMachineInstance
+    {
+        ArgumentNullException.ThrowIfNull(repository);
+        ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(machine);
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
-            var querySagaRepository = repository as IQuerySagaRepository<TInstance>;
-            if (querySagaRepository == null)
-                throw new ArgumentException("The repository must support querying", nameof(repository));
+        var querySagaRepository = repository as IQuerySagaRepository<TInstance>;
+        if (querySagaRepository == null)
+            throw new ArgumentException("The repository must support querying", nameof(repository));
 
-            if (timeout <= TimeSpan.Zero)
-                return default;
-
-            var startedAt = timeProvider.GetTimestamp();
-
-            ISagaQuery<TInstance> query = machine.CreateSagaQuery(expression, state);
-
-            while (timeProvider.GetElapsedTime(startedAt) < timeout)
-            {
-                var saga = (await querySagaRepository.Find(query).ConfigureAwait(false)).FirstOrDefault();
-                if (saga != Guid.Empty)
-                    return saga;
-
-                await Task.Delay(TimeSpan.FromMilliseconds(10), timeProvider, CancellationToken.None).ConfigureAwait(false);
-            }
-
+        if (timeout <= TimeSpan.Zero)
             return default;
+
+        var startedAt = timeProvider.GetTimestamp();
+
+        ISagaQuery<TInstance> query = machine.CreateSagaQuery(expression, state);
+
+        while (timeProvider.GetElapsedTime(startedAt) < timeout)
+        {
+            var saga = (await querySagaRepository.Find(query).ConfigureAwait(false)).FirstOrDefault();
+            if (saga != Guid.Empty)
+                return saga;
+
+            await Task.Delay(TimeSpan.FromMilliseconds(10), timeProvider, CancellationToken.None).ConfigureAwait(false);
         }
+
+        return default;
     }
 }

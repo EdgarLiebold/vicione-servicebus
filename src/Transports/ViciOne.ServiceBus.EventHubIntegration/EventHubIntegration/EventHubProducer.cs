@@ -1,251 +1,249 @@
-namespace ViciOne.ServiceBus.EventHubIntegration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Initializers;
+using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.EventHubIntegration;
+
+public class EventHubProducer :
+    Supervisor,
+    IAsyncDisposable,
+    IEventHubProducer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Initializers;
-    using Logging;
-    using ViciOne.ServiceBus.Middleware;
-    using Transports;
+    readonly ConnectHandle _connectHandle;
+    readonly EventHubSendTransportContext _context;
 
-
-    public class EventHubProducer :
-        Supervisor,
-        IAsyncDisposable,
-        IEventHubProducer
+    public EventHubProducer(EventHubSendTransportContext context, ConnectHandle connectHandle = null)
     {
-        readonly ConnectHandle _connectHandle;
+        _context = context;
+        _connectHandle = connectHandle;
+
+        foreach (var handle in _context.GetAgentHandles())
+            Add(handle);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _connectHandle?.Disconnect();
+        await this.Stop("Disposing Agent").ConfigureAwait(false);
+    }
+
+    public Task Produce<T>(T message, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return Produce(message, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
+    }
+
+    public Task Produce<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return Produce(messages, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
+    }
+
+    public Task Produce<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken)
+        where T : class
+    {
+        return _context.Send(new SendPipe<T>(message, _context, pipe, cancellationToken), cancellationToken);
+    }
+
+    public Task Produce<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return _context.Send(new BatchSendPipe<T>(messages, _context, pipe, cancellationToken), cancellationToken);
+    }
+
+    public Task Produce<T>(object values, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return Produce(values, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
+    }
+
+    public Task Produce<T>(IEnumerable<object> values, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        return Produce(values, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
+    }
+
+    public async Task Produce<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
+        where T : class
+    {
+        (var message, IPipe<SendContext<T>> sendPipe) = await MessageInitializerCache<T>.InitializeMessage(values, cancellationToken);
+
+        await _context.Send(new SendPipe<T>(message, _context, pipe, cancellationToken, sendPipe), cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task Produce<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken)
+        where T : class
+    {
+        SendTuple<T>[] contexts = await Task.WhenAll(values.Select(value => MessageInitializerCache<T>.InitializeMessage(value, cancellationToken)))
+            .ConfigureAwait(false);
+
+        await _context.Send(new BatchSendPipe<T>(contexts.Select(x => x.Message), _context, pipe, cancellationToken, contexts.Select(x => x.Pipe)),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public ConnectHandle ConnectSendObserver(ISendObserver observer)
+    {
+        return _context.ConnectSendObserver(observer);
+    }
+
+
+    class SendPipe<T> :
+        IPipe<ProducerContext>
+        where T : class
+    {
+        readonly CancellationToken _cancellationToken;
         readonly EventHubSendTransportContext _context;
+        readonly T _message;
+        readonly IPipe<EventHubSendContext<T>> _pipe;
+        readonly IPipe<SendContext<T>> _sendPipe;
 
-        public EventHubProducer(EventHubSendTransportContext context, ConnectHandle connectHandle = null)
+        public SendPipe(T message, EventHubSendTransportContext context, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken,
+            IPipe<SendContext<T>> sendPipe = null)
         {
+            _message = message;
             _context = context;
-            _connectHandle = connectHandle;
-
-            foreach (var handle in _context.GetAgentHandles())
-                Add(handle);
+            _pipe = pipe;
+            _cancellationToken = cancellationToken;
+            _sendPipe = sendPipe;
         }
 
-        public async ValueTask DisposeAsync()
+        public async Task Send(ProducerContext context)
         {
-            _connectHandle?.Disconnect();
-            await this.Stop("Disposing Agent").ConfigureAwait(false);
-        }
+            LogContext.SetCurrentIfNull(_context.LogContext);
 
-        public Task Produce<T>(T message, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return Produce(message, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
-        }
+            EventHubSendContext<T> sendContext = await _context.CreateContext(_message, _pipe, _cancellationToken, _sendPipe).ConfigureAwait(false);
 
-        public Task Produce<T>(IEnumerable<T> messages, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return Produce(messages, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
-        }
+            sendContext.CancellationToken.ThrowIfCancellationRequested();
+            if (_context is BaseSendTransportContext transportContext)
+                transportContext.ApplyPayloadAdmission(sendContext);
 
-        public Task Produce<T>(T message, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken)
-            where T : class
-        {
-            return _context.Send(new SendPipe<T>(message, _context, pipe, cancellationToken), cancellationToken);
-        }
+            StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
+            var instrument = LogContext.Current?.StartSendInstrument(_context, sendContext);
 
-        public Task Produce<T>(IEnumerable<T> messages, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return _context.Send(new BatchSendPipe<T>(messages, _context, pipe, cancellationToken), cancellationToken);
-        }
-
-        public Task Produce<T>(object values, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return Produce(values, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
-        }
-
-        public Task Produce<T>(IEnumerable<object> values, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            return Produce(values, Pipe.Empty<EventHubSendContext<T>>(), cancellationToken);
-        }
-
-        public async Task Produce<T>(object values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken = default)
-            where T : class
-        {
-            (var message, IPipe<SendContext<T>> sendPipe) = await MessageInitializerCache<T>.InitializeMessage(values, cancellationToken);
-
-            await _context.Send(new SendPipe<T>(message, _context, pipe, cancellationToken, sendPipe), cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task Produce<T>(IEnumerable<object> values, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken)
-            where T : class
-        {
-            SendTuple<T>[] contexts = await Task.WhenAll(values.Select(value => MessageInitializerCache<T>.InitializeMessage(value, cancellationToken)))
-                .ConfigureAwait(false);
-
-            await _context.Send(new BatchSendPipe<T>(contexts.Select(x => x.Message), _context, pipe, cancellationToken, contexts.Select(x => x.Pipe)),
-                cancellationToken).ConfigureAwait(false);
-        }
-
-        public ConnectHandle ConnectSendObserver(ISendObserver observer)
-        {
-            return _context.ConnectSendObserver(observer);
-        }
-
-
-        class SendPipe<T> :
-            IPipe<ProducerContext>
-            where T : class
-        {
-            readonly CancellationToken _cancellationToken;
-            readonly EventHubSendTransportContext _context;
-            readonly T _message;
-            readonly IPipe<EventHubSendContext<T>> _pipe;
-            readonly IPipe<SendContext<T>> _sendPipe;
-
-            public SendPipe(T message, EventHubSendTransportContext context, IPipe<EventHubSendContext<T>> pipe, CancellationToken cancellationToken,
-                IPipe<SendContext<T>> sendPipe = null)
+            try
             {
-                _message = message;
-                _context = context;
-                _pipe = pipe;
-                _cancellationToken = cancellationToken;
-                _sendPipe = sendPipe;
+                if (_context.SendObservers.Count > 0)
+                    await _context.SendObservers.PreSend(sendContext).ConfigureAwait(false);
+
+                await _context.Send(context, sendContext).ConfigureAwait(false);
+
+                activity?.Update(sendContext);
+                sendContext.LogSent();
+
+                if (_context.SendObservers.Count > 0)
+                    await _context.SendObservers.PostSend(sendContext).ConfigureAwait(false);
             }
-
-            public async Task Send(ProducerContext context)
+            catch (Exception exception)
             {
-                LogContext.SetCurrentIfNull(_context.LogContext);
+                sendContext.LogFaulted(exception);
 
-                EventHubSendContext<T> sendContext = await _context.CreateContext(_message, _pipe, _cancellationToken, _sendPipe).ConfigureAwait(false);
+                if (_context.SendObservers.Count > 0)
+                    await _context.SendObservers.SendFault(sendContext, exception).ConfigureAwait(false);
 
-                sendContext.CancellationToken.ThrowIfCancellationRequested();
-                if (_context is BaseSendTransportContext transportContext)
-                    transportContext.ApplyPayloadAdmission(sendContext);
+                activity?.AddExceptionEvent(exception);
+                instrument?.RecordException(exception);
 
-                StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
-                var instrument = LogContext.Current?.StartSendInstrument(_context, sendContext);
-
-                try
-                {
-                    if (_context.SendObservers.Count > 0)
-                        await _context.SendObservers.PreSend(sendContext).ConfigureAwait(false);
-
-                    await _context.Send(context, sendContext).ConfigureAwait(false);
-
-                    activity?.Update(sendContext);
-                    sendContext.LogSent();
-
-                    if (_context.SendObservers.Count > 0)
-                        await _context.SendObservers.PostSend(sendContext).ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    sendContext.LogFaulted(exception);
-
-                    if (_context.SendObservers.Count > 0)
-                        await _context.SendObservers.SendFault(sendContext, exception).ConfigureAwait(false);
-
-                    activity?.AddExceptionEvent(exception);
-                    instrument?.RecordException(exception);
-
-                    throw;
-                }
-                finally
-                {
-                    activity?.Stop();
-                    instrument?.Complete();
-                }
+                throw;
             }
-
-            public void Probe(ProbeContext context)
+            finally
             {
+                activity?.Stop();
+                instrument?.Complete();
             }
         }
 
-
-        class BatchSendPipe<T> :
-            IPipe<ProducerContext>
-            where T : class
+        public void Probe(ProbeContext context)
         {
-            readonly CancellationToken _cancellationToken;
-            readonly EventHubSendTransportContext _context;
-            readonly IPipe<SendContext<T>>[] _initializerPipes;
-            readonly T[] _messages;
-            readonly IPipe<EventHubSendContext<T>> _pipe;
+        }
+    }
 
-            public BatchSendPipe(IEnumerable<T> messages, EventHubSendTransportContext context, IPipe<EventHubSendContext<T>> pipe,
-                CancellationToken cancellationToken, IEnumerable<IPipe<SendContext<T>>> sendPipes = null)
+
+    class BatchSendPipe<T> :
+        IPipe<ProducerContext>
+        where T : class
+    {
+        readonly CancellationToken _cancellationToken;
+        readonly EventHubSendTransportContext _context;
+        readonly IPipe<SendContext<T>>[] _initializerPipes;
+        readonly T[] _messages;
+        readonly IPipe<EventHubSendContext<T>> _pipe;
+
+        public BatchSendPipe(IEnumerable<T> messages, EventHubSendTransportContext context, IPipe<EventHubSendContext<T>> pipe,
+            CancellationToken cancellationToken, IEnumerable<IPipe<SendContext<T>>> sendPipes = null)
+        {
+            _messages = messages as T[] ?? messages.ToArray();
+            _context = context;
+            _pipe = pipe;
+            _initializerPipes = sendPipes as IPipe<SendContext<T>>[] ?? sendPipes?.ToArray() ?? [];
+            _cancellationToken = cancellationToken;
+        }
+
+        public async Task Send(ProducerContext context)
+        {
+            if (_messages == null)
+                throw new ArgumentNullException(nameof(_messages));
+
+            LogContext.SetCurrentIfNull(_context.LogContext);
+
+            var contexts = new EventHubSendContext<T>[_messages.Length];
+            if (contexts.Length == 0)
+                return;
+
+            for (var i = 0; i < contexts.Length; i++)
             {
-                _messages = messages as T[] ?? messages.ToArray();
-                _context = context;
-                _pipe = pipe;
-                _initializerPipes = sendPipes as IPipe<SendContext<T>>[] ?? sendPipes?.ToArray() ?? [];
-                _cancellationToken = cancellationToken;
+                contexts[i] = await _context.CreateContext(_messages[i], _pipe, _cancellationToken,
+                    _initializerPipes.Length > i ? _initializerPipes[i] : null).ConfigureAwait(false);
             }
 
-            public async Task Send(ProducerContext context)
+            if (_context is BaseSendTransportContext transportContext)
             {
-                if (_messages == null)
-                    throw new ArgumentNullException(nameof(_messages));
-
-                LogContext.SetCurrentIfNull(_context.LogContext);
-
-                var contexts = new EventHubSendContext<T>[_messages.Length];
-                if (contexts.Length == 0)
-                    return;
-
-                for (var i = 0; i < contexts.Length; i++)
-                {
-                    contexts[i] = await _context.CreateContext(_messages[i], _pipe, _cancellationToken,
-                        _initializerPipes.Length > i ? _initializerPipes[i] : null).ConfigureAwait(false);
-                }
-
-                if (_context is BaseSendTransportContext transportContext)
-                {
-                    foreach (EventHubSendContext<T> candidate in contexts)
-                        transportContext.ApplyPayloadAdmission(candidate);
-                }
-
-                EventHubSendContext<T> sendContext = contexts[0];
-
-                sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-                StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
-                try
-                {
-                    if (_context.SendObservers.Count > 0)
-                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSend(c))).ConfigureAwait(false);
-
-                    await _context.Send(context, contexts).ConfigureAwait(false);
-
-                    activity?.Update(sendContext);
-                    sendContext.LogSent();
-
-                    if (_context.SendObservers.Count > 0)
-                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.PostSend(c))).ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    sendContext.LogFaulted(exception);
-
-                    if (_context.SendObservers.Count > 0)
-                        await Task.WhenAll(contexts.Select(c => _context.SendObservers.SendFault(c, exception))).ConfigureAwait(false);
-
-                    activity?.AddExceptionEvent(exception);
-
-                    throw;
-                }
-                finally
-                {
-                    activity?.Stop();
-                }
+                foreach (EventHubSendContext<T> candidate in contexts)
+                    transportContext.ApplyPayloadAdmission(candidate);
             }
 
-            public void Probe(ProbeContext context)
+            EventHubSendContext<T> sendContext = contexts[0];
+
+            sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+            StartedActivity? activity = LogContext.Current?.StartSendActivity(_context, sendContext);
+            try
             {
+                if (_context.SendObservers.Count > 0)
+                    await Task.WhenAll(contexts.Select(c => _context.SendObservers.PreSend(c))).ConfigureAwait(false);
+
+                await _context.Send(context, contexts).ConfigureAwait(false);
+
+                activity?.Update(sendContext);
+                sendContext.LogSent();
+
+                if (_context.SendObservers.Count > 0)
+                    await Task.WhenAll(contexts.Select(c => _context.SendObservers.PostSend(c))).ConfigureAwait(false);
             }
+            catch (Exception exception)
+            {
+                sendContext.LogFaulted(exception);
+
+                if (_context.SendObservers.Count > 0)
+                    await Task.WhenAll(contexts.Select(c => _context.SendObservers.SendFault(c, exception))).ConfigureAwait(false);
+
+                activity?.AddExceptionEvent(exception);
+
+                throw;
+            }
+            finally
+            {
+                activity?.Stop();
+            }
+        }
+
+        public void Probe(ProbeContext context)
+        {
         }
     }
 }

@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RateLimitPipeSpecification<T> :
+    IPipeSpecification<T>
+    where T : class, PipeContext
 {
-    using System;
-    using System.Collections.Generic;
-    using Middleware;
+    readonly TimeSpan _interval;
+    readonly int _rateLimit;
+    readonly IPipeRouter _router;
+    readonly TimeProvider _timeProvider;
 
-
-    public class RateLimitPipeSpecification<T> :
-        IPipeSpecification<T>
-        where T : class, PipeContext
+    public RateLimitPipeSpecification(int rateLimit, TimeSpan interval, IPipeRouter router = null, TimeProvider timeProvider = null)
     {
-        readonly TimeSpan _interval;
-        readonly int _rateLimit;
-        readonly IPipeRouter _router;
-        readonly TimeProvider _timeProvider;
+        _rateLimit = rateLimit;
+        _interval = interval;
+        _router = router;
+        _timeProvider = timeProvider ?? TimeProvider.System;
+    }
 
-        public RateLimitPipeSpecification(int rateLimit, TimeSpan interval, IPipeRouter router = null, TimeProvider timeProvider = null)
-        {
-            _rateLimit = rateLimit;
-            _interval = interval;
-            _router = router;
-            _timeProvider = timeProvider ?? TimeProvider.System;
-        }
+    public void Apply(IPipeBuilder<T> builder)
+    {
+        var filter = new RateLimitFilter<T>(_rateLimit, _interval, _timeProvider);
 
-        public void Apply(IPipeBuilder<T> builder)
-        {
-            var filter = new RateLimitFilter<T>(_rateLimit, _interval, _timeProvider);
+        builder.AddFilter(filter);
 
-            builder.AddFilter(filter);
+        _router?.ConnectPipe(filter);
+    }
 
-            _router?.ConnectPipe(filter);
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_rateLimit < 1)
-                yield return this.Failure("RateLimit", "must be >= 1");
-            if (_interval <= TimeSpan.Zero)
-                yield return this.Failure("Interval", "must be > 0");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_rateLimit < 1)
+            yield return this.Failure("RateLimit", "must be >= 1");
+        if (_interval <= TimeSpan.Zero)
+            yield return this.Failure("Interval", "must be > 0");
     }
 }

@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class SagaFilterSpecification<TSaga, TMessage> :
+    IPipeSpecification<SagaConsumeContext<TSaga, TMessage>>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly IFilter<SagaConsumeContext<TSaga>> _filter;
 
-
-    public class SagaFilterSpecification<TSaga, TMessage> :
-        IPipeSpecification<SagaConsumeContext<TSaga, TMessage>>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public SagaFilterSpecification(IFilter<SagaConsumeContext<TSaga>> filter)
     {
-        readonly IFilter<SagaConsumeContext<TSaga>> _filter;
+        _filter = filter;
+    }
 
-        public SagaFilterSpecification(IFilter<SagaConsumeContext<TSaga>> filter)
-        {
-            _filter = filter;
-        }
+    public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
+    {
+        builder.AddFilter(new SagaSplitFilter<TSaga, TMessage>(_filter));
+    }
 
-        public void Apply(IPipeBuilder<SagaConsumeContext<TSaga, TMessage>> builder)
-        {
-            builder.AddFilter(new SagaSplitFilter<TSaga, TMessage>(_filter));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_filter == null)
-                yield return this.Failure("Filter", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_filter == null)
+            yield return this.Failure("Filter", "must not be null");
     }
 }

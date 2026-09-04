@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IErrorQueueNameFormatter
 {
-    public interface IErrorQueueNameFormatter
-    {
-        string FormatErrorQueueName(string queueName);
-    }
+    string FormatErrorQueueName(string queueName);
 }

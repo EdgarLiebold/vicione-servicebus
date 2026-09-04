@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
-{
-    using System.Collections.Generic;
+using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+/// <summary>
+/// The exchange to queue binding details to declare the binding to RabbitMQ
+/// </summary>
+public interface ExchangeToQueueBinding
+{
+    /// <summary>
+    /// The source exchange
+    /// </summary>
+    Exchange Source { get; }
 
     /// <summary>
-    /// The exchange to queue binding details to declare the binding to RabbitMQ
+    /// The destination exchange
     /// </summary>
-    public interface ExchangeToQueueBinding
-    {
-        /// <summary>
-        /// The source exchange
-        /// </summary>
-        Exchange Source { get; }
+    Queue Destination { get; }
 
-        /// <summary>
-        /// The destination exchange
-        /// </summary>
-        Queue Destination { get; }
+    /// <summary>
+    /// A routing key for the exchange binding
+    /// </summary>
+    string RoutingKey { get; }
 
-        /// <summary>
-        /// A routing key for the exchange binding
-        /// </summary>
-        string RoutingKey { get; }
-
-        /// <summary>
-        /// The arguments for the binding
-        /// </summary>
-        IDictionary<string, object> Arguments { get; }
-    }
+    /// <summary>
+    /// The arguments for the binding
+    /// </summary>
+    IDictionary<string, object> Arguments { get; }
 }

@@ -1,19 +1,17 @@
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.SqlTransport
+namespace ViciOne.ServiceBus.SqlTransport;
+
+public interface IConnectionContextSupervisor :
+    ITransportSupervisor<ConnectionContext>
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    Task<ISendTransport> CreateSendTransport(SqlReceiveEndpointContext context, Uri address);
 
+    Task<ISendTransport> CreatePublishTransport<T>(SqlReceiveEndpointContext context, Uri? publishAddress)
+        where T : class;
 
-    public interface IConnectionContextSupervisor :
-        ITransportSupervisor<ConnectionContext>
-    {
-        Task<ISendTransport> CreateSendTransport(SqlReceiveEndpointContext context, Uri address);
-
-        Task<ISendTransport> CreatePublishTransport<T>(SqlReceiveEndpointContext context, Uri? publishAddress)
-            where T : class;
-
-        Uri NormalizeAddress(Uri address);
-    }
+    Uri NormalizeAddress(Uri address);
 }

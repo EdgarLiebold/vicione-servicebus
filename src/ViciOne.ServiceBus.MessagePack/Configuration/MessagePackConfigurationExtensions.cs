@@ -1,7 +1,6 @@
+using ViciOne.ServiceBus.Serialization;
+
 namespace ViciOne.ServiceBus;
-
-using Serialization;
-
 
 public static class MessagePackConfigurationExtensions
 {

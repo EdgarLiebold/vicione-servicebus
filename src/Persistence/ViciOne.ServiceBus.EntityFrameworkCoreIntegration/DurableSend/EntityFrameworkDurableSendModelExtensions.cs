@@ -1,10 +1,9 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using Microsoft.EntityFrameworkCore;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 /// <summary>EF model mapping for the generic ViciOne durable sender store.</summary>
 public static class EntityFrameworkDurableSendModelExtensions
 {

@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus
+using System;
+using ViciOne.ServiceBus.SqlTransport;
+
+namespace ViciOne.ServiceBus;
+
+public interface SqlMessageContext :
+    RoutingKeyConsumeContext,
+    PartitionKeyConsumeContext
 {
-    using System;
-    using SqlTransport;
+    SqlTransportMessage TransportMessage { get; }
 
+    Guid TransportMessageId { get; }
+    long DeliveryMessageId { get; }
 
-    public interface SqlMessageContext :
-        RoutingKeyConsumeContext,
-        PartitionKeyConsumeContext
-    {
-        SqlTransportMessage TransportMessage { get; }
+    string QueueName { get; }
 
-        Guid TransportMessageId { get; }
-        long DeliveryMessageId { get; }
+    Guid? ConsumerId { get; }
+    Guid? LockId { get; }
 
-        string QueueName { get; }
-
-        Guid? ConsumerId { get; }
-        Guid? LockId { get; }
-
-        short Priority { get; }
-        DateTime EnqueueTime { get; }
-        int DeliveryCount { get; }
-    }
+    short Priority { get; }
+    DateTime EnqueueTime { get; }
+    int DeliveryCount { get; }
 }

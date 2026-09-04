@@ -1,207 +1,205 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Collections.Concurrent;
+using System.Reflection;
+using System.Text;
+using ViciOne.ServiceBus.Metadata;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class MessageUrn :
+    Uri
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Reflection;
-    using System.Text;
-    using Metadata;
+    public const string Prefix = "urn:message:";
 
+    static readonly ConcurrentDictionary<Type, Cached> _cache = new ConcurrentDictionary<Type, Cached>();
 
-    [Serializable]
-    public class MessageUrn :
-        Uri
+    MessageUrn(string uriString)
+        : base(uriString)
     {
-        public const string Prefix = "urn:message:";
+    }
 
-        static readonly ConcurrentDictionary<Type, Cached> _cache = new ConcurrentDictionary<Type, Cached>();
+    public static MessageUrn ForType<T>()
+    {
+        return MessageUrnCache<T>.Urn;
+    }
 
-        MessageUrn(string uriString)
-            : base(uriString)
+    public static string ForTypeString<T>()
+    {
+        return MessageUrnCache<T>.UrnString;
+    }
+
+    public static MessageUrn ForType(Type type)
+    {
+        ValidateType(type);
+
+        return _cache.GetOrAdd(type, ValueFactory).Urn;
+    }
+
+    public static string ForTypeString(Type type)
+    {
+        ValidateType(type);
+
+        return _cache.GetOrAdd(type, ValueFactory).UrnString;
+    }
+
+    static void ValidateType(Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+
+        if (type.ContainsGenericParameters)
+            throw new ArgumentException("A message type may not contain generic parameters", nameof(type));
+    }
+
+    static Cached ValueFactory(Type type)
+    {
+        return Activation.Activate(type, new Factory());
+    }
+
+
+    readonly struct Factory :
+        IActivationType<Cached>
+    {
+        public Cached ActivateType<T>()
+            where T : class
         {
+            return new Cached<T>();
         }
+    }
 
-        public static MessageUrn ForType<T>()
+
+    public void Deconstruct(out string? name, out string? ns, out string? assemblyName)
+    {
+        name = null;
+        ns = null;
+        assemblyName = null;
+
+        if (Segments.Length > 0)
         {
-            return MessageUrnCache<T>.Urn;
-        }
-
-        public static string ForTypeString<T>()
-        {
-            return MessageUrnCache<T>.UrnString;
-        }
-
-        public static MessageUrn ForType(Type type)
-        {
-            ValidateType(type);
-
-            return _cache.GetOrAdd(type, ValueFactory).Urn;
-        }
-
-        public static string ForTypeString(Type type)
-        {
-            ValidateType(type);
-
-            return _cache.GetOrAdd(type, ValueFactory).UrnString;
-        }
-
-        static void ValidateType(Type type)
-        {
-            ArgumentNullException.ThrowIfNull(type);
-
-            if (type.ContainsGenericParameters)
-                throw new ArgumentException("A message type may not contain generic parameters", nameof(type));
-        }
-
-        static Cached ValueFactory(Type type)
-        {
-            return Activation.Activate(type, new Factory());
-        }
-
-
-        readonly struct Factory :
-            IActivationType<Cached>
-        {
-            public Cached ActivateType<T>()
-                where T : class
+            var names = Segments[0].Split(':');
+            if (string.Compare(names[0], "message", StringComparison.OrdinalIgnoreCase) == 0)
             {
-                return new Cached<T>();
-            }
-        }
-
-
-        public void Deconstruct(out string? name, out string? ns, out string? assemblyName)
-        {
-            name = null;
-            ns = null;
-            assemblyName = null;
-
-            if (Segments.Length > 0)
-            {
-                var names = Segments[0].Split(':');
-                if (string.Compare(names[0], "message", StringComparison.OrdinalIgnoreCase) == 0)
+                if (names.Length == 2)
+                    name = names[1];
+                else if (names.Length == 3)
                 {
-                    if (names.Length == 2)
-                        name = names[1];
-                    else if (names.Length == 3)
-                    {
-                        name = names[2];
-                        ns = names[1];
-                    }
-                    else if (names.Length >= 4)
-                    {
-                        name = names[2];
-                        ns = names[1];
-                        assemblyName = names[3];
-                    }
+                    name = names[2];
+                    ns = names[1];
+                }
+                else if (names.Length >= 4)
+                {
+                    name = names[2];
+                    ns = names[1];
+                    assemblyName = names[3];
                 }
             }
         }
+    }
 
-        static string GetUrnForType(Type type)
+    static string GetUrnForType(Type type)
+    {
+        return GetMessageName(type, true);
+    }
+
+    static string GetMessageName(Type type, bool includeScope)
+    {
+        var messageName = GetMessageNameFromAttribute(type);
+
+        return string.IsNullOrWhiteSpace(messageName)
+            ? GetMessageNameFromType(new StringBuilder(Prefix), type, includeScope)
+            : messageName!;
+    }
+
+    static string? GetMessageNameFromAttribute(Type? type)
+    {
+        if (type is { IsArray: true, HasElementType: true })
         {
-            return GetMessageName(type, true);
+            var elementType = type.GetElementType();
+            var elementName = GetMessageNameFromAttribute(elementType);
+
+            if (!string.IsNullOrWhiteSpace(elementName))
+                return elementName + "[]";
         }
 
-        static string GetMessageName(Type type, bool includeScope)
-        {
-            var messageName = GetMessageNameFromAttribute(type);
+        return type?.GetCustomAttribute<MessageUrnAttribute>()?.Urn.ToString();
+    }
 
-            return string.IsNullOrWhiteSpace(messageName)
-                ? GetMessageNameFromType(new StringBuilder(Prefix), type, includeScope)
-                : messageName!;
+    static string GetMessageNameFromType(StringBuilder sb, Type type, bool includeScope)
+    {
+        if (type.IsGenericParameter)
+            return string.Empty;
+
+        var ns = type.Namespace;
+        if (includeScope && ns != null)
+        {
+            sb.Append(ns);
+
+            sb.Append(':');
         }
 
-        static string? GetMessageNameFromAttribute(Type? type)
+        if (type is { IsNested: true, DeclaringType: { } })
         {
-            if (type is { IsArray: true, HasElementType: true })
-            {
-                var elementType = type.GetElementType();
-                var elementName = GetMessageNameFromAttribute(elementType);
-
-                if (!string.IsNullOrWhiteSpace(elementName))
-                    return elementName + "[]";
-            }
-
-            return type?.GetCustomAttribute<MessageUrnAttribute>()?.Urn.ToString();
+            GetMessageNameFromType(sb, type.DeclaringType, false);
+            sb.Append('+');
         }
 
-        static string GetMessageNameFromType(StringBuilder sb, Type type, bool includeScope)
+        if (type.IsGenericType)
         {
-            if (type.IsGenericParameter)
-                return string.Empty;
+            var name = type.GetGenericTypeDefinition().Name;
 
-            var ns = type.Namespace;
-            if (includeScope && ns != null)
+            //remove `1
+            var index = name.IndexOf('`');
+            if (index > 0)
+                name = name.Remove(index);
+            //
+
+            sb.Append(name);
+            sb.Append('[');
+
+            Type[] arguments = type.GetGenericArguments();
+            for (var i = 0; i < arguments.Length; i++)
             {
-                sb.Append(ns);
+                if (i > 0)
+                    sb.Append(',');
 
-                sb.Append(':');
-            }
-
-            if (type is { IsNested: true, DeclaringType: { } })
-            {
-                GetMessageNameFromType(sb, type.DeclaringType, false);
-                sb.Append('+');
-            }
-
-            if (type.IsGenericType)
-            {
-                var name = type.GetGenericTypeDefinition().Name;
-
-                //remove `1
-                var index = name.IndexOf('`');
-                if (index > 0)
-                    name = name.Remove(index);
-                //
-
-                sb.Append(name);
                 sb.Append('[');
-
-                Type[] arguments = type.GetGenericArguments();
-                for (var i = 0; i < arguments.Length; i++)
-                {
-                    if (i > 0)
-                        sb.Append(',');
-
-                    sb.Append('[');
-                    GetMessageNameFromType(sb, arguments[i], true);
-                    sb.Append(']');
-                }
-
+                GetMessageNameFromType(sb, arguments[i], true);
                 sb.Append(']');
             }
-            else
-                sb.Append(type.Name);
 
-            return sb.ToString();
+            sb.Append(']');
         }
+        else
+            sb.Append(type.Name);
+
+        return sb.ToString();
+    }
 
 
-        static class MessageUrnCache<T>
+    static class MessageUrnCache<T>
+    {
+        internal static readonly MessageUrn Urn;
+        internal static readonly string UrnString;
+
+        static MessageUrnCache()
         {
-            internal static readonly MessageUrn Urn;
-            internal static readonly string UrnString;
-
-            static MessageUrnCache()
-            {
-                Urn = new MessageUrn(GetUrnForType(typeof(T)));
-                UrnString = Urn.ToString();
-            }
+            Urn = new MessageUrn(GetUrnForType(typeof(T)));
+            UrnString = Urn.ToString();
         }
+    }
 
 
-        interface Cached
-        {
-            MessageUrn Urn { get; }
-            string UrnString { get; }
-        }
+    interface Cached
+    {
+        MessageUrn Urn { get; }
+        string UrnString { get; }
+    }
 
 
-        class Cached<T> :
-            Cached
-        {
-            public MessageUrn Urn => MessageUrnCache<T>.Urn;
-            public string UrnString => MessageUrnCache<T>.UrnString;
-        }
+    class Cached<T> :
+        Cached
+    {
+        public MessageUrn Urn => MessageUrnCache<T>.Urn;
+        public string UrnString => MessageUrnCache<T>.UrnString;
     }
 }

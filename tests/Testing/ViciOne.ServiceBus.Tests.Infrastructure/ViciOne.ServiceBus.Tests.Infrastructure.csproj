@@ -2,6 +2,11 @@
 
   <!-- Framework-neutral test infrastructure. It owns no test case and no verdict. -->
 
+  <PropertyGroup>
+    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Dedicated infrastructure tests exercise internal behavior without making test-only
          injection seams part of the reusable public surface. -->

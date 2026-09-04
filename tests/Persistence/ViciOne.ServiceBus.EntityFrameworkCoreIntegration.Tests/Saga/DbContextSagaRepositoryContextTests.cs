@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga;
-
 using System.Data;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
@@ -9,6 +7,8 @@ using ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Saga;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration.Tests.Saga;
 
 public sealed class DbContextSagaRepositoryContextTests
 {

@@ -1,51 +1,49 @@
-namespace ViciOne.ServiceBus.SignalR.Scoping
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.SignalR.Contracts;
+
+namespace ViciOne.ServiceBus.SignalR.Scoping;
+
+public class DependencyInjectionHubLifetimeScopeProvider :
+    IHubLifetimeScopeProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Contracts;
-    using Microsoft.AspNetCore.SignalR;
-    using Microsoft.Extensions.DependencyInjection;
+    readonly IServiceScopeFactory _serviceScopeFactory;
 
-
-    public class DependencyInjectionHubLifetimeScopeProvider :
-        IHubLifetimeScopeProvider
+    public DependencyInjectionHubLifetimeScopeProvider(IServiceScopeFactory serviceScopeFactory)
     {
-        readonly IServiceScopeFactory _serviceScopeFactory;
+        _serviceScopeFactory = serviceScopeFactory;
+    }
 
-        public DependencyInjectionHubLifetimeScopeProvider(IServiceScopeFactory serviceScopeFactory)
+    public IHubLifetimeScope<THub> CreateScope<THub>()
+        where THub : Hub
+    {
+        return new HubLifetimeScope<THub>(_serviceScopeFactory.CreateAsyncScope());
+    }
+
+
+    class HubLifetimeScope<THub> :
+        IHubLifetimeScope<THub>
+        where THub : Hub
+    {
+        readonly AsyncServiceScope _serviceScope;
+
+        public HubLifetimeScope(AsyncServiceScope serviceScope)
         {
-            _serviceScopeFactory = serviceScopeFactory;
+            _serviceScope = serviceScope;
+            PublishEndpoint = ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            RequestClient = ServiceProvider.GetRequiredService<IRequestClient<GroupManagement<THub>>>();
         }
 
-        public IHubLifetimeScope<THub> CreateScope<THub>()
-            where THub : Hub
+        IServiceProvider ServiceProvider => _serviceScope.ServiceProvider;
+
+        public IPublishEndpoint PublishEndpoint { get; }
+        public IRequestClient<GroupManagement<THub>> RequestClient { get; }
+
+        public ValueTask DisposeAsync()
         {
-            return new HubLifetimeScope<THub>(_serviceScopeFactory.CreateAsyncScope());
-        }
-
-
-        class HubLifetimeScope<THub> :
-            IHubLifetimeScope<THub>
-            where THub : Hub
-        {
-            readonly AsyncServiceScope _serviceScope;
-
-            public HubLifetimeScope(AsyncServiceScope serviceScope)
-            {
-                _serviceScope = serviceScope;
-                PublishEndpoint = ServiceProvider.GetRequiredService<IPublishEndpoint>();
-                RequestClient = ServiceProvider.GetRequiredService<IRequestClient<GroupManagement<THub>>>();
-            }
-
-            IServiceProvider ServiceProvider => _serviceScope.ServiceProvider;
-
-            public IPublishEndpoint PublishEndpoint { get; }
-            public IRequestClient<GroupManagement<THub>> RequestClient { get; }
-
-            public ValueTask DisposeAsync()
-            {
-                return _serviceScope.DisposeAsync();
-            }
+            return _serviceScope.DisposeAsync();
         }
     }
 }

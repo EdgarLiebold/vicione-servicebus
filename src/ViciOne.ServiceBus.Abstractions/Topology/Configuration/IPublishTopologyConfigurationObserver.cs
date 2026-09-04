@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IPublishTopologyConfigurationObserver
 {
-    public interface IPublishTopologyConfigurationObserver
-    {
-        void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
-            where T : class;
-    }
+    void MessageTopologyCreated<T>(IMessagePublishTopologyConfigurator<T> configurator)
+        where T : class;
 }

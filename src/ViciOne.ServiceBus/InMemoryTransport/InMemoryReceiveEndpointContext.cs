@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Transports.Fabric;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public interface InMemoryReceiveEndpointContext :
+    ReceiveEndpointContext
 {
-    using Transports;
-    using Transports.Fabric;
+    ISendTopology Send { get; }
 
+    IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> MessageFabric { get; }
 
-    public interface InMemoryReceiveEndpointContext :
-        ReceiveEndpointContext
-    {
-        ISendTopology Send { get; }
+    InMemoryTransportContext TransportContext { get; }
 
-        IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> MessageFabric { get; }
-
-        InMemoryTransportContext TransportContext { get; }
-
-        void ConfigureTopology();
-    }
+    void ConfigureTopology();
 }

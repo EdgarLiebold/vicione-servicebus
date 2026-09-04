@@ -1,34 +1,32 @@
-namespace ViciOne.ServiceBus.DependencyInjection.Registration
+using System;
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.DependencyInjection.Registration;
+
+public class EndpointRegistration<T> :
+    IEndpointRegistration
+    where T : class
 {
-    using System;
-    using Configuration;
+    readonly IRegistration _registration;
+    readonly IContainerSelector _selector;
 
-
-    public class EndpointRegistration<T> :
-        IEndpointRegistration
-        where T : class
+    public EndpointRegistration(IRegistration registration, IContainerSelector selector)
     {
-        readonly IRegistration _registration;
-        readonly IContainerSelector _selector;
+        _registration = registration;
+        _selector = selector;
+    }
 
-        public EndpointRegistration(IRegistration registration, IContainerSelector selector)
-        {
-            _registration = registration;
-            _selector = selector;
-        }
+    public Type Type => typeof(T);
 
-        public Type Type => typeof(T);
+    public bool IncludeInConfigureEndpoints
+    {
+        get => _registration.IncludeInConfigureEndpoints;
+        set { }
+    }
 
-        public bool IncludeInConfigureEndpoints
-        {
-            get => _registration.IncludeInConfigureEndpoints;
-            set { }
-        }
-
-        public IEndpointDefinition GetDefinition(IServiceProvider provider)
-        {
-            return _selector.GetEndpointDefinition<T>(provider)
-                ?? throw new ConfigurationException($"Endpoint definition not found: {TypeCache<T>.ShortName}");
-        }
+    public IEndpointDefinition GetDefinition(IServiceProvider provider)
+    {
+        return _selector.GetEndpointDefinition<T>(provider)
+            ?? throw new ConfigurationException($"Endpoint definition not found: {TypeCache<T>.ShortName}");
     }
 }

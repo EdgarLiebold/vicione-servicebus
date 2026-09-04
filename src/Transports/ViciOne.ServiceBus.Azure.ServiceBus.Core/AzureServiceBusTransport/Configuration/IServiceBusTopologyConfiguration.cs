@@ -1,15 +1,13 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using ViciOne.ServiceBus.Configuration;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public interface IServiceBusTopologyConfiguration :
+    ITopologyConfiguration
 {
-    using ViciOne.ServiceBus.Configuration;
+    new IServiceBusPublishTopologyConfigurator Publish { get; }
 
+    new IServiceBusSendTopologyConfigurator Send { get; }
 
-    public interface IServiceBusTopologyConfiguration :
-        ITopologyConfiguration
-    {
-        new IServiceBusPublishTopologyConfigurator Publish { get; }
-
-        new IServiceBusSendTopologyConfigurator Send { get; }
-
-        new IServiceBusConsumeTopologyConfigurator Consume { get; }
-    }
+    new IServiceBusConsumeTopologyConfigurator Consume { get; }
 }

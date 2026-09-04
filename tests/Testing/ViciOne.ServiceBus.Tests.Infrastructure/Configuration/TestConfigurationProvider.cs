@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 
-/// <summary>Owns the single typed configuration pipeline of the native test tree.</summary>
+/// <summary>Owns the single typed configuration pipeline of the repository test tree.</summary>
 public sealed class TestConfigurationProvider
 {
     public const string EnvironmentPrefix = "VICIONE_TESTS__";

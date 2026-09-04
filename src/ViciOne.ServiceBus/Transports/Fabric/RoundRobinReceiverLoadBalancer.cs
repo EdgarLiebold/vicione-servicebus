@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+using System.Collections.Generic;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class RoundRobinReceiverLoadBalancer<T> :
+    IReceiverLoadBalancer<T>
+    where T : class
 {
-    using System.Collections.Generic;
-    using System.Threading;
+    Receiver _current;
 
-
-    public class RoundRobinReceiverLoadBalancer<T> :
-        IReceiverLoadBalancer<T>
-        where T : class
+    public RoundRobinReceiverLoadBalancer(IMessageReceiver<T>[] receivers)
     {
-        Receiver _current;
+        _current = BuildList(receivers.Copy().Shuffle());
+    }
 
-        public RoundRobinReceiverLoadBalancer(IMessageReceiver<T>[] receivers)
+    public IMessageReceiver<T> SelectReceiver(T message)
+    {
+        Receiver selected;
+        do
         {
-            _current = BuildList(receivers.Copy().Shuffle());
+            selected = _current;
+        }
+        while (Interlocked.CompareExchange(ref _current, selected.Next, selected) != selected);
+
+        return selected.Current;
+    }
+
+    static Receiver BuildList(IReadOnlyList<IMessageReceiver<T>> receivers)
+    {
+        var first = new Receiver(receivers[0]);
+        var last = first;
+        for (var i = 1; i < receivers.Count; i++)
+        {
+            var consumer = new Receiver(receivers[i]);
+            last.Next = consumer;
+            last = consumer;
         }
 
-        public IMessageReceiver<T> SelectReceiver(T message)
-        {
-            Receiver selected;
-            do
-            {
-                selected = _current;
-            }
-            while (Interlocked.CompareExchange(ref _current, selected.Next, selected) != selected);
+        last.Next = first;
 
-            return selected.Current;
+        return last;
+    }
+
+
+    class Receiver
+    {
+        public Receiver(IMessageReceiver<T> current)
+        {
+            Current = current;
         }
 
-        static Receiver BuildList(IReadOnlyList<IMessageReceiver<T>> receivers)
-        {
-            var first = new Receiver(receivers[0]);
-            var last = first;
-            for (var i = 1; i < receivers.Count; i++)
-            {
-                var consumer = new Receiver(receivers[i]);
-                last.Next = consumer;
-                last = consumer;
-            }
-
-            last.Next = first;
-
-            return last;
-        }
-
-
-        class Receiver
-        {
-            public Receiver(IMessageReceiver<T> current)
-            {
-                Current = current;
-            }
-
-            public IMessageReceiver<T> Current { get; }
-            public Receiver Next { get; set; }
-        }
+        public IMessageReceiver<T> Current { get; }
+        public Receiver Next { get; set; }
     }
 }

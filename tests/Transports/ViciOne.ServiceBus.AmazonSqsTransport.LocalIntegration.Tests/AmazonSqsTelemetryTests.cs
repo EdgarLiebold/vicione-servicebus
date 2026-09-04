@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
-
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests.Infrastructure;
@@ -8,6 +6,8 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.AmazonSqsTransport.LocalIntegration.Tests;
 
 [Collection(AmazonSqsTelemetryCollection.Name)]
 public sealed class AmazonSqsTelemetryTests

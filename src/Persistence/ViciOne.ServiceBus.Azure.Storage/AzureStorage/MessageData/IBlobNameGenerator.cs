@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.AzureStorage.MessageData
+namespace ViciOne.ServiceBus.AzureStorage.MessageData;
+
+public interface IBlobNameGenerator
 {
-    public interface IBlobNameGenerator
-    {
-        string GenerateBlobName();
-    }
+    string GenerateBlobName();
 }

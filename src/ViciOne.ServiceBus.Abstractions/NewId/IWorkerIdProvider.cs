@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IWorkerIdProvider
 {
-    public interface IWorkerIdProvider
-    {
-        byte[] GetWorkerId(int index);
-    }
+    byte[] GetWorkerId(int index);
 }

@@ -1,60 +1,58 @@
-namespace ViciOne.ServiceBus.Middleware.Timeout
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Middleware.Timeout;
+
+internal sealed class TimeoutCompensateContext<TLog> :
+    TimeoutCourierContextProxy,
+    CompensateContext<TLog>
+    where TLog : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using Context;
+    readonly CompensateContext<TLog> _context;
 
-
-    internal sealed class TimeoutCompensateContext<TLog> :
-        TimeoutCourierContextProxy,
-        CompensateContext<TLog>
-        where TLog : class
+    public TimeoutCompensateContext(CompensateContext<TLog> context, CancellationToken cancellationToken, TimeSpan timeout)
+        : base(context, cancellationToken, timeout)
     {
-        readonly CompensateContext<TLog> _context;
+        _context = context;
+    }
 
-        public TimeoutCompensateContext(CompensateContext<TLog> context, CancellationToken cancellationToken, TimeSpan timeout)
-            : base(context, cancellationToken, timeout)
-        {
-            _context = context;
-        }
+    CompensationResult CompensateContext.Compensated()
+    {
+        return _context.Compensated();
+    }
 
-        CompensationResult CompensateContext.Compensated()
-        {
-            return _context.Compensated();
-        }
+    CompensationResult CompensateContext.Compensated(object values)
+    {
+        return _context.Compensated(values);
+    }
 
-        CompensationResult CompensateContext.Compensated(object values)
-        {
-            return _context.Compensated(values);
-        }
+    CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
+    {
+        return _context.Compensated(variables);
+    }
 
-        CompensationResult CompensateContext.Compensated(IDictionary<string, object> variables)
-        {
-            return _context.Compensated(variables);
-        }
+    CompensationResult CompensateContext.Failed()
+    {
+        return _context.Failed();
+    }
 
-        CompensationResult CompensateContext.Failed()
-        {
-            return _context.Failed();
-        }
+    CompensationResult CompensateContext.Failed(Exception exception)
+    {
+        return _context.Failed(exception);
+    }
 
-        CompensationResult CompensateContext.Failed(Exception exception)
-        {
-            return _context.Failed(exception);
-        }
+    CompensationResult CompensateContext.Result
+    {
+        get => _context.Result;
+        set => _context.Result = value;
+    }
 
-        CompensationResult CompensateContext.Result
-        {
-            get => _context.Result;
-            set => _context.Result = value;
-        }
+    TLog CompensateContext<TLog>.Log => _context.Log;
 
-        TLog CompensateContext<TLog>.Log => _context.Log;
-
-        CompensateActivityContext<TActivity, TLog> CompensateContext<TLog>.CreateActivityContext<TActivity>(TActivity activity)
-        {
-            return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
-        }
+    CompensateActivityContext<TActivity, TLog> CompensateContext<TLog>.CreateActivityContext<TActivity>(TActivity activity)
+    {
+        return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }
 }

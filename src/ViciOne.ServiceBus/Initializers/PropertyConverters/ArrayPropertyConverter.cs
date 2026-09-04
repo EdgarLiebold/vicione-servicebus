@@ -1,127 +1,125 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyConverters
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Util;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyConverters;
+
+public class ArrayPropertyConverter<TElement> :
+    IPropertyConverter<TElement[], IEnumerable<TElement>>
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Util;
-
-
-    public class ArrayPropertyConverter<TElement> :
-        IPropertyConverter<TElement[], IEnumerable<TElement>>
+    public Task<TElement[]> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement> input)
+        where TMessage : class
     {
-        public Task<TElement[]> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TElement> input)
-            where TMessage : class
+        switch (input)
         {
-            switch (input)
-            {
-                case null:
-                    return TaskResults.Default<TElement[]>();
-                case TElement[] array:
-                    return Task.FromResult(array);
-                default:
-                    return Task.FromResult(input.ToArray());
-            }
+            case null:
+                return TaskResults.Default<TElement[]>();
+            case TElement[] array:
+                return Task.FromResult(array);
+            default:
+                return Task.FromResult(input.ToArray());
         }
     }
+}
 
 
-    public class ArrayPropertyConverter<TElement, TInputElement> :
-        IPropertyConverter<TElement[], IEnumerable<TInputElement>>
+public class ArrayPropertyConverter<TElement, TInputElement> :
+    IPropertyConverter<TElement[], IEnumerable<TInputElement>>
+{
+    static readonly TElement[] _emptyArray = new TElement[0];
+    readonly IPropertyConverter<TElement, TInputElement> _converter;
+
+    public ArrayPropertyConverter(IPropertyConverter<TElement, TInputElement> converter)
     {
-        static readonly TElement[] _emptyArray = new TElement[0];
-        readonly IPropertyConverter<TElement, TInputElement> _converter;
+        _converter = converter;
+    }
 
-        public ArrayPropertyConverter(IPropertyConverter<TElement, TInputElement> converter)
+    public Task<TElement[]> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
+        where TMessage : class
+    {
+        Task<TElement[]> resultTask = ConvertSync(context, input);
+        if (resultTask.IsCompleted)
+            return Task.FromResult(resultTask.Result);
+
+        async Task<TElement[]> ConvertAsync()
         {
-            _converter = converter;
+            return await resultTask.ConfigureAwait(false);
         }
 
-        public Task<TElement[]> Convert<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
-            where TMessage : class
+        return ConvertAsync();
+    }
+
+    Task<TElement[]> ConvertSync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
+        where TMessage : class
+    {
+        if (input == null)
+            return TaskResults.Default<TElement[]>();
+
+        var capacity = 0;
+        if (input is ICollection<TElement> collection)
         {
-            Task<TElement[]> resultTask = ConvertSync(context, input);
-            if (resultTask.IsCompleted)
-                return Task.FromResult(resultTask.Result);
-
-            async Task<TElement[]> ConvertAsync()
-            {
-                return await resultTask.ConfigureAwait(false);
-            }
-
-            return ConvertAsync();
+            capacity = collection.Count;
+            if (capacity == 0)
+                return Task.FromResult(_emptyArray);
         }
 
-        Task<TElement[]> ConvertSync<TMessage>(InitializeContext<TMessage> context, IEnumerable<TInputElement> input)
-            where TMessage : class
+        var results = new List<TElement>(capacity);
+        IEnumerator<TInputElement> enumerator = input.GetEnumerator();
+        var disposeEnumerator = true;
+        try
         {
-            if (input == null)
-                return TaskResults.Default<TElement[]>();
-
-            var capacity = 0;
-            if (input is ICollection<TElement> collection)
+            async Task<TElement[]> ConvertAsync(IEnumerator<TInputElement> asyncEnumerator, Task<TElement> elementTask)
             {
-                capacity = collection.Count;
-                if (capacity == 0)
-                    return Task.FromResult(_emptyArray);
-            }
-
-            var results = new List<TElement>(capacity);
-            IEnumerator<TInputElement> enumerator = input.GetEnumerator();
-            var disposeEnumerator = true;
-            try
-            {
-                async Task<TElement[]> ConvertAsync(IEnumerator<TInputElement> asyncEnumerator, Task<TElement> elementTask)
+                try
                 {
-                    try
+                    var element = await elementTask.ConfigureAwait(false);
+
+                    results.Add(element);
+
+                    while (asyncEnumerator.MoveNext())
                     {
-                        var element = await elementTask.ConfigureAwait(false);
+                        var current = asyncEnumerator.Current;
 
-                        results.Add(element);
-
-                        while (asyncEnumerator.MoveNext())
+                        elementTask = _converter.Convert(context, current);
+                        if (elementTask.IsCompleted)
+                            results.Add(elementTask.Result);
+                        else
                         {
-                            var current = asyncEnumerator.Current;
+                            element = await elementTask.ConfigureAwait(false);
 
-                            elementTask = _converter.Convert(context, current);
-                            if (elementTask.IsCompleted)
-                                results.Add(elementTask.Result);
-                            else
-                            {
-                                element = await elementTask.ConfigureAwait(false);
-
-                                results.Add(element);
-                            }
+                            results.Add(element);
                         }
+                    }
 
-                        return results.ToArray();
-                    }
-                    finally
-                    {
-                        asyncEnumerator.Dispose();
-                    }
+                    return results.ToArray();
                 }
-
-                while (enumerator.MoveNext())
+                finally
                 {
-                    var current = enumerator.Current;
-
-                    Task<TElement> elementTask = _converter.Convert(context, current);
-                    if (elementTask.IsCompleted)
-                        results.Add(elementTask.Result);
-                    else
-                    {
-                        disposeEnumerator = false;
-                        return ConvertAsync(enumerator, elementTask);
-                    }
+                    asyncEnumerator.Dispose();
                 }
             }
-            finally
-            {
-                if (disposeEnumerator)
-                    enumerator.Dispose();
-            }
 
-            return Task.FromResult(results.ToArray());
+            while (enumerator.MoveNext())
+            {
+                var current = enumerator.Current;
+
+                Task<TElement> elementTask = _converter.Convert(context, current);
+                if (elementTask.IsCompleted)
+                    results.Add(elementTask.Result);
+                else
+                {
+                    disposeEnumerator = false;
+                    return ConvertAsync(enumerator, elementTask);
+                }
+            }
         }
+        finally
+        {
+            if (disposeEnumerator)
+                enumerator.Dispose();
+        }
+
+        return Task.FromResult(results.ToArray());
     }
 }

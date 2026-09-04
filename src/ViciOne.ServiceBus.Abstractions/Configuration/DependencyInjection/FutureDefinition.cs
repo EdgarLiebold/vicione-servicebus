@@ -1,88 +1,86 @@
-namespace ViciOne.ServiceBus
-{
-    using System;
-    using Configuration;
+using System;
+using ViciOne.ServiceBus.Configuration;
 
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// A future definition defines the configuration for a future, which can be used by the automatic registration code to
+/// configure the consumer on a receive endpoint.
+/// </summary>
+/// <typeparam name="TFuture"></typeparam>
+public class FutureDefinition<TFuture> :
+    IFutureDefinition<TFuture>
+    where TFuture : class, SagaStateMachine<FutureState>
+{
+    int? _concurrentMessageLimit;
+    string? _endpointName;
+
+    protected FutureDefinition()
+    {
+    }
 
     /// <summary>
-    /// A future definition defines the configuration for a future, which can be used by the automatic registration code to
-    /// configure the consumer on a receive endpoint.
+    /// Specify the endpoint name (which may be a queue, or a subscription, depending upon the transport) on which the saga
+    /// should be configured.
     /// </summary>
-    /// <typeparam name="TFuture"></typeparam>
-    public class FutureDefinition<TFuture> :
-        IFutureDefinition<TFuture>
-        where TFuture : class, SagaStateMachine<FutureState>
+    protected string EndpointName
     {
-        int? _concurrentMessageLimit;
-        string? _endpointName;
+        set => _endpointName = value;
+    }
 
-        protected FutureDefinition()
-        {
-        }
+    public IEndpointDefinition<TFuture>? EndpointDefinition { get; set; }
 
-        /// <summary>
-        /// Specify the endpoint name (which may be a queue, or a subscription, depending upon the transport) on which the saga
-        /// should be configured.
-        /// </summary>
-        protected string EndpointName
-        {
-            set => _endpointName = value;
-        }
+    IEndpointDefinition? IFutureDefinition.EndpointDefinition => EndpointDefinition;
 
-        public IEndpointDefinition<TFuture>? EndpointDefinition { get; set; }
+    /// <summary>
+    /// Set the concurrent message limit for the saga, which limits how many saga instances are able to concurrently
+    /// consume messages.
+    /// </summary>
+    public int? ConcurrentMessageLimit
+    {
+        get => _concurrentMessageLimit;
+        protected set => _concurrentMessageLimit = value;
+    }
 
-        IEndpointDefinition? IFutureDefinition.EndpointDefinition => EndpointDefinition;
+    void IFutureDefinition<TFuture>.Configure(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
+        IRegistrationContext context)
+    {
+        if (_concurrentMessageLimit.HasValue)
+            sagaConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
+        ConfigureSaga(endpointConfigurator, sagaConfigurator, context);
+    }
 
-        /// <summary>
-        /// Set the concurrent message limit for the saga, which limits how many saga instances are able to concurrently
-        /// consume messages.
-        /// </summary>
-        public int? ConcurrentMessageLimit
-        {
-            get => _concurrentMessageLimit;
-            protected set => _concurrentMessageLimit = value;
-        }
+    Type IFutureDefinition.FutureType => typeof(TFuture);
 
-        void IFutureDefinition<TFuture>.Configure(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
-            IRegistrationContext context)
-        {
-            if (_concurrentMessageLimit.HasValue)
-                sagaConfigurator.ConcurrentMessageLimit = _concurrentMessageLimit;
-            ConfigureSaga(endpointConfigurator, sagaConfigurator, context);
-        }
+    string IFutureDefinition.GetEndpointName(IEndpointNameFormatter formatter)
+    {
+        return string.IsNullOrWhiteSpace(_endpointName)
+            ? _endpointName = EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Message<TFuture>()
+            : _endpointName!;
+    }
 
-        Type IFutureDefinition.FutureType => typeof(TFuture);
+    /// <summary>
+    /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
+    /// the endpoint.
+    /// </summary>
+    /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
+    /// <param name="sagaConfigurator">The saga configurator</param>
+    /// <param name="context"></param>
+    protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
+        IRegistrationContext context)
+    {
+    }
 
-        string IFutureDefinition.GetEndpointName(IEndpointNameFormatter formatter)
-        {
-            return string.IsNullOrWhiteSpace(_endpointName)
-                ? _endpointName = EndpointDefinition?.GetEndpointName(formatter) ?? formatter.Message<TFuture>()
-                : _endpointName!;
-        }
+    /// <summary>
+    /// Configure the saga endpoint
+    /// </summary>
+    /// <param name="configure"></param>
+    protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
+    {
+        var configurator = new EndpointRegistrationConfigurator<TFuture>();
 
-        /// <summary>
-        /// Called when configuring the saga on the endpoint. Configuration only applies to this saga, and does not apply to
-        /// the endpoint.
-        /// </summary>
-        /// <param name="endpointConfigurator">The receive endpoint configurator for the consumer</param>
-        /// <param name="sagaConfigurator">The saga configurator</param>
-        /// <param name="context"></param>
-        protected virtual void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<FutureState> sagaConfigurator,
-            IRegistrationContext context)
-        {
-        }
+        configure?.Invoke(configurator);
 
-        /// <summary>
-        /// Configure the saga endpoint
-        /// </summary>
-        /// <param name="configure"></param>
-        protected void Endpoint(Action<IEndpointRegistrationConfigurator>? configure = null)
-        {
-            var configurator = new EndpointRegistrationConfigurator<TFuture>();
-
-            configure?.Invoke(configurator);
-
-            EndpointDefinition = new FutureEndpointDefinition<TFuture>(configurator.Settings);
-        }
+        EndpointDefinition = new FutureEndpointDefinition<TFuture>(configurator.Settings);
     }
 }

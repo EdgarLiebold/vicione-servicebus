@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.Initializers
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Initializers;
+
+public interface IInitializerVariable<T>
 {
-    using System.Threading.Tasks;
-
-
-    public interface IInitializerVariable<T>
-    {
-        Task<T> GetValue<TMessage>(InitializeContext<TMessage> context)
-            where TMessage : class;
-    }
+    Task<T> GetValue<TMessage>(InitializeContext<TMessage> context)
+        where TMessage : class;
 }

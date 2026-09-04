@@ -1,14 +1,14 @@
-namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.AzureTable;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
-using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.AzureTable.Saga;
+using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.AzureTable;
 
 public sealed class AzureTableJobServiceIntegrationTests
 {

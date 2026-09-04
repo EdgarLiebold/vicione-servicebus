@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 
-/// <summary>The execution profile selected for a native test run.</summary>
+/// <summary>The infrastructure profile selected for test execution.</summary>
 public enum TestProfile
 {
     /// <summary>Hermetic unit and architecture tests.</summary>
@@ -15,7 +15,7 @@ public enum TestProfile
     External = 2,
 }
 
-/// <summary>The typed, secret-free configuration contract of the native test tree.</summary>
+/// <summary>The typed, secret-free configuration contract of the repository test tree.</summary>
 public sealed class ViciOneTestOptions
 {
     public TestProfile? Profile { get; set; }

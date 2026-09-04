@@ -1,54 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class MessageTopicExchange<T> :
+    IMessageExchange<T>
+    where T : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    readonly TopicNode<T> _root;
 
-
-    public class MessageTopicExchange<T> :
-        IMessageExchange<T>
-        where T : class
+    public MessageTopicExchange(string name, StringComparer? comparer = default)
     {
-        readonly TopicNode<T> _root;
+        Name = name;
 
-        public MessageTopicExchange(string name, StringComparer? comparer = default)
-        {
-            Name = name;
+        _root = new TopicNode<T>(comparer ?? StringComparer.Ordinal);
+    }
 
-            _root = new TopicNode<T>(comparer ?? StringComparer.Ordinal);
-        }
+    public IEnumerable<IMessageSink<T>> Sinks => _root.Sinks;
 
-        public IEnumerable<IMessageSink<T>> Sinks => _root.Sinks;
+    public string Name { get; }
 
-        public string Name { get; }
+    public Task Deliver(DeliveryContext<T> context)
+    {
+        var routingKey = context.RoutingKey;
 
-        public Task Deliver(DeliveryContext<T> context)
-        {
-            var routingKey = context.RoutingKey;
+        return _root.Deliver(context, routingKey);
+    }
 
-            return _root.Deliver(context, routingKey);
-        }
+    public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)
+    {
+        return _root.Add(sink, routingKey);
+    }
 
-        public ConnectHandle Connect(IMessageSink<T> sink, string? routingKey)
-        {
-            return _root.Add(sink, routingKey);
-        }
+    public void Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("exchange");
+        scope.Add("name", Name);
+        scope.Add("type", "topic");
 
-        public void Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("exchange");
-            scope.Add("name", Name);
-            scope.Add("type", "topic");
+        var topicScope = scope.CreateScope("topics");
 
-            var topicScope = scope.CreateScope("topics");
+        _root.Probe(topicScope);
+    }
 
-            _root.Probe(topicScope);
-        }
-
-        public override string ToString()
-        {
-            return $"Exchange({Name})";
-        }
+    public override string ToString()
+    {
+        return $"Exchange({Name})";
     }
 }

@@ -1,37 +1,35 @@
-namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters
+using System;
+
+namespace ViciOne.ServiceBus.RetryPolicies.ExceptionFilters;
+
+public class FilterExceptionFilter<T> :
+    IExceptionFilter
+    where T : Exception
 {
-    using System;
+    readonly Func<T, bool> _filter;
 
-
-    public class FilterExceptionFilter<T> :
-        IExceptionFilter
-        where T : Exception
+    public FilterExceptionFilter(Func<T, bool> filter)
     {
-        readonly Func<T, bool> _filter;
+        _filter = filter;
+    }
 
-        public FilterExceptionFilter(Func<T, bool> filter)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateScope("filter");
+        scope.Set(new { ExceptionType = typeof(T).Name });
+    }
+
+    bool IExceptionFilter.Match(Exception exception)
+    {
+        var currentException = exception;
+        while (currentException != null)
         {
-            _filter = filter;
+            if (exception is T ex)
+                return _filter(ex);
+
+            currentException = currentException.GetBaseException();
         }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            var scope = context.CreateScope("filter");
-            scope.Set(new { ExceptionType = typeof(T).Name });
-        }
-
-        bool IExceptionFilter.Match(Exception exception)
-        {
-            var currentException = exception;
-            while (currentException != null)
-            {
-                if (exception is T ex)
-                    return _filter(ex);
-
-                currentException = currentException.GetBaseException();
-            }
-
-            return true;
-        }
+        return true;
     }
 }

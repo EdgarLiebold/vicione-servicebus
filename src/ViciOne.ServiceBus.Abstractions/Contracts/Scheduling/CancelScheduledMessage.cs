@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.Scheduling
+using System;
+
+namespace ViciOne.ServiceBus.Scheduling;
+
+public interface CancelScheduledMessage
 {
-    using System;
+    /// <summary>
+    /// The date/time this message was created
+    /// </summary>
+    DateTime Timestamp { get; }
 
-
-    public interface CancelScheduledMessage
-    {
-        /// <summary>
-        /// The date/time this message was created
-        /// </summary>
-        DateTime Timestamp { get; }
-
-        /// <summary>
-        /// The token of the scheduled message
-        /// </summary>
-        Guid TokenId { get; }
-    }
+    /// <summary>
+    /// The token of the scheduled message
+    /// </summary>
+    Guid TokenId { get; }
 }

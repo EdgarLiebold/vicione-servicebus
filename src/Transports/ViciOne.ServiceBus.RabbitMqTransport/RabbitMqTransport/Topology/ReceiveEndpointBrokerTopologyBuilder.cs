@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class ReceiveEndpointBrokerTopologyBuilder :
+    BrokerTopologyBuilder,
+    IReceiveEndpointBrokerTopologyBuilder
 {
-    public class ReceiveEndpointBrokerTopologyBuilder :
-        BrokerTopologyBuilder,
-        IReceiveEndpointBrokerTopologyBuilder
-    {
-        public QueueHandle Queue { get; set; }
+    public QueueHandle Queue { get; set; }
 
-        public ExchangeHandle Exchange { get; set; }
+    public ExchangeHandle Exchange { get; set; }
 
-        public ExchangeHandle BoundExchange { get; set; }
-    }
+    public ExchangeHandle BoundExchange { get; set; }
 }

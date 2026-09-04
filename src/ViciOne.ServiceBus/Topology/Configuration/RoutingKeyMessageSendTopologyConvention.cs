@@ -1,47 +1,45 @@
-namespace ViciOne.ServiceBus.Configuration
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class RoutingKeyMessageSendTopologyConvention<TMessage> :
+    IRoutingKeyMessageSendTopologyConvention<TMessage>
+    where TMessage : class
 {
-    using Transports;
+    IMessageRoutingKeyFormatter<TMessage> _formatter;
 
-
-    public class RoutingKeyMessageSendTopologyConvention<TMessage> :
-        IRoutingKeyMessageSendTopologyConvention<TMessage>
-        where TMessage : class
+    public RoutingKeyMessageSendTopologyConvention(IRoutingKeyFormatter formatter)
     {
-        IMessageRoutingKeyFormatter<TMessage> _formatter;
+        if (formatter != null)
+            SetFormatter(formatter);
+    }
 
-        public RoutingKeyMessageSendTopologyConvention(IRoutingKeyFormatter formatter)
+    bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
+    {
+        if (_formatter != null)
         {
-            if (formatter != null)
-                SetFormatter(formatter);
+            messageSendTopology = new SetRoutingKeyMessageSendTopology<TMessage>(_formatter);
+            return true;
         }
 
-        bool IMessageSendTopologyConvention<TMessage>.TryGetMessageSendTopology(out IMessageSendTopology<TMessage> messageSendTopology)
-        {
-            if (_formatter != null)
-            {
-                messageSendTopology = new SetRoutingKeyMessageSendTopology<TMessage>(_formatter);
-                return true;
-            }
+        messageSendTopology = null;
+        return false;
+    }
 
-            messageSendTopology = null;
-            return false;
-        }
+    bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
+    {
+        convention = this as IMessageSendTopologyConvention<T>;
 
-        bool IMessageSendTopologyConvention.TryGetMessageSendTopologyConvention<T>(out IMessageSendTopologyConvention<T> convention)
-        {
-            convention = this as IMessageSendTopologyConvention<T>;
+        return convention != null;
+    }
 
-            return convention != null;
-        }
+    public void SetFormatter(IRoutingKeyFormatter formatter)
+    {
+        _formatter = new MessageRoutingKeyFormatter<TMessage>(formatter);
+    }
 
-        public void SetFormatter(IRoutingKeyFormatter formatter)
-        {
-            _formatter = new MessageRoutingKeyFormatter<TMessage>(formatter);
-        }
-
-        public void SetFormatter(IMessageRoutingKeyFormatter<TMessage> formatter)
-        {
-            _formatter = formatter;
-        }
+    public void SetFormatter(IMessageRoutingKeyFormatter<TMessage> formatter)
+    {
+        _formatter = formatter;
     }
 }

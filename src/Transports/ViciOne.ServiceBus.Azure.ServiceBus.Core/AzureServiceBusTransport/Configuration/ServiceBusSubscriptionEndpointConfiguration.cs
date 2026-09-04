@@ -1,91 +1,89 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Azure.Messaging.ServiceBus.Administration;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Middleware;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Topology;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class ServiceBusSubscriptionEndpointConfiguration :
+    ServiceBusEntityReceiveEndpointConfiguration,
+    IServiceBusSubscriptionEndpointConfiguration,
+    IServiceBusSubscriptionEndpointConfigurator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Azure.Messaging.ServiceBus.Administration;
-    using ViciOne.ServiceBus.Configuration;
-    using Middleware;
-    using Topology;
-    using Transports;
+    readonly IServiceBusEndpointConfiguration _endpointConfiguration;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
+    readonly Lazy<Uri> _inputAddress;
+    readonly SubscriptionEndpointSettings _settings;
 
-
-    public class ServiceBusSubscriptionEndpointConfiguration :
-        ServiceBusEntityReceiveEndpointConfiguration,
-        IServiceBusSubscriptionEndpointConfiguration,
-        IServiceBusSubscriptionEndpointConfigurator
+    public ServiceBusSubscriptionEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration,
+        SubscriptionEndpointSettings settings, IServiceBusEndpointConfiguration endpointConfiguration)
+        : base(hostConfiguration, settings, endpointConfiguration)
     {
-        readonly IServiceBusEndpointConfiguration _endpointConfiguration;
-        readonly IServiceBusHostConfiguration _hostConfiguration;
-        readonly Lazy<Uri> _inputAddress;
-        readonly SubscriptionEndpointSettings _settings;
+        _hostConfiguration = hostConfiguration;
+        _endpointConfiguration = endpointConfiguration;
+        _settings = settings;
 
-        public ServiceBusSubscriptionEndpointConfiguration(IServiceBusHostConfiguration hostConfiguration,
-            SubscriptionEndpointSettings settings, IServiceBusEndpointConfiguration endpointConfiguration)
-            : base(hostConfiguration, settings, endpointConfiguration)
-        {
-            _hostConfiguration = hostConfiguration;
-            _endpointConfiguration = endpointConfiguration;
-            _settings = settings;
+        HostAddress = hostConfiguration.HostAddress;
+        _inputAddress = new Lazy<Uri>(FormatInputAddress);
+    }
 
-            HostAddress = hostConfiguration.HostAddress;
-            _inputAddress = new Lazy<Uri>(FormatInputAddress);
-        }
+    public SubscriptionSettings Settings => _settings;
 
-        public SubscriptionSettings Settings => _settings;
+    public override Uri HostAddress { get; }
 
-        public override Uri HostAddress { get; }
+    public override Uri InputAddress => _inputAddress.Value;
 
-        public override Uri InputAddress => _inputAddress.Value;
+    public override ReceiveEndpointContext CreateReceiveEndpointContext()
+    {
+        return CreateServiceBusReceiveEndpointContext();
+    }
 
-        public override ReceiveEndpointContext CreateReceiveEndpointContext()
-        {
-            return CreateServiceBusReceiveEndpointContext();
-        }
+    IServiceBusTopologyConfiguration IServiceBusEndpointConfiguration.Topology => _endpointConfiguration.Topology;
 
-        IServiceBusTopologyConfiguration IServiceBusEndpointConfiguration.Topology => _endpointConfiguration.Topology;
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return _settings.SubscriptionConfigurator.Validate()
+            .Concat(base.Validate());
+    }
 
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return _settings.SubscriptionConfigurator.Validate()
-                .Concat(base.Validate());
-        }
+    public void Build(IHost host)
+    {
+        this.ConfigureDeadLetterQueueDeadLetterTransport();
+        this.ConfigureDeadLetterQueueErrorTransport();
 
-        public void Build(IHost host)
-        {
-            this.ConfigureDeadLetterQueueDeadLetterTransport();
-            this.ConfigureDeadLetterQueueErrorTransport();
+        var context = CreateServiceBusReceiveEndpointContext();
 
-            var context = CreateServiceBusReceiveEndpointContext();
+        ClientPipeConfigurator.UseFilter(new ConfigureServiceBusTopologyFilter<SubscriptionSettings>(_settings, context.BrokerTopology,
+            _settings.RemoveSubscriptions, context));
 
-            ClientPipeConfigurator.UseFilter(new ConfigureServiceBusTopologyFilter<SubscriptionSettings>(_settings, context.BrokerTopology,
-                _settings.RemoveSubscriptions, context));
+        CreateReceiveEndpoint(host, context);
+    }
 
-            CreateReceiveEndpoint(host, context);
-        }
+    public RuleFilter Filter
+    {
+        set => _settings.Filter = value;
+    }
 
-        public RuleFilter Filter
-        {
-            set => _settings.Filter = value;
-        }
+    public CreateRuleOptions Rule
+    {
+        set => _settings.Rule = value;
+    }
 
-        public CreateRuleOptions Rule
-        {
-            set => _settings.Rule = value;
-        }
+    ServiceBusReceiveEndpointContext CreateServiceBusReceiveEndpointContext()
+    {
+        var builder = new ServiceBusSubscriptionEndpointBuilder(_hostConfiguration, this);
 
-        ServiceBusReceiveEndpointContext CreateServiceBusReceiveEndpointContext()
-        {
-            var builder = new ServiceBusSubscriptionEndpointBuilder(_hostConfiguration, this);
+        ApplySpecifications(builder);
 
-            ApplySpecifications(builder);
+        return builder.CreateReceiveEndpointContext();
+    }
 
-            return builder.CreateReceiveEndpointContext();
-        }
-
-        Uri FormatInputAddress()
-        {
-            return _settings.GetInputAddress(_hostConfiguration.HostAddress, _settings.Path);
-        }
+    Uri FormatInputAddress()
+    {
+        return _settings.GetInputAddress(_hostConfiguration.HostAddress, _settings.Path);
     }
 }

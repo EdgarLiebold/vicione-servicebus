@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Adds an arbitrary filter to the pipe
+/// </summary>
+/// <typeparam name="TContext"></typeparam>
+public class InlineFilterPipeSpecification<TContext> :
+    IPipeSpecification<TContext>
+    where TContext : class, PipeContext
 {
-    using System.Collections.Generic;
-    using Middleware;
+    readonly InlineFilterMethod<TContext> _filterMethod;
 
-
-    /// <summary>
-    /// Adds an arbitrary filter to the pipe
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public class InlineFilterPipeSpecification<TContext> :
-        IPipeSpecification<TContext>
-        where TContext : class, PipeContext
+    public InlineFilterPipeSpecification(InlineFilterMethod<TContext> filterMethod)
     {
-        readonly InlineFilterMethod<TContext> _filterMethod;
+        _filterMethod = filterMethod;
+    }
 
-        public InlineFilterPipeSpecification(InlineFilterMethod<TContext> filterMethod)
-        {
-            _filterMethod = filterMethod;
-        }
+    public void Apply(IPipeBuilder<TContext> builder)
+    {
+        builder.AddFilter(new InlineFilter<TContext>(_filterMethod));
+    }
 
-        public void Apply(IPipeBuilder<TContext> builder)
-        {
-            builder.AddFilter(new InlineFilter<TContext>(_filterMethod));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_filterMethod == null)
-                yield return this.Failure("FilterMethod", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_filterMethod == null)
+            yield return this.Failure("FilterMethod", "must not be null");
     }
 }

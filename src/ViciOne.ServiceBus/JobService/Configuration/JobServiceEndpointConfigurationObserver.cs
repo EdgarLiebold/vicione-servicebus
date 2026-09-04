@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+using ViciOne.ServiceBus.JobService;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class JobServiceEndpointConfigurationObserver :
+    IEndpointConfigurationObserver
 {
-    using System;
-    using JobService;
+    readonly Action<IReceiveEndpointConfigurator> _configureEndpoint;
+    readonly JobServiceSettings _settings;
 
-
-    public class JobServiceEndpointConfigurationObserver :
-        IEndpointConfigurationObserver
+    public JobServiceEndpointConfigurationObserver(JobServiceSettings settings, Action<IReceiveEndpointConfigurator> configureEndpoint)
     {
-        readonly Action<IReceiveEndpointConfigurator> _configureEndpoint;
-        readonly JobServiceSettings _settings;
+        _settings = settings;
+        _configureEndpoint = configureEndpoint;
+    }
 
-        public JobServiceEndpointConfigurationObserver(JobServiceSettings settings, Action<IReceiveEndpointConfigurator> configureEndpoint)
-        {
-            _settings = settings;
-            _configureEndpoint = configureEndpoint;
-        }
-
-        public void EndpointConfigured<T>(T configurator)
-            where T : IReceiveEndpointConfigurator
-        {
-            configurator.ConnectConsumerConfigurationObserver(new JobServiceConsumerConfigurationObserver(configurator, _settings, _configureEndpoint));
-        }
+    public void EndpointConfigured<T>(T configurator)
+        where T : IReceiveEndpointConfigurator
+    {
+        configurator.ConnectConsumerConfigurationObserver(new JobServiceConsumerConfigurationObserver(configurator, _settings, _configureEndpoint));
     }
 }

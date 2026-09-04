@@ -1,46 +1,44 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Apache.NMS;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public interface ConnectionContext :
+    PipeContext
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Apache.NMS;
+    /// <summary>
+    /// The ActiveMQ Connection
+    /// </summary>
+    IConnection Connection { get; }
 
+    /// <summary>
+    /// The connection description, useful to debug output
+    /// </summary>
+    string Description { get; }
 
-    public interface ConnectionContext :
-        PipeContext
-    {
-        /// <summary>
-        /// The ActiveMQ Connection
-        /// </summary>
-        IConnection Connection { get; }
+    /// <summary>
+    /// The Host Address for this connection
+    /// </summary>
+    Uri HostAddress { get; }
 
-        /// <summary>
-        /// The connection description, useful to debug output
-        /// </summary>
-        string Description { get; }
+    IActiveMqBusTopology Topology { get; }
 
-        /// <summary>
-        /// The Host Address for this connection
-        /// </summary>
-        Uri HostAddress { get; }
+    /// <summary>
+    /// Create a model on the connection
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<ISession> CreateSession(CancellationToken cancellationToken);
 
-        IActiveMqBusTopology Topology { get; }
+    bool IsVirtualTopicConsumer(string name);
 
-        /// <summary>
-        /// Create a model on the connection
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task<ISession> CreateSession(CancellationToken cancellationToken);
+    IQueue GetTemporaryQueue(ISession session, string topicName);
 
-        bool IsVirtualTopicConsumer(string name);
+    ITopic GetTemporaryTopic(ISession session, string topicName);
 
-        IQueue GetTemporaryQueue(ISession session, string topicName);
+    bool TryGetTemporaryEntity(string name, out IDestination destination);
 
-        ITopic GetTemporaryTopic(ISession session, string topicName);
-
-        bool TryGetTemporaryEntity(string name, out IDestination destination);
-
-        bool TryRemoveTemporaryEntity(ISession session, string name);
-    }
+    bool TryRemoveTemporaryEntity(ISession session, string name);
 }

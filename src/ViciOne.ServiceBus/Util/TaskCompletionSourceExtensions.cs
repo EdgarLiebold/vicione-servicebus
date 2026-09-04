@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.Util;
-
 using System;
 using System.Threading.Tasks;
 
+namespace ViciOne.ServiceBus.Util;
 
 public static class TaskCompletionSourceExtensions
 {

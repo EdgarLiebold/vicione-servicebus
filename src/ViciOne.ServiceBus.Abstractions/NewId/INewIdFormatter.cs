@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface INewIdFormatter
 {
-    public interface INewIdFormatter
-    {
-        string Format(in byte[] bytes);
-    }
+    string Format(in byte[] bytes);
 }

@@ -6,7 +6,6 @@
     <Copyright>Copyright 2007-2024 Chris Patterson</Copyright>
     <Authors>Chris Patterson</Authors>
     <!-- Unsafe code is granted per project, only where the compiler requires it. -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 

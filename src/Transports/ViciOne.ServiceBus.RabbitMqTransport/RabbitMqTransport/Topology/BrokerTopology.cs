@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public interface BrokerTopology :
+    IProbeSite
 {
-    public interface BrokerTopology :
-        IProbeSite
-    {
-        Exchange[] Exchanges { get; }
-        Queue[] Queues { get; }
-        ExchangeToExchangeBinding[] ExchangeBindings { get; }
-        ExchangeToQueueBinding[] QueueBindings { get; }
-    }
+    Exchange[] Exchanges { get; }
+    Queue[] Queues { get; }
+    ExchangeToExchangeBinding[] ExchangeBindings { get; }
+    ExchangeToQueueBinding[] QueueBindings { get; }
 }

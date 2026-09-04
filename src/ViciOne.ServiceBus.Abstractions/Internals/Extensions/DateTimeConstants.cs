@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Internals;
-
 using System;
 
+namespace ViciOne.ServiceBus.Internals;
 
 public static class DateTimeConstants
 {

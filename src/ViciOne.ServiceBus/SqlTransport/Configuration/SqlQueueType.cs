@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public enum SqlQueueType
 {
-    public enum SqlQueueType
-    {
-        Queue = 1,
-        ErrorQueue = 2,
-        DeadLetterQueue = 3
-    }
+    Queue = 1,
+    ErrorQueue = 2,
+    DeadLetterQueue = 3
 }

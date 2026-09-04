@@ -1,42 +1,40 @@
-namespace ViciOne.ServiceBus.Batching
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Batching;
+
+[Serializable]
+public class MessageBatch<TMessage> :
+    Batch<TMessage>
+    where TMessage : class
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
+    readonly IReadOnlyList<ConsumeContext<TMessage>> _messages;
 
-
-    [Serializable]
-    public class MessageBatch<TMessage> :
-        Batch<TMessage>
-        where TMessage : class
+    public MessageBatch(DateTime firstMessageReceived, DateTime lastMessageReceived, BatchCompletionMode mode,
+        IReadOnlyList<ConsumeContext<TMessage>> messages)
     {
-        readonly IReadOnlyList<ConsumeContext<TMessage>> _messages;
+        FirstMessageReceived = firstMessageReceived;
+        LastMessageReceived = lastMessageReceived;
+        Mode = mode;
+        _messages = messages;
+    }
 
-        public MessageBatch(DateTime firstMessageReceived, DateTime lastMessageReceived, BatchCompletionMode mode,
-            IReadOnlyList<ConsumeContext<TMessage>> messages)
-        {
-            FirstMessageReceived = firstMessageReceived;
-            LastMessageReceived = lastMessageReceived;
-            Mode = mode;
-            _messages = messages;
-        }
+    public BatchCompletionMode Mode { get; set; }
+    public DateTime FirstMessageReceived { get; set; }
+    public DateTime LastMessageReceived { get; set; }
 
-        public BatchCompletionMode Mode { get; set; }
-        public DateTime FirstMessageReceived { get; set; }
-        public DateTime LastMessageReceived { get; set; }
+    public ConsumeContext<TMessage> this[int index] => _messages[index];
 
-        public ConsumeContext<TMessage> this[int index] => _messages[index];
+    public int Length => _messages.Count;
 
-        public int Length => _messages.Count;
+    public IEnumerator<ConsumeContext<TMessage>> GetEnumerator()
+    {
+        return _messages.GetEnumerator();
+    }
 
-        public IEnumerator<ConsumeContext<TMessage>> GetEnumerator()
-        {
-            return _messages.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

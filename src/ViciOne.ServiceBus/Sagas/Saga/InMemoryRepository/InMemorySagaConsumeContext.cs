@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using ViciOne.ServiceBus.Context;
+
+namespace ViciOne.ServiceBus.Saga;
+
+public class InMemorySagaConsumeContext<TSaga, TMessage> :
+    DefaultSagaConsumeContext<TSaga, TMessage>,
+    IDisposable
+    where TMessage : class
+    where TSaga : class, ISaga
 {
-    using System;
-    using Context;
+    readonly SagaInstance<TSaga> _saga;
 
-
-    public class InMemorySagaConsumeContext<TSaga, TMessage> :
-        DefaultSagaConsumeContext<TSaga, TMessage>,
-        IDisposable
-        where TMessage : class
-        where TSaga : class, ISaga
+    public InMemorySagaConsumeContext(ConsumeContext<TMessage> context, SagaInstance<TSaga> saga)
+        : base(context, saga.Instance)
     {
-        readonly SagaInstance<TSaga> _saga;
+        _saga = saga;
+    }
 
-        public InMemorySagaConsumeContext(ConsumeContext<TMessage> context, SagaInstance<TSaga> saga)
-            : base(context, saga.Instance)
-        {
-            _saga = saga;
-        }
-
-        public void Dispose()
-        {
-            _saga.Release();
-        }
+    public void Dispose()
+    {
+        _saga.Release();
     }
 }

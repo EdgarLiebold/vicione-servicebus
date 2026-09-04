@@ -1,5 +1,3 @@
-namespace ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.EventHubIntegration;
-
 using System.Collections.Concurrent;
 using Azure.Messaging.EventHubs.Consumer;
 using Azure.Messaging.EventHubs.Processor;
@@ -7,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.Infrastructure;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.EventHubIntegration.LocalIntegration.Tests.EventHubIntegration;
 
 public sealed class EventHubSagaAndLifecycleTests
 {

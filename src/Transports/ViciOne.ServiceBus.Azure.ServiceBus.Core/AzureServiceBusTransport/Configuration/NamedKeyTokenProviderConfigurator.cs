@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration
+using Azure;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+
+public class NamedKeyTokenProviderConfigurator :
+    IServiceBusNamedKeyTokenProviderConfigurator
 {
-    using Azure;
-
-
-    public class NamedKeyTokenProviderConfigurator :
-        IServiceBusNamedKeyTokenProviderConfigurator
-    {
-        public AzureNamedKeyCredential NamedKeyCredential { get; set; }
-    }
+    public AzureNamedKeyCredential NamedKeyCredential { get; set; }
 }

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.SqlTransport.Topology
+namespace ViciOne.ServiceBus.SqlTransport.Topology;
+
+public interface Topic
 {
-    public interface Topic
-    {
-        string TopicName { get; }
-    }
+    string TopicName { get; }
 }

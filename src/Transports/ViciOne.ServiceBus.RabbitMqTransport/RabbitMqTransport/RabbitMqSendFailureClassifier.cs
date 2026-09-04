@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport;
-
 using System;
 using RabbitMQ.Client.Exceptions;
 
-
+namespace ViciOne.ServiceBus.RabbitMqTransport;
 /// <summary>
 /// Classifies RabbitMQ send failures using exception identity and AMQP reply codes.
 /// </summary>

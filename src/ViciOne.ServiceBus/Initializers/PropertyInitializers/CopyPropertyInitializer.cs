@@ -1,41 +1,39 @@
-namespace ViciOne.ServiceBus.Initializers.PropertyInitializers
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.Initializers.PropertyInitializers;
+
+/// <summary>
+/// Set a message property by copying the input property (of the same type), regardless of whether
+/// the input property value is null, etc.
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TInput"></typeparam>
+/// <typeparam name="TProperty"></typeparam>
+public class CopyPropertyInitializer<TMessage, TInput, TProperty> :
+    IPropertyInitializer<TMessage, TInput>
+    where TMessage : class
+    where TInput : class
 {
-    using System;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Internals;
+    readonly IReadProperty<TInput, TProperty> _inputProperty;
+    readonly IWriteProperty<TMessage, TProperty> _messageProperty;
 
-
-    /// <summary>
-    /// Set a message property by copying the input property (of the same type), regardless of whether
-    /// the input property value is null, etc.
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <typeparam name="TInput"></typeparam>
-    /// <typeparam name="TProperty"></typeparam>
-    public class CopyPropertyInitializer<TMessage, TInput, TProperty> :
-        IPropertyInitializer<TMessage, TInput>
-        where TMessage : class
-        where TInput : class
+    public CopyPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
     {
-        readonly IReadProperty<TInput, TProperty> _inputProperty;
-        readonly IWriteProperty<TMessage, TProperty> _messageProperty;
+        if (messagePropertyInfo == null)
+            throw new ArgumentNullException(nameof(messagePropertyInfo));
 
-        public CopyPropertyInitializer(PropertyInfo messagePropertyInfo, PropertyInfo inputPropertyInfo)
-        {
-            if (messagePropertyInfo == null)
-                throw new ArgumentNullException(nameof(messagePropertyInfo));
+        _inputProperty = ReadPropertyCache<TInput>.GetProperty<TProperty>(inputPropertyInfo);
+        _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(messagePropertyInfo);
+    }
 
-            _inputProperty = ReadPropertyCache<TInput>.GetProperty<TProperty>(inputPropertyInfo);
-            _messageProperty = WritePropertyCache<TMessage>.GetProperty<TProperty>(messagePropertyInfo);
-        }
+    public Task Apply(InitializeContext<TMessage, TInput> context)
+    {
+        if (context.HasInput)
+            _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
 
-        public Task Apply(InitializeContext<TMessage, TInput> context)
-        {
-            if (context.HasInput)
-                _messageProperty.Set(context.Message, _inputProperty.Get(context.Input));
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

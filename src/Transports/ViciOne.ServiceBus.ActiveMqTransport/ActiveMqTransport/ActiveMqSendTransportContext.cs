@@ -1,166 +1,164 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Apache.NMS;
+using Apache.NMS.ActiveMQ;
+using ViciOne.ServiceBus.ActiveMqTransport.Configuration;
+using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class ActiveMqSendTransportContext :
+    BaseSendTransportContext,
+    SendTransportContext<SessionContext>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Apache.NMS;
-    using Apache.NMS.ActiveMQ;
-    using Configuration;
-    using Internals;
-    using Transports;
+    readonly IPipe<SessionContext> _configureTopologyPipe;
+    readonly DestinationType _destinationType;
+    readonly IActiveMqHostConfiguration _hostConfiguration;
+    readonly ISessionContextSupervisor _supervisor;
 
-
-    public class ActiveMqSendTransportContext :
-        BaseSendTransportContext,
-        SendTransportContext<SessionContext>
+    public ActiveMqSendTransportContext(IActiveMqHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
+        ISessionContextSupervisor supervisor, IPipe<SessionContext> configureTopologyPipe, string entityName, DestinationType destinationType)
+        : base(hostConfiguration, receiveEndpointContext.Serialization)
     {
-        readonly IPipe<SessionContext> _configureTopologyPipe;
-        readonly DestinationType _destinationType;
-        readonly IActiveMqHostConfiguration _hostConfiguration;
-        readonly ISessionContextSupervisor _supervisor;
+        _hostConfiguration = hostConfiguration;
+        _supervisor = supervisor;
+        _configureTopologyPipe = configureTopologyPipe;
+        _destinationType = destinationType;
 
-        public ActiveMqSendTransportContext(IActiveMqHostConfiguration hostConfiguration, ReceiveEndpointContext receiveEndpointContext,
-            ISessionContextSupervisor supervisor, IPipe<SessionContext> configureTopologyPipe, string entityName, DestinationType destinationType)
-            : base(hostConfiguration, receiveEndpointContext.Serialization)
+        EntityName = entityName;
+    }
+
+    public override string EntityName { get; }
+    public override string ActivitySystem => "activemq";
+
+    public Task Send(IPipe<SessionContext> pipe, CancellationToken cancellationToken = default)
+    {
+        return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        _supervisor.Probe(context);
+    }
+
+    public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+    {
+        var sendContext = new TransportActiveMqSendContext<T>(message, cancellationToken);
+
+        await pipe.Send(sendContext).ConfigureAwait(false);
+
+        return sendContext;
+    }
+
+    public override IEnumerable<IAgent> GetAgentHandles()
+    {
+        return new IAgent[] { _supervisor };
+    }
+
+    public Task<SendContext<T>> CreateSendContext<T>(SessionContext sessionContext, T message, IPipe<SendContext<T>> pipe,
+        CancellationToken cancellationToken)
+        where T : class
+    {
+        return CreateSendContext(message, pipe, cancellationToken);
+    }
+
+    public async Task Send<T>(SessionContext sessionContext, SendContext<T> sendContext)
+        where T : class
+    {
+        TransportActiveMqSendContext<T> context = sendContext as TransportActiveMqSendContext<T>
+            ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
+
+        sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+        await _configureTopologyPipe.Send(sessionContext).ConfigureAwait(false);
+
+        sendContext.CancellationToken.ThrowIfCancellationRequested();
+
+        var destination = context.ReplyDestination ?? await sessionContext.GetDestination(EntityName, _destinationType).ConfigureAwait(false);
+
+        var transportMessage = sessionContext.CreateBytesMessage(context.Body.GetBytes());
+
+        await SetResponseTo(transportMessage, context, sessionContext);
+
+        transportMessage.Properties.SetHeaders(context.Headers);
+
+        transportMessage.Properties[MessageHeaders.ContentType] = context.ContentType.ToString();
+
+        if (context.MessageId.HasValue)
         {
-            _hostConfiguration = hostConfiguration;
-            _supervisor = supervisor;
-            _configureTopologyPipe = configureTopologyPipe;
-            _destinationType = destinationType;
-
-            EntityName = entityName;
+            // NMSMessageId is broker-owned and both Classic ActiveMQ transports replace a
+            // caller-assigned value with their provider identity. Preserve the service-bus
+            // message identity independently so receive-fault generation can still correlate
+            // a body that is too damaged to yield its envelope metadata.
+            transportMessage.Properties[MessageHeaders.MessageId] = context.MessageId.Value.ToString("D");
+            transportMessage.NMSMessageId = context.MessageId.ToString();
         }
 
-        public override string EntityName { get; }
-        public override string ActivitySystem => "activemq";
+        if (context.CorrelationId.HasValue)
+            transportMessage.NMSCorrelationID = context.CorrelationId.ToString();
 
-        public Task Send(IPipe<SessionContext> pipe, CancellationToken cancellationToken = default)
+        transportMessage.NMSDeliveryMode = context.Durable ? MsgDeliveryMode.Persistent : MsgDeliveryMode.NonPersistent;
+
+        ApplyTimeToLive(transportMessage, context, sessionContext.Session is Session);
+
+        transportMessage.NMSPriority = context.Priority ?? NMSConstants.defaultPriority;
+
+        if (!string.IsNullOrWhiteSpace(context.GroupId))
+            transportMessage.SetGroupId(context.GroupId);
+
+        if (context.GroupSequence.HasValue)
+            transportMessage.SetGroupSequence(context.GroupSequence.Value);
+
+        ApplyDeliveryDelay(transportMessage, context, _hostConfiguration.IsArtemis);
+
+        await sessionContext.SendAsync(destination, transportMessage, context.CancellationToken).ConfigureAwait(false);
+    }
+
+    internal static void ApplyTimeToLive(IMessage transportMessage, SendContext context, bool useOpenWireDefault)
+    {
+        if (context.TimeToLive.HasValue)
         {
-            return _hostConfiguration.Retry(() => _supervisor.Send(pipe, cancellationToken), cancellationToken, _supervisor.SendStopping);
-        }
+            if (context.TimeToLive.Value <= TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(context), "Expired messages must be discarded before transport serialization.");
 
-        public void Probe(ProbeContext context)
+            transportMessage.NMSTimeToLive = context.TimeToLive.Value;
+        }
+        else if (useOpenWireDefault)
+            transportMessage.NMSTimeToLive = NMSConstants.defaultTimeToLive;
+    }
+
+    internal static void ApplyDeliveryDelay(IMessage transportMessage, SendContext context, bool isArtemis)
+    {
+        ArgumentNullException.ThrowIfNull(transportMessage);
+        ArgumentNullException.ThrowIfNull(context);
+
+        if (!context.Delay.HasValue || context.Delay.Value <= TimeSpan.Zero)
+            return;
+
+        if (isArtemis)
         {
-            _supervisor.Probe(context);
+            // Apache.NMS.AMQP maps NMSDeliveryTime to the AMQP x-opt-delivery-time
+            // annotation understood by Artemis. A regular application property named
+            // _AMQ_SCHED_DELIVERY is only the Core/JMS contract and is ignored on AMQP.
+            transportMessage.NMSDeliveryTime = (context.GetTimeProvider().GetUtcNow() + context.Delay.Value).UtcDateTime;
         }
+        else
+            transportMessage.Properties["AMQ_SCHEDULED_DELAY"] = checked((long)context.Delay.Value.TotalMilliseconds);
+    }
 
-        public override async Task<SendContext<T>> CreateSendContext<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
-        {
-            var sendContext = new TransportActiveMqSendContext<T>(message, cancellationToken);
+    static async Task SetResponseTo(IMessage transportMessage, SendContext context, SessionContext sessionContext)
+    {
+        if (context.ResponseAddress == null)
+            return;
 
-            await pipe.Send(sendContext).ConfigureAwait(false);
+        var endpointName = context.ResponseAddress.GetEndpointName();
 
-            return sendContext;
-        }
-
-        public override IEnumerable<IAgent> GetAgentHandles()
-        {
-            return new IAgent[] { _supervisor };
-        }
-
-        public Task<SendContext<T>> CreateSendContext<T>(SessionContext sessionContext, T message, IPipe<SendContext<T>> pipe,
-            CancellationToken cancellationToken)
-            where T : class
-        {
-            return CreateSendContext(message, pipe, cancellationToken);
-        }
-
-        public async Task Send<T>(SessionContext sessionContext, SendContext<T> sendContext)
-            where T : class
-        {
-            TransportActiveMqSendContext<T> context = sendContext as TransportActiveMqSendContext<T>
-                ?? throw new ArgumentException("Invalid SendContext<T> type", nameof(sendContext));
-
-            sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-            await _configureTopologyPipe.Send(sessionContext).ConfigureAwait(false);
-
-            sendContext.CancellationToken.ThrowIfCancellationRequested();
-
-            var destination = context.ReplyDestination ?? await sessionContext.GetDestination(EntityName, _destinationType).ConfigureAwait(false);
-
-            var transportMessage = sessionContext.CreateBytesMessage(context.Body.GetBytes());
-
-            await SetResponseTo(transportMessage, context, sessionContext);
-
-            transportMessage.Properties.SetHeaders(context.Headers);
-
-            transportMessage.Properties[MessageHeaders.ContentType] = context.ContentType.ToString();
-
-            if (context.MessageId.HasValue)
-            {
-                // NMSMessageId is broker-owned and both Classic ActiveMQ transports replace a
-                // caller-assigned value with their provider identity. Preserve the service-bus
-                // message identity independently so receive-fault generation can still correlate
-                // a body that is too damaged to yield its envelope metadata.
-                transportMessage.Properties[MessageHeaders.MessageId] = context.MessageId.Value.ToString("D");
-                transportMessage.NMSMessageId = context.MessageId.ToString();
-            }
-
-            if (context.CorrelationId.HasValue)
-                transportMessage.NMSCorrelationID = context.CorrelationId.ToString();
-
-            transportMessage.NMSDeliveryMode = context.Durable ? MsgDeliveryMode.Persistent : MsgDeliveryMode.NonPersistent;
-
-            ApplyTimeToLive(transportMessage, context, sessionContext.Session is Session);
-
-            transportMessage.NMSPriority = context.Priority ?? NMSConstants.defaultPriority;
-
-            if (!string.IsNullOrWhiteSpace(context.GroupId))
-                transportMessage.SetGroupId(context.GroupId);
-
-            if (context.GroupSequence.HasValue)
-                transportMessage.SetGroupSequence(context.GroupSequence.Value);
-
-            ApplyDeliveryDelay(transportMessage, context, _hostConfiguration.IsArtemis);
-
-            await sessionContext.SendAsync(destination, transportMessage, context.CancellationToken).ConfigureAwait(false);
-        }
-
-        internal static void ApplyTimeToLive(IMessage transportMessage, SendContext context, bool useOpenWireDefault)
-        {
-            if (context.TimeToLive.HasValue)
-            {
-                if (context.TimeToLive.Value <= TimeSpan.Zero)
-                    throw new ArgumentOutOfRangeException(nameof(context), "Expired messages must be discarded before transport serialization.");
-
-                transportMessage.NMSTimeToLive = context.TimeToLive.Value;
-            }
-            else if (useOpenWireDefault)
-                transportMessage.NMSTimeToLive = NMSConstants.defaultTimeToLive;
-        }
-
-        internal static void ApplyDeliveryDelay(IMessage transportMessage, SendContext context, bool isArtemis)
-        {
-            ArgumentNullException.ThrowIfNull(transportMessage);
-            ArgumentNullException.ThrowIfNull(context);
-
-            if (!context.Delay.HasValue || context.Delay.Value <= TimeSpan.Zero)
-                return;
-
-            if (isArtemis)
-            {
-                // Apache.NMS.AMQP maps NMSDeliveryTime to the AMQP x-opt-delivery-time
-                // annotation understood by Artemis. A regular application property named
-                // _AMQ_SCHED_DELIVERY is only the Core/JMS contract and is ignored on AMQP.
-                transportMessage.NMSDeliveryTime = (context.GetTimeProvider().GetUtcNow() + context.Delay.Value).UtcDateTime;
-            }
-            else
-                transportMessage.Properties["AMQ_SCHEDULED_DELAY"] = checked((long)context.Delay.Value.TotalMilliseconds);
-        }
-
-        static async Task SetResponseTo(IMessage transportMessage, SendContext context, SessionContext sessionContext)
-        {
-            if (context.ResponseAddress == null)
-                return;
-
-            var endpointName = context.ResponseAddress.GetEndpointName();
-
-            transportMessage.NMSReplyTo = sessionContext.GetTemporaryDestination(endpointName)
-                ?? (context.ResponseAddress.TryGetValueFromQueryString("temporary", out _)
-                    ? await sessionContext.GetDestination(endpointName, DestinationType.TemporaryQueue)
-                    : await sessionContext.GetDestination(endpointName, DestinationType.Queue));
-        }
+        transportMessage.NMSReplyTo = sessionContext.GetTemporaryDestination(endpointName)
+            ?? (context.ResponseAddress.TryGetValueFromQueryString("temporary", out _)
+                ? await sessionContext.GetDestination(endpointName, DestinationType.TemporaryQueue)
+                : await sessionContext.GetDestination(endpointName, DestinationType.Queue));
     }
 }

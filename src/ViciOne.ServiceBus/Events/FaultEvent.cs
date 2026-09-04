@@ -1,69 +1,67 @@
-namespace ViciOne.ServiceBus.Events
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ViciOne.ServiceBus.Events;
+
+[Serializable]
+public class FaultEvent<T> :
+    Fault<T>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    const int MaximumExceptionCount = 16;
 
 
-    [Serializable]
-    public class FaultEvent<T> :
-        Fault<T>
+    public FaultEvent()
     {
-        const int MaximumExceptionCount = 16;
-
-
-        public FaultEvent()
-        {
-        }
-
-        public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes)
-            : this(message, faultedMessageId, host, GetExceptions(exception), faultMessageTypes)
-        {
-        }
-
-        public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes)
-        {
-            ArgumentNullException.ThrowIfNull(exceptions);
-
-            Timestamp = DateTime.UtcNow;
-            FaultId = NewId.NextGuid();
-
-            Message = message;
-            Host = host;
-            FaultMessageTypes = faultMessageTypes;
-            FaultedMessageId = faultedMessageId;
-
-            Exceptions = exceptions.Take(MaximumExceptionCount).ToArray();
-        }
-
-        public Guid FaultId { get; set; }
-        public Guid? FaultedMessageId { get; set; }
-        public DateTime Timestamp { get; set; }
-        public ExceptionInfo[] Exceptions { get; set; }
-        public HostInfo Host { get; set; }
-        public string[] FaultMessageTypes { get; set; }
-        public T Message { get; set; }
-
-        static ExceptionInfo[] GetExceptions(Exception exception)
-        {
-            var aggregateException = exception as AggregateException;
-
-            return aggregateException?.InnerExceptions.Where(x => x != null).Take(MaximumExceptionCount)
-                .Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
-                ?? [new FaultExceptionInfo(exception)];
-        }
     }
 
-
-    [Serializable]
-    public class FaultEvent :
-        Fault
+    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, Exception exception, string[] faultMessageTypes)
+        : this(message, faultedMessageId, host, GetExceptions(exception), faultMessageTypes)
     {
-        public Guid FaultId { get; set; }
-        public Guid? FaultedMessageId { get; set; }
-        public DateTime Timestamp { get; set; }
-        public ExceptionInfo[] Exceptions { get; set; }
-        public HostInfo Host { get; set; }
-        public string[] FaultMessageTypes { get; set; }
     }
+
+    public FaultEvent(T message, Guid? faultedMessageId, HostInfo host, IEnumerable<ExceptionInfo> exceptions, string[] faultMessageTypes)
+    {
+        ArgumentNullException.ThrowIfNull(exceptions);
+
+        Timestamp = DateTime.UtcNow;
+        FaultId = NewId.NextGuid();
+
+        Message = message;
+        Host = host;
+        FaultMessageTypes = faultMessageTypes;
+        FaultedMessageId = faultedMessageId;
+
+        Exceptions = exceptions.Take(MaximumExceptionCount).ToArray();
+    }
+
+    public Guid FaultId { get; set; }
+    public Guid? FaultedMessageId { get; set; }
+    public DateTime Timestamp { get; set; }
+    public ExceptionInfo[] Exceptions { get; set; }
+    public HostInfo Host { get; set; }
+    public string[] FaultMessageTypes { get; set; }
+    public T Message { get; set; }
+
+    static ExceptionInfo[] GetExceptions(Exception exception)
+    {
+        var aggregateException = exception as AggregateException;
+
+        return aggregateException?.InnerExceptions.Where(x => x != null).Take(MaximumExceptionCount)
+            .Select(ExceptionInfo (x) => new FaultExceptionInfo(x)).ToArray()
+            ?? [new FaultExceptionInfo(exception)];
+    }
+}
+
+
+[Serializable]
+public class FaultEvent :
+    Fault
+{
+    public Guid FaultId { get; set; }
+    public Guid? FaultedMessageId { get; set; }
+    public DateTime Timestamp { get; set; }
+    public ExceptionInfo[] Exceptions { get; set; }
+    public HostInfo Host { get; set; }
+    public string[] FaultMessageTypes { get; set; }
 }

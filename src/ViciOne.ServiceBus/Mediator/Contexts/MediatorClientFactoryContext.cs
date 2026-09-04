@@ -1,67 +1,65 @@
+using System;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Mediator.Contexts
+namespace ViciOne.ServiceBus.Mediator.Contexts;
+
+public class MediatorClientFactoryContext :
+    ClientFactoryContext
 {
-    using System;
-    using Transports;
+    readonly IConsumePipe _connector;
+    readonly ISendEndpoint _endpoint;
 
-
-    public class MediatorClientFactoryContext :
-        ClientFactoryContext
+    public MediatorClientFactoryContext(
+        ISendEndpoint endpoint,
+        IConsumePipe connector,
+        Uri responseAddress,
+        RequestTimeout defaultTimeout = default,
+        TimeProvider? timeProvider = null)
     {
-        readonly IConsumePipe _connector;
-        readonly ISendEndpoint _endpoint;
+        _endpoint = endpoint;
+        _connector = connector;
 
-        public MediatorClientFactoryContext(
-            ISendEndpoint endpoint,
-            IConsumePipe connector,
-            Uri responseAddress,
-            RequestTimeout defaultTimeout = default,
-            TimeProvider? timeProvider = null)
-        {
-            _endpoint = endpoint;
-            _connector = connector;
-
-            ResponseAddress = responseAddress;
-            DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
-            TimeProvider = timeProvider ?? TimeProvider.System;
-        }
-
-        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
-            where T : class
-        {
-            return _connector.ConnectConsumePipe(pipe);
-        }
-
-        public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
-            where T : class
-        {
-            return _connector.ConnectConsumePipe(pipe, options);
-        }
-
-        public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
-            where T : class
-        {
-            return _connector.ConnectRequestPipe(requestId, pipe);
-        }
-
-        public Uri ResponseAddress { get; }
-
-        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
-            where T : class
-        {
-            return new MediatorRequestSendEndpoint<T>(_endpoint, consumeContext);
-        }
-
-        public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
-            where T : class
-        {
-            return new MediatorRequestSendEndpoint<T>(_endpoint, consumeContext);
-        }
-
-        public RequestTimeout DefaultTimeout { get; }
-
-        public IMessageRouteTable MessageRoutes => MessageRouteTable.Empty;
-
-        public TimeProvider TimeProvider { get; }
+        ResponseAddress = responseAddress;
+        DefaultTimeout = defaultTimeout.Or(RequestTimeout.Default);
+        TimeProvider = timeProvider ?? TimeProvider.System;
     }
+
+    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe)
+        where T : class
+    {
+        return _connector.ConnectConsumePipe(pipe);
+    }
+
+    public ConnectHandle ConnectConsumePipe<T>(IPipe<ConsumeContext<T>> pipe, ConnectPipeOptions options)
+        where T : class
+    {
+        return _connector.ConnectConsumePipe(pipe, options);
+    }
+
+    public ConnectHandle ConnectRequestPipe<T>(Guid requestId, IPipe<ConsumeContext<T>> pipe)
+        where T : class
+    {
+        return _connector.ConnectRequestPipe(requestId, pipe);
+    }
+
+    public Uri ResponseAddress { get; }
+
+    public IRequestSendEndpoint<T> GetRequestEndpoint<T>(ConsumeContext? consumeContext = default)
+        where T : class
+    {
+        return new MediatorRequestSendEndpoint<T>(_endpoint, consumeContext);
+    }
+
+    public IRequestSendEndpoint<T> GetRequestEndpoint<T>(Uri destinationAddress, ConsumeContext? consumeContext = default)
+        where T : class
+    {
+        return new MediatorRequestSendEndpoint<T>(_endpoint, consumeContext);
+    }
+
+    public RequestTimeout DefaultTimeout { get; }
+
+    public IMessageRouteTable MessageRoutes => MessageRouteTable.Empty;
+
+    public TimeProvider TimeProvider { get; }
 }

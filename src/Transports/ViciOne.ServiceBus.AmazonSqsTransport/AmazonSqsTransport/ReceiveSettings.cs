@@ -1,9 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 
-
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 /// <summary>
 /// Specify the receive settings for a receive transport
 /// </summary>

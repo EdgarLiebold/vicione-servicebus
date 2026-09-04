@@ -1,22 +1,20 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IEntityFrameworkBusOutboxConfigurator :
+    IBusOutboxConfigurator
 {
-    using System;
+    int MessageDeliveryLimit { set; }
+    TimeSpan MessageDeliveryTimeout { get; set; }
+    int MaximumDeliveryAttempts { get; set; }
+    TimeSpan InitialDeliveryRetryDelay { get; set; }
+    TimeSpan MaximumDeliveryRetryDelay { get; set; }
 
-
-    public interface IEntityFrameworkBusOutboxConfigurator :
-        IBusOutboxConfigurator
-    {
-        int MessageDeliveryLimit { set; }
-        TimeSpan MessageDeliveryTimeout { get; set; }
-        int MaximumDeliveryAttempts { get; set; }
-        TimeSpan InitialDeliveryRetryDelay { get; set; }
-        TimeSpan MaximumDeliveryRetryDelay { get; set; }
-
-        /// <summary>
-        /// Selects this DbContext as the default outbox for untyped scoped publish/send when a bus has multiple EF outboxes.
-        /// DbContext-specific transactional APIs do not require a default.
-        /// </summary>
-        void UseAsDefault();
-    }
+    /// <summary>
+    /// Selects this DbContext as the default outbox for untyped scoped publish/send when a bus has multiple EF outboxes.
+    /// DbContext-specific transactional APIs do not require a default.
+    /// </summary>
+    void UseAsDefault();
 }

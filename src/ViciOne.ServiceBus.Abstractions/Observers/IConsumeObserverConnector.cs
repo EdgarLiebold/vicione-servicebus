@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+/// <summary>
+/// Supports connection of a consume observer
+/// </summary>
+public interface IConsumeObserverConnector
 {
-    /// <summary>
-    /// Supports connection of a consume observer
-    /// </summary>
-    public interface IConsumeObserverConnector
-    {
-        ConnectHandle ConnectConsumeObserver(IConsumeObserver observer);
-    }
+    ConnectHandle ConnectConsumeObserver(IConsumeObserver observer);
 }

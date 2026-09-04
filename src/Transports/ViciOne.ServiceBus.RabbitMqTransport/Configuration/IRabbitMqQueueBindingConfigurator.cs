@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IRabbitMqQueueBindingConfigurator :
+    IRabbitMqQueueConfigurator,
+    IRabbitMqExchangeBindingConfigurator
 {
-    public interface IRabbitMqQueueBindingConfigurator :
-        IRabbitMqQueueConfigurator,
-        IRabbitMqExchangeBindingConfigurator
-    {
-    }
 }

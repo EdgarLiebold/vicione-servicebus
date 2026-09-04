@@ -1,38 +1,36 @@
-namespace ViciOne.ServiceBus.SignalR.Utils
+using System;
+using System.Collections.Concurrent;
+using Microsoft.AspNetCore.SignalR;
+
+namespace ViciOne.ServiceBus.SignalR.Utils;
+
+public class ViciOneServiceBusSubscriptionManager
 {
-    using System;
-    using System.Collections.Concurrent;
-    using Microsoft.AspNetCore.SignalR;
+    readonly ConcurrentDictionary<string, HubConnectionStore> _subscriptions = new ConcurrentDictionary<string, HubConnectionStore>(StringComparer.Ordinal);
 
-
-    public class ViciOneServiceBusSubscriptionManager
+    public HubConnectionStore this[string identifier]
     {
-        readonly ConcurrentDictionary<string, HubConnectionStore> _subscriptions = new ConcurrentDictionary<string, HubConnectionStore>(StringComparer.Ordinal);
-
-        public HubConnectionStore this[string identifier]
+        get
         {
-            get
-            {
-                _subscriptions.TryGetValue(identifier, out var connectionStore);
-                return connectionStore;
-            }
+            _subscriptions.TryGetValue(identifier, out var connectionStore);
+            return connectionStore;
         }
+    }
 
-        public int Count => _subscriptions.Count;
+    public int Count => _subscriptions.Count;
 
-        public void AddSubscription(string id, HubConnectionContext connection)
-        {
-            var subscription = _subscriptions.GetOrAdd(id, _ => new HubConnectionStore());
+    public void AddSubscription(string id, HubConnectionContext connection)
+    {
+        var subscription = _subscriptions.GetOrAdd(id, _ => new HubConnectionStore());
 
-            subscription.Add(connection);
-        }
+        subscription.Add(connection);
+    }
 
-        public void RemoveSubscription(string id, HubConnectionContext connection)
-        {
-            if (!_subscriptions.TryGetValue(id, out var subscription))
-                return;
+    public void RemoveSubscription(string id, HubConnectionContext connection)
+    {
+        if (!_subscriptions.TryGetValue(id, out var subscription))
+            return;
 
-            subscription.Remove(connection);
-        }
+        subscription.Remove(connection);
     }
 }

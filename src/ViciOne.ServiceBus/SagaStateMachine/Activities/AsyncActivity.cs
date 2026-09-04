@@ -1,93 +1,91 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class AsyncActivity<TSaga> :
+    IStateMachineActivity<TSaga>
+    where TSaga : class, SagaStateMachineInstance
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly Func<BehaviorContext<TSaga>, Task> _asyncAction;
 
-
-    public class AsyncActivity<TSaga> :
-        IStateMachineActivity<TSaga>
-        where TSaga : class, SagaStateMachineInstance
+    public AsyncActivity(Func<BehaviorContext<TSaga>, Task> asyncAction)
     {
-        readonly Func<BehaviorContext<TSaga>, Task> _asyncAction;
-
-        public AsyncActivity(Func<BehaviorContext<TSaga>, Task> asyncAction)
-        {
-            _asyncAction = asyncAction;
-        }
-
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("thenAsync");
-        }
-
-        public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
-        {
-            await _asyncAction(context).ConfigureAwait(false);
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public async Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
-            where TData : class
-        {
-            await _asyncAction(context).ConfigureAwait(false);
-
-            await next.Execute(context).ConfigureAwait(false);
-        }
-
-        public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
-
-        public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
-            where T : class
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
+        _asyncAction = asyncAction;
     }
 
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
 
-    public class AsyncActivity<TInstance, TData> :
-        IStateMachineActivity<TInstance, TData>
-        where TInstance : class, SagaStateMachineInstance
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("thenAsync");
+    }
+
+    public async Task Execute(BehaviorContext<TSaga> context, IBehavior<TSaga> next)
+    {
+        await _asyncAction(context).ConfigureAwait(false);
+
+        await next.Execute(context).ConfigureAwait(false);
+    }
+
+    public async Task Execute<TData>(BehaviorContext<TSaga, TData> context, IBehavior<TSaga, TData> next)
         where TData : class
     {
-        readonly Func<BehaviorContext<TInstance, TData>, Task> _asyncAction;
+        await _asyncAction(context).ConfigureAwait(false);
 
-        public AsyncActivity(Func<BehaviorContext<TInstance, TData>, Task> asyncAction)
-        {
-            _asyncAction = asyncAction;
-        }
+        await next.Execute(context).ConfigureAwait(false);
+    }
 
-        public void Accept(StateMachineVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+    public Task Faulted<TException>(BehaviorExceptionContext<TSaga, TException> context, IBehavior<TSaga> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
+    }
 
-        public void Probe(ProbeContext context)
-        {
-            context.CreateScope("thenAsync");
-        }
+    public Task Faulted<T, TException>(BehaviorExceptionContext<TSaga, T, TException> context, IBehavior<TSaga, T> next)
+        where T : class
+        where TException : Exception
+    {
+        return next.Faulted(context);
+    }
+}
 
-        public async Task Execute(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
-        {
-            await _asyncAction(context).ConfigureAwait(false);
 
-            await next.Execute(context).ConfigureAwait(false);
-        }
+public class AsyncActivity<TInstance, TData> :
+    IStateMachineActivity<TInstance, TData>
+    where TInstance : class, SagaStateMachineInstance
+    where TData : class
+{
+    readonly Func<BehaviorContext<TInstance, TData>, Task> _asyncAction;
 
-        public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
-            where TException : Exception
-        {
-            return next.Faulted(context);
-        }
+    public AsyncActivity(Func<BehaviorContext<TInstance, TData>, Task> asyncAction)
+    {
+        _asyncAction = asyncAction;
+    }
+
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("thenAsync");
+    }
+
+    public async Task Execute(BehaviorContext<TInstance, TData> context, IBehavior<TInstance, TData> next)
+    {
+        await _asyncAction(context).ConfigureAwait(false);
+
+        await next.Execute(context).ConfigureAwait(false);
+    }
+
+    public Task Faulted<TException>(BehaviorExceptionContext<TInstance, TData, TException> context, IBehavior<TInstance, TData> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
     }
 }

@@ -1,9 +1,9 @@
 using System.Text.Json;
-using ViciOne.ServiceBus.SignalR.Contracts;
-using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.SignalR.Contracts;
+using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
 namespace ViciOne.ServiceBus.SignalR.Tests;

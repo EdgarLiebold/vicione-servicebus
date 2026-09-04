@@ -1,91 +1,89 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware
-{
-    using System;
-    using System.Threading.Tasks;
-    using Apache.NMS;
-    using Transports;
-    using Util;
+using System;
+using System.Threading.Tasks;
+using Apache.NMS;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Util;
 
+namespace ViciOne.ServiceBus.ActiveMqTransport.Middleware;
+
+/// <summary>
+/// Receives messages from ActiveMQ, pushing them to the InboundPipe of the service endpoint.
+/// </summary>
+public sealed class ActiveMqConsumer :
+    ConsumerAgent<string>
+{
+    readonly ActiveMqReceiveEndpointContext _context;
+    readonly TaskExecutor _executor;
+    readonly IMessageConsumer _messageConsumer;
+    readonly ReceiveSettings _receiveSettings;
+    readonly SessionContext _session;
 
     /// <summary>
-    /// Receives messages from ActiveMQ, pushing them to the InboundPipe of the service endpoint.
+    /// The basic consumer receives messages pushed from the broker.
     /// </summary>
-    public sealed class ActiveMqConsumer :
-        ConsumerAgent<string>
+    /// <param name="session">The model context for the consumer</param>
+    /// <param name="messageConsumer"></param>
+    /// <param name="context">The topology</param>
+    /// <param name="executor"></param>
+    public ActiveMqConsumer(SessionContext session, IMessageConsumer messageConsumer, ActiveMqReceiveEndpointContext context, TaskExecutor executor)
+        : base(context, StringComparer.Ordinal)
     {
-        readonly ActiveMqReceiveEndpointContext _context;
-        readonly TaskExecutor _executor;
-        readonly IMessageConsumer _messageConsumer;
-        readonly ReceiveSettings _receiveSettings;
-        readonly SessionContext _session;
+        _session = session;
+        _messageConsumer = messageConsumer;
+        _context = context;
+        _executor = executor;
 
-        /// <summary>
-        /// The basic consumer receives messages pushed from the broker.
-        /// </summary>
-        /// <param name="session">The model context for the consumer</param>
-        /// <param name="messageConsumer"></param>
-        /// <param name="context">The topology</param>
-        /// <param name="executor"></param>
-        public ActiveMqConsumer(SessionContext session, IMessageConsumer messageConsumer, ActiveMqReceiveEndpointContext context, TaskExecutor executor)
-            : base(context, StringComparer.Ordinal)
+        _receiveSettings = session.GetPayload<ReceiveSettings>();
+
+        messageConsumer.Listener += HandleMessage;
+
+        TrySetManualConsumeTask();
+
+        SetReady();
+    }
+
+    void HandleMessage(IMessage message)
+    {
+        _executor.EnqueueBlocking(async () =>
         {
-            _session = session;
-            _messageConsumer = messageConsumer;
-            _context = context;
-            _executor = executor;
+            if (IsStopping)
+                return;
 
-            _receiveSettings = session.GetPayload<ReceiveSettings>();
+            LogContext.Current = _context.LogContext;
 
-            messageConsumer.Listener += HandleMessage;
-
-            TrySetManualConsumeTask();
-
-            SetReady();
-        }
-
-        void HandleMessage(IMessage message)
-        {
-            _executor.EnqueueBlocking(async () =>
-            {
-                if (IsStopping)
-                    return;
-
-                LogContext.Current = _context.LogContext;
-
-                var context = new ActiveMqReceiveContext(message, _context, _receiveSettings, _session, _session.ConnectionContext);
-
-                try
-                {
-                    await Dispatch(message.NMSMessageId, context, new ActiveMqReceiveLockContext(message)).ConfigureAwait(false);
-                }
-                catch (Exception exception)
-                {
-                    context.LogTransportFaulted(exception);
-                }
-                finally
-                {
-                    context.Dispose();
-                }
-            }, Stopping);
-        }
-
-        protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
-        {
-            _messageConsumer.Stop();
-            _messageConsumer.Listener -= HandleMessage;
-            _messageConsumer.Start();
-
-            await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+            var context = new ActiveMqReceiveContext(message, _context, _receiveSettings, _session, _session.ConnectionContext);
 
             try
             {
-                await _messageConsumer.CloseAsync().ConfigureAwait(false);
-                _messageConsumer.Dispose();
+                await Dispatch(message.NMSMessageId, context, new ActiveMqReceiveLockContext(message)).ConfigureAwait(false);
             }
-            catch (OperationCanceledException)
+            catch (Exception exception)
             {
-                LogContext.Warning?.Log("Stop canceled waiting for consumer shutdown: {InputAddress}", _context.InputAddress);
+                context.LogTransportFaulted(exception);
             }
+            finally
+            {
+                context.Dispose();
+            }
+        }, Stopping);
+    }
+
+    protected override async Task ActiveAndActualAgentsCompleted(StopContext context)
+    {
+        _messageConsumer.Stop();
+        _messageConsumer.Listener -= HandleMessage;
+        _messageConsumer.Start();
+
+        await base.ActiveAndActualAgentsCompleted(context).ConfigureAwait(false);
+
+        try
+        {
+            await _messageConsumer.CloseAsync().ConfigureAwait(false);
+            _messageConsumer.Dispose();
+        }
+        catch (OperationCanceledException)
+        {
+            LogContext.Warning?.Log("Stop canceled waiting for consumer shutdown: {InputAddress}", _context.InputAddress);
         }
     }
 }

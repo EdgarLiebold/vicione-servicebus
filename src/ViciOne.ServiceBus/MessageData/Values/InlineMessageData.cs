@@ -1,30 +1,28 @@
-namespace ViciOne.ServiceBus.MessageData.Values
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.MessageData.Values;
+
+public class InlineMessageData<T> :
+    MessageData<T>,
+    IInlineMessageData
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly IInlineMessageData _messageData;
 
-
-    public class InlineMessageData<T> :
-        MessageData<T>,
-        IInlineMessageData
+    public InlineMessageData(Uri address, T value, IInlineMessageData messageData)
     {
-        readonly IInlineMessageData _messageData;
+        Value = Task.FromResult(value);
+        Address = address;
 
-        public InlineMessageData(Uri address, T value, IInlineMessageData messageData)
-        {
-            Value = Task.FromResult(value);
-            Address = address;
-
-            _messageData = messageData;
-        }
-
-        public void Set(IMessageDataReference reference)
-        {
-            _messageData.Set(reference);
-        }
-
-        public Uri Address { get; }
-        public bool HasValue => true;
-        public Task<T> Value { get; }
+        _messageData = messageData;
     }
+
+    public void Set(IMessageDataReference reference)
+    {
+        _messageData.Set(reference);
+    }
+
+    public Uri Address { get; }
+    public bool HasValue => true;
+    public Task<T> Value { get; }
 }

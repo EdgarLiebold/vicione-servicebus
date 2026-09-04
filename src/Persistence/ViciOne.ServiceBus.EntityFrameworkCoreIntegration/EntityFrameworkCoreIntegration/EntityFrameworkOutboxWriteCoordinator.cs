@@ -1,12 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-
-/// <summary>Owns all mutation of one scoped EF outbox session.</summary>
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
+/// <summary>Owns all state changes for one scoped EF outbox session.</summary>
 internal sealed class EntityFrameworkOutboxWriteCoordinator : IDisposable
 {
     readonly SemaphoreSlim _gate = new(1, 1);

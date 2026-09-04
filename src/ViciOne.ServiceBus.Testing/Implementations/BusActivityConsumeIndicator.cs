@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.Testing.Implementations
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Testing.Implementations;
+
+public class BusActivityConsumeIndicator : BaseBusActivityIndicatorConnectable,
+    ISignalResource,
+    IConsumeObserver
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly ISignalResource _signalResource;
+    int _messagesInFlight;
 
-
-    public class BusActivityConsumeIndicator : BaseBusActivityIndicatorConnectable,
-        ISignalResource,
-        IConsumeObserver
+    public BusActivityConsumeIndicator(ISignalResource signalResource)
     {
-        readonly ISignalResource _signalResource;
-        int _messagesInFlight;
+        _signalResource = signalResource;
+    }
 
-        public BusActivityConsumeIndicator(ISignalResource signalResource)
-        {
-            _signalResource = signalResource;
-        }
+    public BusActivityConsumeIndicator()
+        :
+        this(null)
+    {
+    }
 
-        public BusActivityConsumeIndicator()
-            :
-            this(null)
-        {
-        }
+    public override bool IsMet => Interlocked.CompareExchange(ref _messagesInFlight, int.MinValue, int.MinValue) == 0;
 
-        public override bool IsMet => Interlocked.CompareExchange(ref _messagesInFlight, int.MinValue, int.MinValue) == 0;
+    Task IConsumeObserver.PreConsume<T>(ConsumeContext<T> context)
+    {
+        Interlocked.Increment(ref _messagesInFlight);
+        return Task.CompletedTask;
+    }
 
-        Task IConsumeObserver.PreConsume<T>(ConsumeContext<T> context)
-        {
-            Interlocked.Increment(ref _messagesInFlight);
-            return Task.CompletedTask;
-        }
+    Task IConsumeObserver.PostConsume<T>(ConsumeContext<T> context)
+    {
+        if (Interlocked.Decrement(ref _messagesInFlight) == 0)
+            Signal();
+        return Task.CompletedTask;
+    }
 
-        Task IConsumeObserver.PostConsume<T>(ConsumeContext<T> context)
-        {
-            if (Interlocked.Decrement(ref _messagesInFlight) == 0)
-                Signal();
-            return Task.CompletedTask;
-        }
+    Task IConsumeObserver.ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
+    {
+        if (Interlocked.Decrement(ref _messagesInFlight) == 0)
+            Signal();
+        return Task.CompletedTask;
+    }
 
-        Task IConsumeObserver.ConsumeFault<T>(ConsumeContext<T> context, Exception exception)
-        {
-            if (Interlocked.Decrement(ref _messagesInFlight) == 0)
-                Signal();
-            return Task.CompletedTask;
-        }
-
-        public void Signal()
-        {
-            _signalResource?.Signal();
-            ConditionUpdated();
-        }
+    public void Signal()
+    {
+        _signalResource?.Signal();
+        ConditionUpdated();
     }
 }

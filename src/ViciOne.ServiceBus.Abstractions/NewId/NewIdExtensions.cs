@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public static class NewIdExtensions
 {
-    using System;
-
-
-    public static class NewIdExtensions
+    public static NewId ToNewId(this Guid guid)
     {
-        public static NewId ToNewId(this Guid guid)
-        {
-            return NewId.FromGuid(guid);
-        }
+        return NewId.FromGuid(guid);
+    }
 
-        public static NewId ToNewIdFromSequential(this Guid guid)
-        {
-            return NewId.FromSequentialGuid(guid);
-        }
+    public static NewId ToNewIdFromSequential(this Guid guid)
+    {
+        return NewId.FromSequentialGuid(guid);
     }
 }

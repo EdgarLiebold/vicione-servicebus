@@ -1,33 +1,31 @@
-namespace ViciOne.ServiceBus.Middleware
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public class DelaySendPipe<T> :
+    IPipe<SendContext<T>>
+    where T : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly TimeSpan _delay;
+    readonly IPipe<SendContext<T>> _pipe;
 
-
-    public class DelaySendPipe<T> :
-        IPipe<SendContext<T>>
-        where T : class
+    public DelaySendPipe(IPipe<SendContext<T>> pipe, TimeSpan delay)
     {
-        readonly TimeSpan _delay;
-        readonly IPipe<SendContext<T>> _pipe;
+        _pipe = pipe;
+        _delay = delay;
+    }
 
-        public DelaySendPipe(IPipe<SendContext<T>> pipe, TimeSpan delay)
-        {
-            _pipe = pipe;
-            _delay = delay;
-        }
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        _pipe?.Probe(context);
+    }
 
-        void IProbeSite.Probe(ProbeContext context)
-        {
-            _pipe?.Probe(context);
-        }
+    public Task Send(SendContext<T> context)
+    {
+        if (_delay > TimeSpan.Zero)
+            context.Delay = _delay;
 
-        public Task Send(SendContext<T> context)
-        {
-            if (_delay > TimeSpan.Zero)
-                context.Delay = _delay;
-
-            return _pipe.IsNotEmpty() ? _pipe.Send(context) : Task.CompletedTask;
-        }
+        return _pipe.IsNotEmpty() ? _pipe.Send(context) : Task.CompletedTask;
     }
 }

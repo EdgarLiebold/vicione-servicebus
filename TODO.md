@@ -10,7 +10,7 @@ The local Azure Service Bus emulator executes queue, topic, subscription, rule, 
 session-state, scheduling, duplicate-detection and dead-letter contracts. It does not provide a
 truthful substitute for Azure-owned identity, tier, availability, partition, transport and clock
 semantics. Keep the corresponding rows in
-`.testagent/azure-servicebus-external-native-obligation-map.tsv` visibly `EXTERNAL_PENDING` until a
+`evidence/native-tests/obligation-maps/azure-servicebus-external-native-obligation-map.tsv` visibly `EXTERNAL_PENDING` until a
 short-lived real namespace runs them.
 
 The external profile must use run-scoped entities and credentials, bind the exact Azure resource and
@@ -85,32 +85,6 @@ Run one path-complete product slice that:
 Acceptance requires an explicit public-API disposition, complete consumer and package comparison,
 locked restore, zero-warning Release builds, and every applicable unfiltered native profile.
 
-## Normalize inherited formatting
-
-The inherited product tree contains pre-existing whitespace findings outside files changed by the
-native test reconstruction. Normalize them as a dedicated mechanical slice instead of mixing a broad
-rewrite into behavior cohorts.
-
-Acceptance requires a repository-wide formatter/analyzer gate, a path-complete reviewed diff, zero
-behavior or public-API changes, locked restore, zero-warning Release builds, and every applicable
-unfiltered native test profile.
-
-## Consolidate the two cache engines
-
-`src/ViciOne.ServiceBus/Caching` and `src/ViciOne.ServiceBus/Internals/Caching` are two independent
-cache engines with overlapping factory, pending-value, capacity, usage, and expiration behavior.
-The second engine remains production-critical for core send endpoints and for ActiveMQ, Event Hubs,
-and Amazon SQS resources; it must not be removed as a naming cleanup.
-
-After the complete native reconstruction has captured both engines and all transport-specific call
-sites, select one coherent cache architecture and migrate consumers in a dedicated product slice.
-Preserve single-flight creation, queued fallback after factory faults, exact removal/disposal,
-capacity and usage-aware retention, deterministic TTL through `TimeProvider`, metrics, and every
-transport resource-lifetime contract. Acceptance requires explicit API and capability disposition,
-one engine and one naming model at the end, no compatibility wrapper left behind, all applicable
-native profiles, transport integration tests, package comparison, and targeted concurrency
-mutations.
-
 ## Separate cache index projection from external observation
 
 `GreenCache<T>` currently uses the same observer fan-out for correctness-critical index projection
@@ -119,7 +93,7 @@ without a global order; the public contract now states that honestly. Do not add
 single-drainer queue: a blocked observer would let committed values and closures accumulate without
 backpressure, and catch-all isolation would also hide a failed index key projection.
 
-Normalize this as a dedicated API slice, preferably together with the cache-engine consolidation.
+Normalize this as a dedicated API slice on top of the consolidated cache engine.
 Give internal index projection its own fail-closed correctness path and define a separate bounded,
 backpressure-aware external notification contract with an explicit failure channel, reentrancy rule
 and ordering guarantee. Preserve complete observer fan-out and the current index generation guards.

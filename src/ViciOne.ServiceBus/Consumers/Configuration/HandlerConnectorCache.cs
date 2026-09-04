@@ -1,28 +1,26 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class HandlerConnectorCache<TMessage> :
+    IHandlerConnectorCache<TMessage>
+    where TMessage : class
 {
-    using System;
+    readonly HandlerConnector<TMessage> _connector;
 
-
-    public class HandlerConnectorCache<TMessage> :
-        IHandlerConnectorCache<TMessage>
-        where TMessage : class
+    HandlerConnectorCache()
     {
-        readonly HandlerConnector<TMessage> _connector;
+        _connector = new HandlerConnector<TMessage>();
+    }
 
-        HandlerConnectorCache()
-        {
-            _connector = new HandlerConnector<TMessage>();
-        }
+    public static IHandlerConnector<TMessage> Connector => InstanceCache.Cached.Value.Connector;
 
-        public static IHandlerConnector<TMessage> Connector => InstanceCache.Cached.Value.Connector;
-
-        IHandlerConnector<TMessage> IHandlerConnectorCache<TMessage>.Connector => _connector;
+    IHandlerConnector<TMessage> IHandlerConnectorCache<TMessage>.Connector => _connector;
 
 
-        static class InstanceCache
-        {
-            internal static readonly Lazy<IHandlerConnectorCache<TMessage>> Cached = new Lazy<IHandlerConnectorCache<TMessage>>(
-                () => new HandlerConnectorCache<TMessage>());
-        }
+    static class InstanceCache
+    {
+        internal static readonly Lazy<IHandlerConnectorCache<TMessage>> Cached = new Lazy<IHandlerConnectorCache<TMessage>>(
+            () => new HandlerConnectorCache<TMessage>());
     }
 }

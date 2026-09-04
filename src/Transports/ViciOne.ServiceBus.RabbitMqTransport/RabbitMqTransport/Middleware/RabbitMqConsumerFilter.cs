@@ -1,13 +1,11 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
-
 using System;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
-
+namespace ViciOne.ServiceBus.RabbitMqTransport.Middleware;
 /// <summary>
 /// A filter that uses the channel context to create a basic consumer and connect it to the channel
 /// </summary>

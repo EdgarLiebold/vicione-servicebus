@@ -1,25 +1,23 @@
+using System;
+
 #nullable enable
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class SqlTopologyException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class SqlTopologyException :
-        ViciOneServiceBusException
+    public SqlTopologyException()
     {
-        public SqlTopologyException()
-        {
-        }
+    }
 
-        public SqlTopologyException(string? message)
-            : base(message)
-        {
-        }
+    public SqlTopologyException(string? message)
+        : base(message)
+    {
+    }
 
-        public SqlTopologyException(string? message, Exception? innerException)
-            : base(message, innerException)
-        {
-        }
+    public SqlTopologyException(string? message, Exception? innerException)
+        : base(message, innerException)
+    {
     }
 }

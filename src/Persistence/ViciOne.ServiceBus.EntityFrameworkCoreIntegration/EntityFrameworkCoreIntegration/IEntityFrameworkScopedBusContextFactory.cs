@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
-using DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection;
 
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 
 internal interface IEntityFrameworkScopedBusContextFactory<TBus>
     where TBus : class, IBus

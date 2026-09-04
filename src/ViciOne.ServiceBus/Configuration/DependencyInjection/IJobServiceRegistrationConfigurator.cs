@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IJobServiceRegistrationConfigurator
 {
-    using System;
+    /// <summary>
+    /// Configure the job service options
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IJobServiceRegistrationConfigurator Options(Action<JobConsumerOptions> configure);
 
-
-    public interface IJobServiceRegistrationConfigurator
-    {
-        /// <summary>
-        /// Configure the job service options
-        /// </summary>
-        /// <param name="configure"></param>
-        /// <returns></returns>
-        IJobServiceRegistrationConfigurator Options(Action<JobConsumerOptions> configure);
-
-        /// <summary>
-        /// Configure the instance endpoint settings
-        /// </summary>
-        /// <param name="configure"></param>
-        void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
-    }
+    /// <summary>
+    /// Configure the instance endpoint settings
+    /// </summary>
+    /// <param name="configure"></param>
+    void Endpoint(Action<IEndpointRegistrationConfigurator> configure);
 }

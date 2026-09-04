@@ -1,10 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonS3.MessageData;
-
 using System;
 using System.Linq;
 using System.Net;
 
-
+namespace ViciOne.ServiceBus.AmazonS3.MessageData;
 /// <summary>
 /// Immutable Amazon S3 message-data storage contract.
 /// </summary>

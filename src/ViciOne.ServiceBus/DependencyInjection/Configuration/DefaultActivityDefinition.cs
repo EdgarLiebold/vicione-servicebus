@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public class DefaultActivityDefinition<TActivity, TArguments, TLog> :
+    ActivityDefinition<TActivity, TArguments, TLog>
+    where TActivity : class, IActivity<TArguments, TLog>
+    where TArguments : class
+    where TLog : class
 {
-    public class DefaultActivityDefinition<TActivity, TArguments, TLog> :
-        ActivityDefinition<TActivity, TArguments, TLog>
-        where TActivity : class, IActivity<TArguments, TLog>
-        where TArguments : class
-        where TLog : class
-    {
-    }
 }

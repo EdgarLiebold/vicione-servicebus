@@ -1,48 +1,46 @@
-namespace ViciOne.ServiceBus.SqlTransport.Middleware
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.SqlTransport.Middleware;
+
+/// <summary>
+/// A filter that uses the model context to create a basic consumer and connect it to the model
+/// </summary>
+public class SqlConsumerFilter :
+    IFilter<ClientContext>
 {
-    using System.Threading.Tasks;
-    using Transports;
+    readonly SqlReceiveEndpointContext _context;
 
-
-    /// <summary>
-    /// A filter that uses the model context to create a basic consumer and connect it to the model
-    /// </summary>
-    public class SqlConsumerFilter :
-        IFilter<ClientContext>
+    public SqlConsumerFilter(SqlReceiveEndpointContext context)
     {
-        readonly SqlReceiveEndpointContext _context;
+        _context = context;
+    }
 
-        public SqlConsumerFilter(SqlReceiveEndpointContext context)
+    void IProbeSite.Probe(ProbeContext context)
+    {
+    }
+
+    async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
+    {
+        var receiver = new SqlMessageReceiver(context, _context);
+
+        await receiver.Ready.ConfigureAwait(false);
+
+        _context.AddConsumeAgent(receiver);
+
+        await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
+
+        try
         {
-            _context = context;
+            await receiver.Completed.ConfigureAwait(false);
         }
-
-        void IProbeSite.Probe(ProbeContext context)
+        finally
         {
-        }
+            DeliveryMetrics metrics = receiver;
 
-        async Task IFilter<ClientContext>.Send(ClientContext context, IPipe<ClientContext> next)
-        {
-            var receiver = new SqlMessageReceiver(context, _context);
+            await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
 
-            await receiver.Ready.ConfigureAwait(false);
-
-            _context.AddConsumeAgent(receiver);
-
-            await _context.TransportObservers.NotifyReady(_context.InputAddress).ConfigureAwait(false);
-
-            try
-            {
-                await receiver.Completed.ConfigureAwait(false);
-            }
-            finally
-            {
-                DeliveryMetrics metrics = receiver;
-
-                await _context.TransportObservers.NotifyCompleted(_context.InputAddress, metrics).ConfigureAwait(false);
-
-                _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
-            }
+            _context.LogConsumerCompleted(metrics.DeliveryCount, metrics.ConcurrentDeliveryCount);
         }
     }
 }

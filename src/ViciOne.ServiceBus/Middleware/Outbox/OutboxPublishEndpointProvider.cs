@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Middleware.Outbox
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Middleware.Outbox;
+
+public class OutboxPublishEndpointProvider :
+    IPublishEndpointProvider
 {
-    using System.Threading.Tasks;
+    readonly OutboxSendContext _context;
+    readonly IPublishEndpointProvider _publishEndpointProvider;
 
-
-    public class OutboxPublishEndpointProvider :
-        IPublishEndpointProvider
+    public OutboxPublishEndpointProvider(OutboxSendContext context, IPublishEndpointProvider publishEndpointProvider)
     {
-        readonly OutboxSendContext _context;
-        readonly IPublishEndpointProvider _publishEndpointProvider;
+        _context = context;
+        _publishEndpointProvider = publishEndpointProvider;
+    }
 
-        public OutboxPublishEndpointProvider(OutboxSendContext context, IPublishEndpointProvider publishEndpointProvider)
-        {
-            _context = context;
-            _publishEndpointProvider = publishEndpointProvider;
-        }
+    public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
+    {
+        return _publishEndpointProvider.ConnectPublishObserver(observer);
+    }
 
-        public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
-        {
-            return _publishEndpointProvider.ConnectPublishObserver(observer);
-        }
+    public async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
+        where T : class
+    {
+        var endpoint = await _publishEndpointProvider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
 
-        public async Task<ISendEndpoint> GetPublishSendEndpoint<T>()
-            where T : class
-        {
-            var endpoint = await _publishEndpointProvider.GetPublishSendEndpoint<T>().ConfigureAwait(false);
-
-            return new OutboxSendEndpoint(_context, endpoint);
-        }
+        return new OutboxSendEndpoint(_context, endpoint);
     }
 }

@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.DependencyInjection
+namespace ViciOne.ServiceBus.DependencyInjection;
+
+public interface ScopedBusContext
 {
-    public interface ScopedBusContext
-    {
-        ISendEndpointProvider SendEndpointProvider { get; }
-        IPublishEndpoint PublishEndpoint { get; }
-        IScopedClientFactory ClientFactory { get; }
-    }
+    ISendEndpointProvider SendEndpointProvider { get; }
+    IPublishEndpoint PublishEndpoint { get; }
+    IScopedClientFactory ClientFactory { get; }
 }

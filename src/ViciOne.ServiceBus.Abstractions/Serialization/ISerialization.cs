@@ -1,20 +1,18 @@
-namespace ViciOne.ServiceBus
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
+
+namespace ViciOne.ServiceBus;
+
+public interface ISerialization :
+    IProbeSite
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Net.Mime;
+    ContentType DefaultContentType { get; }
 
+    IMessageSerializer GetMessageSerializer(ContentType? contentType = null);
 
-    public interface ISerialization :
-        IProbeSite
-    {
-        ContentType DefaultContentType { get; }
+    bool TryGetMessageSerializer(ContentType contentType, [NotNullWhen(true)] out IMessageSerializer? serializer);
 
-        IMessageSerializer GetMessageSerializer(ContentType? contentType = null);
+    IMessageDeserializer GetMessageDeserializer(ContentType? contentType = null);
 
-        bool TryGetMessageSerializer(ContentType contentType, [NotNullWhen(true)] out IMessageSerializer? serializer);
-
-        IMessageDeserializer GetMessageDeserializer(ContentType? contentType = null);
-
-        bool TryGetMessageDeserializer(ContentType contentType, [NotNullWhen(true)] out IMessageDeserializer? deserializer);
-    }
+    bool TryGetMessageDeserializer(ContentType contentType, [NotNullWhen(true)] out IMessageDeserializer? deserializer);
 }

@@ -1,6 +1,5 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface ITransactionalOutboxConfigurator
 {
-    public interface ITransactionalOutboxConfigurator
-    {
-    }
 }

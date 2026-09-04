@@ -1,55 +1,53 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public class InMemoryRequestResponseTransport :
+    IRequestResponseTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
+    readonly InMemoryOptionSet _optionSet;
+    IBusControl _busControl;
 
+    IClientFactory _clientFactory;
+    IRequestResponseSettings _settings;
 
-    public class InMemoryRequestResponseTransport :
-        IRequestResponseTransport
+    Uri _targetEndpointAddress;
+
+    public InMemoryRequestResponseTransport(InMemoryOptionSet optionSet, IRequestResponseSettings settings)
     {
-        readonly InMemoryOptionSet _optionSet;
-        IBusControl _busControl;
+        _optionSet = optionSet;
+        _settings = settings;
+    }
 
-        IClientFactory _clientFactory;
-        IRequestResponseSettings _settings;
-
-        Uri _targetEndpointAddress;
-
-        public InMemoryRequestResponseTransport(InMemoryOptionSet optionSet, IRequestResponseSettings settings)
+    public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
+    {
+        _busControl = Bus.Factory.CreateUsingInMemory(x =>
         {
-            _optionSet = optionSet;
-            _settings = settings;
-        }
+            x.AutoStart = true;
+            x.ConcurrentMessageLimit = _optionSet.TransportConcurrencyLimit;
 
-        public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
-        {
-            _busControl = Bus.Factory.CreateUsingInMemory(x =>
+            x.ReceiveEndpoint("rpc_consumer", e =>
             {
-                x.AutoStart = true;
-                x.ConcurrentMessageLimit = _optionSet.TransportConcurrencyLimit;
-
-                x.ReceiveEndpoint("rpc_consumer", e =>
-                {
-                    callback(e);
-                    _targetEndpointAddress = e.InputAddress;
-                });
+                callback(e);
+                _targetEndpointAddress = e.InputAddress;
             });
+        });
 
-            _busControl.Start();
+        _busControl.Start();
 
-            _clientFactory = _busControl.CreateReplyToClientFactory();
-        }
+        _clientFactory = _busControl.CreateReplyToClientFactory();
+    }
 
-        public async Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
-            where T : class
-        {
-            return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
-        }
+    public async Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
+        where T : class
+    {
+        return _clientFactory.CreateRequestClient<T>(_targetEndpointAddress, settingsRequestTimeout);
+    }
 
-        public void Dispose()
-        {
-            _busControl.Stop();
-        }
+    public void Dispose()
+    {
+        _busControl.Stop();
     }
 }

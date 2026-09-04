@@ -1,57 +1,55 @@
-namespace ViciOne.ServiceBus.RabbitMqTransport.Topology
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ViciOne.ServiceBus.RabbitMqTransport.Configuration;
+
+namespace ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+public class RabbitMqMessageConsumeTopology<TMessage> :
+    MessageConsumeTopology<TMessage>,
+    IRabbitMqMessageConsumeTopologyConfigurator<TMessage>,
+    IRabbitMqMessageConsumeTopologyConfigurator
+    where TMessage : class
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Configuration;
+    readonly IMessageTopology<TMessage> _messageTopology;
+    readonly IRabbitMqMessagePublishTopology<TMessage> _publishTopology;
+    readonly List<IRabbitMqConsumeTopologySpecification> _specifications;
 
-
-    public class RabbitMqMessageConsumeTopology<TMessage> :
-        MessageConsumeTopology<TMessage>,
-        IRabbitMqMessageConsumeTopologyConfigurator<TMessage>,
-        IRabbitMqMessageConsumeTopologyConfigurator
-        where TMessage : class
+    public RabbitMqMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IMessageExchangeTypeSelector<TMessage> exchangeTypeSelector,
+        IRabbitMqMessagePublishTopology<TMessage> publishTopology)
     {
-        readonly IMessageTopology<TMessage> _messageTopology;
-        readonly IRabbitMqMessagePublishTopology<TMessage> _publishTopology;
-        readonly List<IRabbitMqConsumeTopologySpecification> _specifications;
+        _messageTopology = messageTopology;
+        _publishTopology = publishTopology;
+        ExchangeTypeSelector = exchangeTypeSelector;
 
-        public RabbitMqMessageConsumeTopology(IMessageTopology<TMessage> messageTopology, IMessageExchangeTypeSelector<TMessage> exchangeTypeSelector,
-            IRabbitMqMessagePublishTopology<TMessage> publishTopology)
+        _specifications = new List<IRabbitMqConsumeTopologySpecification>();
+    }
+
+    IMessageExchangeTypeSelector<TMessage> ExchangeTypeSelector { get; }
+
+    public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
+    {
+        foreach (var specification in _specifications)
+            specification.Apply(builder);
+    }
+
+    public void Bind(Action<IRabbitMqExchangeBindingConfigurator> configure = null)
+    {
+        if (!IsBindableMessageType)
         {
-            _messageTopology = messageTopology;
-            _publishTopology = publishTopology;
-            ExchangeTypeSelector = exchangeTypeSelector;
-
-            _specifications = new List<IRabbitMqConsumeTopologySpecification>();
+            _specifications.Add(new InvalidRabbitMqConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a bindable message type"));
+            return;
         }
 
-        IMessageExchangeTypeSelector<TMessage> ExchangeTypeSelector { get; }
+        var specification = new ExchangeBindingConsumeTopologySpecification(_publishTopology.Exchange);
 
-        public void Apply(IReceiveEndpointBrokerTopologyBuilder builder)
-        {
-            foreach (var specification in _specifications)
-                specification.Apply(builder);
-        }
+        configure?.Invoke(specification);
 
-        public void Bind(Action<IRabbitMqExchangeBindingConfigurator> configure = null)
-        {
-            if (!IsBindableMessageType)
-            {
-                _specifications.Add(new InvalidRabbitMqConsumeTopologySpecification(TypeCache<TMessage>.ShortName, "Is not a bindable message type"));
-                return;
-            }
+        _specifications.Add(specification);
+    }
 
-            var specification = new ExchangeBindingConsumeTopologySpecification(_publishTopology.Exchange);
-
-            configure?.Invoke(specification);
-
-            _specifications.Add(specification);
-        }
-
-        public override IEnumerable<ValidationResult> Validate()
-        {
-            return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
-        }
+    public override IEnumerable<ValidationResult> Validate()
+    {
+        return base.Validate().Concat(_specifications.SelectMany(x => x.Validate()));
     }
 }

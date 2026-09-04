@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.Metadata;
-
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
+namespace ViciOne.ServiceBus.Metadata;
 
 internal static class PropertyAccessorFactory
 {

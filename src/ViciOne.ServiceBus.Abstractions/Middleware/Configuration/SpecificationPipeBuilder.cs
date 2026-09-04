@@ -1,64 +1,62 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public partial class PipeConfigurator<TContext>
+    where TContext : class, PipeContext
 {
-    using System.Collections.Generic;
-
-
-    public partial class PipeConfigurator<TContext>
-        where TContext : class, PipeContext
+    public class SpecificationPipeBuilder :
+        ISpecificationPipeBuilder<TContext>
     {
-        public class SpecificationPipeBuilder :
-            ISpecificationPipeBuilder<TContext>
+        readonly List<IFilter<TContext>> _filters;
+
+        public SpecificationPipeBuilder()
         {
-            readonly List<IFilter<TContext>> _filters;
+            _filters = new List<IFilter<TContext>>(16);
+        }
 
-            public SpecificationPipeBuilder()
-            {
-                _filters = new List<IFilter<TContext>>(16);
-            }
+        public void AddFilter(IFilter<TContext> filter)
+        {
+            _filters.Add(filter);
+        }
 
-            public void AddFilter(IFilter<TContext> filter)
-            {
-                _filters.Add(filter);
-            }
+        public bool IsDelegated => false;
+        public bool IsImplemented => false;
 
-            public bool IsDelegated => false;
-            public bool IsImplemented => false;
+        public ISpecificationPipeBuilder<TContext> CreateDelegatedBuilder()
+        {
+            return new ChildSpecificationPipeBuilder(this, IsImplemented, true);
+        }
 
-            public ISpecificationPipeBuilder<TContext> CreateDelegatedBuilder()
-            {
-                return new ChildSpecificationPipeBuilder(this, IsImplemented, true);
-            }
+        public ISpecificationPipeBuilder<TContext> CreateImplementedBuilder()
+        {
+            return new ChildSpecificationPipeBuilder(this, true, IsDelegated);
+        }
 
-            public ISpecificationPipeBuilder<TContext> CreateImplementedBuilder()
-            {
-                return new ChildSpecificationPipeBuilder(this, true, IsDelegated);
-            }
+        public IPipe<TContext> Build()
+        {
+            if (_filters.Count == 0)
+                return Cache.EmptyPipe;
 
-            public IPipe<TContext> Build()
-            {
-                if (_filters.Count == 0)
-                    return Cache.EmptyPipe;
+            IPipe<TContext> current = new LastPipe(_filters[_filters.Count - 1]);
 
-                IPipe<TContext> current = new LastPipe(_filters[_filters.Count - 1]);
+            for (var i = _filters.Count - 2; i >= 0; i--)
+                current = new FilterPipe(_filters[i], current);
 
-                for (var i = _filters.Count - 2; i >= 0; i--)
-                    current = new FilterPipe(_filters[i], current);
+            return current;
+        }
 
-                return current;
-            }
+        public IPipe<TContext> Build(IPipe<TContext> lastPipe)
+        {
+            if (_filters.Count == 0)
+                return lastPipe;
 
-            public IPipe<TContext> Build(IPipe<TContext> lastPipe)
-            {
-                if (_filters.Count == 0)
-                    return lastPipe;
+            IPipe<TContext> current = lastPipe;
 
-                IPipe<TContext> current = lastPipe;
+            for (var i = _filters.Count - 1; i >= 0; i--)
+                current = new FilterPipe(_filters[i], current);
 
-                for (var i = _filters.Count - 1; i >= 0; i--)
-                    current = new FilterPipe(_filters[i], current);
-
-                return current;
-            }
+            return current;
         }
     }
 }

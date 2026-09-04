@@ -1,18 +1,16 @@
-namespace ViciOne.ServiceBus.Middleware
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Contracts;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+public interface IConcurrencyLimiter :
+    IConsumer<SetConcurrencyLimit>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Contracts;
+    int Available { get; }
+    int Limit { get; }
 
+    Task Wait(CancellationToken cancellationToken);
 
-    public interface IConcurrencyLimiter :
-        IConsumer<SetConcurrencyLimit>
-    {
-        int Available { get; }
-        int Limit { get; }
-
-        Task Wait(CancellationToken cancellationToken);
-
-        void Release();
-    }
+    void Release();
 }

@@ -1,35 +1,33 @@
-namespace ViciOneServiceBusBenchmark.RequestResponse
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.Mediator;
+
+namespace ViciOneServiceBusBenchmark.RequestResponse;
+
+public class MediatorRequestResponseTransport :
+    IRequestResponseTransport
 {
-    using System;
-    using System.Threading.Tasks;
-    using ViciOne.ServiceBus;
-    using ViciOne.ServiceBus.Mediator;
+    readonly IRequestResponseSettings _settings;
+    IMediator _mediator;
 
-
-    public class MediatorRequestResponseTransport :
-        IRequestResponseTransport
+    public MediatorRequestResponseTransport(IRequestResponseSettings settings)
     {
-        readonly IRequestResponseSettings _settings;
-        IMediator _mediator;
+        _settings = settings;
+    }
 
-        public MediatorRequestResponseTransport(IRequestResponseSettings settings)
-        {
-            _settings = settings;
-        }
+    public Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
+        where T : class
+    {
+        return Task.FromResult(_mediator.CreateRequestClient<T>(settingsRequestTimeout));
+    }
 
-        public Task<IRequestClient<T>> GetRequestClient<T>(TimeSpan settingsRequestTimeout)
-            where T : class
-        {
-            return Task.FromResult(_mediator.CreateRequestClient<T>(settingsRequestTimeout));
-        }
+    public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
+    {
+        _mediator = Bus.Factory.CreateMediator(callback);
+    }
 
-        public void GetBusControl(Action<IReceiveEndpointConfigurator> callback)
-        {
-            _mediator = Bus.Factory.CreateMediator(callback);
-        }
-
-        public void Dispose()
-        {
-        }
+    public void Dispose()
+    {
     }
 }

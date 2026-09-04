@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Threading.Tasks;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public interface IConnectionContextSupervisor :
     ITransportSupervisor<ConnectionContext>

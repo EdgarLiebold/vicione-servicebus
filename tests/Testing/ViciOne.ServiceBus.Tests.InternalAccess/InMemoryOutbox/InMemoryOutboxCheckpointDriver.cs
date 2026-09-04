@@ -1,12 +1,18 @@
-namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
-
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
+namespace ViciOne.ServiceBus.Tests.InternalAccess.InMemoryOutbox;
 /// <summary>
 /// Drives the internal scheduler checkpoint boundary without exposing its representation to tests.
 /// </summary>
 public static class InMemoryOutboxCheckpointDriver
 {
+    public static int GetPendingMethodCount(InMemoryOutboxDeferredMethodCollection methods)
+    {
+        ArgumentNullException.ThrowIfNull(methods);
+
+        return methods.CreateCheckpoint();
+    }
+
     public static async Task DiscardActionsCreatedByAttempt(
         InMemoryOutboxMessageSchedulerContext context,
         Func<Task> attempt)

@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
-
 using Npgsql;
 
+namespace ViciOne.ServiceBus.SqlTransport.PostgreSql;
 
 public interface IPostgresSqlTransportConnection :
     ISqlTransportConnection

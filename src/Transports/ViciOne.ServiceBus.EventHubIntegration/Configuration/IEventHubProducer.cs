@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus
+using System;
+using Azure.Messaging.EventHubs.Producer;
+
+namespace ViciOne.ServiceBus;
+
+public interface IEventHubProducerConfigurator :
+    ISendObserverConnector,
+    ISendPipelineConfigurator
 {
-    using System;
-    using Azure.Messaging.EventHubs.Producer;
+    /// <summary>
+    /// Configure <see cref="EventHubProducerClientOptions" />
+    /// </summary>
+    Action<EventHubProducerClientOptions> ConfigureOptions { set; }
 
-
-    public interface IEventHubProducerConfigurator :
-        ISendObserverConnector,
-        ISendPipelineConfigurator
-    {
-        /// <summary>
-        /// Configure <see cref="EventHubProducerClientOptions" />
-        /// </summary>
-        Action<EventHubProducerClientOptions> ConfigureOptions { set; }
-
-        /// <summary>
-        /// Sets the outbound message serializer
-        /// </summary>
-        /// <param name="factory">The factory to create the message serializer</param>
-        /// <param name="isSerializer"></param>
-        void AddSerializer(ISerializerFactory factory, bool isSerializer = true);
-    }
+    /// <summary>
+    /// Sets the outbound message serializer
+    /// </summary>
+    /// <param name="factory">The factory to create the message serializer</param>
+    /// <param name="isSerializer"></param>
+    void AddSerializer(ISerializerFactory factory, bool isSerializer = true);
 }

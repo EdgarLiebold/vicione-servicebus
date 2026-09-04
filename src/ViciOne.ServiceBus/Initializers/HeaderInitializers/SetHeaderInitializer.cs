@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.Initializers.HeaderInitializers
+using System;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Initializers.HeaderInitializers;
+
+/// <summary>
+/// Set a header to a constant value from the input
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TInput"></typeparam>
+/// <typeparam name="THeader">The header type</typeparam>
+public class SetHeaderInitializer<TMessage, TInput, THeader> :
+    IHeaderInitializer<TMessage, TInput>
+    where TMessage : class
+    where TInput : class
 {
-    using System;
-    using System.Threading.Tasks;
+    readonly string _headerName;
+    readonly IPropertyProvider<TInput, THeader> _provider;
 
-
-    /// <summary>
-    /// Set a header to a constant value from the input
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    /// <typeparam name="TInput"></typeparam>
-    /// <typeparam name="THeader">The header type</typeparam>
-    public class SetHeaderInitializer<TMessage, TInput, THeader> :
-        IHeaderInitializer<TMessage, TInput>
-        where TMessage : class
-        where TInput : class
+    public SetHeaderInitializer(string headerName, IPropertyProvider<TInput, THeader> provider)
     {
-        readonly string _headerName;
-        readonly IPropertyProvider<TInput, THeader> _provider;
+        if (headerName == null)
+            throw new ArgumentNullException(nameof(headerName));
 
-        public SetHeaderInitializer(string headerName, IPropertyProvider<TInput, THeader> provider)
+        _headerName = headerName;
+        _provider = provider;
+    }
+
+    public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+    {
+        Task<THeader> propertyTask = _provider.GetProperty(context);
+        if (propertyTask.IsCompleted)
         {
-            if (headerName == null)
-                throw new ArgumentNullException(nameof(headerName));
-
-            _headerName = headerName;
-            _provider = provider;
+            sendContext.Headers.Set(_headerName, propertyTask.Result);
+            return Task.CompletedTask;
         }
 
-        public Task Apply(InitializeContext<TMessage, TInput> context, SendContext sendContext)
+        async Task ApplyAsync()
         {
-            Task<THeader> propertyTask = _provider.GetProperty(context);
-            if (propertyTask.IsCompleted)
-            {
-                sendContext.Headers.Set(_headerName, propertyTask.Result);
-                return Task.CompletedTask;
-            }
+            var value = await propertyTask.ConfigureAwait(false);
 
-            async Task ApplyAsync()
-            {
-                var value = await propertyTask.ConfigureAwait(false);
-
-                sendContext.Headers.Set(_headerName, value);
-            }
-
-            return ApplyAsync();
+            sendContext.Headers.Set(_headerName, value);
         }
+
+        return ApplyAsync();
     }
 }

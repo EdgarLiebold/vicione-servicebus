@@ -1,26 +1,24 @@
-namespace ViciOne.ServiceBus.Internals.GraphValidation
+using System;
+
+namespace ViciOne.ServiceBus.Internals.GraphValidation;
+
+internal struct Edge<T, TNode> :
+    IComparable<Edge<T, TNode>>
+    where TNode : Node<T>
 {
-    using System;
+    public readonly TNode Source;
+    public readonly TNode Target;
+    public readonly int Weight;
 
-
-    internal struct Edge<T, TNode> :
-        IComparable<Edge<T, TNode>>
-        where TNode : Node<T>
+    public Edge(TNode source, TNode target, int weight)
     {
-        public readonly TNode Source;
-        public readonly TNode Target;
-        public readonly int Weight;
+        Source = source;
+        Target = target;
+        Weight = weight;
+    }
 
-        public Edge(TNode source, TNode target, int weight)
-        {
-            Source = source;
-            Target = target;
-            Weight = weight;
-        }
-
-        public int CompareTo(Edge<T, TNode> other)
-        {
-            return Weight - other.Weight;
-        }
+    public int CompareTo(Edge<T, TNode> other)
+    {
+        return Weight - other.Weight;
     }
 }

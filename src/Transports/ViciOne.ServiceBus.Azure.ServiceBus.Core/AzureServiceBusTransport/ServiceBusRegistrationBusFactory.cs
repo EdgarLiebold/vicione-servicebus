@@ -1,49 +1,47 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusRegistrationBusFactory :
+    TransportRegistrationBusFactory<IServiceBusReceiveEndpointConfigurator>
 {
-    using System;
-    using System.Collections.Generic;
-    using Configuration;
-    using ViciOne.ServiceBus.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Options;
-    using Transports;
+    readonly ServiceBusBusConfiguration _busConfiguration;
+    readonly Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> _configure;
 
-
-    public class ServiceBusRegistrationBusFactory :
-        TransportRegistrationBusFactory<IServiceBusReceiveEndpointConfigurator>
+    public ServiceBusRegistrationBusFactory(Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure)
+        : this(new ServiceBusBusConfiguration(new ServiceBusTopologyConfiguration(AzureBusFactory.CreateMessageTopology())), configure)
     {
-        readonly ServiceBusBusConfiguration _busConfiguration;
-        readonly Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> _configure;
+    }
 
-        public ServiceBusRegistrationBusFactory(Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure)
-            : this(new ServiceBusBusConfiguration(new ServiceBusTopologyConfiguration(AzureBusFactory.CreateMessageTopology())), configure)
-        {
-        }
+    ServiceBusRegistrationBusFactory(ServiceBusBusConfiguration busConfiguration,
+        Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure)
+        : base(busConfiguration.HostConfiguration)
+    {
+        _configure = configure;
 
-        ServiceBusRegistrationBusFactory(ServiceBusBusConfiguration busConfiguration,
-            Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator> configure)
-            : base(busConfiguration.HostConfiguration)
-        {
-            _configure = configure;
+        _busConfiguration = busConfiguration;
+    }
 
-            _busConfiguration = busConfiguration;
-        }
+    public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
+    {
+        var configurator = new ServiceBusBusFactoryConfigurator(_busConfiguration);
 
-        public override IBusInstance CreateBus(IBusRegistrationContext context, IEnumerable<IBusInstanceSpecification> specifications, string busName)
-        {
-            var configurator = new ServiceBusBusFactoryConfigurator(_busConfiguration);
+        var options = context.GetRequiredService<IOptionsMonitor<AzureServiceBusTransportOptions>>().Get(busName);
+        if (!string.IsNullOrWhiteSpace(options.ConnectionString))
+            configurator.Host(options.ConnectionString);
 
-            var options = context.GetRequiredService<IOptionsMonitor<AzureServiceBusTransportOptions>>().Get(busName);
-            if (!string.IsNullOrWhiteSpace(options.ConnectionString))
-                configurator.Host(options.ConnectionString);
+        return CreateBus(configurator, context, _configure, specifications);
+    }
 
-            return CreateBus(configurator, context, _configure, specifications);
-        }
-
-        protected override IBusInstance CreateBusInstance(IBusControl bus, IHost<IServiceBusReceiveEndpointConfigurator> host,
-            IHostConfiguration hostConfiguration, IBusRegistrationContext context)
-        {
-            return new ServiceBusInstance(bus, host, hostConfiguration, context);
-        }
+    protected override IBusInstance CreateBusInstance(IBusControl bus, IHost<IServiceBusReceiveEndpointConfigurator> host,
+        IHostConfiguration hostConfiguration, IBusRegistrationContext context)
+    {
+        return new ServiceBusInstance(bus, host, hostConfiguration, context);
     }
 }

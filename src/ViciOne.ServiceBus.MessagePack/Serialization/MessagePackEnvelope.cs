@@ -1,10 +1,9 @@
-namespace ViciOne.ServiceBus.Serialization;
-
 using System;
 using System.Collections.Generic;
 using MessagePack;
-using Metadata;
+using ViciOne.ServiceBus.Metadata;
 
+namespace ViciOne.ServiceBus.Serialization;
 
 public class MessagePackEnvelope :
     MessageEnvelope

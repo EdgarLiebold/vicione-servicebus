@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
 
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// Marks a contract whose payload content must be redacted from ServiceBus-owned diagnostics.
 /// This metadata does not grant authorization or replace application data classification.

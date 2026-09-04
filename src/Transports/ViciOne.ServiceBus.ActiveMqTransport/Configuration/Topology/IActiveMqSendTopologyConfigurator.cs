@@ -1,14 +1,12 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqSendTopologyConfigurator :
+    ISendTopologyConfigurator,
+    IActiveMqSendTopology
 {
-    using System;
+    Action<IActiveMqQueueConfigurator> ConfigureErrorSettings { set; }
 
-
-    public interface IActiveMqSendTopologyConfigurator :
-        ISendTopologyConfigurator,
-        IActiveMqSendTopology
-    {
-        Action<IActiveMqQueueConfigurator> ConfigureErrorSettings { set; }
-
-        Action<IActiveMqQueueConfigurator> ConfigureDeadLetterSettings { set; }
-    }
+    Action<IActiveMqQueueConfigurator> ConfigureDeadLetterSettings { set; }
 }

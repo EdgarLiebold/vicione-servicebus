@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus.Initializers.TypeConverters
-{
-    public class StringTypeConverter :
-        ITypeConverter<string, object>
-    {
-        public bool TryConvert(object input, out string result)
-        {
-            if (input != null)
-            {
-                result = input.ToString();
-                return true;
-            }
+namespace ViciOne.ServiceBus.Initializers.TypeConverters;
 
-            result = null;
-            return false;
+public class StringTypeConverter :
+    ITypeConverter<string, object>
+{
+    public bool TryConvert(object input, out string result)
+    {
+        if (input != null)
+        {
+            result = input.ToString();
+            return true;
         }
+
+        result = null;
+        return false;
     }
 }

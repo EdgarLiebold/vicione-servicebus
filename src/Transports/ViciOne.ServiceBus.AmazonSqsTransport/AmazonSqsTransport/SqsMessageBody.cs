@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System.Text.Json;
 using Amazon.SQS.Model;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class SqsMessageBody :
     StringMessageBody,

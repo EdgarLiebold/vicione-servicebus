@@ -1,54 +1,52 @@
-namespace ViciOne.ServiceBus.SagaStateMachine
+using System;
+using System.Linq.Expressions;
+using ViciOne.ServiceBus.Internals;
+
+namespace ViciOne.ServiceBus.SagaStateMachine;
+
+public class EventCorrelationExpressionConverter<TInstance, TMessage> :
+    ExpressionVisitor
+    where TInstance : class, SagaStateMachineInstance
+    where TMessage : class
 {
-    using System;
-    using System.Linq.Expressions;
-    using Internals;
+    readonly ConsumeContext<TMessage> _context;
 
-
-    public class EventCorrelationExpressionConverter<TInstance, TMessage> :
-        ExpressionVisitor
-        where TInstance : class, SagaStateMachineInstance
-        where TMessage : class
+    public EventCorrelationExpressionConverter(ConsumeContext<TMessage> context)
     {
-        readonly ConsumeContext<TMessage> _context;
+        _context = context;
+    }
 
-        public EventCorrelationExpressionConverter(ConsumeContext<TMessage> context)
-        {
-            _context = context;
-        }
+    public Expression<Func<TInstance, bool>> Convert(Expression<Func<TInstance, ConsumeContext<TMessage>, bool>> expression)
+    {
+        var result = Visit(expression);
 
-        public Expression<Func<TInstance, bool>> Convert(Expression<Func<TInstance, ConsumeContext<TMessage>, bool>> expression)
-        {
-            var result = Visit(expression);
+        return RemoveMessageParameter(result as LambdaExpression);
+    }
 
-            return RemoveMessageParameter(result as LambdaExpression);
-        }
+    static Expression<Func<TInstance, bool>> RemoveMessageParameter(LambdaExpression lambda)
+    {
+        ParameterExpression[] parameters = { lambda.Parameters[0] };
 
-        static Expression<Func<TInstance, bool>> RemoveMessageParameter(LambdaExpression lambda)
-        {
-            ParameterExpression[] parameters = { lambda.Parameters[0] };
+        return Expression.Lambda<Func<TInstance, bool>>(lambda.Body, parameters);
+    }
 
-            return Expression.Lambda<Func<TInstance, bool>>(lambda.Body, parameters);
-        }
-
-        protected override Expression VisitMember(MemberExpression m)
-        {
-            if (m.Expression == null)
-                return base.VisitMember(m);
-
-            if (m.Expression.NodeType == ExpressionType.Parameter && m.Expression.Type == typeof(ConsumeContext<TMessage>))
-                return EvaluateConsumeContextAccess(m);
-
+    protected override Expression VisitMember(MemberExpression m)
+    {
+        if (m.Expression == null)
             return base.VisitMember(m);
-        }
 
-        Expression EvaluateConsumeContextAccess(MemberExpression exp)
-        {
-            var parameter = exp.Expression as ParameterExpression;
+        if (m.Expression.NodeType == ExpressionType.Parameter && m.Expression.Type == typeof(ConsumeContext<TMessage>))
+            return EvaluateConsumeContextAccess(m);
 
-            var fn = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(ConsumeContext<TMessage>), exp.Type), exp, parameter).CompileFast();
+        return base.VisitMember(m);
+    }
 
-            return Expression.Constant(fn.DynamicInvoke(_context), exp.Type);
-        }
+    Expression EvaluateConsumeContextAccess(MemberExpression exp)
+    {
+        var parameter = exp.Expression as ParameterExpression;
+
+        var fn = Expression.Lambda(typeof(Func<,>).MakeGenericType(typeof(ConsumeContext<TMessage>), exp.Type), exp, parameter).CompileFast();
+
+        return Expression.Constant(fn.DynamicInvoke(_context), exp.Type);
     }
 }

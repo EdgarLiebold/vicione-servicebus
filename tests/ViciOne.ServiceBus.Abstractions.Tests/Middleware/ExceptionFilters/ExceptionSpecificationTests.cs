@@ -1,8 +1,8 @@
-namespace ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters;
-
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+
+namespace ViciOne.ServiceBus.Abstractions.Tests.Middleware.ExceptionFilters;
 
 public sealed class ExceptionSpecificationTests
 {

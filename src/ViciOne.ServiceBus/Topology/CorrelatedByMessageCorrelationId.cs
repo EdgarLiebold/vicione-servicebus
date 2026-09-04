@@ -1,17 +1,15 @@
-namespace ViciOne.ServiceBus.Topology
+using System;
+
+namespace ViciOne.ServiceBus.Topology;
+
+public class CorrelatedByMessageCorrelationId<T> :
+    IMessageCorrelationId<T>
+    where T : class, CorrelatedBy<Guid>
 {
-    using System;
-
-
-    public class CorrelatedByMessageCorrelationId<T> :
-        IMessageCorrelationId<T>
-        where T : class, CorrelatedBy<Guid>
+    public bool TryGetCorrelationId(T message, out Guid correlationId)
     {
-        public bool TryGetCorrelationId(T message, out Guid correlationId)
-        {
-            correlationId = message.CorrelationId;
+        correlationId = message.CorrelationId;
 
-            return correlationId != Guid.Empty;
-        }
+        return correlationId != Guid.Empty;
     }
 }

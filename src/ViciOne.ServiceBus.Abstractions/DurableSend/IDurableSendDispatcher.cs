@@ -10,7 +10,7 @@ public interface IDurableSendDispatcher<TBus>
     where TBus : class, IBus
 {
     /// <summary>
-    /// Dispatches one persisted message and reports the selected transport's real retirement boundary. For a durable
+    /// Dispatches one persisted message and reports the selected transport's real completion boundary. For a durable
     /// broker/provider hand-off, return <see cref="DurableSendCompletionMode.TransportAcceptance"/> only after that
     /// provider's durable acceptance boundary has completed. For a volatile in-process enqueue, propagate
     /// <see cref="DurableSendDispatchContext.ConsumerCompletion"/> as process-local pipeline context and return

@@ -1,76 +1,74 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using System;
+using ViciOne.ServiceBus.InMemoryTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+/// <summary>
+/// Caches InMemory transport instances so that they are only created and used once
+/// </summary>
+public class InMemoryHost :
+    BaseHost,
+    IInMemoryHost
 {
-    using System;
-    using Configuration;
-    using Transports;
+    readonly IInMemoryHostConfiguration _hostConfiguration;
 
-
-    /// <summary>
-    /// Caches InMemory transport instances so that they are only created and used once
-    /// </summary>
-    public class InMemoryHost :
-        BaseHost,
-        IInMemoryHost
+    public InMemoryHost(IInMemoryHostConfiguration hostConfiguration, IInMemoryBusTopology busTopology)
+        : base(hostConfiguration, busTopology)
     {
-        readonly IInMemoryHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+    }
 
-        public InMemoryHost(IInMemoryHostConfiguration hostConfiguration, IInMemoryBusTopology busTopology)
-            : base(hostConfiguration, busTopology)
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    {
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        Action<IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
+    {
+        var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
+
+        return ConnectReceiveEndpoint(queueName, configurator =>
         {
-            _hostConfiguration = hostConfiguration;
-        }
+            _hostConfiguration.ApplyEndpointDefinition(configurator, definition);
+            configureEndpoint?.Invoke(configurator);
+        });
+    }
 
-        public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IReceiveEndpointConfigurator> configureEndpoint = null)
-        {
-            return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
-        }
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    {
+        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+    }
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IInMemoryReceiveEndpointConfigurator> configureEndpoint = null)
-        {
-            var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator> configure = null)
+    {
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
-            return ConnectReceiveEndpoint(queueName, configurator =>
-            {
-                _hostConfiguration.ApplyEndpointDefinition(configurator, definition);
-                configureEndpoint?.Invoke(configurator);
-            });
-        }
+        var configuration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName, configure);
 
-        public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
-        {
-            return ConnectReceiveEndpoint(queueName, configureEndpoint);
-        }
+        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IInMemoryReceiveEndpointConfigurator> configure = null)
-        {
-            LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
 
-            var configuration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName, configure);
+        configuration.Build(this);
 
-            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+        return ReceiveEndpoints.Start(queueName);
+    }
 
-            configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
+    public IInMemoryDelayProvider DelayProvider => _hostConfiguration.TransportProvider.MessageFabric.DelayProvider;
 
-            configuration.Build(this);
+    protected override void Probe(ProbeContext context)
+    {
+        context.Add("type", "InMemory");
+        context.Add("baseAddress", _hostConfiguration.HostAddress);
 
-            return ReceiveEndpoints.Start(queueName);
-        }
+        _hostConfiguration.TransportProvider.Probe(context);
+    }
 
-        public IInMemoryDelayProvider DelayProvider => _hostConfiguration.TransportProvider.MessageFabric.DelayProvider;
-
-        protected override void Probe(ProbeContext context)
-        {
-            context.Add("type", "InMemory");
-            context.Add("baseAddress", _hostConfiguration.HostAddress);
-
-            _hostConfiguration.TransportProvider.Probe(context);
-        }
-
-        protected override IAgent[] GetAgentHandles()
-        {
-            return [_hostConfiguration.TransportProvider];
-        }
+    protected override IAgent[] GetAgentHandles()
+    {
+        return [_hostConfiguration.TransportProvider];
     }
 }

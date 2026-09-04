@@ -1,10 +1,9 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.ProviderAbstractions;
-
 using System;
 using System.ComponentModel;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.ProviderAbstractions;
 /// <summary>
 /// The one stable persistence namespace owned by a typed bus and shared by all persistent features.
 /// Applications configure it through the typed AddViciOneServiceBus overload; provider packages consume it here.

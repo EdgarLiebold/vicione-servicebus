@@ -1,13 +1,12 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using Middleware;
+using ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport;
 
 public class SqsMoveTransport<TSettings>
     where TSettings : class

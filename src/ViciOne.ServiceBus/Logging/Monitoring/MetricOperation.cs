@@ -1,10 +1,8 @@
-#nullable enable
-namespace ViciOne.ServiceBus.Logging;
-
 using System;
 using System.Threading;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.Logging;
 /// <summary>
 /// Completes the metric observations associated with one message-flow operation. Telemetry
 /// observers are outside the product trust boundary and cannot change message-flow semantics.

@@ -1,99 +1,97 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
 #nullable enable
-namespace ViciOne.ServiceBus.Serialization
+namespace ViciOne.ServiceBus.Serialization;
+
+public abstract class BaseSerializerContext :
+    SerializerContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
+    readonly MessageContext _context;
+    readonly IObjectDeserializer _deserializer;
 
+    Guid? _conversationId;
+    Guid? _correlationId;
+    Uri? _destinationAddress;
+    Uri? _faultAddress;
+    Headers? _headers;
+    Guid? _initiatorId;
+    Guid? _messageId;
+    Guid? _requestId;
+    Uri? _responseAddress;
+    Uri? _sourceAddress;
 
-    public abstract class BaseSerializerContext :
-        SerializerContext
+    protected BaseSerializerContext(IObjectDeserializer deserializer, MessageContext context, string[] supportedMessageTypes)
     {
-        readonly MessageContext _context;
-        readonly IObjectDeserializer _deserializer;
+        _context = context;
+        _deserializer = deserializer;
 
-        Guid? _conversationId;
-        Guid? _correlationId;
-        Uri? _destinationAddress;
-        Uri? _faultAddress;
-        Headers? _headers;
-        Guid? _initiatorId;
-        Guid? _messageId;
-        Guid? _requestId;
-        Uri? _responseAddress;
-        Uri? _sourceAddress;
+        SupportedMessageTypes = supportedMessageTypes;
 
-        protected BaseSerializerContext(IObjectDeserializer deserializer, MessageContext context, string[] supportedMessageTypes)
-        {
-            _context = context;
-            _deserializer = deserializer;
+    }
 
-            SupportedMessageTypes = supportedMessageTypes;
+    public Guid? MessageId => _messageId ??= _context.MessageId;
+    public Guid? RequestId => _requestId ??= _context.RequestId;
+    public Guid? CorrelationId => _correlationId ??= _context.CorrelationId;
+    public Guid? ConversationId => _conversationId ??= _context.ConversationId;
+    public Guid? InitiatorId => _initiatorId ??= _context.InitiatorId;
+    public DateTime? ExpirationTime => _context.ExpirationTime;
+    public Uri? SourceAddress => _sourceAddress ??= _context.SourceAddress;
+    public Uri? DestinationAddress => _destinationAddress ??= _context.DestinationAddress;
+    public Uri? ResponseAddress => _responseAddress ??= _context.ResponseAddress;
+    public Uri? FaultAddress => _faultAddress ??= _context.FaultAddress;
+    public DateTime? SentTime => _context.SentTime;
+    public Headers Headers => _headers ??= _context.Headers;
+    public HostInfo Host => _context.Host;
 
-        }
+    public string[] SupportedMessageTypes { get; }
 
-        public Guid? MessageId => _messageId ??= _context.MessageId;
-        public Guid? RequestId => _requestId ??= _context.RequestId;
-        public Guid? CorrelationId => _correlationId ??= _context.CorrelationId;
-        public Guid? ConversationId => _conversationId ??= _context.ConversationId;
-        public Guid? InitiatorId => _initiatorId ??= _context.InitiatorId;
-        public DateTime? ExpirationTime => _context.ExpirationTime;
-        public Uri? SourceAddress => _sourceAddress ??= _context.SourceAddress;
-        public Uri? DestinationAddress => _destinationAddress ??= _context.DestinationAddress;
-        public Uri? ResponseAddress => _responseAddress ??= _context.ResponseAddress;
-        public Uri? FaultAddress => _faultAddress ??= _context.FaultAddress;
-        public DateTime? SentTime => _context.SentTime;
-        public Headers Headers => _headers ??= _context.Headers;
-        public HostInfo Host => _context.Host;
+    public T? DeserializeObject<T>(object? value, T? defaultValue = default)
+        where T : class
+    {
+        return _deserializer.DeserializeObject(value, defaultValue);
+    }
 
-        public string[] SupportedMessageTypes { get; }
+    public T? DeserializeObject<T>(object? value, T? defaultValue = null)
+        where T : struct
+    {
+        return _deserializer.DeserializeObject(value, defaultValue);
+    }
 
-        public T? DeserializeObject<T>(object? value, T? defaultValue = default)
-            where T : class
-        {
-            return _deserializer.DeserializeObject(value, defaultValue);
-        }
+    public MessageBody SerializeObject(object? value)
+    {
+        return _deserializer.SerializeObject(value);
+    }
 
-        public T? DeserializeObject<T>(object? value, T? defaultValue = null)
-            where T : struct
-        {
-            return _deserializer.DeserializeObject(value, defaultValue);
-        }
+    public abstract bool TryGetMessage<T>(out T? message)
+        where T : class;
 
-        public MessageBody SerializeObject(object? value)
-        {
-            return _deserializer.SerializeObject(value);
-        }
+    public abstract bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message);
 
-        public abstract bool TryGetMessage<T>(out T? message)
-            where T : class;
+    public abstract IMessageSerializer GetMessageSerializer();
 
-        public abstract bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message);
+    public abstract IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
+        where T : class;
 
-        public abstract IMessageSerializer GetMessageSerializer();
+    public abstract IMessageSerializer GetMessageSerializer(object message, string[] messageTypes);
 
-        public abstract IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
-            where T : class;
+    public abstract Dictionary<string, object> ToDictionary<T>(T? message)
+        where T : class;
 
-        public abstract IMessageSerializer GetMessageSerializer(object message, string[] messageTypes);
+    public virtual bool IsSupportedMessageType<T>()
+        where T : class
+    {
+        var typeUrn = MessageUrn.ForTypeString<T>();
 
-        public abstract Dictionary<string, object> ToDictionary<T>(T? message)
-            where T : class;
+        return SupportedMessageTypes.Any(x => typeUrn.Equals(x, StringComparison.OrdinalIgnoreCase));
+    }
 
-        public virtual bool IsSupportedMessageType<T>()
-            where T : class
-        {
-            var typeUrn = MessageUrn.ForTypeString<T>();
+    public virtual bool IsSupportedMessageType(Type messageType)
+    {
+        var typeUrn = MessageUrn.ForTypeString(messageType);
 
-            return SupportedMessageTypes.Any(x => typeUrn.Equals(x, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public virtual bool IsSupportedMessageType(Type messageType)
-        {
-            var typeUrn = MessageUrn.ForTypeString(messageType);
-
-            return SupportedMessageTypes.Any(x => typeUrn.Equals(x, StringComparison.OrdinalIgnoreCase));
-        }
+        return SupportedMessageTypes.Any(x => typeUrn.Equals(x, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.AzureTable.Saga
+using System;
+
+namespace ViciOne.ServiceBus.AzureTable.Saga;
+
+public class ConstPartitionSagaKeyFormatter<TSaga> :
+    ISagaKeyFormatter<TSaga>
+    where TSaga : class, ISaga
 {
-    using System;
+    readonly string _partitionKey;
 
-
-    public class ConstPartitionSagaKeyFormatter<TSaga> :
-        ISagaKeyFormatter<TSaga>
-        where TSaga : class, ISaga
+    public ConstPartitionSagaKeyFormatter(string partitionKey)
     {
-        readonly string _partitionKey;
+        _partitionKey = AzureTableKeyValidator.Validate(partitionKey, nameof(partitionKey));
+    }
 
-        public ConstPartitionSagaKeyFormatter(string partitionKey)
-        {
-            _partitionKey = AzureTableKeyValidator.Validate(partitionKey, nameof(partitionKey));
-        }
-
-        public (string partitionKey, string rowKey) Format(Guid correlationId)
-        {
-            AzureTableKeyValidator.ValidateCorrelationId(correlationId, nameof(correlationId));
-            return (_partitionKey, correlationId.ToString("D"));
-        }
+    public (string partitionKey, string rowKey) Format(Guid correlationId)
+    {
+        AzureTableKeyValidator.ValidateCorrelationId(correlationId, nameof(correlationId));
+        return (_partitionKey, correlationId.ToString("D"));
     }
 }

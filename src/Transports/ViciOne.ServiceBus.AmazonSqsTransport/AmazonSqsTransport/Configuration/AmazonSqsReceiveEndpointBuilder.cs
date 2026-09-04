@@ -1,11 +1,10 @@
-namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
-
 using Amazon.SQS.Model;
+using ViciOne.ServiceBus.AmazonSqsTransport.Middleware;
+using ViciOne.ServiceBus.AmazonSqsTransport.Topology;
 using ViciOne.ServiceBus.Configuration;
-using Middleware;
-using Topology;
-using Transports;
+using ViciOne.ServiceBus.Transports;
 
+namespace ViciOne.ServiceBus.AmazonSqsTransport.Configuration;
 
 public class AmazonSqsReceiveEndpointBuilder :
     ReceiveEndpointBuilder

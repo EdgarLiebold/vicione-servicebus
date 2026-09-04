@@ -1,126 +1,124 @@
-namespace ViciOneServiceBusBenchmark
+using System;
+using Amazon;
+using Amazon.Runtime;
+using Amazon.SimpleNotificationService;
+using Amazon.SQS;
+using NDesk.Options;
+using ViciOne.ServiceBus;
+using ViciOne.ServiceBus.AmazonSqsTransport;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOneServiceBusBenchmark;
+
+class AmazonSqsOptionSet :
+    OptionSet
 {
-    using System;
-    using Amazon;
-    using Amazon.Runtime;
-    using Amazon.SimpleNotificationService;
-    using Amazon.SQS;
-    using ViciOne.ServiceBus;
-    using ViciOne.ServiceBus.AmazonSqsTransport;
-    using ViciOne.ServiceBus.Transports;
-    using NDesk.Options;
+    string _accessKey;
+    AWSCredentials _credentials;
+    ImmutableCredentials _immutableCredentials;
+    string _secretKey;
 
-
-    class AmazonSqsOptionSet :
-        OptionSet
+    public AmazonSqsOptionSet()
     {
-        string _accessKey;
-        AWSCredentials _credentials;
-        ImmutableCredentials _immutableCredentials;
-        string _secretKey;
+        Add<string>("region:", "The AWS region", SetRegion);
+        Add<string>("scope:", "Account Scope", value => Scope = value);
+        Add<string>("accesskey:", "Access Key", SetAccessKey);
+        Add<string>("secretkey:", "Secret Key", SetSecretKey);
 
-        public AmazonSqsOptionSet()
+        HostAddress = new Uri("amazonsqs://localhost:4566");
+
+        Region = RegionEndpoint.APEast1;
+
+        AmazonSqsConfig = new AmazonSQSConfig { ServiceURL = "http://localhost:4566" };
+        AmazonSnsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = "http://localhost:4566" };
+    }
+
+    public AWSCredentials Credentials
+    {
+        get => _credentials;
+        set
         {
-            Add<string>("region:", "The AWS region", SetRegion);
-            Add<string>("scope:", "Account Scope", value => Scope = value);
-            Add<string>("accesskey:", "Access Key", SetAccessKey);
-            Add<string>("secretkey:", "Secret Key", SetSecretKey);
-
-            HostAddress = new Uri("amazonsqs://localhost:4566");
-
-            Region = RegionEndpoint.APEast1;
-
-            AmazonSqsConfig = new AmazonSQSConfig { ServiceURL = "http://localhost:4566" };
-            AmazonSnsConfig = new AmazonSimpleNotificationServiceConfig { ServiceURL = "http://localhost:4566" };
+            _credentials = value;
+            _immutableCredentials = null;
         }
+    }
 
-        public AWSCredentials Credentials
+    public AmazonSQSConfig AmazonSqsConfig { get; set; }
+    public AmazonSimpleNotificationServiceConfig AmazonSnsConfig { get; set; }
+
+    public string Scope { get; set; }
+
+    public RegionEndpoint Region { get; set; }
+    public string AccessKey => (_immutableCredentials ??= GetImmutableCredentials()).AccessKey;
+    public string SecretKey => (_immutableCredentials ??= GetImmutableCredentials()).SecretKey;
+
+    public Uri HostAddress { get; private set; }
+
+    public AmazonSqsHostSettings HostSettings
+    {
+        get
         {
-            get => _credentials;
-            set
-            {
-                _credentials = value;
-                _immutableCredentials = null;
-            }
+            var configurator = new ViciOne.ServiceBus.AmazonSqsTransport.Configuration.AmazonSqsHostConfigurator(HostAddress);
+            configurator.ClientFactories(
+                () => Credentials == null
+                    ? new AmazonSQSClient(AmazonSqsConfig)
+                    : new AmazonSQSClient(Credentials, AmazonSqsConfig),
+                () => Credentials == null
+                    ? new AmazonSimpleNotificationServiceClient(AmazonSnsConfig)
+                    : new AmazonSimpleNotificationServiceClient(Credentials, AmazonSnsConfig));
+            if (!string.IsNullOrWhiteSpace(Scope))
+                configurator.Scope(Scope, false);
+
+            return configurator.Settings;
         }
+    }
 
-        public AmazonSQSConfig AmazonSqsConfig { get; set; }
-        public AmazonSimpleNotificationServiceConfig AmazonSnsConfig { get; set; }
-
-        public string Scope { get; set; }
-
-        public RegionEndpoint Region { get; set; }
-        public string AccessKey => (_immutableCredentials ??= GetImmutableCredentials()).AccessKey;
-        public string SecretKey => (_immutableCredentials ??= GetImmutableCredentials()).SecretKey;
-
-        public Uri HostAddress { get; private set; }
-
-        public AmazonSqsHostSettings HostSettings
+    public override string ToString()
+    {
+        return new UriBuilder
         {
-            get
-            {
-                var configurator = new ViciOne.ServiceBus.AmazonSqsTransport.Configuration.AmazonSqsHostConfigurator(HostAddress);
-                configurator.ClientFactories(
-                    () => Credentials == null
-                        ? new AmazonSQSClient(AmazonSqsConfig)
-                        : new AmazonSQSClient(Credentials, AmazonSqsConfig),
-                    () => Credentials == null
-                        ? new AmazonSimpleNotificationServiceClient(AmazonSnsConfig)
-                        : new AmazonSimpleNotificationServiceClient(Credentials, AmazonSnsConfig));
-                if (!string.IsNullOrWhiteSpace(Scope))
-                    configurator.Scope(Scope, false);
+            Scheme = "https",
+            Host = Region.SystemName
+        }.Uri.ToString();
+    }
 
-                return configurator.Settings;
-            }
-        }
+    ImmutableCredentials GetImmutableCredentials()
+    {
+        return Credentials?.GetCredentials() ?? throw new ArgumentNullException(nameof(Credentials));
+    }
 
-        public override string ToString()
-        {
-            return new UriBuilder
-            {
-                Scheme = "https",
-                Host = Region.SystemName
-            }.Uri.ToString();
-        }
+    void SetRegion(string region)
+    {
+        HostAddress = new UriBuilder("amazonsqs", region) { Path = Scope }.Uri;
 
-        ImmutableCredentials GetImmutableCredentials()
-        {
-            return Credentials?.GetCredentials() ?? throw new ArgumentNullException(nameof(Credentials));
-        }
+        var regionEndpoint = RegionEndpoint.GetBySystemName(region);
 
-        void SetRegion(string region)
-        {
-            HostAddress = new UriBuilder("amazonsqs", region) { Path = Scope }.Uri;
+        AmazonSqsConfig = new AmazonSQSConfig { RegionEndpoint = regionEndpoint };
+        AmazonSnsConfig = new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint };
+    }
 
-            var regionEndpoint = RegionEndpoint.GetBySystemName(region);
+    void SetAccessKey(string accessKey)
+    {
+        _accessKey = accessKey;
+        SetBasicCredentials();
+    }
 
-            AmazonSqsConfig = new AmazonSQSConfig { RegionEndpoint = regionEndpoint };
-            AmazonSnsConfig = new AmazonSimpleNotificationServiceConfig { RegionEndpoint = regionEndpoint };
-        }
+    void SetSecretKey(string secretKey)
+    {
+        _secretKey = secretKey;
+        SetBasicCredentials();
+    }
 
-        void SetAccessKey(string accessKey)
-        {
-            _accessKey = accessKey;
-            SetBasicCredentials();
-        }
+    void SetBasicCredentials()
+    {
+        if (string.IsNullOrEmpty(_accessKey) || string.IsNullOrEmpty(_secretKey))
+            return;
 
-        void SetSecretKey(string secretKey)
-        {
-            _secretKey = secretKey;
-            SetBasicCredentials();
-        }
+        _credentials = new BasicAWSCredentials(_accessKey, _secretKey);
+    }
 
-        void SetBasicCredentials()
-        {
-            if (string.IsNullOrEmpty(_accessKey) || string.IsNullOrEmpty(_secretKey))
-                return;
-
-            _credentials = new BasicAWSCredentials(_accessKey, _secretKey);
-        }
-
-        public void ShowOptions()
-        {
-            Console.WriteLine("Host: {0}", HostAddress);
-        }
+    public void ShowOptions()
+    {
+        Console.WriteLine("Host: {0}", HostAddress);
     }
 }

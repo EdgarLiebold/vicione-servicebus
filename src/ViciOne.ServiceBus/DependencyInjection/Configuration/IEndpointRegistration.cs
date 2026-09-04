@@ -1,11 +1,9 @@
-namespace ViciOne.ServiceBus.Configuration
+using System;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IEndpointRegistration :
+    IRegistration
 {
-    using System;
-
-
-    public interface IEndpointRegistration :
-        IRegistration
-    {
-        IEndpointDefinition GetDefinition(IServiceProvider provider);
-    }
+    IEndpointDefinition GetDefinition(IServiceProvider provider);
 }

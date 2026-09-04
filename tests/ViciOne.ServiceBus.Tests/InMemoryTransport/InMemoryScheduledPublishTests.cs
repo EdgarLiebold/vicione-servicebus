@@ -1,7 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;

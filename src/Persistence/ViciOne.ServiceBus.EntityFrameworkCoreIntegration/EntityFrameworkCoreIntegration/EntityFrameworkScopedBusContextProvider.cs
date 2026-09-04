@@ -1,12 +1,10 @@
-#nullable enable
-namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection;
 
-
+#nullable enable
+namespace ViciOne.ServiceBus.EntityFrameworkCoreIntegration;
 /// <summary>
 /// Selects the EF bus outbox for a scoped bus. Selection is deterministic: one registration is implicit, multiple
 /// registrations require exactly one explicit default. DbContext-specific APIs bypass this selector entirely.

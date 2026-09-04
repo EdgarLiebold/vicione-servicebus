@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public interface IConnectionContextSupervisor :
+    ITransportSupervisor<ConnectionContext>
 {
-    using System;
-    using System.Threading.Tasks;
-    using Agents;
-    using Transports;
+    IClientContextSupervisor CreateClientContextSupervisor(Func<IConnectionContextSupervisor, IPipeContextFactory<ClientContext>> factory);
 
+    ISendEndpointContextSupervisor CreateSendEndpointContextSupervisor(SendSettings settings);
 
-    public interface IConnectionContextSupervisor :
-        ITransportSupervisor<ConnectionContext>
-    {
-        IClientContextSupervisor CreateClientContextSupervisor(Func<IConnectionContextSupervisor, IPipeContextFactory<ClientContext>> factory);
+    Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext context, Uri address);
 
-        ISendEndpointContextSupervisor CreateSendEndpointContextSupervisor(SendSettings settings);
+    Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext context, Uri publishAddress)
+        where T : class;
 
-        Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext context, Uri address);
-
-        Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext context, Uri publishAddress)
-            where T : class;
-
-        Uri NormalizeAddress(Uri address);
-    }
+    Uri NormalizeAddress(Uri address);
 }

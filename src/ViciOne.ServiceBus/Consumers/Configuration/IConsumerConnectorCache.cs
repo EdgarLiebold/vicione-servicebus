@@ -1,7 +1,6 @@
-namespace ViciOne.ServiceBus.Configuration
+namespace ViciOne.ServiceBus.Configuration;
+
+public interface IConsumerConnectorCache
 {
-    public interface IConsumerConnectorCache
-    {
-        IConsumerConnector Connector { get; }
-    }
+    IConsumerConnector Connector { get; }
 }

@@ -1,39 +1,37 @@
-namespace ViciOne.ServiceBus.Util
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.Util;
+
+/// <summary>
+/// Recycles a supervisor once it is stopped, replacing it with a new one
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class Recycle<T>
+    where T : class, IAgent
 {
-    using System;
-    using System.Threading;
+    Lazy<T> _supervisor;
 
-
-    /// <summary>
-    /// Recycles a supervisor once it is stopped, replacing it with a new one
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Recycle<T>
-        where T : class, IAgent
+    public Recycle(Func<T> supervisorFactory)
     {
-        Lazy<T> _supervisor;
+        CancellationTokenRegistration registration = default;
 
-        public Recycle(Func<T> supervisorFactory)
+        void RecycleSupervisor()
         {
-            CancellationTokenRegistration registration = default;
+            registration.Dispose();
 
-            void RecycleSupervisor()
+            Volatile.Write(ref _supervisor, new Lazy<T>(() =>
             {
-                registration.Dispose();
+                var supervisor = supervisorFactory();
 
-                Volatile.Write(ref _supervisor, new Lazy<T>(() =>
-                {
-                    var supervisor = supervisorFactory();
+                registration = supervisor.Stopping.Register(() => RecycleSupervisor());
 
-                    registration = supervisor.Stopping.Register(() => RecycleSupervisor());
-
-                    return supervisor;
-                }));
-            }
-
-            RecycleSupervisor();
+                return supervisor;
+            }));
         }
 
-        public T Supervisor => Volatile.Read(ref _supervisor).Value;
+        RecycleSupervisor();
     }
+
+    public T Supervisor => Volatile.Read(ref _supervisor).Value;
 }

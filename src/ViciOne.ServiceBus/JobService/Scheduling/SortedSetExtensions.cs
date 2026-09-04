@@ -1,8 +1,7 @@
-namespace ViciOne.ServiceBus.JobService.Scheduling;
-
 using System;
 using System.Collections.Generic;
 
+namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 static class SortedSetExtensions
 {

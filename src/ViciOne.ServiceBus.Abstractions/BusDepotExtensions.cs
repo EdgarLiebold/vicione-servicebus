@@ -1,38 +1,36 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus;
+
+public static class BusDepotExtensions
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-
-    public static class BusDepotExtensions
+    public static async Task Start(this IBusDepot depot, TimeSpan timeout, CancellationToken cancellationToken = default)
     {
-        public static async Task Start(this IBusDepot depot, TimeSpan timeout, CancellationToken cancellationToken = default)
+        using var timeoutTokenSource = new CancellationTokenSource(timeout);
+
+        if (cancellationToken.CanBeCanceled)
         {
-            using var timeoutTokenSource = new CancellationTokenSource(timeout);
+            using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token);
 
-            if (cancellationToken.CanBeCanceled)
-            {
-                using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token);
-
-                await depot.Start(linkedTokenSource.Token).ConfigureAwait(false);
-            }
-            else
-                await depot.Start(timeoutTokenSource.Token).ConfigureAwait(false);
+            await depot.Start(linkedTokenSource.Token).ConfigureAwait(false);
         }
+        else
+            await depot.Start(timeoutTokenSource.Token).ConfigureAwait(false);
+    }
 
-        public static async Task Stop(this IBusDepot depot, TimeSpan timeout, CancellationToken cancellationToken = default)
+    public static async Task Stop(this IBusDepot depot, TimeSpan timeout, CancellationToken cancellationToken = default)
+    {
+        using var timeoutTokenSource = new CancellationTokenSource(timeout);
+
+        if (cancellationToken.CanBeCanceled)
         {
-            using var timeoutTokenSource = new CancellationTokenSource(timeout);
+            using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token);
 
-            if (cancellationToken.CanBeCanceled)
-            {
-                using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutTokenSource.Token);
-
-                await depot.Stop(linkedTokenSource.Token).ConfigureAwait(false);
-            }
-            else
-                await depot.Stop(timeoutTokenSource.Token).ConfigureAwait(false);
+            await depot.Stop(linkedTokenSource.Token).ConfigureAwait(false);
         }
+        else
+            await depot.Stop(timeoutTokenSource.Token).ConfigureAwait(false);
     }
 }

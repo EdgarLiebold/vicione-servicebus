@@ -1,19 +1,18 @@
-namespace ViciOne.ServiceBus.Transports.Fabric
+namespace ViciOne.ServiceBus.Transports.Fabric;
+
+public class SingleReceiverLoadBalancer<T> :
+    IReceiverLoadBalancer<T>
+    where T : class
 {
-    public class SingleReceiverLoadBalancer<T> :
-        IReceiverLoadBalancer<T>
-        where T : class
+    readonly IMessageReceiver<T> _receiver;
+
+    public SingleReceiverLoadBalancer(IMessageReceiver<T> receiver)
     {
-        readonly IMessageReceiver<T> _receiver;
+        _receiver = receiver;
+    }
 
-        public SingleReceiverLoadBalancer(IMessageReceiver<T> receiver)
-        {
-            _receiver = receiver;
-        }
-
-        public IMessageReceiver<T> SelectReceiver(T message)
-        {
-            return _receiver;
-        }
+    public IMessageReceiver<T> SelectReceiver(T message)
+    {
+        return _receiver;
     }
 }

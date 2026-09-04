@@ -1,120 +1,118 @@
-namespace ViciOne.ServiceBus.Saga
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Middleware;
+
+namespace ViciOne.ServiceBus.Saga;
+
+public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
+    ConsumeContextProxy<TMessage>,
+    SagaRepositoryQueryContext<TSaga, TMessage>
+    where TSaga : class, ISaga
+    where TMessage : class
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Context;
-    using Middleware;
+    readonly SagaRepositoryContext<TSaga, TMessage> _context;
+    readonly IList<Guid> _results;
 
-
-    public class DefaultSagaRepositoryQueryContext<TSaga, TMessage> :
-        ConsumeContextProxy<TMessage>,
-        SagaRepositoryQueryContext<TSaga, TMessage>
-        where TSaga : class, ISaga
-        where TMessage : class
+    public DefaultSagaRepositoryQueryContext(SagaRepositoryContext<TSaga, TMessage> context, IList<Guid> results)
+        : base(context)
     {
-        readonly SagaRepositoryContext<TSaga, TMessage> _context;
-        readonly IList<Guid> _results;
-
-        public DefaultSagaRepositoryQueryContext(SagaRepositoryContext<TSaga, TMessage> context, IList<Guid> results)
-            : base(context)
-        {
-            _context = context;
-            _results = results;
-        }
-
-        public int Count => _results.Count;
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
-        {
-            return _context.Add(instance);
-        }
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
-        {
-            return _context.Insert(instance);
-        }
-
-        public Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
-        {
-            return _context.Load(correlationId);
-        }
-
-        public Task Save(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Save(context);
-        }
-
-        public Task Discard(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Discard(context);
-        }
-
-        public Task Undo(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Undo(context);
-        }
-
-        public Task Update(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Update(context);
-        }
-
-        public Task Delete(SagaConsumeContext<TSaga> context)
-        {
-            return _context.Delete(context);
-        }
-
-        public IEnumerator<Guid> GetEnumerator()
-        {
-            return _results.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
-            where T : class
-        {
-            return _context.CreateSagaConsumeContext(consumeContext, instance, mode);
-        }
+        _context = context;
+        _results = results;
     }
 
+    public int Count => _results.Count;
 
-    public class DefaultSagaRepositoryQueryContext<TSaga> :
-        ProxyPipeContext,
-        SagaRepositoryQueryContext<TSaga>
-        where TSaga : class, ISaga
+    public Task<SagaConsumeContext<TSaga, TMessage>> Add(TSaga instance)
     {
-        readonly QuerySagaRepositoryContext<TSaga> _queryContext;
-        readonly IList<Guid> _results;
+        return _context.Add(instance);
+    }
 
-        public DefaultSagaRepositoryQueryContext(QuerySagaRepositoryContext<TSaga> queryContext, IList<Guid> results)
-            : base(queryContext)
-        {
-            _queryContext = queryContext;
-            _results = results;
-        }
+    public Task<SagaConsumeContext<TSaga, TMessage>> Insert(TSaga instance)
+    {
+        return _context.Insert(instance);
+    }
 
-        public int Count => _results.Count;
+    public Task<SagaConsumeContext<TSaga, TMessage>> Load(Guid correlationId)
+    {
+        return _context.Load(correlationId);
+    }
 
-        public Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
-        {
-            return _queryContext.Query(query, cancellationToken);
-        }
+    public Task Save(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Save(context);
+    }
 
-        public IEnumerator<Guid> GetEnumerator()
-        {
-            return _results.GetEnumerator();
-        }
+    public Task Discard(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Discard(context);
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    public Task Undo(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Undo(context);
+    }
+
+    public Task Update(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Update(context);
+    }
+
+    public Task Delete(SagaConsumeContext<TSaga> context)
+    {
+        return _context.Delete(context);
+    }
+
+    public IEnumerator<Guid> GetEnumerator()
+    {
+        return _results.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    public Task<SagaConsumeContext<TSaga, T>> CreateSagaConsumeContext<T>(ConsumeContext<T> consumeContext, TSaga instance, SagaConsumeContextMode mode)
+        where T : class
+    {
+        return _context.CreateSagaConsumeContext(consumeContext, instance, mode);
+    }
+}
+
+
+public class DefaultSagaRepositoryQueryContext<TSaga> :
+    ProxyPipeContext,
+    SagaRepositoryQueryContext<TSaga>
+    where TSaga : class, ISaga
+{
+    readonly QuerySagaRepositoryContext<TSaga> _queryContext;
+    readonly IList<Guid> _results;
+
+    public DefaultSagaRepositoryQueryContext(QuerySagaRepositoryContext<TSaga> queryContext, IList<Guid> results)
+        : base(queryContext)
+    {
+        _queryContext = queryContext;
+        _results = results;
+    }
+
+    public int Count => _results.Count;
+
+    public Task<SagaRepositoryQueryContext<TSaga>> Query(ISagaQuery<TSaga> query, CancellationToken cancellationToken)
+    {
+        return _queryContext.Query(query, cancellationToken);
+    }
+
+    public IEnumerator<Guid> GetEnumerator()
+    {
+        return _results.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

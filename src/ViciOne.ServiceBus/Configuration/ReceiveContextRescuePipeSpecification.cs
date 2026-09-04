@@ -1,31 +1,29 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Middleware.Rescue;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class ReceiveContextRescuePipeSpecification :
+    ExceptionSpecification,
+    IPipeSpecification<ReceiveContext>
 {
-    using System.Collections.Generic;
-    using Middleware;
-    using Middleware.Rescue;
+    readonly IPipe<ExceptionReceiveContext> _rescuePipe;
 
-
-    public class ReceiveContextRescuePipeSpecification :
-        ExceptionSpecification,
-        IPipeSpecification<ReceiveContext>
+    public ReceiveContextRescuePipeSpecification(IPipe<ExceptionReceiveContext> rescuePipe)
     {
-        readonly IPipe<ExceptionReceiveContext> _rescuePipe;
+        _rescuePipe = rescuePipe;
+    }
 
-        public ReceiveContextRescuePipeSpecification(IPipe<ExceptionReceiveContext> rescuePipe)
-        {
-            _rescuePipe = rescuePipe;
-        }
+    public void Apply(IPipeBuilder<ReceiveContext> builder)
+    {
+        builder.AddFilter(new RescueFilter<ReceiveContext, ExceptionReceiveContext>(_rescuePipe, Filter,
+            (context, ex) => new RescueExceptionReceiveContext(context, ex)));
+    }
 
-        public void Apply(IPipeBuilder<ReceiveContext> builder)
-        {
-            builder.AddFilter(new RescueFilter<ReceiveContext, ExceptionReceiveContext>(_rescuePipe, Filter,
-                (context, ex) => new RescueExceptionReceiveContext(context, ex)));
-        }
-
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_rescuePipe == null)
-                yield return this.Failure("RescuePipe", "must not be null");
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_rescuePipe == null)
+            yield return this.Failure("RescuePipe", "must not be null");
     }
 }

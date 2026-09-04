@@ -1,61 +1,59 @@
-namespace ViciOne.ServiceBus.Transports
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ViciOne.ServiceBus.Transports;
+
+/// <summary>
+/// Intercepts the ISendEndpoint and makes it part of the current consume context
+/// </summary>
+public class ConsumeSendEndpoint :
+    SendEndpointProxy
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    readonly ConsumeContext _context;
+    readonly bool _inheritRequestTimeToLive;
+    readonly Guid? _requestId;
 
-
-    /// <summary>
-    /// Intercepts the ISendEndpoint and makes it part of the current consume context
-    /// </summary>
-    public class ConsumeSendEndpoint :
-        SendEndpointProxy
+    public ConsumeSendEndpoint(ISendEndpoint endpoint, ConsumeContext context, Guid? requestId = default)
+        : this(endpoint, context, requestId, false)
     {
-        readonly ConsumeContext _context;
-        readonly bool _inheritRequestTimeToLive;
-        readonly Guid? _requestId;
+    }
 
-        public ConsumeSendEndpoint(ISendEndpoint endpoint, ConsumeContext context, Guid? requestId = default)
-            : this(endpoint, context, requestId, false)
-        {
-        }
+    internal ConsumeSendEndpoint(ISendEndpoint endpoint, ConsumeContext context, Guid? requestId,
+        bool inheritRequestTimeToLive)
+        : base(endpoint)
+    {
+        _context = context;
+        _requestId = requestId;
+        _inheritRequestTimeToLive = inheritRequestTimeToLive;
+    }
 
-        internal ConsumeSendEndpoint(ISendEndpoint endpoint, ConsumeContext context, Guid? requestId,
-            bool inheritRequestTimeToLive)
-            : base(endpoint)
-        {
-            _context = context;
-            _requestId = requestId;
-            _inheritRequestTimeToLive = inheritRequestTimeToLive;
-        }
+    public override Task Send<T>(T message, CancellationToken cancellationToken)
+        where T : class
+    {
+        return ConsumeTask(base.Send(message, cancellationToken));
+    }
 
-        public override Task Send<T>(T message, CancellationToken cancellationToken)
-            where T : class
-        {
-            return ConsumeTask(base.Send(message, cancellationToken));
-        }
+    public override Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
+        where T : class
+    {
+        return ConsumeTask(base.Send(message, pipe, cancellationToken));
+    }
 
-        public override Task Send<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
-            where T : class
-        {
-            return ConsumeTask(base.Send(message, pipe, cancellationToken));
-        }
+    public override Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
+        where T : class
+    {
+        return ConsumeTask(base.Send(message, pipe, cancellationToken));
+    }
 
-        public override Task Send<T>(T message, IPipe<SendContext> pipe, CancellationToken cancellationToken)
-            where T : class
-        {
-            return ConsumeTask(base.Send(message, pipe, cancellationToken));
-        }
+    protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
+    {
+        return new ConsumeSendPipeAdapter<T>(_context, pipe, _requestId, _inheritRequestTimeToLive);
+    }
 
-        protected override IPipe<SendContext<T>> GetPipeProxy<T>(IPipe<SendContext<T>> pipe = default)
-        {
-            return new ConsumeSendPipeAdapter<T>(_context, pipe, _requestId, _inheritRequestTimeToLive);
-        }
-
-        Task ConsumeTask(Task task)
-        {
-            _context.AddConsumeTask(task);
-            return task;
-        }
+    Task ConsumeTask(Task task)
+    {
+        _context.AddConsumeTask(task);
+        return task;
     }
 }

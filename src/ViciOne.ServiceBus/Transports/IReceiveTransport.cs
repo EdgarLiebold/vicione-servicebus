@@ -1,16 +1,15 @@
-namespace ViciOne.ServiceBus.Transports
+namespace ViciOne.ServiceBus.Transports;
+
+public interface IReceiveTransport :
+    IReceiveObserverConnector,
+    IPublishObserverConnector,
+    ISendObserverConnector,
+    IReceiveTransportObserverConnector,
+    IProbeSite
 {
-    public interface IReceiveTransport :
-        IReceiveObserverConnector,
-        IPublishObserverConnector,
-        ISendObserverConnector,
-        IReceiveTransportObserverConnector,
-        IProbeSite
-    {
-        /// <summary>
-        /// Start receiving on a transport, sending messages to the specified pipe.
-        /// </summary>
-        /// <returns></returns>
-        ReceiveTransportHandle Start();
-    }
+    /// <summary>
+    /// Start receiving on a transport, sending messages to the specified pipe.
+    /// </summary>
+    /// <returns></returns>
+    ReceiveTransportHandle Start();
 }

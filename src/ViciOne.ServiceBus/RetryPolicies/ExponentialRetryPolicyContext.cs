@@ -1,24 +1,22 @@
-namespace ViciOne.ServiceBus.RetryPolicies
+using System;
+using System.Threading;
+
+namespace ViciOne.ServiceBus.RetryPolicies;
+
+public class ExponentialRetryPolicyContext<TContext> :
+    BaseRetryPolicyContext<TContext>
+    where TContext : class, PipeContext
 {
-    using System;
-    using System.Threading;
+    readonly ExponentialRetryPolicy _policy;
 
-
-    public class ExponentialRetryPolicyContext<TContext> :
-        BaseRetryPolicyContext<TContext>
-        where TContext : class, PipeContext
+    public ExponentialRetryPolicyContext(ExponentialRetryPolicy policy, TContext context)
+        : base(policy, context)
     {
-        readonly ExponentialRetryPolicy _policy;
+        _policy = policy;
+    }
 
-        public ExponentialRetryPolicyContext(ExponentialRetryPolicy policy, TContext context)
-            : base(policy, context)
-        {
-            _policy = policy;
-        }
-
-        protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
-        {
-            return new ExponentialRetryContext<TContext>(_policy, Context, exception, 0, cancellationToken);
-        }
+    protected override RetryContext<TContext> CreateRetryContext(Exception exception, CancellationToken cancellationToken)
+    {
+        return new ExponentialRetryContext<TContext>(_policy, Context, exception, 0, cancellationToken);
     }
 }

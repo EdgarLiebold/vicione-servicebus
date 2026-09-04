@@ -1,21 +1,19 @@
-namespace ViciOne.ServiceBus
+using ViciOne.ServiceBus.RabbitMqTransport.Topology;
+
+namespace ViciOne.ServiceBus;
+
+public interface IRabbitMqPublishTopology :
+    IPublishTopology
 {
-    using RabbitMqTransport.Topology;
+    IExchangeTypeSelector ExchangeTypeSelector { get; }
 
+    /// <summary>
+    /// Determines how type hierarchy is configured on the broker
+    /// </summary>
+    PublishBrokerTopologyOptions BrokerTopologyOptions { get; }
 
-    public interface IRabbitMqPublishTopology :
-        IPublishTopology
-    {
-        IExchangeTypeSelector ExchangeTypeSelector { get; }
+    new IRabbitMqMessagePublishTopology<T> GetMessageTopology<T>()
+        where T : class;
 
-        /// <summary>
-        /// Determines how type hierarchy is configured on the broker
-        /// </summary>
-        PublishBrokerTopologyOptions BrokerTopologyOptions { get; }
-
-        new IRabbitMqMessagePublishTopology<T> GetMessageTopology<T>()
-            where T : class;
-
-        BrokerTopology GetPublishBrokerTopology();
-    }
+    BrokerTopology GetPublishBrokerTopology();
 }

@@ -1,92 +1,90 @@
-namespace ViciOne.ServiceBus.Util.Scanning
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace ViciOne.ServiceBus.Util.Scanning;
+
+public class AssemblyFinder
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
+    public delegate bool AssemblyFilter(string filename);
 
 
-    public class AssemblyFinder
+    public delegate void AssemblyLoadFailure(string assemblyName, Exception exception);
+
+
+    public static IEnumerable<Assembly> FindAssemblies(AssemblyLoadFailure loadFailure, bool includeExeFiles, AssemblyFilter filter)
     {
-        public delegate bool AssemblyFilter(string filename);
+        var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
+        var binPath = string.Empty;
 
+        if (string.IsNullOrEmpty(binPath))
+            return FindAssemblies(assemblyPath, loadFailure, includeExeFiles, filter);
 
-        public delegate void AssemblyLoadFailure(string assemblyName, Exception exception);
+        if (Path.IsPathRooted(binPath))
+            return FindAssemblies(binPath, loadFailure, includeExeFiles, filter);
 
-
-        public static IEnumerable<Assembly> FindAssemblies(AssemblyLoadFailure loadFailure, bool includeExeFiles, AssemblyFilter filter)
+        var binPaths = binPath.Split(';');
+        return binPaths.SelectMany(bin =>
         {
-            var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
-            var binPath = string.Empty;
+            var path = Path.Combine(assemblyPath, bin);
+            return FindAssemblies(path, loadFailure, includeExeFiles, filter);
+        });
+    }
 
-            if (string.IsNullOrEmpty(binPath))
-                return FindAssemblies(assemblyPath, loadFailure, includeExeFiles, filter);
+    public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, AssemblyLoadFailure loadFailure, bool includeExeFiles, AssemblyFilter filter)
+    {
+        LogContext.Debug?.Log("Scanning assembly directory: {Path}", assemblyPath);
 
-            if (Path.IsPathRooted(binPath))
-                return FindAssemblies(binPath, loadFailure, includeExeFiles, filter);
+        IEnumerable<string> dllFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories).ToList();
+        IEnumerable<string> files = dllFiles;
 
-            var binPaths = binPath.Split(';');
-            return binPaths.SelectMany(bin =>
-            {
-                var path = Path.Combine(assemblyPath, bin);
-                return FindAssemblies(path, loadFailure, includeExeFiles, filter);
-            });
+        if (includeExeFiles)
+        {
+            IEnumerable<string> exeFiles = Directory.EnumerateFiles(assemblyPath, "*.exe", SearchOption.AllDirectories).ToList();
+            files = dllFiles.Concat(exeFiles);
         }
 
-        public static IEnumerable<Assembly> FindAssemblies(string assemblyPath, AssemblyLoadFailure loadFailure, bool includeExeFiles, AssemblyFilter filter)
+        foreach (var file in files)
         {
-            LogContext.Debug?.Log("Scanning assembly directory: {Path}", assemblyPath);
+            var name = Path.GetFileNameWithoutExtension(file);
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
 
-            IEnumerable<string> dllFiles = Directory.EnumerateFiles(assemblyPath, "*.dll", SearchOption.AllDirectories).ToList();
-            IEnumerable<string> files = dllFiles;
-
-            if (includeExeFiles)
+            var filterName = Path.GetFileName(file);
+            if (!filter(filterName))
             {
-                IEnumerable<string> exeFiles = Directory.EnumerateFiles(assemblyPath, "*.exe", SearchOption.AllDirectories).ToList();
-                files = dllFiles.Concat(exeFiles);
+                LogContext.Debug?.Log("Filtered assembly: {File}", file);
+
+                continue;
             }
 
-            foreach (var file in files)
+            Assembly loadedAssembly = null;
+            try
             {
-                var name = Path.GetFileNameWithoutExtension(file);
-                if (string.IsNullOrWhiteSpace(name))
-                    continue;
+                loadedAssembly = Assembly.Load(name);
+            }
+            catch (BadImageFormatException exception)
+            {
+                LogContext.Warning?.Log(exception, "Assembly Scan failed: {Name}", name);
 
-                var filterName = Path.GetFileName(file);
-                if (!filter(filterName))
-                {
-                    LogContext.Debug?.Log("Filtered assembly: {File}", file);
-
-                    continue;
-                }
-
-                Assembly loadedAssembly = null;
+                continue;
+            }
+            catch (Exception originalException)
+            {
                 try
                 {
-                    loadedAssembly = Assembly.Load(name);
+                    loadedAssembly = Assembly.Load(file);
                 }
-                catch (BadImageFormatException exception)
+                catch (Exception)
                 {
-                    LogContext.Warning?.Log(exception, "Assembly Scan failed: {Name}", name);
-
-                    continue;
+                    loadFailure(file, originalException);
                 }
-                catch (Exception originalException)
-                {
-                    try
-                    {
-                        loadedAssembly = Assembly.Load(file);
-                    }
-                    catch (Exception)
-                    {
-                        loadFailure(file, originalException);
-                    }
-                }
-
-                if (loadedAssembly != null)
-                    yield return loadedAssembly;
             }
+
+            if (loadedAssembly != null)
+                yield return loadedAssembly;
         }
     }
 }

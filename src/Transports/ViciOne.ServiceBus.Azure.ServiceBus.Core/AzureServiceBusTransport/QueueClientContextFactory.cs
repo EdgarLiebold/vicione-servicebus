@@ -1,22 +1,20 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class QueueClientContextFactory :
+    ClientContextFactory
 {
-    using System;
+    readonly ReceiveSettings _settings;
 
-
-    public class QueueClientContextFactory :
-        ClientContextFactory
+    public QueueClientContextFactory(IConnectionContextSupervisor supervisor, ReceiveSettings settings)
+        : base(supervisor, settings)
     {
-        readonly ReceiveSettings _settings;
+        _settings = settings;
+    }
 
-        public QueueClientContextFactory(IConnectionContextSupervisor supervisor, ReceiveSettings settings)
-            : base(supervisor, settings)
-        {
-            _settings = settings;
-        }
-
-        protected override ClientContext CreateClientContext(ConnectionContext connectionContext, Uri inputAddress, IAgent agent)
-        {
-            return new QueueClientContext(connectionContext, inputAddress, _settings, agent);
-        }
+    protected override ClientContext CreateClientContext(ConnectionContext connectionContext, Uri inputAddress, IAgent agent)
+    {
+        return new QueueClientContext(connectionContext, inputAddress, _settings, agent);
     }
 }

@@ -1,58 +1,56 @@
-namespace ViciOne.ServiceBus.Configuration
+using System.Collections.Generic;
+using System.Threading;
+using ViciOne.ServiceBus.Context;
+using ViciOne.ServiceBus.Courier.Contracts;
+using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Observables;
+using ViciOne.ServiceBus.RetryPolicies;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+public class CompensateContextRedeliveryPipeSpecification<TLog> :
+    ExceptionSpecification,
+    IRedeliveryConfigurator,
+    IPipeSpecification<CompensateContext<TLog>>
+    where TLog : class
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using Context;
-    using Courier.Contracts;
-    using Middleware;
-    using Observables;
-    using RetryPolicies;
+    readonly RetryObservable _observers;
+    RetryPolicyFactory _policyFactory;
 
-
-    public class CompensateContextRedeliveryPipeSpecification<TLog> :
-        ExceptionSpecification,
-        IRedeliveryConfigurator,
-        IPipeSpecification<CompensateContext<TLog>>
-        where TLog : class
+    public CompensateContextRedeliveryPipeSpecification()
     {
-        readonly RetryObservable _observers;
-        RetryPolicyFactory _policyFactory;
+        _observers = new RetryObservable();
+    }
 
-        public CompensateContextRedeliveryPipeSpecification()
-        {
-            _observers = new RetryObservable();
-        }
+    public void Apply(IPipeBuilder<CompensateContext<TLog>> builder)
+    {
+        var retryPolicy = _policyFactory(Filter);
 
-        public void Apply(IPipeBuilder<CompensateContext<TLog>> builder)
-        {
-            var retryPolicy = _policyFactory(Filter);
+        var policy = new ConsumeContextRetryPolicy<CompensateContext<TLog>, RetryCompensateContext<TLog>>(retryPolicy, CancellationToken.None, Factory);
 
-            var policy = new ConsumeContextRetryPolicy<CompensateContext<TLog>, RetryCompensateContext<TLog>>(retryPolicy, CancellationToken.None, Factory);
+        builder.AddFilter(new RedeliveryRetryFilter<CompensateContext<TLog>, RoutingSlip>(policy, _observers));
+    }
 
-            builder.AddFilter(new RedeliveryRetryFilter<CompensateContext<TLog>, RoutingSlip>(policy, _observers));
-        }
+    public IEnumerable<ValidationResult> Validate()
+    {
+        if (_policyFactory == null)
+            yield return this.Failure("RetryPolicy", "must not be null");
+    }
 
-        public IEnumerable<ValidationResult> Validate()
-        {
-            if (_policyFactory == null)
-                yield return this.Failure("RetryPolicy", "must not be null");
-        }
+    public void SetRetryPolicy(RetryPolicyFactory factory)
+    {
+        _policyFactory = factory;
+    }
 
-        public void SetRetryPolicy(RetryPolicyFactory factory)
-        {
-            _policyFactory = factory;
-        }
+    ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
+    {
+        return _observers.Connect(observer);
+    }
 
-        ConnectHandle IRetryObserverConnector.ConnectRetryObserver(IRetryObserver observer)
-        {
-            return _observers.Connect(observer);
-        }
+    public bool ReplaceMessageId { get; set; }
 
-        public bool ReplaceMessageId { get; set; }
-
-        static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
-        {
-            return new RetryCompensateContext<TLog>(context, retryPolicy, retryContext);
-        }
+    static RetryCompensateContext<TLog> Factory(CompensateContext<TLog> context, IRetryPolicy retryPolicy, RetryContext retryContext)
+    {
+        return new RetryCompensateContext<TLog>(context, retryPolicy, retryContext);
     }
 }

@@ -1,109 +1,107 @@
-namespace ViciOne.ServiceBus.AzureServiceBusTransport
+using System;
+using ViciOne.ServiceBus.AzureServiceBusTransport.Configuration;
+using ViciOne.ServiceBus.Transports;
+
+namespace ViciOne.ServiceBus.AzureServiceBusTransport;
+
+public class ServiceBusHost :
+    BaseHost,
+    IServiceBusHost
 {
-    using System;
-    using Configuration;
-    using Transports;
+    readonly IServiceBusHostConfiguration _hostConfiguration;
 
-
-    public class ServiceBusHost :
-        BaseHost,
-        IServiceBusHost
+    public ServiceBusHost(IServiceBusHostConfiguration hostConfiguration, IServiceBusBusTopology busTopology)
+        : base(hostConfiguration, busTopology)
     {
-        readonly IServiceBusHostConfiguration _hostConfiguration;
+        _hostConfiguration = hostConfiguration;
+        Topology = busTopology;
+    }
 
-        public ServiceBusHost(IServiceBusHostConfiguration hostConfiguration, IServiceBusBusTopology busTopology)
-            : base(hostConfiguration, busTopology)
+    public new IServiceBusBusTopology Topology { get; }
+
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
+        Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    {
+        return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
+    }
+
+    public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+    {
+        return ConnectReceiveEndpoint(queueName, configureEndpoint);
+    }
+
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter = null,
+        Action<IServiceBusReceiveEndpointConfigurator> configureEndpoint = null)
+    {
+        var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
+
+        return ConnectReceiveEndpoint(queueName, configurator =>
         {
-            _hostConfiguration = hostConfiguration;
-            Topology = busTopology;
-        }
+            _hostConfiguration.ApplyEndpointDefinition(configurator, definition);
+            configureEndpoint?.Invoke(configurator);
+        });
+    }
 
-        public new IServiceBusBusTopology Topology { get; }
+    public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator> configure = null)
+    {
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
 
-        public override HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,
-            Action<IReceiveEndpointConfigurator> configureEndpoint = null)
+        var configuration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName, configure);
+
+        configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
+
+        TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
+
+        configuration.Build(this);
+
+        return ReceiveEndpoints.Start(configuration.Settings.Path);
+    }
+
+    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
+        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+        where T : class
+    {
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+
+        var endpointConfiguration = _hostConfiguration.CreateSubscriptionEndpointConfiguration<T>(subscriptionName, configure);
+
+        return ConnectSubscriptionEndpoint(endpointConfiguration);
+    }
+
+    public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
+        Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
+    {
+        LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+
+        var endpointConfiguration = _hostConfiguration.CreateSubscriptionEndpointConfiguration(subscriptionName, topicName, configure);
+
+        return ConnectSubscriptionEndpoint(endpointConfiguration);
+    }
+
+    protected override void Probe(ProbeContext context)
+    {
+        context.Set(new
         {
-            return ConnectReceiveEndpoint(definition, endpointNameFormatter, configureEndpoint);
-        }
+            Type = "Azure Service Bus",
+            _hostConfiguration.HostAddress,
+        });
 
-        public override HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IReceiveEndpointConfigurator> configureEndpoint = null)
-        {
-            return ConnectReceiveEndpoint(queueName, configureEndpoint);
-        }
+        _hostConfiguration.ConnectionContextSupervisor.Probe(context);
+    }
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter = null,
-            Action<IServiceBusReceiveEndpointConfigurator> configureEndpoint = null)
-        {
-            var queueName = definition.GetEndpointName(endpointNameFormatter ?? DefaultEndpointNameFormatter.Instance);
+    HostReceiveEndpointHandle ConnectSubscriptionEndpoint(IServiceBusSubscriptionEndpointConfiguration configuration)
+    {
+        LogContext.Debug?.Log("Connect subscription endpoint: {Topic}/{SubscriptionName}", configuration.Settings.Path, configuration.Settings.Name);
 
-            return ConnectReceiveEndpoint(queueName, configurator =>
-            {
-                _hostConfiguration.ApplyEndpointDefinition(configurator, definition);
-                configureEndpoint?.Invoke(configurator);
-            });
-        }
+        configuration.Validate().ThrowIfContainsFailure("The subscription endpoint configuration is invalid:");
 
-        public HostReceiveEndpointHandle ConnectReceiveEndpoint(string queueName, Action<IServiceBusReceiveEndpointConfigurator> configure = null)
-        {
-            LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
+        configuration.Build(this);
 
-            var configuration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName, configure);
+        return ReceiveEndpoints.Start(configuration.Settings.Path);
+    }
 
-            configuration.Validate().ThrowIfContainsFailure("The receive endpoint configuration is invalid:");
-
-            TransportLogMessages.ConnectReceiveEndpoint(configuration.InputAddress);
-
-            configuration.Build(this);
-
-            return ReceiveEndpoints.Start(configuration.Settings.Path);
-        }
-
-        public HostReceiveEndpointHandle ConnectSubscriptionEndpoint<T>(string subscriptionName,
-            Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
-            where T : class
-        {
-            LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
-
-            var endpointConfiguration = _hostConfiguration.CreateSubscriptionEndpointConfiguration<T>(subscriptionName, configure);
-
-            return ConnectSubscriptionEndpoint(endpointConfiguration);
-        }
-
-        public HostReceiveEndpointHandle ConnectSubscriptionEndpoint(string subscriptionName, string topicName,
-            Action<IServiceBusSubscriptionEndpointConfigurator> configure = null)
-        {
-            LogContext.SetCurrentIfNull(_hostConfiguration.LogContext);
-
-            var endpointConfiguration = _hostConfiguration.CreateSubscriptionEndpointConfiguration(subscriptionName, topicName, configure);
-
-            return ConnectSubscriptionEndpoint(endpointConfiguration);
-        }
-
-        protected override void Probe(ProbeContext context)
-        {
-            context.Set(new
-            {
-                Type = "Azure Service Bus",
-                _hostConfiguration.HostAddress,
-            });
-
-            _hostConfiguration.ConnectionContextSupervisor.Probe(context);
-        }
-
-        HostReceiveEndpointHandle ConnectSubscriptionEndpoint(IServiceBusSubscriptionEndpointConfiguration configuration)
-        {
-            LogContext.Debug?.Log("Connect subscription endpoint: {Topic}/{SubscriptionName}", configuration.Settings.Path, configuration.Settings.Name);
-
-            configuration.Validate().ThrowIfContainsFailure("The subscription endpoint configuration is invalid:");
-
-            configuration.Build(this);
-
-            return ReceiveEndpoints.Start(configuration.Settings.Path);
-        }
-
-        protected override IAgent[] GetAgentHandles()
-        {
-            return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };
-        }
+    protected override IAgent[] GetAgentHandles()
+    {
+        return new IAgent[] { _hostConfiguration.ConnectionContextSupervisor };
     }
 }

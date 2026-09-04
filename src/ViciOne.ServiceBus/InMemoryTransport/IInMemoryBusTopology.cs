@@ -1,9 +1,8 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IInMemoryBusTopology :
+    IBusTopology
 {
-    public interface IInMemoryBusTopology :
-        IBusTopology
-    {
-        new IInMemoryMessagePublishTopology<T> Publish<T>()
-            where T : class;
-    }
+    new IInMemoryMessagePublishTopology<T> Publish<T>()
+        where T : class;
 }

@@ -1,18 +1,17 @@
-namespace ViciOne.ServiceBus
+namespace ViciOne.ServiceBus;
+
+public interface IActiveMqMessagePublishTopologyConfigurator<TMessage> :
+    IMessagePublishTopologyConfigurator<TMessage>,
+    IActiveMqMessagePublishTopology<TMessage>,
+    IActiveMqMessagePublishTopologyConfigurator
+    where TMessage : class
 {
-    public interface IActiveMqMessagePublishTopologyConfigurator<TMessage> :
-        IMessagePublishTopologyConfigurator<TMessage>,
-        IActiveMqMessagePublishTopology<TMessage>,
-        IActiveMqMessagePublishTopologyConfigurator
-        where TMessage : class
-    {
-    }
+}
 
 
-    public interface IActiveMqMessagePublishTopologyConfigurator :
-        IMessagePublishTopologyConfigurator,
-        IActiveMqMessagePublishTopology,
-        IActiveMqTopicConfigurator
-    {
-    }
+public interface IActiveMqMessagePublishTopologyConfigurator :
+    IMessagePublishTopologyConfigurator,
+    IActiveMqMessagePublishTopology,
+    IActiveMqTopicConfigurator
+{
 }

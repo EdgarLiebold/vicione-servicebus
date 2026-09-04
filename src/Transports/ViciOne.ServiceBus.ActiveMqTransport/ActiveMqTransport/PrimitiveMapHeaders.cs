@@ -1,97 +1,95 @@
-namespace ViciOne.ServiceBus.ActiveMqTransport
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Apache.NMS;
+
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class PrimitiveMapHeaders :
+    SendHeaders
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using Apache.NMS;
+    readonly IPrimitiveMap _properties;
 
-
-    public class PrimitiveMapHeaders :
-        SendHeaders
+    public PrimitiveMapHeaders(IPrimitiveMap properties)
     {
-        readonly IPrimitiveMap _properties;
+        _properties = properties;
+    }
 
-        public PrimitiveMapHeaders(IPrimitiveMap properties)
+    public void Set(string key, string value)
+    {
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
+
+        if (value == null)
+            _properties.Remove(key);
+        else
+            _properties[key] = value;
+    }
+
+    public void Set(string key, object value, bool overwrite)
+    {
+        if (key == null)
+            throw new ArgumentNullException(nameof(key));
+
+        if (overwrite)
         {
-            _properties = properties;
-        }
-
-        public void Set(string key, string value)
-        {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
             if (value == null)
                 _properties.Remove(key);
             else
                 _properties[key] = value;
         }
+        else if (!_properties.Contains(key))
+            _properties[key] = value;
+    }
 
-        public void Set(string key, object value, bool overwrite)
+    public bool TryGetHeader(string key, out object value)
+    {
+        var found = _properties.Contains(key);
+        if (found)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            if (overwrite)
-            {
-                if (value == null)
-                    _properties.Remove(key);
-                else
-                    _properties[key] = value;
-            }
-            else if (!_properties.Contains(key))
-                _properties[key] = value;
+            value = _properties[key];
+            return true;
         }
 
-        public bool TryGetHeader(string key, out object value)
+        value = null;
+        return false;
+    }
+
+    public IEnumerable<KeyValuePair<string, object>> GetAll()
+    {
+        foreach (string key in _properties.Keys)
         {
-            var found = _properties.Contains(key);
-            if (found)
-            {
-                value = _properties[key];
-                return true;
-            }
+            var value = _properties[key];
 
-            value = null;
-            return false;
+            yield return new KeyValuePair<string, object>(key, value);
         }
+    }
 
-        public IEnumerable<KeyValuePair<string, object>> GetAll()
+    public T Get<T>(string key, T defaultValue)
+        where T : class
+    {
+        throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");
+    }
+
+    public T? Get<T>(string key, T? defaultValue)
+        where T : struct
+    {
+        throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");
+    }
+
+    public IEnumerator<HeaderValue> GetEnumerator()
+    {
+        foreach (string key in _properties.Keys)
         {
-            foreach (string key in _properties.Keys)
-            {
-                var value = _properties[key];
+            var value = _properties[key];
 
-                yield return new KeyValuePair<string, object>(key, value);
-            }
+            if (value != null)
+                yield return new HeaderValue(key, value);
         }
+    }
 
-        public T Get<T>(string key, T defaultValue)
-            where T : class
-        {
-            throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");
-        }
-
-        public T? Get<T>(string key, T? defaultValue)
-            where T : struct
-        {
-            throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");
-        }
-
-        public IEnumerator<HeaderValue> GetEnumerator()
-        {
-            foreach (string key in _properties.Keys)
-            {
-                var value = _properties[key];
-
-                if (value != null)
-                    yield return new HeaderValue(key, value);
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

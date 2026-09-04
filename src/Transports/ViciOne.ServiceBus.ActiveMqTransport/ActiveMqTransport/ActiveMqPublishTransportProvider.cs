@@ -1,29 +1,27 @@
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+
 #nullable enable
-namespace ViciOne.ServiceBus.ActiveMqTransport
+namespace ViciOne.ServiceBus.ActiveMqTransport;
+
+public class ActiveMqPublishTransportProvider :
+    IPublishTransportProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
+    readonly IConnectionContextSupervisor _connectionContextSupervisor;
+    readonly ActiveMqReceiveEndpointContext _context;
+    readonly ISessionContextSupervisor _supervisor;
 
-
-    public class ActiveMqPublishTransportProvider :
-        IPublishTransportProvider
+    public ActiveMqPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ActiveMqReceiveEndpointContext context)
     {
-        readonly IConnectionContextSupervisor _connectionContextSupervisor;
-        readonly ActiveMqReceiveEndpointContext _context;
-        readonly ISessionContextSupervisor _supervisor;
+        _connectionContextSupervisor = connectionContextSupervisor;
+        _context = context;
+        _supervisor = context.SessionContextSupervisor;
+    }
 
-        public ActiveMqPublishTransportProvider(IConnectionContextSupervisor connectionContextSupervisor, ActiveMqReceiveEndpointContext context)
-        {
-            _connectionContextSupervisor = connectionContextSupervisor;
-            _context = context;
-            _supervisor = context.SessionContextSupervisor;
-        }
-
-        public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
-            where T : class
-        {
-            return _connectionContextSupervisor.CreatePublishTransport<T>(_context, _supervisor);
-        }
+    public Task<ISendTransport> GetPublishTransport<T>(Uri? publishAddress)
+        where T : class
+    {
+        return _connectionContextSupervisor.CreatePublishTransport<T>(_context, _supervisor);
     }
 }

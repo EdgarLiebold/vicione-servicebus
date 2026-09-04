@@ -1,65 +1,63 @@
-namespace ViciOne.ServiceBus
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+
+namespace ViciOne.ServiceBus;
+
+public class ViciOneServiceBusHostedService :
+    IHostedService,
+    IAsyncDisposable
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Options;
+    readonly IBusDepot _depot;
+    readonly IOptions<ViciOneServiceBusHostOptions> _options;
+    Task _startTask;
+    bool _stopped;
 
-
-    public class ViciOneServiceBusHostedService :
-        IHostedService,
-        IAsyncDisposable
+    public ViciOneServiceBusHostedService(IBusDepot depot, IOptions<ViciOneServiceBusHostOptions> options)
     {
-        readonly IBusDepot _depot;
-        readonly IOptions<ViciOneServiceBusHostOptions> _options;
-        Task _startTask;
-        bool _stopped;
+        _depot = depot;
+        _options = options;
+    }
 
-        public ViciOneServiceBusHostedService(IBusDepot depot, IOptions<ViciOneServiceBusHostOptions> options)
+    public async ValueTask DisposeAsync()
+    {
+        if (_stopped)
+            return;
+
+        if (_options.Value.StopTimeout.HasValue)
         {
-            _depot = depot;
-            _options = options;
+            using var tokenSource = new CancellationTokenSource(_options.Value.StopTimeout.Value);
+
+            await _depot.Stop(tokenSource.Token).ConfigureAwait(false);
         }
+        else
+            await _depot.Stop(CancellationToken.None).ConfigureAwait(false);
 
-        public async ValueTask DisposeAsync()
+        _stopped = true;
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _startTask = _options.Value.StartTimeout.HasValue
+            ? _depot.Start(_options.Value.StartTimeout.Value, cancellationToken)
+            : _depot.Start(cancellationToken);
+
+        return _startTask.IsCompleted || _options.Value.WaitUntilStarted
+            ? _startTask
+            : Task.CompletedTask;
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (!_stopped)
         {
-            if (_stopped)
-                return;
-
-            if (_options.Value.StopTimeout.HasValue)
-            {
-                using var tokenSource = new CancellationTokenSource(_options.Value.StopTimeout.Value);
-
-                await _depot.Stop(tokenSource.Token).ConfigureAwait(false);
-            }
-            else
-                await _depot.Stop(CancellationToken.None).ConfigureAwait(false);
-
             _stopped = true;
-        }
 
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            _startTask = _options.Value.StartTimeout.HasValue
-                ? _depot.Start(_options.Value.StartTimeout.Value, cancellationToken)
-                : _depot.Start(cancellationToken);
-
-            return _startTask.IsCompleted || _options.Value.WaitUntilStarted
-                ? _startTask
-                : Task.CompletedTask;
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            if (!_stopped)
-            {
-                _stopped = true;
-
-                await (_options.Value.StopTimeout.HasValue
-                    ? _depot.Stop(_options.Value.StopTimeout.Value, cancellationToken)
-                    : _depot.Stop(cancellationToken)).ConfigureAwait(false);
-            }
+            await (_options.Value.StopTimeout.HasValue
+                ? _depot.Stop(_options.Value.StopTimeout.Value, cancellationToken)
+                : _depot.Stop(cancellationToken)).ConfigureAwait(false);
         }
     }
 }

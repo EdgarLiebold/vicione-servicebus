@@ -1,15 +1,14 @@
-#nullable enable
-
-namespace ViciOne.ServiceBus.Diagnostics;
-
 using System;
-using System.Collections.Generic;
 using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
+namespace ViciOne.ServiceBus.Diagnostics;
 /// <summary>
 /// Caches immutable sensitivity metadata without pinning collectible message assemblies.
 /// </summary>

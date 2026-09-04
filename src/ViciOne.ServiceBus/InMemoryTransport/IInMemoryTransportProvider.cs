@@ -1,23 +1,21 @@
-namespace ViciOne.ServiceBus.InMemoryTransport
+using System;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Transports;
+using ViciOne.ServiceBus.Transports.Fabric;
+
+namespace ViciOne.ServiceBus.InMemoryTransport;
+
+public interface IInMemoryTransportProvider :
+    InMemoryTransportContext,
+    IAgent,
+    IProbeSite
 {
-    using System;
-    using System.Threading.Tasks;
-    using Transports;
-    using Transports.Fabric;
+    IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> MessageFabric { get; }
 
+    Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext context, Uri address);
 
-    public interface IInMemoryTransportProvider :
-        InMemoryTransportContext,
-        IAgent,
-        IProbeSite
-    {
-        IMessageFabric<InMemoryTransportContext, InMemoryTransportMessage> MessageFabric { get; }
+    Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext context, Uri publishAddress)
+        where T : class;
 
-        Task<ISendTransport> CreateSendTransport(ReceiveEndpointContext context, Uri address);
-
-        Task<ISendTransport> CreatePublishTransport<T>(ReceiveEndpointContext context, Uri publishAddress)
-            where T : class;
-
-        Uri NormalizeAddress(Uri address);
-    }
+    Uri NormalizeAddress(Uri address);
 }

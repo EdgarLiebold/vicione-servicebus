@@ -1,25 +1,23 @@
-namespace ViciOne.ServiceBus
+using System;
+
+namespace ViciOne.ServiceBus;
+
+[Serializable]
+public class ConsumeContextNotAvailableException :
+    ViciOneServiceBusException
 {
-    using System;
-
-
-    [Serializable]
-    public class ConsumeContextNotAvailableException :
-        ViciOneServiceBusException
+    public ConsumeContextNotAvailableException()
+        : this("A valid ConsumeContext was not available")
     {
-        public ConsumeContextNotAvailableException()
-            : this("A valid ConsumeContext was not available")
-        {
-        }
+    }
 
-        public ConsumeContextNotAvailableException(string message)
-            : base(message)
-        {
-        }
+    public ConsumeContextNotAvailableException(string message)
+        : base(message)
+    {
+    }
 
-        public ConsumeContextNotAvailableException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public ConsumeContextNotAvailableException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }
