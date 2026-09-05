@@ -34,6 +34,27 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
         T message,
         CancellationToken cancellationToken = default)
         where T : class
+        => await ScheduleSendCoreAsync(destination, dueAt, message, null, cancellationToken).ConfigureAwait(false);
+
+    public async Task<ScheduledMessage<T>> ScheduleSendAsync<T>(
+        Uri destination,
+        DateTimeOffset dueAt,
+        T message,
+        ScheduleOptions options,
+        CancellationToken cancellationToken = default)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return await ScheduleSendCoreAsync(destination, dueAt, message, options, cancellationToken).ConfigureAwait(false);
+    }
+
+    async Task<ScheduledMessage<T>> ScheduleSendCoreAsync<T>(
+        Uri destination,
+        DateTimeOffset dueAt,
+        T message,
+        ScheduleOptions? options,
+        CancellationToken cancellationToken)
+        where T : class
     {
         ArgumentNullException.ThrowIfNull(destination);
         ArgumentNullException.ThrowIfNull(message);
@@ -45,7 +66,13 @@ internal sealed class ReliableMessageScheduler<TBus> : IMessageScheduler
         await _sender.SendAsync(
                 destination,
                 message,
-                new DurableSendOptions { IdempotencyKey = id, DueAt = dueAt },
+                new DurableSendOptions
+                {
+                    IdempotencyKey = id,
+                    CorrelationId = options?.CorrelationId,
+                    DueAt = dueAt,
+                    ScheduledMessageOptions = options,
+                },
                 cancellationToken)
             .ConfigureAwait(false);
         return new ScheduledMessageHandle<T>(id.Value, dueAt, destination, message);

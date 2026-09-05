@@ -64,3 +64,32 @@ Five isolated mutations were killed and restored: PostgreSQL relative-value reje
 - Engineering style verification at warning severity: passed.
 
 A repeat full-profile run exposed an existing observation-test race: the handler completion signal could precede publication into the consumed-message observer list. The test now awaits the public observation signal before taking a deliberately non-waiting snapshot. The formerly failing test passed ten isolated repetitions and the final complete profile. The private async iterator in the same file was also renamed from `Empty` to `EmptyAsync`, closing the previously recorded bidirectional async-naming exception.
+
+## Iteration 3
+
+Iteration 3 closes the direct behavior gaps around all 29 properties on `SendOptions`, `PublishOptions`, `ScheduleOptions`, and `RequestOptions`, their application entry points, the generic request-client wrapper, consume-context outgoing operations, and the reliable-messaging read and reference partitions.
+
+### Red/green evidence
+
+| Contract | Baseline result | Corrected result |
+|---|---:|---:|
+| Unsupported application partition key | silently ignored | explicit failure before context mutation |
+| Explicit request identity | request timed out because response matching retained a generated identifier | exact request/response identifier round trip |
+| Reliable inbox query boundary | four invalid inputs reached the provider | all invalid inputs rejected before provider I/O |
+| Reliable scheduler options | options overload rejected by the reliable scheduler | all supported envelope metadata persisted and replayed |
+
+The tests exercise direct `ISendEndpoint`, `IPublishEndpoint`, `IMessageScheduler`, `IRequestClient<T>`, `IOutgoingMessages`, `ConsumeContext` response, generic request-client, and `IReliableMessagingOperations<TBus>` entry points. Every application options property is asserted independently. Defaults, nulls, exact cancellation-token identity, an injected-clock deadline boundary, unsupported partition capability, both reliable-reference kinds, and complete/incomplete cursor shapes are included.
+
+Four isolated mutation groups were killed and restored: reintroducing silent partition-key discard, removing the request-identifier assignment from the common options pipe, bypassing facade-level inbox-query validation, and dropping scheduled envelope metadata before durable persistence. The original explicit-request-identity red run additionally timed out before the request handle itself was corrected to own the configured identity.
+
+### Test quality
+
+The new tests contain no sleeps, wall-clock polling, skipped cases, broad exception catches, tautological assertions, or assertion-free test bodies. Protocol-boundary doubles record exact objects and cancellation tokens; in-memory integration tests independently prove round trips through the public application surface. The common inbox-query validator remains internal and therefore does not enlarge the public provider API.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,767 passed, 0 failed, 0 skipped across 21 assemblies.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace verification: passed.
+- Engineering style verification at warning severity: passed.

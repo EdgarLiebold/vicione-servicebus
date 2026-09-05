@@ -45,7 +45,10 @@ internal sealed class ReliableMessagingOperations<TBus> : IReliableMessagingOper
     public Task<ReliableInboxQuarantinePage> GetInboxQuarantineAsync(
         ReliableInboxQuarantineQuery query,
         CancellationToken cancellationToken = default)
-        => _inbox.GetQuarantineAsync(query, cancellationToken);
+    {
+        _ = ReliableInboxQuarantinePagination.Validate(query);
+        return _inbox.GetQuarantineAsync(query, cancellationToken);
+    }
 
     public async Task<ReliableMessagingOperationResult> RequeueAsync(
         ReliableMessageReference reference,

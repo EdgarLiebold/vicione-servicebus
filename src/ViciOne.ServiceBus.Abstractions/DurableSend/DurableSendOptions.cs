@@ -19,6 +19,8 @@ public sealed record DurableSendOptions
     /// </summary>
     public DateTimeOffset? DueAt { get; init; }
 
+    internal ScheduleOptions? ScheduledMessageOptions { get; init; }
+
     internal DurableSendOptions Validate()
     {
         if (IdempotencyKey.Value == Guid.Empty)

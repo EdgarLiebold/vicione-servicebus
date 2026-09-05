@@ -1,3 +1,6 @@
+using System.Reflection;
+using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -9,6 +12,123 @@ public sealed class RequestClientMetadataTests
 {
     private const string TraceHeader = "Client-Trace";
     private const string TraceValue = "request-7f11";
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-REQUEST-OPTIONS", "all-envelope-fields-and-request-identity-round-trip")]
+    public async Task ApplicationRequestOptions_ReachTheRequestEnvelopeAndPreserveResponseCorrelationAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness(timeout);
+        var requestSeen = new TaskCompletionSource<ConsumeContext<MetadataRequest>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        harness.Handler<MetadataRequest>(async context =>
+        {
+            requestSeen.TrySetResult(context);
+            await context.RespondAsync(new MetadataResponse(context.Message.CorrelationId, "options"));
+        });
+
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            Guid requestId = Guid.Parse("11000000-0000-0000-0000-000000000011");
+            Guid messageId = Guid.Parse("22000000-0000-0000-0000-000000000022");
+            Guid correlationId = Guid.Parse("33000000-0000-0000-0000-000000000033");
+            Guid conversationId = Guid.Parse("44000000-0000-0000-0000-000000000044");
+            TimeSpan lifetime = TimeSpan.FromMinutes(19);
+            IRequestClient<MetadataRequest> client =
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, timeout);
+            var options = new RequestOptions
+            {
+                Headers = new Dictionary<string, object?>
+                {
+                    ["application"] = "orders",
+                    ["attempt"] = 7,
+                },
+                TimeToLive = lifetime,
+                CorrelationId = correlationId,
+                ConversationId = conversationId,
+                MessageId = messageId,
+                RequestId = requestId,
+                Deadline = TimeProvider.System.GetUtcNow().Add(timeout),
+            };
+
+            Response<MetadataResponse> response = await client.GetResponseAsync<MetadataResponse>(
+                new MetadataRequest(Guid.NewGuid(), false),
+                options,
+                cancellationToken);
+            ConsumeContext<MetadataRequest> request = await requestSeen.Task.WaitAsync(timeout, cancellationToken);
+
+            Assert.Equal("orders", request.Headers.Get<string>("application"));
+            Assert.Equal(7, request.Headers.Get<int>("attempt"));
+            TimeSpan observedLifetime = Assert.IsType<DateTimeOffset>(request.ExpirationTime)
+                - Assert.IsType<DateTimeOffset>(request.SentTime);
+            Assert.InRange(observedLifetime, lifetime, lifetime.Add(TimeSpan.FromSeconds(1)));
+            Assert.Equal(correlationId, request.CorrelationId);
+            Assert.Equal(conversationId, request.ConversationId);
+            Assert.Equal(messageId, request.MessageId);
+            Assert.Equal(requestId, request.RequestId);
+            Assert.Equal(requestId, response.RequestId);
+            Assert.Equal(new MetadataResponse(request.Message.CorrelationId, "options"), response.Message);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-REQUEST-OPTIONS", "deadline-uses-injected-clock-and-rejects-current-instant")]
+    public async Task RequestDeadline_AtTheInjectedCurrentInstantFailsBeforeEndpointUseAsync()
+    {
+        DateTimeOffset now = new(2041, 2, 3, 4, 5, 6, TimeSpan.Zero);
+        var clock = new FakeTimeProvider(now);
+        ClientFactoryContext context = DispatchProxy.Create<ClientFactoryContext, RequestClientContextProxy>();
+        ((RequestClientContextProxy)(object)context).Clock = clock;
+        IRequestSendEndpoint<MetadataRequest> endpoint =
+            DispatchProxy.Create<IRequestSendEndpoint<MetadataRequest>, UnusedRequestEndpointProxy>();
+        IRequestClient<MetadataRequest> client = new RequestClient<MetadataRequest>(
+            context,
+            endpoint,
+            RequestTimeout.After(m: 1));
+
+        ArgumentOutOfRangeException exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            client.GetResponseAsync<MetadataResponse>(
+                new MetadataRequest(Guid.NewGuid(), false),
+                new RequestOptions { Deadline = now },
+                TestContext.Current.CancellationToken));
+
+        Assert.Equal("options", exception.ParamName);
+        Assert.Equal(now, exception.ActualValue);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-APPLICATION-REQUEST-OPTIONS", "partition-capability-failure-is-not-silent")]
+    public async Task RequestPartitionKey_UnsupportedByTheTransportFailsExplicitlyAsync()
+    {
+        TimeSpan timeout = OperationTimeout();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        using var harness = CreateHarness(timeout);
+        await harness.StartAsync(cancellationToken);
+        try
+        {
+            IRequestClient<MetadataRequest> client =
+                harness.Bus.CreateRequestClient<MetadataRequest>(harness.InputQueueAddress, timeout);
+
+            RequestException exception = await Assert.ThrowsAsync<RequestException>(() =>
+                client.GetResponseAsync<MetadataResponse>(
+                    new MetadataRequest(Guid.NewGuid(), false),
+                    new RequestOptions { PartitionKey = "tenant-42" },
+                    cancellationToken));
+
+            NotSupportedException inner = Assert.IsType<NotSupportedException>(exception.InnerException);
+            Assert.Contains("partition key", inner.Message, StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
+        }
+    }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-REQUEST-METADATA", "request-pipe-header-round-trip")]
@@ -193,4 +313,24 @@ public sealed class RequestClientMetadataTests
     private sealed record SentSideEffect(Guid CorrelationId) : CorrelatedBy<Guid>;
 
     private sealed class ExpectedRequestFailure(string message) : Exception(message);
+
+    private class RequestClientContextProxy : DispatchProxy
+    {
+        public TimeProvider Clock { get; set; } = null!;
+
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            ArgumentNullException.ThrowIfNull(targetMethod);
+
+            return targetMethod.Name == "get_TimeProvider"
+                ? Clock
+                : throw new NotSupportedException(targetMethod.Name);
+        }
+    }
+
+    private class UnusedRequestEndpointProxy : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
+            throw new InvalidOperationException($"The request endpoint must not be used for an expired deadline ({targetMethod?.Name}).");
+    }
 }

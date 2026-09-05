@@ -72,8 +72,16 @@ public class RequestClient<TRequest> :
             timeout = remaining;
         }
 
-        return GetResponseAsync<TResponse>(
-            request,
+        async Task<TRequest> RequestAsync(Guid requestId, IPipe<SendContext<TRequest>> pipe, CancellationToken token)
+        {
+            await _requestSendEndpoint.SendAsync(requestId, request, pipe, token).ConfigureAwait(false);
+            return request;
+        }
+
+        return GetResponseInternalAsync<TResponse>(
+            RequestAsync,
+            cancellationToken,
+            timeout,
             configurator =>
             {
                 if (options.TimeToLive is { } timeToLive)
@@ -89,8 +97,7 @@ public class RequestClient<TRequest> :
                     options.RequestId,
                     options.PartitionKey));
             },
-            timeout,
-            cancellationToken);
+            options.RequestId);
     }
 
     /// <summary>
@@ -396,10 +403,16 @@ public class RequestClient<TRequest> :
     }
 
     async Task<Response<T>> GetResponseInternalAsync<T>(ClientRequestHandle<TRequest>.SendRequestCallback request,
-        CancellationToken cancellationToken, RequestTimeout timeout, RequestPipeConfiguratorCallback<TRequest>? callback = null)
+        CancellationToken cancellationToken, RequestTimeout timeout, RequestPipeConfiguratorCallback<TRequest>? callback = null,
+        Guid? requestId = null)
         where T : class
     {
-        using RequestHandle<TRequest> handle = new ClientRequestHandle<TRequest>(_context, request, cancellationToken, timeout.Or(_timeout));
+        using RequestHandle<TRequest> handle = new ClientRequestHandle<TRequest>(
+            _context,
+            request,
+            cancellationToken,
+            timeout.Or(_timeout),
+            requestId);
 
         callback?.Invoke(handle);
 

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.Providers.Persistence;
@@ -73,6 +74,18 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The send context for bus '{typeof(TBus)}' cannot fix deterministic durable-admission metadata before serialization.", "Correct the named configuration before starting the host"));
         }
         messageContext.SetDurableAdmissionMetadata(options.IdempotencyKey.Value, options.CorrelationId);
+        if (options.ScheduledMessageOptions is { } scheduledOptions)
+        {
+            OutgoingOptionsPipe.Apply(
+                context,
+                scheduledOptions.Headers,
+                scheduledOptions.TimeToLive,
+                scheduledOptions.CorrelationId,
+                scheduledOptions.ConversationId,
+                scheduledOptions.MessageId,
+                scheduledOptions.RequestId,
+                scheduledOptions.PartitionKey);
+        }
         context.GetOrAddPayload(() => DurableSendEnvelopeMetadata.Instance);
 
         if (context is not TransportSendContext transportContext)
@@ -94,6 +107,9 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));
+        ReadOnlyMemory<byte> metadata = options.ScheduledMessageOptions is null
+            ? ReadOnlyMemory<byte>.Empty
+            : ReliableEnvelopeMetadataCodec.Capture(context, options.DueAt ?? context.GetTimeProvider().GetUtcNow());
         var serialized = new SerializedDurableSend
         {
             Id = options.IdempotencyKey,
@@ -101,7 +117,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
             DestinationAddress = destinationAddress,
             ContentType = contentType,
             Body = body,
-            Metadata = ReadOnlyMemory<byte>.Empty,
+            Metadata = metadata,
             MessageId = context.MessageId,
             CorrelationId = context.CorrelationId,
             DueAt = options.DueAt,

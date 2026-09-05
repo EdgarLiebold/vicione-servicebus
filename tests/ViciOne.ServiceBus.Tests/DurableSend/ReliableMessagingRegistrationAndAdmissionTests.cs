@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Advanced.Serialization;
+using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Providers.Persistence;
@@ -201,11 +203,26 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
         IMessageScheduler scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
         IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
         DateTimeOffset dueAt = Epoch.AddMinutes(30);
+        TimeSpan lifetime = TimeSpan.FromMinutes(17);
+        Guid messageId = GuidFrom(51);
+        Guid correlationId = GuidFrom(52);
+        Guid conversationId = GuidFrom(53);
+        Guid requestId = GuidFrom(54);
+        var scheduleOptions = new ScheduleOptions
+        {
+            Headers = new Dictionary<string, object?> { ["tenant"] = "north" },
+            TimeToLive = lifetime,
+            MessageId = messageId,
+            CorrelationId = correlationId,
+            ConversationId = conversationId,
+            RequestId = requestId,
+        };
 
         ScheduledMessage<TypedMessage> scheduled = await scheduler.ScheduleSendAsync(
             destination,
             dueAt,
             new TypedMessage("due"),
+            scheduleOptions,
             TestCancellationToken);
         ScheduledMessage<TypedMessage> cancelled = await scheduler.ScheduleSendAsync(
             destination,
@@ -228,6 +245,15 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
             TestCancellationToken));
         Assert.Equal(scheduled.TokenId, delivery.Message.Id.Value);
         Assert.Equal(dueAt, delivery.Message.DueAt);
+        Assert.Equal(messageId, delivery.Message.MessageId);
+        Assert.Equal(correlationId, delivery.Message.CorrelationId);
+        Assert.False(delivery.Message.Metadata.IsEmpty);
+        var replay = new InMemorySendContext<SerializedMessageBody>(new SerializedMessageBody());
+        ReliableEnvelopeMetadataCodec.Apply(replay, delivery.Message.Metadata, dueAt);
+        Assert.Equal("north", replay.Headers.Get<string>("tenant"));
+        Assert.Equal(lifetime, replay.TimeToLive);
+        Assert.Equal(conversationId, replay.ConversationId);
+        Assert.Equal(requestId, replay.RequestId);
         Assert.Equal(1, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
     }
 
@@ -730,6 +756,129 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-OPERATIONS-QUERY", "read-contracts-validate-before-provider-and-forward-exact-inputs")]
+    public async Task Operations_ReadContractsValidateBeforeProviderAndForwardExactInputsAsync()
+    {
+        IOutboxStore<ITestBus> inner = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        var store = new ObservingStore(inner);
+        using ServiceProvider provider = Services(
+                store,
+                new FakeTimeProvider(Epoch),
+                builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion))
+            .BuildServiceProvider();
+        IReliableMessagingOperations<ITestBus> operations =
+            provider.GetRequiredService<IReliableMessagingOperations<ITestBus>>();
+        using var cancellation = new CancellationTokenSource();
+        var outboxQuery = DurableSendQuarantineQuery.FirstPage(1);
+        var inboxQuery = new ReliableInboxQuarantineQuery { PageSize = 1000 };
+
+        DurableSendStoreSnapshot snapshot = await operations.GetSnapshotAsync(cancellation.Token);
+        DurableSendQuarantinePage outbox = await operations.GetOutboxQuarantineAsync(outboxQuery, cancellation.Token);
+        ReliableInboxQuarantinePage inbox = await operations.GetInboxQuarantineAsync(inboxQuery, cancellation.Token);
+
+        Assert.Equal(default, snapshot);
+        Assert.Empty(outbox.Entries);
+        Assert.Null(outbox.ContinuationToken);
+        Assert.Empty(inbox.Entries);
+        Assert.Null(inbox.Next);
+        Assert.Equal(cancellation.Token, store.SnapshotCancellationToken);
+        Assert.Equal(cancellation.Token, store.OutboxQueryCancellationToken);
+        Assert.Equal(cancellation.Token, store.InboxQueryCancellationToken);
+        Assert.Same(outboxQuery, store.OutboxQuery);
+        Assert.Same(inboxQuery, store.InboxQuery);
+        Assert.Equal(1, store.OutboxQueryCalls);
+        Assert.Equal(1, store.InboxQueryCalls);
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            operations.GetOutboxQuarantineAsync(null!, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            operations.GetOutboxQuarantineAsync(new DurableSendQuarantineQuery { PageSize = 0 }, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.GetOutboxQuarantineAsync(new DurableSendQuarantineQuery { ContinuationToken = "invalid" }, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            operations.GetInboxQuarantineAsync(null!, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            operations.GetInboxQuarantineAsync(new ReliableInboxQuarantineQuery { PageSize = 0 }, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            operations.GetInboxQuarantineAsync(new ReliableInboxQuarantineQuery { PageSize = 1001 }, TestCancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            operations.GetInboxQuarantineAsync(
+                new ReliableInboxQuarantineQuery { AfterQuarantinedAt = Epoch },
+                TestCancellationToken));
+
+        Assert.Equal(1, store.OutboxQueryCalls);
+        Assert.Equal(1, store.InboxQueryCalls);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-OPERATIONS", "inbox-requeue-discard-and-outbox-abandon-boundaries")]
+    public async Task Operations_ApplyInboxTransitionsAndRejectOutboxAbandonWithoutLosingStateAsync()
+    {
+        IOutboxStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        IInboxStore<ITestBus> inbox = Assert.IsAssignableFrom<IInboxStore<ITestBus>>(store);
+        var now = Epoch.AddHours(6);
+        using ServiceProvider provider = Services(
+                store,
+                new FakeTimeProvider(now),
+                builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion))
+            .BuildServiceProvider();
+        IReliableMessagingOperations<ITestBus> operations =
+            provider.GetRequiredService<IReliableMessagingOperations<ITestBus>>();
+        var key = new ReliableInboxKey(GuidFrom(41), GuidFrom(42));
+        ReliableInboxAcquireResult firstAcquire = await inbox.AcquireAsync(
+            key,
+            Epoch,
+            TimeSpan.FromMinutes(1),
+            TestCancellationToken);
+        Assert.True(await inbox.QuarantineAsync(
+            key,
+            Assert.IsType<ReliableInboxLease>(firstAcquire.Lease),
+            "Tests.FirstFailure",
+            Epoch,
+            TestCancellationToken));
+
+        ReliableMessagingOperationResult requeued = await operations.RequeueAsync(
+            ReliableMessageReference.Inbox(key),
+            TestCancellationToken);
+        ReliableInboxAcquireResult secondAcquire = await inbox.AcquireAsync(
+            key,
+            now,
+            TimeSpan.FromMinutes(1),
+            TestCancellationToken);
+        Assert.True(await inbox.QuarantineAsync(
+            key,
+            Assert.IsType<ReliableInboxLease>(secondAcquire.Lease),
+            "Tests.SecondFailure",
+            now,
+            TestCancellationToken));
+        ReliableMessagingOperationResult discarded = await operations.DiscardAsync(
+            ReliableMessageReference.Inbox(key),
+            TestCancellationToken);
+        ReliableMessagingOperationResult missing = await operations.DiscardAsync(
+            ReliableMessageReference.Inbox(key),
+            TestCancellationToken);
+        ReliableMessagingOperationResult invalidAbandon = await operations.AbandonAsync(
+            ReliableMessageReference.Outbox(new DurableSendId(GuidFrom(43))),
+            TestCancellationToken);
+
+        Assert.Equal(ReliableMessagingOperationDisposition.Applied, requeued.Disposition);
+        Assert.Equal("Quarantined", requeued.PreviousState);
+        Assert.Equal("RetryScheduled", requeued.CurrentState);
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired, secondAcquire.Disposition);
+        Assert.Equal(2, secondAcquire.Attempt);
+        Assert.Equal(ReliableMessagingOperationDisposition.Applied, discarded.Disposition);
+        Assert.Equal("Quarantined", discarded.PreviousState);
+        Assert.Equal("Discarded", discarded.CurrentState);
+        Assert.Equal(ReliableMessagingOperationDisposition.NotFound, missing.Disposition);
+        Assert.Equal(ReliableMessagingOperationDisposition.InvalidState, invalidAbandon.Disposition);
+        Assert.Equal("Quarantined", invalidAbandon.PreviousState);
+        Assert.Equal("Quarantined", invalidAbandon.CurrentState);
+        Assert.Empty((await operations.GetInboxQuarantineAsync(
+            new ReliableInboxQuarantineQuery(),
+            TestCancellationToken)).Entries);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-RELIABLE-OPERATIONS", "abandon-is-retained-logged-metered-once-and-observation-safe")]
     public async Task Operations_AbandonLogsAndMetersOnlyTheAppliedRetainedDecisionAsync()
     {
@@ -955,12 +1104,25 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
             _logger.Log(logLevel, eventId, state, exception, formatter);
     }
 
-    private sealed class ObservingStore(IOutboxStore<ITestBus> inner) : IOutboxStore<ITestBus>
+    private sealed class ObservingStore(IOutboxStore<ITestBus> inner) :
+        IOutboxStore<ITestBus>,
+        IInboxStore<ITestBus>
     {
         public int AdmitCalls { get; private set; }
         public SerializedDurableSend? LastMessage { get; private set; }
         public DurableSendStoreLimits LastLimits { get; private set; }
         public DateTimeOffset LastEnqueuedAt { get; private set; }
+        public int OutboxQueryCalls { get; private set; }
+        public int InboxQueryCalls { get; private set; }
+        public CancellationToken SnapshotCancellationToken { get; private set; }
+        public CancellationToken OutboxQueryCancellationToken { get; private set; }
+        public CancellationToken InboxQueryCancellationToken { get; private set; }
+        public DurableSendQuarantineQuery? OutboxQuery { get; private set; }
+        public ReliableInboxQuarantineQuery? InboxQuery { get; private set; }
+
+        private IInboxStore<ITestBus> Inbox =>
+            inner as IInboxStore<ITestBus>
+            ?? throw new InvalidOperationException("The observing store requires an inbox-capable inner store.");
 
         public Task<DurableSendAdmissionResult> AdmitAsync(
             SerializedDurableSend message,
@@ -1040,13 +1202,21 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
                 quarantinedAt,
                 cancellationToken);
 
-        public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default) =>
-            inner.GetSnapshotAsync(cancellationToken);
+        public Task<DurableSendStoreSnapshot> GetSnapshotAsync(CancellationToken cancellationToken = default)
+        {
+            SnapshotCancellationToken = cancellationToken;
+            return inner.GetSnapshotAsync(cancellationToken);
+        }
 
         public Task<DurableSendQuarantinePage> GetQuarantineAsync(
             DurableSendQuarantineQuery query,
-            CancellationToken cancellationToken = default) =>
-            inner.GetQuarantineAsync(query, cancellationToken);
+            CancellationToken cancellationToken = default)
+        {
+            OutboxQueryCalls++;
+            OutboxQuery = query;
+            OutboxQueryCancellationToken = cancellationToken;
+            return inner.GetQuarantineAsync(query, cancellationToken);
+        }
 
         public Task<DurableSendOperationResult> RequeueAsync(
             DurableSendId id,
@@ -1058,5 +1228,63 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
             DurableSendId id,
             CancellationToken cancellationToken = default) =>
             inner.DiscardQuarantinedAsync(id, cancellationToken);
+
+        public Task<ReliableInboxAcquireResult> AcquireAsync(
+            ReliableInboxKey key,
+            DateTimeOffset now,
+            TimeSpan leaseDuration,
+            CancellationToken cancellationToken = default) =>
+            Inbox.AcquireAsync(key, now, leaseDuration, cancellationToken);
+
+        public Task<bool> CompleteAsync(
+            ReliableInboxKey key,
+            ReliableInboxLease lease,
+            DateTimeOffset consumedAt,
+            CancellationToken cancellationToken = default) =>
+            Inbox.CompleteAsync(key, lease, consumedAt, cancellationToken);
+
+        public Task<bool> ScheduleRetryAsync(
+            ReliableInboxKey key,
+            ReliableInboxLease lease,
+            DateTimeOffset dueAt,
+            string? failureType,
+            DateTimeOffset failedAt,
+            CancellationToken cancellationToken = default) =>
+            Inbox.ScheduleRetryAsync(key, lease, dueAt, failureType, failedAt, cancellationToken);
+
+        public Task<bool> QuarantineAsync(
+            ReliableInboxKey key,
+            ReliableInboxLease lease,
+            string? failureType,
+            DateTimeOffset quarantinedAt,
+            CancellationToken cancellationToken = default) =>
+            Inbox.QuarantineAsync(key, lease, failureType, quarantinedAt, cancellationToken);
+
+        public Task<ReliableInboxQuarantinePage> GetQuarantineAsync(
+            ReliableInboxQuarantineQuery query,
+            CancellationToken cancellationToken = default)
+        {
+            InboxQueryCalls++;
+            InboxQuery = query;
+            InboxQueryCancellationToken = cancellationToken;
+            return Inbox.GetQuarantineAsync(query, cancellationToken);
+        }
+
+        public Task<ReliableMessagingOperationResult> RequeueAsync(
+            ReliableInboxKey key,
+            DateTimeOffset dueAt,
+            CancellationToken cancellationToken = default) =>
+            Inbox.RequeueAsync(key, dueAt, cancellationToken);
+
+        public Task<ReliableMessagingOperationResult> DiscardAsync(
+            ReliableInboxKey key,
+            CancellationToken cancellationToken = default) =>
+            Inbox.DiscardAsync(key, cancellationToken);
+
+        public Task<ReliableMessagingOperationResult> AbandonAsync(
+            ReliableInboxKey key,
+            DateTimeOffset abandonedAt,
+            CancellationToken cancellationToken = default) =>
+            Inbox.AbandonAsync(key, abandonedAt, cancellationToken);
     }
 }

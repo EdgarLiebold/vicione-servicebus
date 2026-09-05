@@ -90,6 +90,10 @@ static class OutgoingOptionsPipe
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(headers);
 
+        PartitionKeySendContext? partitionContext = null;
+        if (partitionKey is not null && !context.TryGetPayload(out partitionContext))
+            throw new NotSupportedException("The selected transport does not support partition keys.");
+
         foreach ((string key, object? value) in headers)
             context.Headers.Set(key, value);
 
@@ -103,7 +107,7 @@ static class OutgoingOptionsPipe
             context.MessageId = messageId;
         if (requestId.HasValue)
             context.RequestId = requestId;
-        if (partitionKey is not null && context.TryGetPayload(out PartitionKeySendContext? partitionContext))
+        if (partitionContext is not null)
             partitionContext.PartitionKey = partitionKey;
     }
 }

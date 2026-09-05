@@ -631,7 +631,7 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
         ReliableInboxQuarantineQuery query,
         CancellationToken cancellationToken = default)
     {
-        ValidateInboxQuery(query);
+        _ = ReliableInboxQuarantinePagination.Validate(query);
         await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
         await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<ReliableInboxRecord> rows = db.Set<ReliableInboxRecord>().AsNoTracking()
@@ -992,17 +992,6 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
             return false;
 
         throw new InvalidOperationException($"Reliable inbox '{key}' is not owned by lease '{lease.Token}'.");
-    }
-
-    static void ValidateInboxQuery(ReliableInboxQuarantineQuery query)
-    {
-        ArgumentNullException.ThrowIfNull(query);
-        if (query.PageSize is < 1 or > 1000)
-            throw new ArgumentOutOfRangeException(nameof(query), "Inbox quarantine page size must be between 1 and 1,000.");
-        bool anyCursor = query.AfterQuarantinedAt.HasValue || query.AfterMessageId.HasValue || query.AfterConsumerId.HasValue;
-        bool completeCursor = query.AfterQuarantinedAt.HasValue && query.AfterMessageId.HasValue && query.AfterConsumerId.HasValue;
-        if (anyCursor && !completeCursor)
-            throw new ArgumentException("All inbox quarantine cursor values must be supplied together.", nameof(query));
     }
 
     static ReliableInboxQuarantineEntry ToInboxEntry(ReliableInboxRecord row) => new(
