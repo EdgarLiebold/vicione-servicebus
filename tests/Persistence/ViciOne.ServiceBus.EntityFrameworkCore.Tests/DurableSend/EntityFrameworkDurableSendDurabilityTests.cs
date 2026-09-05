@@ -119,6 +119,6 @@ public sealed class EntityFrameworkDurableSendDurabilityTests
 
     private sealed class DurableDbContext(DbContextOptions<DurableDbContext> options) : DbContext(options)
     {
-        protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.AddViciOneDurableSender();
+        protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.AddViciOneReliableMessaging();
     }
 }

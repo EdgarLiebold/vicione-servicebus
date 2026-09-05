@@ -50,7 +50,7 @@ public class RequestConsumerFutureDefinition<TFuture, TConsumer, TRequest, TResp
         IRegistrationContext context)
     {
         endpointConfigurator.UseTechnicalMessageRetry();
-        endpointConfigurator.UseInMemoryOutbox(context);
+        endpointConfigurator.UseVolatileOutbox(context);
     }
 }
 

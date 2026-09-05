@@ -32,7 +32,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     },
     {
       "id": "amazon-sqs",
@@ -46,7 +46,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     },
     {
       "id": "azure-service-bus",
@@ -60,7 +60,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     },
     {
       "id": "event-hub",
@@ -74,7 +74,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     },
     {
       "id": "rabbit-mq",
@@ -102,7 +102,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     },
     {
       "id": "sql-server-sql-transport",
@@ -116,7 +116,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     },
     {
       "id": "signal-r",
@@ -130,7 +130,7 @@
       "durableSendDispatch": "unsupported",
       "durableSendAcceptanceBoundary": "not-applicable",
       "durableSendAcceptanceEnvironment": "not-applicable",
-      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs"
+      "durableSendEvidence": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs"
     }
   ],
   "persistenceProviders": [
@@ -163,7 +163,7 @@
       "package": "ViciOne.ServiceBus.EntityFrameworkCore",
       "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj",
       "durableSendStore": "supported",
-      "durableSendEvidence": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs"
+      "durableSendEvidence": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkReliableStoreTests.cs"
     }
   ]
 }

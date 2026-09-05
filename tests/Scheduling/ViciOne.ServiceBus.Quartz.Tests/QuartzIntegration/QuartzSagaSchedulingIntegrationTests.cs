@@ -29,7 +29,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             {
                 configurator.ReceiveEndpoint(queueName, endpoint =>
                 {
-                    endpoint.UseInMemoryOutbox();
+                    endpoint.UseVolatileOutbox();
                     endpoint.StateMachineSaga(stateMachine, repository);
                 });
                 configurator.ReceiveEndpoint($"{queueName}-events", endpoint => endpoint.Handler<RescheduleStopped>(context =>
@@ -98,7 +98,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             {
                 configurator.ReceiveEndpoint(queueName, endpoint =>
                 {
-                    endpoint.UseInMemoryOutbox();
+                    endpoint.UseVolatileOutbox();
                     endpoint.StateMachineSaga(stateMachine, repository);
                 });
                 configurator.ReceiveEndpoint($"{queueName}-events", endpoint => endpoint.Handler<ScheduleFired>(context =>
@@ -148,7 +148,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             {
                 configurator.ReceiveEndpoint(queueName, endpoint =>
                 {
-                    endpoint.UseInMemoryOutbox();
+                    endpoint.UseVolatileOutbox();
                     endpoint.StateMachineSaga(stateMachine, repository);
                 });
                 configurator.ReceiveEndpoint($"{queueName}-events", endpoint =>
@@ -213,7 +213,7 @@ public sealed class QuartzSagaSchedulingIntegrationTests
             {
                 configurator.ReceiveEndpoint(queueName, endpoint =>
                 {
-                    endpoint.UseInMemoryOutbox();
+                    endpoint.UseVolatileOutbox();
                     endpoint.StateMachineSaga(stateMachine, repository);
                 });
                 configurator.ReceiveEndpoint($"{queueName}-events", endpoint => endpoint.Handler<LoadStopped>(context =>

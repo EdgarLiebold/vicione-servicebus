@@ -262,7 +262,7 @@ public sealed class DynamoDbSagaConcurrencyTests
         {
             endpointConfigurator.ConcurrentMessageLimit = 4;
             sagaConfigurator.UseMessageRetry(retry => retry.Immediate(8));
-            sagaConfigurator.UseInMemoryOutbox(context);
+            sagaConfigurator.UseVolatileOutbox(context);
         }
     }
 

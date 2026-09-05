@@ -29,7 +29,7 @@ public sealed class ActiveMqQuartzSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseInMemoryScheduler(out schedulerFactory, schedulerQueue);
+            configurator.ConfigureInMemoryScheduler(out schedulerFactory, schedulerQueue);
             configurator.MessageTopology.GetMessageTopology<QuartzDelivery>().SetEntityName(deliveryEntityName);
             configurator.ReceiveEndpoint(inputQueue, endpoint =>
             {

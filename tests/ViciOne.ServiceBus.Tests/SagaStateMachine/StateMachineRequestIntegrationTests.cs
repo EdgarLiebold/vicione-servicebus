@@ -27,7 +27,7 @@ public sealed class StateMachineRequestIntegrationTests
         string serviceEndpointName = $"validation-{NewId.NextGuid():N}";
         Uri serviceAddress = new(harness.BaseAddress, serviceEndpointName);
         var machine = new CompositeRequestMachine(serviceAddress);
-        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.UseInMemoryOutbox();
+        harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.UseVolatileOutbox();
         harness.OnConfigureInMemoryBus += configurator => configurator.ReceiveEndpoint(
             serviceEndpointName,
             endpoint =>

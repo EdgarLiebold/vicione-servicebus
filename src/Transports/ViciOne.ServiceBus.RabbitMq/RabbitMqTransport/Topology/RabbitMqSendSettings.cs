@@ -29,7 +29,7 @@ public class RabbitMqSendSettings :
         QueueArguments = new Dictionary<string, object?>();
 
         if (address.BindToQueue)
-            BindToQueue(address.QueueName ?? throw new ArgumentException("A queue name is required when BindToQueue is enabled.", nameof(address)));
+            BindToQueue(address.QueueName ?? address.Name);
 
         if (!string.IsNullOrWhiteSpace(address.DelayedType))
             SetExchangeArgument("x-delayed-type", address.DelayedType);

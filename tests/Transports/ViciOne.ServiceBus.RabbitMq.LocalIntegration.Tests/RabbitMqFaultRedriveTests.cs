@@ -199,7 +199,11 @@ public sealed class RabbitMqFaultRedriveTests
     {
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddViciOneServiceBus(configurator => configurator.UsingRabbitMq((_, rabbit) => fixture.ConfigureHost(rabbit)));
+        services.AddViciOneServiceBus(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.UsingRabbitMq((_, rabbit) => fixture.ConfigureHost(rabbit));
+        });
         return services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,

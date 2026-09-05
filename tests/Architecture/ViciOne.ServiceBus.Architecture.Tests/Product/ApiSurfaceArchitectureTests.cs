@@ -82,7 +82,7 @@ public sealed class ApiSurfaceArchitectureTests
         ];
         Assert.All(applicationContracts, type => Assert.Equal("ViciOne.ServiceBus", type.Namespace));
 
-        Assert.Equal("ViciOne.ServiceBus.Operations", typeof(IDurableSenderOperations<>).Namespace);
+        Assert.Equal("ViciOne.ServiceBus.Operations", typeof(IReliableMessagingOperations<>).Namespace);
 
         Type[] advancedContracts =
         [
@@ -94,7 +94,7 @@ public sealed class ApiSurfaceArchitectureTests
             typeof(Bind<>),
             typeof(MessageSchedulerBusExtensions),
             typeof(SerializedDurableSend),
-            typeof(IDurableSendStore<>),
+            typeof(IOutboxStore<>),
             typeof(IDurableSendDispatcher<>),
         ];
         Assert.All(advancedContracts, type =>
@@ -223,7 +223,7 @@ public sealed class ApiSurfaceArchitectureTests
             "CreateMessageScheduler(",
             "CreateDelayedMessageScheduler(",
             "SerializedDurableSend",
-            "IDurableSendStore<",
+            "IOutboxStore<",
             "IDurableSendDispatcher<",
             "PartitionedConsumerConcurrencyGate<",
             "ConsumerConcurrencyGate<",
@@ -235,6 +235,36 @@ public sealed class ApiSurfaceArchitectureTests
         Assert.Contains("consumer.UsePartitionedConcurrency", source, StringComparison.Ordinal);
         Assert.Contains("IDurableSender<IOrdersBus>", source, StringComparison.Ordinal);
         Assert.Contains("IMessageScheduler scheduler", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULER-API", "exactly-three-explicit-adapters-live-under-reliable-messaging")]
+    public void SchedulerAdapterEntryPoints_AreOnlyExplicitReliableMessagingChoices()
+    {
+        string sourceRoot = Path.Combine(RepositoryLayout.Root, "src");
+        Regex declaration = new(
+            @"public\s+static[^\r\n{;]*\b(?<name>Use[A-Za-z0-9_]*Scheduler)\s*\(\s*this\s+(?<receiver>[A-Za-z0-9_<>.,?]+)",
+            RegexOptions.CultureInvariant);
+        var entryPoints = Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(path => declaration.Matches(File.ReadAllText(path)).Select(match => new
+            {
+                Path = path,
+                Name = match.Groups["name"].Value,
+                Receiver = match.Groups["receiver"].Value,
+            }))
+            .OrderBy(static entry => entry.Name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(
+            ["UseInMemoryScheduler", "UseQuartzScheduler", "UseTransportScheduler"],
+            entryPoints.Select(static entry => entry.Name));
+        Assert.All(entryPoints, entry =>
+        {
+            string source = File.ReadAllText(entry.Path);
+            Assert.Equal("IReliableMessagingConfigurator", entry.Receiver);
+            Assert.Contains("namespace ViciOne.ServiceBus.Configuration;", source, StringComparison.Ordinal);
+            Assert.Contains("IReliableMessagingProviderConfigurator", source, StringComparison.Ordinal);
+        });
     }
 
     [Fact]

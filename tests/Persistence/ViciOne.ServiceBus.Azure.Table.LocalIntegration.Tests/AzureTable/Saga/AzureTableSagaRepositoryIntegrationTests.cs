@@ -169,7 +169,7 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
             IRegistrationContext context)
         {
             sagaConfigurator.UseMessageRetry(retry => retry.Immediate(2));
-            sagaConfigurator.UseInMemoryOutbox(context);
+            sagaConfigurator.UseVolatileOutbox(context);
         }
     }
 
@@ -227,6 +227,6 @@ public sealed class AzureTableSagaRepositoryIntegrationTests
         protected override void ConfigureSaga(
             IReceiveEndpointConfigurator endpointConfigurator,
             ISagaConfigurator<ReadOnlyState> sagaConfigurator,
-            IRegistrationContext context) => sagaConfigurator.UseInMemoryOutbox(context);
+            IRegistrationContext context) => sagaConfigurator.UseVolatileOutbox(context);
     }
 }

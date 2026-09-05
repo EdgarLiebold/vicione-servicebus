@@ -461,7 +461,7 @@ public sealed class TransactionalOutboxRequestSagaTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddEntityFrameworkOutbox<RequestSagaDbContext>(outbox =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<RequestSagaDbContext>(outbox =>
                 {
                     outbox.UsePostgres();
                     outbox.DisableInboxCleanupService();

@@ -13,7 +13,7 @@ public static class ServiceBusScheduleMessageExtensions
     /// of using Quartz. A natively supported feature that is highly reliable.
     /// </summary>
     /// <param name="configurator"></param>
-    public static void UseServiceBusMessageScheduler(this IBusFactoryConfigurator configurator)
+    public static void ConfigureServiceBusMessageScheduler(this IBusFactoryConfigurator configurator)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));

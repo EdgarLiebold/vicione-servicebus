@@ -172,7 +172,7 @@ public sealed class MessageJournalIntegrationTests
         using var harness = CreateHarness("journal-outbox-envelope", timeout);
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
         {
-            configurator.UseInMemoryOutbox();
+            configurator.UseVolatileOutbox();
             configurator.Handler<OutboxRequest>(context =>
                 context.Advanced().PublishAsync(new DeferredMessage(context.Message.CorrelationId, "deferred")));
             configurator.Handler<DeferredMessage>(_ => Task.CompletedTask);

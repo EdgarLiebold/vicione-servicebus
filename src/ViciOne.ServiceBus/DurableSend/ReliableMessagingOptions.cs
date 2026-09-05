@@ -1,19 +1,62 @@
 using System;
 
 namespace ViciOne.ServiceBus.Configuration;
-/// <summary>Mutable bootstrap options for one typed bus; validated and frozen before its durable sender starts.</summary>
-public sealed class DurableSenderOptions<TBus>
+/// <summary>Hard retained-storage limits shared by outbox, inbox quarantine and schedules.</summary>
+public sealed record ReliableStoreLimits
+{
+    /// <summary>Gets or initializes the maximum retained record count.</summary>
+    public int MaximumStoredCount { get; init; }
+
+    /// <summary>Gets or initializes the maximum retained logical content bytes.</summary>
+    public long MaximumStoredBytes { get; init; }
+}
+
+internal sealed class ReliableDeliveryConfigurator : IReliableDeliveryConfigurator
+{
+    /// <summary>Gets or sets the maximum number of concurrently owned deliveries.</summary>
+    public int MaximumConcurrentDeliveries { get; set; } = 16;
+
+    /// <summary>Gets or sets the maximum number of delivery attempts.</summary>
+    public int MaximumAttempts { get; set; } = 10;
+
+    /// <summary>Gets or sets the initial retry delay.</summary>
+    public TimeSpan InitialRetryDelay { get; set; } = TimeSpan.FromSeconds(15);
+
+    /// <summary>Gets or sets the maximum retry delay.</summary>
+    public TimeSpan MaximumRetryDelay { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>Gets or sets the bounded fractional retry jitter.</summary>
+    public double RetryJitterFraction { get; set; } = 0.20;
+
+    /// <summary>Gets or sets the durable ownership lease duration.</summary>
+    public TimeSpan LeaseDuration { get; set; } = TimeSpan.FromMinutes(2);
+
+    /// <summary>Gets or sets the maximum wait for in-process consumer completion.</summary>
+    public TimeSpan ConsumerCompletionTimeout { get; set; } = TimeSpan.FromMinutes(5);
+
+    /// <summary>Gets or sets the idle polling interval.</summary>
+    public TimeSpan PollInterval { get; set; } = TimeSpan.FromSeconds(1);
+
+    /// <summary>Gets or sets the telemetry snapshot interval.</summary>
+    public TimeSpan TelemetrySnapshotInterval { get; set; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>Gets or sets the oldest-pending age that degrades health.</summary>
+    public TimeSpan HealthDegradedAfter { get; set; } = TimeSpan.FromMinutes(15);
+}
+
+/// <summary>Mutable bootstrap options for one typed bus; validated and frozen before reliable messaging starts.</summary>
+public sealed class ReliableMessagingOptions<TBus>
     where TBus : class, IBus
 {
 
     /// <summary>
     /// Gets or sets the maximum stored count value.
     /// </summary>
-    public int MaximumStoredCount { get; set; } = 10_000;
+    public int MaximumStoredCount { get; set; }
     /// <summary>
     /// Gets or sets the maximum stored bytes value.
     /// </summary>
-    public long MaximumStoredBytes { get; set; } = 128L * 1024 * 1024;
+    public long MaximumStoredBytes { get; set; }
     /// <summary>
     /// Gets or sets the maximum concurrent deliveries value.
     /// </summary>
@@ -55,8 +98,23 @@ public sealed class DurableSenderOptions<TBus>
     /// </summary>
     public TimeSpan HealthDegradedAfter { get; set; } = TimeSpan.FromMinutes(15);
 
-    internal DurableSenderPolicy<TBus> ValidateAndFreeze()
+    /// <summary>Gets or sets the retention period for terminal reliable-messaging state.</summary>
+    public TimeSpan Retention { get; set; }
+
+    internal bool StoreLimitsConfigured { get; set; }
+
+    internal bool DeliveryConfigured { get; set; }
+
+    internal bool RetentionConfigured { get; set; }
+
+    internal ReliableMessagingPolicy<TBus> ValidateAndFreeze()
     {
+        if (!StoreLimitsConfigured)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Store limits were not configured.", "Call Store(new ReliableStoreLimits { ... }) inside UseReliableMessaging"));
+        if (!DeliveryConfigured)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Delivery policy was not configured.", "Call Delivery(...) inside UseReliableMessaging"));
+        if (!RetentionConfigured)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Retention was not configured.", "Call Retention(...) inside UseReliableMessaging"));
         if (MaximumStoredCount < 1)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(MaximumStoredCount)} must be positive.", "Correct the named configuration before starting the host"));
         if (MaximumStoredBytes < 1)
@@ -81,8 +139,10 @@ public sealed class DurableSenderOptions<TBus>
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(TelemetrySnapshotInterval)} must be positive.", "Correct the named configuration before starting the host"));
         if (HealthDegradedAfter <= TimeSpan.Zero)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(HealthDegradedAfter)} must be positive.", "Correct the named configuration before starting the host"));
+        if (Retention <= TimeSpan.Zero)
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"{nameof(Retention)} must be positive.", "Correct the named configuration before starting the host"));
 
-        return new DurableSenderPolicy<TBus>(
+        return new ReliableMessagingPolicy<TBus>(
             new DurableSendStoreLimits(MaximumStoredCount, MaximumStoredBytes),
             MaximumConcurrentDeliveries,
             MaximumDeliveryAttempts,
@@ -93,11 +153,12 @@ public sealed class DurableSenderOptions<TBus>
             ConsumerCompletionTimeout,
             PollInterval,
             TelemetrySnapshotInterval,
-            HealthDegradedAfter);
+            HealthDegradedAfter,
+            Retention);
     }
 }
 
-internal sealed record DurableSenderPolicy<TBus>(
+internal sealed record ReliableMessagingPolicy<TBus>(
     DurableSendStoreLimits Limits,
     int MaximumConcurrentDeliveries,
     int MaximumDeliveryAttempts,
@@ -108,5 +169,6 @@ internal sealed record DurableSenderPolicy<TBus>(
     TimeSpan ConsumerCompletionTimeout,
     TimeSpan PollInterval,
     TimeSpan TelemetrySnapshotInterval,
-    TimeSpan HealthDegradedAfter)
+    TimeSpan HealthDegradedAfter,
+    TimeSpan Retention)
     where TBus : class, IBus;

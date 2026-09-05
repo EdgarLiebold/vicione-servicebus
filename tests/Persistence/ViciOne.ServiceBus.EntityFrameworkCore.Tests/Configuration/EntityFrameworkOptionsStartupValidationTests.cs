@@ -37,10 +37,10 @@ public sealed class EntityFrameworkOptionsStartupValidationTests
         services.AddViciOneServiceBus(bus =>
         {
             bus.Limits(MessageLimits.Conservative);
-            bus.AddEntityFrameworkOutbox<OptionsDbContext>(outbox =>
+            bus.ConfigureEntityFrameworkTransactionalStore<OptionsDbContext>(outbox =>
             {
                 outbox.UseSqlite();
-                outbox.UseBusOutbox();
+                outbox.EnableTransactionalOutbox();
             });
             bus.UsingInMemory();
         });

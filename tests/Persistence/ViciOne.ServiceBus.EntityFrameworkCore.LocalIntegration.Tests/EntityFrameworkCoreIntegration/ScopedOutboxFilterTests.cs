@@ -302,12 +302,12 @@ public sealed class ScopedOutboxFilterTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddEntityFrameworkOutbox<ScopedOutboxDbContext>(outbox =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<ScopedOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();
                     outbox.DisableInboxCleanupService();
                     outbox.QueryDelay = TimeSpan.FromHours(1);
-                    outbox.UseBusOutbox();
+                    outbox.EnableTransactionalOutbox();
                 });
                 configuration.AddConsumer<PublishFromOutboxConsumer, PublishFromOutboxConsumerDefinition>();
                 configuration.AddConsumer<ScopedPublishedEventConsumer>();

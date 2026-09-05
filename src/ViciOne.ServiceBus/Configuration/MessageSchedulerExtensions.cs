@@ -13,7 +13,7 @@ public static class MessageSchedulerExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="schedulerAddress"></param>
-    public static void UseMessageScheduler(this IConsumePipeConfigurator configurator, Uri schedulerAddress)
+    public static void ConfigureMessageScheduler(this IConsumePipeConfigurator configurator, Uri schedulerAddress)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -29,7 +29,7 @@ public static class MessageSchedulerExtensions
     /// cluster.
     /// </summary>
     /// <param name="configurator"></param>
-    public static void UsePublishMessageScheduler(this IConsumePipeConfigurator configurator)
+    public static void ConfigurePublishMessageScheduler(this IConsumePipeConfigurator configurator)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));

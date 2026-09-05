@@ -11,13 +11,13 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
     readonly Guid _generationToken;
     readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
     readonly long _startedTimestamp;
-    readonly IDurableSendStore<TBus> _store;
+    readonly IOutboxStore<TBus> _store;
     readonly TimeProvider _timeProvider;
 
     public DurableSendConsumerCompletion(
         DurableSendId durableSendId,
         Guid generationToken,
-        IDurableSendStore<TBus> store,
+        IOutboxStore<TBus> store,
         TimeProvider timeProvider,
         V5ServiceBusInstrumentation<TBus> instrumentation)
     {

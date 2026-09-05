@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.RabbitMq.Topology;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -46,6 +47,12 @@ public sealed class RabbitMqEndpointAddressTests
         Assert.Equal(expectedBindToQueue, address.BindToQueue);
         Assert.Equal(expectedName, address.Name);
         Assert.Equal(new Uri(expectedAddress), (Uri)address);
+
+        BrokerTopology topology = new RabbitMqSendSettings(address).GetBrokerTopology();
+        if (expectedBindToQueue)
+            Assert.Equal(expectedName, Assert.Single(topology.Queues).QueueName);
+        else
+            Assert.Empty(topology.Queues);
     }
 
     [Theory]

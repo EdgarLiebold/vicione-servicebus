@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 
 #nullable enable
@@ -27,7 +28,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
             throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"Durable Sender for bus '{typeof(TBus)}' selected the RabbitMQ transport adapter, but the owning " +
                 $"bus address '{bus.Address}' is not a RabbitMQ address. Configure UsingRabbitMq(...) and " +
-                "UseDurableSender(...) on the same bus.", "Correct the named configuration before starting the host"));
+                "UseReliableMessaging(...) on the same bus.", "Correct the named configuration before starting the host"));
         }
     }
 
@@ -37,7 +38,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
     {
         SerializedDurableSend message = context.Message.Validate();
         IMessageContractCatalog contractCatalog =
-            DurableSenderComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
+            ReliableMessagingComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
                 _contractCatalogs,
                 "message-contract catalog");
         if (!contractCatalog.TryGetMessageType(message.ContractIdentity, out Type? messageType))
@@ -80,6 +81,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
             var contentType = new ContentType(_message.ContentType);
             context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));
             context.ContentType = contentType;
+            ReliableEnvelopeMetadataCodec.Apply(context, _message.Metadata, context.GetTimeProvider().GetUtcNow());
             context.MessageId = _message.MessageId;
             context.CorrelationId = _message.CorrelationId;
             context.Durable = true;

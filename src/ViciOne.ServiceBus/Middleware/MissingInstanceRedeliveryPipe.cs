@@ -52,7 +52,7 @@ public class MissingInstanceRedeliveryPipe<TSaga, TMessage> :
                 return _finalPipe.SendAsync(context);
         }
 
-        var redeliveryContext = _options.HasFlag(RedeliveryOptions.UseMessageScheduler)
+        var redeliveryContext = _options.HasFlag(RedeliveryOptions.ConfigureMessageScheduler)
             ? (MessageRedeliveryContext)new ScheduleMessageRedeliveryContext<TMessage>(context, _options)
             : new DelayedMessageRedeliveryContext<TMessage>(context, _options);
 

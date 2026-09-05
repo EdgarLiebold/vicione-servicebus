@@ -31,7 +31,7 @@ public sealed class DurableSenderArchitectureTests
             typeof(DurableSendQuarantineEntry),
             typeof(DurableSendOperationOutcome),
             typeof(DurableSendOperationResult),
-            typeof(IDurableSenderOperations<>),
+            typeof(IReliableMessagingOperations<>),
         ];
         Assert.All(operationsApi, type => Assert.Equal("ViciOne.ServiceBus.Operations", type.Namespace));
 
@@ -47,12 +47,12 @@ public sealed class DurableSenderArchitectureTests
             typeof(DurableSendLease),
             typeof(DurableSendStoreLimits),
             typeof(DurableSendStoreSnapshot),
-            typeof(IDurableSendStore<>),
+            typeof(IOutboxStore<>),
             typeof(IDurableSendDispatcher<>),
             typeof(IDurableSendAdmission<>),
             typeof(IDurableSendConsumerCompletion),
             typeof(BusPersistenceIdentity<>),
-            typeof(IDurableSenderProviderConfigurator),
+            typeof(IReliableMessagingProviderConfigurator),
         ];
 
         Assert.All(providerSpi, contract =>
@@ -80,7 +80,7 @@ public sealed class DurableSenderArchitectureTests
         Assert.All(advancedSpi, contract =>
             Assert.StartsWith("ViciOne.ServiceBus.Advanced", contract.Namespace, StringComparison.Ordinal));
         Assert.Same(ProductAssemblyFacts.Abstractions, typeof(SerializedDurableSend).Assembly);
-        Assert.Same(ProductAssemblyFacts.Core, typeof(DurableSenderOptions<>).Assembly);
+        Assert.Same(ProductAssemblyFacts.Core, typeof(ReliableMessagingOptions<>).Assembly);
         Assert.DoesNotContain(typeof(SerializedDurableSend).GetProperties(), property => property.PropertyType == typeof(Type));
         Assert.DoesNotContain("AssemblyQualifiedName", Source(
             "src/ViciOne.ServiceBus.Abstractions/DurableSend/SerializedDurableSend.cs"),
@@ -105,13 +105,13 @@ public sealed class DurableSenderArchitectureTests
     {
         string[] implementationNames =
         [
-            "ViciOne.ServiceBus.Providers.Persistence.InMemoryDurableSendStore`1",
+            "ViciOne.ServiceBus.Providers.Persistence.InMemoryReliableStore`1",
             "ViciOne.ServiceBus.Providers.Persistence.DurableSendAdmission`1",
             "ViciOne.ServiceBus.Providers.Persistence.TypedDurableSender`1",
-            "ViciOne.ServiceBus.Providers.Persistence.DurableSenderDeliveryService`1",
-            "ViciOne.ServiceBus.Operations.DurableSenderOperations`1",
+            "ViciOne.ServiceBus.Providers.Persistence.ReliableMessagingDeliveryService`1",
+            "ViciOne.ServiceBus.Operations.ReliableMessagingOperations`1",
             "ViciOne.ServiceBus.Providers.Persistence.DurableSendConsumerCompletion`1",
-            "ViciOne.ServiceBus.Configuration.DurableSenderConfigurator`1",
+            "ViciOne.ServiceBus.Configuration.ReliableMessagingConfigurator`1",
             "ViciOne.ServiceBus.Configuration.BusCompositionStartupValidator`1",
             "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendDispatcher`1",
             "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendCompletionFilter",
@@ -133,6 +133,74 @@ public sealed class DurableSenderArchitectureTests
             BindingFlags.Instance | BindingFlags.NonPublic)!;
         Assert.False(capability.GetMethod!.IsPublic);
         Assert.False(capability.PropertyType.IsPublic);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-OWNERSHIP", "one-delivery-loop-and-one-quarantine-operations-api")]
+    public void ReliableMessaging_HasOneDeliveryLoopAndOneQuarantineOperationsApi()
+    {
+        string sourceRoot = Path.Combine(RepositoryLayout.Root, "src");
+        string[] deliveryLoops = Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path =>
+            {
+                string source = File.ReadAllText(path);
+                return source.Contains("class ReliableMessagingDeliveryService<", StringComparison.Ordinal)
+                    || source.Contains("class DurableSenderDeliveryService<", StringComparison.Ordinal)
+                    || source.Contains("class BusOutboxDeliveryService<", StringComparison.Ordinal);
+            })
+            .Select(path => Path.GetRelativePath(RepositoryLayout.Root, path))
+            .ToArray();
+        Assert.Equal(
+            ["src/ViciOne.ServiceBus/DurableSend/ReliableMessagingDeliveryService.cs"],
+            deliveryLoops);
+
+        string[] retiredEntryPoints = ["UseInMemoryOutbox", "AddEntityFrameworkOutbox", "UseBusOutbox"];
+        string[] applicationRoots =
+        [
+            sourceRoot,
+            Path.Combine(RepositoryLayout.Root, "samples"),
+        ];
+        var retiredOccurrences = applicationRoots
+            .SelectMany(root => Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories))
+            .Select(path => new { Path = path, Source = File.ReadAllText(path) })
+            .Where(entry => retiredEntryPoints.Any(token => entry.Source.Contains(token, StringComparison.Ordinal)))
+            .Select(entry => Path.GetRelativePath(RepositoryLayout.Root, entry.Path))
+            .ToArray();
+        Assert.Empty(retiredOccurrences);
+
+        Type[] quarantineApis = ProductAssemblyFacts.Abstractions.GetExportedTypes()
+            .Where(type => type.GetMethods().Any(method =>
+                method.Name is "GetOutboxQuarantineAsync" or "GetInboxQuarantineAsync"))
+            .ToArray();
+        Type operations = Assert.Single(quarantineApis);
+        Assert.Equal(typeof(IReliableMessagingOperations<>), operations);
+        Assert.Equal(
+            ["AbandonAsync", "DiscardAsync", "GetInboxQuarantineAsync", "GetOutboxQuarantineAsync", "GetSnapshotAsync", "RequeueAsync"],
+            operations.GetMethods().Select(static method => method.Name).Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RABBITMQ-DURABLE-ACCEPTANCE", "persistent-mandatory-confirmed-before-accepted")]
+    public void RabbitMqDispatcher_ReportsAcceptanceOnlyAfterPersistentMandatoryConfirmedPublish()
+    {
+        string dispatcher = Source(
+            "src/Transports/ViciOne.ServiceBus.RabbitMq/DurableSend/RabbitMqDurableSendDispatcher.cs");
+
+        Assert.Contains("context.Durable = true;", dispatcher, StringComparison.Ordinal);
+        Assert.Contains("rabbitMqContext.Mandatory = true;", dispatcher, StringComparison.Ordinal);
+        Assert.Contains("rabbitMqContext.AwaitAck = true;", dispatcher, StringComparison.Ordinal);
+
+        int send = dispatcher.IndexOf("await endpoint.SendAsync(", StringComparison.Ordinal);
+        int accepted = dispatcher.IndexOf(
+            "return DurableSendDispatchResult.TransportAccepted;",
+            StringComparison.Ordinal);
+        Assert.True(send >= 0);
+        Assert.True(accepted > send);
+        Assert.Equal(
+            1,
+            dispatcher.Split(
+                "return DurableSendDispatchResult.TransportAccepted;",
+                StringSplitOptions.None).Length - 1);
     }
 
     [Fact]
@@ -168,7 +236,7 @@ public sealed class DurableSenderArchitectureTests
         Assert.True(storeAdmission > catalogLookup);
 
         string efStore = Source(
-            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/DurableSend/EntityFrameworkDurableSendStore.cs");
+            "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/DurableSend/EntityFrameworkReliableStore.cs");
         int preflight = efStore.IndexOf("_commitDurabilityValidator.ValidateAsync", StringComparison.Ordinal);
         int capacityLookup = efStore.IndexOf("Set<DurableSendCapacityState>()", preflight, StringComparison.Ordinal);
         Assert.True(preflight >= 0);

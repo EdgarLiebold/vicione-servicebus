@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
@@ -26,19 +29,19 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
     readonly TBus _bus;
     readonly IClientFactory _clientFactory;
     readonly TDbContext _dbContext;
-    readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
+    readonly IMessageContractCatalog _contractCatalog;
     readonly string _persistenceIdentity;
     readonly IServiceProvider _provider;
     readonly TimeProvider _timeProvider;
+    readonly ReliableMessagingOptions<TBus> _options;
     readonly EntityFrameworkOutboxWriteCoordinator _writeCoordinator = new();
+    readonly HashSet<Guid> _stagedIds = [];
     bool _disposed;
-    Guid _outboxId = NewId.NextGuid();
-    EntityEntry<OutboxState>? _outboxState;
     IPublishEndpoint? _publishEndpoint;
     IScopedClientFactory? _scopedClientFactory;
     ISendEndpointProvider? _sendEndpointProvider;
 
-    internal bool HasActiveSession => _outboxState != null;
+    internal bool HasActiveSession => _stagedIds.Count > 0;
 
     public EntityFrameworkScopedBusContext(TBus bus, TDbContext dbContext,
         IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification,
@@ -47,9 +50,11 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        _notification = notification ?? throw new ArgumentNullException(nameof(notification));
+        ArgumentNullException.ThrowIfNull(notification);
         _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _contractCatalog = provider.GetRequiredService<IMessageContractCatalog>();
+        _options = provider.GetRequiredService<IOptions<ReliableMessagingOptions<TBus>>>().Value;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _persistenceIdentity = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
             .Require("Entity Framework transactional outbox");
@@ -70,14 +75,42 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
         ArgumentNullException.ThrowIfNull(context);
         ThrowIfDisposed();
 
-        return _writeCoordinator.ExecuteAsync(() =>
+        return _writeCoordinator.ExecuteAsync(async () =>
         {
             ThrowIfDisposed();
-            EnsureOutboxState();
+            if (WasCommitted())
+                CompleteCommittedOutbox();
 
-            var message = OutboxMessageFactory.Create(context, ServiceBusMetadataJson.ObjectDeserializer, _timeProvider, outboxId: _outboxId);
-            _dbContext.Add(message);
-            return Task.CompletedTask;
+            if (!context.MessageId.HasValue)
+                throw new MessageException(typeof(T), "The SendContext MessageId must be present");
+            Uri destination = context.DestinationAddress
+                ?? throw new MessageException(typeof(T), "The SendContext DestinationAddress must be present");
+            byte[] body = context.Serializer.GetMessageBody(context).GetBytes();
+            string contentType = context.ContentType?.ToString() ?? context.Serialization.DefaultContentType.ToString();
+            DateTimeOffset now = _timeProvider.GetUtcNow();
+            Guid id = context.MessageId.Value;
+            var record = new DurableSendRecord
+            {
+                StoreKey = _persistenceIdentity,
+                Id = id,
+                GenerationToken = Guid.NewGuid(),
+                ContractIdentity = _contractCatalog.GetIdentity(typeof(T)).ToString(),
+                DestinationAddress = destination.AbsoluteUri,
+                ContentType = contentType,
+                Body = body,
+                Metadata = ReliableEnvelopeMetadataCodec.Capture(context, now).ToArray(),
+                MessageId = context.MessageId,
+                CorrelationId = context.CorrelationId,
+                StorageSize = body.LongLength,
+                Status = DurableSendStatus.Pending,
+                EnqueuedAt = now.UtcDateTime,
+                DueAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,
+                NextAttemptAt = context.Delay.HasValue ? (now + context.Delay.Value).UtcDateTime : null,
+            };
+
+            await ReserveCapacityAsync(record.StorageSize, cancellationToken).ConfigureAwait(false);
+            _dbContext.Add(record);
+            _stagedIds.Add(id);
         }, cancellationToken);
     }
 
@@ -94,7 +127,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            if (_outboxState == null)
+            if (_stagedIds.Count == 0)
                 return;
 
             if (!WasCommitted())
@@ -128,15 +161,15 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
             return;
 
         Exception? uncommitted = null;
-        _writeCoordinator.ExecuteBlocking(() =>
+        _writeCoordinator.ExecuteSynchronous(() =>
         {
             if (HasPendingOutboxChanges())
             {
-                Guid abandonedOutboxId = _outboxId;
+                Guid[] abandonedIds = _stagedIds.ToArray();
                 DetachPendingOutbox();
                 uncommitted = new InvalidOperationException(
                     $"The transactional outbox for {TypeCache<TBus>.ShortName}/{TypeCache<TDbContext>.ShortName} was disposed without commit. "
-                    + $"Staged outbox {abandonedOutboxId} records were detached to prevent accidental later persistence.");
+                    + $"{abandonedIds.Length} staged outbox records were detached to prevent accidental later persistence.");
             }
             else if (WasCommitted())
                 CompleteCommittedOutbox();
@@ -157,61 +190,89 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
     protected virtual IPublishEndpointProvider GetPublishEndpointProvider() => _bus;
     protected virtual ISendEndpointProvider GetSendEndpointProvider() => _bus;
 
-    void EnsureOutboxState()
-    {
-        if (_outboxState != null && !WasCommitted())
-            return;
-
-        if (WasCommitted())
-            CompleteCommittedOutbox();
-
-        _outboxId = NewId.NextGuid();
-        _outboxState = _dbContext.Add(new OutboxState
-        {
-            OutboxId = _outboxId,
-            BusKey = _persistenceIdentity,
-            Created = _timeProvider.GetUtcNow().UtcDateTime,
-            Status = OutboxDeliveryStatus.Pending
-        });
-    }
-
     bool HasPendingOutboxChanges()
     {
-        if (_outboxState == null)
-            return false;
-
-        if (_outboxState is { State: not EntityState.Unchanged and not EntityState.Detached })
-            return true;
-
-        return _dbContext.ChangeTracker.Entries<OutboxMessage>()
-            .Any(x => x.Entity.OutboxId == _outboxId && x.State is not EntityState.Unchanged and not EntityState.Detached);
+        return _dbContext.ChangeTracker.Entries<DurableSendRecord>()
+            .Any(entry => _stagedIds.Contains(entry.Entity.Id)
+                && entry.State is not EntityState.Unchanged and not EntityState.Detached);
     }
 
-    bool WasCommitted() => _outboxState?.State == EntityState.Unchanged;
+    bool WasCommitted() => _stagedIds.Count > 0
+        && _dbContext.ChangeTracker.Entries<DurableSendRecord>()
+            .Where(entry => _stagedIds.Contains(entry.Entity.Id))
+            .All(entry => entry.State is EntityState.Unchanged or EntityState.Detached);
 
     void CompleteCommittedOutbox()
     {
-        if (_outboxState == null || !WasCommitted())
+        if (!WasCommitted())
             return;
 
-        _notification.Delivered();
-        _outboxState = null;
-        _outboxId = NewId.NextGuid();
+        _stagedIds.Clear();
     }
 
     void DetachPendingOutbox()
     {
-        foreach (var entry in _dbContext.ChangeTracker.Entries<OutboxMessage>().Where(x => x.Entity.OutboxId == _outboxId).ToArray())
+        long releasedBytes = 0;
+        int releasedCount = 0;
+        foreach (var entry in _dbContext.ChangeTracker.Entries<DurableSendRecord>()
+                     .Where(entry => _stagedIds.Contains(entry.Entity.Id))
+                     .ToArray())
         {
             if (entry.State != EntityState.Unchanged)
+            {
+                releasedBytes = checked(releasedBytes + entry.Entity.StorageSize);
+                releasedCount++;
                 entry.State = EntityState.Detached;
+            }
         }
 
-        if (_outboxState is { State: not EntityState.Unchanged })
-            _outboxState.State = EntityState.Detached;
+        DurableSendCapacityState? capacity = _dbContext.ChangeTracker.Entries<DurableSendCapacityState>()
+            .Select(entry => entry.Entity)
+            .SingleOrDefault(state => string.Equals(state.StoreKey, _persistenceIdentity, StringComparison.Ordinal));
+        if (capacity is not null && releasedCount > 0)
+        {
+            capacity.StoredCount = checked(capacity.StoredCount - releasedCount);
+            capacity.StoredBytes = checked(capacity.StoredBytes - releasedBytes);
+        }
 
-        _outboxState = null;
-        _outboxId = NewId.NextGuid();
+        _stagedIds.Clear();
+    }
+
+    async Task ReserveCapacityAsync(long bytes, CancellationToken cancellationToken)
+    {
+        if (bytes > _options.MaximumStoredBytes)
+        {
+            throw new DurableSendCapacityExceededException(
+                $"Reliable outbox message size {bytes} exceeds the configured byte limit {_options.MaximumStoredBytes}.",
+                0,
+                0);
+        }
+
+        DurableSendCapacityState? capacity = _dbContext.ChangeTracker.Entries<DurableSendCapacityState>()
+            .Select(entry => entry.Entity)
+            .SingleOrDefault(state => string.Equals(state.StoreKey, _persistenceIdentity, StringComparison.Ordinal));
+        capacity ??= await _dbContext.Set<DurableSendCapacityState>()
+            .SingleOrDefaultAsync(state => state.StoreKey == _persistenceIdentity, cancellationToken)
+            .ConfigureAwait(false);
+        if (capacity is null)
+        {
+            capacity = new DurableSendCapacityState { StoreKey = _persistenceIdentity };
+            _dbContext.Add(capacity);
+        }
+
+        int nextCount = checked(capacity.StoredCount + 1);
+        long nextBytes = checked(capacity.StoredBytes + bytes);
+        if (nextCount > _options.MaximumStoredCount || nextBytes > _options.MaximumStoredBytes)
+        {
+            throw new DurableSendCapacityExceededException(
+                $"Reliable messaging storage capacity would be exceeded ({nextCount}/{_options.MaximumStoredCount} records, "
+                + $"{nextBytes}/{_options.MaximumStoredBytes} bytes).",
+                capacity.StoredCount,
+                capacity.StoredBytes);
+        }
+
+        capacity.StoredCount = nextCount;
+        capacity.StoredBytes = nextBytes;
     }
 
     void ThrowIfDisposed()

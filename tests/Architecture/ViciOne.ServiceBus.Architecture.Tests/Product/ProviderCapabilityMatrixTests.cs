@@ -65,7 +65,7 @@ public sealed class ProviderCapabilityMatrixTests
         {
             Assert.Equal(ReadPackageId(provider.Project), provider.Package);
             bool ownsStore = Sources(provider.Project)
-                .Any(static source => source.Contains("IDurableSendStore<", StringComparison.Ordinal));
+                .Any(static source => source.Contains("IOutboxStore<", StringComparison.Ordinal));
             Assert.Equal(ownsStore, provider.DurableSendStore == "supported");
             if (ownsStore)
                 Assert.True(File.Exists(Path.Combine(RepositoryLayout.Root, provider.DurableSendEvidence!)), provider.Id);

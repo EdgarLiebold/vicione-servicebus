@@ -39,8 +39,8 @@ internal sealed class QuartzTestBus : IAsyncDisposable
             configure?.Invoke(configurator);
             string queueName = $"quartz-{NewId.NextGuid():N}";
             schedulerAddress = timeProvider is null && timeZoneResolver is null
-                ? configurator.UseInMemoryScheduler(schedulerFactory, queueName)
-                : configurator.UseInMemoryScheduler(options =>
+                ? configurator.ConfigureInMemoryScheduler(schedulerFactory, queueName)
+                : configurator.ConfigureInMemoryScheduler(options =>
                 {
                     options.SchedulerFactory = schedulerFactory;
                     options.QueueName = queueName;

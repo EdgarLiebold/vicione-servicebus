@@ -41,7 +41,7 @@ public sealed class JobServiceEndpointConfigurationTests
                 configuration.AddJobSagaStateMachines();
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     bus.ConfigureEndpoints(context);
                 });
             })

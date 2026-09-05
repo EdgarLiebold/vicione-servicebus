@@ -111,12 +111,12 @@ public sealed class QuartzNestedRequestIntegrationTests
                 {
                     configurator.ReceiveEndpoint($"{prefix}-saga", endpoint =>
                     {
-                        endpoint.UseInMemoryOutbox();
+                        endpoint.UseVolatileOutbox();
                         endpoint.StateMachineSaga(linkMachine, linkRepository);
                     });
                     configurator.ReceiveEndpoint($"{prefix}-request-state", endpoint =>
                     {
-                        endpoint.UseInMemoryOutbox();
+                        endpoint.UseVolatileOutbox();
                         endpoint.StateMachineSaga(requestMachine, requestRepository);
                     });
                     configurator.ReceiveEndpoint($"{prefix}-service", endpoint => endpoint.Handler<RequestShortLink>(context =>

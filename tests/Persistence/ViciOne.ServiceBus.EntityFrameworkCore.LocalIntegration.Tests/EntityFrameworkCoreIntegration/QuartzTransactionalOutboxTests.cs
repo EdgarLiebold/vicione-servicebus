@@ -272,7 +272,7 @@ public sealed class QuartzTransactionalOutboxTests
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
                 configuration.AddPublishMessageScheduler();
                 configuration.AddQuartzConsumers();
-                configuration.AddEntityFrameworkOutbox<QuartzOutboxDbContext>(outbox =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<QuartzOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();
                     outbox.DisableInboxCleanupService();
@@ -281,7 +281,7 @@ public sealed class QuartzTransactionalOutboxTests
                 configuration.AddConsumer<ScheduledOutboxPayloadConsumer>();
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UsePublishMessageScheduler();
+                    bus.ConfigurePublishMessageScheduler();
                     bus.ConfigureEndpoints(context);
                 });
             });

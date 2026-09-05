@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Transports.Fabric;
 using Xunit;
 
@@ -19,10 +20,10 @@ public sealed class ReliableInMemoryIntegrationTests
         var observation = new InboxObservation();
         await using ServiceProvider provider = new ServiceCollection()
             .AddSingleton(observation)
-            .AddInMemoryInboxOutbox()
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration);
                 configuration.AddConsumer<InboxConsumer, InboxConsumerDefinition>();
                 configuration.AddConsumer<InboxEventConsumer>();
             })
@@ -67,10 +68,10 @@ public sealed class ReliableInMemoryIntegrationTests
         await using ServiceProvider provider = new ServiceCollection()
             .AddSingleton(observation)
             .AddScoped<IReliablePublisher, ReliablePublisher>()
-            .AddInMemoryInboxOutbox()
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
+                ConfigureReliableMessaging(configuration);
                 configuration.AddConsumer<ReliableConsumer, ReliableConsumerDefinition>();
                 configuration.AddConsumer<ReliableEventConsumer>();
             })
@@ -118,10 +119,11 @@ public sealed class ReliableInMemoryIntegrationTests
         var observation = new ReliableObservation();
         var services = new ServiceCollection();
         services.AddSingleton(observation);
-        services.AddInMemoryInboxOutbox();
+        services.AddSingleton<ITransportSendFailureClassifier, ExpectedReliableFailureClassifier>();
         services.AddViciOneServiceBusTestHarness(configuration =>
         {
             configuration.SetTestTimeouts(timeout, timeout);
+            ConfigureReliableMessaging(configuration);
             configuration.AddSagaStateMachine<ReliableMachine, ReliableState, ReliableStateDefinition>()
                 .InMemoryRepository();
         });
@@ -157,6 +159,35 @@ public sealed class ReliableInMemoryIntegrationTests
 
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions().OperationTimeout!.Value;
+
+    private static void ConfigureReliableMessaging(IBusRegistrationConfigurator configuration)
+    {
+        configuration.Limits(MessageLimits.Conservative);
+        configuration.UseReliableMessaging(reliable =>
+        {
+            reliable.UseInMemoryStore();
+            reliable.Store(new ReliableStoreLimits
+            {
+                MaximumStoredCount = 1_000,
+                MaximumStoredBytes = 16 * 1024 * 1024,
+            });
+            reliable.Delivery(delivery =>
+            {
+                delivery.MaximumAttempts = 3;
+                delivery.InitialRetryDelay = TimeSpan.FromMilliseconds(20);
+                delivery.MaximumRetryDelay = TimeSpan.FromMilliseconds(50);
+                delivery.RetryJitterFraction = 0;
+                delivery.PollInterval = TimeSpan.FromMilliseconds(10);
+            });
+            reliable.Retention(TimeSpan.FromDays(1));
+            reliable.AddMessageContract<InboxCommand>("inbox-command");
+            reliable.AddMessageContract<InboxEvent>("inbox-event");
+            reliable.AddMessageContract<ReliableCommand>("reliable-command");
+            reliable.AddMessageContract<ReliableEvent>("reliable-event");
+            reliable.AddMessageContract<CreateReliableState>("create-reliable-state");
+            reliable.AddMessageContract<ReliableStateVerified>("reliable-state-verified");
+        });
+    }
 
     private static CancellationToken SnapshotOnlyToken() => new(canceled: true);
 
@@ -245,8 +276,9 @@ public sealed class ReliableInMemoryIntegrationTests
             IConsumerConfigurator<InboxConsumer> consumerConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.UseMessageRetry(retry => retry.Immediate(2));
-            endpointConfigurator.UseInMemoryInboxOutbox(context);
+            _ = endpointConfigurator;
+            _ = consumerConfigurator;
+            _ = context;
         }
     }
 
@@ -299,8 +331,9 @@ public sealed class ReliableInMemoryIntegrationTests
             IConsumerConfigurator<ReliableConsumer> consumerConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.UseMessageRetry(retry => retry.Immediate(1));
-            endpointConfigurator.UseInMemoryInboxOutbox(context);
+            _ = endpointConfigurator;
+            _ = consumerConfigurator;
+            _ = context;
         }
     }
 
@@ -363,9 +396,8 @@ public sealed class ReliableInMemoryIntegrationTests
             ISagaConfigurator<ReliableState> sagaConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.UseMessageRetry(retry => retry.Immediate(1));
             endpointConfigurator.UseMessageScope(context);
-            endpointConfigurator.UseInMemoryInboxOutbox(context);
+            _ = sagaConfigurator;
         }
     }
 
@@ -391,4 +423,23 @@ public sealed class ReliableInMemoryIntegrationTests
     }
 
     public sealed class ExpectedReliableException(string message) : Exception(message);
+
+    private sealed class ExpectedReliableFailureClassifier : ITransportSendFailureClassifier
+    {
+        public bool TryClassify(Exception exception, out TransportSendFailureKind kind)
+        {
+            ArgumentNullException.ThrowIfNull(exception);
+            for (Exception? current = exception; current is not null; current = current.InnerException)
+            {
+                if (current is not ExpectedReliableException)
+                    continue;
+
+                kind = TransportSendFailureKind.Transient;
+                return true;
+            }
+
+            kind = TransportSendFailureKind.Unclassified;
+            return false;
+        }
+    }
 }

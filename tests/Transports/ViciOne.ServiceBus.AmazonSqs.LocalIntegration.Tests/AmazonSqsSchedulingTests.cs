@@ -27,7 +27,7 @@ public sealed class AmazonSqsSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseDelayedMessageScheduler();
+            configurator.ConfigureDelayedMessageScheduler();
             configurator.ReceiveEndpoint(queueName, endpoint =>
             {
                 endpoint.Durable = false;
@@ -89,7 +89,7 @@ public sealed class AmazonSqsSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseDelayedMessageScheduler();
+            configurator.ConfigureDelayedMessageScheduler();
             configurator.ReceiveEndpoint(queueName, endpoint =>
             {
                 endpoint.Durable = false;

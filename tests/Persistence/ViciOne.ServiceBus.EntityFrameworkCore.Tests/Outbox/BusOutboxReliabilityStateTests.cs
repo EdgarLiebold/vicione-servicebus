@@ -195,7 +195,7 @@ public sealed class BusOutboxReliabilityStateTests
         Assert.Equal(42, persisted.LastSequenceNumber);
     }
 
-    private static BusOutboxDeliveryService<IBus, DeliveryDbContext> CreateService(
+    private static EntityFrameworkTransactionalOutboxSource<IBus, DeliveryDbContext> CreateService(
         IServiceProvider provider,
         int maximumAttempts = 10,
         TimeSpan? initialDelay = null,
@@ -212,12 +212,12 @@ public sealed class BusOutboxReliabilityStateTests
             LockStatementProvider = new SqliteLockStatementProvider()
         };
 
-        return new BusOutboxDeliveryService<IBus, DeliveryDbContext>(
+        return new EntityFrameworkTransactionalOutboxSource<IBus, DeliveryDbContext>(
             Options.Create(options),
             Options.Create(outboxOptions),
             new RecordingNotification(),
             classifiers ?? [],
-            NullLogger<BusOutboxDeliveryService<IBus, DeliveryDbContext>>.Instance,
+            NullLogger<EntityFrameworkTransactionalOutboxSource<IBus, DeliveryDbContext>>.Instance,
             provider,
             new FakeTimeProvider(Now),
             BusPersistenceIdentity<IBus>.Create("default"));

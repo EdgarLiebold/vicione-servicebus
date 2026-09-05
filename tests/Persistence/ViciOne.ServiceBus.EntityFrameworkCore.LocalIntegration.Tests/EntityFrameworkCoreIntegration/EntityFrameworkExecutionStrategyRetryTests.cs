@@ -55,7 +55,7 @@ public sealed class EntityFrameworkExecutionStrategyRetryTests
         services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-            configuration.AddEntityFrameworkOutbox<RetryDbContext>(outbox =>
+            configuration.ConfigureEntityFrameworkTransactionalStore<RetryDbContext>(outbox =>
             {
                 outbox.UsePostgres();
                 outbox.DisableInboxCleanupService();

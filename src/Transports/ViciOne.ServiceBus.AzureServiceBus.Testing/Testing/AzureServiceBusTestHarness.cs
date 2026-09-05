@@ -146,7 +146,7 @@ public class AzureServiceBusTestHarness :
             ConfigureServiceBusBus(x);
 
             if (ConfigureMessageScheduler)
-                x.UseServiceBusMessageScheduler();
+                x.ConfigureServiceBusMessageScheduler();
 
             x.ReceiveEndpoint(InputQueueName, e =>
             {

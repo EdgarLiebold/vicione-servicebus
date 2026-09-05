@@ -132,8 +132,18 @@ public sealed class RabbitMqDurableSendAcceptanceTests
             catalog.Register<DurableAcceptanceMessage>(ContractIdentity.Name, ContractIdentity.MajorVersion));
         services.AddViciOneServiceBus(configurator =>
         {
-            configurator.UseDurableSender(durable => durable
-                .UseInMemoryStore());
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                reliable.Store(new ReliableStoreLimits
+                {
+                    MaximumStoredCount = 100,
+                    MaximumStoredBytes = 1024 * 1024,
+                });
+                reliable.Delivery(_ => { });
+                reliable.Retention(TimeSpan.FromDays(1));
+            });
             configurator.UsingRabbitMq((_, rabbit) => fixture.ConfigureHost(rabbit));
         });
         return services.BuildServiceProvider(new ServiceProviderOptions
@@ -172,7 +182,10 @@ public sealed class RabbitMqDurableSendAcceptanceTests
 
         public ValueTask<bool> CompleteAsync(CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.ValueTask.FromCanceled<bool>(cancellationToken); return ValueTask.FromException<bool>(new InvalidOperationException(
+            if (cancellationToken.IsCancellationRequested)
+                return global::System.Threading.Tasks.ValueTask.FromCanceled<bool>(cancellationToken);
+
+            return ValueTask.FromException<bool>(new InvalidOperationException(
                 "RabbitMQ transport acceptance must never invoke the in-process consumer-completion capability."));
         }
     }

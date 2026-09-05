@@ -99,7 +99,7 @@ public sealed class BusCompositionStartupValidationTests
         {
             bus.Limits(MessageLimits.Conservative);
             bus.UsingInMemory();
-            bus.UseDurableSender(_ => { });
+            bus.UseReliableMessaging(reliable => ConfigurePolicy(reliable));
         });
         await using ServiceProvider provider = services.BuildServiceProvider();
 
@@ -108,7 +108,9 @@ public sealed class BusCompositionStartupValidationTests
 
         Assert.Contains("no message-contract catalog", exception.Message, StringComparison.Ordinal);
         Assert.Contains("no persistence store", exception.Message, StringComparison.Ordinal);
-        Assert.Equal(2, exception.Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Length);
+        Assert.Contains("no inbox store", exception.Message, StringComparison.Ordinal);
+        Assert.Contains("no schedule store", exception.Message, StringComparison.Ordinal);
+        Assert.Equal(4, exception.Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Length);
     }
 
     [Fact]
@@ -121,8 +123,9 @@ public sealed class BusCompositionStartupValidationTests
         {
             bus.Limits(MessageLimits.Conservative);
             bus.UsingInMemory();
-            bus.UseDurableSender(durable =>
+            bus.UseReliableMessaging(durable =>
             {
+                ConfigurePolicy(durable);
                 durable.AddMessageContract<JournalProbe>("vicione.tests.journal-probe");
                 durable.AddMessageContract<JournalProbe>("vicione.tests.conflicting-journal-probe");
             });
@@ -133,9 +136,11 @@ public sealed class BusCompositionStartupValidationTests
             CompositionValidator<IBus>(provider).StartAsync(TestContext.Current.CancellationToken));
 
         string[] failures = exception.Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        Assert.Equal(2, failures.Length);
+        Assert.Equal(4, failures.Length);
         Assert.Contains(failures, static failure => failure.Contains("cannot also be", StringComparison.Ordinal));
         Assert.Contains(failures, static failure => failure.Contains("no persistence store", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("no inbox store", StringComparison.Ordinal));
+        Assert.Contains(failures, static failure => failure.Contains("no schedule store", StringComparison.Ordinal));
         Assert.All(failures, static failure => Assert.StartsWith("Reliable messaging for bus 'default':", failure, StringComparison.Ordinal));
     }
 
@@ -251,6 +256,18 @@ public sealed class BusCompositionStartupValidationTests
             service.GetType().IsGenericType
             && service.GetType().GetGenericTypeDefinition().Name == "BusCompositionStartupValidator`1"
             && service.GetType().GetGenericArguments()[0] == typeof(TBus));
+
+    static void ConfigurePolicy<TBus>(IReliableMessagingConfigurator<TBus> reliable)
+        where TBus : class, IBus
+    {
+        reliable.Store(new ReliableStoreLimits
+        {
+            MaximumStoredCount = 10_000,
+            MaximumStoredBytes = 16 * 1024 * 1024,
+        });
+        reliable.Delivery(_ => { });
+        reliable.Retention(TimeSpan.FromDays(7));
+    }
 
     public interface IOrdersBus : IBus;
 

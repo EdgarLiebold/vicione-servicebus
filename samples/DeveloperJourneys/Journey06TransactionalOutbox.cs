@@ -9,15 +9,23 @@ public static class Journey06TransactionalOutbox
 {
     public static IServiceCollection Configure(IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<JourneyDbContext>(options => options.UseSqlite(connectionString));
+        services.AddDbContextFactory<JourneyDbContext>(options => options.UseSqlite(connectionString));
         return services.AddViciOneServiceBus(configuration =>
         {
-            configuration.AddEntityFrameworkOutbox<JourneyDbContext>(outbox =>
-            {
-                outbox.UseSqlite();
-                outbox.UseBusOutbox();
-            });
+            configuration.Limits(MessageLimits.Conservative);
             configuration.UsingInMemory();
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseEntityFramework<JourneyDbContext>();
+                reliable.Store(new ReliableStoreLimits
+                {
+                    MaximumStoredCount = 10_000,
+                    MaximumStoredBytes = 16 * 1024 * 1024,
+                });
+                reliable.Delivery(_ => { });
+                reliable.Retention(TimeSpan.FromDays(7));
+                reliable.AddMessageContract<SubmitOrder>("orders.submit");
+            });
         });
     }
 }

@@ -27,7 +27,7 @@ public sealed class ContainerRoutingSlipOutboxRequestTests
                     .Endpoint(endpoint => endpoint.Name = "container-requesting-activity_execute");
                 configuration.AddRequestClient<ActivityRequest>(new Uri("queue:container-activity-request"));
                 configuration.AddConfigureEndpointsCallback((context, _, endpoint) =>
-                    endpoint.UseInMemoryOutbox(context));
+                    endpoint.UseVolatileOutbox(context));
             })
             .BuildServiceProvider(validateScopes: true);
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);

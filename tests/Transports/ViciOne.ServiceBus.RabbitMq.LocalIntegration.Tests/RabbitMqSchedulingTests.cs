@@ -19,7 +19,7 @@ public sealed class RabbitMqSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingRabbitMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseDelayedMessageScheduler();
+            configurator.ConfigureDelayedMessageScheduler();
             configurator.ReceiveEndpoint(queue, endpoint =>
             {
                 endpoint.Durable = true;

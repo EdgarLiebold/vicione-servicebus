@@ -131,7 +131,7 @@ public sealed class AzureServiceBusSessionStateTests
                 endpoint.DefaultMessageTimeToLive = EmulatorEntityTimeToLive;
                 endpoint.RequiresSession = true;
                 endpoint.MaxConcurrentCallsPerSession = 1;
-                endpoint.UseInMemoryOutbox();
+                endpoint.UseVolatileOutbox();
                 endpoint.Saga(repository);
             });
             configuration.ReceiveEndpoint(resultQueue, endpoint =>

@@ -188,7 +188,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
     {
         ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
             new ServiceCollection().AddViciOneServiceBus(configuration =>
-                configuration.AddEntityFrameworkOutbox<ConfigurationDbContext>()));
+                configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>()));
 
         Assert.Contains("provider", exception.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("explicitly", exception.Message, StringComparison.OrdinalIgnoreCase);
@@ -234,10 +234,10 @@ public sealed class EntityFrameworkProviderConfigurationTests
 
         static void AddBusOutbox(IBusRegistrationConfigurator configuration)
         {
-            configuration.AddEntityFrameworkOutbox<ConfigurationDbContext>(outbox =>
+            configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
             {
                 outbox.UseSqlite();
-                outbox.UseBusOutbox(busOutbox => busOutbox.DisableDeliveryService());
+                outbox.EnableTransactionalOutbox(busOutbox => busOutbox.DisableDeliveryService());
             });
         }
     }
@@ -250,14 +250,14 @@ public sealed class EntityFrameworkProviderConfigurationTests
         IEntityFrameworkBusOutboxConfigurator? capturedBusOutbox = null;
         var services = new ServiceCollection();
         services.AddViciOneServiceBus(configuration =>
-            configuration.AddEntityFrameworkOutbox<ConfigurationDbContext>(outbox =>
+            configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
             {
                 outbox.UsePostgres();
                 outbox.DuplicateDetectionWindow = TimeSpan.FromMinutes(17);
                 outbox.QueryDelay = TimeSpan.FromSeconds(3);
                 outbox.QueryMessageLimit = 41;
                 outbox.QueryTimeout = TimeSpan.FromSeconds(7);
-                outbox.UseBusOutbox(busOutbox =>
+                outbox.EnableTransactionalOutbox(busOutbox =>
                 {
                     busOutbox.MessageDeliveryLimit = 13;
                     busOutbox.MessageDeliveryTimeout = TimeSpan.FromSeconds(11);
@@ -317,10 +317,10 @@ public sealed class EntityFrameworkProviderConfigurationTests
     {
         ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
             new ServiceCollection().AddViciOneServiceBus(configuration =>
-                configuration.AddEntityFrameworkOutbox<ConfigurationDbContext>(outbox =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<ConfigurationDbContext>(outbox =>
                 {
                     outbox.UseSqlite();
-                    outbox.UseBusOutbox(busOutbox =>
+                    outbox.EnableTransactionalOutbox(busOutbox =>
                     {
                         switch (setting)
                         {
@@ -382,7 +382,7 @@ public sealed class EntityFrameworkProviderConfigurationTests
         public int QueryMessageLimit { get; set; }
         public TimeSpan QueryTimeout { get; set; }
         public void DisableInboxCleanupService() => throw new NotSupportedException();
-        public void UseBusOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null) =>
+        public void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null) =>
             throw new NotSupportedException();
     }
 

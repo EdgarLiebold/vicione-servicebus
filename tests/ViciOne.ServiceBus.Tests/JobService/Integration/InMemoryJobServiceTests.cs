@@ -539,7 +539,7 @@ public sealed class InMemoryJobServiceTests
 
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     bus.ConfigureEndpoints(context);
                 });
             });

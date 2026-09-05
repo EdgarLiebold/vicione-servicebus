@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Internals;
@@ -18,13 +17,12 @@ using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.RetryPolicies;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
-using ViciOne.ServiceBus.Util;
 
 #nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
-internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
-    BackgroundService
+internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext> :
+    IReliableDeliverySource<TBus>
     where TBus : class, IBus
     where TDbContext : DbContext
 {
@@ -35,7 +33,6 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
     readonly IsolationLevel _isolationLevel;
     readonly ILockStatementProvider _lockStatementProvider;
     readonly ILogger _logger;
-    readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
     readonly OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _options;
     readonly Func<TDbContext, Guid, long, int, IAsyncEnumerable<OutboxMessage>> _outboxMessagesQuery;
     readonly IServiceProvider _provider;
@@ -43,11 +40,11 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
     readonly TimeProvider _timeProvider;
     string? _getOutboxIdStatement;
 
-    public BusOutboxDeliveryService(IOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>>> options,
+    public EntityFrameworkTransactionalOutboxSource(IOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>>> options,
         IOptions<EntityFrameworkOutboxOptions<TDbContext>> outboxOptions,
         IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> notification,
         IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
-        ILogger<BusOutboxDeliveryService<TBus, TDbContext>> logger,
+        ILogger<EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>> logger,
         IServiceProvider provider,
         TimeProvider timeProvider,
         BusPersistenceIdentity<TBus> persistenceIdentity)
@@ -64,7 +61,6 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         _busControl = ResolveBusControl(provider);
         _busKey = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
             .Require("Entity Framework bus outbox");
-        _notification = notification;
         _logger = logger;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _failureClassifiers = failureClassifiers.ToArray();
@@ -82,41 +78,30 @@ internal sealed class BusOutboxDeliveryService<TBus, TDbContext> :
         _operationalRetryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task<bool> DeliverDueBatchAsync(CancellationToken cancellationToken = default)
     {
         LogContext.ConfigureCurrentLogContextIfNull(_provider);
-
-        using var algorithm = new RequestRateAlgorithm(new RequestRateAlgorithmOptions
+        try
         {
-            PrefetchCount = _options.QueryMessageLimit,
-            RequestResultLimit = 10
-        }, _timeProvider);
-
-        while (!stoppingToken.IsCancellationRequested)
+            await _busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, cancellationToken).ConfigureAwait(false);
+            int count = await _operationalRetryPolicy
+                .RetryAsync(() => DeliverOutboxAsync(_options.QueryMessageLimit, cancellationToken), cancellationToken)
+                .ConfigureAwait(false);
+            return count > 0;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            try
-            {
-                await _busControl.WaitForHealthStatusAsync(BusHealthStatus.Healthy, stoppingToken).ConfigureAwait(false);
-
-                var count = await _operationalRetryPolicy.RetryAsync(() => algorithm.RunAsync(DeliverOutboxAsync, stoppingToken), stoppingToken)
-                    .ConfigureAwait(false);
-                if (count > 0)
-                    continue;
-
-                await _notification.WaitForDeliveryAsync(stoppingToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-            {
-                break;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                // Another process won the row. This is normal HA contention and not a delivery failure.
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, "EF bus outbox delivery agent faulted for {BusKey}/{DbContext}", _busKey, typeof(TDbContext).Name);
-            }
+            throw;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            // Another process won the row. This is normal HA contention and not a delivery failure.
+            return false;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "EF transactional outbox source faulted for {BusKey}/{DbContext}", _busKey, typeof(TDbContext).Name);
+            return false;
         }
     }
 

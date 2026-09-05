@@ -152,9 +152,9 @@ public sealed class ContainerConsumeContextTests
                 }
 
                 if (UsesRegistrationContext(shape))
-                    endpoint.UseInMemoryOutbox(context);
+                    endpoint.UseVolatileOutbox(context);
                 else
-                    endpoint.UseInMemoryOutbox();
+                    endpoint.UseVolatileOutbox();
 
                 if (IsBatch(shape))
                     endpoint.ConnectConsumerConfigurationObserver(new OutboxUnitOfWorkObserver());

@@ -42,7 +42,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
                 {
                     bus.Route<LoopRequest>(new Uri(
                         $"loopback://localhost/{endpointNameFormatter.Message<LoopRequest>()}"));
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     bus.ConfigureEndpoints(context);
                 });
             })
@@ -218,7 +218,7 @@ public sealed class StateMachineOutboxSchedulingIntegrationTests
         {
             endpointConfigurator.UseMessageScope(context);
             endpointConfigurator.UseMessageRetry(retry => retry.Immediate(5));
-            endpointConfigurator.UseInMemoryOutbox(context);
+            endpointConfigurator.UseVolatileOutbox(context);
         }
     }
 

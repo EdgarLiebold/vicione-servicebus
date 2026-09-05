@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Providers.Transports;
@@ -29,7 +30,7 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
     {
         SerializedDurableSend message = context.Message.Validate();
         IMessageContractCatalog contractCatalog =
-            DurableSenderComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
+            ReliableMessagingComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
                 _contractCatalogs,
                 "message-contract catalog");
         if (!contractCatalog.TryGetMessageType(message.ContractIdentity, out Type? messageType))
@@ -65,6 +66,7 @@ internal sealed class InMemoryDurableSendDispatcher<TBus> : IDurableSendDispatch
             var contentType = new ContentType(_message.ContentType);
             context.Serializer = new CopyBodySerializer(contentType, new MemoryMessageBody(_message.Body));
             context.ContentType = contentType;
+            ReliableEnvelopeMetadataCodec.Apply(context, _message.Metadata, context.GetTimeProvider().GetUtcNow());
             context.MessageId = _message.MessageId;
             context.CorrelationId = _message.CorrelationId;
             context.Durable = true;

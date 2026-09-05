@@ -72,7 +72,7 @@ public sealed class StateMachineResponseAndFaultIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
             endpoint.UseMessageRetry(retry => retry.Immediate(5));
-            endpoint.UseInMemoryOutbox();
+            endpoint.UseVolatileOutbox();
         };
         ISagaStateMachineTestHarness<OutboxMachine, OutboxState> sagaHarness =
             harness.StateMachineSaga<OutboxState, OutboxMachine>(machine, repository);

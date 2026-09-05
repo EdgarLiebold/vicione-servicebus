@@ -61,6 +61,12 @@ public sealed record SerializedDurableSend
     public Guid? CorrelationId { get; init; }
 
     /// <summary>
+    /// Optional first-delivery time. A missing value means immediately due; a future value is persisted as outbox state
+    /// and is never owned by an in-process timer.
+    /// </summary>
+    public DateTimeOffset? DueAt { get; init; }
+
+    /// <summary>
     /// Logical retained content bytes owned by this record: serialized payload body plus ServiceBus metadata bytes.
     /// This is the byte budget enforced by Durable Sender capacity accounting; it is deliberately not described as
     /// physical database/storage allocation because provider row, index, address and schema overhead is provider-owned.

@@ -16,7 +16,7 @@ public static class DurableSenderHealthCheckExtensions
     /// Registers one typed durable-sender health check. The host still owns endpoint exposure, authorization,
     /// response formatting and external monitoring policy.
     /// </summary>
-    public static IHealthChecksBuilder AddViciOneDurableSenderHealthCheck<TBus>(
+    public static IHealthChecksBuilder AddViciOneReliableMessagingHealthCheck<TBus>(
         this IHealthChecksBuilder builder,
         string? name = null,
         IEnumerable<string>? tags = null)

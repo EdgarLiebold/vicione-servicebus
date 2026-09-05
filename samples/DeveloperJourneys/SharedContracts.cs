@@ -22,8 +22,7 @@ public sealed class JourneyDbContext(DbContextOptions<JourneyDbContext> options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.AddTransactionalOutboxEntities();
-        modelBuilder.AddViciOneDurableSender();
+        modelBuilder.AddViciOneReliableMessaging();
     }
 }
 

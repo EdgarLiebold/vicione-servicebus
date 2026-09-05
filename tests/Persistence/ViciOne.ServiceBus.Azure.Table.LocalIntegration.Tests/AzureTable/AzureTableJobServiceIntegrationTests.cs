@@ -261,7 +261,7 @@ public sealed class AzureTableJobServiceIntegrationTests
                         if (timeProvider is not null)
                             bus.UseExecute(consumeContext => consumeContext.SetTimeProvider(timeProvider));
 
-                        bus.UseDelayedMessageScheduler();
+                        bus.ConfigureDelayedMessageScheduler();
                         bus.ConfigureEndpoints(context);
                     });
                 });

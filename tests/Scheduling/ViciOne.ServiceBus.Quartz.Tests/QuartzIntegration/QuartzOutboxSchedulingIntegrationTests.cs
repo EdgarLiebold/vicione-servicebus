@@ -30,7 +30,7 @@ public sealed class QuartzOutboxSchedulingIntegrationTests
                 configurator.ReceiveEndpoint(queueName, endpoint =>
                 {
                     if (useOutbox)
-                        endpoint.UseInMemoryOutbox();
+                        endpoint.UseVolatileOutbox();
 
                     endpoint.Handler<StartDeferredSchedule>(async context =>
                     {

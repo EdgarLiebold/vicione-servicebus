@@ -14,47 +14,51 @@ using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 
-internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundService
+internal sealed partial class ReliableMessagingDeliveryService<TBus> : BackgroundService
     where TBus : class, IBus
 {
     readonly object _compositionLock = new();
     readonly IReadOnlyList<IDurableSendDispatcher<TBus>>? _dispatchers;
     readonly IReadOnlyList<ITransportSendFailureClassifier> _failureClassifiers;
+    readonly IReadOnlyList<IReliableDeliverySource<TBus>> _additionalSources;
     readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
-    readonly ILogger<DurableSenderDeliveryService<TBus>> _logger;
-    readonly DurableSenderPolicy<TBus> _policy;
+    readonly ILogger<ReliableMessagingDeliveryService<TBus>> _logger;
+    readonly ReliableMessagingPolicy<TBus> _policy;
     readonly IServiceProvider? _provider;
-    readonly IReadOnlyList<IDurableSendStore<TBus>>? _stores;
+    readonly IReadOnlyList<IOutboxStore<TBus>>? _stores;
     readonly TimeProvider _timeProvider;
     IDurableSendDispatcher<TBus> _dispatcher = null!;
-    IDurableSendStore<TBus> _store = null!;
+    IOutboxStore<TBus> _store = null!;
     bool _compositionResolved;
     long _nextTelemetrySnapshotUtcTicks;
 
-    public DurableSenderDeliveryService(
+    public ReliableMessagingDeliveryService(
         IServiceProvider provider,
         IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
-        DurableSenderPolicy<TBus> policy,
+        IEnumerable<IReliableDeliverySource<TBus>> additionalSources,
+        ReliableMessagingPolicy<TBus> policy,
         TimeProvider timeProvider,
-        ILogger<DurableSenderDeliveryService<TBus>> logger,
+        ILogger<ReliableMessagingDeliveryService<TBus>> logger,
         V5ServiceBusInstrumentation<TBus> instrumentation)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         ArgumentNullException.ThrowIfNull(failureClassifiers);
+        ArgumentNullException.ThrowIfNull(additionalSources);
         _failureClassifiers = failureClassifiers.ToArray();
+        _additionalSources = additionalSources.ToArray();
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));
     }
 
-    internal DurableSenderDeliveryService(
-        IEnumerable<IDurableSendStore<TBus>> stores,
+    internal ReliableMessagingDeliveryService(
+        IEnumerable<IOutboxStore<TBus>> stores,
         IEnumerable<IDurableSendDispatcher<TBus>> dispatchers,
         IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
-        DurableSenderPolicy<TBus> policy,
+        ReliableMessagingPolicy<TBus> policy,
         TimeProvider timeProvider,
-        ILogger<DurableSenderDeliveryService<TBus>> logger,
+        ILogger<ReliableMessagingDeliveryService<TBus>> logger,
         V5ServiceBusInstrumentation<TBus> instrumentation)
     {
         ArgumentNullException.ThrowIfNull(stores);
@@ -63,6 +67,7 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
         _stores = stores.ToArray();
         _dispatchers = dispatchers.ToArray();
         _failureClassifiers = failureClassifiers.ToArray();
+        _additionalSources = Array.Empty<IReliableDeliverySource<TBus>>();
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -106,8 +111,15 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
             await Task.WhenAll(deliveries).ConfigureAwait(false);
         }
 
+        bool additionalWork = false;
+        foreach (IReliableDeliverySource<TBus> source in _additionalSources)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            additionalWork |= await source.DeliverDueBatchAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         await RefreshTelemetrySnapshotIfDueAsync(_timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
-        return batch.Count > 0;
+        return batch.Count > 0 || additionalWork;
     }
 
     void EnsureCompositionResolved()
@@ -120,10 +132,10 @@ internal sealed partial class DurableSenderDeliveryService<TBus> : BackgroundSer
             if (_compositionResolved)
                 return;
 
-            IEnumerable<IDurableSendStore<TBus>> stores = _stores ?? _provider!.GetServices<IDurableSendStore<TBus>>();
+            IEnumerable<IOutboxStore<TBus>> stores = _stores ?? _provider!.GetServices<IOutboxStore<TBus>>();
             IEnumerable<IDurableSendDispatcher<TBus>> dispatchers = _dispatchers ?? _provider!.GetServices<IDurableSendDispatcher<TBus>>();
-            _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
-            _dispatcher = DurableSenderComposition.RequireExactlyOne<IDurableSendDispatcher<TBus>, TBus>(
+            _store = ReliableMessagingComposition.RequireExactlyOne<IOutboxStore<TBus>, TBus>(stores, "persistence store");
+            _dispatcher = ReliableMessagingComposition.RequireExactlyOne<IDurableSendDispatcher<TBus>, TBus>(
                 dispatchers,
                 "transport dispatcher");
             Volatile.Write(ref _compositionResolved, true);

@@ -17,7 +17,7 @@ public class ViciOneServiceBusJobFactory :
 
     /// <summary>
     /// Creates a factory that resolves the bus and clock from the Quartz scheduler context populated by
-    /// <c>UseInMemoryScheduler</c>.
+    /// <c>ConfigureInMemoryScheduler</c>.
     /// </summary>
     public ViciOneServiceBusJobFactory()
     {

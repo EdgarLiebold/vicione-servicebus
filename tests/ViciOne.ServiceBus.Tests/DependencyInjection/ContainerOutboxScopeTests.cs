@@ -29,7 +29,7 @@ public sealed class ContainerOutboxScopeTests
                     if (name == "container-outbox-producer")
                     {
                         endpoint.UseMessageScope(context);
-                        endpoint.UseInMemoryOutbox(context);
+                        endpoint.UseVolatileOutbox(context);
                     }
                 });
                 configuration.UsingInMemory((context, bus) =>

@@ -94,7 +94,7 @@ public sealed class AmazonSqsOutboxRedeliveryTests
     {
         configurator.UseDelayedRedelivery(redelivery => redelivery.Interval(1, TimeSpan.FromSeconds(1)));
         configurator.UseMessageRetry(retry => retry.Immediate(1));
-        configurator.UseInMemoryOutbox();
+        configurator.UseVolatileOutbox();
     }
 
     private static void ConfigureOutbox<T>(IHandlerConfigurator<T> configurator)
@@ -102,7 +102,7 @@ public sealed class AmazonSqsOutboxRedeliveryTests
     {
         configurator.UseDelayedRedelivery(redelivery => redelivery.Interval(1, TimeSpan.FromSeconds(1)));
         configurator.UseMessageRetry(retry => retry.Immediate(1));
-        configurator.UseInMemoryOutbox();
+        configurator.UseVolatileOutbox();
     }
 
     public enum OutboxMode

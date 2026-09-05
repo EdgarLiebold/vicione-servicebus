@@ -22,7 +22,7 @@ public sealed class InMemoryOutboxFaultTests
         };
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
         {
-            configurator.UseInMemoryOutbox();
+            configurator.UseVolatileOutbox();
             configurator.Handler<OutboxRequest>(async context =>
             {
                 handlerEntered.TrySetResult(context);

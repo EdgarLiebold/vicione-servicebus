@@ -95,7 +95,7 @@ public sealed class AzureServiceBusSessionAndSchedulingTests
             configuration.Host(new Uri("sb://localhost/"), client, admin);
             configuration.DefaultMessageTimeToLive = EmulatorEntityTimeToLive;
             configuration.OverrideDefaultBusEndpointQueueName(fixture.Name("bus"));
-            configuration.UseServiceBusMessageScheduler();
+            configuration.ConfigureServiceBusMessageScheduler();
             configuration.ReceiveEndpoint(queue, endpoint =>
             {
                 endpoint.ConfigureConsumeTopology = false;

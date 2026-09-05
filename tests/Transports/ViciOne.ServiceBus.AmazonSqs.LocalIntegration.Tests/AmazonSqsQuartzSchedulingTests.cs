@@ -22,7 +22,7 @@ public sealed class AmazonSqsQuartzSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingAmazonSqs(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseInMemoryScheduler(out schedulerFactory, schedulerQueue);
+            configurator.ConfigureInMemoryScheduler(out schedulerFactory, schedulerQueue);
             configurator.ReceiveEndpoint(inputQueue, endpoint =>
             {
                 endpoint.Durable = false;

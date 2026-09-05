@@ -193,7 +193,7 @@ public sealed class BatchDeliveryIntegrationTests
         {
             configuration.AddConsumer<FailingOutboxBatchConsumer>(consumer => consumer.Options<BatchOptions>(options =>
                 options.SetMessageLimit(2)));
-            configuration.AddConfigureEndpointsCallback((context, _, endpoint) => endpoint.UseInMemoryOutbox(context));
+            configuration.AddConfigureEndpointsCallback((context, _, endpoint) => endpoint.UseVolatileOutbox(context));
         });
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
         bool started = true;
@@ -375,7 +375,7 @@ public sealed class BatchDeliveryIntegrationTests
                 configuration.AddConfigureEndpointsCallback((context, _, endpoint) =>
                 {
                     endpoint.UseMessageRetry(retry => retry.Immediate(2));
-                    endpoint.UseInMemoryOutbox(context);
+                    endpoint.UseVolatileOutbox(context);
                 });
                 break;
             case SuccessMode.RetryingEndpointOutbox:
@@ -383,12 +383,12 @@ public sealed class BatchDeliveryIntegrationTests
                 configuration.AddConfigureEndpointsCallback((context, _, endpoint) =>
                 {
                     endpoint.UseMessageRetry(retry => retry.Immediate(2));
-                    endpoint.UseInMemoryOutbox(context);
+                    endpoint.UseVolatileOutbox(context);
                 });
                 break;
             case SuccessMode.MessageOutbox:
                 configuration.AddConsumer<OutboxBatchConsumer>(consumer =>
-                    consumer.Message<Batch<BatchItem>>(message => message.UseInMemoryOutbox()));
+                    consumer.Message<Batch<BatchItem>>(message => message.UseVolatileOutbox()));
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown success mode.");
@@ -431,7 +431,7 @@ public sealed class BatchDeliveryIntegrationTests
                 });
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     bus.ConfigureEndpoints(context);
                 });
                 break;
@@ -439,7 +439,7 @@ public sealed class BatchDeliveryIntegrationTests
                 configuration.AddConfigureEndpointsCallback((context, _, endpoint) =>
                 {
                     endpoint.UseMessageRetry(retry => retry.Immediate(2));
-                    endpoint.UseInMemoryOutbox(context);
+                    endpoint.UseVolatileOutbox(context);
                 });
                 break;
             default:
@@ -594,7 +594,7 @@ public sealed class BatchDeliveryIntegrationTests
             IConsumerConfigurator<BatchResultConsumer> consumerConfigurator,
             IRegistrationContext context)
         {
-            endpointConfigurator.UseInMemoryOutbox(context);
+            endpointConfigurator.UseVolatileOutbox(context);
             consumerConfigurator.Options<BatchOptions>(options =>
                 options.SetMessageLimit(5).SetTimeLimit(SizeTailTimeLimit).SetTimeLimitStart(BatchTimeLimitStart.FromLast));
         }

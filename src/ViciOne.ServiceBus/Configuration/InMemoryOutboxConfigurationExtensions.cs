@@ -21,7 +21,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IRegistrationContext context,
+    public static void UseVolatileOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where T : class
     {
@@ -42,7 +42,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IOutboxConfigurator>? configure = default)
+    public static void UseVolatileOutbox<T>(this IPipeConfigurator<ConsumeContext<T>> configurator, Action<IOutboxConfigurator>? configure = default)
         where T : class
     {
         if (configurator == null)
@@ -63,7 +63,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox(this IConsumePipeConfigurator configurator, IRegistrationContext context,
+    public static void UseVolatileOutbox(this IConsumePipeConfigurator configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
     {
         if (configurator == null)
@@ -79,7 +79,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox(this IConsumePipeConfigurator configurator, Action<IOutboxConfigurator>? configure = default)
+    public static void UseVolatileOutbox(this IConsumePipeConfigurator configurator, Action<IOutboxConfigurator>? configure = default)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -95,7 +95,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, IRegistrationContext context,
+    public static void UseVolatileOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where TConsumer : class
     {
@@ -113,7 +113,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IOutboxConfigurator>? configure = default)
+    public static void UseVolatileOutbox<TConsumer>(this IConsumerConfigurator<TConsumer> configurator, Action<IOutboxConfigurator>? configure = default)
         where TConsumer : class
     {
         if (configurator == null)
@@ -131,7 +131,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, IRegistrationContext context,
+    public static void UseVolatileOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where TSaga : class, ISaga
     {
@@ -149,7 +149,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator>? configure = default)
+    public static void UseVolatileOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator>? configure = default)
         where TSaga : class, ISaga
     {
         if (configurator == null)
@@ -167,7 +167,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, IRegistrationContext context,
+    public static void UseVolatileOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where TMessage : class
     {
@@ -185,7 +185,7 @@ public static class InMemoryOutboxConfigurationExtensions
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseInMemoryOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IOutboxConfigurator>? configure = default)
+    public static void UseVolatileOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<IOutboxConfigurator>? configure = default)
         where TMessage : class
     {
         if (configurator == null)

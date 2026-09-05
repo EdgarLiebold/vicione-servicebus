@@ -44,8 +44,7 @@ public sealed class RabbitMqReliabilityRegistrationTests
         {
             if (transportFirst)
                 configurator.UsingRabbitMq();
-            configurator.UseDurableSender(durable => durable
-                .UseInMemoryStore());
+            configurator.UseReliableMessaging(ConfigureReliableMessaging);
             if (!transportFirst)
                 configurator.UsingRabbitMq();
         });
@@ -65,7 +64,7 @@ public sealed class RabbitMqReliabilityRegistrationTests
 
         services.AddViciOneServiceBus<ITestBus>(configurator =>
         {
-            configurator.UseDurableSender(durable => durable.UseInMemoryStore());
+            configurator.UseReliableMessaging(ConfigureReliableMessaging);
             configurator.UsingRabbitMq();
         });
 
@@ -79,6 +78,18 @@ public sealed class RabbitMqReliabilityRegistrationTests
     }
 
     private sealed class TestServiceCollection : List<ServiceDescriptor>, IServiceCollection;
+
+    static void ConfigureReliableMessaging(IReliableMessagingConfigurator reliable)
+    {
+        reliable.UseInMemoryStore();
+        reliable.Store(new ReliableStoreLimits
+        {
+            MaximumStoredCount = 100,
+            MaximumStoredBytes = 1024 * 1024,
+        });
+        reliable.Delivery(_ => { });
+        reliable.Retention(TimeSpan.FromDays(1));
+    }
 
     public interface ITestBus : IBus;
 }

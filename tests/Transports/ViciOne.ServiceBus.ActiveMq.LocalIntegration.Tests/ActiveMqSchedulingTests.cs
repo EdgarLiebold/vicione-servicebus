@@ -44,7 +44,7 @@ public sealed class ActiveMqSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseDelayedMessageScheduler();
+            configurator.ConfigureDelayedMessageScheduler();
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<ScheduledDelivery>(context =>
             {
                 identities.Enqueue(context.Message.FlowId);
@@ -117,7 +117,7 @@ public sealed class ActiveMqSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseDelayedMessageScheduler();
+            configurator.ConfigureDelayedMessageScheduler();
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<ScheduledDelivery>(context =>
             {
                 Interlocked.Increment(ref deliveryCount);
@@ -183,7 +183,7 @@ public sealed class ActiveMqSchedulingTests
         IBusControl bus = Bus.Factory.CreateUsingActiveMq(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseDelayedMessageScheduler();
+            configurator.ConfigureDelayedMessageScheduler();
             configurator.MessageTopology.GetMessageTopology<ScheduledDelivery>().SetEntityName(entityName);
             configurator.ReceiveEndpoint(queueName, endpoint => endpoint.Handler<ScheduledDelivery>(context =>
             {

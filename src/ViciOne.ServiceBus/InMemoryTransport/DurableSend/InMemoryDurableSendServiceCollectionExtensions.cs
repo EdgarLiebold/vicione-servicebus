@@ -12,13 +12,17 @@ public static class InMemoryDurableSendServiceCollectionExtensions
     /// <summary>
     /// Selects the volatile in-memory store for tests and local process-only hosts. It does not provide restart durability.
     /// </summary>
-    public static IDurableSenderConfigurator UseInMemoryStore(this IDurableSenderConfigurator configurator)
+    public static IReliableMessagingConfigurator UseInMemoryStore(this IReliableMessagingConfigurator configurator)
     {
         ArgumentNullException.ThrowIfNull(configurator);
-        if (configurator is not IDurableSenderProviderConfigurator provider)
+        if (configurator is not IReliableMessagingProviderConfigurator provider)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "The Durable Sender configurator does not expose the provider registration contract.", "Correct the named configuration before starting the host"));
 
-        provider.UseStore(typeof(InMemoryDurableSendStore<>).MakeGenericType(provider.BusType));
+        provider.UseStore(typeof(InMemoryReliableStore<>).MakeGenericType(provider.BusType));
+        typeof(InMemoryReliableInboxRegistration)
+            .GetMethod(nameof(InMemoryReliableInboxRegistration.Add))!
+            .MakeGenericMethod(provider.BusType)
+            .Invoke(null, [provider.Services]);
         return configurator;
     }
 

@@ -37,7 +37,7 @@ public sealed class InboxOutboxConcurrencyTests
         services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-            configuration.AddEntityFrameworkOutbox<InboxOutboxDbContext>(outbox =>
+            configuration.ConfigureEntityFrameworkTransactionalStore<InboxOutboxDbContext>(outbox =>
             {
                 outbox.UsePostgres();
                 outbox.DisableInboxCleanupService();

@@ -40,7 +40,7 @@ public class JobSagaDefinition :
 
         configurator.UseMessageScope(context);
 
-        configurator.UseInMemoryOutbox(context);
+        configurator.UseVolatileOutbox(context);
 
         if (_options.ConcurrentMessageLimit.HasValue)
         {

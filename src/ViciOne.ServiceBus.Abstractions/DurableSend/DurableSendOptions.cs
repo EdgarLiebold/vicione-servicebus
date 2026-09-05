@@ -14,6 +14,11 @@ public sealed record DurableSendOptions
     /// <summary>Optional correlation identity copied to the canonical send context before serialization.</summary>
     public Guid? CorrelationId { get; init; }
 
+    /// <summary>
+    /// Optional first-delivery time used by the reliable scheduler. Direct durable sends normally leave this unset.
+    /// </summary>
+    public DateTimeOffset? DueAt { get; init; }
+
     internal DurableSendOptions Validate()
     {
         if (IdempotencyKey.Value == Guid.Empty)

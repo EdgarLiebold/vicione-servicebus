@@ -100,7 +100,7 @@ public class ScheduledMessageJob :
             return typed;
 
         throw new InvalidOperationException(
-            $"Quartz scheduler context value '{key}' is missing. Configure the scheduler through UseInMemoryScheduler or register {nameof(ScheduledMessageJob)} with dependency injection.");
+            $"Quartz scheduler context value '{key}' is missing. Configure the scheduler through ConfigureInMemoryScheduler or register {nameof(ScheduledMessageJob)} with dependency injection.");
     }
 
 

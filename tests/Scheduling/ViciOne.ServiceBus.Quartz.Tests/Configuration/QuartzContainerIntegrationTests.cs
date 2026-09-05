@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration;
 using ViciOne.ServiceBus.Quartz.Tests.Testing;
 using ViciOne.ServiceBus.Scheduling;
@@ -13,6 +15,91 @@ namespace ViciOne.ServiceBus.Quartz.Tests.Configuration;
 public sealed class QuartzContainerIntegrationTests
 {
     private static readonly DateTimeOffset DueAt = new(2100, 2, 3, 4, 5, 6, TimeSpan.Zero);
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULER-API", "in-memory-quartz-is-explicit-single-owner-and-resolvable")]
+    public async Task ReliableInMemoryScheduler_RegistersOneExplicitQuartzAdapterAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<ContainerPayload>("vicione.tests.quartz-reliable");
+                reliable.UseInMemoryScheduler(options => options.QueueName = "reliable-quartz");
+            });
+        });
+
+        Assert.Single(services, descriptor => descriptor.ServiceType == typeof(ISchedulerFactory));
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+
+        Assert.NotNull(provider.GetRequiredService<ISchedulerFactory>());
+        Assert.Equal("MessageScheduler", scope.ServiceProvider.GetRequiredService<IMessageScheduler>().GetType().Name);
+        Assert.IsType<EndpointRecurringMessageScheduler>(
+            scope.ServiceProvider.GetRequiredService<IRecurringMessageScheduler>());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULER-API", "quartz-has-no-implicit-in-memory-fallback")]
+    public void ReliableQuartzScheduler_MissingFactoryFailsContainerValidation()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<ContainerPayload>("vicione.tests.quartz-no-fallback");
+                reliable.UseQuartzScheduler();
+            });
+        });
+
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(ISchedulerFactory));
+        AggregateException failure = Assert.Throws<AggregateException>(() =>
+            services.BuildServiceProvider(new ServiceProviderOptions
+            {
+                ValidateOnBuild = true,
+                ValidateScopes = true,
+            }));
+        Assert.Contains(nameof(ISchedulerFactory), failure.ToString(), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULER-API", "mixed-adapters-are-rejected")]
+    public void ReliableScheduler_RejectsMixedExplicitAdapters()
+    {
+        var services = new ServiceCollection();
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            services.AddViciOneServiceBus(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
+                configuration.UseReliableMessaging(reliable =>
+                {
+                    reliable.UseInMemoryStore();
+                    ConfigureReliablePolicy(reliable);
+                    reliable.AddMessageContract<ContainerPayload>("vicione.tests.quartz-duplicate");
+                    reliable.UseInMemoryScheduler();
+                    reliable.UseQuartzScheduler();
+                });
+            }));
+
+        Assert.Contains("scheduler adapter was configured more than once", failure.Message, StringComparison.OrdinalIgnoreCase);
+    }
 
     [Theory]
     [InlineData(false)]
@@ -40,7 +127,7 @@ public sealed class QuartzContainerIntegrationTests
                 if (useRawJson)
                     configurator.UseRawJsonSerializer();
 
-                configurator.UsePublishMessageScheduler();
+                configurator.ConfigurePublishMessageScheduler();
                 configurator.ConfigureEndpoints(context);
             });
         });
@@ -111,5 +198,16 @@ public sealed class QuartzContainerIntegrationTests
 
         public void Complete(ConsumeContext<ContainerPayload> context) =>
             _delivered.TrySetResult(new ContainerDelivery(context.Message.Value, context.Headers.Get<string>("tenant")));
+    }
+
+    static void ConfigureReliablePolicy(IReliableMessagingConfigurator reliable)
+    {
+        reliable.Store(new ReliableStoreLimits
+        {
+            MaximumStoredCount = 100,
+            MaximumStoredBytes = 1024 * 1024,
+        });
+        reliable.Delivery(_ => { });
+        reliable.Retention(TimeSpan.FromDays(1));
     }
 }

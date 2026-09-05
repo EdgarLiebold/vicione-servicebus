@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Diagnostics.Metrics;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.MessageData;
 using ViciOne.ServiceBus.MessageData.Values;
 using ViciOne.ServiceBus.Providers.Persistence;
@@ -17,7 +20,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.DurableSend;
 
-public sealed class DurableSenderRegistrationAndAdmissionTests
+public sealed class ReliableMessagingRegistrationAndAdmissionTests
 {
     private static readonly DateTimeOffset Epoch = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
 
@@ -39,15 +42,17 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 bus.Host(new Uri("loopback://typed-durable/"));
                 bus.Route<TypedMessage>(destination);
             });
-            configuration.UseDurableSender(durable =>
+            configuration.UseReliableMessaging(durable =>
             {
                 durable.UseInMemoryStore();
                 durable.AddMessageContract<TypedMessage>("vicione.tests.typed-durable", 3);
-                durable.Configure(options =>
+                durable.Store(new ReliableStoreLimits
                 {
-                    options.MaximumStoredCount = 4;
-                    options.MaximumStoredBytes = 64 * 1024;
+                    MaximumStoredCount = 4,
+                    MaximumStoredBytes = 64 * 1024,
                 });
+                durable.Delivery(_ => { });
+                durable.Retention(TimeSpan.FromDays(1));
             });
         });
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
@@ -57,7 +62,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         });
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
         IDurableSender<IBus> sender = scope.ServiceProvider.GetRequiredService<IDurableSender<IBus>>();
-        IDurableSendStore<IBus> store = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IBus>>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
         var options = new DurableSendOptions { IdempotencyKey = durableId, CorrelationId = correlationId };
         var message = new TypedMessage("accepted while the broker is offline");
 
@@ -107,9 +112,10 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 bus.Host(new Uri("loopback://typed-primary/"));
                 bus.Route<TypedMessage>(primaryDestination);
             });
-            configuration.UseDurableSender(durable =>
+            configuration.UseReliableMessaging(durable =>
             {
                 durable.UseInMemoryStore();
+                ConfigureReliablePolicy(durable);
                 durable.AddMessageContract<TypedMessage>("vicione.tests.typed-durable", 3);
             });
         });
@@ -121,9 +127,10 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 bus.Host(new Uri("loopback://typed-secondary/"));
                 bus.Route<TypedMessage>(secondaryDestination);
             });
-            configuration.UseDurableSender(durable =>
+            configuration.UseReliableMessaging(durable =>
             {
                 durable.UseInMemoryStore();
+                ConfigureReliablePolicy(durable);
                 durable.AddMessageContract<TypedMessage>("vicione.tests.typed-durable", 3);
             });
         });
@@ -143,8 +150,8 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
             new DurableSendOptions { IdempotencyKey = new DurableSendId(GuidFrom(12)) },
             TestCancellationToken);
 
-        IDurableSendStore<IBus> primaryStore = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IBus>>();
-        IDurableSendStore<IOtherBus> secondaryStore = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IOtherBus>>();
+        IOutboxStore<IBus> primaryStore = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
+        IOutboxStore<IOtherBus> secondaryStore = scope.ServiceProvider.GetRequiredService<IOutboxStore<IOtherBus>>();
         DurableSendDelivery primaryIntent = Assert.Single(await primaryStore.ClaimDueAsync(
             Epoch.AddYears(1), 1, TimeSpan.FromMinutes(1), TestCancellationToken));
         DurableSendDelivery secondaryIntent = Assert.Single(await secondaryStore.ClaimDueAsync(
@@ -158,6 +165,173 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         Assert.Equal("default", scope.ServiceProvider.GetRequiredService<BusPersistenceIdentity<IBus>>().Require("test"));
         Assert.Equal("secondary-v1",
             scope.ServiceProvider.GetRequiredService<BusPersistenceIdentity<IOtherBus>>().Require("test"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "public-scheduler-persists-due-at-and-cancels-through-one-store")]
+    public async Task MessageScheduler_PersistsDueAtAndCancelsThroughTheReliableStoreAsync()
+    {
+        var destination = new Uri("loopback://reliable-scheduler/messages");
+        var clock = new FakeTimeProvider(Epoch);
+        var services = new ServiceCollection();
+        services.AddSingleton<TimeProvider>(clock);
+        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://reliable-scheduler/"));
+                bus.Route<TypedMessage>(destination);
+            });
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<TypedMessage>("vicione.tests.reliable-scheduler");
+            });
+        });
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IMessageScheduler scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
+        DateTimeOffset dueAt = Epoch.AddMinutes(30);
+
+        ScheduledMessage<TypedMessage> scheduled = await scheduler.ScheduleSendAsync(
+            destination,
+            dueAt,
+            new TypedMessage("due"),
+            TestCancellationToken);
+        ScheduledMessage<TypedMessage> cancelled = await scheduler.ScheduleSendAsync(
+            destination,
+            dueAt.AddMinutes(1),
+            new TypedMessage("cancelled"),
+            TestCancellationToken);
+
+        Assert.Equal(dueAt, scheduled.DueAt);
+        Assert.Equal(destination, scheduled.Destination);
+        Assert.Empty(await store.ClaimDueAsync(
+            dueAt.AddTicks(-1),
+            10,
+            TimeSpan.FromMinutes(1),
+            TestCancellationToken));
+        await scheduler.CancelScheduledSendAsync(cancelled, TestCancellationToken);
+        DurableSendDelivery delivery = Assert.Single(await store.ClaimDueAsync(
+            dueAt,
+            10,
+            TimeSpan.FromMinutes(1),
+            TestCancellationToken));
+        Assert.Equal(scheduled.TokenId, delivery.Message.Id.Value);
+        Assert.Equal(dueAt, delivery.Message.DueAt);
+        Assert.Equal(1, (await store.GetSnapshotAsync(TestCancellationToken)).StoredCount);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "default-and-typed-bus-schedulers-have-isolated-owners")]
+    public async Task MessageScheduler_MultiBusRegistrationsRemainIsolatedAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://scheduler-primary/")));
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<TypedMessage>("vicione.tests.scheduler-isolation");
+            });
+        });
+        services.AddViciOneServiceBus<IOtherBus>("scheduler-secondary", configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://scheduler-secondary/")));
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<TypedMessage>("vicione.tests.scheduler-isolation");
+            });
+        });
+
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+
+        IMessageScheduler primary = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
+        IMessageScheduler secondary = scope.ServiceProvider
+            .GetRequiredService<Bind<IOtherBus, IMessageScheduler>>()
+            .Value;
+        Assert.NotSame(primary, secondary);
+        Assert.Equal("ReliableMessageScheduler`1", primary.GetType().Name);
+        Assert.Equal("ReliableMessageScheduler`1", secondary.GetType().Name);
+        Assert.Equal(typeof(IBus), primary.GetType().GenericTypeArguments.Single());
+        Assert.Equal(typeof(IOtherBus), secondary.GetType().GenericTypeArguments.Single());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULER-API", "adapter-selection-is-explicit-and-single-owner")]
+    public void MessageScheduler_RejectsASecondExplicitAdapter()
+    {
+        var services = new ServiceCollection();
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
+            services.AddViciOneServiceBus(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://scheduler-duplicate/")));
+                configuration.UseReliableMessaging(reliable =>
+                {
+                    reliable.UseInMemoryStore();
+                    ConfigureReliablePolicy(reliable);
+                    reliable.UseTransportScheduler();
+                    reliable.UseTransportScheduler();
+                });
+            }));
+
+        Assert.Contains("scheduler adapter was configured more than once", failure.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("exactly once", failure.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULER-API", "transport-adapter-replaces-store-scheduler-without-fallback")]
+    public async Task MessageScheduler_TransportAdapterIsTheResolvedSchedulerAsync()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddViciOneServiceBus(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://scheduler-transport/")));
+            configuration.UseReliableMessaging(reliable =>
+            {
+                reliable.UseInMemoryStore();
+                ConfigureReliablePolicy(reliable);
+                reliable.AddMessageContract<TypedMessage>("vicione.tests.scheduler-transport");
+                reliable.UseTransportScheduler();
+            });
+        });
+
+        await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        });
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        IMessageScheduler scheduler = scope.ServiceProvider.GetRequiredService<IMessageScheduler>();
+
+        Assert.Equal("MessageScheduler", scheduler.GetType().Name);
+        Assert.DoesNotContain("ReliableMessageScheduler", scheduler.GetType().FullName, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -186,9 +360,10 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 bus.UseMessageData(repository, new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 16));
                 bus.Route<DurableDataMessage>(destination);
             });
-            configuration.UseDurableSender(durable =>
+            configuration.UseReliableMessaging(durable =>
             {
                 durable.UseInMemoryStore();
+                ConfigureReliablePolicy(durable);
                 durable.AddMessageContract<DurableDataMessage>(contractName);
             });
         });
@@ -205,7 +380,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
             TestCancellationToken);
 
         Assert.True(receipt.IsNew);
-        IDurableSendStore<IBus> store = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IBus>>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
         DurableSendDelivery retained = Assert.Single(await store.ClaimDueAsync(
             Epoch.AddYears(1), 1, TimeSpan.FromMinutes(1), TestCancellationToken));
         string envelope = Encoding.UTF8.GetString(retained.Message.Body.Span);
@@ -235,9 +410,10 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 bus.Host(new Uri("loopback://typed-admission/"));
                 bus.Route<TypedMessage>(destination);
             });
-            configuration.UseDurableSender(durable =>
+            configuration.UseReliableMessaging(durable =>
             {
                 durable.UseInMemoryStore();
+                ConfigureReliablePolicy(durable);
                 durable.AddMessageContract<TypedMessage>("vicione.tests.typed-admission");
             });
         });
@@ -248,7 +424,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         });
         await using AsyncServiceScope scope = provider.CreateAsyncScope();
         IDurableSender<IBus> sender = scope.ServiceProvider.GetRequiredService<IDurableSender<IBus>>();
-        IDurableSendStore<IBus> store = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IBus>>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
 
         PayloadAdmissionException failure = await Assert.ThrowsAsync<PayloadAdmissionException>(() => sender.SendAsync(
             new TypedMessage(new string('x', 4096)),
@@ -296,7 +472,12 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         using ServiceProvider provider = Services(
                 store,
                 new FakeTimeProvider(Epoch),
-                builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion))
+                builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion),
+                options =>
+                {
+                    options.MaximumStoredCount = 7;
+                    options.MaximumStoredBytes = 23;
+                })
             .BuildServiceProvider();
         IDurableSendAdmission<ITestBus> sender = provider.GetRequiredService<IDurableSendAdmission<ITestBus>>();
 
@@ -362,7 +543,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
     [RequirementCoverage("REQ-VSB-DURABLE-SENDER-CONFIGURATION", "all-safety-bounds-fail-before-use")]
     public void Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes()
     {
-        Action<DurableSenderOptions<ITestBus>>[] invalidConfigurations =
+        Action<ReliableMessagingOptions<ITestBus>>[] invalidConfigurations =
         [
             options => options.MaximumStoredCount = 0,
             options => options.MaximumStoredBytes = 0,
@@ -382,9 +563,10 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
             options => options.PollInterval = TimeSpan.Zero,
             options => options.TelemetrySnapshotInterval = TimeSpan.Zero,
             options => options.HealthDegradedAfter = TimeSpan.Zero,
+            options => options.Retention = TimeSpan.FromTicks(-1),
         ];
 
-        foreach (Action<DurableSenderOptions<ITestBus>> configure in invalidConfigurations)
+        foreach (Action<ReliableMessagingOptions<ITestBus>> configure in invalidConfigurations)
         {
             using ServiceProvider provider = Services(
                     DurableSenderTestFactory.CreateInMemoryStore<ITestBus>(),
@@ -404,7 +586,11 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
     [InlineData(InvalidComposition.MissingCatalog, "no message-contract catalog")]
     [InlineData(InvalidComposition.DuplicateStore, "multiple persistence store")]
     [InlineData(InvalidComposition.DuplicateDispatcher, "multiple transport dispatcher")]
+    [InlineData(InvalidComposition.MissingStoreLimits, "Store limits were not configured")]
+    [InlineData(InvalidComposition.MissingDeliveryPolicy, "Delivery policy was not configured")]
+    [InlineData(InvalidComposition.MissingRetention, "Retention was not configured")]
     [InlineData(InvalidComposition.InvalidOptions, "MaximumStoredCount")]
+    [InlineData(InvalidComposition.InvalidRetention, "Retention")]
     [RequirementCoverage("REQ-VSB-DURABLE-STARTUP", "invalid-static-composition-fails-before-background-delivery")]
     public async Task StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(
         InvalidComposition invalid,
@@ -416,7 +602,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         {
             bus.Limits(MessageLimits.Conservative);
             bus.UsingInMemory();
-            bus.UseDurableSender(durable =>
+            bus.UseReliableMessaging(durable =>
             {
                 if (invalid != InvalidComposition.MissingCatalog)
                 {
@@ -426,8 +612,22 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 }
                 if (invalid != InvalidComposition.MissingStore)
                     durable.UseInMemoryStore();
-                if (invalid == InvalidComposition.InvalidOptions)
-                    durable.Configure(options => options.MaximumStoredCount = 0);
+                if (invalid != InvalidComposition.MissingStoreLimits)
+                {
+                    durable.Store(new ReliableStoreLimits
+                    {
+                        MaximumStoredCount = invalid == InvalidComposition.InvalidOptions ? 0 : 100,
+                        MaximumStoredBytes = 1024 * 1024,
+                    });
+                }
+                if (invalid != InvalidComposition.MissingDeliveryPolicy)
+                    durable.Delivery(_ => { });
+                if (invalid != InvalidComposition.MissingRetention)
+                {
+                    durable.Retention(invalid == InvalidComposition.InvalidRetention
+                        ? TimeSpan.Zero
+                        : TimeSpan.FromDays(1));
+                }
             });
         });
 
@@ -457,18 +657,29 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         Assert.Contains(expectedMessage, failure.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 
+    static void ConfigureReliablePolicy(IReliableMessagingConfigurator reliable)
+    {
+        reliable.Store(new ReliableStoreLimits
+        {
+            MaximumStoredCount = 100,
+            MaximumStoredBytes = 1024 * 1024,
+        });
+        reliable.Delivery(_ => { });
+        reliable.Retention(TimeSpan.FromDays(1));
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-OPERATIONS", "bounded-requeue-and-discard-use-host-clock")]
     public async Task Operations_ValidatePagesAndUseTheInjectedClockForOperatorTransitionsAsync()
     {
-        IDurableSendStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        IOutboxStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
         var time = new FakeTimeProvider(Epoch.AddHours(3));
         using ServiceProvider provider = Services(
                 store,
                 time,
                 builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion))
             .BuildServiceProvider();
-        IDurableSenderOperations<ITestBus> operations = provider.GetRequiredService<IDurableSenderOperations<ITestBus>>();
+        IReliableMessagingOperations<ITestBus> operations = provider.GetRequiredService<IReliableMessagingOperations<ITestBus>>();
         SerializedDurableSend message = Message(KnownIdentity);
         await store.AdmitAsync(message, new DurableSendStoreLimits(10, 100), Epoch, TestCancellationToken);
         DurableSendDelivery delivery = Assert.Single(await store.ClaimDueAsync(
@@ -485,13 +696,13 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
             Epoch,
             TestCancellationToken);
 
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => operations.GetQuarantineAsync(
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => operations.GetOutboxQuarantineAsync(
             DurableSendQuarantineQuery.FirstPage(
                 DurableSendOperationLimits.AbsoluteMaximumQuarantinePageSize + 1),
             TestCancellationToken));
         Assert.Equal(
-            DurableSendOperationOutcome.Requeued,
-            (await operations.RequeueAsync(message.Id, TestCancellationToken)).Outcome);
+            ReliableMessagingOperationDisposition.Applied,
+            (await operations.RequeueAsync(ReliableMessageReference.Outbox(message.Id), TestCancellationToken)).Disposition);
         Assert.Empty(await store.ClaimDueAsync(
             time.GetUtcNow().AddTicks(-1),
             1,
@@ -511,18 +722,81 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
             time.GetUtcNow(),
             TestCancellationToken);
         Assert.Equal(
-            DurableSendOperationOutcome.Discarded,
-            (await operations.DiscardAsync(message.Id, TestCancellationToken)).Outcome);
+            ReliableMessagingOperationDisposition.Applied,
+            (await operations.DiscardAsync(ReliableMessageReference.Outbox(message.Id), TestCancellationToken)).Disposition);
         Assert.Equal(
-            DurableSendOperationOutcome.NotFound,
-            (await operations.DiscardAsync(message.Id, TestCancellationToken)).Outcome);
+            ReliableMessagingOperationDisposition.NotFound,
+            (await operations.DiscardAsync(ReliableMessageReference.Outbox(message.Id), TestCancellationToken)).Disposition);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-OPERATIONS", "abandon-is-retained-logged-metered-once-and-observation-safe")]
+    public async Task Operations_AbandonLogsAndMetersOnlyTheAppliedRetainedDecisionAsync()
+    {
+        IOutboxStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        IInboxStore<ITestBus> inbox = Assert.IsAssignableFrom<IInboxStore<ITestBus>>(store);
+        var time = new FakeTimeProvider(Epoch.AddHours(4));
+        var logs = new RecordingLoggerProvider();
+        using var measurements = new MeterListener();
+        var abandoned = new ConcurrentQueue<long>();
+        measurements.InstrumentPublished = (instrument, listener) =>
+        {
+            if (instrument.Meter.Name == "ViciOne.ServiceBus"
+                && instrument.Name == "vicione.servicebus.reliability.abandoned")
+                listener.EnableMeasurementEvents(instrument);
+        };
+        measurements.SetMeasurementEventCallback<long>((instrument, value, tags, state) =>
+        {
+            _ = instrument;
+            _ = tags;
+            _ = state;
+            abandoned.Enqueue(value);
+        });
+        measurements.Start();
+
+        IServiceCollection services = Services(
+            store,
+            time,
+            builder => builder.Register<KnownMessage>(KnownIdentity.Name, KnownIdentity.MajorVersion));
+        services.RemoveAll(typeof(ILogger<>));
+        services.AddSingleton(logs);
+        services.AddSingleton(typeof(ILogger<>), typeof(RecordingTypedLogger<>));
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IReliableMessagingOperations<ITestBus> operations = provider.GetRequiredService<IReliableMessagingOperations<ITestBus>>();
+        var key = new ReliableInboxKey(GuidFrom(31), GuidFrom(32));
+        ReliableInboxAcquireResult acquired = await inbox.AcquireAsync(
+            key,
+            Epoch,
+            TimeSpan.FromMinutes(1),
+            TestCancellationToken);
+        Assert.True(await inbox.QuarantineAsync(
+            key,
+            Assert.IsType<ReliableInboxLease>(acquired.Lease),
+            "Tests.Permanent",
+            Epoch,
+            TestCancellationToken));
+
+        ReliableMessagingOperationResult applied = await operations.AbandonAsync(
+            ReliableMessageReference.Inbox(key),
+            TestCancellationToken);
+        ReliableMessagingOperationResult repeated = await operations.AbandonAsync(
+            ReliableMessageReference.Inbox(key),
+            TestCancellationToken);
+
+        Assert.Equal(ReliableMessagingOperationDisposition.Applied, applied.Disposition);
+        Assert.Equal("Abandoned", applied.CurrentState);
+        Assert.Equal(ReliableMessagingOperationDisposition.InvalidState, repeated.Disposition);
+        string log = Assert.Single(logs.Messages);
+        Assert.Contains("abandoned", log, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(key.MessageId.ToString(), log, StringComparison.Ordinal);
+        Assert.Equal(1, abandoned.Sum());
     }
 
     [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-HEALTH", "capacity-is-degraded-with-bounded-nonsensitive-data")]
     public async Task HealthCheck_ReportsCapacityWithoutMessagePayloadOrIdentityAsync()
     {
-        IDurableSendStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
+        IOutboxStore<ITestBus> store = DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
         var time = new FakeTimeProvider(Epoch);
         IServiceCollection services = Services(
             store,
@@ -534,7 +808,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
                 options.MaximumStoredBytes = 100;
             });
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
-        services.AddHealthChecks().AddViciOneDurableSenderHealthCheck<ITestBus>();
+        services.AddHealthChecks().AddViciOneReliableMessagingHealthCheck<ITestBus>();
         using ServiceProvider provider = services.BuildServiceProvider();
         HealthCheckService health = provider.GetRequiredService<HealthCheckService>();
 
@@ -552,16 +826,21 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
     }
 
     private static IServiceCollection Services(
-        IDurableSendStore<ITestBus> store,
+        IOutboxStore<ITestBus> store,
         TimeProvider timeProvider,
         Action<MessageContractCatalogBuilder> catalog,
-        Action<DurableSenderOptions<ITestBus>>? configure = null)
+        Action<ReliableMessagingOptions<ITestBus>>? configure = null)
     {
         var services = new ServiceCollection();
         services.AddSingleton(store);
+        if (store is IInboxStore<ITestBus> inboxStore)
+            services.AddSingleton(inboxStore);
+        if (store is IScheduleStore<ITestBus> scheduleStore)
+            services.AddSingleton(scheduleStore);
         services.AddSingleton(timeProvider);
+        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         services.AddViciOneMessageContracts(catalog);
-        services.AddViciOneDurableSender(configure);
+        services.AddViciOneReliableMessaging(configure);
         return services;
     }
 
@@ -598,7 +877,11 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         MissingCatalog,
         DuplicateStore,
         DuplicateDispatcher,
+        MissingStoreLimits,
+        MissingDeliveryPolicy,
+        MissingRetention,
         InvalidOptions,
+        InvalidRetention,
     }
 
     private sealed class NoOpDispatcher : IDurableSendDispatcher<ITestBus>
@@ -613,7 +896,66 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         }
     }
 
-    private sealed class ObservingStore(IDurableSendStore<ITestBus> inner) : IDurableSendStore<ITestBus>
+    private sealed class RecordingLoggerProvider : ILoggerProvider
+    {
+        readonly ConcurrentQueue<string> _messages = new();
+
+        public IReadOnlyList<string> Messages => _messages.ToArray();
+
+        public ILogger CreateLogger(string categoryName)
+        {
+            _ = categoryName;
+            return new RecordingLogger(_messages);
+        }
+
+        public void Dispose()
+        {
+        }
+
+        private sealed class RecordingLogger(ConcurrentQueue<string> messages) : ILogger
+        {
+            public IDisposable? BeginScope<TState>(TState state)
+                where TState : notnull
+            {
+                _ = state;
+                return null;
+            }
+
+            public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Warning;
+
+            public void Log<TState>(
+                LogLevel logLevel,
+                EventId eventId,
+                TState state,
+                Exception? exception,
+                Func<TState, Exception?, string> formatter)
+            {
+                _ = eventId;
+                if (IsEnabled(logLevel))
+                    messages.Enqueue(formatter(state, exception));
+            }
+        }
+    }
+
+    private sealed class RecordingTypedLogger<T>(RecordingLoggerProvider provider) : ILogger<T>
+    {
+        readonly ILogger _logger = provider.CreateLogger(typeof(T).FullName ?? typeof(T).Name);
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => _logger.BeginScope(state);
+
+        public bool IsEnabled(LogLevel logLevel) => _logger.IsEnabled(logLevel);
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) =>
+            _logger.Log(logLevel, eventId, state, exception, formatter);
+    }
+
+    private sealed class ObservingStore(IOutboxStore<ITestBus> inner) : IOutboxStore<ITestBus>
     {
         public int AdmitCalls { get; private set; }
         public SerializedDurableSend? LastMessage { get; private set; }

@@ -28,12 +28,12 @@ public sealed class PostgreSqlBusOutboxTests
         services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(database.OperationTimeout, database.OperationTimeout);
-            configuration.AddEntityFrameworkOutbox<OutboxDbContext>(outbox =>
+            configuration.ConfigureEntityFrameworkTransactionalStore<OutboxDbContext>(outbox =>
             {
                 outbox.UsePostgres();
                 outbox.DisableInboxCleanupService();
                 outbox.QueryDelay = TimeSpan.FromHours(1);
-                outbox.UseBusOutbox(busOutbox => busOutbox.MessageDeliveryLimit = 10);
+                outbox.EnableTransactionalOutbox(busOutbox => busOutbox.MessageDeliveryLimit = 10);
             });
             configuration.AddConsumer<OutboxMessageConsumer>()
                 .Endpoint(endpoint => endpoint.Name = endpointName);

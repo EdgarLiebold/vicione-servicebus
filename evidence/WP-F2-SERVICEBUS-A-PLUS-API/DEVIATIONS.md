@@ -150,3 +150,22 @@ The listener and its completion cleanup are now installed inside the agent facto
 precondition that fault observation exists before first use, then proves listener removal and recovery
 to a different shared session. The corrected regression passed 50 consecutive isolated process runs
 before the complete profile was restarted.
+
+## File-based public API generator and SDK patch independence
+
+After SDK selection was intentionally removed from `global.json`, the file-based public API generator
+still inherited NativeAOT. The generated project therefore acquired implicit `ILCompiler` and `ILLink`
+package references whose versions follow the executing SDK patch, making its tracked lockfile fail under
+a different valid .NET 10 SDK even though the tool only loads assemblies through reflection.
+
+`PublishAot` is now disabled for this one reflection tool. Its package lock remains enforced but has no
+SDK-patch-specific compiler/runtime dependency. The package-only Developer Journey gate then generated
+the public API baseline successfully under SDK 10.0.400 and runtime 10.0.11.
+
+## RabbitMQ fault-redrive tests and mandatory message limits
+
+The real RabbitMQ profile exposed four older fault-redrive tests whose shared bus setup predated the
+mandatory `MessageLimits` contract. They failed during composition, before reaching the operation each
+test was meant to verify. The shared setup now declares `MessageLimits.Conservative`, matching every
+other current bus composition. The behavior assertions and time budgets are unchanged; the complete
+real profile passed 27/27 after the correction.

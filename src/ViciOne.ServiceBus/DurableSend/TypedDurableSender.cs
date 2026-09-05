@@ -104,6 +104,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
             Metadata = ReadOnlyMemory<byte>.Empty,
             MessageId = context.MessageId,
             CorrelationId = context.CorrelationId,
+            DueAt = options.DueAt,
         };
 
         DurableSendAdmissionResult result = await _admission

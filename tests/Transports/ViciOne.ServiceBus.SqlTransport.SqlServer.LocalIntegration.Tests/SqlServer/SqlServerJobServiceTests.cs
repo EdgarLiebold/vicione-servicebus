@@ -316,7 +316,7 @@ public sealed class SqlServerJobServiceTests
                     configuration.UsingSqlServer((context, bus) =>
                     {
                         bus.UseSqlServer(database.ConnectionString, host => host.Schema = database.Schema);
-                        bus.UseSqlMessageScheduler();
+                        bus.ConfigureSqlMessageScheduler();
                         bus.UseJobSagaPartitionKeyFormatters();
                         bus.ConfigureEndpoints(context);
                     });

@@ -207,7 +207,7 @@ public sealed class StateMachineConcurrencyIntegrationTests
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
             endpoint.UseMessageRetry(retry => retry.Immediate(5));
-            endpoint.UseInMemoryOutbox();
+            endpoint.UseVolatileOutbox();
         };
         var machine = new ChoirMachine();
         ISagaStateMachineTestHarness<ChoirMachine, ChoirState> sagaHarness =

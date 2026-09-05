@@ -8,7 +8,7 @@ public static class Journey12HealthAndTelemetry
     {
         services.AddLogging();
         services.AddMetrics();
-        services.AddHealthChecks().AddViciOneDurableSenderHealthCheck<IOrdersBus>("orders-durable-send");
+        services.AddHealthChecks().AddViciOneReliableMessagingHealthCheck<IOrdersBus>("orders-durable-send");
         return services;
     }
 }

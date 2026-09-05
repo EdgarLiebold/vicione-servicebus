@@ -22,7 +22,7 @@ public sealed class EntityFrameworkTimeProviderTests
         var services = new ServiceCollection();
         services.AddSingleton<TimeProvider>(timeProvider);
         services.AddViciOneServiceBus(configuration =>
-            configuration.AddEntityFrameworkOutbox<TimeDbContext>(outbox =>
+            configuration.ConfigureEntityFrameworkTransactionalStore<TimeDbContext>(outbox =>
             {
                 outbox.UseSqlite();
                 outbox.DisableInboxCleanupService();

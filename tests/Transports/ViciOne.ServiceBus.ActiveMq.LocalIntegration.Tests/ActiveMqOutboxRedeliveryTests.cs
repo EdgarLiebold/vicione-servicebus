@@ -103,7 +103,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
     {
         configurator.UseDelayedRedelivery(redelivery => redelivery.Interval(1, BrokerDelay));
         configurator.UseMessageRetry(retry => retry.Immediate(1));
-        configurator.UseInMemoryOutbox();
+        configurator.UseVolatileOutbox();
     }
 
     private static void ConfigureOutbox<T>(IHandlerConfigurator<T> configurator)
@@ -111,7 +111,7 @@ public sealed class ActiveMqOutboxRedeliveryTests
     {
         configurator.UseDelayedRedelivery(redelivery => redelivery.Interval(1, BrokerDelay));
         configurator.UseMessageRetry(retry => retry.Immediate(1));
-        configurator.UseInMemoryOutbox();
+        configurator.UseVolatileOutbox();
     }
 
     public enum OutboxMode

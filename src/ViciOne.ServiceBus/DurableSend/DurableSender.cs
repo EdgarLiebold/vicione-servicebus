@@ -10,19 +10,19 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 internal sealed class DurableSendAdmission<TBus> : IDurableSendAdmission<TBus>
     where TBus : class, IBus
 {
-    readonly IDurableSendStore<TBus> _store;
-    readonly DurableSenderPolicy<TBus> _policy;
+    readonly IOutboxStore<TBus> _store;
+    readonly ReliableMessagingPolicy<TBus> _policy;
     readonly IMessageContractCatalog _contractCatalog;
     readonly TimeProvider _timeProvider;
     readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
 
-    public DurableSendAdmission(IEnumerable<IDurableSendStore<TBus>> stores, DurableSenderPolicy<TBus> policy,
+    public DurableSendAdmission(IEnumerable<IOutboxStore<TBus>> stores, ReliableMessagingPolicy<TBus> policy,
         IEnumerable<IMessageContractCatalog> contractCatalogs, TimeProvider timeProvider,
         V5ServiceBusInstrumentation<TBus> instrumentation)
     {
-        _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
+        _store = ReliableMessagingComposition.RequireExactlyOne<IOutboxStore<TBus>, TBus>(stores, "persistence store");
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
-        _contractCatalog = DurableSenderComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
+        _contractCatalog = ReliableMessagingComposition.RequireExactlyOne<IMessageContractCatalog, TBus>(
             contractCatalogs,
             "message-contract catalog");
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));

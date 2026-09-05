@@ -50,28 +50,30 @@ public sealed class BusOutboxDeliveryTelemetryTests
         listener.Start();
 
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
-        var service = new BusOutboxDeliveryService<IBus, RecordingDbContext>(
+        var service = new EntityFrameworkTransactionalOutboxSource<IBus, RecordingDbContext>(
             Options.Create(new OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<IBus, RecordingDbContext>>()),
             Options.Create(new EntityFrameworkOutboxOptions<RecordingDbContext>()),
             new NoNotification(),
             [],
-            NullLogger<BusOutboxDeliveryService<IBus, RecordingDbContext>>.Instance,
+            NullLogger<EntityFrameworkTransactionalOutboxSource<IBus, RecordingDbContext>>.Instance,
             provider,
             TimeProvider.System,
             BusPersistenceIdentity<IBus>.Create("default"));
 
         try
         {
-            await service.StartAsync(cancellationToken).WaitAsync(timeout, cancellationToken);
+            using var deliveryCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            Task<bool> delivery = service.DeliverDueBatchAsync(deliveryCancellation.Token);
             ILogContext deliveryLogContext = await entered.Task.WaitAsync(timeout, cancellationToken);
 
             OutboxTelemetryTestDriver.RecordDelivery(deliveryLogContext);
 
             Assert.Same(meterFactory, Assert.Single(measurements));
+            deliveryCancellation.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => delivery);
         }
         finally
         {
-            await service.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
             await harness.StopAsync(CancellationToken.None).WaitAsync(timeout, CancellationToken.None);
         }
     }

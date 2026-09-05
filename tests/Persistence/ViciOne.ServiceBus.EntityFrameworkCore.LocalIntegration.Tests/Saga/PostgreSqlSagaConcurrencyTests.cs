@@ -224,7 +224,7 @@ public sealed class PostgreSqlSagaConcurrencyTests
         {
             endpointConfigurator.ConcurrentMessageLimit = 2;
             sagaConfigurator.UseMessageRetry(retry => retry.Immediate(2));
-            sagaConfigurator.UseInMemoryOutbox(context);
+            sagaConfigurator.UseVolatileOutbox(context);
         }
     }
 

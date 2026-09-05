@@ -18,7 +18,7 @@ public static class SqlScheduleMessageExtensions
     /// Uses the SQL transport's built-in message scheduler
     /// </summary>
     /// <param name="configurator"></param>
-    public static void UseSqlMessageScheduler(this IBusFactoryConfigurator configurator)
+    public static void ConfigureSqlMessageScheduler(this IBusFactoryConfigurator configurator)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));

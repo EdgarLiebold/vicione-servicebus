@@ -22,5 +22,5 @@ public enum RedeliveryOptions
     /// <summary>
     /// If specified, use the message scheduler context instead of the redelivery context (only use when transport-level redelivery is not available)
     /// </summary>
-    UseMessageScheduler = 2,
+    ConfigureMessageScheduler = 2,
 }

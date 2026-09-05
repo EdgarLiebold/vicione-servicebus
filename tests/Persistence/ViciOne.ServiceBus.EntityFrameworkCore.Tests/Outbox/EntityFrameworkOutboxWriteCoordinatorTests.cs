@@ -31,12 +31,11 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         fixture.DbContext.ChangeTracker.Clear();
 
         Assert.Equal(business, await fixture.DbContext.Set<BusinessRecord>().SingleAsync(TestContext.Current.CancellationToken));
-        OutboxState state = await fixture.DbContext.Set<OutboxState>().SingleAsync(TestContext.Current.CancellationToken);
-        OutboxMessage message = await fixture.DbContext.Set<OutboxMessage>().SingleAsync(TestContext.Current.CancellationToken);
-        Assert.Equal("default", state.BusKey);
-        Assert.Equal(OutboxDeliveryStatus.Pending, state.Status);
-        Assert.Equal(state.OutboxId, message.OutboxId);
-        Assert.Equal(1, fixture.Notification.DeliveredCount);
+        DurableSendRecord message = await fixture.DbContext.Set<DurableSendRecord>()
+            .SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Equal("default", message.StoreKey);
+        Assert.Equal(DurableSendStatus.Pending, message.Status);
+        Assert.Equal("vicione.tests.transactional-outbox;v=1", message.ContractIdentity);
     }
 
     [Fact]
@@ -52,8 +51,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         fixture.DbContext.ChangeTracker.Clear();
 
         Assert.Equal(business, await fixture.DbContext.Set<BusinessRecord>().SingleAsync(TestContext.Current.CancellationToken));
-        Assert.Empty(await fixture.DbContext.Set<OutboxState>().ToListAsync(TestContext.Current.CancellationToken));
-        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        Assert.Empty(await fixture.DbContext.Set<DurableSendRecord>().ToListAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -71,9 +69,9 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         fixture.DbContext.ChangeTracker.Clear();
 
         Assert.Equal(business, await fixture.DbContext.Set<BusinessRecord>().SingleAsync(TestContext.Current.CancellationToken));
-        Assert.Empty(await fixture.DbContext.Set<OutboxState>().ToListAsync(TestContext.Current.CancellationToken));
-        Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
-        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        Assert.Empty(await fixture.DbContext.Set<DurableSendRecord>().ToListAsync(TestContext.Current.CancellationToken));
+        Assert.Equal(0, Assert.Single(await fixture.DbContext.Set<DurableSendCapacityState>()
+            .ToListAsync(TestContext.Current.CancellationToken)).StoredCount);
     }
 
     [Fact]
@@ -92,9 +90,9 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         Assert.Contains("disposed without commit", failure.Message, StringComparison.Ordinal);
         Assert.Equal(business, await fixture.DbContext.Set<BusinessRecord>().SingleAsync(TestContext.Current.CancellationToken));
-        Assert.Empty(await fixture.DbContext.Set<OutboxState>().ToListAsync(TestContext.Current.CancellationToken));
-        Assert.Empty(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
-        Assert.Equal(0, fixture.Notification.DeliveredCount);
+        Assert.Empty(await fixture.DbContext.Set<DurableSendRecord>().ToListAsync(TestContext.Current.CancellationToken));
+        Assert.Equal(0, Assert.Single(await fixture.DbContext.Set<DurableSendCapacityState>()
+            .ToListAsync(TestContext.Current.CancellationToken)).StoredCount);
     }
 
     [Fact]
@@ -109,9 +107,9 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         await context.CommitAsync(TestContext.Current.CancellationToken);
         await context.CommitAsync(TestContext.Current.CancellationToken);
 
-        Assert.Equal(1, fixture.Notification.DeliveredCount);
-        Assert.Single(await fixture.DbContext.Set<OutboxState>().ToListAsync(TestContext.Current.CancellationToken));
-        Assert.Single(await fixture.DbContext.Set<OutboxMessage>().ToListAsync(TestContext.Current.CancellationToken));
+        Assert.Single(await fixture.DbContext.Set<DurableSendRecord>().ToListAsync(TestContext.Current.CancellationToken));
+        Assert.Equal(1, Assert.Single(await fixture.DbContext.Set<DurableSendCapacityState>()
+            .ToListAsync(TestContext.Current.CancellationToken)).StoredCount);
     }
 
     [Fact]
@@ -131,11 +129,10 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         start.SetResult();
         await Task.WhenAll(writes);
 
-        OutboxState state = Assert.Single(fixture.DbContext.Set<OutboxState>().Local);
-        OutboxMessage[] messages = fixture.DbContext.Set<OutboxMessage>().Local.ToArray();
+        DurableSendRecord[] messages = fixture.DbContext.Set<DurableSendRecord>().Local.ToArray();
         Assert.Equal(messageIds.Length, messages.Length);
-        Assert.Equal(messageIds.Order(), messages.Select(message => message.MessageId).Order());
-        Assert.All(messages, message => Assert.Equal(state.OutboxId, message.OutboxId));
+        Assert.Equal(messageIds.Order(), messages.Select(message => message.Id).Order());
+        Assert.All(messages, message => Assert.Equal("default", message.StoreKey));
 
         await context.AbortAsync(TestContext.Current.CancellationToken);
     }
@@ -148,19 +145,19 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
         EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
         await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
         await context.CommitAsync(TestContext.Current.CancellationToken);
-        Guid firstOutboxId = Assert.Single(fixture.DbContext.Set<OutboxState>().Local).OutboxId;
+        Guid firstOutboxId = Assert.Single(fixture.DbContext.Set<DurableSendRecord>().Local).Id;
 
         await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 2), TestContext.Current.CancellationToken);
-        OutboxState[] states = fixture.DbContext.Set<OutboxState>().Local.ToArray();
+        DurableSendRecord[] states = fixture.DbContext.Set<DurableSendRecord>().Local.ToArray();
 
         Assert.Equal(2, states.Length);
-        Assert.Single(states, state => state.OutboxId == firstOutboxId);
-        Assert.Single(states, state => state.OutboxId != firstOutboxId);
-        Assert.Equal(1, fixture.Notification.DeliveredCount);
+        Assert.Single(states, state => state.Id == firstOutboxId);
+        Assert.Single(states, state => state.Id != firstOutboxId);
 
         await context.CommitAsync(TestContext.Current.CancellationToken);
         context.Dispose();
-        Assert.Equal(2, fixture.Notification.DeliveredCount);
+        Assert.Equal(2, (await fixture.DbContext.Set<DurableSendRecord>()
+            .ToListAsync(TestContext.Current.CancellationToken)).Count);
     }
 
     private static MessageSendContext<OutboxProbe> CreateSendContext(Guid messageId, int sequence) => new(
@@ -168,6 +165,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
     {
         MessageId = messageId,
         Serializer = ServiceBusMetadataJson.MessageSerializer,
+        DestinationAddress = new Uri("loopback://transactional-outbox/probe"),
     };
 
     public sealed record OutboxProbe(int Sequence);
@@ -180,7 +178,7 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.AddTransactionalOutboxEntities();
+            modelBuilder.AddViciOneReliableMessaging();
             modelBuilder.Entity<BusinessRecord>().HasKey(x => x.Id);
         }
     }
@@ -220,7 +218,15 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
                     .Options);
             await dbContext.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
             var notification = new RecordingNotification();
-            var services = new ServiceCollection().BuildServiceProvider();
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddViciOneMessageContracts(catalog =>
+                catalog.Register<OutboxProbe>("vicione.tests.transactional-outbox"));
+            serviceCollection.AddViciOneReliableMessaging<IBus>(options =>
+            {
+                options.MaximumStoredCount = 100;
+                options.MaximumStoredBytes = 1024 * 1024;
+            });
+            ServiceProvider services = serviceCollection.BuildServiceProvider();
             IBus bus = global::ViciOne.ServiceBus.Advanced.Bus.Factory.CreateUsingInMemory(_ => { });
 
             return new OutboxFixture(connection, dbContext, bus, notification, services);

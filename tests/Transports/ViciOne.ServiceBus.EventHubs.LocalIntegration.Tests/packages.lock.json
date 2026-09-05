@@ -376,20 +376,20 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
-      "ViciOne.ServiceBus.EventHubs.Testing": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
-          "ViciOne.ServiceBus.EventHubs": "[1.0.0, )",
-          "ViciOne.ServiceBus.Testing": "[1.0.0, )"
-        }
-      },
       "vicione.servicebus.eventhubs": {
         "type": "Project",
         "dependencies": {
           "Azure.Messaging.EventHubs.Processor": "[5.12.2, )",
           "Azure.Storage.Blobs": "[12.29.2, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.eventhubs.testing": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
+          "ViciOne.ServiceBus.EventHubs": "[1.0.0, )",
+          "ViciOne.ServiceBus.Testing": "[1.0.0, )"
         }
       },
       "vicione.servicebus.testing": {

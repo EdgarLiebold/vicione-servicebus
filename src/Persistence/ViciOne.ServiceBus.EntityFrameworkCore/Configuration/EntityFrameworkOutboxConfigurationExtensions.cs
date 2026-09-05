@@ -21,13 +21,13 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// <param name="configure"></param>
     /// <typeparam name="TDbContext"></typeparam>
     /// <returns></returns>
-    public static void AddEntityFrameworkOutbox<TDbContext>(this IBusRegistrationConfigurator configurator,
+    public static void ConfigureEntityFrameworkTransactionalStore<TDbContext>(this IBusRegistrationConfigurator configurator,
         Action<IEntityFrameworkOutboxConfigurator>? configure = null)
         where TDbContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
-        var outboxConfigurator = new EntityFrameworkOutboxConfigurator<IBus, TDbContext>(configurator);
+        var outboxConfigurator = new EntityFrameworkOutboxConfigurator<IBus, TDbContext>(configurator.Services);
         outboxConfigurator.Configure(configure);
     }
 
@@ -35,14 +35,14 @@ public static class EntityFrameworkOutboxConfigurationExtensions
     /// Configures an Entity Framework outbox for a specific MultiBus instance. Bus and DbContext together form
     /// the durable outbox identity, allowing the same DbContext to host isolated outboxes for multiple buses.
     /// </summary>
-    public static void AddEntityFrameworkOutbox<TBus, TDbContext>(this IBusRegistrationConfigurator<TBus> configurator,
+    public static void ConfigureEntityFrameworkTransactionalStore<TBus, TDbContext>(this IBusRegistrationConfigurator<TBus> configurator,
         Action<IEntityFrameworkOutboxConfigurator>? configure = null)
         where TBus : class, IBus
         where TDbContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
-        var outboxConfigurator = new EntityFrameworkOutboxConfigurator<TBus, TDbContext>(configurator);
+        var outboxConfigurator = new EntityFrameworkOutboxConfigurator<TBus, TDbContext>(configurator.Services);
         outboxConfigurator.Configure(configure);
     }
 

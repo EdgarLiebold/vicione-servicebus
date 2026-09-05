@@ -129,7 +129,7 @@ public sealed class PostgreSqlReadOnlySagaTests
         protected override void ConfigureSaga(
             IReceiveEndpointConfigurator endpointConfigurator,
             ISagaConfigurator<ReadOnlyState> sagaConfigurator,
-            IRegistrationContext context) => sagaConfigurator.UseInMemoryOutbox(context);
+            IRegistrationContext context) => sagaConfigurator.UseVolatileOutbox(context);
     }
 
     public sealed class ReadOnlySagaDbContext(DbContextOptions<ReadOnlySagaDbContext> options) : DbContext(options)

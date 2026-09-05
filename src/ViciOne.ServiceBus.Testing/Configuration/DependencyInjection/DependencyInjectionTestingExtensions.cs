@@ -105,7 +105,7 @@ public static class DependencyInjectionTestingExtensions
                 harnessConfigurator.UsingInMemory((context, cfg) =>
                 {
                     if (addScheduler)
-                        cfg.UseDelayedMessageScheduler();
+                        cfg.ConfigureDelayedMessageScheduler();
 
                     cfg.ConfigureEndpoints(context);
                 });

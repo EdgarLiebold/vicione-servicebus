@@ -26,7 +26,7 @@ public sealed class ScopedSchedulingTests
                 configuration.AddConsumer<ScheduledMessageConsumer>();
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     bus.UseSendFilter(typeof(ScheduleScopeSendFilter<>), context);
                     bus.ConfigureEndpoints(context);
                 });

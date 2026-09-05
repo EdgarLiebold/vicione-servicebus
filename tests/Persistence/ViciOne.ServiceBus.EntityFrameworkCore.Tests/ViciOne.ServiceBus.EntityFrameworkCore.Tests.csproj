@@ -29,6 +29,18 @@
     <EmbeddedResource
       Include="Requirements/EntityFrameworkRequirements.json"
       LogicalName="ViciOne.ServiceBus.EntityFrameworkCore.Tests.Requirements.EntityFrameworkRequirements.json" />
+    <EmbeddedResource
+      Include="../../../docs/migrations/reliable-messaging-sqlite.sql"
+      Link="MigrationScripts/reliable-messaging-sqlite.sql"
+      LogicalName="ViciOne.ServiceBus.EntityFrameworkCore.Tests.MigrationScripts.reliable-messaging-sqlite.sql" />
+    <EmbeddedResource
+      Include="../../../docs/migrations/reliable-messaging-postgresql.sql"
+      Link="MigrationScripts/reliable-messaging-postgresql.sql"
+      LogicalName="ViciOne.ServiceBus.EntityFrameworkCore.Tests.MigrationScripts.reliable-messaging-postgresql.sql" />
+    <EmbeddedResource
+      Include="../../../docs/migrations/reliable-messaging-sqlserver.sql"
+      Link="MigrationScripts/reliable-messaging-sqlserver.sql"
+      LogicalName="ViciOne.ServiceBus.EntityFrameworkCore.Tests.MigrationScripts.reliable-messaging-sqlserver.sql" />
   </ItemGroup>
 
 </Project>

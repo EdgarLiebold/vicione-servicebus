@@ -1,10 +1,11 @@
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.DurableSend;
 
-public sealed class InMemoryDurableSendStoreTests
+public sealed class InMemoryReliableStoreTests
 {
     private static readonly DateTimeOffset Epoch = DateTimeOffset.Parse("2026-09-03T12:00:00+00:00");
 
@@ -48,6 +49,7 @@ public sealed class InMemoryDurableSendStoreTests
             original with { ContentType = "application/json" },
             original with { MessageId = Guid.NewGuid() },
             original with { CorrelationId = Guid.NewGuid() },
+            original with { DueAt = Epoch.AddMinutes(1) },
             original with { Body = new byte[] { 1, 9 } },
             original with { Metadata = new byte[] { 3, 9 } },
         ];
@@ -446,6 +448,201 @@ public sealed class InMemoryDurableSendStoreTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-SCHEDULE", "scheduled-outbox-intent-is-hidden-until-fake-clock-reaches-due-time")]
+    public async Task Schedule_BecomesClaimableAtDueTimeAndCanBeCancelledBeforeClaimAsync()
+    {
+        StoreHarness store = Store();
+        var clock = new FakeTimeProvider(Epoch);
+        var limits = new DurableSendStoreLimits(10, 100);
+        SerializedDurableSend dueMessage = Message(GuidFrom(1));
+        SerializedDurableSend cancelledMessage = Message(GuidFrom(2));
+        DateTimeOffset dueAt = Epoch.AddMinutes(15);
+
+        DurableSendAdmissionResult scheduled = await store.Schedule.ScheduleAsync(
+            dueMessage,
+            limits,
+            clock.GetUtcNow(),
+            dueAt,
+            TestContext.Current.CancellationToken);
+        await store.Schedule.ScheduleAsync(
+            cancelledMessage,
+            limits,
+            clock.GetUtcNow(),
+            dueAt.AddMinutes(1),
+            TestContext.Current.CancellationToken);
+
+        Assert.True(scheduled.IsNew);
+        Assert.Empty(await store.ClaimDueAsync(clock.GetUtcNow(), 10, TimeSpan.FromMinutes(1)));
+        ReliableMessagingOperationResult cancelled = await store.Schedule.CancelAsync(
+            cancelledMessage.Id,
+            TestContext.Current.CancellationToken);
+        Assert.Equal(ReliableMessagingOperationDisposition.Applied, cancelled.Disposition);
+        Assert.Equal("Cancelled", cancelled.CurrentState);
+
+        clock.Advance(TimeSpan.FromMinutes(15) - TimeSpan.FromTicks(1));
+        Assert.Empty(await store.ClaimDueAsync(clock.GetUtcNow(), 10, TimeSpan.FromMinutes(1)));
+        clock.Advance(TimeSpan.FromTicks(1));
+
+        DurableSendDelivery delivery = Assert.Single(await store.ClaimDueAsync(
+            clock.GetUtcNow(),
+            10,
+            TimeSpan.FromMinutes(1)));
+        Assert.Equal(dueMessage.Id, delivery.Message.Id);
+        Assert.Equal(dueAt, delivery.Message.DueAt);
+        ReliableMessagingOperationResult claimed = await store.Schedule.CancelAsync(
+            dueMessage.Id,
+            TestContext.Current.CancellationToken);
+        Assert.Equal(ReliableMessagingOperationDisposition.InvalidState, claimed.Disposition);
+        Assert.Equal(1, (await store.GetSnapshotAsync()).StoredCount);
+        Assert.Equal(
+            ReliableMessagingOperationDisposition.NotFound,
+            (await store.Schedule.CancelAsync(cancelledMessage.Id, TestContext.Current.CancellationToken)).Disposition);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX", "duplicate-fencing-retry-due-time-and-terminal-completion")]
+    public async Task Inbox_DuplicateAndRetryTransitionsAreDueAndLeaseFencedAsync()
+    {
+        StoreHarness store = Store();
+        var clock = new FakeTimeProvider(Epoch);
+        var key = new ReliableInboxKey(GuidFrom(11), GuidFrom(12));
+
+        ReliableInboxAcquireResult first = await store.Inbox.AcquireAsync(
+            key,
+            clock.GetUtcNow(),
+            TimeSpan.FromMinutes(1),
+            TestContext.Current.CancellationToken);
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired, first.Disposition);
+        Assert.Equal(1, first.Attempt);
+        ReliableInboxLease firstLease = Assert.IsType<ReliableInboxLease>(first.Lease);
+
+        ReliableInboxAcquireResult busy = await store.Inbox.AcquireAsync(
+            key,
+            clock.GetUtcNow().AddTicks(1),
+            TimeSpan.FromMinutes(1),
+            TestContext.Current.CancellationToken);
+        Assert.Equal(ReliableInboxAcquireDisposition.Busy, busy.Disposition);
+        Assert.Null(busy.Lease);
+
+        DateTimeOffset retryAt = Epoch.AddMinutes(5);
+        Assert.True(await store.Inbox.ScheduleRetryAsync(
+            key,
+            firstLease,
+            retryAt,
+            "Tests.Transient",
+            clock.GetUtcNow(),
+            TestContext.Current.CancellationToken));
+        Assert.Equal(
+            ReliableInboxAcquireDisposition.NotDue,
+            (await store.Inbox.AcquireAsync(
+                key,
+                retryAt.AddTicks(-1),
+                TimeSpan.FromMinutes(1),
+                TestContext.Current.CancellationToken)).Disposition);
+
+        clock.Advance(TimeSpan.FromMinutes(5));
+        ReliableInboxAcquireResult retry = await store.Inbox.AcquireAsync(
+            key,
+            clock.GetUtcNow(),
+            TimeSpan.FromMinutes(1),
+            TestContext.Current.CancellationToken);
+        Assert.Equal(ReliableInboxAcquireDisposition.Acquired, retry.Disposition);
+        Assert.Equal(2, retry.Attempt);
+        ReliableInboxLease retryLease = Assert.IsType<ReliableInboxLease>(retry.Lease);
+        Assert.NotEqual(firstLease.Token, retryLease.Token);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => store.Inbox.CompleteAsync(
+            key,
+            firstLease,
+            clock.GetUtcNow(),
+            TestContext.Current.CancellationToken));
+        Assert.True(await store.Inbox.CompleteAsync(
+            key,
+            retryLease,
+            clock.GetUtcNow(),
+            TestContext.Current.CancellationToken));
+
+        ReliableInboxAcquireResult duplicate = await store.Inbox.AcquireAsync(
+            key,
+            clock.GetUtcNow().AddYears(1),
+            TimeSpan.FromMinutes(1),
+            TestContext.Current.CancellationToken);
+        Assert.Equal(ReliableInboxAcquireDisposition.AlreadyConsumed, duplicate.Disposition);
+        Assert.Equal(2, duplicate.Attempt);
+        Assert.Null(duplicate.Lease);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-RELIABLE-INBOX-QUARANTINE", "seek-pagination-over-one-thousand-and-explicit-terminal-actions")]
+    public async Task InboxQuarantine_TraversesMoreThanOneThousandRowsAndAppliesExplicitOperatorActionsAsync()
+    {
+        const int retainedCount = 1005;
+        StoreHarness store = Store();
+        Guid consumerId = GuidFrom(2000);
+        var expected = new List<ReliableInboxKey>(retainedCount);
+
+        for (var index = 1; index <= retainedCount; index++)
+        {
+            var key = new ReliableInboxKey(GuidFrom(index), consumerId);
+            expected.Add(key);
+            ReliableInboxAcquireResult acquired = await store.Inbox.AcquireAsync(
+                key,
+                Epoch,
+                TimeSpan.FromMinutes(1),
+                TestContext.Current.CancellationToken);
+            Assert.True(await store.Inbox.QuarantineAsync(
+                key,
+                Assert.IsType<ReliableInboxLease>(acquired.Lease),
+                new string('x', 700),
+                Epoch,
+                TestContext.Current.CancellationToken));
+        }
+
+        var actual = new List<ReliableInboxKey>(retainedCount);
+        var query = new ReliableInboxQuarantineQuery { PageSize = 137 };
+        while (true)
+        {
+            ReliableInboxQuarantinePage page = await store.Inbox.GetQuarantineAsync(
+                query,
+                TestContext.Current.CancellationToken);
+            actual.AddRange(page.Entries.Select(entry => entry.Key));
+            Assert.All(page.Entries, entry =>
+            {
+                Assert.Equal(ReliableInboxStatus.Quarantined, entry.Status);
+                Assert.Equal(1, entry.Attempts);
+                Assert.Equal(512, entry.FailureType!.Length);
+            });
+            if (page.Next is null)
+                break;
+            query = page.Next;
+        }
+
+        Assert.Equal(expected, actual);
+        Assert.Equal(retainedCount, actual.Distinct().Count());
+        Assert.Equal(
+            ReliableMessagingOperationDisposition.Applied,
+            (await store.Inbox.AbandonAsync(expected[0], Epoch.AddMinutes(1), TestContext.Current.CancellationToken)).Disposition);
+        Assert.Equal(
+            ReliableMessagingOperationDisposition.Applied,
+            (await store.Inbox.RequeueAsync(expected[1], Epoch.AddMinutes(1), TestContext.Current.CancellationToken)).Disposition);
+        Assert.Equal(
+            ReliableMessagingOperationDisposition.Applied,
+            (await store.Inbox.DiscardAsync(expected[2], TestContext.Current.CancellationToken)).Disposition);
+        Assert.Equal(
+            ReliableMessagingOperationDisposition.InvalidState,
+            (await store.Inbox.AbandonAsync(expected[0], Epoch.AddMinutes(2), TestContext.Current.CancellationToken)).Disposition);
+
+        ReliableInboxQuarantinePage remaining = await store.Inbox.GetQuarantineAsync(
+            new ReliableInboxQuarantineQuery { PageSize = 1000 },
+            TestContext.Current.CancellationToken);
+        Assert.Equal(1000, remaining.Entries.Count);
+        Assert.DoesNotContain(remaining.Entries, entry =>
+            entry.Key == expected[0] || entry.Key == expected[1] || entry.Key == expected[2]);
+        await Assert.ThrowsAsync<ArgumentException>(() => store.Inbox.GetQuarantineAsync(
+            new ReliableInboxQuarantineQuery { PageSize = 10, AfterQuarantinedAt = Epoch },
+            TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-DURABLE-STORE-CANCELLATION", "pre-canceled-operations-do-not-mutate")]
     public async Task Operations_PreCanceledTokenIsPreservedWithoutMutationAsync()
     {
@@ -484,8 +681,12 @@ public sealed class InMemoryDurableSendStoreTests
 
     private interface ITestBus : IBus;
 
-    private sealed class StoreHarness(IDurableSendStore<ITestBus> store)
+    private sealed class StoreHarness(IOutboxStore<ITestBus> store)
     {
+        public IInboxStore<ITestBus> Inbox { get; } = Assert.IsAssignableFrom<IInboxStore<ITestBus>>(store);
+
+        public IScheduleStore<ITestBus> Schedule { get; } = Assert.IsAssignableFrom<IScheduleStore<ITestBus>>(store);
+
         public Task<DurableSendAdmissionResult> AdmitAsync(
             SerializedDurableSend message,
             DurableSendStoreLimits limits,

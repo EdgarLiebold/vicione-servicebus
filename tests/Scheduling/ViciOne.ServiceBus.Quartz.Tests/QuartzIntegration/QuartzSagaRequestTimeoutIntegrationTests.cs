@@ -113,7 +113,7 @@ public sealed class QuartzSagaRequestTimeoutIntegrationTests
                 {
                     configurator.ReceiveEndpoint($"{prefix}-saga", endpoint =>
                     {
-                        endpoint.UseInMemoryOutbox();
+                        endpoint.UseVolatileOutbox();
                         endpoint.StateMachineSaga(stateMachine, repository);
                     });
                     configurator.ReceiveEndpoint($"{prefix}-service", endpoint => endpoint.Handler<ValidationRequest>(context =>

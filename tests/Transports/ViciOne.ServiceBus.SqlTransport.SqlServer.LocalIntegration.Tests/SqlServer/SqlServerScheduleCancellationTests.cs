@@ -33,7 +33,7 @@ public sealed class SqlServerScheduleCancellationTests
         IBusControl bus = SqlBusFactory.Create(configurator =>
         {
             fixture.ConfigureHost(configurator);
-            configurator.UseSqlMessageScheduler();
+            configurator.ConfigureSqlMessageScheduler();
             configurator.ReceiveEndpoint(queueName, endpoint =>
             {
                 endpoint.Handler<ScheduleRequest>(async context =>

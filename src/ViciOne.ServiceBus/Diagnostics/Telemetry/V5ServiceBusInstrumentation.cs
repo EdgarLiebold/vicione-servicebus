@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Threading;
+using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
 namespace ViciOne.ServiceBus.Diagnostics;
@@ -28,6 +29,7 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     Histogram<double>? _durableDeliveryDuration;
     Counter<long>? _durableConsumerCompletion;
     Histogram<double>? _durableConsumerCompletionDuration;
+    Counter<long>? _reliabilityAbandoned;
     Counter<long>? _payloadAdmission;
     Histogram<long>? _payloadBodySize;
     Histogram<long>? _payloadEnvelopeSize;
@@ -186,6 +188,25 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
         catch
         {
             // Completion is a correctness signal; observation cannot affect it.
+        }
+    }
+
+    public void RecordReliabilityAbandoned(ReliableMessageKind kind)
+    {
+        try
+        {
+            if (!EnsureDurableMetrics())
+                return;
+
+            TagList tags = new()
+            {
+                { "side", kind == ReliableMessageKind.Inbox ? "inbox" : "outbox" },
+            };
+            _reliabilityAbandoned?.Add(1, in tags);
+        }
+        catch
+        {
+            // Operator state is authoritative; an observation failure cannot rewrite it.
         }
     }
 
@@ -352,6 +373,9 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
                     "vicione.servicebus.durable_sender.consumer_completion.duration",
                     unit: "s",
                     description: "Elapsed time from volatile durable dispatch attempt start to logical consumer completion.");
+                var reliabilityAbandoned = meter.CreateCounter<long>(
+                    "vicione.servicebus.reliability.abandoned",
+                    description: "Explicit operator decisions to retain a quarantined reliable-messaging record as abandoned.");
 
                 meter.CreateObservableGauge(
                     "vicione.servicebus.durable_sender.stored",
@@ -390,6 +414,7 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
                 _durableDeliveryDuration = deliveryDuration;
                 _durableConsumerCompletion = consumerCompletion;
                 _durableConsumerCompletionDuration = consumerCompletionDuration;
+                _reliabilityAbandoned = reliabilityAbandoned;
                 return true;
             }
             catch

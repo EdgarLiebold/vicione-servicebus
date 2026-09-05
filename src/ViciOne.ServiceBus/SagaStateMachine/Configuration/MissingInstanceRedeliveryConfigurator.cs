@@ -67,7 +67,7 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
     /// <summary>
     /// Gets or sets the use message scheduler value.
     /// </summary>
-    public bool UseMessageScheduler { get; set; } = true;
+    public bool ConfigureMessageScheduler { get; set; } = true;
 
     /// <summary>
     /// Validates the current configuration.
@@ -88,8 +88,8 @@ public class MissingInstanceRedeliveryConfigurator<TSaga, TMessage> :
         var retryPolicy = _policyFactory(Filter);
 
         var options = ReplaceMessageId ? RedeliveryOptions.ReplaceMessageId : RedeliveryOptions.None;
-        if (UseMessageScheduler)
-            options |= RedeliveryOptions.UseMessageScheduler;
+        if (ConfigureMessageScheduler)
+            options |= RedeliveryOptions.ConfigureMessageScheduler;
 
         return new MissingInstanceRedeliveryPipe<TSaga, TMessage>(retryPolicy, _finalPipe, options);
     }

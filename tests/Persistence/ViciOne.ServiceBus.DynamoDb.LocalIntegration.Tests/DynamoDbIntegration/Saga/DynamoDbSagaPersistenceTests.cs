@@ -157,7 +157,7 @@ public sealed class DynamoDbSagaPersistenceTests
             IRegistrationContext context)
         {
             sagaConfigurator.UseMessageRetry(retry => retry.Immediate(2));
-            sagaConfigurator.UseInMemoryOutbox(context);
+            sagaConfigurator.UseVolatileOutbox(context);
         }
     }
 }

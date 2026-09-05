@@ -188,15 +188,33 @@ internal sealed class BusCompositionStartupValidator<TBus>(IServiceProvider prov
                 CountServices(registration, typeof(IMessageContractCatalog)),
                 "no message-contract catalog is registered",
                 "multiple message-contract catalog owners are registered",
-                "Declare contracts once inside the owning bus.UseDurableSender(...) or bus.Contracts(...) block");
+                "Declare contracts once inside the owning bus.UseReliableMessaging(...) or bus.Contracts(...) block");
             AddCardinalityFailure(
                 failures,
                 "Reliable messaging",
                 bus,
-                CountServices(registration, typeof(IDurableSendStore<TBus>)),
+                CountServices(registration, typeof(IOutboxStore<TBus>)),
                 "no persistence store is registered",
                 "multiple persistence store owners are registered",
-                "Select exactly one store inside bus.UseDurableSender(...)"
+                "Select exactly one store inside bus.UseReliableMessaging(...)"
+            );
+            AddCardinalityFailure(
+                failures,
+                "Reliable messaging",
+                bus,
+                CountServices(registration, typeof(IInboxStore<TBus>)),
+                "no inbox store is registered",
+                "multiple inbox store owners are registered",
+                "Select exactly one store inside bus.UseReliableMessaging(...)"
+            );
+            AddCardinalityFailure(
+                failures,
+                "Reliable messaging",
+                bus,
+                CountServices(registration, typeof(IScheduleStore<TBus>)),
+                "no schedule store is registered",
+                "multiple schedule store owners are registered",
+                "Select exactly one store inside bus.UseReliableMessaging(...)"
             );
             AddCardinalityFailure(
                 failures,

@@ -20,7 +20,7 @@ public sealed class SchedulerBusObserverTests
         try
         {
             bus = Bus.Factory.CreateUsingInMemory(configurator =>
-                configurator.UseInMemoryScheduler(schedulerFactory, $"quartz-{NewId.NextGuid():N}"));
+                configurator.ConfigureInMemoryScheduler(schedulerFactory, $"quartz-{NewId.NextGuid():N}"));
 
             await bus.StartAsync(TestContext.Current.CancellationToken)
                 .WaitAsync(timeout, TestContext.Current.CancellationToken);
@@ -56,7 +56,7 @@ public sealed class SchedulerBusObserverTests
         try
         {
             bus = Bus.Factory.CreateUsingInMemory(configurator =>
-                configurator.UseInMemoryScheduler(options =>
+                configurator.ConfigureInMemoryScheduler(options =>
                 {
                     options.SchedulerFactory = schedulerFactory;
                     options.QueueName = $"quartz-{NewId.NextGuid():N}";
@@ -98,7 +98,7 @@ public sealed class SchedulerBusObserverTests
         try
         {
             bus = Bus.Factory.CreateUsingInMemory(configurator =>
-                configurator.UseInMemoryScheduler(options =>
+                configurator.ConfigureInMemoryScheduler(options =>
                 {
                     options.SchedulerFactory = schedulerFactory;
                     options.QueueName = $"quartz-{NewId.NextGuid():N}";

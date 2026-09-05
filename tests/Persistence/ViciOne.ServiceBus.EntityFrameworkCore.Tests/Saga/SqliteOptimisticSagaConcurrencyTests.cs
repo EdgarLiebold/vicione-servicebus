@@ -151,7 +151,7 @@ public sealed class SqliteOptimisticSagaConcurrencyTests
             ISagaConfigurator<OptimisticSaga> sagaConfigurator, IRegistrationContext context)
         {
             sagaConfigurator.UseMessageRetry(retry => retry.Immediate(2));
-            sagaConfigurator.UseInMemoryOutbox(context);
+            sagaConfigurator.UseVolatileOutbox(context);
         }
     }
 

@@ -43,9 +43,16 @@ public sealed class MessagePackTransportIntegrationTests
                 transport.UseMessagePackSerializer();
                 transport.Route<DurableMessagePackMessage>(destination);
             });
-            configuration.UseDurableSender(durable =>
+            configuration.UseReliableMessaging(durable =>
             {
                 durable.UseInMemoryStore();
+                durable.Store(new ReliableStoreLimits
+                {
+                    MaximumStoredCount = 100,
+                    MaximumStoredBytes = 1024 * 1024,
+                });
+                durable.Delivery(_ => { });
+                durable.Retention(TimeSpan.FromDays(1));
                 durable.AddMessageContract<DurableMessagePackMessage>("vicione.tests.messagepack-durable");
             });
         });
@@ -64,7 +71,7 @@ public sealed class MessagePackTransportIntegrationTests
 
         Assert.True(first.IsNew);
         Assert.Equal(DurableSendAdmissionDisposition.AlreadyAccepted, duplicate.Disposition);
-        IDurableSendStore<IBus> store = scope.ServiceProvider.GetRequiredService<IDurableSendStore<IBus>>();
+        IOutboxStore<IBus> store = scope.ServiceProvider.GetRequiredService<IOutboxStore<IBus>>();
         DurableSendDelivery retained = Assert.Single(await store.ClaimDueAsync(
             DateTimeOffset.UtcNow.AddDays(1),
             1,

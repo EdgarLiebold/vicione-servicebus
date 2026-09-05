@@ -20,14 +20,14 @@ public static class QuartzIntegrationExtensions
     /// <param name="configurator">The configurator value.</param>
     /// <param name="queueName">The queue name value.</param>
     /// <returns>The result of the operation.</returns>
-    public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, string queueName = "quartz")
+    public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, string queueName = "quartz")
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
 
         var schedulerFactory = CreateSchedulerFactory();
 
-        return configurator.UseInMemoryScheduler(schedulerFactory, queueName);
+        return configurator.ConfigureInMemoryScheduler(schedulerFactory, queueName);
     }
 
     /// <summary>
@@ -37,11 +37,11 @@ public static class QuartzIntegrationExtensions
     /// <param name="schedulerFactory">The scheduler factory value.</param>
     /// <param name="queueName">The queue name value.</param>
     /// <returns>The result of the operation.</returns>
-    public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, out ISchedulerFactory schedulerFactory, string queueName = "quartz")
+    public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, out ISchedulerFactory schedulerFactory, string queueName = "quartz")
     {
         schedulerFactory = CreateSchedulerFactory();
 
-        return UseInMemoryScheduler(configurator, schedulerFactory, queueName);
+        return ConfigureInMemoryScheduler(configurator, schedulerFactory, queueName);
     }
 
     /// <summary>
@@ -51,9 +51,9 @@ public static class QuartzIntegrationExtensions
     /// <param name="schedulerFactory">The scheduler factory value.</param>
     /// <param name="queueName">The queue name value.</param>
     /// <returns>The result of the operation.</returns>
-    public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, ISchedulerFactory schedulerFactory, string queueName = "quartz")
+    public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, ISchedulerFactory schedulerFactory, string queueName = "quartz")
     {
-        return configurator.UseInMemoryScheduler(options =>
+        return configurator.ConfigureInMemoryScheduler(options =>
         {
             options.SchedulerFactory = schedulerFactory;
 
@@ -72,7 +72,7 @@ public static class QuartzIntegrationExtensions
         return configuration;
     }
 
-    static ISchedulerFactory CreateSchedulerFactory()
+    internal static ISchedulerFactory CreateSchedulerFactory()
     {
         return QuartzSchedulerBuilder.Create(builder =>
                 builder.UseJobFactory(new ViciOneServiceBusJobFactory()))
@@ -86,7 +86,7 @@ public static class QuartzIntegrationExtensions
     /// <param name="configurator">The configurator value.</param>
     /// <param name="configure">The configuration callback.</param>
     /// <returns>The result of the operation.</returns>
-    public static Uri UseInMemoryScheduler(this IBusFactoryConfigurator configurator, Action<QuartzSchedulerOptions>? configure)
+    public static Uri ConfigureInMemoryScheduler(this IBusFactoryConfigurator configurator, Action<QuartzSchedulerOptions>? configure)
     {
         if (configurator == null)
             throw new ArgumentNullException(nameof(configurator));
@@ -113,7 +113,7 @@ public static class QuartzIntegrationExtensions
 
             e.Consumer(() => new ResumeScheduledMessageConsumer(settings.SchedulerFactory));
 
-            configurator.UseMessageScheduler(e.InputAddress);
+            configurator.ConfigureMessageScheduler(e.InputAddress);
 
             configurator.ConnectBusObserver(observer);
 

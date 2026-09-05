@@ -21,7 +21,7 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     where TBus : class, IBus
     where TDbContext : DbContext
 {
-    readonly IBusRegistrationConfigurator _configurator;
+    readonly IServiceCollection _services;
     readonly EntityFrameworkOutboxConfigurator<TBus, TDbContext> _outboxConfigurator;
     bool _isDefault;
     bool _registerOutboxDeliveryService = true;
@@ -29,13 +29,13 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
-    /// <param name="configurator">The configurator value.</param>
+    /// <param name="services">The service collection owned by the bus configuration.</param>
     /// <param name="outboxConfigurator">The outbox configurator value.</param>
-    public EntityFrameworkBusOutboxConfigurator(IBusRegistrationConfigurator configurator,
+    internal EntityFrameworkBusOutboxConfigurator(IServiceCollection services,
         EntityFrameworkOutboxConfigurator<TBus, TDbContext> outboxConfigurator)
     {
         _outboxConfigurator = outboxConfigurator;
-        _configurator = configurator;
+        _services = services ?? throw new ArgumentNullException(nameof(services));
     }
 
     /// <summary>
@@ -96,20 +96,20 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
         TimeSpan initialDeliveryRetryDelay = InitialDeliveryRetryDelay;
         TimeSpan maximumDeliveryRetryDelay = MaximumDeliveryRetryDelay;
 
-        _configurator.Services.TryAddScoped<EntityFrameworkBusOutboxSessionRegistry<TBus>>();
-        _configurator.Services.AddScoped<EntityFrameworkScopedBusContext<TBus, TDbContext>>(provider =>
+        _services.TryAddScoped<EntityFrameworkBusOutboxSessionRegistry<TBus>>();
+        _services.AddScoped<EntityFrameworkScopedBusContext<TBus, TDbContext>>(provider =>
             provider.GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<TBus>>().GetOrCreate<TDbContext>(provider));
-        _configurator.Services.AddSingleton<IEntityFrameworkScopedBusContextFactory<TBus>>(
+        _services.AddSingleton<IEntityFrameworkScopedBusContextFactory<TBus>>(
             new EntityFrameworkScopedBusContextFactory<TBus, TDbContext>(_isDefault));
-        _configurator.Services.ReplaceScoped<IScopedBusContextProvider<TBus>, EntityFrameworkScopedBusContextProvider<TBus>>();
-        _configurator.Services.AddScoped<IEntityFrameworkTransactionalOutbox<TBus, TDbContext>>(provider =>
+        _services.ReplaceScoped<IScopedBusContextProvider<TBus>, EntityFrameworkScopedBusContextProvider<TBus>>();
+        _services.AddScoped<IEntityFrameworkTransactionalOutbox<TBus, TDbContext>>(provider =>
             provider.GetRequiredService<EntityFrameworkScopedBusContext<TBus, TDbContext>>());
-        _configurator.Services.AddScoped<IEntityFrameworkOutboxOperations<TBus, TDbContext>, EntityFrameworkOutboxOperations<TBus, TDbContext>>();
+        _services.AddScoped<IEntityFrameworkOutboxOperations<TBus, TDbContext>, EntityFrameworkOutboxOperations<TBus, TDbContext>>();
 
-        _configurator.Services.AddSingleton<IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>>,
+        _services.AddSingleton<IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>>,
             BusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>>>();
 
-        _configurator.Services.AddOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>>>()
+        _services.AddOptions<OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>>>()
             .Configure(options =>
             {
                 options.QueryDelay = queryDelay;
@@ -148,7 +148,10 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
             .ValidateOnStart();
 
         if (_registerOutboxDeliveryService)
-            _configurator.Services.AddHostedService<BusOutboxDeliveryService<TBus, TDbContext>>();
+        {
+            _services.AddSingleton<IReliableDeliverySource<TBus>,
+                EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>>();
+        }
     }
 
     void EnsureCompatibleScopedContextOwner()
@@ -157,7 +160,7 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
         Type defaultProvider = typeof(ScopedBusContextProvider<TBus>);
         Type ownProvider = typeof(EntityFrameworkScopedBusContextProvider<TBus>);
 
-        ServiceDescriptor? conflict = _configurator.Services.FirstOrDefault(descriptor =>
+        ServiceDescriptor? conflict = _services.FirstOrDefault(descriptor =>
             descriptor.ServiceType == serviceType
             && descriptor.ImplementationType != defaultProvider
             && descriptor.ImplementationType != ownProvider);
@@ -173,11 +176,11 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     void EnsureUniqueRegistration()
     {
         Type marker = typeof(EntityFrameworkBusOutboxRegistration<TBus, TDbContext>);
-        if (_configurator.Services.Any(x => x.ServiceType == marker))
+        if (_services.Any(x => x.ServiceType == marker))
             throw new ConfigurationException(
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", $"The Entity Framework bus outbox for {TypeCache<TBus>.ShortName} and {TypeCache<TDbContext>.ShortName} is already configured.", "Correct the named configuration before starting the host"));
 
-        if (_isDefault && _configurator.Services.Any(x =>
+        if (_isDefault && _services.Any(x =>
                 x.ServiceType == typeof(IEntityFrameworkScopedBusContextFactory<TBus>)
                 && x.ImplementationInstance is IEntityFrameworkScopedBusContextFactory<TBus> { IsDefault: true }))
         {
@@ -185,7 +188,7 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
                 global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", $"A default Entity Framework bus outbox is already configured for {TypeCache<TBus>.ShortName}. Exactly one default is allowed.", "Correct the named configuration before starting the host"));
         }
 
-        _configurator.Services.AddSingleton(new EntityFrameworkBusOutboxRegistration<TBus, TDbContext>());
+        _services.AddSingleton(new EntityFrameworkBusOutboxRegistration<TBus, TDbContext>());
     }
 
     void Validate()

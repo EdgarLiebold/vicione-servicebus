@@ -104,7 +104,7 @@ public sealed class RoutingSlipRequestIntegrationTests
             RequestActivityArguments>();
         var requestProxy = new FaultingRequestProxy(() => activity.ExecuteAddress);
         var responseProxy = new RetryingFaultResponseProxy();
-        harness.OnConfigureInMemoryBus += bus => bus.UseDelayedMessageScheduler();
+        harness.OnConfigureInMemoryBus += bus => bus.ConfigureDelayedMessageScheduler();
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint =>
         {
             endpoint.Instance(requestProxy);

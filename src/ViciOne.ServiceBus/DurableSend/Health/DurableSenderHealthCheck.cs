@@ -12,16 +12,16 @@ namespace ViciOne.ServiceBus.Operations;
 internal sealed class DurableSenderHealthCheck<TBus> : IHealthCheck
     where TBus : class, IBus
 {
-    readonly DurableSenderPolicy<TBus> _policy;
-    readonly IDurableSendStore<TBus> _store;
+    readonly ReliableMessagingPolicy<TBus> _policy;
+    readonly IOutboxStore<TBus> _store;
     readonly TimeProvider _timeProvider;
 
     public DurableSenderHealthCheck(
-        IEnumerable<IDurableSendStore<TBus>> stores,
-        DurableSenderPolicy<TBus> policy,
+        IEnumerable<IOutboxStore<TBus>> stores,
+        ReliableMessagingPolicy<TBus> policy,
         TimeProvider timeProvider)
     {
-        _store = DurableSenderComposition.RequireExactlyOne<IDurableSendStore<TBus>, TBus>(stores, "persistence store");
+        _store = ReliableMessagingComposition.RequireExactlyOne<IOutboxStore<TBus>, TBus>(stores, "persistence store");
         _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }

@@ -832,7 +832,7 @@ public sealed class MessagePipelineMetricsTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.AddHandler<OutboxResult>(static (ConsumeContext<OutboxResult> _) => Task.CompletedTask);
-                configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseInMemoryOutbox());
+                configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseVolatileOutbox());
                 configuration.AddHandler<OutboxRequest>((ConsumeContext<OutboxRequest> context) =>
                     context.Advanced().PublishAsync(new OutboxResult(context.Message.Value), context.CancellationToken));
             })
@@ -879,7 +879,7 @@ public sealed class MessagePipelineMetricsTests
             .AddViciOneServiceBusTestHarness(configuration =>
             {
                 configuration.SetTestTimeouts(timeout, timeout);
-                configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseInMemoryOutbox());
+                configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseVolatileOutbox());
                 configuration.AddHandler<OutboxResult>(static (ConsumeContext<OutboxResult> _) => Task.CompletedTask);
                 configuration.AddHandler<OutboxFaultRequest>((ConsumeContext<OutboxFaultRequest> context) =>
                     context.Advanced().PublishAsync(

@@ -74,7 +74,7 @@ public sealed class RequestClientOutboxTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
         {
-            configurator.UseInMemoryOutbox();
+            configurator.UseVolatileOutbox();
             configurator.Consumer(() => new OuterConsumer(harness.Bus, events));
             configurator.Consumer(() => new InnerConsumer(events));
             configurator.Handler<DeferredSideEffect>(context =>

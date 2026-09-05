@@ -30,7 +30,7 @@ public sealed class StateMachineSchedulingIntegrationTests
                 configuration.AddSagaStateMachine<ScheduledMachine, ScheduledState>();
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     bus.UseConsumeFilter(typeof(RecordingSchedulerFilter<>), context);
                     bus.ConfigureEndpoints(context);
                 });

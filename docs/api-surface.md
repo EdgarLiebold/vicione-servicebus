@@ -15,7 +15,7 @@ one transport with `Using...(...)`, and inject application contracts such as
 
 Consumer retry and concurrency belong directly in the `AddConsumer<T>` callback.
 Durable Sender belongs inside the owning bus block through
-`UseDurableSender(...)`; a supported transport registers its dispatcher adapter
+`UseReliableMessaging(...)`; a supported transport registers its dispatcher adapter
 automatically. Application code sends typed messages and never constructs a
 serialized durable envelope.
 
@@ -42,7 +42,7 @@ Sender dispatch fails during startup instead of silently falling back.
 ## Operations API
 
 Operational actions are explicit contracts, separate from producer messaging.
-Use `IDurableSenderOperations<TBus>` for durable quarantine/replay operations and
+Use `IReliableMessagingOperations<TBus>` for durable quarantine/replay operations and
 provider-owned contracts such as `IRabbitMqQueueOperations` for broker operations.
 Commands return typed outcomes rather than ambiguous booleans.
 

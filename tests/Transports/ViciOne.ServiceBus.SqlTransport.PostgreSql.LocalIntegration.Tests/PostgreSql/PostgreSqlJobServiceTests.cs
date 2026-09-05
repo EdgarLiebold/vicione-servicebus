@@ -317,7 +317,7 @@ public sealed class PostgreSqlJobServiceTests
                         .Endpoint(endpoint => endpoint.PrefetchCount = 100);
                     configuration.UsingPostgres(database.ConnectionString, (context, bus) =>
                     {
-                        bus.UseSqlMessageScheduler();
+                        bus.ConfigureSqlMessageScheduler();
                         bus.UseJobSagaPartitionKeyFormatters();
                         bus.ConfigureEndpoints(context);
                     });

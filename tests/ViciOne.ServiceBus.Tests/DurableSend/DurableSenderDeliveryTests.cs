@@ -13,7 +13,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-COMPLETION", "transport-acceptance-retires-immediately")]
     public async Task TransportAcceptance_RetiresThePersistedIntentAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
@@ -29,7 +29,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-COMPLETION", "volatile-send-awaits-logical-consumer")]
     public async Task ConsumerCompletion_KeepsCapacityUntilTheLogicalConsumerCompletesAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.AwaitConsumerCompletion);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
@@ -50,7 +50,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RACE", "early-consumer-completion-wins-await-transition")]
     public async Task ConsumerCompletion_MayWinBeforeTheAwaitingStateTransitionAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.AwaitConsumerCompletion)
         {
             CompleteBeforeReturn = true,
@@ -69,7 +69,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RACE", "completion-wins-ambiguous-dispatch-failure")]
     public async Task ConsumerCompletion_WinsAnOverlappingAmbiguousDispatchFailureAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.AwaitConsumerCompletion)
         {
             CompleteBeforeThrow = true,
@@ -88,7 +88,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-TIMEOUT", "bounded-redispatch-then-quarantine")]
     public async Task MissingConsumerCompletion_RedispatchesOnlyWithinTheAttemptBudgetAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.AwaitConsumerCompletion);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
@@ -119,7 +119,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RACE", "late-completion-resolves-timeout-quarantine")]
     public async Task LateConsumerCompletion_RetiresTheSameGenerationAfterTimeoutQuarantineAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.AwaitConsumerCompletion);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
@@ -148,7 +148,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-FAILURE", "classified-retry-and-terminal-evidence")]
     public async Task TransportFailure_OnlyClassifiedTransientFailuresRetryAndExhaustionQuarantinesAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ThrowingDispatcher(new ExpectedDispatchException());
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
@@ -205,7 +205,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-INVARIANT", "unsupported-completion-mode-quarantines")]
     public async Task UnsupportedCompletionMode_FailsClosedIntoInvariantQuarantineAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new ControlledDispatcher(new DurableSendDispatchResult((DurableSendCompletionMode)999));
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(store, dispatcher, time);
@@ -222,7 +222,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-PERSISTENCE", "successful-dispatch-state-failure-propagates")]
     public async Task StatePersistenceFailure_AfterSuccessfulDispatchEscapesWithoutDeletingTheIntentAsync()
     {
-        IDurableSendStore<ITestBus> inner = Store();
+        IOutboxStore<ITestBus> inner = Store();
         var expected = new ExpectedPersistenceException();
         var store = new MarkDeliveredThrowingStore(inner, expected);
         var dispatcher = new ControlledDispatcher(DurableSendDispatchResult.TransportAccepted);
@@ -242,7 +242,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-CONCURRENCY", "claim-never-exceeds-immediate-worker-capacity")]
     public async Task BatchClaim_StartsNoMoreThanTheConfiguredConcurrentDeliveryLimitAsync()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var dispatcher = new BlockingDispatcher(expectedConcurrent: 2);
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
@@ -272,7 +272,7 @@ public sealed class DurableSenderDeliveryTests
     [RequirementCoverage("REQ-VSB-DURABLE-DELIVERY-RETRY", "deterministic-decorrelated-ceiling-jitter")]
     public void RetryDelay_RemainsBoundedAndDecorrelatedAtTheBackoffCeiling()
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
             store,
@@ -302,7 +302,7 @@ public sealed class DurableSenderDeliveryTests
         IEnumerable<ITransportSendFailureClassifier> classifiers,
         int maximumAttempts = 3)
     {
-        IDurableSendStore<ITestBus> store = Store();
+        IOutboxStore<ITestBus> store = Store();
         var time = new FakeTimeProvider(Epoch);
         using DurableSenderDeliveryTestDriver<ITestBus> driver = Driver(
             store,
@@ -316,14 +316,14 @@ public sealed class DurableSenderDeliveryTests
     }
 
     private static DurableSenderDeliveryTestDriver<ITestBus> Driver(
-        IDurableSendStore<ITestBus> store,
+        IOutboxStore<ITestBus> store,
         IDurableSendDispatcher<ITestBus> dispatcher,
         TimeProvider timeProvider,
-        Action<DurableSenderOptions<ITestBus>>? configure = null,
+        Action<ReliableMessagingOptions<ITestBus>>? configure = null,
         IEnumerable<ITransportSendFailureClassifier>? classifiers = null) =>
         DurableSenderTestFactory.CreateDeliveryDriver(store, dispatcher, timeProvider, configure, classifiers);
 
-    private static async Task<SerializedDurableSend> AdmitAsync(IDurableSendStore<ITestBus> store, int id = 1)
+    private static async Task<SerializedDurableSend> AdmitAsync(IOutboxStore<ITestBus> store, int id = 1)
     {
         SerializedDurableSend message = Message(id);
         await store.AdmitAsync(
@@ -334,10 +334,10 @@ public sealed class DurableSenderDeliveryTests
         return message;
     }
 
-    private static Task<DurableSendStoreSnapshot> SnapshotAsync(IDurableSendStore<ITestBus> store) =>
+    private static Task<DurableSendStoreSnapshot> SnapshotAsync(IOutboxStore<ITestBus> store) =>
         store.GetSnapshotAsync(TestCancellationToken);
 
-    private static async Task<IReadOnlyList<DurableSendQuarantineEntry>> QuarantineAsync(IDurableSendStore<ITestBus> store) =>
+    private static async Task<IReadOnlyList<DurableSendQuarantineEntry>> QuarantineAsync(IOutboxStore<ITestBus> store) =>
         (await store.GetQuarantineAsync(DurableSendQuarantineQuery.FirstPage(10), TestCancellationToken)).Entries;
 
     private static SerializedDurableSend Message(int id) => new()
@@ -353,7 +353,7 @@ public sealed class DurableSenderDeliveryTests
 
     private static CancellationToken TestCancellationToken => TestContext.Current.CancellationToken;
 
-    private static IDurableSendStore<ITestBus> Store() =>
+    private static IOutboxStore<ITestBus> Store() =>
         DurableSenderTestFactory.CreateInMemoryStore<ITestBus>();
 
     private interface ITestBus : IBus;
@@ -464,8 +464,8 @@ public sealed class DurableSenderDeliveryTests
     }
 
     private sealed class MarkDeliveredThrowingStore(
-        IDurableSendStore<ITestBus> inner,
-        Exception exception) : IDurableSendStore<ITestBus>
+        IOutboxStore<ITestBus> inner,
+        Exception exception) : IOutboxStore<ITestBus>
     {
         public Task<DurableSendAdmissionResult> AdmitAsync(
             SerializedDurableSend message,

@@ -23,10 +23,11 @@ internal sealed class EntityFrameworkOutboxWriteCoordinator : IDisposable
         }
     }
 
-    public void ExecuteBlocking(Action action)
+    public void ExecuteSynchronous(Action action)
     {
         ArgumentNullException.ThrowIfNull(action);
-        _gate.Wait();
+        if (!_gate.Wait(0))
+            throw new InvalidOperationException("The transactional outbox is busy with an asynchronous state change.");
         try
         {
             action();

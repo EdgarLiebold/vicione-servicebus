@@ -19,7 +19,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     where TBus : class, IBus
     where TDbContext : DbContext
 {
-    readonly IBusRegistrationConfigurator _configurator;
+    readonly IServiceCollection _services;
     Action<IEntityFrameworkBusOutboxConfigurator>? _configureBusOutbox;
     IsolationLevel _isolationLevel;
     ILockStatementProvider? _lockStatementProvider;
@@ -29,10 +29,10 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
-    /// <param name="configurator">The configurator value.</param>
-    public EntityFrameworkOutboxConfigurator(IBusRegistrationConfigurator configurator)
+    /// <param name="services">The service collection owned by the bus configuration.</param>
+    internal EntityFrameworkOutboxConfigurator(IServiceCollection services)
     {
-        _configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
+        _services = services ?? throw new ArgumentNullException(nameof(services));
 
         _isolationLevel = IsolationLevel.RepeatableRead;
         _registerInboxCleanupService = true;
@@ -86,7 +86,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     /// Configures bus outbox for the current pipeline.
     /// </summary>
     /// <param name="configure">The configuration callback.</param>
-    public virtual void UseBusOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null)
+    public virtual void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null)
     {
         if (_useBusOutbox)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "The Entity Framework bus outbox may only be configured once.", "Correct the named configuration before starting the host"));
@@ -105,7 +105,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
 
         ValidateSettings();
 
-        _configurator.Services.TryAddSingleton(TimeProvider.System);
+        _services.TryAddSingleton(TimeProvider.System);
 
         IsolationLevel isolationLevel = _isolationLevel;
         ILockStatementProvider lockStatementProvider = _lockStatementProvider!;
@@ -114,8 +114,8 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
         TimeSpan queryDelay = QueryDelay;
         TimeSpan queryTimeout = QueryTimeout;
 
-        _configurator.Services.TryAddScoped<IOutboxContextFactory<TDbContext>, EntityFrameworkOutboxContextFactory<TDbContext>>();
-        _configurator.Services.AddOptions<EntityFrameworkOutboxOptions<TDbContext>>().Configure(options =>
+        _services.TryAddScoped<IOutboxContextFactory<TDbContext>, EntityFrameworkOutboxContextFactory<TDbContext>>();
+        _services.AddOptions<EntityFrameworkOutboxOptions<TDbContext>>().Configure(options =>
         {
             options.IsolationLevel = isolationLevel;
             options.LockStatementProvider = lockStatementProvider;
@@ -130,8 +130,8 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
 
         if (_registerInboxCleanupService)
         {
-            _configurator.Services.AddHostedService<InboxCleanupService<TDbContext>>();
-            _configurator.Services.AddOptions<InboxCleanupServiceOptions<TDbContext>>().Configure(options =>
+            _services.AddHostedService<InboxCleanupService<TDbContext>>();
+            _services.AddOptions<InboxCleanupServiceOptions<TDbContext>>().Configure(options =>
             {
                 options.DuplicateDetectionWindow = duplicateDetectionWindow;
                 options.QueryMessageLimit = queryMessageLimit;
@@ -155,7 +155,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
 
         if (_useBusOutbox)
         {
-            var busOutboxConfigurator = new EntityFrameworkBusOutboxConfigurator<TBus, TDbContext>(_configurator, this);
+            var busOutboxConfigurator = new EntityFrameworkBusOutboxConfigurator<TBus, TDbContext>(_services, this);
             busOutboxConfigurator.Configure(_configureBusOutbox);
         }
     }

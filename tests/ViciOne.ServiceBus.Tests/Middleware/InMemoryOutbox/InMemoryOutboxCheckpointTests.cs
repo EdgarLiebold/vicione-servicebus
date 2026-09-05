@@ -104,7 +104,7 @@ public sealed class InMemoryOutboxCheckpointTests
         };
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
         {
-            configurator.UseInMemoryOutbox();
+            configurator.UseVolatileOutbox();
             configurator.Handler<CheckpointOwnerCommand>(async context =>
             {
                 Assert.True(context.TryGetPayload(out OutboxContext? outbox));
@@ -163,7 +163,7 @@ public sealed class InMemoryOutboxCheckpointTests
         };
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
         {
-            configurator.UseInMemoryOutbox();
+            configurator.UseVolatileOutbox();
             configurator.Handler<CheckpointCommand>(async context =>
             {
                 Assert.True(context.TryGetPayload(out OutboxContext? outbox));

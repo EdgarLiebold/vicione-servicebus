@@ -208,14 +208,14 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         if (_endpointsConfigured)
             return;
 
-        void UseInMemoryOutbox(IReceiveEndpointConfigurator configurator)
+        void UseVolatileOutbox(IReceiveEndpointConfigurator configurator)
         {
             if (context == null)
-                configurator.UseInMemoryOutbox();
+                configurator.UseVolatileOutbox();
             else
             {
                 configurator.UseMessageScope(context);
-                configurator.UseInMemoryOutbox(context);
+                configurator.UseVolatileOutbox(context);
             }
         }
 
@@ -223,7 +223,7 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         {
             e.UseTechnicalMessageRetry();
 
-            UseInMemoryOutbox(e);
+            UseVolatileOutbox(e);
 
             if (_options.SagaPartitionCount.HasValue)
             {
@@ -271,7 +271,7 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         {
             e.UseTechnicalMessageRetry();
 
-            UseInMemoryOutbox(e);
+            UseVolatileOutbox(e);
 
             if (_options.SagaPartitionCount.HasValue)
             {
@@ -306,7 +306,7 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
         {
             e.UseTechnicalMessageRetry();
 
-            UseInMemoryOutbox(e);
+            UseVolatileOutbox(e);
 
             if (_options.SagaPartitionCount.HasValue)
             {

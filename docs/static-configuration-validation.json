@@ -110,13 +110,13 @@
       "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs", "method": "Defaults_AreBoundedExplicitAndUseStandardTime" }
     },
     {
-      "type": "DurableSenderOptions<TBus>",
-      "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderOptions.cs",
+      "type": "ReliableMessagingOptions<TBus>",
+      "source": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingOptions.cs",
       "boundary": "host-start",
-      "registrationSource": "src/ViciOne.ServiceBus/DurableSend/DurableSenderServiceCollectionExtensions.cs",
+      "registrationSource": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingServiceCollectionExtensions.cs",
       "invariantCount": 12,
-      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs", "method": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes" },
-      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs", "method": "Admission_RegisteredIdentityUsesTheConfiguredLimitsAndApplicationClockAsync" }
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs", "method": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs", "method": "Admission_RegisteredIdentityUsesTheConfiguredLimitsAndApplicationClockAsync" }
     },
     {
       "type": "DynamoDbSagaRepositoryOptions<TSaga>",
@@ -406,8 +406,8 @@
     {
       "id": "durable-sender-policy",
       "boundary": "host-start",
-      "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderServiceCollectionExtensions.cs",
-      "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs",
+      "source": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingServiceCollectionExtensions.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
       "testMethod": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes",
       "exception": "OptionsValidationException",
       "actionableFragment": "MaximumStoredCount"
@@ -415,8 +415,8 @@
     {
       "id": "durable-sender-composition",
       "boundary": "host-start",
-      "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderComposition.cs",
-      "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs",
+      "source": "src/ViciOne.ServiceBus/DurableSend/ReliableMessagingComposition.cs",
+      "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
       "testMethod": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
       "exception": "ConfigurationException",
       "actionableFragment": "Configure exactly one"
@@ -461,7 +461,7 @@
       "id": "bus-persistence-identity",
       "boundary": "registration",
       "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/BusPersistenceIdentity.cs",
-      "test": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendStoreTests.cs",
+      "test": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkReliableStoreTests.cs",
       "testMethod": "Registration_PreservesProviderValidatorAndUsesOneValidatedPersistenceIdentity",
       "exception": "ArgumentException",
       "actionableFragment": "persistence identity"

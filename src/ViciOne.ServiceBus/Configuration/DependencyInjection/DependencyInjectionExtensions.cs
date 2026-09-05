@@ -28,7 +28,7 @@ public static class DependencyInjectionExtensions
 
 
     /// <summary>
-    /// Creates a scope for each message type, compatible with UseMessageRetry and UseInMemoryOutbox
+    /// Creates a scope for each message type, compatible with UseMessageRetry and UseVolatileOutbox
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="context"></param>

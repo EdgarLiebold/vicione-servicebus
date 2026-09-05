@@ -63,11 +63,11 @@ public class BusOutboxBenchmark
                     });
                 });
 
-                x.AddEntityFrameworkOutbox<BusOutboxDbContext>(o =>
+                x.ConfigureEntityFrameworkTransactionalStore<BusOutboxDbContext>(o =>
                 {
                     o.QueryDelay = TimeSpan.FromMilliseconds(10);
 
-                    o.UseBusOutbox();
+                    o.EnableTransactionalOutbox();
                 });
 
                 _transport.Using(x, (context, cfg) =>

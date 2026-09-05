@@ -17,7 +17,7 @@ namespace ViciOne.ServiceBus.Providers.Persistence;
 /// so a stale in-process capability can never remove a later re-admission that reuses the same durable-send id. A durable acceptance may be acknowledged to the caller
 /// only after <see cref="AdmitAsync"/> commits successfully.
 /// </remarks>
-public interface IDurableSendStore<TBus>
+public interface IOutboxStore<TBus>
     where TBus : class, IBus
 {
     /// <summary>

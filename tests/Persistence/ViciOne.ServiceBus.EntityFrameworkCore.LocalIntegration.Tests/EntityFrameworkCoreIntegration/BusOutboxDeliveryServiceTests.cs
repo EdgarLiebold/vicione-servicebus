@@ -17,7 +17,7 @@ using Xunit;
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.EntityFrameworkCoreIntegration;
 
-public sealed class BusOutboxDeliveryServiceTests
+public sealed class EntityFrameworkTransactionalOutboxSourceTests
 {
     private static readonly DateTimeOffset FrozenTime =
         new(2042, 3, 4, 5, 6, 7, TimeSpan.Zero);
@@ -587,12 +587,12 @@ public sealed class BusOutboxDeliveryServiceTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddEntityFrameworkOutbox<BusOutboxDbContext>(outbox =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<BusOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();
                     outbox.DisableInboxCleanupService();
                     outbox.QueryDelay = TimeSpan.FromHours(1);
-                    outbox.UseBusOutbox(busOutbox =>
+                    outbox.EnableTransactionalOutbox(busOutbox =>
                     {
                         busOutbox.MessageDeliveryLimit = 10;
                         if (disableDeliveryService)

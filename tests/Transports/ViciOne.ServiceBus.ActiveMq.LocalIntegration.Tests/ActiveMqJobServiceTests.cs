@@ -292,7 +292,7 @@ public sealed class ActiveMqJobServiceTests
                     configuration.UsingActiveMq((context, bus) =>
                     {
                         broker.ConfigureHost(bus);
-                        bus.UseDelayedMessageScheduler();
+                        bus.ConfigureDelayedMessageScheduler();
                         bus.ConfigureEndpoints(context);
                     });
                 });

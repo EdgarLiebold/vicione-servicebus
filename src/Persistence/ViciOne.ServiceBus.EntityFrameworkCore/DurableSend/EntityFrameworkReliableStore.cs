@@ -18,7 +18,10 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// removes the record in the same transaction that releases capacity. Claims use compare-and-set updates, so competing
 /// agents cannot own the same record even when the provider's normal read isolation is snapshot based.
 /// </remarks>
-internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurableSendStore<TBus>
+internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
+    IOutboxStore<TBus>,
+    IInboxStore<TBus>,
+    IScheduleStore<TBus>
     where TBus : class, IBus
     where TDbContext : DbContext
 {
@@ -28,7 +31,7 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
     readonly SemaphoreSlim _initializationGate = new(1, 1);
     volatile bool _initialized;
 
-    public EntityFrameworkDurableSendStore(
+    public EntityFrameworkReliableStore(
         IDbContextFactory<TDbContext> dbContextFactory,
         BusPersistenceIdentity<TBus> persistenceIdentity,
         IEntityFrameworkDurableSendCommitDurabilityValidator<TBus> commitDurabilityValidator)
@@ -128,7 +131,7 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
                 && (x.Status == DurableSendStatus.Pending
                     || x.Status == DurableSendStatus.RetryScheduled
                     || x.Status == DurableSendStatus.AwaitingConsumerCompletion)
-                && (x.Status == DurableSendStatus.Pending || x.NextAttemptAt <= utcNow)
+                && (x.NextAttemptAt == null || x.NextAttemptAt <= utcNow)
                 && (x.LeaseToken == null || x.LeaseExpiresAt <= utcNow))
             .OrderBy(x => x.EnqueuedAt)
             .ThenBy(x => x.Id)
@@ -153,7 +156,7 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
                     && (x.Status == DurableSendStatus.Pending
                         || x.Status == DurableSendStatus.RetryScheduled
                         || x.Status == DurableSendStatus.AwaitingConsumerCompletion)
-                    && (x.Status == DurableSendStatus.Pending || x.NextAttemptAt <= utcNow)
+                    && (x.NextAttemptAt == null || x.NextAttemptAt <= utcNow)
                     && (x.LeaseToken == null || x.LeaseExpiresAt <= utcNow))
                 .ExecuteUpdateAsync(setters => setters
                     .SetProperty(x => x.LeaseToken, leaseToken)
@@ -448,6 +451,293 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
         return new DurableSendOperationResult(id, DurableSendOperationOutcome.Discarded);
     }
 
+    public Task<DurableSendAdmissionResult> ScheduleAsync(
+        SerializedDurableSend message,
+        DurableSendStoreLimits limits,
+        DateTimeOffset enqueuedAt,
+        DateTimeOffset dueAt,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(message);
+        return AdmitAsync(message with { DueAt = dueAt }, limits, enqueuedAt, cancellationToken);
+    }
+
+    public async Task<ReliableMessagingOperationResult> CancelAsync(
+        DurableSendId id,
+        CancellationToken cancellationToken = default)
+    {
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        await using var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken).ConfigureAwait(false);
+        DurableSendRecord? row = await db.Set<DurableSendRecord>().SingleOrDefaultAsync(
+            x => x.StoreKey == _storeKey && x.Id == id.Value,
+            cancellationToken).ConfigureAwait(false);
+        var reference = ReliableMessageReference.Outbox(id);
+        if (row is null)
+        {
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return NotFound(reference);
+        }
+        if (row.LeaseToken.HasValue || row.Status == DurableSendStatus.Quarantined)
+        {
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return InvalidState(reference, row.Status);
+        }
+
+        await DecrementCapacityAsync(db, row.StorageSize, cancellationToken).ConfigureAwait(false);
+        db.Remove(row);
+        await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return Applied(reference, row.Status, "Cancelled");
+    }
+
+    public async Task<ReliableInboxAcquireResult> AcquireAsync(
+        ReliableInboxKey key,
+        DateTimeOffset now,
+        TimeSpan leaseDuration,
+        CancellationToken cancellationToken = default)
+    {
+        key.Validate();
+        if (leaseDuration <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(leaseDuration));
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        await using var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken).ConfigureAwait(false);
+        ReliableInboxRecord? row = await db.Set<ReliableInboxRecord>().SingleOrDefaultAsync(
+            x => x.StoreKey == _storeKey && x.MessageId == key.MessageId && x.ConsumerId == key.ConsumerId,
+            cancellationToken).ConfigureAwait(false);
+        if (row is null)
+        {
+            var lease = new ReliableInboxLease(Guid.NewGuid(), now + leaseDuration);
+            db.Add(new ReliableInboxRecord
+            {
+                StoreKey = _storeKey,
+                MessageId = key.MessageId,
+                ConsumerId = key.ConsumerId,
+                Status = ReliableInboxStatus.Processing,
+                Attempts = 1,
+                ReceivedAt = now.UtcDateTime,
+                LeaseToken = lease.Token,
+                LeaseExpiresAt = lease.ExpiresAt.UtcDateTime,
+            });
+            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return new ReliableInboxAcquireResult(key, ReliableInboxAcquireDisposition.Acquired, lease, 1);
+        }
+
+        ReliableInboxAcquireDisposition disposition;
+        if (row.Status == ReliableInboxStatus.Consumed)
+            disposition = ReliableInboxAcquireDisposition.AlreadyConsumed;
+        else if (row.Status is ReliableInboxStatus.Quarantined or ReliableInboxStatus.Abandoned)
+            disposition = ReliableInboxAcquireDisposition.Unavailable;
+        else if (row.Status == ReliableInboxStatus.RetryScheduled && row.DueAt > now.UtcDateTime)
+            disposition = ReliableInboxAcquireDisposition.NotDue;
+        else if (row.LeaseExpiresAt > now.UtcDateTime)
+            disposition = ReliableInboxAcquireDisposition.Busy;
+        else
+        {
+            var lease = new ReliableInboxLease(Guid.NewGuid(), now + leaseDuration);
+            row.Status = ReliableInboxStatus.Processing;
+            row.Attempts = checked(row.Attempts + 1);
+            row.DueAt = null;
+            row.LeaseToken = lease.Token;
+            row.LeaseExpiresAt = lease.ExpiresAt.UtcDateTime;
+            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            return new ReliableInboxAcquireResult(key, ReliableInboxAcquireDisposition.Acquired, lease, row.Attempts);
+        }
+
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return new ReliableInboxAcquireResult(key, disposition, null, row.Attempts);
+    }
+
+    public async Task<bool> CompleteAsync(
+        ReliableInboxKey key,
+        ReliableInboxLease lease,
+        DateTimeOffset consumedAt,
+        CancellationToken cancellationToken = default)
+    {
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        int updated = await db.Set<ReliableInboxRecord>()
+            .Where(x => x.StoreKey == _storeKey
+                && x.MessageId == key.MessageId
+                && x.ConsumerId == key.ConsumerId
+                && x.LeaseToken == lease.Token)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.Status, ReliableInboxStatus.Consumed)
+                .SetProperty(x => x.CompletedAt, consumedAt.UtcDateTime)
+                .SetProperty(x => x.DueAt, (DateTime?)null)
+                .SetProperty(x => x.LeaseToken, (Guid?)null)
+                .SetProperty(x => x.LeaseExpiresAt, (DateTime?)null)
+                .SetProperty(x => x.FailureType, (string?)null), cancellationToken)
+            .ConfigureAwait(false);
+        return await RequireOwnedOrMissingAsync(db, key, lease, updated, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<bool> ScheduleRetryAsync(
+        ReliableInboxKey key,
+        ReliableInboxLease lease,
+        DateTimeOffset dueAt,
+        string? failureType,
+        DateTimeOffset failedAt,
+        CancellationToken cancellationToken = default)
+    {
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        int updated = await db.Set<ReliableInboxRecord>()
+            .Where(x => x.StoreKey == _storeKey
+                && x.MessageId == key.MessageId
+                && x.ConsumerId == key.ConsumerId
+                && x.LeaseToken == lease.Token)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.Status, ReliableInboxStatus.RetryScheduled)
+                .SetProperty(x => x.DueAt, dueAt.UtcDateTime)
+                .SetProperty(x => x.FailedAt, failedAt.UtcDateTime)
+                .SetProperty(x => x.FailureType, BoundFailureType(failureType))
+                .SetProperty(x => x.LeaseToken, (Guid?)null)
+                .SetProperty(x => x.LeaseExpiresAt, (DateTime?)null), cancellationToken)
+            .ConfigureAwait(false);
+        return await RequireOwnedOrMissingAsync(db, key, lease, updated, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<bool> QuarantineAsync(
+        ReliableInboxKey key,
+        ReliableInboxLease lease,
+        string? failureType,
+        DateTimeOffset quarantinedAt,
+        CancellationToken cancellationToken = default)
+    {
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        int updated = await db.Set<ReliableInboxRecord>()
+            .Where(x => x.StoreKey == _storeKey
+                && x.MessageId == key.MessageId
+                && x.ConsumerId == key.ConsumerId
+                && x.LeaseToken == lease.Token)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.Status, ReliableInboxStatus.Quarantined)
+                .SetProperty(x => x.QuarantinedAt, quarantinedAt.UtcDateTime)
+                .SetProperty(x => x.FailedAt, quarantinedAt.UtcDateTime)
+                .SetProperty(x => x.FailureType, BoundFailureType(failureType))
+                .SetProperty(x => x.DueAt, (DateTime?)null)
+                .SetProperty(x => x.LeaseToken, (Guid?)null)
+                .SetProperty(x => x.LeaseExpiresAt, (DateTime?)null), cancellationToken)
+            .ConfigureAwait(false);
+        return await RequireOwnedOrMissingAsync(db, key, lease, updated, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<ReliableInboxQuarantinePage> GetQuarantineAsync(
+        ReliableInboxQuarantineQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        ValidateInboxQuery(query);
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        IQueryable<ReliableInboxRecord> rows = db.Set<ReliableInboxRecord>().AsNoTracking()
+            .Where(x => x.StoreKey == _storeKey && x.Status == ReliableInboxStatus.Quarantined);
+        if (query.AfterQuarantinedAt.HasValue)
+        {
+            DateTime afterAt = query.AfterQuarantinedAt.Value.UtcDateTime;
+            Guid afterMessage = query.AfterMessageId!.Value;
+            Guid afterConsumer = query.AfterConsumerId!.Value;
+            rows = rows.Where(x => x.QuarantinedAt < afterAt
+                || x.QuarantinedAt == afterAt
+                && (x.MessageId.CompareTo(afterMessage) > 0
+                    || x.MessageId == afterMessage && x.ConsumerId.CompareTo(afterConsumer) > 0));
+        }
+
+        ReliableInboxQuarantineEntry[] entries = (await rows
+                .OrderByDescending(x => x.QuarantinedAt)
+                .ThenBy(x => x.MessageId)
+                .ThenBy(x => x.ConsumerId)
+                .Take(checked(query.PageSize + 1))
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false))
+            .Select(ToInboxEntry)
+            .ToArray();
+        if (entries.Length <= query.PageSize)
+            return new ReliableInboxQuarantinePage(entries, null);
+
+        ReliableInboxQuarantineEntry[] page = entries[..query.PageSize];
+        ReliableInboxQuarantineEntry last = page[^1];
+        return new ReliableInboxQuarantinePage(page, query with
+        {
+            AfterQuarantinedAt = last.QuarantinedAt,
+            AfterMessageId = last.Key.MessageId,
+            AfterConsumerId = last.Key.ConsumerId,
+        });
+    }
+
+    public Task<ReliableMessagingOperationResult> RequeueAsync(
+        ReliableInboxKey key,
+        DateTimeOffset dueAt,
+        CancellationToken cancellationToken = default)
+        => MutateInboxQuarantineAsync(
+            key,
+            ReliableInboxStatus.RetryScheduled,
+            dueAt,
+            remove: false,
+            cancellationToken);
+
+    public Task<ReliableMessagingOperationResult> DiscardAsync(
+        ReliableInboxKey key,
+        CancellationToken cancellationToken = default)
+        => MutateInboxQuarantineAsync(
+            key,
+            ReliableInboxStatus.Quarantined,
+            dueAt: null,
+            remove: true,
+            cancellationToken);
+
+    public Task<ReliableMessagingOperationResult> AbandonAsync(
+        ReliableInboxKey key,
+        DateTimeOffset abandonedAt,
+        CancellationToken cancellationToken = default)
+    {
+        _ = abandonedAt;
+        return MutateInboxQuarantineAsync(
+            key,
+            ReliableInboxStatus.Abandoned,
+            dueAt: null,
+            remove: false,
+            cancellationToken);
+    }
+
+    async Task<ReliableMessagingOperationResult> MutateInboxQuarantineAsync(
+        ReliableInboxKey key,
+        ReliableInboxStatus target,
+        DateTimeOffset? dueAt,
+        bool remove,
+        CancellationToken cancellationToken)
+    {
+        await EnsureInitializedAsync(cancellationToken).ConfigureAwait(false);
+        await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        ReliableInboxRecord? row = await db.Set<ReliableInboxRecord>().SingleOrDefaultAsync(
+            x => x.StoreKey == _storeKey && x.MessageId == key.MessageId && x.ConsumerId == key.ConsumerId,
+            cancellationToken).ConfigureAwait(false);
+        var reference = ReliableMessageReference.Inbox(key);
+        if (row is null)
+            return NotFound(reference);
+        if (row.Status != ReliableInboxStatus.Quarantined)
+            return InvalidState(reference, row.Status);
+
+        ReliableInboxStatus previous = row.Status;
+        if (remove)
+            db.Remove(row);
+        else
+        {
+            row.Status = target;
+            row.DueAt = dueAt?.UtcDateTime;
+            row.QuarantinedAt = target == ReliableInboxStatus.Abandoned ? row.QuarantinedAt : null;
+            row.LeaseToken = null;
+            row.LeaseExpiresAt = null;
+        }
+
+        await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Applied(reference, previous, remove ? "Discarded" : target);
+    }
+
     async Task<bool> MutateOwnedAsync(
         DurableSendId id,
         DurableSendLease lease,
@@ -626,6 +916,8 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
             StorageSize = message.StorageSize,
             Status = DurableSendStatus.Pending,
             EnqueuedAt = enqueuedAt.UtcDateTime,
+            DueAt = message.DueAt?.UtcDateTime,
+            NextAttemptAt = message.DueAt?.UtcDateTime,
         };
 
     static DurableSendDelivery ToDelivery(DurableSendRecord row, DurableSendLease lease)
@@ -641,6 +933,7 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
                 Metadata = row.Metadata ?? Array.Empty<byte>(),
                 MessageId = row.MessageId,
                 CorrelationId = row.CorrelationId,
+                DueAt = row.DueAt is { } dueAt ? ToUtcOffset(dueAt) : null,
             },
             GenerationToken = row.GenerationToken,
             EnqueuedAt = ToUtcOffset(row.EnqueuedAt),
@@ -672,12 +965,72 @@ internal sealed class EntityFrameworkDurableSendStore<TBus, TDbContext> : IDurab
             && string.Equals(existing.ContentType, message.ContentType, StringComparison.Ordinal)
             && existing.MessageId == message.MessageId
             && existing.CorrelationId == message.CorrelationId
+            && existing.DueAt == message.DueAt?.UtcDateTime
             && existing.Body.AsSpan().SequenceEqual(message.Body.Span)
             && (existing.Metadata ?? Array.Empty<byte>()).AsSpan().SequenceEqual(message.Metadata.Span))
             return;
 
         throw new DurableSendIdentityConflictException(message.Id);
     }
+
+    async Task<bool> RequireOwnedOrMissingAsync(
+        TDbContext db,
+        ReliableInboxKey key,
+        ReliableInboxLease lease,
+        int updated,
+        CancellationToken cancellationToken)
+    {
+        if (updated == 1)
+            return true;
+
+        bool exists = await db.Set<ReliableInboxRecord>().AsNoTracking().AnyAsync(
+            x => x.StoreKey == _storeKey && x.MessageId == key.MessageId && x.ConsumerId == key.ConsumerId,
+            cancellationToken).ConfigureAwait(false);
+        if (!exists)
+            return false;
+
+        throw new InvalidOperationException($"Reliable inbox '{key}' is not owned by lease '{lease.Token}'.");
+    }
+
+    static void ValidateInboxQuery(ReliableInboxQuarantineQuery query)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+        if (query.PageSize is < 1 or > 1000)
+            throw new ArgumentOutOfRangeException(nameof(query), "Inbox quarantine page size must be between 1 and 1,000.");
+        bool anyCursor = query.AfterQuarantinedAt.HasValue || query.AfterMessageId.HasValue || query.AfterConsumerId.HasValue;
+        bool completeCursor = query.AfterQuarantinedAt.HasValue && query.AfterMessageId.HasValue && query.AfterConsumerId.HasValue;
+        if (anyCursor && !completeCursor)
+            throw new ArgumentException("All inbox quarantine cursor values must be supplied together.", nameof(query));
+    }
+
+    static ReliableInboxQuarantineEntry ToInboxEntry(ReliableInboxRecord row) => new(
+        new ReliableInboxKey(row.MessageId, row.ConsumerId),
+        row.Status,
+        row.Attempts,
+        ToUtcOffset(row.ReceivedAt),
+        ToUtcOffset(row.QuarantinedAt!.Value),
+        row.FailureType);
+
+    static ReliableMessagingOperationResult Applied(
+        ReliableMessageReference reference,
+        object previous,
+        object current) => new(
+            reference,
+            ReliableMessagingOperationDisposition.Applied,
+            previous.ToString(),
+            current.ToString());
+
+    static ReliableMessagingOperationResult NotFound(ReliableMessageReference reference) => new(
+        reference,
+        ReliableMessagingOperationDisposition.NotFound,
+        null,
+        null);
+
+    static ReliableMessagingOperationResult InvalidState(ReliableMessageReference reference, object state) => new(
+        reference,
+        ReliableMessagingOperationDisposition.InvalidState,
+        state.ToString(),
+        state.ToString());
 
     static string? BoundFailureType(string? failureType)
         => failureType is { Length: > 512 } ? failureType[..512] : failureType;

@@ -6,15 +6,15 @@ namespace ViciOne.ServiceBus.Tests.InternalAccess.DurableSend;
 /// <summary>Signed, xUnit-free access bridge for the internal durable-sender state machines.</summary>
 public static class DurableSenderTestFactory
 {
-    public static IDurableSendStore<TBus> CreateInMemoryStore<TBus>()
+    public static IOutboxStore<TBus> CreateInMemoryStore<TBus>()
         where TBus : class, IBus
-        => new InMemoryDurableSendStore<TBus>();
+        => new InMemoryReliableStore<TBus>();
 
     public static DurableSenderDeliveryTestDriver<TBus> CreateDeliveryDriver<TBus>(
-        IDurableSendStore<TBus> store,
+        IOutboxStore<TBus> store,
         IDurableSendDispatcher<TBus> dispatcher,
         TimeProvider timeProvider,
-        Action<DurableSenderOptions<TBus>>? configure = null,
+        Action<ReliableMessagingOptions<TBus>>? configure = null,
         IEnumerable<ITransportSendFailureClassifier>? classifiers = null)
         where TBus : class, IBus
         => new(store, dispatcher, timeProvider, configure, classifiers);
@@ -25,30 +25,38 @@ public sealed class DurableSenderDeliveryTestDriver<TBus> : IDisposable
 {
     private readonly TestMeterFactory _meterFactory = new();
     private readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
-    private readonly DurableSenderDeliveryService<TBus> _service;
+    private readonly ReliableMessagingDeliveryService<TBus> _service;
 
     internal DurableSenderDeliveryTestDriver(
-        IDurableSendStore<TBus> store,
+        IOutboxStore<TBus> store,
         IDurableSendDispatcher<TBus> dispatcher,
         TimeProvider timeProvider,
-        Action<DurableSenderOptions<TBus>>? configure,
+        Action<ReliableMessagingOptions<TBus>>? configure,
         IEnumerable<ITransportSendFailureClassifier>? classifiers)
     {
         ArgumentNullException.ThrowIfNull(store);
         ArgumentNullException.ThrowIfNull(dispatcher);
         ArgumentNullException.ThrowIfNull(timeProvider);
 
-        var options = new DurableSenderOptions<TBus>();
+        var options = new ReliableMessagingOptions<TBus>
+        {
+            MaximumStoredCount = 10_000,
+            MaximumStoredBytes = 16 * 1024 * 1024,
+            Retention = TimeSpan.FromDays(7),
+            StoreLimitsConfigured = true,
+            DeliveryConfigured = true,
+            RetentionConfigured = true,
+        };
         configure?.Invoke(options);
-        DurableSenderPolicy<TBus> policy = options.ValidateAndFreeze();
+        ReliableMessagingPolicy<TBus> policy = options.ValidateAndFreeze();
         _instrumentation = new V5ServiceBusInstrumentation<TBus>(_meterFactory);
-        _service = new DurableSenderDeliveryService<TBus>(
+        _service = new ReliableMessagingDeliveryService<TBus>(
             [store],
             [dispatcher],
             classifiers ?? [],
             policy,
             timeProvider,
-            NullLogger<DurableSenderDeliveryService<TBus>>.Instance,
+            NullLogger<ReliableMessagingDeliveryService<TBus>>.Instance,
             _instrumentation);
     }
 
@@ -61,7 +69,7 @@ public sealed class DurableSenderDeliveryTestDriver<TBus> : IDisposable
     public IDurableSendConsumerCompletion CreateCompletion(
         DurableSendId id,
         Guid generationToken,
-        IDurableSendStore<TBus> store,
+        IOutboxStore<TBus> store,
         TimeProvider timeProvider)
         => new DurableSendConsumerCompletion<TBus>(id, generationToken, store, timeProvider, _instrumentation);
 

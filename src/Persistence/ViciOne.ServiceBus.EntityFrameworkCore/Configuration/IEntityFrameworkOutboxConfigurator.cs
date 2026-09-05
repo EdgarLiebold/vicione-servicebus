@@ -52,5 +52,5 @@ public interface IEntityFrameworkOutboxConfigurator :
     /// that are used when not consuming messages. Messages sent or published via those interfaces are written to the outbox
     /// instead of being delivered directly to the message broker.
     /// </summary>
-    void UseBusOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null);
+    void EnableTransactionalOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null);
 }

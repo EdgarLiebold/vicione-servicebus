@@ -19,6 +19,6 @@ public class DefaultFutureDefinition<TFuture> :
     {
         endpointConfigurator.UseTechnicalDelayedRedelivery();
         endpointConfigurator.UseTechnicalMessageRetry();
-        endpointConfigurator.UseInMemoryOutbox(context);
+        endpointConfigurator.UseVolatileOutbox(context);
     }
 }

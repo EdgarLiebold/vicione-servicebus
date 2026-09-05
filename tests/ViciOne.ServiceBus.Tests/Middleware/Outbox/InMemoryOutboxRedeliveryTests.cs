@@ -37,7 +37,7 @@ public sealed class InMemoryOutboxRedeliveryTests
                             message.UseDelayedRedelivery(redelivery =>
                                 redelivery.Intervals(RedeliveryInterval));
                             message.UseMessageRetry(retry => retry.Immediate(1));
-                            message.UseInMemoryOutbox();
+                            message.UseVolatileOutbox();
                         });
                     }
                 });
@@ -48,7 +48,7 @@ public sealed class InMemoryOutboxRedeliveryTests
                         endpoint.UseDelayedRedelivery(redelivery =>
                             redelivery.Intervals(RedeliveryInterval));
                         endpoint.UseMessageRetry(retry => retry.Immediate(1));
-                        endpoint.UseInMemoryOutbox();
+                        endpoint.UseVolatileOutbox();
                     });
                 }
             })

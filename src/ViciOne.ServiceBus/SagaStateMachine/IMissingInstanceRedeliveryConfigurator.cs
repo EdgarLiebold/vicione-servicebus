@@ -11,7 +11,7 @@ public interface IMissingInstanceRedeliveryConfigurator :
     /// <summary>
     /// Use the message scheduler context instead of the redelivery context (only use when transport-level redelivery is not available)
     /// </summary>
-    bool UseMessageScheduler { set; }
+    bool ConfigureMessageScheduler { set; }
 }
 
 

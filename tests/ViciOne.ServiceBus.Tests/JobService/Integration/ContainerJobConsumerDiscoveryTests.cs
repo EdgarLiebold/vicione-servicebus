@@ -27,7 +27,7 @@ public sealed class ContainerJobConsumerDiscoveryTests
                 configuration.AddRequestClient<ContainerJobDiscovery.CrunchNumbers>();
                 configuration.UsingInMemory((context, bus) =>
                 {
-                    bus.UseDelayedMessageScheduler();
+                    bus.ConfigureDelayedMessageScheduler();
                     var options = new ServiceInstanceOptions().EnableJobServiceEndpoints();
                     bus.ConfigureServiceInstanceEndpoints(context, options);
                 });

@@ -222,7 +222,9 @@ public sealed class InMemoryDurableSendIntegrationTests
             DestinationAddress = new Uri("loopback://durable-host/durable-input"),
             ContentType = SystemTextJsonMessageSerializer.JsonContentType.MediaType,
             Body = Encoding.UTF8.GetBytes(body),
-            Metadata = Encoding.UTF8.GetBytes("process-local-metadata"),
+            // This fixture exercises the process-local completion capability, not envelope metadata. Reliable
+            // metadata is now a versioned codec and intentionally rejects arbitrary opaque bytes.
+            Metadata = ReadOnlyMemory<byte>.Empty,
         };
     }
 
@@ -268,7 +270,7 @@ public sealed class InMemoryDurableSendIntegrationTests
         public Task ReceiveFaultAsync(ReceiveContext context, Exception exception) => Task.CompletedTask;
     }
 
-    private sealed class SignalingDurableSendStore(IDurableSendStore<IBus> inner) : IDurableSendStore<IBus>
+    private sealed class SignalingDurableSendStore(IOutboxStore<IBus> inner) : IOutboxStore<IBus>
     {
         public TaskCompletionSource<bool> AwaitingConsumerCompletionPersisted { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);

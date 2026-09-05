@@ -315,7 +315,7 @@ public sealed class TransactionalOutboxFaultTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
-                configuration.AddEntityFrameworkOutbox<TransactionalOutboxDbContext>(outbox =>
+                configuration.ConfigureEntityFrameworkTransactionalStore<TransactionalOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();
                     outbox.DisableInboxCleanupService();
