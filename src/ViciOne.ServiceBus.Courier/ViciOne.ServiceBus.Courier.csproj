@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageTags>ViciOne.ServiceBus;Courier;RoutingSlips</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Courier/**/*.cs"
+             Exclude="../ViciOne.ServiceBus.Abstractions/Courier/IItineraryBuilder.cs;../ViciOne.ServiceBus.Abstractions/Courier/Contracts/RoutingSlipEvents.cs;../ViciOne.ServiceBus.Abstractions/Courier/Contracts/RoutingSlipEventContents.cs"
+             Link="Courier/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/IRoutingSlipExecutor.cs" Link="Advanced/IRoutingSlipExecutor.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/RoutingSlip*.cs" Link="Exceptions/%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ICompensateActivityConfigurator.cs" Link="Configuration/Consumers/ICompensateActivityConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/ICompensateActivityLogConfigurator.cs" Link="Configuration/Consumers/ICompensateActivityLogConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IExecuteActivityArgumentsConfigurator.cs" Link="Configuration/Consumers/IExecuteActivityArgumentsConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IExecuteActivityConfigurator.cs" Link="Configuration/Consumers/IExecuteActivityConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/Consumers/IRoutingSlipConfigurator.cs" Link="Configuration/Consumers/IRoutingSlipConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ActivityDefinition.cs" Link="Configuration/DependencyInjection/ActivityDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/Configuration/CompensateActivityEndpointDefinition.cs" Link="Configuration/DependencyInjection/Configuration/CompensateActivityEndpointDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/Configuration/ExecuteActivityEndpointDefinition.cs" Link="Configuration/DependencyInjection/Configuration/ExecuteActivityEndpointDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/ExecuteActivityDefinition.cs" Link="Configuration/DependencyInjection/ExecuteActivityDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IActivityDefinition.cs" Link="Configuration/DependencyInjection/IActivityDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IActivityRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IActivityRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IExecuteActivityDefinition.cs" Link="Configuration/DependencyInjection/IExecuteActivityDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IExecuteActivityRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IExecuteActivityRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Contexts/CourierContext.cs" Link="Contexts/CourierContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Courier/**/*.cs" Link="Courier/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/CourierHostConfiguratorExtensions.cs" Link="Configuration/CourierHostConfiguratorExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/RoutingSlipConfigurator.cs" Link="Configuration/RoutingSlipConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/ActivityPipeConfiguratorExtensions.cs" Link="Consumers/Configuration/ActivityPipeConfiguratorExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/CompensateActivityHostConfigurator.cs" Link="Consumers/Configuration/CompensateActivityHostConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/CompensateActivityLogConfigurator.cs" Link="Consumers/Configuration/CompensateActivityLogConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/ExecuteActivityArgumentsConfigurator.cs" Link="Consumers/Configuration/ExecuteActivityArgumentsConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/ExecuteActivityHostConfigurator.cs" Link="Consumers/Configuration/ExecuteActivityHostConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Contexts/Context/BaseCourierContext.cs" Link="Contexts/Context/BaseCourierContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Contexts/Context/CourierContextProxy.cs" Link="Contexts/Context/CourierContextProxy.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Contexts/Context/CourierContextScope.cs" Link="Contexts/Context/CourierContextScope.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/CompensateActivityScopeProvider.cs" Link="DependencyInjection/CompensateActivityScopeProvider.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionActivityRegistrationExtensions.cs" Link="DependencyInjection/Configuration/DependencyInjectionActivityRegistrationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionExecuteActivityRegistrationExtensions.cs" Link="DependencyInjection/Configuration/DependencyInjectionExecuteActivityRegistrationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DefaultActivityDefinition.cs" Link="DependencyInjection/Configuration/DefaultActivityDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DefaultExecuteActivityDefinition.cs" Link="DependencyInjection/Configuration/DefaultExecuteActivityDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/IActivityRegistration.cs" Link="DependencyInjection/Configuration/IActivityRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/IExecuteActivityRegistration.cs" Link="DependencyInjection/Configuration/IExecuteActivityRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Activities/ActivityRegistration.cs" Link="DependencyInjection/Registration/Activities/ActivityRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Activities/ActivityRegistrationConfigurator.cs" Link="DependencyInjection/Registration/Activities/ActivityRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Activities/ExecuteActivityRegistration.cs" Link="DependencyInjection/Registration/Activities/ExecuteActivityRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Activities/ExecuteActivityRegistrationConfigurator.cs" Link="DependencyInjection/Registration/Activities/ExecuteActivityRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/CreatedCompensateActivityScopeContext.cs" Link="DependencyInjection/CreatedCompensateActivityScopeContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/CreatedExecuteActivityScopeContext.cs" Link="DependencyInjection/CreatedExecuteActivityScopeContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ExecuteActivityScopeProvider.cs" Link="DependencyInjection/ExecuteActivityScopeProvider.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ExistingCompensateActivityScopeContext.cs" Link="DependencyInjection/ExistingCompensateActivityScopeContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ExistingExecuteActivityScopeContext.cs" Link="DependencyInjection/ExistingExecuteActivityScopeContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ICompensateActivityScopeContext.cs" Link="DependencyInjection/ICompensateActivityScopeContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ICompensateActivityScopeProvider.cs" Link="DependencyInjection/ICompensateActivityScopeProvider.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/IExecuteActivityScopeContext.cs" Link="DependencyInjection/IExecuteActivityScopeContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/IExecuteActivityScopeProvider.cs" Link="DependencyInjection/IExecuteActivityScopeProvider.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ScopeCompensateActivityFactory.cs" Link="DependencyInjection/ScopeCompensateActivityFactory.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/ScopeExecuteActivityFactory.cs" Link="DependencyInjection/ScopeExecuteActivityFactory.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/CompensateActivityFactoryFilter.cs" Link="Middleware/CompensateActivityFactoryFilter.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/CompensateActivityFilter.cs" Link="Middleware/CompensateActivityFilter.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/ExecuteActivityFactoryFilter.cs" Link="Middleware/ExecuteActivityFactoryFilter.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/ExecuteActivityFilter.cs" Link="Middleware/ExecuteActivityFilter.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/InMemoryOutbox/InMemoryOutboxCourierContextProxy.cs" Link="Middleware/InMemoryOutbox/InMemoryOutboxCourierContextProxy.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/Timeout/TimeoutCourierContextProxy.cs" Link="Middleware/Timeout/TimeoutCourierContextProxy.cs" />
+    <Compile Include="../ViciOne.ServiceBus/RoutingSlipBuilder.cs" Link="RoutingSlipBuilder.cs" />
+    <Compile Include="../ViciOne.ServiceBus/RoutingSlipEventExtensions.cs" Link="RoutingSlipEventExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Transports/ExecuteActivityReceiveEndpointDispatcher.cs" Link="Transports/ExecuteActivityReceiveEndpointDispatcher.cs" />
+  </ItemGroup>
+</Project>

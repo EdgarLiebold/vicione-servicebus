@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Internals;
 
@@ -185,6 +187,7 @@ public static class DependencyInjectionActivityRegistrationExtensions
     {
         public virtual IActivityRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
+            collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, ActivityConsumerKind>());
             collection.TryAddScoped<TActivity>();
 
             return registrar.GetOrAddRegistration<IActivityRegistration>(typeof(TActivity),

@@ -149,16 +149,53 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
-      "vicione.servicebus.signalr": {
+      "vicione.servicebus.courier": {
         "type": "Project",
         "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
-      "vicione.servicebus.testing": {
+      "vicione.servicebus.futures": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.initializers": {
         "type": "Project",
         "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.signalr": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Initializers": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.testing": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Futures": "[1.0.0, )",
+          "ViciOne.ServiceBus.Mediator": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },
       "vicione.servicebus.tests.infrastructure": {

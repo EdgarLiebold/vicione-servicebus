@@ -1,0 +1,112 @@
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using ViciOne.ServiceBus.Observables;
+
+namespace ViciOne.ServiceBus.Middleware;
+
+/// <summary>
+/// Schedules redelivery for a transport-independent activity pipeline.
+/// </summary>
+/// <typeparam name="TContext">The activity context type.</typeparam>
+public sealed class ActivityRedeliveryRetryFilter<TContext> :
+    IFilter<TContext>
+    where TContext : class, Advanced.ActivityContext
+{
+    readonly RetryObservable _observers;
+    readonly IRetryPolicy _retryPolicy;
+
+    /// <summary>
+    /// Initializes the redelivery filter.
+    /// </summary>
+    public ActivityRedeliveryRetryFilter(IRetryPolicy retryPolicy, RetryObservable observers)
+    {
+        _retryPolicy = retryPolicy;
+        _observers = observers;
+    }
+
+    void IProbeSite.Probe(ProbeContext context)
+    {
+        var scope = context.CreateFilterScope("retry");
+        scope.Add("type", "activityRedelivery");
+        _retryPolicy.Probe(scope);
+    }
+
+    /// <inheritdoc />
+    [DebuggerNonUserCode]
+    public async Task SendAsync(TContext context, IPipe<TContext> next)
+    {
+        using RetryPolicyContext<TContext> policyContext = _retryPolicy.CreatePolicyContext(context);
+
+        if (_observers.Count > 0)
+            await _observers.PostCreateAsync(policyContext).ConfigureAwait(false);
+
+        try
+        {
+            await next.SendAsync(policyContext.Context).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+        {
+            context.CancellationToken.ThrowIfCancellationRequested();
+            throw;
+        }
+        catch (OperationCanceledException exception)
+            when (exception.CancellationToken.IsCancellationRequested
+                && exception.CancellationToken == policyContext.Context.CancellationToken)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            policyContext.Context.CancellationToken.ThrowIfCancellationRequested();
+
+            if (!policyContext.CanRetry(exception, out RetryContext<TContext> retryContext))
+            {
+                if (_retryPolicy.IsHandled(exception))
+                {
+                    context.GetOrAddPayload(() => retryContext);
+                    await retryContext.RetryFaultedAsync(exception).ConfigureAwait(false);
+
+                    if (_observers.Count > 0)
+                        await _observers.RetryFaultAsync(retryContext).ConfigureAwait(false);
+                }
+
+                throw;
+            }
+
+            int previousDeliveryCount = context.Advanced().GetRedeliveryCount();
+            for (var retryIndex = 0; retryIndex < previousDeliveryCount; retryIndex++)
+            {
+                if (retryContext.CanRetry(exception, out retryContext))
+                    continue;
+
+                if (_retryPolicy.IsHandled(exception))
+                {
+                    context.GetOrAddPayload(() => retryContext);
+                    await retryContext.RetryFaultedAsync(exception).ConfigureAwait(false);
+
+                    if (_observers.Count > 0)
+                        await _observers.RetryFaultAsync(retryContext).ConfigureAwait(false);
+                }
+
+                throw;
+            }
+
+            if (_observers.Count > 0)
+                await _observers.PostFaultAsync(retryContext).ConfigureAwait(false);
+
+            try
+            {
+                MessageRedeliveryContext redeliveryContext = context.GetPayload<MessageRedeliveryContext>();
+                await redeliveryContext.ScheduleRedeliveryAsync(retryContext.Delay ?? TimeSpan.Zero).ConfigureAwait(false);
+                await context.NotifyActivityConsumedAsync(context.Advanced().ReceiveContext.ElapsedTime,
+                    TypeCache<ActivityRedeliveryRetryFilter<TContext>>.ShortName).ConfigureAwait(false);
+            }
+            catch (Exception redeliveryException)
+            {
+                throw new TransportException(context.Advanced().ReceiveContext.InputAddress,
+                    "The message delivery could not be rescheduled", new AggregateException(redeliveryException, exception));
+            }
+        }
+    }
+}

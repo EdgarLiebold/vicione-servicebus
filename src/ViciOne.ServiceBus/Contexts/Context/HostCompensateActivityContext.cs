@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Context;
 public class HostCompensateActivityContext<TActivity, TLog> :
     CompensateContextProxy<TLog>,
     CompensateActivityContext<TActivity, TLog>
-    where TActivity : class, ICompensateActivity<TLog>
+    where TActivity : class
     where TLog : class
 {
     readonly TActivity _activity;

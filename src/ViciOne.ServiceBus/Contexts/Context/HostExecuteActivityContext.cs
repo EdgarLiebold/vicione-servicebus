@@ -9,7 +9,7 @@ public class HostExecuteActivityContext<TActivity, TArguments> :
     ExecuteContextProxy<TArguments>,
     ExecuteActivityContext<TActivity, TArguments>
     where TArguments : class
-    where TActivity : class, IExecuteActivity<TArguments>
+    where TActivity : class
 {
     readonly TActivity _activity;
 

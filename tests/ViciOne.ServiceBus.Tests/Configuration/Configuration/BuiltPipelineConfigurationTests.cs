@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using ViciOne.ServiceBus.Saga;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

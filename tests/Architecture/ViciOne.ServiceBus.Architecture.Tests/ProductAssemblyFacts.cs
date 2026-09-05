@@ -22,6 +22,17 @@ internal static class ProductAssemblyFacts
     /// <summary>The core assembly, anchored on its bus entry point.</summary>
     internal static Assembly Core => typeof(Bus).Assembly;
 
+    /// <summary>The optional capability assemblies, each anchored on one public contract.</summary>
+    internal static IReadOnlyList<Assembly> CapabilityAssemblies =>
+    [
+        typeof(ViciOne.ServiceBus.Courier.IActivity<,>).Assembly,
+        typeof(ViciOne.ServiceBus.Futures.FutureState).Assembly,
+        typeof(ViciOne.ServiceBus.Advanced.InVar).Assembly,
+        typeof(ViciOne.ServiceBus.Advanced.IJobConsumer<>).Assembly,
+        typeof(ViciOne.ServiceBus.Mediator.IMediator).Assembly,
+        typeof(ViciOne.ServiceBus.Advanced.ISaga).Assembly,
+    ];
+
     /// <summary>The framework-neutral test infrastructure assembly.</summary>
     internal static Assembly TestingInfrastructure =>
         typeof(ServiceBus.Tests.Infrastructure.Configuration.TestConfigurationProvider).Assembly;
@@ -42,12 +53,12 @@ internal static class ProductAssemblyFacts
     internal static Assembly ArchitectureTests => typeof(ProductAssemblyFacts).Assembly;
 
     /// <summary>
-    /// The two product assemblies currently anchored by compiled structural rules.
+    /// The foundation product assemblies currently anchored by compiled structural rules.
     /// </summary>
     /// <remarks>
     /// This is a deliberately small anchor set, not the complete product. It anchors the two
     /// assemblies every other one depends on. Calling it "all product assemblies" would be a completeness claim this set does
-    /// not carry: the repository has twenty-two product projects. A rule that needs the full set
+    /// not carry. A rule that needs the full set
     /// must derive it from the evaluated product graph rather than from this list.
     /// </remarks>
     internal static IReadOnlyList<Assembly> ArchitectureAnchors => [Abstractions, Core];

@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
     <PackageReference Include="MessagePack" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />

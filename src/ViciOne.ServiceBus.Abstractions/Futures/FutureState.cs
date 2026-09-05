@@ -8,6 +8,7 @@ namespace ViciOne.ServiceBus.Futures;
 /// </summary>
 public class FutureState :
     SagaStateMachineInstance,
+    IConsumerKindOwnedState,
     ISagaVersion
 {
     Dictionary<Guid, FutureMessage>? _faults;

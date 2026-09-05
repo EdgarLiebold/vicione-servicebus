@@ -1,5 +1,3 @@
-using ViciOne.ServiceBus.Configuration;
-
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
@@ -20,17 +18,6 @@ public sealed class ServiceInstanceOptions :
     /// Gets or sets the endpoint name formatter value.
     /// </summary>
     public IEndpointNameFormatter EndpointNameFormatter { get; private set; }
-
-    /// <summary>
-    /// Enable the job service endpoints, so that <see cref="IJobConsumer{TJob}" /> consumers
-    /// can be configured.
-    /// </summary>
-    public ServiceInstanceOptions EnableJobServiceEndpoints()
-    {
-        Options<JobServiceOptions>();
-
-        return this;
-    }
 
     /// <summary>
     /// Sets endpoint name formatter.

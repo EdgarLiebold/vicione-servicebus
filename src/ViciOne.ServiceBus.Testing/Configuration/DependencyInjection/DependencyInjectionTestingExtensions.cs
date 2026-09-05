@@ -90,6 +90,8 @@ public static class DependencyInjectionTestingExtensions
 
             configure?.Invoke(harnessConfigurator);
 
+            harnessConfigurator.ConfigureConsumerKindTestHarnesses();
+
             if (!MessageLimitsConfigurationExtensions.HasLimits<IBus>(services))
                 x.Limits(MessageLimits.Conservative);
 

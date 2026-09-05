@@ -513,12 +513,12 @@ public sealed class AmazonSqsFifoTests
         public string TemporaryEndpoint(string tag) => inner.TemporaryEndpoint(tag) + ".fifo";
         public string Consumer<T>() where T : class, IConsumer => inner.Consumer<T>() + ".fifo";
         public string Message<T>() where T : class => inner.Message<T>() + ".fifo";
-        public string Saga<T>() where T : class, ISaga => inner.Saga<T>() + ".fifo";
+        public string Saga<T>() where T : class => inner.Saga<T>() + ".fifo";
         public string ExecuteActivity<T, TArguments>()
-            where T : class, IExecuteActivity<TArguments>
+            where T : class
             where TArguments : class => inner.ExecuteActivity<T, TArguments>() + ".fifo";
         public string CompensateActivity<T, TLog>()
-            where T : class, ICompensateActivity<TLog>
+            where T : class
             where TLog : class => inner.CompensateActivity<T, TLog>() + ".fifo";
         public string SanitizeName(string name) => inner.SanitizeName(name);
     }

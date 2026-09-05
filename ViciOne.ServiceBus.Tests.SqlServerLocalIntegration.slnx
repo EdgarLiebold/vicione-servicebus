@@ -7,8 +7,14 @@
   <Folder Name="/src/">
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
+    <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
   </Folder>

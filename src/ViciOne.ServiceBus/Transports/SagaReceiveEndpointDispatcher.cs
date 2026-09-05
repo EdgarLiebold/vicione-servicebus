@@ -18,6 +18,7 @@ public class SagaReceiveEndpointDispatcher<T> :
     {
         var queueName = formatter.Saga<T>();
 
-        return factory.CreateSagaReceiver<T>(queueName);
+        return factory.CreateReceiver(queueName, static (configurator, registration) =>
+            registration.ConfigureSaga<T>(configurator));
     }
 }

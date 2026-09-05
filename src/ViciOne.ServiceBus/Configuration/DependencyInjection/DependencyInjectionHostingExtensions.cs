@@ -72,22 +72,4 @@ public static class DependencyInjectionHostingExtensions
         return hostBuilder;
     }
 
-    /// <summary>
-    /// Adds the ViciOne.ServiceBus Mediator to the host, and allows consumers, sagas, and activities (which are not supported
-    /// by the Mediator) to be configured.
-    /// </summary>
-    /// <param name="hostBuilder"></param>
-    /// <param name="configure"></param>
-    public static IHostBuilder UseMediator(this IHostBuilder hostBuilder, Action<HostBuilderContext, IMediatorRegistrationConfigurator>? configure = null)
-    {
-        hostBuilder.ConfigureServices((hostContext, services) =>
-        {
-            services.AddMediator(configurator =>
-            {
-                configure?.Invoke(hostContext, configurator);
-            });
-        });
-
-        return hostBuilder;
-    }
 }

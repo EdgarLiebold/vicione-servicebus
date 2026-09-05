@@ -21,7 +21,7 @@ public interface ISagaMessageConfigurator<TMessage> :
 public interface ISagaMessageConfigurator<TSaga, TMessage> :
     IPipeConfigurator<SagaConsumeContext<TSaga, TMessage>>
     where TMessage : class
-    where TSaga : class, ISaga
+    where TSaga : class
 {
     /// <summary>
     /// Add middleware to the saga pipeline, for the specified message type, which is

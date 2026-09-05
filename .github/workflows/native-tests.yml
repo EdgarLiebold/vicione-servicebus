@@ -33,6 +33,11 @@ jobs:
         run: dotnet restore ViciOne.ServiceBus.slnx --locked-mode
       - name: Build product graph in Release
         run: dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore
+      - name: Run the minimal suite composition
+        run: >-
+          dotnet run
+          --project samples/SuiteComposition/ViciOne.ServiceBus.Samples.SuiteComposition.csproj
+          -c Release --no-build --no-restore
       - name: Restore complete engineering graph in locked mode
         run: dotnet restore ViciOne.ServiceBus.Engineering.slnx --locked-mode
       - name: Build complete engineering graph in Release

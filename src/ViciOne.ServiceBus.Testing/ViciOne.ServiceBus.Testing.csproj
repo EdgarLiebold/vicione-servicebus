@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ViciOne.ServiceBus.Courier\ViciOne.ServiceBus.Courier.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.Futures\ViciOne.ServiceBus.Futures.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.Mediator\ViciOne.ServiceBus.Mediator.csproj" />
+    <ProjectReference Include="..\ViciOne.ServiceBus.Sagas\ViciOne.ServiceBus.Sagas.csproj" />
     <ProjectReference Include="..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
   </ItemGroup>
 </Project>

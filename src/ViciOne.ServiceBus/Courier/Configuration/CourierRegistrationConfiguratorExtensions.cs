@@ -1,0 +1,84 @@
+using System;
+using ViciOne.ServiceBus.Advanced.Registration;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
+
+namespace ViciOne.ServiceBus.Configuration;
+
+/// <summary>
+/// Provides the activity registration surface contributed by the Courier capability package.
+/// </summary>
+public static class CourierRegistrationConfiguratorExtensions
+{
+    /// <summary>
+    /// Adds Courier runtime services and message-correlation conventions to this bus registration.
+    /// </summary>
+    /// <param name="configurator">The bus registration configurator.</param>
+    /// <returns>The same configurator.</returns>
+    public static IRegistrationConfigurator AddCourier(this IRegistrationConfigurator configurator)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        CourierServiceRegistration.Register(configurator.Services, configurator.BusType);
+        return configurator;
+    }
+
+    /// <summary>
+    /// Adds an execute activity and allows it to be configured when attached to an endpoint.
+    /// </summary>
+    public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
+        this IRegistrationConfigurator configurator,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
+        where TActivity : class, IExecuteActivity<TArguments>
+        where TArguments : class =>
+        configurator.AddExecuteActivity(null, configure);
+
+    /// <summary>
+    /// Adds an execute activity with an optional definition and allows it to be configured when attached to an endpoint.
+    /// </summary>
+    public static IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
+        this IRegistrationConfigurator configurator, Type? executeActivityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
+        where TActivity : class, IExecuteActivity<TArguments>
+        where TArguments : class
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        CourierServiceRegistration.Register(configurator.Services, configurator.BusType);
+        IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
+        IExecuteActivityRegistration registration = configurator.Services.RegisterExecuteActivity<TActivity, TArguments>(advanced.Registrar,
+            executeActivityDefinitionType);
+        registration.AddConfigureAction(configure);
+        return new ExecuteActivityRegistrationConfigurator<TActivity, TArguments>(configurator, registration);
+    }
+
+    /// <summary>
+    /// Adds a compensatable activity and allows its execute and compensate behaviors to be configured.
+    /// </summary>
+    public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
+        this IRegistrationConfigurator configurator,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
+        where TActivity : class, IActivity<TArguments, TLog>
+        where TArguments : class
+        where TLog : class =>
+        configurator.AddActivity(null, configureExecute, configureCompensate);
+
+    /// <summary>
+    /// Adds a compensatable activity with an optional definition and allows its behaviors to be configured.
+    /// </summary>
+    public static IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
+        this IRegistrationConfigurator configurator, Type? activityDefinitionType,
+        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
+        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
+        where TActivity : class, IActivity<TArguments, TLog>
+        where TArguments : class
+        where TLog : class
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        CourierServiceRegistration.Register(configurator.Services, configurator.BusType);
+        IAdvancedRegistrationConfigurator advanced = configurator.Advanced();
+        IActivityRegistration registration = configurator.Services.RegisterActivity<TActivity, TArguments, TLog>(advanced.Registrar,
+            activityDefinitionType);
+        registration.AddConfigureAction(configureExecute);
+        registration.AddConfigureAction(configureCompensate);
+        return new ActivityRegistrationConfigurator<TActivity, TArguments, TLog>(configurator, registration);
+    }
+}

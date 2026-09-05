@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Advanced;
 public interface SagaConsumeContext<out TSaga, out TMessage> :
     SagaConsumeContext<TSaga>,
     ConsumeContext<TMessage>
-    where TSaga : class, ISaga
+    where TSaga : class
     where TMessage : class
 {
 }
@@ -23,7 +23,7 @@ public interface SagaConsumeContext<out TSaga, out TMessage> :
 /// <typeparam name="TSaga">The saga type</typeparam>
 public interface SagaConsumeContext<out TSaga> :
     ConsumeContext
-    where TSaga : class, ISaga
+    where TSaga : class
 {
     /// <summary>
     /// The saga instance for the current consume operation

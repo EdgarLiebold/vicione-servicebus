@@ -1,8 +1,10 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -52,6 +54,8 @@ public class ServiceCollectionMediatorConfigurator :
 
     static void AddViciOneServiceBusComponents(IServiceCollection collection)
     {
+        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, ConsumerKind>());
+
         collection.AddScoped<IScopedMediator, ScopedMediator>();
 
         collection.TryAddScoped<ScopedConsumeContextProvider>();
@@ -70,6 +74,12 @@ public class ServiceCollectionMediatorConfigurator :
         collection.TryAddScoped(provider => provider.GetRequiredService<IScopedConsumeContextProvider>().GetContext() ?? MissingConsumeContext.Instance);
 
         collection.TryAddScoped(typeof(IRequestClient<>), typeof(GenericRequestClient<>));
+        collection.TryAddScoped<IScopedClientFactory>(provider =>
+        {
+            var mediator = provider.GetRequiredService<IScopedMediator>();
+            var context = provider.GetRequiredService<Bind<IMediator, IScopedConsumeContextProvider>>().Value.GetContext();
+            return new ScopedClientFactory(mediator, context);
+        });
     }
 
     IMediator MediatorFactory(IServiceProvider provider, Uri? baseAddress)
@@ -88,8 +98,7 @@ public class ServiceCollectionMediatorConfigurator :
                 cfg.Limits(limits);
                 _configure?.Invoke(context, cfg);
 
-                cfg.ConfigureConsumers(context);
-                cfg.ConfigureSagas(context);
+                context.ConfigureConsumerKinds(cfg);
             },
             provider.GetService<TimeProvider>() ?? TimeProvider.System);
     }

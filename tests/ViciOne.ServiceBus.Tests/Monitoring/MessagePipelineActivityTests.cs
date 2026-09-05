@@ -8,6 +8,7 @@ using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using ViciOne.ServiceBus.Tests.Testing;
 using Xunit;
+using ActivityContext = System.Diagnostics.ActivityContext;
 
 namespace ViciOne.ServiceBus.Tests.Monitoring;
 

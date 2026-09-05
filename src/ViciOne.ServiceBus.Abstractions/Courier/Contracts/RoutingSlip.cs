@@ -7,6 +7,7 @@ namespace ViciOne.ServiceBus.Courier.Contracts;
 /// A RoutingSlip is the transport-level interface that is used to carry the details
 /// of a message routing slip over the network.
 /// </summary>
+[ActivityMessage]
 public interface RoutingSlip
 {
     /// <summary>

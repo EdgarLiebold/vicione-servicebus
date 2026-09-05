@@ -288,16 +288,16 @@ public sealed class StateMachineConfigurationContractTests
         public List<(Type SagaType, Type MessageType)> Messages { get; } = [];
 
         public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga => SagaTypes.Add(typeof(TSaga));
+            where TSaga : class => SagaTypes.Add(typeof(TSaga));
 
         public void StateMachineSagaConfigured<TInstance>(
             ISagaConfigurator<TInstance> configurator,
-            SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance =>
+            object stateMachine)
+            where TInstance : class =>
             StateMachines.Add((typeof(TInstance), stateMachine.GetType()));
 
         public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-            where TSaga : class, ISaga
+            where TSaga : class
             where TMessage : class => Messages.Add((typeof(TSaga), typeof(TMessage)));
     }
 

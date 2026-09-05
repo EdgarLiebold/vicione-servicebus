@@ -42,6 +42,11 @@ public class ConsumerRegistration<TConsumer> :
     /// </summary>
     public bool IncludeInConfigureEndpoints { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the consumer endpoint must be hosted by a service instance.
+    /// </summary>
+    public bool RequiresServiceInstance { get; set; }
+
     void IConsumerRegistration.AddConfigureAction<T>(Action<IRegistrationContext, IConsumerConfigurator<T>>? configure)
     {
         if (configure is Action<IRegistrationContext, IConsumerConfigurator<TConsumer>> action)

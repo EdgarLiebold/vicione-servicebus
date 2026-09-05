@@ -7,7 +7,8 @@ namespace ViciOne.ServiceBus;
 /// </summary>
 [Serializable]
 public class CourierException :
-    ViciOneServiceBusException
+    ViciOneServiceBusException,
+    IRetryFailureClassification
 {
     /// <summary>
     /// Initializes a new instance of the containing type.
@@ -34,4 +35,6 @@ public class CourierException :
         : base(message, innerException)
     {
     }
+
+    RetryFailureKind IRetryFailureClassification.RetryFailureKind => RetryFailureKind.NonRetryable;
 }

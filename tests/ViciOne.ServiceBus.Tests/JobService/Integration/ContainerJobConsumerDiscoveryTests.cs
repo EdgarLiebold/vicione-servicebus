@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
@@ -23,16 +24,27 @@ public sealed class ContainerJobConsumerDiscoveryTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.SetKebabCaseEndpointNameFormatter();
+                configuration.SetJobConsumerOptions();
+                configuration.AddJobSagaStateMachines();
                 configuration.AddConsumersFromNamespaceContaining<ContainerJobDiscovery.DiscoveryMarker>();
                 configuration.AddRequestClient<ContainerJobDiscovery.CrunchNumbers>();
                 configuration.UsingInMemory((context, bus) =>
                 {
                     bus.ConfigureDelayedMessageScheduler();
-                    var options = new ServiceInstanceOptions().EnableJobServiceEndpoints();
-                    bus.ConfigureServiceInstanceEndpoints(context, options);
+                    bus.ConfigureEndpoints(context);
                 });
             })
             .BuildServiceProvider(validateScopes: true);
+
+        IConsumerKind[] consumerKinds = provider.GetServices<IConsumerKind>().ToArray();
+        IConsumerKind consumerKind = Assert.Single(consumerKinds, kind => kind.Name == "Consumer");
+        IConsumerKind jobKind = Assert.Single(consumerKinds, kind => kind.Name == "Job");
+        Assert.True(consumerKind.IsFallback);
+        Assert.False(jobKind.IsFallback);
+        Assert.Single(provider.GetServices<IConsumerKindHost>());
+        Assert.Contains(provider.GetServices<IConsumerRegistration>(),
+            registration => registration.Type == typeof(ContainerJobDiscovery.CrunchNumbersConsumer));
+
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
         try

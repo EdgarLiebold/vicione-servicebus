@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.EntityFrameworkCore.Saga;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

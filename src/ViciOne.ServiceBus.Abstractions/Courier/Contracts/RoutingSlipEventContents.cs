@@ -1,6 +1,6 @@
 using System;
 
-namespace ViciOne.ServiceBus.Courier.Contracts;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Specifies the specific contents of routing slip events to be included for a subscription

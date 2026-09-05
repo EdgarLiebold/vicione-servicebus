@@ -23,12 +23,19 @@ public sealed class StatePropertyConverterTests
         var repository = new InMemorySagaRepository<IntegerStateInstance>();
         var received = new TaskCompletionSource<ConsumeContext<StateTransitionPublished>>(
             TaskCreationOptions.RunContinuationsAsynchronously);
+        var faulted = new TaskCompletionSource<ConsumeContext<Fault<StateTransitionStarted>>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
         harness.OnConfigureInMemoryReceiveEndpoint += configurator =>
         {
             configurator.StateMachineSaga(machine, repository);
             configurator.Handler<StateTransitionPublished>(context =>
             {
                 received.TrySetResult(context);
+                return Task.CompletedTask;
+            });
+            configurator.Handler<Fault<StateTransitionStarted>>(context =>
+            {
+                faulted.TrySetResult(context);
                 return Task.CompletedTask;
             });
         };
@@ -41,9 +48,17 @@ public sealed class StatePropertyConverterTests
 
             await harness.Bus.PublishAsync(new StateTransitionStarted { CorrelationId = sagaId }, cancellationToken);
 
-            ConsumeContext<StateTransitionPublished> context = await received.Task.WaitAsync(
-                operationTimeout,
-                cancellationToken);
+            Task completed = await Task.WhenAny(received.Task, faulted.Task)
+                .WaitAsync(operationTimeout, cancellationToken);
+            if (completed == faulted.Task)
+            {
+                ConsumeContext<Fault<StateTransitionStarted>> fault = await faulted.Task;
+                string details = string.Join(Environment.NewLine,
+                    fault.Message.Exceptions.Select(FormatException));
+                throw new Xunit.Sdk.XunitException($"The state transition faulted before publishing its result:{Environment.NewLine}{details}");
+            }
+
+            ConsumeContext<StateTransitionPublished> context = await received.Task;
 
             Assert.Equal(sagaId, context.Message.CorrelationId);
             Assert.Equal(machine.Running.Name, context.Message.CurrentState);
@@ -54,6 +69,13 @@ public sealed class StatePropertyConverterTests
         {
             await harness.StopAsync(TestContext.Current.CancellationToken);
         }
+    }
+
+    private static string FormatException(ExceptionInfo exception)
+    {
+        return exception.InnerException is null
+            ? $"{exception.ExceptionType}: {exception.Message}{Environment.NewLine}{exception.StackTrace}"
+            : $"{exception.ExceptionType}: {exception.Message}{Environment.NewLine}{exception.StackTrace}{Environment.NewLine}---> {FormatException(exception.InnerException)}";
     }
 
     private sealed class IntegerStateInstance : SagaStateMachineInstance

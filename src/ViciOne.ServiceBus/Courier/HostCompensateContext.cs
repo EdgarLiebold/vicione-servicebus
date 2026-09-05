@@ -54,7 +54,7 @@ public class HostCompensateContext<TLog> :
     /// <param name="activity">The activity value.</param>
     /// <returns>The result of the operation.</returns>
     public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
     {
         return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }

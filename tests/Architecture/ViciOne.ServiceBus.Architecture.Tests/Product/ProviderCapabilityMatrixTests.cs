@@ -32,6 +32,7 @@ public sealed class ProviderCapabilityMatrixTests
         string[] expectedPersistenceProjects = Directory
             .GetFiles(Path.Combine(RepositoryLayout.Root, "src", "Persistence"), "*.csproj", SearchOption.AllDirectories)
             .Select(RepositoryLayout.RelativeToRoot)
+            .Except(matrix.CapabilityPackages.Select(static capability => capability.Project), StringComparer.Ordinal)
             .Order(StringComparer.Ordinal)
             .ToArray();
         Assert.Equal(expectedPersistenceProjects, matrix.PersistenceProviders.Select(static provider => provider.Project)
@@ -98,8 +99,11 @@ public sealed class ProviderCapabilityMatrixTests
     private sealed record ProviderCapabilityMatrix(
         int SchemaVersion,
         DurableSenderContract DurableSenderContract,
+        CapabilityPackage[] CapabilityPackages,
         TransportProvider[] TransportProviders,
         PersistenceProvider[] PersistenceProviders);
+
+    private sealed record CapabilityPackage(string Project);
 
     private sealed record DurableSenderContract(
         string ApplicationApi,

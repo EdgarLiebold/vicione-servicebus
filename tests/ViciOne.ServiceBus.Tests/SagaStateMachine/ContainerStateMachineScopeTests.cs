@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

@@ -36,7 +36,7 @@ internal sealed class TimeoutConfigurationObserver :
         configurator.Message(m => m.AddPipeSpecification(specification));
     }
 
-    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
     {
         var specification = new ExecuteContextTimeoutSpecification<TArguments>();
 
@@ -45,7 +45,7 @@ internal sealed class TimeoutConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
     {
         var specification = new ExecuteContextTimeoutSpecification<TArguments>();
 
@@ -54,7 +54,7 @@ internal sealed class TimeoutConfigurationObserver :
         configurator.Arguments(x => x.AddPipeSpecification(specification));
     }
 
-    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
     {
         var specification = new CompensateContextTimeoutSpecification<TLog>();
 

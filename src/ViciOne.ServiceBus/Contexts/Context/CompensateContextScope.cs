@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Context;
 /// </summary>
 /// <typeparam name="TLog">The t log type.</typeparam>
 public class CompensateContextScope<TLog> :
-    CourierContextScope,
+    ActivityContextScope,
     CompensateContext<TLog>
     where TLog : class
 {
@@ -37,7 +37,7 @@ public class CompensateContextScope<TLog> :
     /// <param name="activity">The activity value.</param>
     /// <returns>The result of the operation.</returns>
     public CompensateActivityContext<TActivity, TLog> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
     {
         return new HostCompensateActivityContext<TActivity, TLog>(activity, this);
     }

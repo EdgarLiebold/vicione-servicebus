@@ -13,32 +13,7 @@ class RegistrationFilter :
         _filter = filter;
     }
 
-    public bool Matches(IConsumerRegistration registration)
-    {
-        return _filter.Matches(registration.Type);
-    }
-
-    public bool Matches(ISagaRegistration registration)
-    {
-        return _filter.Matches(registration.Type);
-    }
-
-    public bool Matches(IExecuteActivityRegistration registration)
-    {
-        return _filter.Matches(registration.Type);
-    }
-
-    public bool Matches(IActivityRegistration registration)
-    {
-        return _filter.Matches(registration.Type);
-    }
-
-    public bool Matches(IFutureRegistration registration)
-    {
-        return _filter.Matches(registration.Type);
-    }
-
-    public bool Matches(IEndpointRegistration registration)
+    public bool Matches(IRegistration registration)
     {
         return _filter.Matches(registration.Type);
     }

@@ -16,7 +16,7 @@ public class SagaConfigurationObservable :
     /// <typeparam name="TSaga">The t saga type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
 
@@ -29,8 +29,8 @@ public class SagaConfigurationObservable :
     /// <typeparam name="TInstance">The t instance type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="stateMachine">The state machine value.</param>
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
         ArgumentNullException.ThrowIfNull(configurator);
         ArgumentNullException.ThrowIfNull(stateMachine);
@@ -45,7 +45,7 @@ public class SagaConfigurationObservable :
     /// <typeparam name="TMessage">The t message type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
         where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(configurator);

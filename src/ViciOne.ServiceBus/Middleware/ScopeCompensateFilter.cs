@@ -6,20 +6,18 @@ namespace ViciOne.ServiceBus.Middleware;
 /// <summary>
 /// Provides a scope compensate filter implementation.
 /// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
 /// <typeparam name="TLog">The t log type.</typeparam>
-public class ScopeCompensateFilter<TActivity, TLog> :
+public class ScopeCompensateFilter<TLog> :
     IFilter<CompensateContext<TLog>>
     where TLog : class
-    where TActivity : class, ICompensateActivity<TLog>
 {
-    readonly ICompensateActivityScopeProvider<TActivity, TLog> _scopeProvider;
+    readonly CompensateScopeProvider<TLog> _scopeProvider;
 
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
     /// <param name="scopeProvider">The scope provider value.</param>
-    public ScopeCompensateFilter(ICompensateActivityScopeProvider<TActivity, TLog> scopeProvider)
+    public ScopeCompensateFilter(CompensateScopeProvider<TLog> scopeProvider)
     {
         _scopeProvider = scopeProvider;
     }

@@ -60,21 +60,6 @@ public static class TimeoutConfiguratorExtensions
     /// </summary>
     /// <param name="configurator">The pipe configurator</param>
     /// <param name="configure">Configure timeout</param>
-    public static void UseTimeout<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<ITimeoutConfigurator> configure)
-        where TSaga : class, ISaga
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(configure);
-
-        var observer = new TimeoutSagaConfigurationObserver<TSaga>(configurator, configure);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
-    /// Cancels context's CancellationToken once timeout is reached.
-    /// </summary>
-    /// <param name="configurator">The pipe configurator</param>
-    /// <param name="configure">Configure timeout</param>
     public static void UseTimeout<TMessage>(this IHandlerConfigurator<TMessage> configurator, Action<ITimeoutConfigurator> configure)
         where TMessage : class
     {

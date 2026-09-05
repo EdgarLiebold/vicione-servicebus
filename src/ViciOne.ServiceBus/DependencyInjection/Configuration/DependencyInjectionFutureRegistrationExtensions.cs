@@ -1,7 +1,9 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
+using ViciOne.ServiceBus.Futures;
 using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -145,6 +147,7 @@ public static class DependencyInjectionFutureRegistrationExtensions
     {
         public virtual IFutureRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
+            collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, FutureConsumerKind>());
             collection.TryAddSingleton<TFuture>();
 
             return registrar.GetOrAddRegistration<IFutureRegistration>(typeof(TFuture), _ => new FutureRegistration<TFuture>(registrar));

@@ -44,7 +44,7 @@ public class RequestCompletedActivity<TSaga, TMessage> :
         await context.PublishAsync<RequestCompleted>(new
         {
             context.Saga.CorrelationId,
-            InVar.Timestamp,
+            Timestamp = TimeProvider.System.GetUtcNow(),
             PayloadType = MessageTypeCache<TMessage>.MessageTypeNames,
             Payload = context.Message
         }, context.CancellationToken).ConfigureAwait(false);
@@ -120,7 +120,7 @@ public class RequestCompletedActivity<TSaga, TMessage, TResponse> :
         await context.PublishAsync<RequestCompleted>(new
         {
             context.Saga.CorrelationId,
-            InVar.Timestamp,
+            Timestamp = TimeProvider.System.GetUtcNow(),
             PayloadType = MessageTypeCache<TResponse>.MessageTypeNames,
             Payload = _messageFactory(context)
         }, context.CancellationToken).ConfigureAwait(false);

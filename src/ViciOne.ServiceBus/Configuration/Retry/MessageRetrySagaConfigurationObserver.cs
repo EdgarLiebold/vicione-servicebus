@@ -41,8 +41,8 @@ public class MessageRetrySagaConfigurationObserver<TSaga> :
     /// <typeparam name="TInstance">The t instance type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="stateMachine">The state machine value.</param>
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
     }
 

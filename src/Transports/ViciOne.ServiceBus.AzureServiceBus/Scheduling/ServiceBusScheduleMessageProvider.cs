@@ -83,7 +83,7 @@ public class ServiceBusScheduleMessageProvider :
 
         await endpoint.SendAsync<CancelScheduledMessage>(new
         {
-            InVar.Timestamp,
+            Timestamp = TimeProvider.System.GetUtcNow(),
             TokenId = tokenId
         }, cancellationToken).ConfigureAwait(false);
     }

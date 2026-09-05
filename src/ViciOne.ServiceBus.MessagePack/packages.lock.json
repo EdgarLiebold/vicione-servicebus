@@ -108,6 +108,25 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.jobservice": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "CentralTransitive",
         "requested": "[10.0.11, )",

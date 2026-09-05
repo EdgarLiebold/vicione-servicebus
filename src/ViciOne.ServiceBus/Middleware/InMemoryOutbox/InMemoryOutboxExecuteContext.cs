@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 /// </summary>
 /// <typeparam name="TArguments">The t arguments type.</typeparam>
 public class InMemoryOutboxExecuteContext<TArguments> :
-    InMemoryOutboxCourierContextProxy,
+    InMemoryOutboxActivityContextProxy,
     ExecuteContext<TArguments>
     where TArguments : class
 {
@@ -306,7 +306,7 @@ public class InMemoryOutboxExecuteContext<TArguments> :
     /// <param name="activity">The activity value.</param>
     /// <returns>The result of the operation.</returns>
     public ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
     {
         return new HostExecuteActivityContext<TActivity, TArguments>(activity, this);
     }

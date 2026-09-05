@@ -9,12 +9,17 @@ public interface ISagaRegistration :
     IRegistration
 {
     /// <summary>
+    /// Gets the state-machine implementation type, or <see langword="null" /> for a class saga.
+    /// </summary>
+    Type? StateMachineType { get; }
+
+    /// <summary>
     /// Adds configure action to the configuration.
     /// </summary>
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="configure">The configuration callback.</param>
     void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
-        where T : class, ISaga;
+        where T : class;
 
     /// <summary>
     /// Performs the configure operation.

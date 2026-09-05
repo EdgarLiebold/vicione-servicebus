@@ -1,7 +1,6 @@
 using System;
-using ViciOne.ServiceBus.Courier.Contracts;
+using System.Reflection;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
@@ -54,11 +53,11 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="compensateAddress">The compensate address value.</param>
-    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+        where TActivity : class
         where TArguments : class
     {
-        configurator.RoutingSlip(e => AddScopedFilter<TActivity, RoutingSlip>(e));
+        ConfigureExecuteActivityMessage(configurator);
     }
 
     /// <summary>
@@ -67,11 +66,11 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
         where TArguments : class
     {
-        configurator.RoutingSlip(e => AddScopedFilter<TActivity, RoutingSlip>(e));
+        ConfigureExecuteActivityMessage(configurator);
     }
 
     /// <summary>
@@ -80,11 +79,16 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        where TActivity : class, ICompensateActivity<TLog>
+    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+        where TActivity : class
         where TLog : class
     {
-        configurator.RoutingSlip(e => AddScopedFilter<TActivity, RoutingSlip>(e));
+        MethodInfo method = typeof(OutboxConsumePipeSpecificationObserver<TContext>)
+                .GetMethod(nameof(ConfigureCompensateActivityMessage), BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"The {nameof(ConfigureCompensateActivityMessage)} method was not found.");
+
+        method.MakeGenericMethod(typeof(TActivity), typeof(TLog), configurator.MessageType)
+            .Invoke(this, [configurator]);
     }
 
     /// <summary>
@@ -128,7 +132,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     /// <typeparam name="TSaga">The t saga type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
     {
     }
 
@@ -138,8 +142,8 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     /// <typeparam name="TInstance">The t instance type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="stateMachine">The state machine value.</param>
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
     }
 
@@ -150,7 +154,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
     /// <typeparam name="TMessage">The t message type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
         where TMessage : class
     {
         if (!(configurator is ISagaMessageConfigurator<TMessage> messageConfigurator))
@@ -178,5 +182,35 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         var specification = new FilterPipeSpecification<ConsumeContext<TMessage>>(filter);
 
         messageConfigurator.AddPipeSpecification(specification);
+    }
+
+    void ConfigureExecuteActivityMessage<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
+        where TArguments : class
+    {
+        MethodInfo method = typeof(OutboxConsumePipeSpecificationObserver<TContext>)
+                .GetMethod(nameof(ConfigureExecuteActivityMessageCore), BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"The {nameof(ConfigureExecuteActivityMessageCore)} method was not found.");
+
+        method.MakeGenericMethod(typeof(TActivity), typeof(TArguments), configurator.MessageType)
+            .Invoke(this, [configurator]);
+    }
+
+    void ConfigureExecuteActivityMessageCore<TActivity, TArguments, TMessage>(
+        IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
+        where TArguments : class
+        where TMessage : class
+    {
+        configurator.Message<TMessage>(messageConfigurator => AddScopedFilter<TActivity, TMessage>(messageConfigurator));
+    }
+
+    void ConfigureCompensateActivityMessage<TActivity, TLog, TMessage>(
+        ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+        where TActivity : class
+        where TLog : class
+        where TMessage : class
+    {
+        configurator.Message<TMessage>(messageConfigurator => AddScopedFilter<TActivity, TMessage>(messageConfigurator));
     }
 }

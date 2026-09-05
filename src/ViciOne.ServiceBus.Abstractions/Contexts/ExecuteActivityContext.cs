@@ -19,7 +19,7 @@ public interface ExecuteActivityContext<out TArguments> :
 public interface ExecuteActivityContext<out TActivity, out TArguments> :
     ExecuteActivityContext<TArguments>
     where TArguments : class
-    where TActivity : class, IExecuteActivity<TArguments>
+    where TActivity : class
 {
     /// <summary>
     /// The activity that was created/used for this execution

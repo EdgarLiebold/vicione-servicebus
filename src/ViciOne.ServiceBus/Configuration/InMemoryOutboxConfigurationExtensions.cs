@@ -131,42 +131,6 @@ public static class InMemoryOutboxConfigurationExtensions
     /// <param name="configurator"></param>
     /// <param name="context"></param>
     /// <param name="configure">Configure the outbox</param>
-    public static void UseVolatileOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, IRegistrationContext context,
-        Action<IOutboxConfigurator>? configure = default)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-
-        var observer = new InMemoryOutboxSagaConfigurationObserver<TSaga>(context, configurator, configure);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
-    /// Includes an outbox in the consume filter path, which delays outgoing messages until the return path
-    /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
-    /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure">Configure the outbox</param>
-    public static void UseVolatileOutbox<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IOutboxConfigurator>? configure = default)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-
-        var observer = new InMemoryOutboxSagaConfigurationObserver<TSaga>((ISetScopedConsumeContext?)null, configurator, configure);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
-    /// Includes an outbox in the consume filter path, which delays outgoing messages until the return path
-    /// of the pipeline returns to the outbox filter. At this point, the message execution pipeline should be
-    /// nearly complete with only the ack remaining. If an exception is thrown, the messages are not sent/published.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="context"></param>
-    /// <param name="configure">Configure the outbox</param>
     public static void UseVolatileOutbox<TMessage>(this IHandlerConfigurator<TMessage> configurator, IRegistrationContext context,
         Action<IOutboxConfigurator>? configure = default)
         where TMessage : class

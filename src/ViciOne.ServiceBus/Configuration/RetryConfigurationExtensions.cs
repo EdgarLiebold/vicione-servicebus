@@ -106,31 +106,6 @@ public static class RetryConfigurationExtensions
     }
 
     /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, Action<IRetryConfigurator> configure)
-        where TSaga : class, ISaga
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(configure);
-
-        var specification = new ConsumeContextRetryPipeSpecification<SagaConsumeContext<TSaga>, RetrySagaConsumeContext<TSaga>>(Factory);
-
-        configure(specification);
-
-        configurator.AddPipeSpecification(specification);
-    }
-
-    static RetrySagaConsumeContext<TSaga> Factory<TSaga>(SagaConsumeContext<TSaga> context, IRetryPolicy retryPolicy, RetryContext? retryContext)
-        where TSaga : class, ISaga
-    {
-        return new RetrySagaConsumeContext<TSaga>(context, retryPolicy, retryContext);
-    }
-
-    /// <summary>
     /// Configures retry for the current pipeline.
     /// </summary>
     /// <typeparam name="T">The t type.</typeparam>
@@ -217,31 +192,6 @@ public static class RetryConfigurationExtensions
 
         var specification =
             new ConsumeContextRetryPipeSpecification<ConsumerConsumeContext<TConsumer>, RetryConsumerConsumeContext<TConsumer>>(Factory, observer.Stopping);
-
-        configure(specification);
-
-        configurator.AddPipeSpecification(specification);
-    }
-
-    /// <summary>
-    /// Configures message retry for the current pipeline.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <param name="configurator">The configurator value.</param>
-    /// <param name="connector">The connector value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    public static void UseMessageRetry<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, IBusFactoryConfigurator connector,
-        Action<IRetryConfigurator> configure)
-        where TSaga : class, ISaga
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(connector);
-        ArgumentNullException.ThrowIfNull(configure);
-
-        var observer = new RetryBusObserver();
-        connector.ConnectBusObserver(observer);
-
-        var specification = new ConsumeContextRetryPipeSpecification<SagaConsumeContext<TSaga>, RetrySagaConsumeContext<TSaga>>(Factory, observer.Stopping);
 
         configure(specification);
 

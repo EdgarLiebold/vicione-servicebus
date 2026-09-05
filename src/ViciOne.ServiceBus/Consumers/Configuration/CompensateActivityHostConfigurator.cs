@@ -61,6 +61,11 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
     public int? ConcurrentMessageLimit { get; set; }
 
     /// <summary>
+    /// Gets the routing-slip message type hosted by this compensation pipeline.
+    /// </summary>
+    public Type MessageType => typeof(RoutingSlip);
+
+    /// <summary>
     /// Performs the log operation.
     /// </summary>
     /// <param name="configure">The configuration callback.</param>
@@ -89,6 +94,22 @@ public class CompensateActivityHostConfigurator<TActivity, TLog> :
     public void RoutingSlip(Action<IRoutingSlipConfigurator> configure)
     {
         configure?.Invoke(_routingSlipConfigurator);
+    }
+
+    /// <summary>
+    /// Configures the activity transport-message pipeline.
+    /// </summary>
+    /// <typeparam name="TMessage">The activity transport-message type.</typeparam>
+    /// <param name="configure">The message-pipeline callback.</param>
+    public void Message<TMessage>(Action<IActivityMessageConfigurator<TMessage>> configure)
+        where TMessage : class
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+
+        if (typeof(TMessage) != typeof(RoutingSlip))
+            throw new ArgumentException($"The activity host message type is {TypeCache<RoutingSlip>.ShortName}.", nameof(configure));
+
+        configure((IActivityMessageConfigurator<TMessage>)(object)_routingSlipConfigurator);
     }
 
     /// <summary>

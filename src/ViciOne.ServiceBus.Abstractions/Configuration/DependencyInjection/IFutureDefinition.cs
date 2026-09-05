@@ -25,6 +25,7 @@ public interface IFutureDefinition<TFuture> :
 /// <summary>
 /// Defines the contract for future definition.
 /// </summary>
+[ConsumerRegistrationExclusion]
 public interface IFutureDefinition :
     IDefinition
 {

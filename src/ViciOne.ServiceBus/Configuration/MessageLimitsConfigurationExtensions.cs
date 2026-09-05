@@ -50,50 +50,6 @@ public static class MessageLimitsConfigurationExtensions
         return configurator;
     }
 
-    /// <summary>
-    /// Assigns explicit limits to a dependency-injected mediator.
-    /// </summary>
-    /// <param name="configurator">The mediator registration block.</param>
-    /// <param name="limits">The complete immutable limits policy.</param>
-    /// <returns>The registration block for continued configuration.</returns>
-    public static IMediatorRegistrationConfigurator Limits(
-        this IMediatorRegistrationConfigurator configurator,
-        MessageLimits limits)
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(limits);
-        limits.Validate("mediator");
-
-        if (configurator.Services.Any(x => x.ServiceType == typeof(MediatorMessageLimitsRegistration)))
-        {
-            throw new ConfigurationException(
-                "Message limits for bus 'mediator': Limits is already declared. Configure exactly one Limits policy inside the mediator block.");
-        }
-
-        configurator.Services.AddSingleton(new MediatorMessageLimitsRegistration(limits));
-        return configurator;
-    }
-
-    /// <summary>
-    /// Assigns explicit limits to a directly-created mediator.
-    /// </summary>
-    /// <param name="configurator">The mediator configuration.</param>
-    /// <param name="limits">The complete immutable limits policy.</param>
-    public static void Limits(this IMediatorConfigurator configurator, MessageLimits limits)
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(limits);
-        limits.Validate("mediator");
-
-        if (configurator is not IMessageLimitsConfigurator target)
-        {
-            throw new ConfigurationException(
-                "Message limits for bus 'mediator': The selected mediator cannot enforce receive limits. Use the built-in mediator configurator.");
-        }
-
-        target.SetMessageLimits(limits);
-    }
-
     static void Register<TBus>(IServiceCollection services, MessageLimits limits)
         where TBus : class, IBus
     {
@@ -149,5 +105,3 @@ internal interface IMessageLimitsConfigurator
 {
     void SetMessageLimits(MessageLimits limits);
 }
-
-internal sealed record MediatorMessageLimitsRegistration(MessageLimits Limits);

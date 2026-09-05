@@ -5,6 +5,50 @@
     "providerSpi": "IDurableSendDispatcher<TBus>",
     "unsupportedBehavior": "startup-failure-before-background-delivery"
   },
+  "capabilityPackages": [
+    {
+      "id": "sagas",
+      "package": "ViciOne.ServiceBus.Sagas",
+      "project": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "productDependencies": ["ViciOne.ServiceBus"]
+    },
+    {
+      "id": "courier",
+      "package": "ViciOne.ServiceBus.Courier",
+      "project": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "productDependencies": ["ViciOne.ServiceBus"]
+    },
+    {
+      "id": "futures",
+      "package": "ViciOne.ServiceBus.Futures",
+      "project": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "productDependencies": ["ViciOne.ServiceBus", "ViciOne.ServiceBus.Courier", "ViciOne.ServiceBus.Sagas"]
+    },
+    {
+      "id": "job-service",
+      "package": "ViciOne.ServiceBus.JobService",
+      "project": "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "productDependencies": ["ViciOne.ServiceBus", "ViciOne.ServiceBus.Sagas"]
+    },
+    {
+      "id": "mediator",
+      "package": "ViciOne.ServiceBus.Mediator",
+      "project": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "productDependencies": ["ViciOne.ServiceBus"]
+    },
+    {
+      "id": "initializers",
+      "package": "ViciOne.ServiceBus.Initializers",
+      "project": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "productDependencies": ["ViciOne.ServiceBus"]
+    },
+    {
+      "id": "entity-framework-core-sagas",
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas",
+      "project": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+      "productDependencies": ["ViciOne.ServiceBus.EntityFrameworkCore", "ViciOne.ServiceBus.Futures", "ViciOne.ServiceBus.JobService", "ViciOne.ServiceBus.Sagas"]
+    }
+  ],
   "transportProviders": [
     {
       "id": "in-memory",

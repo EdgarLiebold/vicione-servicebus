@@ -251,15 +251,15 @@ public sealed class ConfigurationObserverTests
         public List<(Type SagaType, Type MessageType)> MessageTypes { get; } = [];
 
         public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga => SagaTypes.Add(typeof(TSaga));
+            where TSaga : class => SagaTypes.Add(typeof(TSaga));
 
-        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance
+        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+            where TInstance : class
         {
         }
 
         public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-            where TSaga : class, ISaga
+            where TSaga : class
             where TMessage : class => MessageTypes.Add((typeof(TSaga), typeof(TMessage)));
     }
 
@@ -272,17 +272,17 @@ public sealed class ConfigurationObserverTests
         public List<(Type ActivityType, Type LogType)> Compensate { get; } = [];
 
         public void ActivityConfigured<TActivity, TArguments>(
-            IExecuteActivityConfigurator<TActivity, TArguments> configurator,
+            IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
             Uri compensateAddress)
-            where TActivity : class, IExecuteActivity<TArguments>
+            where TActivity : class
             where TArguments : class => Compensatable.Add((typeof(TActivity), typeof(TArguments), compensateAddress));
 
-        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-            where TActivity : class, IExecuteActivity<TArguments>
+        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+            where TActivity : class
             where TArguments : class => ExecuteOnly.Add((typeof(TActivity), typeof(TArguments)));
 
-        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-            where TActivity : class, ICompensateActivity<TLog>
+        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+            where TActivity : class
             where TLog : class => Compensate.Add((typeof(TActivity), typeof(TLog)));
     }
 
@@ -355,19 +355,19 @@ public sealed class ConfigurationObserverTests
         public int NotificationCount { get; private set; }
 
         public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-            where TSaga : class, ISaga
+            where TSaga : class
         {
             NotificationCount++;
             configurator.AddPipeSpecification(new InvalidSpecification<SagaConsumeContext<TSaga>>("saga-root"));
         }
 
-        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-            where TInstance : class, ISaga, SagaStateMachineInstance
+        public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+            where TInstance : class
         {
         }
 
         public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-            where TSaga : class, ISaga
+            where TSaga : class
             where TMessage : class
         {
             string suffix = typeof(TMessage) == typeof(SagaStarted) ? "alpha" : "zulu";
@@ -382,21 +382,21 @@ public sealed class ConfigurationObserverTests
         public int CompensateNotificationCount { get; private set; }
 
         public void ActivityConfigured<TActivity, TArguments>(
-            IExecuteActivityConfigurator<TActivity, TArguments> configurator,
+            IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
             Uri compensateAddress)
-            where TActivity : class, IExecuteActivity<TArguments>
+            where TActivity : class
             where TArguments : class => throw new InvalidOperationException("This test configures execute-only and compensate-only hosts.");
 
-        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-            where TActivity : class, IExecuteActivity<TArguments>
+        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+            where TActivity : class
             where TArguments : class
         {
             ExecuteNotificationCount++;
             configurator.AddPipeSpecification(new InvalidSpecification<ExecuteActivityContext<TActivity, TArguments>>("execute-activity"));
         }
 
-        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-            where TActivity : class, ICompensateActivity<TLog>
+        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+            where TActivity : class
             where TLog : class
         {
             CompensateNotificationCount++;

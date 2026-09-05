@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Context;
@@ -23,9 +25,12 @@ public abstract class CourierContextScope :
         _courierContext = courierContext;
     }
 
-    DateTimeOffset CourierContext.Timestamp => _courierContext.Timestamp;
-    TimeSpan CourierContext.Elapsed => _courierContext.Elapsed;
-    Guid CourierContext.TrackingNumber => _courierContext.TrackingNumber;
-    Guid CourierContext.ExecutionId => _courierContext.ExecutionId;
-    string CourierContext.ActivityName => _courierContext.ActivityName;
+    DateTimeOffset ActivityContext.Timestamp => _courierContext.Timestamp;
+    TimeSpan ActivityContext.Elapsed => _courierContext.Elapsed;
+    Guid ActivityContext.TrackingNumber => _courierContext.TrackingNumber;
+    Guid ActivityContext.ExecutionId => _courierContext.ExecutionId;
+    string ActivityContext.ActivityName => _courierContext.ActivityName;
+    IReadOnlyDictionary<string, object> ActivityContext.Variables => _courierContext.Variables;
+    Task ActivityContext.NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken) =>
+        _courierContext.NotifyActivityConsumedAsync(duration, consumerType, cancellationToken);
 }

@@ -1,5 +1,4 @@
 using System;
-using ViciOne.ServiceBus.Courier.Contracts;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -33,7 +32,7 @@ public interface IEndpointRegistrationConfigurator
     /// <summary>
     /// Defaults to true, which connects topics/exchanges/etc. to the endpoint queue at the broker.
     /// If set to false, no broker topology is configured (automatically set to false for courier
-    /// activities since <see cref="RoutingSlip" /> should never be published).
+    /// activities because routing slips are sent directly and should never be published).
     /// </summary>
     bool ConfigureConsumeTopology { set; }
 

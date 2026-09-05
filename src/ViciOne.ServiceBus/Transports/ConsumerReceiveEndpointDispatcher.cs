@@ -18,6 +18,7 @@ public class ConsumerReceiveEndpointDispatcher<T> :
     {
         var queueName = formatter.Consumer<T>();
 
-        return factory.CreateConsumerReceiver<T>(queueName);
+        return factory.CreateReceiver(queueName, static (configurator, registration) =>
+            configurator.ConfigureConsumer<T>(registration));
     }
 }

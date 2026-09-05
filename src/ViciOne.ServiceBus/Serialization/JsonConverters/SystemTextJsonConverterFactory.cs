@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Batching;
-using ViciOne.ServiceBus.Contracts.JobService;
-using ViciOne.ServiceBus.Courier.Contracts;
-using ViciOne.ServiceBus.Courier.Messages;
 using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Scheduling;
 
@@ -21,79 +18,21 @@ namespace ViciOne.ServiceBus.Serialization.JsonConverters;
 public class SystemTextJsonConverterFactory :
     JsonConverterFactory
 {
-    static readonly IDictionary<Type, Func<JsonConverter>> _converterFactory;
-
-    static readonly IDictionary<Type, Type> _openTypeFactory = new Dictionary<Type, Type>
-    {
-        { typeof(Fault<>), typeof(FaultEvent<>) },
-        { typeof(Batch<>), typeof(MessageBatch<>) },
-        { typeof(SubmitJob<>), typeof(SubmitJobCommand<>) },
-        { typeof(JobCompleted<>), typeof(JobCompletedEvent<>) },
-    };
-
     static SystemTextJsonConverterFactory()
     {
-        _converterFactory = new Dictionary<Type, Func<JsonConverter>>()
-            .Add<Fault, FaultEvent>()
-            .Add<ReceiveFault, ReceiveFaultEvent>()
-            .Add<ExceptionInfo, FaultExceptionInfo>()
-            .Add<HostInfo, BusHostInfo>()
-            .Add<ScheduleMessage, ScheduleMessageCommand>()
-            .Add<ScheduleRecurringMessage, ScheduleRecurringMessageCommand>()
-            .Add<CancelScheduledMessage, CancelScheduledMessageCommand>()
-            .Add<CancelScheduledRecurringMessage, CancelScheduledRecurringMessageCommand>()
-            .Add<PauseScheduledRecurringMessage, PauseScheduledRecurringMessageCommand>()
-            .Add<ResumeScheduledRecurringMessage, ResumeScheduledRecurringMessageCommand>()
-            .Add<MessageEnvelope, JsonMessageEnvelope>()
-            .Add<RoutingSlip, RoutingSlipRoutingSlip>()
-            .Add<Activity, RoutingSlipActivity>()
-            .Add<ActivityLog, RoutingSlipActivityLog>()
-            .Add<CompensateLog, RoutingSlipCompensateLog>()
-            .Add<ActivityException, RoutingSlipActivityException>()
-            .Add<Subscription, RoutingSlipSubscription>()
-            .Add<RoutingSlipCompleted, RoutingSlipCompletedMessage>()
-            .Add<RoutingSlipFaulted, RoutingSlipFaultedMessage>()
-            .Add<RoutingSlipActivityCompleted, RoutingSlipActivityCompletedMessage>()
-            .Add<RoutingSlipActivityFaulted, RoutingSlipActivityFaultedMessage>()
-            .Add<RoutingSlipActivityCompensated, RoutingSlipActivityCompensatedMessage>()
-            .Add<RoutingSlipActivityCompensationFailed, RoutingSlipActivityCompensationFailedMessage>()
-            .Add<RoutingSlipCompensationFailed, RoutingSlipCompensationFailedMessage>()
-            .Add<RoutingSlipTerminated, RoutingSlipTerminatedMessage>()
-            .Add<RoutingSlipRevised, RoutingSlipRevisedMessage>()
-            .Add<RecurringJobSchedule, RecurringJobScheduleInfo>()
-            .Add<AllocateJobSlot, AllocateJobSlotCommand>()
-            .Add<CancelJob, CancelJobCommand>()
-            .Add<CancelJobAttempt, CancelJobAttemptCommand>()
-            .Add<CompleteJob, CompleteJobCommand>()
-            .Add<FaultJob, FaultJobCommand>()
-            .Add<FinalizeJob, FinalizeJobCommand>()
-            .Add<FinalizeJobAttempt, FinalizeJobAttemptCommand>()
-            .Add<GetJobAttemptStatus, GetJobAttemptStatusRequest>()
-            .Add<GetJobState, GetJobStateRequest>()
-            .Add<JobAttemptCanceled, JobAttemptCanceledEvent>()
-            .Add<JobAttemptCompleted, JobAttemptCompletedEvent>()
-            .Add<JobAttemptFaulted, JobAttemptFaultedEvent>()
-            .Add<JobAttemptStarted, JobAttemptStartedEvent>()
-            .Add<JobCanceled, JobCanceledEvent>()
-            .Add<JobCompleted, JobCompletedEvent>()
-            .Add<JobFaulted, JobFaultedEvent>()
-            .Add<JobRetryDelayElapsed, JobRetryDelayElapsedEvent>()
-            .Add<JobSlotAllocated, JobSlotAllocatedResponse>()
-            .Add<JobSlotReleased, JobSlotReleasedEvent>()
-            .Add<JobSlotUnavailable, JobSlotUnavailableResponse>()
-            .Add<JobSlotWaitElapsed, JobSlotWaitElapsedEvent>()
-            .Add<JobState, JobStateResponse>()
-            .Add<JobStarted, JobStartedEvent>()
-            .Add<JobStatusCheckRequested, JobStatusCheckRequestedEvent>()
-            .Add<JobSubmissionAccepted, JobSubmissionAcceptedResponse>()
-            .Add<JobSubmitted, JobSubmittedEvent>()
-            .Add<RetryJob, RetryJobCommand>()
-            .Add<RunJob, RunJobCommand>()
-            .Add<SaveJobState, SaveJobStateCommand>()
-            .Add<SetConcurrentJobLimit, SetConcurrentJobLimitCommand>()
-            .Add<SetJobProgress, SetJobProgressCommand>()
-            .Add<StartJob, StartJobCommand>()
-            .Add<StartJobAttempt, StartJobAttemptCommand>();
+        JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(Fault<>), typeof(FaultEvent<>));
+        JsonMessageTypeMappingRegistry.RegisterOpenGeneric(typeof(Batch<>), typeof(MessageBatch<>));
+        JsonMessageTypeMappingRegistry.Register<Fault, FaultEvent>();
+        JsonMessageTypeMappingRegistry.Register<ReceiveFault, ReceiveFaultEvent>();
+        JsonMessageTypeMappingRegistry.Register<ExceptionInfo, FaultExceptionInfo>();
+        JsonMessageTypeMappingRegistry.Register<HostInfo, BusHostInfo>();
+        JsonMessageTypeMappingRegistry.Register<ScheduleMessage, ScheduleMessageCommand>();
+        JsonMessageTypeMappingRegistry.Register<ScheduleRecurringMessage, ScheduleRecurringMessageCommand>();
+        JsonMessageTypeMappingRegistry.Register<CancelScheduledMessage, CancelScheduledMessageCommand>();
+        JsonMessageTypeMappingRegistry.Register<CancelScheduledRecurringMessage, CancelScheduledRecurringMessageCommand>();
+        JsonMessageTypeMappingRegistry.Register<PauseScheduledRecurringMessage, PauseScheduledRecurringMessageCommand>();
+        JsonMessageTypeMappingRegistry.Register<ResumeScheduledRecurringMessage, ResumeScheduledRecurringMessageCommand>();
+        JsonMessageTypeMappingRegistry.Register<MessageEnvelope, JsonMessageEnvelope>();
     }
 
     /// <summary>
@@ -128,10 +67,7 @@ public class SystemTextJsonConverterFactory :
         if (!typeToConvert.IsInterface)
             return false;
 
-        if (_converterFactory.TryGetValue(typeToConvert, out _))
-            return true;
-
-        if (_openTypeFactory.TryGetValue(typeToConvert, out _))
+        if (JsonMessageTypeMappingRegistry.Contains(typeToConvert))
             return true;
 
         if (IsConvertibleInterfaceType(typeToConvert))
@@ -148,8 +84,8 @@ public class SystemTextJsonConverterFactory :
     /// <returns>The result of the operation.</returns>
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
-        if (_converterFactory.TryGetValue(typeToConvert, out Func<JsonConverter>? converterFactory))
-            return converterFactory();
+        if (JsonMessageTypeMappingRegistry.TryCreateConverter(typeToConvert, out JsonConverter? mappedConverter))
+            return mappedConverter!;
 
         if (typeToConvert.IsGenericType)
         {
@@ -186,24 +122,6 @@ public class SystemTextJsonConverterFactory :
             }
         }
 
-        if (typeToConvert.IsGenericType && !typeToConvert.IsGenericTypeDefinition)
-        {
-            var interfaceType = typeToConvert.GetGenericTypeDefinition();
-
-            if (_openTypeFactory.TryGetValue(interfaceType, out var concreteType))
-            {
-                Type[] arguments = typeToConvert.GetGenericArguments();
-
-                if (arguments.Length == 1 && !arguments[0].IsGenericParameter)
-                {
-                    interfaceType = interfaceType.MakeGenericType(arguments[0]);
-                    concreteType = concreteType.MakeGenericType(arguments[0]);
-
-                    return (JsonConverter)(Activator.CreateInstance(typeof(TypeMappingJsonConverter<,>).MakeGenericType(interfaceType, concreteType)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
-                }
-            }
-        }
-
         if (IsConvertibleInterfaceType(typeToConvert))
         {
             return (JsonConverter)(Activator.CreateInstance(
@@ -235,18 +153,5 @@ public class SystemTextJsonConverterFactory :
         }
 
         return true;
-    }
-}
-
-
-static class JsonConverterFactoryExtensions
-{
-    public static IDictionary<Type, Func<JsonConverter>> Add<T, TImplementation>(this IDictionary<Type, Func<JsonConverter>> dictionary)
-        where T : class
-        where TImplementation : class, T
-    {
-        dictionary.Add(typeof(T), () => new TypeMappingJsonConverter<T, TImplementation>());
-
-        return dictionary;
     }
 }

@@ -32,6 +32,9 @@ public class JobServiceConfigurator<TReceiveEndpointConfigurator> :
     /// <param name="options">The options value.</param>
     public JobServiceConfigurator(IServiceInstanceConfigurator<TReceiveEndpointConfigurator> instanceConfigurator, JobServiceOptions? options = null)
     {
+        JobServiceCorrelationConventions.Register();
+        JobConsumerConventionRegistration.Register();
+
         _busConfigurator = instanceConfigurator.BusConfigurator;
 
         _options = options != null

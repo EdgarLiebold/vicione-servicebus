@@ -27,6 +27,7 @@ public interface IExecuteActivity<in TArguments> :
 /// <remarks>
 /// Not to be used directly by application code, for internal reflection only
 /// </remarks>
+[ActivityContract]
 public interface IExecuteActivity
 {
 }

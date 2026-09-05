@@ -59,7 +59,7 @@ public class SqlLockStatementProvider :
     public virtual string GetRowLockStatement<T>(DbContext context)
         where T : class
     {
-        return FormatLockStatement<T>(context, nameof(ISaga.CorrelationId));
+        return FormatLockStatement<T>(context, "CorrelationId");
     }
 
     /// <summary>

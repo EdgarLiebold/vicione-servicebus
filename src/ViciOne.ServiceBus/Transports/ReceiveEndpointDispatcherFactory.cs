@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
 
 namespace ViciOne.ServiceBus.Transports;
@@ -37,56 +38,43 @@ public class ReceiveEndpointDispatcherFactory :
     /// <returns>The result of the operation.</returns>
     public IReceiveEndpointDispatcher CreateReceiver(string queueName)
     {
-        return CreateMessageReceiver(queueName, cfg =>
-        {
-            cfg.ConfigureConsumers(_registration);
-            cfg.ConfigureSagas(_registration);
-        });
+        return CreateMessageReceiver(queueName, _registration.ConfigureConsumerKinds);
     }
 
-    /// <summary>
-    /// Creates consumer receiver.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
-    public IReceiveEndpointDispatcher CreateConsumerReceiver<T>(string queueName)
-        where T : class, IConsumer
+    /// <inheritdoc />
+    public IReceiveEndpointDispatcher CreateRegistrationReceiver(Type registrationType, string fallbackQueueName,
+        IEndpointNameFormatter formatter)
     {
-        return CreateMessageReceiver(queueName, cfg =>
+        ArgumentNullException.ThrowIfNull(registrationType);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fallbackQueueName);
+        ArgumentNullException.ThrowIfNull(formatter);
+
+        IEnumerable<IConsumerKind> kinds =
+            (IEnumerable<IConsumerKind>?)_registration.GetService(typeof(IEnumerable<IConsumerKind>))
+            ?? Array.Empty<IConsumerKind>();
+
+        foreach (IConsumerKind kind in kinds.OrderBy(candidate => candidate.IsFallback)
+                     .ThenBy(candidate => candidate.Order)
+                     .ThenBy(candidate => candidate.Name, StringComparer.Ordinal))
         {
-            cfg.ConfigureConsumer<T>(_registration);
-        });
+            if (kind.TryCreateDispatcher(registrationType, this, formatter, out IReceiveEndpointDispatcher? dispatcher))
+                return dispatcher ?? throw new ConfigurationException(
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                        "Consumer kind",
+                        "unknown",
+                        $"'{kind.Name}' accepted '{registrationType}' without creating a dispatcher",
+                        "Return a dispatcher when accepting a registration type"));
+        }
+
+        return CreateReceiver(fallbackQueueName);
     }
 
-    /// <summary>
-    /// Creates saga receiver.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
-    public IReceiveEndpointDispatcher CreateSagaReceiver<T>(string queueName)
-        where T : class, ISaga
+    /// <inheritdoc />
+    public IReceiveEndpointDispatcher CreateReceiver(string queueName,
+        Action<IReceiveEndpointConfigurator, IRegistrationContext> configure)
     {
-        return CreateMessageReceiver(queueName, cfg =>
-        {
-            cfg.ConfigureSaga<T>(_registration);
-        });
-    }
-
-    /// <summary>
-    /// Creates execute activity receiver.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
-    public IReceiveEndpointDispatcher CreateExecuteActivityReceiver<T>(string queueName)
-        where T : class, IExecuteActivity
-    {
-        return CreateMessageReceiver(queueName, cfg =>
-        {
-            cfg.ConfigureExecuteActivity(_registration, typeof(T));
-        });
+        ArgumentNullException.ThrowIfNull(configure);
+        return CreateMessageReceiver(queueName, endpoint => configure(endpoint, _registration));
     }
 
     /// <summary>

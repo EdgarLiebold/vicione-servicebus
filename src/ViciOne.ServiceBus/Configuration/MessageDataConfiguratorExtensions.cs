@@ -32,8 +32,7 @@ public static class MessageDataConfiguratorExtensions
         if (!consumeAdded || !sendAdded)
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message data", "unknown", "Message data is already configured for this bus owner.", "Correct the named configuration before starting the host"));
 
-        // Courier does not use ConsumeContext, so it needs to be special
-        _ = new CourierMessageDataConfigurationObserver(configurator, repository, false);
+        _ = new ActivityMessageDataConfigurationObserver(configurator, repository, false);
     }
 
     /// <summary>

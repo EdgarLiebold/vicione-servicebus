@@ -1,4 +1,5 @@
 using System;
+using ViciOne.ServiceBus.Advanced.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -6,17 +7,12 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Defines the contract for job service registration.
 /// </summary>
 public interface IJobServiceRegistration :
-    IRegistration
+    IConsumerKindHost
 {
     /// <summary>
     /// Gets the endpoint registration configurator value.
     /// </summary>
     IEndpointRegistrationConfigurator EndpointRegistrationConfigurator { get; }
-
-    /// <summary>
-    /// Gets the endpoint definition value.
-    /// </summary>
-    IEndpointDefinition EndpointDefinition { get; }
 
     /// <summary>
     /// Adds configure action to the configuration.
@@ -30,10 +26,4 @@ public interface IJobServiceRegistration :
     /// <param name="dependency">The dependency value.</param>
     void AddReceiveEndpointDependency(IReceiveEndpointConfigurator dependency);
 
-    /// <summary>
-    /// Performs the configure operation.
-    /// </summary>
-    /// <param name="instanceConfigurator">The instance configurator value.</param>
-    /// <param name="context">The operation context.</param>
-    void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context);
 }

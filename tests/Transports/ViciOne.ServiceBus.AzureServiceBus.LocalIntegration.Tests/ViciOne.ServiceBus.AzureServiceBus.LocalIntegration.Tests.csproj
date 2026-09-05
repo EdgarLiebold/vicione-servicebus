@@ -18,6 +18,8 @@
   <ItemGroup>
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj" />
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
   </ItemGroup>
 

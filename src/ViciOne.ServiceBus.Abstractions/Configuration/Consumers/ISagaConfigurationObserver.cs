@@ -12,7 +12,7 @@ public interface ISagaConfigurationObserver
     /// <typeparam name="TSaga"></typeparam>
     /// <param name="configurator"></param>
     void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-        where TSaga : class, ISaga;
+        where TSaga : class;
 
     /// <summary>
     /// Called immediately after the state machine saga configuration is completed, but before the saga pipeline is built.
@@ -22,8 +22,8 @@ public interface ISagaConfigurationObserver
     /// <param name="configurator"></param>
     /// <param name="stateMachine"></param>
     /// <typeparam name="TInstance"></typeparam>
-    void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance;
+    void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class;
 
     /// <summary>
     /// Called after the saga/message configuration is completed, but before the saga/message pipeline is built.
@@ -32,6 +32,6 @@ public interface ISagaConfigurationObserver
     /// <typeparam name="TMessage"></typeparam>
     /// <param name="configurator"></param>
     void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
         where TMessage : class;
 }

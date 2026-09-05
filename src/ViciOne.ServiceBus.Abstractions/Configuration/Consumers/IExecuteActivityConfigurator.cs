@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TActivity"></typeparam>
 /// <typeparam name="TArguments"></typeparam>
 public interface IExecuteActivityConfigurator<TActivity, TArguments> :
-    IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>>,
+    IExecuteActivityPipeConfigurator<TActivity, TArguments>,
     IActivityObserverConnector,
     IConsumeConfigurator
     where TActivity : class, IExecuteActivity<TArguments>
@@ -23,7 +23,7 @@ public interface IExecuteActivityConfigurator<TActivity, TArguments> :
     /// Configure the pipeline prior to the activity factory
     /// </summary>
     /// <param name="configure"></param>
-    void Arguments(Action<IExecuteArgumentsConfigurator<TArguments>> configure);
+    new void Arguments(Action<IExecuteArgumentsConfigurator<TArguments>> configure);
 
     /// <summary>
     /// Configure the arguments separate from the activity

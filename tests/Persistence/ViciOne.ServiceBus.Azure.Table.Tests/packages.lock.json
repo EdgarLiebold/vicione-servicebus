@@ -289,6 +289,27 @@
         "type": "Project",
         "dependencies": {
           "Azure.Data.Tables": "[12.12.0, )",
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.JobService": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.jobservice": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -304,7 +325,8 @@
       "vicione.servicebus.tests.internalaccess": {
         "type": "Project",
         "dependencies": {
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )"
         }
       },
       "Microsoft.Extensions.Configuration": {

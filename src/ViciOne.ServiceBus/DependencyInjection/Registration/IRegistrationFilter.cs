@@ -12,35 +12,5 @@ public interface IRegistrationFilter
     /// </summary>
     /// <param name="registration">The registration value.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    bool Matches(IConsumerRegistration registration);
-    /// <summary>
-    /// Performs the matches operation.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    bool Matches(ISagaRegistration registration);
-    /// <summary>
-    /// Performs the matches operation.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    bool Matches(IExecuteActivityRegistration registration);
-    /// <summary>
-    /// Performs the matches operation.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    bool Matches(IActivityRegistration registration);
-    /// <summary>
-    /// Performs the matches operation.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    bool Matches(IFutureRegistration registration);
-    /// <summary>
-    /// Performs the matches operation.
-    /// </summary>
-    /// <param name="registration">The registration value.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    bool Matches(IEndpointRegistration registration);
+    bool Matches(IRegistration registration);
 }

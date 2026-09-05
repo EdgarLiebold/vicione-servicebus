@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.DynamoDb/ViciOne.ServiceBus.DynamoDb.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <ProjectReference Include="../../../src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />

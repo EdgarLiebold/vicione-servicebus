@@ -7,6 +7,7 @@
   <Folder Name="/src/">
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />

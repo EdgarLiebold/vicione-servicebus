@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageTags>ViciOne.ServiceBus;Initializers</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Advanced/Initializers/**/*.cs"
+             Exclude="../ViciOne.ServiceBus.Abstractions/Advanced/Initializers/INamedInitializerValue.cs"
+             Link="Advanced/Initializers/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/InVar.cs" Link="Advanced/InVar.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Initializers/Variables/IdVariable.cs"
+             Link="Initializers/Variables/IdVariable.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Initializers/Variables/TimestampVariable.cs"
+             Link="Initializers/Variables/TimestampVariable.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/PublishEndpointExtensions.cs"
+             Link="Advanced/Initializers/PublishEndpointExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/SendEndpointExtensions.cs"
+             Link="Advanced/Initializers/SendEndpointExtensions.cs" />
+  </ItemGroup>
+</Project>

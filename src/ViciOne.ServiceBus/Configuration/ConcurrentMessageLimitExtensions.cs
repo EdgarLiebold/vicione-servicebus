@@ -52,45 +52,6 @@ public static class ConcurrentMessageLimitExtensions
     }
 
     /// <summary>
-    /// Limits the number of concurrent messages consumed by the saga, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for all message types for the saga</param>
-    public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-
-        var observer = new ConcurrencyLimitSagaConfigurationObserver<TSaga>(configurator, concurrentMessageLimit);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
-    /// Limits the number of concurrent messages consumed by the saga, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="concurrentMessageLimit">The concurrent message limit for all message types for the saga</param>
-    /// <param name="managementEndpointConfigurator">A management endpoint configurator to support runtime adjustment</param>
-    /// <param name="id">An identifier for the concurrency limit to allow selective adjustment</param>
-    public static void UseConcurrentMessageLimit<TSaga>(this ISagaConfigurator<TSaga> configurator, int concurrentMessageLimit,
-        IReceiveEndpointConfigurator managementEndpointConfigurator, string? id = null)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-
-        var observer = new ConcurrencyLimitSagaConfigurationObserver<TSaga>(configurator, concurrentMessageLimit, id);
-        configurator.ConnectSagaConfigurationObserver(observer);
-
-        managementEndpointConfigurator.Instance(observer.Limiter, x =>
-        {
-            x.UseConcurrentMessageLimit(1);
-            x.Message<SetConcurrencyLimit>(m => m.UseMessageRetry(r => r.None()));
-        });
-    }
-
-    /// <summary>
     /// Limits the number of concurrent messages consumed by the handler.
     /// </summary>
     /// <param name="configurator"></param>

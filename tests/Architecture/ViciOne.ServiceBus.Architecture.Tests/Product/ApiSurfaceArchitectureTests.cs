@@ -170,8 +170,9 @@ public sealed class ApiSurfaceArchitectureTests
             .Order(StringComparer.Ordinal)
             .ToArray();
 
-        Assembly[] assemblies = [ProductAssemblyFacts.Abstractions, ProductAssemblyFacts.Core];
-        Type[] publicTypes = assemblies
+        Type[] publicTypes = ProductAssemblyFacts.ArchitectureAnchors
+            .Concat(ProductAssemblyFacts.CapabilityAssemblies)
+            .Distinct()
             .SelectMany(static assembly => assembly.GetExportedTypes())
             .Where(static type => !type.IsNested)
             .DistinctBy(static type => type.FullName, StringComparer.Ordinal)

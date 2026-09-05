@@ -36,8 +36,9 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="compensateAddress">The compensate address value.</param>
-    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
+        Uri compensateAddress)
+        where TActivity : class
         where TArguments : class
     {
     }
@@ -48,8 +49,8 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
         where TArguments : class
     {
     }
@@ -60,8 +61,8 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        where TActivity : class, ICompensateActivity<TLog>
+    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+        where TActivity : class
         where TLog : class
     {
         if (!_messageTypeFilter.Matches(typeof(TLog)))
@@ -72,9 +73,9 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
         if (!filterType.ImplementsInterface(typeof(IFilter<CompensateContext<TLog>>)))
             throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Compensate Activity Pipe Specification Observer", "unknown", $"The scoped filter must implement {TypeCache<IFilter<CompensateContext<TLog>>>.ShortName} ", "Correct the named configuration before starting the host"));
 
-        var scopeProvider = new CompensateActivityScopeProvider<TActivity, TLog>(_context);
+        var scopeProvider = new CompensateScopeProvider<TLog>(_context);
 
-        var scopedFilterType = typeof(ScopedCompensateFilter<,,>).MakeGenericType(typeof(TActivity), typeof(TLog), filterType);
+        var scopedFilterType = typeof(ScopedCompensateFilter<,>).MakeGenericType(typeof(TLog), filterType);
 
         var filter = (IFilter<CompensateContext<TLog>>)(Activator.CreateInstance(scopedFilterType, scopeProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
 

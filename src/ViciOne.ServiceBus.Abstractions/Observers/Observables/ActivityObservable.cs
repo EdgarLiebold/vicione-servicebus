@@ -19,7 +19,7 @@ public class ActivityObservable :
     /// <param name="context">The operation context.</param>
     /// <returns>The result of the operation.</returns>
     public Task PreExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         return ForEachAsync(x => x.PreExecuteAsync(context));
@@ -33,7 +33,7 @@ public class ActivityObservable :
     /// <param name="context">The operation context.</param>
     /// <returns>The result of the operation.</returns>
     public Task PostExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         return ForEachAsync(x => x.PostExecuteAsync(context));
@@ -48,7 +48,7 @@ public class ActivityObservable :
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns>The result of the operation.</returns>
     public Task ExecuteFaultAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context, Exception exception)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         return ForEachAsync(x => x.ExecuteFaultAsync(context, exception));
@@ -62,7 +62,7 @@ public class ActivityObservable :
     /// <param name="context">The operation context.</param>
     /// <returns>The result of the operation.</returns>
     public Task PreCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         return ForEachAsync(x => x.PreCompensateAsync(context));
@@ -76,7 +76,7 @@ public class ActivityObservable :
     /// <param name="context">The operation context.</param>
     /// <returns>The result of the operation.</returns>
     public Task PostCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         return ForEachAsync(x => x.PostCompensateAsync(context));
@@ -91,7 +91,7 @@ public class ActivityObservable :
     /// <param name="exception">The exception associated with the operation.</param>
     /// <returns>The result of the operation.</returns>
     public Task CompensateFailAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context, Exception exception)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         return ForEachAsync(x => x.CompensateFailAsync(context, exception));

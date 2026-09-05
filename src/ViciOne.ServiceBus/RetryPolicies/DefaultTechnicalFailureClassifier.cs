@@ -87,7 +87,6 @@ public sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClassif
             MessageInitializerException => RetryFailureKind.NonRetryable,
             MessageException => RetryFailureKind.NonRetryable,
             PayloadException => RetryFailureKind.NonRetryable,
-            RoutingSlipArgumentException => RetryFailureKind.NonRetryable,
             UnknownStateException => RetryFailureKind.NonRetryable,
             UnknownEventException => RetryFailureKind.NonRetryable,
             UnhandledEventException => RetryFailureKind.NonRetryable,

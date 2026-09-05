@@ -9,9 +9,11 @@
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/OrderWorkflow/ViciOne.ServiceBus.Samples.OrderWorkflow.csproj" />
+    <Project Path="samples/SuiteComposition/ViciOne.ServiceBus.Samples.SuiteComposition.csproj" />
   </Folder>
   <Folder Name="/dependencies/">
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
+    <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
@@ -25,6 +27,12 @@
     <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj" />
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />

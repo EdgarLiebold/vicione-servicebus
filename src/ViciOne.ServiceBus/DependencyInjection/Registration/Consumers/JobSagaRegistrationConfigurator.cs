@@ -25,6 +25,9 @@ public class JobSagaRegistrationConfigurator :
     {
         _configurator = configurator;
 
+        JobServiceCorrelationConventions.Register();
+        JobConsumerConventionRegistration.Register();
+
         configurator.Services.AddOptions<JobSagaOptions>()
             .Configure(options => configure?.Invoke(options))
             .Validate(

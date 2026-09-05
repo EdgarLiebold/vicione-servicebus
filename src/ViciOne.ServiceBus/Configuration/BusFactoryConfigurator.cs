@@ -228,7 +228,7 @@ public abstract class BusFactoryConfigurator :
     /// <typeparam name="TSaga">The t saga type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
     {
         _busConfiguration.Consume.Configurator.SagaConfigured(configurator);
     }
@@ -239,8 +239,8 @@ public abstract class BusFactoryConfigurator :
     /// <typeparam name="TInstance">The t instance type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="stateMachine">The state machine value.</param>
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
         _busConfiguration.Consume.Configurator.StateMachineSagaConfigured(configurator, stateMachine);
     }
@@ -252,7 +252,7 @@ public abstract class BusFactoryConfigurator :
     /// <typeparam name="TMessage">The t message type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
         where TMessage : class
     {
         _busConfiguration.Consume.Configurator.SagaMessageConfigured(configurator);
@@ -276,8 +276,8 @@ public abstract class BusFactoryConfigurator :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="compensateAddress">The compensate address value.</param>
-    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+        where TActivity : class
         where TArguments : class
     {
         _busConfiguration.Consume.Configurator.ActivityConfigured(configurator, compensateAddress);
@@ -289,8 +289,8 @@ public abstract class BusFactoryConfigurator :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
         where TArguments : class
     {
         _busConfiguration.Consume.Configurator.ExecuteActivityConfigured(configurator);
@@ -302,8 +302,8 @@ public abstract class BusFactoryConfigurator :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        where TActivity : class, ICompensateActivity<TLog>
+    public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+        where TActivity : class
         where TLog : class
     {
         _busConfiguration.Consume.Configurator.CompensateActivityConfigured(configurator);

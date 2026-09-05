@@ -251,12 +251,53 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.futures": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.initializers": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.jobservice": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.messagepack": {
         "type": "Project",
         "dependencies": {
           "MessagePack": "[3.1.8, )",
           "ViciOne.ServiceBus": "[1.0.0, )",
-          "ViciOne.ServiceBus.Abstractions": "[1.0.0, )"
+          "ViciOne.ServiceBus.Abstractions": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.JobService": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
       "vicione.servicebus.testing": {
@@ -265,7 +306,11 @@
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options": "[10.0.11, )",
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Futures": "[1.0.0, )",
+          "ViciOne.ServiceBus.Mediator": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },
       "vicione.servicebus.tests.infrastructure": {

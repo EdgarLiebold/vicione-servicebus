@@ -9,12 +9,13 @@ namespace ViciOne.ServiceBus.Sagas;
 /// </summary>
 public interface State :
     IVisitable,
+    global::ViciOne.ServiceBus.Advanced.Initializers.INamedInitializerValue,
     IComparable<State>
 {
     /// <summary>
     /// Gets the name value.
     /// </summary>
-    string Name { get; }
+    new string Name { get; }
 
     /// <summary>
     /// Raised when the state is entered
@@ -43,7 +44,8 @@ public interface State :
 /// </summary>
 /// <typeparam name="TSaga">The instance type to which the state applies</typeparam>
 public interface State<TSaga> :
-    State
+    State,
+    global::ViciOne.ServiceBus.Advanced.Initializers.INamedInitializerValue<TSaga>
     where TSaga : class, SagaStateMachineInstance
 {
     /// <summary>

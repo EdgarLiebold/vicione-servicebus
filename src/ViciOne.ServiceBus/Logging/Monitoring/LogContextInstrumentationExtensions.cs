@@ -71,36 +71,6 @@ public static class LogContextInstrumentationExtensions
         StartProcess(logContext, context, "handle", "handler");
 
     /// <summary>
-    /// Starts saga instrument.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static MetricOperation? StartSagaInstrument<TSaga, T>(
-        this ILogContext logContext,
-        SagaConsumeContext<TSaga, T> context)
-        where T : class
-        where TSaga : class, ISaga =>
-        StartProcess(logContext, context, "saga", "saga");
-
-    /// <summary>
-    /// Starts saga state machine instrument.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static MetricOperation? StartSagaStateMachineInstrument<TSaga, T>(
-        this ILogContext logContext,
-        BehaviorContext<TSaga, T> context)
-        where T : class
-        where TSaga : class, SagaStateMachineInstance =>
-        StartProcess(logContext, context, "saga", "saga_state_machine");
-
-    /// <summary>
     /// Starts consume instrument.
     /// </summary>
     /// <typeparam name="TConsumer">The t consumer type.</typeparam>
@@ -117,36 +87,6 @@ public static class LogContextInstrumentationExtensions
             context,
             ConsumerProcessorIdentity<TConsumer>.OperationName,
             ConsumerProcessorIdentity<TConsumer>.ProcessorKind);
-
-    /// <summary>
-    /// Starts activity execute instrument.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static MetricOperation? StartActivityExecuteInstrument<TActivity, TArguments>(
-        this ILogContext logContext,
-        ConsumeContext<Courier.Contracts.RoutingSlip> context)
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class =>
-        StartProcess(logContext, context, "execute", "courier_execute");
-
-    /// <summary>
-    /// Starts activity compensate instrument.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static MetricOperation? StartActivityCompensateInstrument<TActivity, TLog>(
-        this ILogContext logContext,
-        ConsumeContext<Courier.Contracts.RoutingSlip> context)
-        where TActivity : class, ICompensateActivity<TLog>
-        where TLog : class =>
-        StartProcess(logContext, context, "compensate", "courier_compensate");
 
     /// <summary>
     /// Starts send instrument.
@@ -273,7 +213,7 @@ public static class LogContextInstrumentationExtensions
             BindInstrumentation(destination, instrumentation);
     }
 
-    private static MetricOperation? StartProcess(ILogContext logContext, PipeContext context, string operationName, string processorKind) =>
+    internal static MetricOperation? StartProcess(ILogContext logContext, PipeContext context, string operationName, string processorKind) =>
         TryStart(logContext, context, state =>
         {
             if (!state.ProcessDuration.Enabled

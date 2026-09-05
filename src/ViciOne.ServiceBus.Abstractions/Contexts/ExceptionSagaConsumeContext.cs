@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// <typeparam name="T">The t type.</typeparam>
 public interface ExceptionSagaConsumeContext<out T> :
     SagaConsumeContext<T>
-    where T : class, ISaga
+    where T : class
 {
     /// <summary>
     /// The exception that was thrown

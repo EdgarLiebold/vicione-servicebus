@@ -5,6 +5,7 @@ using ViciOne.ServiceBus.Scheduling;
 using ViciOne.ServiceBus.Tests.Infrastructure.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+using ActivityContext = System.Diagnostics.ActivityContext;
 
 namespace ViciOne.ServiceBus.Quartz.Tests.QuartzIntegration;
 

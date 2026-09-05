@@ -7,22 +7,20 @@ namespace ViciOne.ServiceBus.Middleware;
 /// <summary>
 /// Provides a scoped execute filter implementation.
 /// </summary>
-/// <typeparam name="TActivity">The t activity type.</typeparam>
 /// <typeparam name="TArguments">The t arguments type.</typeparam>
 /// <typeparam name="TFilter">The t filter type.</typeparam>
-public class ScopedExecuteFilter<TActivity, TArguments, TFilter> :
+public class ScopedExecuteFilter<TArguments, TFilter> :
     IFilter<ExecuteContext<TArguments>>
-    where TActivity : class, IExecuteActivity<TArguments>
     where TArguments : class
     where TFilter : class, IFilter<ExecuteContext<TArguments>>
 {
-    readonly IExecuteActivityScopeProvider<TActivity, TArguments> _scopeProvider;
+    readonly ExecuteScopeProvider<TArguments> _scopeProvider;
 
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
     /// <param name="scopeProvider">The scope provider value.</param>
-    public ScopedExecuteFilter(IExecuteActivityScopeProvider<TActivity, TArguments> scopeProvider)
+    public ScopedExecuteFilter(ExecuteScopeProvider<TArguments> scopeProvider)
     {
         _scopeProvider = scopeProvider;
     }

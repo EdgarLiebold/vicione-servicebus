@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.Courier.Contracts;
 
@@ -15,6 +19,7 @@ public abstract class BaseCourierContext :
     readonly long _startedAt;
     readonly DateTimeOffset _timestamp;
     readonly TimeProvider _timeProvider;
+    readonly IReadOnlyDictionary<string, object> _variables;
 
     /// <summary>
     /// Initializes a new instance of the containing type.
@@ -34,6 +39,7 @@ public abstract class BaseCourierContext :
         _timestamp = newId.Timestamp;
 
         RoutingSlip = new SanitizedRoutingSlip(consumeContext);
+        _variables = new ReadOnlyDictionary<string, object>(RoutingSlip.Variables);
 
         // ReSharper disable once VirtualMemberCallInConstructor
         Publisher = new RoutingSlipEventPublisher(this, RoutingSlip, CancellationToken);
@@ -48,10 +54,11 @@ public abstract class BaseCourierContext :
     /// </summary>
     protected SanitizedRoutingSlip RoutingSlip { get; }
 
-    DateTimeOffset CourierContext.Timestamp => _timestamp;
-    TimeSpan CourierContext.Elapsed => _timeProvider.GetElapsedTime(_startedAt);
-    Guid CourierContext.TrackingNumber => RoutingSlip.TrackingNumber;
-    Guid CourierContext.ExecutionId => _executionId;
+    DateTimeOffset ActivityContext.Timestamp => _timestamp;
+    TimeSpan ActivityContext.Elapsed => _timeProvider.GetElapsedTime(_startedAt);
+    Guid ActivityContext.TrackingNumber => RoutingSlip.TrackingNumber;
+    Guid ActivityContext.ExecutionId => _executionId;
+    IReadOnlyDictionary<string, object> ActivityContext.Variables => _variables;
 
     RoutingSlip ConsumeContext<RoutingSlip>.Message => RoutingSlip;
 
@@ -59,4 +66,9 @@ public abstract class BaseCourierContext :
     /// Gets the activity name value.
     /// </summary>
     public abstract string ActivityName { get; }
+
+    Task ActivityContext.NotifyActivityConsumedAsync(TimeSpan duration, string consumerType, CancellationToken cancellationToken)
+    {
+        return NotifyConsumedAsync((ConsumeContext<RoutingSlip>)this, duration, consumerType, cancellationToken);
+    }
 }

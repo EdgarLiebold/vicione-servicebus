@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Context;
 /// </summary>
 /// <typeparam name="TLog">The t log type.</typeparam>
 public class CompensateContextProxy<TLog> :
-    CourierContextProxy,
+    ActivityContextProxy,
     CompensateContext<TLog>
     where TLog : class
 {

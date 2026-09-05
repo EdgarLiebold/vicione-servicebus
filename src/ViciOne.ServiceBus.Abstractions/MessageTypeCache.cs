@@ -283,42 +283,9 @@ public class MessageTypeCache<T> :
         if (type.IsGenericType)
         {
             var typeDefinition = type.GetGenericTypeDefinition();
-            if (typeDefinition == typeof(CorrelatedBy<>))
+            if (typeDefinition.IsDefined(typeof(MessageContractExclusionAttribute), inherit: false))
             {
-                _invalidMessageTypeReason =
-                    $"CorrelatedBy<{type.GetSingleClosedGenericArgument(typeof(CorrelatedBy<>)).Name}> is not a valid message type";
-
-                return false;
-            }
-
-            if (typeDefinition == typeof(Orchestrates<>))
-            {
-                _invalidMessageTypeReason =
-                    $"Orchestrates<{type.GetSingleClosedGenericArgument(typeof(Orchestrates<>)).Name}> is not a valid message type";
-
-                return false;
-            }
-
-            if (typeDefinition == typeof(InitiatedBy<>))
-            {
-                _invalidMessageTypeReason =
-                    $"InitiatedBy<{type.GetSingleClosedGenericArgument(typeof(InitiatedBy<>)).Name}> is not a valid message type";
-
-                return false;
-            }
-
-            if (typeDefinition == typeof(InitiatedByOrOrchestrates<>))
-            {
-                _invalidMessageTypeReason =
-                    $"InitiatedByOrOrchestrates<{type.GetSingleClosedGenericArgument(typeof(InitiatedByOrOrchestrates<>)).Name}> is not a valid message type";
-
-                return false;
-            }
-
-            if (typeDefinition == typeof(Observes<,>))
-            {
-                Type[]? closingArguments = type.GetSingleClosedGenericArguments(typeof(Observes<,>)).ToArray();
-                _invalidMessageTypeReason = $"Observes<{closingArguments[0].Name},{closingArguments[1].Name}> is not a valid message type";
+                _invalidMessageTypeReason = $"{TypeCache<T>.ShortName} is not a valid message type";
                 return false;
             }
 
@@ -341,7 +308,8 @@ public class MessageTypeCache<T> :
     {
         const string activity = "Activity";
 
-        if (typeof(T).ImplementsInterface<IExecuteActivity>())
+        if (typeof(T).GetInterfaces().Any(static type =>
+                type.IsDefined(typeof(ActivityContractAttribute), inherit: false)))
         {
             var activityName = typeof(T).Name;
             if (activityName.EndsWith(activity, StringComparison.InvariantCultureIgnoreCase))

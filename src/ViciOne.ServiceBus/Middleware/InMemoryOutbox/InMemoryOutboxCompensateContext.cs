@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 /// </summary>
 /// <typeparam name="TLog">The t log type.</typeparam>
 public class InMemoryOutboxCompensateContext<TLog> :
-    InMemoryOutboxCourierContextProxy,
+    InMemoryOutboxActivityContextProxy,
     CompensateContext<TLog>
     where TLog : class
 {

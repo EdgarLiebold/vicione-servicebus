@@ -133,7 +133,7 @@ public class DefaultEndpointNameFormatter :
     /// <typeparam name="T">The t type.</typeparam>
     /// <returns>The result of the operation.</returns>
     public virtual string Saga<T>()
-        where T : class, ISaga
+        where T : class
     {
         return GetSagaName(typeof(T));
     }
@@ -145,7 +145,7 @@ public class DefaultEndpointNameFormatter :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <returns>The result of the operation.</returns>
     public virtual string ExecuteActivity<T, TArguments>()
-        where T : class, IExecuteActivity<TArguments>
+        where T : class
         where TArguments : class
     {
         var activityName = GetActivityName(typeof(T), typeof(TArguments));
@@ -160,7 +160,7 @@ public class DefaultEndpointNameFormatter :
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <returns>The result of the operation.</returns>
     public virtual string CompensateActivity<T, TLog>()
-        where T : class, ICompensateActivity<TLog>
+        where T : class
         where TLog : class
     {
         var activityName = GetActivityName(typeof(T), typeof(TLog));
@@ -279,7 +279,7 @@ public class DefaultEndpointNameFormatter :
     /// <summary>
     /// Gets the endpoint name for a saga of the given type.
     /// </summary>
-    /// <param name="type">The type of the saga implementing <see cref="ISaga" /></param>
+    /// <param name="type">The registered saga type.</param>
     /// <returns>The fully formatted name as it will be provided via <see cref="Saga{T}" /></returns>
     protected virtual string GetSagaName(Type type)
     {
@@ -303,7 +303,7 @@ public class DefaultEndpointNameFormatter :
     /// <remarks>
     /// The activity name is used both for execution and compensation endpoint names.
     /// </remarks>
-    /// <param name="activityType">The type of the activity implementing <see cref="IActivity" /></param>
+    /// <param name="activityType">The activity implementation type.</param>
     /// <param name="argumentType">
     /// For execution endpoints this is the activity arguments, for compensation this is the log type.
     /// </param>

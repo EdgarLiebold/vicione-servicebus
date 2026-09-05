@@ -69,8 +69,8 @@ public class PropertyProviderFactory<TInput> :
         if (propertyType.TryGetSingleClosedGenericArguments(typeof(IInitializerVariable<>), out types))
             return Activate(typeof(VariableProperty<,>).MakeGenericType(typeof(TInput), propertyType, types[0]), this);
 
-        if (propertyType.TryGetSingleClosedGenericArguments(typeof(State<>), out types))
-            return Activate(typeof(StateProperty<>).MakeGenericType(typeof(TInput), types[0]), this);
+        if (typeof(INamedInitializerValue).IsAssignableFrom(propertyType))
+            return Activate(typeof(NamedValueProperty<>).MakeGenericType(typeof(TInput), propertyType), this);
 
         if (propertyType.IsValueTypeOrObject())
             return Activate(typeof(Convert<,>).MakeGenericType(typeof(TInput), type, propertyType), this);
@@ -506,24 +506,24 @@ public class PropertyProviderFactory<TInput> :
     }
 
 
-    class StateProperty<TInstance> :
+    class NamedValueProperty<TValue> :
         IProviderFactory
-        where TInstance : class, SagaStateMachineInstance
+        where TValue : class, INamedInitializerValue
     {
         readonly IPropertyProviderFactory<TInput> _factory;
 
-        public StateProperty(IPropertyProviderFactory<TInput> factory)
+        public NamedValueProperty(IPropertyProviderFactory<TInput> factory)
         {
             _factory = factory;
         }
 
         bool IProviderFactory.TryGetProvider<T>(PropertyInfo propertyInfo, [NotNullWhen(true)] out IPropertyProvider<TInput, T>? provider)
         {
-            if (TryGetConverter(out IPropertyConverter<T, TInstance>? propertyConverter))
+            if (TryGetConverter(out IPropertyConverter<T, TValue>? propertyConverter))
             {
-                var inputValuePropertyProvider = new InputPropertyProvider<TInput, TInstance>(propertyInfo);
+                var inputValuePropertyProvider = new InputPropertyProvider<TInput, TValue>(propertyInfo);
 
-                provider = new PropertyConverterPropertyProvider<TInput, T, TInstance>(propertyConverter, inputValuePropertyProvider);
+                provider = new PropertyConverterPropertyProvider<TInput, T, TValue>(propertyConverter, inputValuePropertyProvider);
                 return true;
             }
 
@@ -535,13 +535,13 @@ public class PropertyProviderFactory<TInput> :
         {
             if (typeof(T) == typeof(string))
             {
-                converter = new StatePropertyConverter<TInstance>() as IPropertyConverter<T, TProperty>;
+                converter = new NamedInitializerValuePropertyConverter<TValue>() as IPropertyConverter<T, TProperty>;
                 return converter != null;
             }
 
             if (_factory.TryGetPropertyConverter(out IPropertyConverter<T, string>? elementConverter))
             {
-                converter = new StatePropertyConverter<T, TInstance>(elementConverter) as IPropertyConverter<T, TProperty>;
+                converter = new NamedInitializerValuePropertyConverter<T, TValue>(elementConverter) as IPropertyConverter<T, TProperty>;
                 return converter != null;
             }
 

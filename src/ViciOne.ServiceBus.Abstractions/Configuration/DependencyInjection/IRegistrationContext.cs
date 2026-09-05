@@ -32,6 +32,12 @@ public interface IRegistrationContext :
     void ConfigureConsumers(IReceiveEndpointConfigurator configurator);
 
     /// <summary>
+    /// Configures every registered handler category on the receive endpoint.
+    /// </summary>
+    /// <param name="configurator">The receive endpoint configurator.</param>
+    void ConfigureConsumerKinds(IReceiveEndpointConfigurator configurator);
+
+    /// <summary>
     /// Configure a saga on the receive endpoint
     /// </summary>
     /// <param name="sagaType">The saga type</param>
@@ -45,7 +51,7 @@ public interface IRegistrationContext :
     /// <param name="configure"></param>
     /// <typeparam name="T">The saga type</typeparam>
     void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>>? configure = null)
-        where T : class, ISaga;
+        where T : class;
 
     /// <summary>
     /// Configure all registered sagas on the receive endpoint
@@ -97,5 +103,5 @@ public interface IRegistrationContext :
     /// <param name="configurator"></param>
     /// <typeparam name="T">The saga type</typeparam>
     void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
-        where T : class, ISaga;
+        where T : class;
 }

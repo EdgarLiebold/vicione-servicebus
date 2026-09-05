@@ -302,6 +302,18 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.initializers": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.rabbitmq": {
         "type": "Project",
         "dependencies": {
@@ -321,7 +333,8 @@
       "vicione.servicebus.tests.internalaccess": {
         "type": "Project",
         "dependencies": {
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )"
         }
       },
       "Microsoft.Extensions.Configuration": {

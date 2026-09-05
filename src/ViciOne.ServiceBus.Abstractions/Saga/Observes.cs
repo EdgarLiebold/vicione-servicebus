@@ -8,6 +8,8 @@ namespace ViciOne.ServiceBus.Sagas;
 /// </summary>
 /// <typeparam name="TMessage">The t message type.</typeparam>
 /// <typeparam name="TSaga">The t saga type.</typeparam>
+[MessageContractExclusion]
+[ConsumerRegistrationExclusion]
 public interface Observes<TMessage, TSaga> :
     IConsumer<TMessage>
     where TMessage : class

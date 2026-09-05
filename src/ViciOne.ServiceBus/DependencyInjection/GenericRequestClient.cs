@@ -1,8 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using ViciOne.ServiceBus.Mediator;
 
 namespace ViciOne.ServiceBus.DependencyInjection;
 
@@ -291,17 +289,8 @@ public class GenericRequestClient<TRequest> :
 
     static IRequestClient<TRequest> GetRequestClient(IServiceProvider provider)
     {
-        var clientFactory = provider.GetService<IScopedClientFactory>();
-        if (clientFactory != null)
-            return clientFactory.CreateRequestClient<TRequest>();
-
-        var mediator = provider.GetService<IScopedMediator>();
-        if (mediator != null)
-        {
-            var consumeContext = provider.GetRequiredService<Bind<IMediator, IScopedConsumeContextProvider>>().Value.GetContext();
-            return mediator.CreateRequestClient<TRequest>(consumeContext);
-        }
-
-        throw new ViciOneServiceBusException($"Unable to resolve client factory or mediator for request client: {TypeCache<TRequest>.ShortName}");
+        var clientFactory = (IScopedClientFactory?)provider.GetService(typeof(IScopedClientFactory));
+        return clientFactory?.CreateRequestClient<TRequest>()
+            ?? throw new ViciOneServiceBusException($"Unable to resolve a scoped client factory for request client: {TypeCache<TRequest>.ShortName}");
     }
 }

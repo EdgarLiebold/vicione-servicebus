@@ -1,5 +1,6 @@
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
+using ViciOne.ServiceBus.Tests.InternalAccess.Topology;
 using Xunit;
 
 namespace ViciOne.ServiceBus.Tests.Topology.Configuration;
@@ -40,5 +41,23 @@ public sealed class ApplicationMessageTopologyTests
         Assert.Null(assemblyMarker.Assembly.GetType("ViciOne.ServiceBus.IEndpointConventionCache"));
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CAPABILITY-PACKAGES", "late-capability-metadata-preserves-application-freeze")]
+    public void FrozenTopology_AcceptsCapabilityMetadataWithoutReopeningApplicationConfiguration()
+    {
+        _ = Bus.Factory.CreateUsingInMemory(_ => { });
+
+        bool found = GlobalTopologyTestDriver.RegisterCapabilityCorrelationId<LateCapabilityContract>(
+            message => message.CorrelationId);
+
+        Assert.True(found);
+        Assert.Throws<InvalidOperationException>(() =>
+            MessageCorrelation.UseCorrelationId<AnotherLateContract>(message => message.CorrelationId));
+    }
+
     private sealed record LateContract(Guid CorrelationId);
+
+    private sealed record LateCapabilityContract(Guid CorrelationId);
+
+    private sealed record AnotherLateContract(Guid CorrelationId);
 }

@@ -90,7 +90,7 @@ class TrackedActivity :
         _completed.TrySetResult(true);
     }
 
-    static ActivitySamplingResult Sample(ref ActivityCreationOptions<ActivityContext> options)
+    static ActivitySamplingResult Sample(ref ActivityCreationOptions<System.Diagnostics.ActivityContext> options)
     {
         return ActivitySamplingResult.AllDataAndRecorded;
     }

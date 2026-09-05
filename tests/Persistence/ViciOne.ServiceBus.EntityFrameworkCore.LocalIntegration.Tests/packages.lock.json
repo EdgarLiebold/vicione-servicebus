@@ -289,6 +289,12 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.entityframeworkcore": {
         "type": "Project",
         "dependencies": {
@@ -297,10 +303,54 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.entityframeworkcore.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "ViciOne.ServiceBus.EntityFrameworkCore": "[1.0.0, )",
+          "ViciOne.ServiceBus.Futures": "[1.0.0, )",
+          "ViciOne.ServiceBus.JobService": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.futures": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.initializers": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.jobservice": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.quartz": {
         "type": "Project",
         "dependencies": {
           "Quartz": "[4.0.0, )",
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.JobService": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -310,7 +360,11 @@
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options": "[10.0.11, )",
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Futures": "[1.0.0, )",
+          "ViciOne.ServiceBus.Mediator": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },
       "vicione.servicebus.tests.infrastructure": {
@@ -325,7 +379,8 @@
       "vicione.servicebus.tests.internalaccess": {
         "type": "Project",
         "dependencies": {
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )"
         }
       },
       "Microsoft.EntityFrameworkCore.Relational": {

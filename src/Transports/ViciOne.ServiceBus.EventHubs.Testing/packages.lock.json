@@ -197,11 +197,38 @@
       "vicione.servicebus.abstractions": {
         "type": "Project"
       },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.eventhubs": {
         "type": "Project",
         "dependencies": {
           "Azure.Messaging.EventHubs.Processor": "[5.12.2, )",
           "Azure.Storage.Blobs": "[12.29.2, )",
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.futures": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -211,7 +238,11 @@
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "Microsoft.Extensions.Hosting.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options": "[10.0.11, )",
-          "ViciOne.ServiceBus": "[1.0.0, )"
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Futures": "[1.0.0, )",
+          "ViciOne.ServiceBus.Mediator": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
         }
       },
       "Azure.Messaging.EventHubs.Processor": {

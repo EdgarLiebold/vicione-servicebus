@@ -20,8 +20,8 @@ internal sealed class TimeoutSagaConfigurationObserver<TSaga> :
     {
     }
 
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
     }
 

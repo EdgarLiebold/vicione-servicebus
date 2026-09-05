@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.RetryPolicies;
@@ -39,7 +38,7 @@ public class CompensateContextRedeliveryPipeSpecification<TLog> :
 
         var policy = new ConsumeContextRetryPolicy<CompensateContext<TLog>, RetryCompensateContext<TLog>>(retryPolicy, CancellationToken.None, Factory);
 
-        builder.AddFilter(new RedeliveryRetryFilter<CompensateContext<TLog>, RoutingSlip>(policy, _observers));
+        builder.AddFilter(new ActivityRedeliveryRetryFilter<CompensateContext<TLog>>(policy, _observers));
     }
 
     /// <summary>

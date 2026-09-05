@@ -63,6 +63,15 @@ public class MediatorRegistrationContext :
     }
 
     /// <summary>
+    /// Configures every registered handler category on the receive endpoint.
+    /// </summary>
+    /// <param name="configurator">The receive endpoint configurator.</param>
+    public void ConfigureConsumerKinds(IReceiveEndpointConfigurator configurator)
+    {
+        _registration.ConfigureConsumerKinds(configurator);
+    }
+
+    /// <summary>
     /// Configures saga.
     /// </summary>
     /// <param name="sagaType">The saga type value.</param>
@@ -79,7 +88,7 @@ public class MediatorRegistrationContext :
     /// <param name="configurator">The configurator value.</param>
     /// <param name="configure">The configuration callback.</param>
     public void ConfigureSaga<T>(IReceiveEndpointConfigurator configurator, Action<ISagaConfigurator<T>>? configure = null)
-        where T : class, ISaga
+        where T : class
     {
         _registration.ConfigureSaga(configurator, configure);
     }
@@ -152,7 +161,7 @@ public class MediatorRegistrationContext :
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void ConfigureFuture<T>(IReceiveEndpointConfigurator configurator)
-        where T : class, ISaga
+        where T : class
     {
         _registration.ConfigureFuture<T>(configurator);
     }

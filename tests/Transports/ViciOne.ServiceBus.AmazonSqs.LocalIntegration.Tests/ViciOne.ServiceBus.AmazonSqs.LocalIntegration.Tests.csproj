@@ -23,6 +23,9 @@
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj" />
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
     <ProjectReference Include="../../../src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj" />
   </ItemGroup>

@@ -4,7 +4,12 @@ namespace ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.Fixtures;
 
 internal static class ServiceBusCodeFixFixture
 {
-    internal static IReadOnlyCollection<Assembly> ReferenceRoots { get; } = [typeof(Bus).Assembly];
+    internal static IReadOnlyCollection<Assembly> ReferenceRoots { get; } =
+    [
+        typeof(Bus).Assembly,
+        typeof(ViciOne.ServiceBus.Advanced.InVar).Assembly,
+        typeof(ViciOne.ServiceBus.Advanced.ISaga).Assembly,
+    ];
 
     internal const string Usings = @"
 using System;

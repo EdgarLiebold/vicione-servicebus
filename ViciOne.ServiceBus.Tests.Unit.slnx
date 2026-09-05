@@ -47,6 +47,12 @@
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Analyzers.CodeFixes/ViciOne.ServiceBus.Analyzers.CodeFixes.csproj" />
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
@@ -57,6 +63,7 @@
     <Project Path="src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.DynamoDb/ViciOne.ServiceBus.DynamoDb.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
+    <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj" />
     <Project Path="src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj" />

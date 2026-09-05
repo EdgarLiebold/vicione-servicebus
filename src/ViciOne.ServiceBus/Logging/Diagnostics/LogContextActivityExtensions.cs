@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
@@ -182,86 +181,6 @@ public static class LogContextActivityExtensions
     }
 
     /// <summary>
-    /// Starts saga activity.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static StartedActivity? StartSagaActivity<TSaga, T>(this ILogContext logContext, SagaConsumeContext<TSaga, T> context)
-        where TSaga : class, ISaga
-        where T : class
-    {
-        return StartActivity((ConsumeContext)context, activity =>
-        {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TSaga>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
-        });
-    }
-
-    /// <summary>
-    /// Starts saga state machine activity.
-    /// </summary>
-    /// <typeparam name="TSaga">The t saga type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static StartedActivity? StartSagaStateMachineActivity<TSaga, T>(this ILogContext logContext, BehaviorContext<TSaga, T> context)
-        where TSaga : class, SagaStateMachineInstance
-        where T : class
-    {
-        return StartActivity((ConsumeContext)context, activity =>
-        {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.SagaId, context.Saga.CorrelationId.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, context.StateMachine.Name);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<T>.DiagnosticAddress);
-        });
-    }
-
-    /// <summary>
-    /// Starts execute activity.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static StartedActivity? StartExecuteActivity<TActivity, TArguments>(this ILogContext logContext, ConsumeContext<RoutingSlip> context)
-        where TActivity : IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        return StartActivity(context.Advanced(), activity =>
-        {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TArguments>.DiagnosticAddress);
-        });
-    }
-
-    /// <summary>
-    /// Starts compensate activity.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="logContext">The log context value.</param>
-    /// <param name="context">The operation context.</param>
-    /// <returns>The result of the operation.</returns>
-    public static StartedActivity? StartCompensateActivity<TActivity, TLog>(this ILogContext logContext, ConsumeContext<RoutingSlip> context)
-        where TActivity : ICompensateActivity<TLog>
-        where TLog : class
-    {
-        return StartActivity(context.Advanced(), activity =>
-        {
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.TrackingNumber, context.Message.TrackingNumber.ToString("D"));
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.ConsumerType, TypeCache<TActivity>.ShortName);
-            ActivityObservation.TrySetTag(activity, DiagnosticHeaders.PeerAddress, MessageTypeCache<TLog>.DiagnosticAddress);
-        });
-    }
-
-    /// <summary>
     /// Starts generic activity.
     /// </summary>
     /// <param name="logContext">The log context value.</param>
@@ -384,14 +303,15 @@ public static class LogContextActivityExtensions
         return headers.TryGetHeader(DiagnosticHeaders.ActivityTraceState, out var value) ? value as string : null;
     }
 
-    static ActivityContext GetParentActivityContext(Headers headers, bool isRemote = false)
+    static System.Diagnostics.ActivityContext GetParentActivityContext(Headers headers, bool isRemote = false)
     {
         if (headers.TryGetHeader(DiagnosticHeaders.ActivityId, out var headerValue)
             && headerValue is string activityId
-            && ActivityContext.TryParse(activityId, GetTraceState(headers), out var activityContext))
+            && System.Diagnostics.ActivityContext.TryParse(activityId, GetTraceState(headers), out var activityContext))
         {
             if (isRemote && System.Diagnostics.Activity.Current == null)
-                return new ActivityContext(activityContext.TraceId, activityContext.SpanId, activityContext.TraceFlags, activityContext.TraceState, true);
+                return new System.Diagnostics.ActivityContext(activityContext.TraceId, activityContext.SpanId, activityContext.TraceFlags,
+                    activityContext.TraceState, true);
 
             return activityContext;
         }
@@ -399,7 +319,7 @@ public static class LogContextActivityExtensions
         return default;
     }
 
-    static StartedActivity? StartActivity(ConsumeContext context, Action<System.Diagnostics.Activity> started)
+    internal static StartedActivity? StartActivity(ConsumeContext context, Action<System.Diagnostics.Activity> started)
     {
         var currentActivity = System.Diagnostics.Activity.Current;
         if (currentActivity == null)

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.AzureServiceBus;

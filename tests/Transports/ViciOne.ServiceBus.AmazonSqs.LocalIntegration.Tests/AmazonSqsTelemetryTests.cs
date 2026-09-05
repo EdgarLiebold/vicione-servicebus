@@ -6,6 +6,7 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
+using ActivityContext = System.Diagnostics.ActivityContext;
 
 namespace ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests;
 

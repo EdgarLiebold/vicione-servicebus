@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
-using ViciOne.ServiceBus.Internals;
-using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -16,8 +14,8 @@ public abstract class RegistrationConfigurator :
     IAdvancedRegistrationConfigurator
 {
     readonly IServiceCollection _collection;
+    readonly Dictionary<Type, IRegistrationCompletionParticipant> _registrationCompletionParticipants = new();
     bool _configured;
-    ISagaRepositoryRegistrationProvider _sagaRepositoryRegistrationProvider;
 
     /// <summary>
     /// Initializes a new instance of the containing type.
@@ -29,8 +27,6 @@ public abstract class RegistrationConfigurator :
         _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
         Registrar = registrar ?? new DependencyInjectionContainerRegistrar(collection);
-
-        _sagaRepositoryRegistrationProvider = new SagaRepositoryRegistrationProvider();
     }
 
     /// <summary>
@@ -42,6 +38,9 @@ public abstract class RegistrationConfigurator :
     /// Gets the services value.
     /// </summary>
     public IServiceCollection Services => _collection;
+
+    /// <inheritdoc />
+    public virtual Type BusType => typeof(IBus);
 
     /// <summary>
     /// Gets or sets the default request timeout value.
@@ -76,165 +75,6 @@ public abstract class RegistrationConfigurator :
         registration.AddConfigureAction(configure);
 
         return new ConsumerRegistrationConfigurator<T>(this, registration);
-    }
-
-    /// <summary>
-    /// Adds saga to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
-        where T : class, ISaga
-    {
-        return AddSaga(null, configure);
-    }
-
-    /// <summary>
-    /// Adds saga to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="sagaDefinitionType">The saga definition type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
-    public ISagaRegistrationConfigurator<T> AddSaga<T>(Type? sagaDefinitionType, Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where T : class, ISaga
-    {
-        if (typeof(T).ImplementsInterface<SagaStateMachineInstance>())
-            throw new ArgumentException($"State machine sagas must be registered using AddSagaStateMachine: {TypeCache<T>.ShortName}");
-
-        var registration = _collection.RegisterSaga<T>(Registrar, sagaDefinitionType);
-
-        registration.AddConfigureAction(configure);
-
-        return new SagaRegistrationConfigurator<T>(this, registration);
-    }
-
-    /// <summary>
-    /// Adds saga state machine to the configuration.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where TStateMachine : class, SagaStateMachine<T>
-        where T : class, SagaStateMachineInstance
-    {
-        return AddSagaStateMachine<TStateMachine, T>(null, configure);
-    }
-
-    /// <summary>
-    /// Adds saga state machine to the configuration.
-    /// </summary>
-    /// <typeparam name="TStateMachine">The t state machine type.</typeparam>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="sagaDefinitionType">The saga definition type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
-    public ISagaRegistrationConfigurator<T> AddSagaStateMachine<TStateMachine, T>(Type? sagaDefinitionType,
-        Action<IRegistrationContext, ISagaConfigurator<T>>? configure = null)
-        where TStateMachine : class, SagaStateMachine<T>
-        where T : class, SagaStateMachineInstance
-    {
-        var registration = _collection.RegisterSagaStateMachine<TStateMachine, T>(Registrar, sagaDefinitionType);
-
-        registration.AddConfigureAction(configure);
-
-        return new SagaRegistrationConfigurator<T>(this, registration);
-    }
-
-    /// <summary>
-    /// Adds execute activity to the configuration.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
-    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure)
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        return AddExecuteActivity(null, configure);
-    }
-
-    /// <summary>
-    /// Adds execute activity to the configuration.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <param name="executeActivityDefinitionType">The execute activity definition type value.</param>
-    /// <param name="configure">The configuration callback.</param>
-    /// <returns>The result of the operation.</returns>
-    public IExecuteActivityRegistrationConfigurator<TActivity, TArguments> AddExecuteActivity<TActivity, TArguments>(Type? executeActivityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configure = null)
-        where TActivity : class, IExecuteActivity<TArguments>
-        where TArguments : class
-    {
-        var registration = _collection.RegisterExecuteActivity<TActivity, TArguments>(Registrar, executeActivityDefinitionType);
-
-        registration.AddConfigureAction(configure);
-
-        return new ExecuteActivityRegistrationConfigurator<TActivity, TArguments>(this, registration);
-    }
-
-    /// <summary>
-    /// Adds activity to the configuration.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="configureExecute">The configure execute value.</param>
-    /// <param name="configureCompensate">The configure compensate value.</param>
-    /// <returns>The result of the operation.</returns>
-    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate)
-        where TActivity : class, IActivity<TArguments, TLog>
-        where TArguments : class
-        where TLog : class
-    {
-        return AddActivity(null, configureExecute, configureCompensate);
-    }
-
-    /// <summary>
-    /// Adds activity to the configuration.
-    /// </summary>
-    /// <typeparam name="TActivity">The t activity type.</typeparam>
-    /// <typeparam name="TArguments">The t arguments type.</typeparam>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="activityDefinitionType">The activity definition type value.</param>
-    /// <param name="configureExecute">The configure execute value.</param>
-    /// <param name="configureCompensate">The configure compensate value.</param>
-    /// <returns>The result of the operation.</returns>
-    public IActivityRegistrationConfigurator<TActivity, TArguments, TLog> AddActivity<TActivity, TArguments, TLog>(Type? activityDefinitionType,
-        Action<IRegistrationContext, IExecuteActivityConfigurator<TActivity, TArguments>>? configureExecute = null,
-        Action<IRegistrationContext, ICompensateActivityConfigurator<TActivity, TLog>>? configureCompensate = null)
-        where TActivity : class, IActivity<TArguments, TLog>
-        where TArguments : class
-        where TLog : class
-    {
-        var registration = _collection.RegisterActivity<TActivity, TArguments, TLog>(Registrar, activityDefinitionType);
-
-        registration.AddConfigureAction(configureExecute);
-        registration.AddConfigureAction(configureCompensate);
-
-        return new ActivityRegistrationConfigurator<TActivity, TArguments, TLog>(this, registration);
-    }
-
-    /// <summary>
-    /// Adds future to the configuration.
-    /// </summary>
-    /// <typeparam name="TFuture">The t future type.</typeparam>
-    /// <param name="futureDefinitionType">The future definition type value.</param>
-    /// <returns>The result of the operation.</returns>
-    public IFutureRegistrationConfigurator<TFuture> AddFuture<TFuture>(Type? futureDefinitionType)
-        where TFuture : class, SagaStateMachine<FutureState>
-    {
-        var registration = _collection.RegisterFuture<TFuture>(Registrar, futureDefinitionType);
-
-        return new FutureRegistrationConfigurator<TFuture>(this, registration);
     }
 
     /// <summary>
@@ -339,24 +179,18 @@ public abstract class RegistrationConfigurator :
         Registrar.RegisterEndpointNameFormatter(endpointNameFormatter);
     }
 
-    /// <summary>
-    /// Adds saga repository to the configuration.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <returns>The result of the operation.</returns>
-    public ISagaRegistrationConfigurator<T> AddSagaRepository<T>()
-        where T : class, ISaga
+    /// <inheritdoc />
+    public TParticipant GetOrAddRegistrationCompletionParticipant<TParticipant>(Func<TParticipant> factory)
+        where TParticipant : class, IRegistrationCompletionParticipant
     {
-        return new SagaRegistrationConfigurator<T>(this);
-    }
+        ArgumentNullException.ThrowIfNull(factory);
 
-    /// <summary>
-    /// Sets saga repository provider.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    public void SetSagaRepositoryProvider(ISagaRepositoryRegistrationProvider provider)
-    {
-        _sagaRepositoryRegistrationProvider = provider ?? throw new ArgumentNullException(nameof(provider));
+        if (_registrationCompletionParticipants.TryGetValue(typeof(TParticipant), out IRegistrationCompletionParticipant? participant))
+            return (TParticipant)participant;
+
+        TParticipant created = factory();
+        _registrationCompletionParticipants.Add(typeof(TParticipant), created);
+        return created;
     }
 
     RequestTimeout GetRequestTimeout(RequestTimeout timeout)
@@ -369,24 +203,10 @@ public abstract class RegistrationConfigurator :
     /// </summary>
     public void Complete()
     {
-        if (_sagaRepositoryRegistrationProvider != null)
-        {
-            List<ISagaRegistration> registrations = Registrar.GetRegistrations<ISagaRegistration>().ToList();
-
-            foreach (var registration in registrations)
-            {
-                if (_collection.Any(x => x.ServiceType == typeof(ISagaRepositoryContextFactory<>).MakeGenericType(registration.Type)))
-                    continue;
-
-                var register = (IConfigureSagaRepository)(Activator.CreateInstance(typeof(ConfigureSagaRepository<>).MakeGenericType(registration.Type)) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
-
-                register.Configure(this, _sagaRepositoryRegistrationProvider, registration);
-            }
-
-            if (Registrar.GetRegistrations<IFutureRegistration>().Any()
-                && _collection.All(x => x.ServiceType != typeof(ISagaRepositoryContextFactory<FutureState>)))
-                new ConfigureSagaRepository<FutureState>().Configure(this, _sagaRepositoryRegistrationProvider, null);
-        }
+        foreach (IRegistrationCompletionParticipant participant in _registrationCompletionParticipants.Values
+                     .OrderBy(x => x.Order)
+                     .ThenBy(x => x.GetType().FullName, StringComparer.Ordinal))
+            participant.Complete(this);
     }
 
     /// <summary>
@@ -419,24 +239,5 @@ public abstract class RegistrationConfigurator :
     protected static void ConfigureLogContext(IServiceProvider provider)
     {
         LogContext.ConfigureCurrentLogContextIfNull(provider);
-    }
-
-
-    interface IConfigureSagaRepository
-    {
-        void Configure(IRegistrationConfigurator configurator, ISagaRepositoryRegistrationProvider provider, ISagaRegistration registration);
-    }
-
-
-    class ConfigureSagaRepository<TSaga> :
-        IConfigureSagaRepository
-        where TSaga : class, ISaga
-    {
-        public void Configure(IRegistrationConfigurator configurator, ISagaRepositoryRegistrationProvider provider, ISagaRegistration? registration)
-        {
-            var registrationConfigurator = new SagaRegistrationConfigurator<TSaga>(configurator, registration);
-
-            provider.Configure(registrationConfigurator);
-        }
     }
 }

@@ -10,11 +10,6 @@ public interface IAdvancedBusRegistrationConfigurator :
     IAdvancedRegistrationConfigurator
 {
     /// <summary>
-    /// Gets the container registrar used by provider integrations.
-    /// </summary>
-    IContainerRegistrar Registrar { get; }
-
-    /// <summary>
     /// Sets the transport-specific bus factory.
     /// </summary>
     /// <typeparam name="T">The registration bus factory type.</typeparam>
@@ -54,6 +49,11 @@ public interface IAdvancedBusRegistrationConfigurator :
 public interface IAdvancedRegistrationConfigurator
 {
     /// <summary>
+    /// Gets the container registrar used by capability and provider integrations.
+    /// </summary>
+    IContainerRegistrar Registrar { get; }
+
+    /// <summary>
     /// Adds a typed endpoint definition for an existing registration.
     /// </summary>
     /// <typeparam name="TDefinition">The endpoint definition type.</typeparam>
@@ -75,10 +75,13 @@ public interface IAdvancedRegistrationConfigurator
     void SetDefaultRequestTimeout(int? d = null, int? h = null, int? m = null, int? s = null, int? ms = null);
 
     /// <summary>
-    /// Sets the provider used to configure saga repositories registered by type.
+    /// Gets the capability registration-completion participant, creating it when necessary.
     /// </summary>
-    /// <param name="provider">The saga repository registration provider.</param>
-    void SetSagaRepositoryProvider(ISagaRepositoryRegistrationProvider provider);
+    /// <typeparam name="TParticipant">The participant type.</typeparam>
+    /// <param name="factory">Creates the participant when it has not been registered.</param>
+    /// <returns>The existing or newly registered participant.</returns>
+    TParticipant GetOrAddRegistrationCompletionParticipant<TParticipant>(Func<TParticipant> factory)
+        where TParticipant : class, IRegistrationCompletionParticipant;
 }
 
 /// <summary>
@@ -183,7 +186,9 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
     public static void SetDefaultRequestTimeout(this IRegistrationConfigurator configurator, int? d = null, int? h = null, int? m = null,
         int? s = null, int? ms = null) => configurator.Advanced().SetDefaultRequestTimeout(d, h, m, s, ms);
 
-    /// <inheritdoc cref="IAdvancedRegistrationConfigurator.SetSagaRepositoryProvider" />
-    public static void SetSagaRepositoryProvider(this IRegistrationConfigurator configurator, ISagaRepositoryRegistrationProvider provider) =>
-        configurator.Advanced().SetSagaRepositoryProvider(provider);
+    /// <inheritdoc cref="IAdvancedRegistrationConfigurator.GetOrAddRegistrationCompletionParticipant{TParticipant}" />
+    public static TParticipant GetOrAddRegistrationCompletionParticipant<TParticipant>(this IRegistrationConfigurator configurator,
+        Func<TParticipant> factory)
+        where TParticipant : class, IRegistrationCompletionParticipant =>
+        configurator.Advanced().GetOrAddRegistrationCompletionParticipant(factory);
 }

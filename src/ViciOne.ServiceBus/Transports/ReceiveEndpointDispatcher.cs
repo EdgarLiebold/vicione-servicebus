@@ -184,21 +184,7 @@ public class ReceiveEndpointDispatcher<T> :
     /// <param name="formatter">The formatter value.</param>
     public ReceiveEndpointDispatcher(IReceiveEndpointDispatcherFactory factory, IEndpointNameFormatter formatter)
     {
-        IReceiveEndpointDispatcher CreateDispatcher(Type dispatcherType)
-        {
-            var dispatcherFactory = (ITypeReceiveEndpointDispatcherFactory)(Activator.CreateInstance(dispatcherType) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
-
-            return dispatcherFactory.Create(factory, formatter);
-        }
-
-        if (typeof(T).ImplementsInterface<ISaga>())
-            _dispatcher = CreateDispatcher(typeof(SagaReceiveEndpointDispatcher<>).MakeGenericType(typeof(T)));
-        else if (typeof(T).ImplementsInterface<IConsumer>())
-            _dispatcher = CreateDispatcher(typeof(ConsumerReceiveEndpointDispatcher<>).MakeGenericType(typeof(T)));
-        else if (typeof(T).TryGetSingleClosedGenericArguments(typeof(IExecuteActivity<>), out Type[] arguments))
-            _dispatcher = CreateDispatcher(typeof(ExecuteActivityReceiveEndpointDispatcher<,>).MakeGenericType(typeof(T), arguments[0]));
-        else
-            _dispatcher = factory.CreateReceiver(formatter.Message<T>());
+        _dispatcher = factory.CreateRegistrationReceiver(typeof(T), formatter.Message<T>(), formatter);
     }
 
     /// <summary>

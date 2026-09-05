@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Middleware;
+using ViciOne.ServiceBus.Sagas.Configuration;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
 
@@ -15,10 +16,14 @@ public sealed class TimeoutConfigurationSurfaceTests
     [RequirementCoverage("REQ-VSB-TIMEOUT-CONFIGURATION", "public-capabilities-and-internal-structure")]
     public void PublicSurface_PreservesEverySupportedScopeAndHidesItsImplementationTypes()
     {
-        MethodInfo[] overloads = typeof(TimeoutConfiguratorExtensions)
+        MethodInfo[] coreOverloads = typeof(TimeoutConfiguratorExtensions)
             .GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Where(method => method.Name == nameof(TimeoutConfiguratorExtensions.UseTimeout))
             .ToArray();
+        MethodInfo sagaOverload = Assert.Single(
+            typeof(SagaPipelineConfigurationExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static),
+            method => method.Name == nameof(SagaPipelineConfigurationExtensions.UseTimeout));
+        MethodInfo[] overloads = [.. coreOverloads, sagaOverload];
         string[] configuredScopes = overloads
             .Select(method => GenericDefinitionName(method.GetParameters()[0].ParameterType))
             .Order(StringComparer.Ordinal)
@@ -41,6 +46,10 @@ public sealed class TimeoutConfigurationSurfaceTests
                 typeof(ISagaConfigurator<>).FullName!,
             ],
             configuredScopes);
+        Assert.DoesNotContain(coreOverloads,
+            method => GenericDefinitionName(method.GetParameters()[0].ParameterType) == typeof(ISagaConfigurator<>).FullName);
+        Assert.Equal(typeof(ISagaConfigurator<>).FullName,
+            GenericDefinitionName(sagaOverload.GetParameters()[0].ParameterType));
 
         PropertyInfo[] options = typeof(ITimeoutConfigurator).GetProperties();
         Assert.Equal([nameof(ITimeoutConfigurator.TimeProvider), nameof(ITimeoutConfigurator.Timeout)],
@@ -79,23 +88,25 @@ public sealed class TimeoutConfigurationSurfaceTests
             "ViciOne.ServiceBus.Configuration.TimeoutConfigurationObserver",
             "ViciOne.ServiceBus.Configuration.TimeoutConsumerConfigurationObserver`1",
             "ViciOne.ServiceBus.Configuration.TimeoutHandlerConfigurationObserver",
-            "ViciOne.ServiceBus.Configuration.TimeoutSagaConfigurationObserver`1",
         ];
         Assert.All(observerNames.Select(RequiredType), observer =>
         {
             Assert.True(observer.IsNotPublic);
             Assert.True(observer.IsSealed);
         });
+        Type sagaObserver = RequiredSagaType("ViciOne.ServiceBus.Configuration.TimeoutSagaConfigurationObserver`1");
+        Assert.True(sagaObserver.IsNotPublic);
+        Assert.True(sagaObserver.IsSealed);
 
         Assert.All(
             new[]
             {
                 RequiredType("ViciOne.ServiceBus.Middleware.Timeout.TimeoutConsumeContext`1"),
-                RequiredType("ViciOne.ServiceBus.Middleware.Timeout.TimeoutCourierContextProxy"),
                 RequiredType("ViciOne.ServiceBus.Middleware.Timeout.TimeoutExecuteContext`1"),
                 RequiredType("ViciOne.ServiceBus.Middleware.Timeout.TimeoutCompensateContext`1"),
             },
             contextType => Assert.True(contextType.IsNotPublic));
+        Assert.True(RequiredCourierType("ViciOne.ServiceBus.Middleware.Timeout.TimeoutCourierContextProxy").IsNotPublic);
     }
 
     public static TheoryData<string, string> SupportedScopeSpecifications => new()
@@ -143,6 +154,12 @@ public sealed class TimeoutConfigurationSurfaceTests
 
     private static Type RequiredType(string fullName) =>
         typeof(TimeoutFilter<,>).Assembly.GetType(fullName, throwOnError: true)!;
+
+    private static Type RequiredSagaType(string fullName) =>
+        typeof(SagaPipelineConfigurationExtensions).Assembly.GetType(fullName, throwOnError: true)!;
+
+    private static Type RequiredCourierType(string fullName) =>
+        typeof(IActivity).Assembly.GetType(fullName, throwOnError: true)!;
 
     private static object ConfigureScope(string scope, TimeSpan configuredTimeout)
     {

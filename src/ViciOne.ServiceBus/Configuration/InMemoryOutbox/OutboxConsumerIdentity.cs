@@ -1,5 +1,6 @@
 using System;
-using ViciOne.ServiceBus.JobService;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -13,6 +14,8 @@ internal static class OutboxConsumerIdentity
             throw new ArgumentException("A bus key is required.", nameof(busKey));
         ArgumentNullException.ThrowIfNull(inputAddress);
 
-        return JobMetadataCache<TConsumer, TMessage>.GenerateJobTypeId($"{busKey}|{inputAddress.AbsoluteUri}");
+        string identity = $"{TypeCache<TConsumer>.ShortName}:{TypeCache<TMessage>.ShortName}:{busKey}|{inputAddress.AbsoluteUri}";
+        byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(identity));
+        return new Guid(hash.AsSpan(0, 16));
     }
 }

@@ -15,18 +15,28 @@
   <Folder Name="/Interoperability/">
     <Project Path="src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj" />
   </Folder>
+  <Folder Name="/Capabilities/">
+    <Project Path="src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
+  </Folder>
   <Folder Name="/Persistence/">
     <Project Path="src/Persistence/ViciOne.ServiceBus.AmazonS3/ViciOne.ServiceBus.AmazonS3.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Storage/ViciOne.ServiceBus.Azure.Storage.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.Azure.Table/ViciOne.ServiceBus.Azure.Table.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.DynamoDb/ViciOne.ServiceBus.DynamoDb.csproj" />
     <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
+    <Project Path="src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj" />
   </Folder>
   <Folder Name="/Scheduling/">
     <Project Path="src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj" />
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/OrderWorkflow/ViciOne.ServiceBus.Samples.OrderWorkflow.csproj" />
+    <Project Path="samples/SuiteComposition/ViciOne.ServiceBus.Samples.SuiteComposition.csproj" />
   </Folder>
   <Folder Name="/SignalR/">
     <Project Path="src/ViciOne.ServiceBus.SignalR/ViciOne.ServiceBus.SignalR.csproj" />

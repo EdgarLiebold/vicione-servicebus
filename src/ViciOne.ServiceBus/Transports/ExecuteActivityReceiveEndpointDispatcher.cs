@@ -20,6 +20,7 @@ public class ExecuteActivityReceiveEndpointDispatcher<TActivity, TArguments> :
     {
         var queueName = formatter.ExecuteActivity<TActivity, TArguments>();
 
-        return factory.CreateExecuteActivityReceiver<TActivity>(queueName);
+        return factory.CreateReceiver(queueName, static (configurator, registration) =>
+            configurator.ConfigureExecuteActivity(registration, typeof(TActivity)));
     }
 }

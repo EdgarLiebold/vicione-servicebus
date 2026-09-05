@@ -6,6 +6,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repository_root="$(cd "$script_dir/../.." && pwd)"
 dotnet_cli="${DOTNET_CLI:-dotnet}"
+build_server_arguments=(--disable-build-servers -m:1)
 temporary_root="$(mktemp -d "${TMPDIR:-/tmp}/vicione-developer-journeys.XXXXXX")"
 package_feed="$temporary_root/packages"
 global_packages="$temporary_root/global-packages"
@@ -42,9 +43,16 @@ export NUGET_PACKAGES="$global_packages"
 projects=(
   "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj"
   "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+  "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj"
+  "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj"
+  "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj"
+  "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj"
+  "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj"
+  "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj"
   "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj"
   "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj"
   "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj"
+  "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj"
   "src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj"
   "src/ViciOne.ServiceBus.MessagePack/ViciOne.ServiceBus.MessagePack.csproj"
   "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj"
@@ -54,6 +62,7 @@ for project in "${projects[@]}"; do
   "$dotnet_cli" pack "$repository_root/$project" \
     --configuration Release \
     --no-restore \
+    "${build_server_arguments[@]}" \
     --output "$package_feed" \
     -p:ContinuousIntegrationBuild=true
 done
@@ -61,9 +70,16 @@ done
 expected_packages=(
   "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg"
   "ViciOne.ServiceBus.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Sagas.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Courier.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Futures.1.0.0.nupkg"
+  "ViciOne.ServiceBus.JobService.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Mediator.1.0.0.nupkg"
+  "ViciOne.ServiceBus.Initializers.1.0.0.nupkg"
   "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg"
   "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg"
   "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg"
+  "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg"
   "ViciOne.ServiceBus.Quartz.1.0.0.nupkg"
   "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg"
   "ViciOne.ServiceBus.Testing.1.0.0.nupkg"
@@ -87,6 +103,7 @@ fi
   --configuration Release \
   --no-restore \
   --no-incremental \
+  "${build_server_arguments[@]}" \
   -p:RestoreLockedMode=true \
   -p:TreatWarningsAsErrors=true
 
@@ -97,4 +114,4 @@ fi
   "$package_feed" \
   "$public_api_baseline"
 
-printf 'Developer journey package-consumer gate passed: 14 scenarios, 8 freshly packed ViciOne packages, packed public API baseline generated.\n'
+printf 'Developer journey package-consumer gate passed: 14 scenarios, 15 freshly packed ViciOne packages, packed public API baseline generated.\n'

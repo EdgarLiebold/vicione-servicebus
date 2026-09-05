@@ -12,7 +12,7 @@ public interface ISagaConfigurator<TSaga> :
     ISagaConfigurationObserverConnector,
     IConsumeConfigurator,
     IOptionsSet
-    where TSaga : class, ISaga
+    where TSaga : class
 {
     /// <summary>
     /// Gets or sets the concurrent message limit value.

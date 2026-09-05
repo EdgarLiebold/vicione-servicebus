@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Context;
 /// </summary>
 /// <typeparam name="TArguments">The t arguments type.</typeparam>
 public class ExecuteContextScope<TArguments> :
-    CourierContextScope,
+    ActivityContextScope,
     ExecuteContext<TArguments>
     where TArguments : class
 {
@@ -47,7 +47,7 @@ public class ExecuteContextScope<TArguments> :
     /// <param name="activity">The activity value.</param>
     /// <returns>The result of the operation.</returns>
     public ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
     {
         return new HostExecuteActivityContext<TActivity, TArguments>(activity, this);
     }

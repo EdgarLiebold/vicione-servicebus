@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
-using ViciOne.ServiceBus.Internals;
 
 #nullable enable
 namespace ViciOne.ServiceBus.Configuration;
@@ -69,42 +69,21 @@ public class BusRegistrationContext :
 
         var registrationFilter = builder.Filter;
 
-        List<IGrouping<string, IConsumerDefinition>> consumersByEndpoint = Selector.GetRegistrations<IConsumerRegistration>(this)
-            .Where(x => x.IncludeInConfigureEndpoints && !WasConfigured(x.Type) && registrationFilter.Matches(x))
-            .Select(x => x.GetDefinition(this))
-            .GroupBy(x => x.GetEndpointName(endpointNameFormatter))
+        var consumerKinds = ((IEnumerable<IConsumerKind>?)GetService(typeof(IEnumerable<IConsumerKind>)) ?? Array.Empty<IConsumerKind>())
+            .OrderBy(x => x.IsFallback)
+            .ThenBy(x => x.Order)
+            .ThenBy(x => x.Name, StringComparer.Ordinal)
+            .ToArray();
+        var consumerKindContext = new ConsumerKindContext(this, endpointNameFormatter, registrationFilter);
+        var registrations = consumerKinds
+            .SelectMany(kind => kind.GetRegistrations(consumerKindContext)
+                .Select(registration => new PlannedRegistration(kind, registration,
+                    registration.RequiresServiceInstance || consumerKinds.Any(candidate => candidate.RequiresServiceInstance(registration.RegistrationType)))))
             .ToList();
-
-        List<IGrouping<string, ISagaDefinition>> sagasByEndpoint = Selector.GetRegistrations<ISagaRegistration>(this)
-            .Where(x => x.IncludeInConfigureEndpoints && !WasConfigured(x.Type) && registrationFilter.Matches(x))
-            .Select(x => x.GetDefinition(this))
-            .GroupBy(x => x.GetEndpointName(endpointNameFormatter))
-            .ToList();
-
-        List<IActivityDefinition> activities = Selector.GetRegistrations<IActivityRegistration>(this)
-            .Where(x => x.IncludeInConfigureEndpoints && !WasConfigured(x.Type) && registrationFilter.Matches(x))
-            .Select(x => x.GetDefinition(this))
-            .ToList();
-
-        List<IGrouping<string, IActivityDefinition>> activitiesByExecuteEndpoint = activities
-            .GroupBy(x => x.GetExecuteEndpointName(endpointNameFormatter))
-            .ToList();
-
-        List<IGrouping<string, IActivityDefinition>> activitiesByCompensateEndpoint = activities
-            .GroupBy(x => x.GetCompensateEndpointName(endpointNameFormatter))
-            .ToList();
-
-        List<IGrouping<string, IExecuteActivityDefinition>> executeActivitiesByEndpoint = Selector.GetRegistrations<IExecuteActivityRegistration>(this)
-            .Where(x => x.IncludeInConfigureEndpoints && !WasConfigured(x.Type) && registrationFilter.Matches(x))
-            .Select(x => x.GetDefinition(this))
-            .GroupBy(x => x.GetExecuteEndpointName(endpointNameFormatter))
-            .ToList();
-
-        List<IGrouping<string, IFutureDefinition>> futuresByEndpoint = Selector.GetRegistrations<IFutureRegistration>(this)
-            .Where(x => x.IncludeInConfigureEndpoints && !WasConfigured(x.Type) && registrationFilter.Matches(x))
-            .Select(x => x.GetDefinition(this))
-            .GroupBy(x => x.GetEndpointName(endpointNameFormatter))
-            .ToList();
+        registrations = SelectRegistrationOwners(registrations);
+        var registrationsByEndpoint = registrations
+            .GroupBy(x => x.Registration.EndpointName)
+            .ToDictionary(x => x.Key, x => x.OrderBy(value => value.Kind.Order).ToList());
 
         var endpointsWithName = Selector.GetRegistrations<IEndpointRegistration>(this)
             .Where(x => x.IncludeInConfigureEndpoints && !WasConfigured(x.Type) && registrationFilter.Matches(x))
@@ -126,43 +105,44 @@ public class BusRegistrationContext :
             return endpointsWithName.SingleOrDefault(x => x.Name == name)?.Definition;
         }
 
-        IEnumerable<string> endpointNames = consumersByEndpoint.Select(x => x.Key)
-            .Union(sagasByEndpoint.Select(x => x.Key))
-            .Union(activitiesByExecuteEndpoint.Select(x => x.Key))
-            .Union(executeActivitiesByEndpoint.Select(x => x.Key))
-            .Union(futuresByEndpoint.Select(x => x.Key))
+        var companionEndpointNames = registrations
+            .SelectMany(x => x.Registration.CompanionEndpointNames)
+            .ToHashSet(StringComparer.Ordinal);
+
+        IEnumerable<string> endpointNames = registrationsByEndpoint.Keys
             .Union(endpointsWithName.Select(x => x.Name))
-            .Except(activitiesByCompensateEndpoint.Select(x => x.Key));
+            .Where(name => !companionEndpointNames.Contains(name))
+            .OrderBy(name => registrationsByEndpoint.TryGetValue(name, out List<PlannedRegistration>? endpointRegistrations)
+                ? endpointRegistrations.Min(x => x.Kind.Order)
+                : int.MaxValue)
+            .ThenBy(name => name, StringComparer.Ordinal);
 
-        IList<Endpoint> endpoints = (
-            from e in endpointNames
-            join c in consumersByEndpoint on e equals c.Key into cs
-            from c in cs.DefaultIfEmpty()
-            join s in sagasByEndpoint on e equals s.Key into ss
-            from s in ss.DefaultIfEmpty()
-            join a in activitiesByExecuteEndpoint on e equals a.Key into aes
-            from a in aes.DefaultIfEmpty()
-            join ea in executeActivitiesByEndpoint on e equals ea.Key into eas
-            from ea in eas.DefaultIfEmpty()
-            join f in futuresByEndpoint on e equals f.Key into fs
-            from f in fs.DefaultIfEmpty()
-            join ep in endpointsWithName on e equals ep.Name into eps
-            from ep in eps.Select(x => x.Definition)
-                .DefaultIfEmpty(c?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this, e)
-                    ?? s?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this, e)
-                    ?? a?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.ExecuteEndpointDefinition)).Combine(this, e)
-                    ?? ea?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.ExecuteEndpointDefinition)).Combine(this, e)
-                    ?? f?.Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(e, x, x.EndpointDefinition)).Combine(this, e)
-                    ?? new NamedEndpointDefinition(e))
-            select new Endpoint(ep, c, s, a, ea, f)).ToList();
+        var endpoints = endpointNames
+            .Select(name =>
+            {
+                registrationsByEndpoint.TryGetValue(name, out var endpointRegistrations);
+                endpointRegistrations ??= new List<PlannedRegistration>();
 
-        var needsServiceInstance = !(configurator is IServiceInstanceConfigurator<T>) && endpoints.Any(endpoint => endpoint.HasJobConsumers);
+                var definition = GetEndpointDefinitionByName(name) ?? CreateConsumerKindEndpointDefinition(name, endpointRegistrations);
+                return new Endpoint(definition, endpointRegistrations);
+            })
+            .ToList();
+
+        var needsServiceInstance = !(configurator is IServiceInstanceConfigurator<T>) && endpoints.Any(endpoint => endpoint.RequiresServiceInstance);
         if (needsServiceInstance)
         {
-            var registration = Selector.GetRegistrations<IJobServiceRegistration>(this).SingleOrDefault();
-            registration ??= new JobServiceRegistration();
+            var hosts = Selector.GetRegistrations<IConsumerKindHost>(this).ToArray();
+            if (hosts.Length != 1)
+            {
+                throw new ConfigurationException(
+                    Providers.Configuration.ConfigurationMessages.Create("Consumer kind host", BusKey,
+                        "Exactly one service-instance host is required by the registered consumer kinds",
+                        "Register the capability package that owns the service-instance consumer kind"));
+            }
 
-            var endpointDefinition = new RegistrationContextEndpointDefinition(registration.EndpointDefinition, this);
+            var host = hosts[0];
+
+            var endpointDefinition = new RegistrationContextEndpointDefinition(host.EndpointDefinition, this);
 
             configurator.ReceiveEndpoint(endpointDefinition, endpointNameFormatter, endpointConfigurator =>
             {
@@ -170,7 +150,7 @@ public class BusRegistrationContext :
 
                 var instanceConfigurator = new ServiceInstanceConfigurator<T>(configurator, options, endpointConfigurator);
 
-                registration.Configure(instanceConfigurator, this);
+                host.Configure(instanceConfigurator, this);
 
                 ConfigureTheEndpoints(endpoints, endpointNameFormatter, GetEndpointDefinitionByName, configurator, instanceConfigurator);
             });
@@ -193,6 +173,22 @@ public class BusRegistrationContext :
         return _configureReceiveEndpoints;
     }
 
+    IEndpointDefinition CreateConsumerKindEndpointDefinition(string endpointName, IReadOnlyCollection<PlannedRegistration> registrations)
+    {
+        if (registrations.Count == 0)
+            return new NamedEndpointDefinition(endpointName);
+
+        var firstKind = registrations
+            .GroupBy(x => x.Kind.Order)
+            .OrderBy(x => x.Key)
+            .First();
+
+        return firstKind
+            .Select(x => (IEndpointDefinition)new DelegateEndpointDefinition(endpointName, x.Registration.Definition,
+                x.Registration.EndpointDefinition))
+            .Combine(this, endpointName) ?? new NamedEndpointDefinition(endpointName);
+    }
+
     void ConfigureTheEndpoints<T>(IEnumerable<Endpoint> endpoints, IEndpointNameFormatter endpointNameFormatter,
         Func<string, IEndpointDefinition?> getEndpointDefinitionByName,
         IReceiveConfigurator<T> configurator, IReceiveConfigurator<T>? instanceConfigurator = null)
@@ -202,7 +198,7 @@ public class BusRegistrationContext :
 
         foreach (var endpoint in endpoints)
         {
-            IReceiveConfigurator<T> useConfigurator = instanceConfigurator != null && endpoint.HasJobConsumers
+            IReceiveConfigurator<T> useConfigurator = instanceConfigurator != null && endpoint.RequiresServiceInstance
                 ? instanceConfigurator
                 : configurator;
 
@@ -212,44 +208,13 @@ public class BusRegistrationContext :
             {
                 configureReceiveEndpoint.Configure(endpointDefinition.GetEndpointName(endpointNameFormatter), cfg);
 
-                foreach (var consumer in endpoint.Consumers)
-                    ConfigureConsumer(consumer.ConsumerType, cfg);
-
-                foreach (var saga in endpoint.Sagas)
-                    ConfigureSaga(saga.SagaType, cfg);
-
-                foreach (var activity in endpoint.Activities)
+                var context = new ConsumerKindEndpointContext<T>(this, cfg, configurator, endpointNameFormatter,
+                    getEndpointDefinitionByName, configureReceiveEndpoint);
+                foreach (var registration in endpoint.Registrations)
                 {
-                    var compensateEndpointName = activity.GetCompensateEndpointName(endpointNameFormatter);
-
-                    var compensateDefinition = activity.CompensateEndpointDefinition ?? getEndpointDefinitionByName(compensateEndpointName);
-                    if (compensateDefinition != null)
-                    {
-                        compensateDefinition = new RegistrationContextEndpointDefinition(compensateDefinition, this);
-                        configurator.ReceiveEndpoint(compensateDefinition, endpointNameFormatter, compensateEndpointConfigurator =>
-                        {
-                            configureReceiveEndpoint.Configure(compensateDefinition.GetEndpointName(endpointNameFormatter),
-                                compensateEndpointConfigurator);
-
-                            ConfigureActivity(activity.ActivityType, cfg, compensateEndpointConfigurator);
-                        });
-                    }
-                    else
-                    {
-                        configurator.ReceiveEndpoint(compensateEndpointName, compensateEndpointConfigurator =>
-                        {
-                            configureReceiveEndpoint.Configure(compensateEndpointName, compensateEndpointConfigurator);
-
-                            ConfigureActivity(activity.ActivityType, cfg, compensateEndpointConfigurator);
-                        });
-                    }
+                    registration.Registration.Configure(context);
+                    MarkConfigured(registration.Registration.RegistrationType);
                 }
-
-                foreach (var activity in endpoint.ExecuteActivities)
-                    ConfigureExecuteActivity(activity.ActivityType, cfg);
-
-                foreach (var future in endpoint.Futures)
-                    ConfigureFuture(future.FutureType, cfg);
             });
         }
     }
@@ -258,28 +223,128 @@ public class BusRegistrationContext :
     {
     }
 
-
-    class Endpoint
+    List<PlannedRegistration> SelectRegistrationOwners(IEnumerable<PlannedRegistration> registrations)
     {
-        public Endpoint(IEndpointDefinition definition, IEnumerable<IConsumerDefinition>? consumers, IEnumerable<ISagaDefinition>? sagas,
-            IEnumerable<IActivityDefinition>? activities, IEnumerable<IExecuteActivityDefinition>? executeActivities,
-            IEnumerable<IFutureDefinition>? futures)
+        return registrations
+            .GroupBy(registration => registration.Registration.RegistrationType)
+            .Select(group =>
+            {
+                PlannedRegistration[] explicitOwners = group.Where(registration => !registration.Kind.IsFallback).ToArray();
+                if (explicitOwners.Length == 1)
+                    return explicitOwners[0];
+
+                if (explicitOwners.Length > 1)
+                {
+                    string owners = string.Join(", ", explicitOwners.Select(registration => registration.Kind.Name)
+                        .OrderBy(name => name, StringComparer.Ordinal));
+                    throw new ConfigurationException(
+                        Providers.Configuration.ConfigurationMessages.Create("Consumer kind", BusKey,
+                            $"Handler '{TypeCache.GetShortName(group.Key)}' is claimed by multiple capability categories: {owners}",
+                            "Register exactly one capability package that owns the handler type"));
+                }
+
+                PlannedRegistration[] fallbackOwners = group.ToArray();
+                if (fallbackOwners.Length == 1)
+                    return fallbackOwners[0];
+
+                throw new ConfigurationException(
+                    Providers.Configuration.ConfigurationMessages.Create("Consumer kind", BusKey,
+                        $"Handler '{TypeCache.GetShortName(group.Key)}' is claimed by multiple fallback categories",
+                        "Register exactly one fallback consumer category"));
+            })
+            .ToList();
+    }
+
+
+    sealed class ConsumerKindContext :
+        IConsumerKindContext
+    {
+        readonly BusRegistrationContext _context;
+        readonly IRegistrationFilter _filter;
+
+        public ConsumerKindContext(BusRegistrationContext context, IEndpointNameFormatter endpointNameFormatter,
+            IRegistrationFilter filter)
+        {
+            _context = context;
+            EndpointNameFormatter = endpointNameFormatter;
+            _filter = filter;
+        }
+
+        public IRegistrationContext RegistrationContext => _context;
+        public IEndpointNameFormatter EndpointNameFormatter { get; }
+
+        public IEnumerable<TRegistration> GetRegistrations<TRegistration>()
+            where TRegistration : class, IRegistration
+        {
+            return _context.Selector.GetRegistrations<TRegistration>(_context)
+                .Where(x => x.IncludeInConfigureEndpoints && !_context.WasConfigured(x.Type) && _filter.Matches(x));
+        }
+    }
+
+
+    sealed class ConsumerKindEndpointContext<T> :
+        IConsumerKindEndpointContext
+        where T : IReceiveEndpointConfigurator
+    {
+        readonly IConfigureReceiveEndpoint _configureReceiveEndpoint;
+        readonly IReceiveConfigurator<T> _configurator;
+        readonly IEndpointNameFormatter _endpointNameFormatter;
+        readonly Func<string, IEndpointDefinition?> _getEndpointDefinitionByName;
+
+        public ConsumerKindEndpointContext(BusRegistrationContext registrationContext,
+            IReceiveEndpointConfigurator endpointConfigurator, IReceiveConfigurator<T> configurator,
+            IEndpointNameFormatter endpointNameFormatter, Func<string, IEndpointDefinition?> getEndpointDefinitionByName,
+            IConfigureReceiveEndpoint configureReceiveEndpoint)
+        {
+            RegistrationContext = registrationContext;
+            EndpointConfigurator = endpointConfigurator;
+            _configurator = configurator;
+            _endpointNameFormatter = endpointNameFormatter;
+            _getEndpointDefinitionByName = getEndpointDefinitionByName;
+            _configureReceiveEndpoint = configureReceiveEndpoint;
+        }
+
+        public IRegistrationContext RegistrationContext { get; }
+        public IReceiveEndpointConfigurator EndpointConfigurator { get; }
+
+        public void ConfigureCompanionEndpoint(string endpointName, IEndpointDefinition? endpointDefinition,
+            Action<IReceiveEndpointConfigurator> configure)
+        {
+            endpointDefinition ??= _getEndpointDefinitionByName(endpointName);
+            if (endpointDefinition != null)
+            {
+                var registrationDefinition = new RegistrationContextEndpointDefinition(endpointDefinition,
+                    (IBusRegistrationContext)RegistrationContext);
+                _configurator.ReceiveEndpoint(registrationDefinition, _endpointNameFormatter, companionConfigurator =>
+                {
+                    _configureReceiveEndpoint.Configure(registrationDefinition.GetEndpointName(_endpointNameFormatter), companionConfigurator);
+                    configure(companionConfigurator);
+                });
+                return;
+            }
+
+            _configurator.ReceiveEndpoint(endpointName, companionConfigurator =>
+            {
+                _configureReceiveEndpoint.Configure(endpointName, companionConfigurator);
+                configure(companionConfigurator);
+            });
+        }
+    }
+
+
+    sealed record PlannedRegistration(IConsumerKind Kind, IConsumerKindRegistration Registration, bool RequiresServiceInstance);
+
+
+    sealed class Endpoint
+    {
+        public Endpoint(IEndpointDefinition definition, IReadOnlyList<PlannedRegistration> registrations)
         {
             Definition = definition;
-            Consumers = consumers?.ToList() ?? new List<IConsumerDefinition>();
-            Sagas = sagas?.ToList() ?? new List<ISagaDefinition>();
-            Activities = activities?.ToList() ?? new List<IActivityDefinition>();
-            ExecuteActivities = executeActivities?.ToList() ?? new List<IExecuteActivityDefinition>();
-            Futures = futures?.ToList() ?? new List<IFutureDefinition>();
+            Registrations = registrations;
         }
 
         public IEndpointDefinition Definition { get; }
-        public List<IConsumerDefinition> Consumers { get; }
-        public List<ISagaDefinition> Sagas { get; }
-        public List<IActivityDefinition> Activities { get; }
-        public List<IExecuteActivityDefinition> ExecuteActivities { get; }
-        public List<IFutureDefinition> Futures { get; }
-
-        public bool HasJobConsumers => Consumers.Any(c => c.ConsumerType.ClosesGenericType(typeof(IJobConsumer<>)));
+        public IReadOnlyList<PlannedRegistration> Registrations { get; }
+        public bool RequiresServiceInstance => Registrations.Any(x => x.RequiresServiceInstance);
     }
 }

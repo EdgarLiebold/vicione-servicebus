@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.Configuration;
 /// the handler itself
 /// </summary>
 public interface IRoutingSlipConfigurator :
-    IConsumeConfigurator,
-    IPipeConfigurator<ConsumeContext<RoutingSlip>>
+    IActivityMessageConfigurator<RoutingSlip>
 {
 }

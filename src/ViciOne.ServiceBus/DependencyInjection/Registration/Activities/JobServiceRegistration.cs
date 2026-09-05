@@ -39,7 +39,7 @@ public class JobServiceRegistration :
         IncludeInConfigureEndpoints = true;
     }
 
-    JobServiceSettings Settings => _settings.Value;
+    InstanceJobServiceSettings Settings => _settings.Value;
 
     /// <summary>
     /// Gets the type value.
@@ -89,6 +89,7 @@ public class JobServiceRegistration :
     /// <param name="context">The operation context.</param>
     public void Configure(IServiceInstanceConfigurator instanceConfigurator, IRegistrationContext context)
     {
+        Settings.ApplyConfiguration(instanceConfigurator.InstanceEndpointConfigurator);
         AddReceiveEndpointDependency(instanceConfigurator.InstanceEndpointConfigurator);
 
         Settings.JobService.ConfigureSuperviseJobConsumer(instanceConfigurator.InstanceEndpointConfigurator);

@@ -6,6 +6,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// Interface that specifies a class is usable as a saga instance, including
 /// the ability to get and set the CorrelationId on the saga instance.
 /// </summary>
+[ConsumerRegistrationExclusion]
 public interface ISaga
 {
     /// <summary>

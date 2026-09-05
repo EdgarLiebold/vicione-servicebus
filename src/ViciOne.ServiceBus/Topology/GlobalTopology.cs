@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using ViciOne.ServiceBus.Configuration;
-using ViciOne.ServiceBus.Contracts.JobService;
-using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
@@ -32,8 +30,6 @@ internal sealed class GlobalTopology
         var observer = new PublishToSendTopologyConfigurationObserver(_send);
         _publishToSendHandle = _publish.ConnectPublishTopologyConfigurationObserver(observer);
 
-        ConfigureRoutingSlipCorrelation();
-        ConfigureJobSagaCorrelation();
     }
 
     internal static ISendTopology Send => Cached.Instance.GetSendTopology();
@@ -49,6 +45,20 @@ internal sealed class GlobalTopology
         where T : class
     {
         Cached.Instance.Configure(() => Cached.Instance._send.UseCorrelationId(correlationIdSelector));
+    }
+
+    internal static void UseCapabilityCorrelationId<T>(Func<T, Guid> correlationIdSelector)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(correlationIdSelector);
+        Cached.Instance.ConfigureCapability(() => Cached.Instance._send.UseCorrelationId(correlationIdSelector));
+    }
+
+    internal static void UseCapabilityCorrelationId<T>(Func<T, Guid?> correlationIdSelector)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(correlationIdSelector);
+        Cached.Instance.ConfigureCapability(() => Cached.Instance._send.UseCorrelationId(correlationIdSelector));
     }
 
     internal static void MarkMessageTypeNotConsumable(Type type)
@@ -95,62 +105,17 @@ internal sealed class GlobalTopology
         }
     }
 
+    void ConfigureCapability(Action configure)
+    {
+        lock (_lock)
+            configure();
+    }
+
     void Freeze()
     {
         lock (_lock)
             _frozen = true;
     }
-
-    void ConfigureRoutingSlipCorrelation()
-    {
-        _send.UseCorrelationId<RoutingSlip>(x => x.TrackingNumber);
-        _send.UseCorrelationId<RoutingSlipCompleted>(x => x.TrackingNumber);
-        _send.UseCorrelationId<RoutingSlipFaulted>(x => x.TrackingNumber);
-        _send.UseCorrelationId<RoutingSlipActivityCompleted>(x => x.ExecutionId);
-        _send.UseCorrelationId<RoutingSlipActivityFaulted>(x => x.ExecutionId);
-        _send.UseCorrelationId<RoutingSlipActivityCompensated>(x => x.ExecutionId);
-        _send.UseCorrelationId<RoutingSlipActivityCompensationFailed>(x => x.ExecutionId);
-        _send.UseCorrelationId<RoutingSlipCompensationFailed>(x => x.TrackingNumber);
-        _send.UseCorrelationId<RoutingSlipTerminated>(x => x.TrackingNumber);
-        _send.UseCorrelationId<RoutingSlipRevised>(x => x.TrackingNumber);
-    }
-
-    void ConfigureJobSagaCorrelation()
-    {
-        _send.UseCorrelationId<AllocateJobSlot>(x => x.JobTypeId);
-        _send.UseCorrelationId<JobSlotReleased>(x => x.JobTypeId);
-        _send.UseCorrelationId<SetConcurrentJobLimit>(x => x.JobTypeId);
-
-        _send.UseCorrelationId<CancelJob>(x => x.JobId);
-        _send.UseCorrelationId<Fault<AllocateJobSlot>>(x => x.Message.JobId);
-        _send.UseCorrelationId<Fault<StartJobAttempt>>(x => x.Message.JobId);
-        _send.UseCorrelationId<FinalizeJob>(x => x.JobId);
-        _send.UseCorrelationId<GetJobState>(x => x.JobId);
-        _send.UseCorrelationId<JobAttemptCanceled>(x => x.JobId);
-        _send.UseCorrelationId<JobAttemptCompleted>(x => x.JobId);
-        _send.UseCorrelationId<JobAttemptFaulted>(x => x.JobId);
-        _send.UseCorrelationId<JobAttemptStarted>(x => x.JobId);
-        _send.UseCorrelationId<JobCanceled>(x => x.JobId);
-        _send.UseCorrelationId<JobCompleted>(x => x.JobId);
-        _send.UseCorrelationId<JobRetryDelayElapsed>(x => x.JobId);
-        _send.UseCorrelationId<JobSlotAllocated>(x => x.JobId);
-        _send.UseCorrelationId<JobSlotUnavailable>(x => x.JobId);
-        _send.UseCorrelationId<JobSlotWaitElapsed>(x => x.JobId);
-        _send.UseCorrelationId<JobSubmitted>(x => x.JobId);
-        _send.UseCorrelationId<RetryJob>(x => x.JobId);
-        _send.UseCorrelationId<RunJob>(x => x.JobId);
-        _send.UseCorrelationId<SaveJobState>(x => x.JobId);
-        _send.UseCorrelationId<SetJobProgress>(x => x.JobId);
-        _send.UseCorrelationId<StartJob>(x => x.JobId);
-
-        _send.UseCorrelationId<StartJobAttempt>(x => x.AttemptId);
-        _send.UseCorrelationId<FinalizeJobAttempt>(x => x.AttemptId);
-        _send.UseCorrelationId<CancelJobAttempt>(x => x.AttemptId);
-        _send.UseCorrelationId<Fault<StartJob>>(x => x.Message.AttemptId);
-        _send.UseCorrelationId<JobAttemptStatus>(x => x.AttemptId);
-        _send.UseCorrelationId<JobStatusCheckRequested>(x => x.AttemptId);
-    }
-
 
     static class Cached
     {

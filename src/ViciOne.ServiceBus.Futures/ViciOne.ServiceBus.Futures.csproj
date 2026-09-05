@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageTags>ViciOne.ServiceBus;Futures</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="../ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
+    <ProjectReference Include="../ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Futures/**/*.cs" Link="Futures/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/FutureDefinition.cs" Link="Configuration/DependencyInjection/FutureDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Configuration/DependencyInjection/IFutureDefinition.cs" Link="Configuration/DependencyInjection/IFutureDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Futures/**/*.cs" Link="Futures/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/Futures/**/*.cs" Link="Configuration/Futures/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionFutureRegistrationExtensions.cs" Link="DependencyInjection/Configuration/DependencyInjectionFutureRegistrationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/IFutureRegistration.cs" Link="DependencyInjection/Configuration/IFutureRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Futures/**/*.cs" Link="DependencyInjection/Registration/Futures/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

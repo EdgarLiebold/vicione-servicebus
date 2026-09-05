@@ -44,7 +44,7 @@ public class PublishScheduleMessageProvider :
     {
         return _publishEndpoint.PublishAsync<CancelScheduledMessage>(new
         {
-            InVar.Timestamp,
+            Timestamp = TimeProvider.System.GetUtcNow(),
             TokenId = tokenId
         }, cancellationToken);
     }

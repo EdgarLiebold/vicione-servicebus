@@ -14,7 +14,7 @@ public interface IActivityObserver
     /// <param name="context">The consume context</param>
     /// <returns></returns>
     Task PreExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class;
 
     /// <summary>
@@ -24,7 +24,7 @@ public interface IActivityObserver
     /// <param name="context"></param>
     /// <returns></returns>
     Task PostExecuteAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class;
 
     /// <summary>
@@ -34,7 +34,7 @@ public interface IActivityObserver
     /// <param name="exception"></param>
     /// <returns></returns>
     Task ExecuteFaultAsync<TActivity, TArguments>(ExecuteActivityContext<TActivity, TArguments> context, Exception exception)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class;
 
     /// <summary>
@@ -43,7 +43,7 @@ public interface IActivityObserver
     /// <param name="context">The consume context</param>
     /// <returns></returns>
     Task PreCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class;
 
     /// <summary>
@@ -53,7 +53,7 @@ public interface IActivityObserver
     /// <param name="context"></param>
     /// <returns></returns>
     Task PostCompensateAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class;
 
     /// <summary>
@@ -63,6 +63,6 @@ public interface IActivityObserver
     /// <param name="exception"></param>
     /// <returns></returns>
     Task CompensateFailAsync<TActivity, TLog>(CompensateActivityContext<TActivity, TLog> context, Exception exception)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class;
 }

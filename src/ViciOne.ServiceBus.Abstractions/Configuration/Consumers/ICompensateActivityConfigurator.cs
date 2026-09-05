@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TActivity"></typeparam>
 /// <typeparam name="TLog"></typeparam>
 public interface ICompensateActivityConfigurator<TActivity, TLog> :
-    IPipeConfigurator<CompensateActivityContext<TActivity, TLog>>,
+    ICompensateActivityPipeConfigurator<TActivity, TLog>,
     IActivityObserverConnector,
     IConsumeConfigurator
     where TActivity : class, ICompensateActivity<TLog>
@@ -23,7 +23,7 @@ public interface ICompensateActivityConfigurator<TActivity, TLog> :
     /// Performs the log operation.
     /// </summary>
     /// <param name="configure">The configuration callback.</param>
-    void Log(Action<ICompensateLogConfigurator<TLog>> configure);
+    new void Log(Action<ICompensateLogConfigurator<TLog>> configure);
 
     /// <summary>
     /// Configure the arguments separate from the activity

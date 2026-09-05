@@ -1,10 +1,8 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware;
-using ViciOne.ServiceBus.Saga;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -40,20 +38,6 @@ public static class DependencyInjectionExtensions
             throw new ArgumentNullException(nameof(context));
 
         var observer = new MessageScopeConfigurationObserver(configurator, context);
-    }
-
-    /// <summary>
-    /// Register the InMemory saga repository for the specified saga type
-    /// </summary>
-    /// <param name="collection"></param>
-    /// <typeparam name="T"></typeparam>
-    public static void RegisterInMemorySagaRepository<T>(this IServiceCollection collection)
-        where T : class, ISaga
-    {
-        collection.TryAddSingleton(new IndexedSagaDictionary<T>());
-        collection.RegisterLoadSagaRepository<T, InMemorySagaRepositoryContextFactory<T>>();
-        collection.RegisterQuerySagaRepository<T, InMemorySagaRepositoryContextFactory<T>>();
-        collection.RegisterSagaRepository<T, IndexedSagaDictionary<T>, InMemorySagaConsumeContextFactory<T>, InMemorySagaRepositoryContextFactory<T>>();
     }
 
     /// <summary>

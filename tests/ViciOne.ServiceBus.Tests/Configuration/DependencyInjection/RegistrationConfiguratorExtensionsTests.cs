@@ -39,7 +39,8 @@ public sealed class RegistrationConfiguratorExtensionsTests
         var configurator = new ServiceCollectionBusConfigurator(new ServiceCollection());
 
         Assert.Equal("configurator",
-            Assert.Throws<ArgumentNullException>(() => RegistrationConfiguratorExtensions.AddFuture(null!, typeof(ValidFutureStateMachine))).ParamName);
+            Assert.Throws<ArgumentNullException>(() => FutureRegistrationConfiguratorRuntimeExtensions.AddFuture(null!,
+                typeof(ValidFutureStateMachine))).ParamName);
         Assert.Equal("futureType", Assert.Throws<ArgumentNullException>(() => configurator.AddFuture(null!)).ParamName);
     }
 

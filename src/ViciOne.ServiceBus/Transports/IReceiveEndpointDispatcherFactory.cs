@@ -18,29 +18,22 @@ public interface IReceiveEndpointDispatcherFactory :
     IReceiveEndpointDispatcher CreateReceiver(string queueName);
 
     /// <summary>
-    /// Creates consumer receiver.
+    /// Creates a receiver and applies capability-owned endpoint configuration.
     /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
-    IReceiveEndpointDispatcher CreateConsumerReceiver<T>(string queueName)
-        where T : class, IConsumer;
+    /// <param name="queueName">The queue name.</param>
+    /// <param name="configure">The endpoint configuration callback.</param>
+    /// <returns>The configured dispatcher.</returns>
+    IReceiveEndpointDispatcher CreateReceiver(string queueName,
+        Action<IReceiveEndpointConfigurator, IRegistrationContext> configure);
 
     /// <summary>
-    /// Creates saga receiver.
+    /// Creates a dispatcher for a registered handler type using its owning consumer kind.
     /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
-    IReceiveEndpointDispatcher CreateSagaReceiver<T>(string queueName)
-        where T : class, ISaga;
+    /// <param name="registrationType">The registered handler type.</param>
+    /// <param name="fallbackQueueName">The queue name used when no consumer kind owns the type.</param>
+    /// <param name="formatter">The endpoint-name formatter.</param>
+    /// <returns>The typed registration dispatcher.</returns>
+    IReceiveEndpointDispatcher CreateRegistrationReceiver(Type registrationType, string fallbackQueueName,
+        IEndpointNameFormatter formatter);
 
-    /// <summary>
-    /// Creates execute activity receiver.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="queueName">The queue name value.</param>
-    /// <returns>The result of the operation.</returns>
-    IReceiveEndpointDispatcher CreateExecuteActivityReceiver<T>(string queueName)
-        where T : class, IExecuteActivity;
 }

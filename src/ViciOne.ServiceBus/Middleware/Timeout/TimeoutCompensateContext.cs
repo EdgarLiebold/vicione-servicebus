@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Context;
 namespace ViciOne.ServiceBus.Middleware.Timeout;
 
 internal sealed class TimeoutCompensateContext<TLog> :
-    TimeoutCourierContextProxy,
+    TimeoutActivityContextProxy,
     CompensateContext<TLog>
     where TLog : class
 {

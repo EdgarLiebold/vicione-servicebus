@@ -39,7 +39,7 @@ public interface IEndpointNameFormatter
     /// <typeparam name="T">The t type.</typeparam>
     /// <returns>The result of the operation.</returns>
     string Saga<T>()
-        where T : class, ISaga;
+        where T : class;
 
     /// <summary>
     /// Performs the execute activity operation.
@@ -48,7 +48,7 @@ public interface IEndpointNameFormatter
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <returns>The result of the operation.</returns>
     string ExecuteActivity<T, TArguments>()
-        where T : class, IExecuteActivity<TArguments>
+        where T : class
         where TArguments : class;
 
     /// <summary>
@@ -58,7 +58,7 @@ public interface IEndpointNameFormatter
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <returns>The result of the operation.</returns>
     string CompensateActivity<T, TLog>()
-        where T : class, ICompensateActivity<TLog>
+        where T : class
         where TLog : class;
 
     /// <summary>

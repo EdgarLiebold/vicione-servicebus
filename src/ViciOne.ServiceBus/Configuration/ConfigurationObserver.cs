@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ViciOne.ServiceBus.Courier.Contracts;
+using System.Reflection;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Util;
 
@@ -43,12 +43,12 @@ public class ConfigurationObserver :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="compensateAddress">The compensate address value.</param>
-    public virtual void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator,
+    public virtual void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
         Uri compensateAddress)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
-        NotifyObserver<RoutingSlip>();
+        NotifyObserver(configurator.MessageType);
     }
 
     /// <summary>
@@ -57,11 +57,11 @@ public class ConfigurationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public virtual void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-        where TActivity : class, IExecuteActivity<TArguments>
+    public virtual void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+        where TActivity : class
         where TArguments : class
     {
-        NotifyObserver<RoutingSlip>();
+        NotifyObserver(configurator.MessageType);
     }
 
     /// <summary>
@@ -70,11 +70,11 @@ public class ConfigurationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public virtual void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-        where TActivity : class, ICompensateActivity<TLog>
+    public virtual void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+        where TActivity : class
         where TLog : class
     {
-        NotifyObserver<RoutingSlip>();
+        NotifyObserver(configurator.MessageType);
     }
 
     void IConsumerConfigurationObserver.ConsumerConfigured<TConsumer>(IConsumerConfigurator<TConsumer> configurator)
@@ -112,8 +112,8 @@ public class ConfigurationObserver :
     /// <typeparam name="TInstance">The t instance type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="stateMachine">The state machine value.</param>
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
     }
 
@@ -143,5 +143,22 @@ public class ConfigurationObserver :
         _messageTypes.Add(typeof(TMessage));
 
         ForEach(observer => observer.MessageConfigured<TMessage>(_configurator));
+    }
+
+    void NotifyObserver(Type messageType)
+    {
+        ArgumentNullException.ThrowIfNull(messageType);
+
+        MethodInfo method = typeof(ConfigurationObserver).GetMethod(nameof(NotifyObserverByType),
+                BindingFlags.Instance | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException($"The {nameof(NotifyObserverByType)} method was not found.");
+
+        method.MakeGenericMethod(messageType).Invoke(this, null);
+    }
+
+    void NotifyObserverByType<TMessage>()
+        where TMessage : class
+    {
+        NotifyObserver<TMessage>();
     }
 }

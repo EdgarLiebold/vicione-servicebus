@@ -9,6 +9,11 @@ public interface IConsumerRegistration :
     IRegistration
 {
     /// <summary>
+    /// Gets or sets a value indicating whether the consumer endpoint must be hosted by a service instance.
+    /// </summary>
+    bool RequiresServiceInstance { get; set; }
+
+    /// <summary>
     /// Adds configure action to the configuration.
     /// </summary>
     /// <typeparam name="T">The t type.</typeparam>

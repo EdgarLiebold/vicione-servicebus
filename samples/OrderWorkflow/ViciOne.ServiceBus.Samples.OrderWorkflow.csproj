@@ -11,6 +11,9 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="../../src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
   </ItemGroup>
 
 </Project>

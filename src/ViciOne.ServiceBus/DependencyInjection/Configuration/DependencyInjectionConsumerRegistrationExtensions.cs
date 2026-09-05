@@ -34,7 +34,7 @@ public static class DependencyInjectionConsumerRegistrationExtensions
     public static IConsumerRegistration RegisterConsumer<T>(this IServiceCollection collection, IContainerRegistrar registrar)
         where T : class, IConsumer
     {
-        if (RegistrationMetadata.IsSaga(typeof(T)))
+        if (RegistrationMetadata.IsConsumerRegistrationExcluded(typeof(T)))
             throw new ArgumentException($"{TypeCache<T>.ShortName} is a saga, and cannot be registered as a consumer", nameof(T));
 
         return new ConsumerRegistrar<T>().Register(collection, registrar);
@@ -66,7 +66,7 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         where T : class, IConsumer
         where TDefinition : class, IConsumerDefinition<T>
     {
-        if (RegistrationMetadata.IsSaga(typeof(T)))
+        if (RegistrationMetadata.IsConsumerRegistrationExcluded(typeof(T)))
             throw new ArgumentException($"{TypeCache<T>.ShortName} is a saga, and cannot be registered as a consumer", nameof(T));
 
         return new ConsumerDefinitionRegistrar<T, TDefinition>().Register(collection, registrar);
@@ -99,7 +99,7 @@ public static class DependencyInjectionConsumerRegistrationExtensions
         if (consumerDefinitionType == null)
             return RegisterConsumer<T>(collection, registrar);
 
-        if (RegistrationMetadata.IsSaga(typeof(T)))
+        if (RegistrationMetadata.IsConsumerRegistrationExcluded(typeof(T)))
             throw new ArgumentException($"{TypeCache<T>.ShortName} is a saga, and cannot be registered as a consumer", nameof(T));
 
         if (!consumerDefinitionType.TryGetSingleClosedGenericArguments(typeof(IConsumerDefinition<>), out Type[] types) || types[0] != typeof(T))
@@ -125,7 +125,7 @@ public static class DependencyInjectionConsumerRegistrationExtensions
     public static IConsumerRegistration RegisterConsumer(this IServiceCollection collection, IContainerRegistrar registrar, Type consumerType,
         Type? consumerDefinitionType = null)
     {
-        if (RegistrationMetadata.IsSaga(consumerType))
+        if (RegistrationMetadata.IsConsumerRegistrationExcluded(consumerType))
             throw new ArgumentException($"{TypeCache.GetShortName(consumerType)} is a saga, and cannot be registered as a consumer", nameof(consumerType));
 
         if (consumerDefinitionType != null)

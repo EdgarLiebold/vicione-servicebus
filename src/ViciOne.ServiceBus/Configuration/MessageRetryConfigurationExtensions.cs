@@ -93,45 +93,6 @@ public static class MessageRetryConfigurationExtensions
     }
 
     /// <summary>
-    /// Configures retry for every message type handled by the saga before the saga repository.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    public static void UseMessageRetry<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IRetryConfigurator> configure)
-        where TSaga : class, ISaga
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(configure);
-
-        var observer = new MessageRetrySagaConfigurationObserver<TSaga>(configurator, CancellationToken.None, configure);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
-    /// Configures retry for every message type handled by the saga before the saga repository and
-    /// cancels it when the bus stops.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="busFactoryConfigurator">
-    /// The bus factory configurator, to connect the observer, to cancel retries if the bus is stopped
-    /// </param>
-    /// <param name="configure"></param>
-    public static void UseMessageRetry<TSaga>(this ISagaConfigurator<TSaga> configurator, IBusFactoryConfigurator busFactoryConfigurator,
-        Action<IRetryConfigurator> configure)
-        where TSaga : class, ISaga
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        ArgumentNullException.ThrowIfNull(busFactoryConfigurator);
-        ArgumentNullException.ThrowIfNull(configure);
-
-        var retryObserver = new RetryBusObserver();
-        busFactoryConfigurator.ConnectBusObserver(retryObserver);
-
-        var observer = new MessageRetrySagaConfigurationObserver<TSaga>(configurator, retryObserver.Stopping, configure);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
     /// Configures retry for the handler's message type.
     /// </summary>
     /// <param name="configurator"></param>

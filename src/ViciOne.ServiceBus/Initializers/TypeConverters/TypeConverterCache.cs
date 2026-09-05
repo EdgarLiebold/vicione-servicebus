@@ -33,7 +33,6 @@ public class TypeConverterCache :
         AddSupportedTypes(typeof(LongTypeConverter));
         AddSupportedTypes(typeof(ShortTypeConverter));
         AddSupportedTypes(typeof(StringTypeConverter));
-        AddSupportedTypes(typeof(StateTypeConverter));
         AddSupportedTypes(typeof(TimeSpanTypeConverter));
         AddSupportedTypes(typeof(UriTypeConverter));
         AddSupportedTypes(typeof(VersionTypeConverter));
@@ -59,7 +58,12 @@ public class TypeConverterCache :
         }
 
         var propertyType = typeof(TProperty);
-        if (propertyType.IsEnum)
+        if (propertyType == typeof(string) && typeof(INamedInitializerValue).IsAssignableFrom(typeof(TInput)))
+        {
+            var namedValueConverterType = typeof(NamedInitializerValueTypeConverter<>).MakeGenericType(typeof(TInput));
+            AddSupportedTypes(namedValueConverterType);
+        }
+        else if (propertyType.IsEnum)
         {
             var enumConverterType = typeof(EnumTypeConverter<>).MakeGenericType(propertyType);
             if (enumConverterType.ImplementsInterface(neededType))

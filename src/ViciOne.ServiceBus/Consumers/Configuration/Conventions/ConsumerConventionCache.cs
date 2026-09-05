@@ -12,7 +12,6 @@ public static class ConsumerConventionCache
     {
         ConsumerConvention.Register<AsyncConsumerConvention>();
         ConsumerConvention.Register<BatchConsumerConvention>();
-        ConsumerConvention.Register<JobConsumerConvention>();
     }
 
     /// <summary>

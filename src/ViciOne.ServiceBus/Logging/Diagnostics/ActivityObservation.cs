@@ -11,7 +11,8 @@ namespace ViciOne.ServiceBus.Logging;
 /// </summary>
 internal static class ActivityObservation
 {
-    public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind, ActivityContext parentContext = default,
+    public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,
+        System.Diagnostics.ActivityContext parentContext = default,
         IEnumerable<ActivityLink>? links = null)
     {
         try

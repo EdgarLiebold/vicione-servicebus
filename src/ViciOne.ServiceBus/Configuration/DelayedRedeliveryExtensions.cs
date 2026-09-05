@@ -90,21 +90,6 @@ public static class DelayedRedeliveryExtensions
     }
 
     /// <summary>
-    /// Configure scheduled redelivery for the saga, regardless of message type.
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="configure"></param>
-    public static void UseDelayedRedelivery<TSaga>(this ISagaConfigurator<TSaga> configurator, Action<IRedeliveryConfigurator> configure)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-
-        var observer = new DelayedRedeliverySagaConfigurationObserver<TSaga>(configurator, configure);
-        configurator.ConnectSagaConfigurationObserver(observer);
-    }
-
-    /// <summary>
     /// Configures the message retry for the handler, regardless of message type.
     /// </summary>
     /// <param name="configurator"></param>

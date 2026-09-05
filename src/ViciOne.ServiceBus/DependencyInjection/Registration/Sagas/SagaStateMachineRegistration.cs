@@ -38,6 +38,9 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     /// </summary>
     public Type Type => typeof(TInstance);
 
+    /// <inheritdoc />
+    public Type? StateMachineType => typeof(TStateMachine);
+
     /// <summary>
     /// Gets or sets the include in configure endpoints value.
     /// </summary>
@@ -49,7 +52,7 @@ public class SagaStateMachineRegistration<TStateMachine, TInstance> :
     /// <typeparam name="T">The t type.</typeparam>
     /// <param name="configure">The configuration callback.</param>
     public void AddConfigureAction<T>(Action<IRegistrationContext, ISagaConfigurator<T>>? configure)
-        where T : class, ISaga
+        where T : class
     {
         if (configure is Action<IRegistrationContext, ISagaConfigurator<TInstance>> action)
             _configureActions.Add(action);

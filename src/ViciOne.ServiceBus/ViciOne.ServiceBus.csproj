@@ -28,6 +28,120 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Sagas/**/*.cs" />
+    <Compile Remove="SagaStateMachine/**/*.cs" />
+    <Compile Remove="**/*Saga*.cs" />
+    <Compile Remove="Configuration/IRequestStateMachineMissingInstanceConfigurator.cs" />
+    <Compile Remove="Courier/**/*.cs" />
+    <Compile Remove="Futures/**/*.cs" />
+    <Compile Remove="JobService/**/*.cs" />
+    <Compile Remove="JobServiceEventExtensions.cs" />
+    <Compile Remove="Middleware/JobConsumerMessageFilter.cs" />
+    <Compile Remove="Serialization/JobPropertyCollection.cs" />
+    <Compile Remove="Initializers/PropertyConverters/StatePropertyConverter.cs" />
+    <Compile Remove="Initializers/TypeConverters/StateTypeConverter.cs" />
+    <Compile Remove="Mediator/**/*.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IJobSagaRegistrationConfigurator.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IJobServiceRegistrationConfigurator.cs" />
+    <Compile Remove="Configuration/DependencyInjection/InMemorySagaRepositoryRegistrationExtensions.cs" />
+    <Compile Remove="Configuration/DependencyInjection/JobSagaBusConfigurationExtensions.cs" />
+    <Compile Remove="Configuration/Futures/**/*.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IFutureRegistrationConfigurator.cs" />
+    <Compile Remove="Configuration/CourierHostConfiguratorExtensions.cs" />
+    <Compile Remove="Configuration/RoutingSlipConfigurator.cs" />
+    <Compile Remove="Configuration/MediatorConfigurationExtensions.cs" />
+    <Compile Remove="Configuration/MediatorConfiguration.cs" />
+    <Compile Remove="Configuration/IMediatorConfigurator.cs" />
+    <Compile Remove="Configuration/SagaExtensions.cs" />
+    <Compile Remove="Configuration/SagaStateMachineReceiveEndpointExtensions.cs" />
+    <Compile Remove="Configuration/IJobServiceConfigurator.cs" />
+    <Compile Remove="Configuration/JobConsumerOptions.cs" />
+    <Compile Remove="Configuration/JobOptions.cs" />
+    <Compile Remove="Configuration/JobSagaOptions.cs" />
+    <Compile Remove="Configuration/JobServiceConfigurationExtensions.cs" />
+    <Compile Remove="Configuration/JobServiceContainerConfigurationExtensions.cs" />
+    <Compile Remove="Configuration/JobServiceOptions.cs" />
+    <Compile Remove="Configuration/JobServiceRegistrationExtensions.cs" />
+    <Compile Remove="Consumers/Configuration/Conventions/JobConsumerConvention.cs" />
+    <Compile Remove="Consumers/Configuration/Conventions/JobConsumerMessageConvention.cs" />
+    <Compile Remove="Consumers/Configuration/Conventions/JobInterfaceType.cs" />
+    <Compile Remove="Consumers/Configuration/CompensateActivityHostConfigurator.cs" />
+    <Compile Remove="Consumers/Configuration/ActivityPipeConfiguratorExtensions.cs" />
+    <Compile Remove="Consumers/Configuration/CompensateActivityLogConfigurator.cs" />
+    <Compile Remove="Consumers/Configuration/ExecuteActivityArgumentsConfigurator.cs" />
+    <Compile Remove="Consumers/Configuration/ExecuteActivityHostConfigurator.cs" />
+    <Compile Remove="Consumers/Configuration/JobConsumerMessageConnector.cs" />
+    <Compile Remove="Consumers/Configuration/JobConsumerMessageSpecification.cs" />
+    <Compile Remove="Consumers/Configuration/JobMessageConnectorFactory.cs" />
+    <Compile Remove="Contexts/Context/BaseCourierContext.cs" />
+    <Compile Remove="Contexts/Context/CourierContextProxy.cs" />
+    <Compile Remove="Contexts/Context/CourierContextScope.cs" />
+    <Compile Remove="DependencyInjection/CompensateActivityScopeProvider.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DefaultSagaDefinition.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionActivityRegistrationExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionExecuteActivityRegistrationExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DefaultActivityDefinition.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DefaultExecuteActivityDefinition.cs" />
+    <Compile Remove="DependencyInjection/Configuration/IActivityRegistration.cs" />
+    <Compile Remove="DependencyInjection/Configuration/IExecuteActivityRegistration.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionFutureRegistrationExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/IFutureRegistration.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionSagaRegistrationExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionSagaStateMachineRegistrationExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/IJobServiceRegistration.cs" />
+    <Compile Remove="DependencyInjection/Configuration/InMemorySagaRepositoryRegistrationProvider.cs" />
+    <Compile Remove="DependencyInjection/Configuration/JobServiceEndpointDefinition.cs" />
+    <Compile Remove="DependencyInjection/Configuration/RegistrationServiceCollectionExtensions.cs" />
+    <Compile Remove="DependencyInjection/Configuration/SagaRepositoryRegistrationProvider.cs" />
+    <Compile Remove="DependencyInjection/Configuration/ServiceCollectionMediatorConfigurator.cs" />
+    <Compile Remove="DependencyInjection/Configuration/DependencyInjectionMediatorContainerRegistrar.cs" />
+    <Compile Remove="DependencyInjection/Configuration/MediatorRegistrationContext.cs" />
+    <Compile Remove="DependencyInjection/ScopedMediator.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IMediatorRegistrationContext.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IMediatorRegistrationConfigurator.cs" />
+    <Compile Remove="DependencyInjection/DependencyInjectionLoadSagaRepository.cs" />
+    <Compile Remove="DependencyInjection/DependencyInjectionQuerySagaRepository.cs" />
+    <Compile Remove="DependencyInjection/DependencyInjectionSagaRepository.cs" />
+    <Compile Remove="DependencyInjection/DependencyInjectionSagaRepositoryContextFactory.cs" />
+    <Compile Remove="DependencyInjection/Registration/Activities/ActivityRegistration.cs" />
+    <Compile Remove="DependencyInjection/Registration/Activities/ActivityRegistrationConfigurator.cs" />
+    <Compile Remove="DependencyInjection/Registration/Activities/ExecuteActivityRegistration.cs" />
+    <Compile Remove="DependencyInjection/Registration/Activities/ExecuteActivityRegistrationConfigurator.cs" />
+    <Compile Remove="DependencyInjection/CreatedCompensateActivityScopeContext.cs" />
+    <Compile Remove="DependencyInjection/CreatedExecuteActivityScopeContext.cs" />
+    <Compile Remove="DependencyInjection/ExecuteActivityScopeProvider.cs" />
+    <Compile Remove="DependencyInjection/ExistingCompensateActivityScopeContext.cs" />
+    <Compile Remove="DependencyInjection/ExistingExecuteActivityScopeContext.cs" />
+    <Compile Remove="DependencyInjection/ICompensateActivityScopeContext.cs" />
+    <Compile Remove="DependencyInjection/ICompensateActivityScopeProvider.cs" />
+    <Compile Remove="DependencyInjection/IExecuteActivityScopeContext.cs" />
+    <Compile Remove="DependencyInjection/IExecuteActivityScopeProvider.cs" />
+    <Compile Remove="DependencyInjection/ScopeCompensateActivityFactory.cs" />
+    <Compile Remove="DependencyInjection/ScopeExecuteActivityFactory.cs" />
+    <Compile Remove="Middleware/CompensateActivityFactoryFilter.cs" />
+    <Compile Remove="Middleware/CompensateActivityFilter.cs" />
+    <Compile Remove="Middleware/ExecuteActivityFactoryFilter.cs" />
+    <Compile Remove="Middleware/ExecuteActivityFilter.cs" />
+    <Compile Remove="Middleware/InMemoryOutbox/InMemoryOutboxCourierContextProxy.cs" />
+    <Compile Remove="Middleware/Timeout/TimeoutCourierContextProxy.cs" />
+    <Compile Remove="DependencyInjection/Registration/Activities/JobServiceRegistration.cs" />
+    <Compile Remove="DependencyInjection/Registration/Consumers/JobSagaRegistrationConfigurator.cs" />
+    <Compile Remove="DependencyInjection/Registration/Consumers/JobServiceRegistrationConfigurator.cs" />
+    <Compile Remove="DependencyInjection/Registration/Futures/**/*.cs" />
+    <Compile Remove="DependencyInjection/Registration/Sagas/**/*.cs" />
+    <Compile Remove="Middleware/MissingSagaPipe.cs" />
+    <Compile Remove="Middleware/MissingInstanceRedeliveryPipe.cs" />
+    <Compile Remove="Middleware/SendQuerySagaPipe.cs" />
+    <Compile Remove="Middleware/SendSagaPipe.cs" />
+    <Compile Remove="Middleware/StateMachineSagaMessageFilter.cs" />
+    <Compile Remove="Topology/CorrelatedByMessageCorrelationId.cs" />
+    <Compile Remove="RoutingSlipBuilder.cs" />
+    <Compile Remove="RoutingSlipEventExtensions.cs" />
+    <Compile Remove="Transports/ExecuteActivityReceiveEndpointDispatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Tests.InternalAccess" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Testing" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.ActiveMq" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
@@ -38,5 +152,12 @@
     <InternalsVisibleTo Include="ViciOne.ServiceBus.EventHubs" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.MessagePack" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.RabbitMq" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Sagas" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Courier" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Futures" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.JobService" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Mediator" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Initializers" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.EntityFrameworkCore.Sagas" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
   </ItemGroup>
 </Project>

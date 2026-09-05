@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ViciOne.ServiceBus.Courier.Contracts;
-
-namespace ViciOne.ServiceBus.Courier;
+namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
 /// Defines the contract for itinerary builder.

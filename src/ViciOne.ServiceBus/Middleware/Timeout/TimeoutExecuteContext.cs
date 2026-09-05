@@ -6,7 +6,7 @@ using ViciOne.ServiceBus.Context;
 namespace ViciOne.ServiceBus.Middleware.Timeout;
 
 internal sealed class TimeoutExecuteContext<TArguments> :
-    TimeoutCourierContextProxy,
+    TimeoutActivityContextProxy,
     ExecuteContext<TArguments>
     where TArguments : class
 {
@@ -153,7 +153,7 @@ internal sealed class TimeoutExecuteContext<TArguments> :
     public TArguments Arguments => _context.Arguments;
 
     public ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
     {
         return new HostExecuteActivityContext<TActivity, TArguments>(activity, this);
     }

@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../signing.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageTags>ViciOne.ServiceBus;JobService</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="../ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/JobService/**/*.cs" Link="JobService/Abstractions/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/IJobConsumer.cs" Link="Advanced/IJobConsumer.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Contexts/INotifyJobContext.cs" Link="Contexts/INotifyJobContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Contexts/JobContext.cs" Link="Contexts/JobContext.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/JobAlreadyExistsException.cs" Link="Exceptions/JobAlreadyExistsException.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/JobNotFoundException.cs" Link="Exceptions/JobNotFoundException.cs" />
+    <Compile Include="../ViciOne.ServiceBus.Abstractions/Exceptions/JobServiceStoppingException.cs" Link="Exceptions/JobServiceStoppingException.cs" />
+    <Compile Include="../ViciOne.ServiceBus/JobService/**/*.cs" Link="JobService/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../ViciOne.ServiceBus/JobServiceEventExtensions.cs" Link="Advanced/JobServiceEventExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Middleware/JobConsumerMessageFilter.cs" Link="Middleware/JobConsumerMessageFilter.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Serialization/JobPropertyCollection.cs" Link="Serialization/JobPropertyCollection.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IJobSagaRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IJobSagaRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/IJobServiceRegistrationConfigurator.cs" Link="Configuration/DependencyInjection/IJobServiceRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/DependencyInjection/JobSagaBusConfigurationExtensions.cs" Link="Configuration/DependencyInjection/JobSagaBusConfigurationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/IJobServiceConfigurator.cs" Link="Configuration/IJobServiceConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobConsumerOptions.cs" Link="Configuration/JobConsumerOptions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobOptions.cs" Link="Configuration/JobOptions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobSagaOptions.cs" Link="Configuration/JobSagaOptions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobServiceConfigurationExtensions.cs" Link="Configuration/JobServiceConfigurationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobServiceContainerConfigurationExtensions.cs" Link="Configuration/JobServiceContainerConfigurationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobServiceOptions.cs" Link="Configuration/JobServiceOptions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Configuration/JobServiceRegistrationExtensions.cs" Link="Configuration/JobServiceRegistrationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/Conventions/JobConsumerConvention.cs" Link="Consumers/Configuration/Conventions/JobConsumerConvention.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/Conventions/JobConsumerMessageConvention.cs" Link="Consumers/Configuration/Conventions/JobConsumerMessageConvention.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/Conventions/JobInterfaceType.cs" Link="Consumers/Configuration/Conventions/JobInterfaceType.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/JobConsumerMessageConnector.cs" Link="Consumers/Configuration/JobConsumerMessageConnector.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/JobConsumerMessageSpecification.cs" Link="Consumers/Configuration/JobConsumerMessageSpecification.cs" />
+    <Compile Include="../ViciOne.ServiceBus/Consumers/Configuration/JobMessageConnectorFactory.cs" Link="Consumers/Configuration/JobMessageConnectorFactory.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs" Link="DependencyInjection/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/IJobServiceRegistration.cs" Link="DependencyInjection/Configuration/IJobServiceRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Configuration/JobServiceEndpointDefinition.cs" Link="DependencyInjection/Configuration/JobServiceEndpointDefinition.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Activities/JobServiceRegistration.cs" Link="DependencyInjection/Registration/Activities/JobServiceRegistration.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/JobSagaRegistrationConfigurator.cs" Link="DependencyInjection/Registration/Consumers/JobSagaRegistrationConfigurator.cs" />
+    <Compile Include="../ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/JobServiceRegistrationConfigurator.cs" Link="DependencyInjection/Registration/Consumers/JobServiceRegistrationConfigurator.cs" />
+  </ItemGroup>
+</Project>

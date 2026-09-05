@@ -19,6 +19,12 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="../../../src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <ProjectReference Include="../../../src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <ProjectReference Include="../../../src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />

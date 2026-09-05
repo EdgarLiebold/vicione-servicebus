@@ -76,7 +76,7 @@ public class InMemoryOutboxConfigurationObserver :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="compensateAddress">The compensate address value.</param>
-    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
     {
         var specification = new InMemoryExecuteContextOutboxSpecification<TArguments>(_setter);
 
@@ -91,7 +91,7 @@ public class InMemoryOutboxConfigurationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
     {
         var specification = new InMemoryExecuteContextOutboxSpecification<TArguments>(_setter);
 
@@ -106,7 +106,7 @@ public class InMemoryOutboxConfigurationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
     {
         var specification = new InMemoryCompensateContextOutboxSpecification<TLog>(_setter);
 

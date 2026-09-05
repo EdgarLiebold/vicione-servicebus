@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <ProjectReference Include="../../../src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
     <ProjectReference Include="../../../src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />
     <ProjectReference Include="../../../src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj" />
     <ProjectReference Include="../../Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj" />

@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.JobService;
 using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
@@ -18,6 +20,9 @@ public static class DependencyInjectionJobServiceRegistrationExtensions
     /// <returns>The result of the operation.</returns>
     public static IJobServiceRegistration RegisterJobService(this IServiceCollection collection, IContainerRegistrar registrar)
     {
+        JobServiceCorrelationConventions.Register();
+        JobConsumerConventionRegistration.Register();
+        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, JobConsumerKind>());
         collection.AddOptions<JobConsumerOptions>()
             .Validate(
                 static options => options.HeartbeatInterval > TimeSpan.Zero,
@@ -29,6 +34,8 @@ public static class DependencyInjectionJobServiceRegistrationExtensions
                 static options => options.TimeProvider is not null,
                 "Job service for bus 'default': TimeProvider must not be null. Set TimeProvider to an application-owned clock.")
             .ValidateOnStart();
-        return registrar.GetOrAddRegistration<IJobServiceRegistration>(typeof(JobServiceState), _ => new JobServiceRegistration());
+        var registration = registrar.GetOrAddRegistration<IJobServiceRegistration>(typeof(JobServiceState), _ => new JobServiceRegistration());
+        registrar.GetOrAddRegistration<IConsumerKindHost>(typeof(JobServiceState), _ => registration);
+        return registration;
     }
 }

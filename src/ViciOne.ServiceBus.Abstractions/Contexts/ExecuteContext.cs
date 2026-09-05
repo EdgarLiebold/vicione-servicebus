@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Advanced;
 /// Defines the contract for execute context.
 /// </summary>
 public interface ExecuteContext :
-    CourierContext
+    ActivityContext
 {
     /// <summary>
     /// Set the execution result, which completes the activity
@@ -113,42 +113,43 @@ public interface ExecuteContext :
         where TLog : class;
 
     /// <summary>
-    /// Performs the revise itinerary operation.
+    /// Revises the remaining itinerary.
     /// </summary>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="buildItinerary">The itinerary callback.</param>
+    /// <returns>The execution result.</returns>
     ExecutionResult ReviseItinerary(Action<IItineraryBuilder> buildItinerary);
 
     /// <summary>
-    /// Performs the revise itinerary operation.
+    /// Revises the remaining itinerary and records a compensation log.
     /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <typeparam name="TLog">The compensation-log type.</typeparam>
+    /// <param name="log">The compensation log.</param>
+    /// <param name="buildItinerary">The itinerary callback.</param>
+    /// <returns>The execution result.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
     /// <summary>
-    /// Performs the revise itinerary operation.
+    /// Revises the remaining itinerary and records a compensation log and variables.
     /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <typeparam name="TLog">The compensation-log type.</typeparam>
+    /// <param name="log">The compensation log.</param>
+    /// <param name="variables">The updated variables.</param>
+    /// <param name="buildItinerary">The itinerary callback.</param>
+    /// <returns>The execution result.</returns>
     ExecutionResult ReviseItinerary<TLog>(TLog log, object variables, Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
     /// <summary>
-    /// Performs the revise itinerary operation.
+    /// Revises the remaining itinerary and records a compensation log and variables.
     /// </summary>
-    /// <typeparam name="TLog">The t log type.</typeparam>
-    /// <param name="log">The log value.</param>
-    /// <param name="variables">The variables value.</param>
-    /// <param name="buildItinerary">The build itinerary value.</param>
-    /// <returns>The result of the operation.</returns>
-    ExecutionResult ReviseItinerary<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables, Action<IItineraryBuilder> buildItinerary)
+    /// <typeparam name="TLog">The compensation-log type.</typeparam>
+    /// <param name="log">The compensation log.</param>
+    /// <param name="variables">The updated variables.</param>
+    /// <param name="buildItinerary">The itinerary callback.</param>
+    /// <returns>The execution result.</returns>
+    ExecutionResult ReviseItinerary<TLog>(TLog log, IEnumerable<KeyValuePair<string, object>> variables,
+        Action<IItineraryBuilder> buildItinerary)
         where TLog : class;
 
     /// <summary>
@@ -232,5 +233,5 @@ public interface ExecuteContext<out TArguments> :
     /// <param name="activity">The activity value.</param>
     /// <returns>The result of the operation.</returns>
     ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, IExecuteActivity<TArguments>;
+        where TActivity : class;
 }

@@ -83,10 +83,11 @@ public class MessageScopeConfigurationObserver :
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="compensateAddress">The compensate address value.</param>
-    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+    public override void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator,
+        Uri compensateAddress)
     {
-        var scopeProvider = new ExecuteActivityScopeProvider<TActivity, TArguments>(_serviceProvider, _setScopedConsumeContext);
-        var scopeFilter = new ScopeExecuteFilter<TActivity, TArguments>(scopeProvider);
+        var scopeProvider = new ExecuteScopeProvider<TArguments>(_serviceProvider, _setScopedConsumeContext);
+        var scopeFilter = new ScopeExecuteFilter<TArguments>(scopeProvider);
         var specification = new FilterPipeSpecification<ExecuteContext<TArguments>>(scopeFilter);
 
         configurator.Arguments(x => x.AddPipeSpecification(specification));
@@ -98,10 +99,10 @@ public class MessageScopeConfigurationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TArguments">The t arguments type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
+    public override void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
     {
-        var scopeProvider = new ExecuteActivityScopeProvider<TActivity, TArguments>(_serviceProvider, _setScopedConsumeContext);
-        var scopeFilter = new ScopeExecuteFilter<TActivity, TArguments>(scopeProvider);
+        var scopeProvider = new ExecuteScopeProvider<TArguments>(_serviceProvider, _setScopedConsumeContext);
+        var scopeFilter = new ScopeExecuteFilter<TArguments>(scopeProvider);
         var specification = new FilterPipeSpecification<ExecuteContext<TArguments>>(scopeFilter);
 
         configurator.Arguments(x => x.AddPipeSpecification(specification));
@@ -113,10 +114,10 @@ public class MessageScopeConfigurationObserver :
     /// <typeparam name="TActivity">The t activity type.</typeparam>
     /// <typeparam name="TLog">The t log type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
-    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
+    public override void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
     {
-        var scopeProvider = new CompensateActivityScopeProvider<TActivity, TLog>(_serviceProvider, _setScopedConsumeContext);
-        var scopeFilter = new ScopeCompensateFilter<TActivity, TLog>(scopeProvider);
+        var scopeProvider = new CompensateScopeProvider<TLog>(_serviceProvider, _setScopedConsumeContext);
+        var scopeFilter = new ScopeCompensateFilter<TLog>(scopeProvider);
         var specification = new FilterPipeSpecification<CompensateContext<TLog>>(scopeFilter);
 
         configurator.Log(x => x.AddPipeSpecification(specification));

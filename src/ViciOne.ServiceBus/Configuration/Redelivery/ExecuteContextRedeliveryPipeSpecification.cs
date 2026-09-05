@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.RetryPolicies;
@@ -40,7 +39,7 @@ public class ExecuteContextRedeliveryPipeSpecification<TArguments> :
         var policy = new ConsumeContextRetryPolicy<ExecuteContext<TArguments>, RetryExecuteContext<TArguments>>(retryPolicy, CancellationToken.None,
             Factory);
 
-        builder.AddFilter(new RedeliveryRetryFilter<ExecuteContext<TArguments>, RoutingSlip>(policy, _observers));
+        builder.AddFilter(new ActivityRedeliveryRetryFilter<ExecuteContext<TArguments>>(policy, _observers));
     }
 
     /// <summary>

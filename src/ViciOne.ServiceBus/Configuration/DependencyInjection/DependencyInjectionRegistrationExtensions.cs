@@ -8,7 +8,6 @@ using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
-using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Transports;
@@ -45,41 +44,6 @@ public static class DependencyInjectionRegistrationExtensions
         configurator.Complete();
 
         return collection;
-    }
-
-    /// <summary>
-    /// Adds the ViciOne.ServiceBus Mediator to the <paramref name="collection" />, and allows consumers, sagas, and activities (which are not supported
-    /// by the Mediator) to be configured.
-    /// </summary>
-    /// <param name="collection"></param>
-    /// <param name="configure"></param>
-    /// <param name="baseAddress"></param>
-    public static IServiceCollection AddMediator(this IServiceCollection collection, Uri? baseAddress,
-        Action<IMediatorRegistrationConfigurator>? configure = null)
-    {
-        if (collection.Any(d => d.ServiceType == typeof(IMediator)))
-            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Registration Extensions", "unknown", "AddMediator() was already called and may only be called once per container.", "Correct the named configuration before starting the host"));
-
-        var configurator = new ServiceCollectionMediatorConfigurator(collection, baseAddress);
-
-        configure?.Invoke(configurator);
-
-        AddInstrumentation(collection);
-
-        configurator.Complete();
-
-        return collection;
-    }
-
-    /// <summary>
-    /// Adds the ViciOne.ServiceBus Mediator to the <paramref name="collection" />, and allows consumers, sagas, and activities (which are not supported
-    /// by the Mediator) to be configured.
-    /// </summary>
-    /// <param name="collection"></param>
-    /// <param name="configure"></param>
-    public static IServiceCollection AddMediator(this IServiceCollection collection, Action<IMediatorRegistrationConfigurator>? configure = null)
-    {
-        return AddMediator(collection, null, configure);
     }
 
     /// <summary>

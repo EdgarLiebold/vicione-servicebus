@@ -18,10 +18,67 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Advanced/Initializers/**/*.cs" />
+    <Compile Remove="InVar.cs" />
+    <Compile Remove="Initializers/Variables/IdVariable.cs" />
+    <Compile Remove="Initializers/Variables/TimestampVariable.cs" />
+    <Compile Remove="PublishEndpointExtensions.cs" />
+    <Compile Remove="SendEndpointExtensions.cs" />
+    <Compile Remove="CorrelatedBy.cs" />
+    <Compile Remove="ILoadSagaRepository.cs" />
+    <Compile Remove="ISaga.cs" />
+    <Compile Remove="Saga/**/*.cs" />
+    <Compile Remove="SagaStateMachine/**/*.cs" />
+    <Compile Remove="Configuration/DependencyInjection/Configuration/SagaEndpointDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/ISagaDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/SagaDefinition.cs" />
+    <Compile Remove="Futures/**/*.cs" />
+    <Compile Remove="Mediator/**/*.cs" />
+    <Compile Remove="MediatorRequestExtensions.cs" />
+    <Compile Remove="JobService/**/*.cs" />
+    <Compile Remove="IJobConsumer.cs" />
+    <Compile Remove="Contexts/INotifyJobContext.cs" />
+    <Compile Remove="Contexts/JobContext.cs" />
+    <Compile Remove="Exceptions/JobAlreadyExistsException.cs" />
+    <Compile Remove="Exceptions/JobNotFoundException.cs" />
+    <Compile Remove="Exceptions/JobServiceStoppingException.cs" />
+    <Compile Remove="Courier/**/*.cs" />
+    <Compile Remove="IRoutingSlipExecutor.cs" />
+    <Compile Remove="Exceptions/RoutingSlip*.cs" />
+    <Compile Remove="Configuration/Consumers/ICompensateActivityConfigurator.cs" />
+    <Compile Remove="Configuration/Consumers/ICompensateActivityLogConfigurator.cs" />
+    <Compile Remove="Configuration/Consumers/IExecuteActivityArgumentsConfigurator.cs" />
+    <Compile Remove="Configuration/Consumers/IExecuteActivityConfigurator.cs" />
+    <Compile Remove="Configuration/Consumers/IRoutingSlipConfigurator.cs" />
+    <Compile Remove="Configuration/DependencyInjection/ActivityDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/Configuration/CompensateActivityEndpointDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/Configuration/ExecuteActivityEndpointDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/ExecuteActivityDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IActivityDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IActivityRegistrationConfigurator.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IExecuteActivityDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IExecuteActivityRegistrationConfigurator.cs" />
+    <Compile Remove="Contexts/CourierContext.cs" />
+    <Compile Remove="Configuration/DependencyInjection/FutureDefinition.cs" />
+    <Compile Remove="Configuration/DependencyInjection/IFutureDefinition.cs" />
+    <Compile Include="Advanced/Initializers/INamedInitializerValue.cs" />
+    <Compile Include="Courier/IItineraryBuilder.cs" Link="Advanced/IItineraryBuilder.cs" />
+    <Compile Include="Courier/Contracts/RoutingSlipEvents.cs" Link="Advanced/RoutingSlipEvents.cs" />
+    <Compile Include="Courier/Contracts/RoutingSlipEventContents.cs" Link="Advanced/RoutingSlipEventContents.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Envelope metadata is one serializer-independent product rule. The projection remains
          internal so adding a wire format does not enlarge the public API, while the two retained
          serializer assemblies consume the same implementation. -->
     <InternalsVisibleTo Include="ViciOne.ServiceBus" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Sagas" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Courier" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Futures" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.JobService" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Mediator" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.Initializers" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
+    <InternalsVisibleTo Include="ViciOne.ServiceBus.EntityFrameworkCore.Sagas" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.EntityFrameworkCore" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.MessagePack" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />
     <InternalsVisibleTo Include="ViciOne.ServiceBus.Testing" Key="0024000004800000940000000602000000240000525341310004000001000100e9e6f2f380b10f7b8f2ef6ae0e241e612d363d34b68936c7eeea11d727581d583a6449d989200db64c080f5d55c4bdb60c4ffa8c6648023290150b325e567b13ebe83e394b7374d9ab36874a0d7e2718290433eb1a03f1d4c465388a27acfd2888ea2c762921853e19ae89d689c6caacdfbeb566c20ca5f46ed621e6a7332087" />

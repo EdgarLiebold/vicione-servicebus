@@ -18,9 +18,9 @@ public static class RegistrationMetadata
     {
         Type[] interfaces = type.GetInterfaces();
 
-        return !IsSaga(type) && interfaces.Any(t => t.ImplementsInterface(typeof(IConsumer<>))
-            || t.ImplementsInterface(typeof(IJobConsumer<>))
-            || t.ImplementsInterface(typeof(IConsumerDefinition<>)));
+        return !IsConsumerRegistrationExcluded(type)
+            && (typeof(IConsumer).IsAssignableFrom(type)
+                || interfaces.Any(candidate => candidate.ImplementsInterface(typeof(IConsumerDefinition<>))));
     }
 
     /// <summary>
@@ -30,87 +30,21 @@ public static class RegistrationMetadata
     /// <returns></returns>
     public static bool IsConsumer(Type type)
     {
-        Type[] interfaces = type.GetInterfaces();
-
-        return interfaces.Any(t => t.ImplementsInterface(typeof(IConsumer<>))
-            || t.ImplementsInterface(typeof(IJobConsumer<>)));
+        return !IsConsumerRegistrationExcluded(type) && typeof(IConsumer).IsAssignableFrom(type);
     }
 
     /// <summary>
-    /// Returns true if the type is a saga, or a saga definition
+    /// Returns whether a capability package, rather than the core consumer kind, owns registration of the type.
     /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsSagaOrDefinition(Type type)
+    /// <param name="type">The candidate handler type.</param>
+    /// <returns><see langword="true" /> when an implemented handler contract excludes core consumer registration.</returns>
+    public static bool IsConsumerRegistrationExcluded(Type type)
     {
+        ArgumentNullException.ThrowIfNull(type);
+
         Type[] interfaces = type.GetInterfaces();
-
-        if (interfaces.Contains(typeof(ISaga)))
-            return true;
-
-        return interfaces.Any(t => t.ImplementsInterface(typeof(InitiatedBy<>))
-            || t.ImplementsInterface(typeof(Orchestrates<>))
-            || t.ImplementsInterface(typeof(InitiatedByOrOrchestrates<>))
-            || t.ImplementsInterface(typeof(Observes<,>))
-            || t.ImplementsInterface(typeof(ISagaDefinition<>)));
+        return interfaces.Any(candidate =>
+            candidate.IsDefined(typeof(ConsumerRegistrationExclusionAttribute), inherit: false));
     }
 
-    /// <summary>
-    /// Returns true if the type is a saga
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsSaga(Type type)
-    {
-        Type[] interfaces = type.GetInterfaces();
-
-        if (interfaces.Contains(typeof(ISaga)))
-            return true;
-
-        return interfaces.Any(t => t.ImplementsInterface(typeof(InitiatedBy<>))
-            || t.ImplementsInterface(typeof(Orchestrates<>))
-            || t.ImplementsInterface(typeof(InitiatedByOrOrchestrates<>))
-            || t.ImplementsInterface(typeof(Observes<,>)));
-    }
-
-    /// <summary>
-    /// Returns true if the type is a state machine or saga definition
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsSagaStateMachineOrDefinition(Type type)
-    {
-        Type[] interfaces = type.GetInterfaces();
-
-        return interfaces.Any(t => t.ImplementsInterface(typeof(SagaStateMachine<>))
-            || t.ImplementsInterface(typeof(ISagaDefinition<>)));
-    }
-
-    /// <summary>
-    /// Returns true if the type is an activity
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsActivityOrDefinition(Type type)
-    {
-        Type[] interfaces = type.GetInterfaces();
-
-        return interfaces.Any(t => t.ImplementsInterface(typeof(IExecuteActivity<>))
-            || t.ImplementsInterface(typeof(ICompensateActivity<>))
-            || t.ImplementsInterface(typeof(IActivityDefinition<,,>))
-            || t.ImplementsInterface(typeof(IExecuteActivityDefinition<,>)));
-    }
-
-    /// <summary>
-    /// Returns true if the type is a future or future definition
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsFutureOrDefinition(Type type)
-    {
-        Type[] interfaces = type.GetInterfaces();
-
-        return interfaces.Any(t => t.ImplementsInterface(typeof(SagaStateMachine<FutureState>))
-            || t.ImplementsInterface(typeof(IFutureDefinition<>)));
-    }
 }

@@ -16,3 +16,4 @@ global using ViciOne.ServiceBus.Providers.Persistence;
 global using ViciOne.ServiceBus.Providers.Transports;
 global using ViciOne.ServiceBus.Quartz;
 global using ViciOne.ServiceBus.Sagas;
+global using ViciOne.ServiceBus.Sagas.Configuration;

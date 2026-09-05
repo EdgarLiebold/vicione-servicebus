@@ -64,7 +64,7 @@ public class ScopedConsumePipeSpecificationObserver :
     /// <typeparam name="TSaga">The t saga type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaConfigured<TSaga>(ISagaConfigurator<TSaga> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
     {
     }
 
@@ -74,8 +74,8 @@ public class ScopedConsumePipeSpecificationObserver :
     /// <typeparam name="TInstance">The t instance type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     /// <param name="stateMachine">The state machine value.</param>
-    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, SagaStateMachine<TInstance> stateMachine)
-        where TInstance : class, ISaga, SagaStateMachineInstance
+    public void StateMachineSagaConfigured<TInstance>(ISagaConfigurator<TInstance> configurator, object stateMachine)
+        where TInstance : class
     {
     }
 
@@ -86,7 +86,7 @@ public class ScopedConsumePipeSpecificationObserver :
     /// <typeparam name="TMessage">The t message type.</typeparam>
     /// <param name="configurator">The configurator value.</param>
     public void SagaMessageConfigured<TSaga, TMessage>(ISagaMessageConfigurator<TSaga, TMessage> configurator)
-        where TSaga : class, ISaga
+        where TSaga : class
         where TMessage : class
     {
         if (!(configurator is ISagaMessageConfigurator<TMessage> messageConfigurator))

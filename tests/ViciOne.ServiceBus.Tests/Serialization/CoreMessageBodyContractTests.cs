@@ -1,3 +1,4 @@
+using ViciOne.ServiceBus.Mediator;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -12,7 +13,6 @@ public sealed class CoreMessageBodyContractTests
     {
         string[] expected =
         [
-            "ViciOne.ServiceBus.Mediator.Contexts.MeasuredMediatorMessageBody",
             IdentityOf(typeof(MemoryMessageBody)),
             IdentityOf(typeof(NotSupportedMessageBody)),
             IdentityOf(typeof(SystemTextJsonMessageBody<>)),
@@ -28,6 +28,21 @@ public sealed class CoreMessageBodyContractTests
             .ToArray();
 
         Assert.Equal(expected.Order(StringComparer.Ordinal), actual);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-BODY-CONTRACT", "mediator-concrete-type-set")]
+    public void EveryConcreteMediatorMessageBody_IsInTheExplicitContractSet()
+    {
+        string[] actual = typeof(IMediator).Assembly.GetTypes()
+            .Where(type => !type.IsInterface && !type.IsAbstract && typeof(MessageBody).IsAssignableFrom(type))
+            .Select(Normalize)
+            .Distinct()
+            .Select(IdentityOf)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(["ViciOne.ServiceBus.Mediator.Contexts.MeasuredMediatorMessageBody"], actual);
     }
 
     private static Type Normalize(Type type) =>

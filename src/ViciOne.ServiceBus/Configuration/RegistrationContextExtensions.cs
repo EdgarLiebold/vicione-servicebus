@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 
 namespace ViciOne.ServiceBus.Configuration;
@@ -101,8 +105,10 @@ public static class RegistrationContextExtensions
 
         configurator.ServiceInstance(options, instanceConfigurator =>
         {
-            if (options.TryGetOptions(out JobServiceOptions jobServiceOptions))
-                instanceConfigurator.ConfigureJobServiceEndpoints(jobServiceOptions, registration);
+            IContainerSelector selector = registration.GetRequiredService<IContainerSelector>();
+            IEnumerable<IConsumerKindHost> hosts = selector.GetRegistrations<IConsumerKindHost>(registration);
+            foreach (IConsumerKindHost host in hosts)
+                host.Configure(instanceConfigurator, registration);
 
             registration.ConfigureEndpoints(instanceConfigurator, instanceConfigurator.EndpointNameFormatter, configureFilter);
         });
@@ -156,41 +162,6 @@ public static class RegistrationContextExtensions
     public static void ConfigureConsumers(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration)
     {
         registration.ConfigureConsumers(configurator);
-    }
-
-    /// <summary>
-    /// Configure a saga on the receive endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="sagaType">The saga type</param>
-    public static void ConfigureSaga(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration, Type sagaType)
-    {
-        registration.ConfigureSaga(sagaType, configurator);
-    }
-
-    /// <summary>
-    /// Configure a saga on the receive endpoint, with an optional configuration action
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
-    /// <param name="configure"></param>
-    /// <typeparam name="T">The saga type</typeparam>
-    public static void ConfigureSaga<T>(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration,
-        Action<ISagaConfigurator<T>>? configure = null)
-        where T : class, ISaga
-    {
-        registration.ConfigureSaga(configurator, configure);
-    }
-
-    /// <summary>
-    /// Configure all registered sagas on the receive endpoint
-    /// </summary>
-    /// <param name="configurator"></param>
-    /// <param name="registration">The registration for this bus instance</param>
-    public static void ConfigureSagas(this IReceiveEndpointConfigurator configurator, IRegistrationContext registration)
-    {
-        registration.ConfigureSagas(configurator);
     }
 
     /// <summary>

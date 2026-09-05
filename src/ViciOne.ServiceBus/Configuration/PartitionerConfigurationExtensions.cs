@@ -174,68 +174,6 @@ public static class PartitionerConfigurationExtensions
     /// <summary>
     /// Adds a partition filter, which also limits concurrency by the partition count.
     /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="partitionCount">The number of partitions to use when distributing message delivery</param>
-    /// <param name="keyProvider">Provides the key from the message</param>
-    public static void UsePartitioner<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, int partitionCount,
-        Func<SagaConsumeContext<TSaga>, Guid> keyProvider)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (keyProvider == null)
-            throw new ArgumentNullException(nameof(keyProvider));
-
-        byte[] PartitionKeyProvider(SagaConsumeContext<TSaga> context)
-        {
-            return keyProvider(context).ToByteArray();
-        }
-
-        UseSagaPartitioner(configurator, partitionCount, PartitionKeyProvider);
-    }
-
-    /// <summary>
-    /// Adds a partition filter, which also limits concurrency by the partition count.
-    /// </summary>
-    /// <typeparam name="TSaga"></typeparam>
-    /// <param name="configurator"></param>
-    /// <param name="partitionCount">The number of partitions to use when distributing message delivery</param>
-    /// <param name="keyProvider">Provides the key from the message</param>
-    /// <param name="encoding"></param>
-    public static void UsePartitioner<TSaga>(this IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, int partitionCount,
-        Func<SagaConsumeContext<TSaga>, string> keyProvider, Encoding? encoding = null)
-        where TSaga : class, ISaga
-    {
-        if (configurator == null)
-            throw new ArgumentNullException(nameof(configurator));
-        if (keyProvider == null)
-            throw new ArgumentNullException(nameof(keyProvider));
-
-        var textEncoding = encoding ?? Encoding.UTF8;
-
-        byte[] PartitionKeyProvider(SagaConsumeContext<TSaga> context)
-        {
-            return GetRequiredBytes(keyProvider(context), textEncoding);
-        }
-
-        UseSagaPartitioner(configurator, partitionCount, PartitionKeyProvider);
-    }
-
-    static void UseSagaPartitioner<TSaga>(IPipeConfigurator<SagaConsumeContext<TSaga>> configurator, int partitionCount,
-        PartitionKeyProvider<SagaConsumeContext<TSaga>> keyProvider)
-        where TSaga : class, ISaga
-    {
-        var partitioner = new Partitioner(partitionCount, new Murmur3UnsafeHashGenerator());
-
-        var specification = new PartitionSagaSpecification<TSaga>(partitioner, keyProvider);
-
-        configurator.AddPipeSpecification(specification);
-    }
-
-    /// <summary>
-    /// Adds a partition filter, which also limits concurrency by the partition count.
-    /// </summary>
     /// <typeparam name="TActivity"></typeparam>
     /// <typeparam name="TArguments"></typeparam>
     /// <param name="configurator"></param>
@@ -243,7 +181,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     public static void UsePartitioner<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
         int partitionCount, Func<ExecuteActivityContext<TActivity, TArguments>, Guid> keyProvider)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         if (configurator == null)
@@ -271,7 +209,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     public static void UsePartitioner<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
         IPartitioner partitioner, Func<ExecuteActivityContext<TActivity, TArguments>, Guid> keyProvider)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         if (configurator == null)
@@ -302,7 +240,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
         int partitionCount, Func<ExecuteActivityContext<TActivity, TArguments>, string> keyProvider, Encoding? encoding = null)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         if (configurator == null)
@@ -333,7 +271,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TArguments>(this IPipeConfigurator<ExecuteActivityContext<TActivity, TArguments>> configurator,
         IPartitioner partitioner, Func<ExecuteActivityContext<TActivity, TArguments>, string> keyProvider, Encoding? encoding = null)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
         where TArguments : class
     {
         if (configurator == null)
@@ -365,7 +303,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     public static void UsePartitioner<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
         int partitionCount, Func<CompensateActivityContext<TActivity, TLog>, Guid> keyProvider)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         if (configurator == null)
@@ -393,7 +331,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="keyProvider">Provides the key from the message</param>
     public static void UsePartitioner<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
         IPartitioner partitioner, Func<CompensateActivityContext<TActivity, TLog>, Guid> keyProvider)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         if (configurator == null)
@@ -424,7 +362,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
         int partitionCount, Func<CompensateActivityContext<TActivity, TLog>, string> keyProvider, Encoding? encoding = null)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         if (configurator == null)
@@ -455,7 +393,7 @@ public static class PartitionerConfigurationExtensions
     /// <param name="encoding">The text encoding to use to convert the string to byte[] (defaults to UTF8)</param>
     public static void UsePartitioner<TActivity, TLog>(this IPipeConfigurator<CompensateActivityContext<TActivity, TLog>> configurator,
         IPartitioner partitioner, Func<CompensateActivityContext<TActivity, TLog>, string> keyProvider, Encoding? encoding = null)
-        where TActivity : class, ICompensateActivity<TLog>
+        where TActivity : class
         where TLog : class
     {
         if (configurator == null)

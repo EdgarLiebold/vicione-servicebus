@@ -19,7 +19,7 @@ public interface CompensateActivityContext<out TLog> :
 public interface CompensateActivityContext<out TActivity, out TLog> :
     CompensateActivityContext<TLog>
     where TLog : class
-    where TActivity : class, ICompensateActivity<TLog>
+    where TActivity : class
 {
     /// <summary>
     /// The activity that was created/used for this compensation

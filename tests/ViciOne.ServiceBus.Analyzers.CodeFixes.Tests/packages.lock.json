@@ -303,10 +303,22 @@
           "ViciOne.ServiceBus.Roslyn.Tests.Infrastructure": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.initializers": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.roslyn.tests.infrastructure": {
         "type": "Project",
         "dependencies": {
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[5.9.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
       "vicione.servicebus.tests.infrastructure": {

@@ -9,7 +9,6 @@ global using ViciOne.ServiceBus.Advanced.Topology;
 global using ViciOne.ServiceBus.Configuration;
 global using ViciOne.ServiceBus.Courier;
 global using ViciOne.ServiceBus.Futures;
-global using ViciOne.ServiceBus.JobService;
 global using ViciOne.ServiceBus.Operations;
 global using ViciOne.ServiceBus.Providers.Persistence;
 global using ViciOne.ServiceBus.Providers.Transports;

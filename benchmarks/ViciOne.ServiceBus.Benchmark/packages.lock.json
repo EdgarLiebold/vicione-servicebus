@@ -411,6 +411,13 @@
         "dependencies": {
           "Azure.Identity": "[1.21.0, )",
           "Azure.Messaging.ServiceBus": "[7.20.2, )",
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.courier": {
+        "type": "Project",
+        "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -422,10 +429,47 @@
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
+      "vicione.servicebus.entityframeworkcore.sagas": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "ViciOne.ServiceBus.EntityFrameworkCore": "[1.0.0, )",
+          "ViciOne.ServiceBus.Futures": "[1.0.0, )",
+          "ViciOne.ServiceBus.JobService": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.futures": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Courier": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.jobservice": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )",
+          "ViciOne.ServiceBus.Sagas": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
       "vicione.servicebus.rabbitmq": {
         "type": "Project",
         "dependencies": {
           "RabbitMQ.Client": "[7.2.2, )",
+          "ViciOne.ServiceBus": "[1.0.0, )"
+        }
+      },
+      "vicione.servicebus.sagas": {
+        "type": "Project",
+        "dependencies": {
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },

@@ -68,8 +68,8 @@ public static class ActivityObserverConfigurationExtensions
             _handles.Clear();
         }
 
-        public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
-            where TActivity : class, IExecuteActivity<TArguments>
+        public void ActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator, Uri compensateAddress)
+            where TActivity : class
             where TArguments : class
         {
             if (_disposed)
@@ -78,8 +78,8 @@ public static class ActivityObserverConfigurationExtensions
             _handles.Add(configurator.ConnectActivityObserver(_observer));
         }
 
-        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityConfigurator<TActivity, TArguments> configurator)
-            where TActivity : class, IExecuteActivity<TArguments>
+        public void ExecuteActivityConfigured<TActivity, TArguments>(IExecuteActivityPipeConfigurator<TActivity, TArguments> configurator)
+            where TActivity : class
             where TArguments : class
         {
             if (_disposed)
@@ -88,8 +88,8 @@ public static class ActivityObserverConfigurationExtensions
             _handles.Add(configurator.ConnectActivityObserver(_observer));
         }
 
-        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityConfigurator<TActivity, TLog> configurator)
-            where TActivity : class, ICompensateActivity<TLog>
+        public void CompensateActivityConfigured<TActivity, TLog>(ICompensateActivityPipeConfigurator<TActivity, TLog> configurator)
+            where TActivity : class
             where TLog : class
         {
             if (_disposed)

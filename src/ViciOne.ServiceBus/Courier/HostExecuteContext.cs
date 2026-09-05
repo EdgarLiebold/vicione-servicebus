@@ -51,7 +51,7 @@ public class HostExecuteContext<TArguments> :
     /// <param name="activity">The activity value.</param>
     /// <returns>The result of the operation.</returns>
     public ExecuteActivityContext<TActivity, TArguments> CreateActivityContext<TActivity>(TActivity activity)
-        where TActivity : class, IExecuteActivity<TArguments>
+        where TActivity : class
     {
         return new HostExecuteActivityContext<TActivity, TArguments>(activity, this);
     }

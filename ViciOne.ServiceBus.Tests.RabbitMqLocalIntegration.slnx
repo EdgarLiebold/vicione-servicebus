@@ -7,6 +7,12 @@
   <Folder Name="/src/">
     <Project Path="src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj" />
     <Project Path="src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj" />
+    <Project Path="src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj" />
     <Project Path="src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj" />

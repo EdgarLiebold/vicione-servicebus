@@ -36,6 +36,9 @@ public class SagaRegistration<TSaga> :
     /// </summary>
     public Type Type => typeof(TSaga);
 
+    /// <inheritdoc />
+    public Type? StateMachineType => null;
+
     /// <summary>
     /// Gets or sets the include in configure endpoints value.
     /// </summary>

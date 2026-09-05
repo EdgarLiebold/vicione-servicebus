@@ -22,6 +22,7 @@
     <PackageReference Include="Azure.Identity" />
     <PackageReference Include="Azure.Messaging.ServiceBus" />
     <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus.Sagas\ViciOne.ServiceBus.Sagas.csproj" />
   </ItemGroup>
 
 </Project>

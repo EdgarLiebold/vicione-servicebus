@@ -26,6 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" />
     <ProjectReference Include="..\..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj" />
+    <ProjectReference Include="..\..\ViciOne.ServiceBus.Sagas\ViciOne.ServiceBus.Sagas.csproj" />
   </ItemGroup>
 
 </Project>

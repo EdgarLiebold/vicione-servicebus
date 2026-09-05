@@ -30,7 +30,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ViciOne.ServiceBus.Abstractions\ViciOne.ServiceBus.Abstractions.csproj"/>
+    <ProjectReference Include="..\ViciOne.ServiceBus.Courier\ViciOne.ServiceBus.Courier.csproj"/>
     <ProjectReference Include="..\ViciOne.ServiceBus\ViciOne.ServiceBus.csproj"/>
+    <ProjectReference Include="..\ViciOne.ServiceBus.JobService\ViciOne.ServiceBus.JobService.csproj"/>
   </ItemGroup>
 
 </Project>

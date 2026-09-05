@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Context;
-using ViciOne.ServiceBus.Courier;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Transports;
@@ -63,10 +63,6 @@ public class ServiceCollectionBusConfigurator :
         collection.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider));
         collection.TryAddScoped(provider => Bind<IBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint));
 
-        collection.TryAddScoped<IRoutingSlipExecutor>(provider => new RoutingSlipExecutor(
-            provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.SendEndpointProvider,
-            provider.GetRequiredService<IScopedBusContextProvider<IBus>>().Context.PublishEndpoint,
-            provider.GetService<TimeProvider>() ?? TimeProvider.System));
     }
 
     /// <summary>
@@ -168,6 +164,8 @@ public class ServiceCollectionBusConfigurator :
 
     static void AddViciOneServiceBusComponents(IServiceCollection collection)
     {
+        collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, ConsumerKind>());
+
         collection.TryAddSingleton<IBusDepot, BusDepot>();
 
         collection.TryAddScoped<ScopedConsumeContextProvider>();
@@ -206,6 +204,9 @@ public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
     where TBus : class, IBus
     where TBusInstance : BusInstance<TBus>, TBus
 {
+    /// <inheritdoc />
+    public override Type BusType => typeof(TBus);
+
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
@@ -235,11 +236,6 @@ public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
         collection.TryAddScoped<IScopedBusContextProvider<TBus>, ScopedBusContextProvider<TBus>>();
         collection.TryAddScoped(provider => Bind<TBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider));
         collection.TryAddScoped(provider => Bind<TBus>.Create(provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint));
-
-        collection.TryAddScoped(provider => Bind<TBus>.Create<IRoutingSlipExecutor>(new RoutingSlipExecutor(
-            provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.SendEndpointProvider,
-            provider.GetRequiredService<IScopedBusContextProvider<TBus>>().Context.PublishEndpoint,
-            provider.GetService<TimeProvider>() ?? TimeProvider.System)));
 
         collection.AddSingleton(provider => Bind<TBus>.Create(CreateRegistrationContext(provider)));
     }

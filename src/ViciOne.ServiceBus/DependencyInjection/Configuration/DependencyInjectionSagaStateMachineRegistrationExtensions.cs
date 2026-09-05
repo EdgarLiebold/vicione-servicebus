@@ -1,7 +1,10 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 using ViciOne.ServiceBus.Internals;
+using ViciOne.ServiceBus.Sagas;
 
 namespace ViciOne.ServiceBus.Configuration;
 
@@ -167,6 +170,7 @@ public static class DependencyInjectionSagaStateMachineRegistrationExtensions
     {
         public virtual ISagaRegistration Register(IServiceCollection collection, IContainerRegistrar registrar)
         {
+            collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConsumerKind, SagaConsumerKind>());
             collection.AddSingleton<TStateMachine>();
             collection.AddSingleton<SagaStateMachine<TSaga>>(provider => provider.GetRequiredService<TStateMachine>());
 
