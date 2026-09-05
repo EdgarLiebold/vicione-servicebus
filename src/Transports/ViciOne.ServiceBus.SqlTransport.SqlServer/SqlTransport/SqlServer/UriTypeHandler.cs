@@ -5,7 +5,7 @@ using Dapper;
 namespace ViciOne.ServiceBus.SqlTransport.SqlServer;
 
 /// <summary>
-/// Provides an uri type handler implementation.
+/// Maps database text values to non-null URI instances.
 /// </summary>
 public class UriTypeHandler : SqlMapper.TypeHandler<Uri>
 {
@@ -24,12 +24,20 @@ public class UriTypeHandler : SqlMapper.TypeHandler<Uri>
     /// Parses the supplied representation.
     /// </summary>
     /// <param name="value">The value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <returns>A relative or absolute URI preserving the stored representation.</returns>
+    /// <exception cref="ArgumentNullException">The database value is <see langword="null" />.</exception>
+    /// <exception cref="InvalidCastException">The database value is not text.</exception>
+    /// <exception cref="UriFormatException">The database text is empty or is not a valid URI.</exception>
     public override Uri Parse(object value)
     {
-        if (value is string text && !string.IsNullOrWhiteSpace(text))
-            return new Uri(text);
+        ArgumentNullException.ThrowIfNull(value);
 
-        return null!;
+        if (value is not string text)
+            throw new InvalidCastException($"Database URI values must be strings, but the supplied value is '{value.GetType().FullName}'.");
+
+        if (string.IsNullOrWhiteSpace(text) || !Uri.TryCreate(text, UriKind.RelativeOrAbsolute, out Uri? uri))
+            throw new UriFormatException("The database URI value is empty or malformed.");
+
+        return uri;
     }
 }

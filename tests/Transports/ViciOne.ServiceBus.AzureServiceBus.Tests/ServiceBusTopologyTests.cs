@@ -12,6 +12,67 @@ namespace ViciOne.ServiceBus.AzureServiceBus.Tests;
 public sealed class ServiceBusTopologyTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "deterministic-65-bit-suffix-and-provider-limit")]
+    public void LongSubscriptionNames_UseTheCompleteBudgetAndACollisionResistantSuffix()
+    {
+        var topology = new ServiceBusPublishTopology(AzureBusFactory.CreateMessageTopology());
+        string prefix = new('a', 80);
+        string first = topology.FormatSubscriptionName($"{prefix}-first");
+        string second = topology.FormatSubscriptionName($"{prefix}-second");
+
+        Assert.Equal("orders", topology.FormatSubscriptionName("orders"));
+        Assert.Equal(50, first.Length);
+        Assert.Equal('-', first[36]);
+        Assert.Matches("^a{36}-[a-z0-9]{13}$", first);
+        Assert.NotEqual(first, second);
+        Assert.Equal(first, topology.FormatSubscriptionName($"{prefix}-first"));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "large-same-prefix-set-has-no-collisions")]
+    public void LongSubscriptionNames_AreUniqueAcrossALargeSamePrefixSet()
+    {
+        var topology = new ServiceBusPublishTopology(AzureBusFactory.CreateMessageTopology());
+        string prefix = new('a', 80);
+
+        string[] names = Enumerable.Range(0, 10_000)
+            .Select(index => topology.FormatSubscriptionName($"{prefix}-{index:D5}"))
+            .ToArray();
+
+        Assert.Equal(names.Length, names.Distinct(StringComparer.Ordinal).Count());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "null-empty-and-whitespace-rejected")]
+    public void SubscriptionNameFormatting_RejectsMissingNames(string? name)
+    {
+        var topology = new ServiceBusPublishTopology(AzureBusFactory.CreateMessageTopology());
+        ArgumentException formatException = Assert.ThrowsAny<ArgumentException>(() => topology.FormatSubscriptionName(name!));
+        ArgumentException generateException = Assert.ThrowsAny<ArgumentException>(() => topology.GenerateSubscriptionName(name!));
+
+        Assert.Equal("subscriptionName", formatException.ParamName);
+        Assert.Equal("entityName", generateException.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-ASB-SUBSCRIPTION-NAME", "entity-and-optional-scope-compose-before-shortening")]
+    public void GeneratedSubscriptionNames_ComposeTheOptionalScopeBeforeApplyingTheLimit()
+    {
+        var topology = new ServiceBusPublishTopology(AzureBusFactory.CreateMessageTopology());
+        string entityName = new('e', 45);
+
+        Assert.Equal(entityName, topology.GenerateSubscriptionName(entityName));
+        Assert.Equal(entityName, topology.GenerateSubscriptionName(entityName, "   "));
+
+        string scoped = topology.GenerateSubscriptionName(entityName, "tenant");
+        Assert.Equal(50, scoped.Length);
+        Assert.StartsWith(new string('e', 36) + "-", scoped, StringComparison.Ordinal);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-ASB-TOPOLOGY", "custom-reflective-formatter-is-evaluated-once-without-recursion")]
     public void CustomReflectiveFormatter_IsEvaluatedOnceAndKeepsTheCompleteTypeGraph()
     {

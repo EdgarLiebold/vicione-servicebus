@@ -38,3 +38,29 @@ Nine one-cause mutation groups were executed and restored byte-for-byte: Entity 
 - Engineering-solution style verification at warning severity: passed.
 
 The previously measured whole-product baseline remains 70.1% line coverage and 55.6% branch coverage. Coverage will be recollected after the remaining remediation iterations so the final report represents the final code rather than an intermediate snapshot.
+
+## Iteration 2
+
+Iteration 2 resolves the SQL URI materialization and topology-name collision findings.
+
+### Red/green evidence
+
+| Contract | Baseline result | Corrected result |
+|---|---:|---:|
+| PostgreSQL and SQL Server URI materialization | 10 failed, 4 passed | 14 passed |
+| Core bounded temporary names | 3 failed | 3 passed |
+| Azure subscription naming | 4 failed, 6 passed | 11 passed |
+
+The SQL contract now round-trips relative and absolute `Uri` instances accepted by the write path and rejects language null, `DBNull`, blank text, malformed text, and non-string values explicitly. Topology shortening is owned by one internal implementation using SHA-256 and a 13-character Base32 suffix, providing 65 suffix bits while retaining a readable prefix and each provider's exact maximum length.
+
+Five isolated mutations were killed and restored: PostgreSQL relative-value rejection, SQL Server relative-value rejection, reduction of the shared hash suffix from 13 to six characters, removal of the Azure public parameter guard, and removal of the Core minimum-length guard.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,751 passed, 0 failed, 0 skipped across 21 assemblies.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace verification: passed.
+- Engineering style verification at warning severity: passed.
+
+A repeat full-profile run exposed an existing observation-test race: the handler completion signal could precede publication into the consumed-message observer list. The test now awaits the public observation signal before taking a deliberately non-waiting snapshot. The formerly failing test passed ten isolated repetitions and the final complete profile. The private async iterator in the same file was also renamed from `Empty` to `EmptyAsync`, closing the previously recorded bidirectional async-naming exception.

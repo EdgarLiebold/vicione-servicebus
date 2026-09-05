@@ -133,6 +133,7 @@ public sealed class MessageObservationListTests
             await harness.InputQueueSendEndpoint.SendAsync(expected, cancellationToken);
             await harness.InputQueueSendEndpoint.SendAsync(other, cancellationToken);
             ConsumeContext<ObservedMessage> expectedContext = await consumed.Task.WaitAsync(timeout, cancellationToken);
+            Assert.True(await harness.Consumed.AnyAsync<ObservedMessage>(cancellationToken));
             Assert.True(await harness.Consumed.AnyAsync<OtherMessage>(cancellationToken));
 
             CancellationToken snapshotOnly = new(canceled: true);
@@ -257,12 +258,12 @@ public sealed class MessageObservationListTests
     public async Task EmptyAsyncSequence_ExtensionsReturnExactEmptyResultsAsync()
     {
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            Empty<TestElement>().FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken));
+            EmptyAsync<TestElement>().FirstObservedAsync(cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Message List was empty, or timed out", exception.Message);
-        Assert.Null(await Empty<TestElement>().FirstObservedOrDefaultAsync(TestContext.Current.CancellationToken));
-        Assert.Equal(0, await Empty<TestElement>().CountObservedAsync(TestContext.Current.CancellationToken));
-        Assert.False(await Empty<TestElement>().AnyObservedAsync(TestContext.Current.CancellationToken));
+        Assert.Null(await EmptyAsync<TestElement>().FirstObservedOrDefaultAsync(TestContext.Current.CancellationToken));
+        Assert.Equal(0, await EmptyAsync<TestElement>().CountObservedAsync(TestContext.Current.CancellationToken));
+        Assert.False(await EmptyAsync<TestElement>().AnyObservedAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -376,7 +377,7 @@ public sealed class MessageObservationListTests
             MessageId = NewId.NextGuid(),
         };
 
-    private static async IAsyncEnumerable<T> Empty<T>()
+    private static async IAsyncEnumerable<T> EmptyAsync<T>()
         where T : class
     {
         await Task.CompletedTask;

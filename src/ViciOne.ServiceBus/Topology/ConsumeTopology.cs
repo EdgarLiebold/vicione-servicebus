@@ -2,11 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Metadata;
-using ViciOne.ServiceBus.NewIdFormatters;
+using ViciOne.ServiceBus.Topology;
 
 namespace ViciOne.ServiceBus.Advanced.Topology;
 
@@ -30,6 +28,8 @@ public class ConsumeTopology :
     /// <param name="maxQueueNameLength">The max queue name length value.</param>
     protected ConsumeTopology(int maxQueueNameLength = 1024)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxQueueNameLength, EntityNameShortener.MinimumMaximumLength);
+
         _maxQueueNameLength = maxQueueNameLength;
 
         _messageTypes = new ConcurrentDictionary<Type, Lazy<IMessageConsumeTopologyConfigurator>>();
@@ -74,7 +74,7 @@ public class ConsumeTopology :
     /// <returns>The result of the operation.</returns>
     public virtual string CreateTemporaryQueueName(string tag)
     {
-        return ShrinkToFit(DefaultEndpointNameFormatter.GetTemporaryQueueName(tag), _maxQueueNameLength);
+        return EntityNameShortener.Shorten(DefaultEndpointNameFormatter.GetTemporaryQueueName(tag), _maxQueueNameLength);
     }
 
     /// <summary>
@@ -120,27 +120,6 @@ public class ConsumeTopology :
     public virtual IEnumerable<ValidationResult> Validate()
     {
         return _messageTypes.Values.SelectMany(x => x.Value.Validate());
-    }
-
-    static string ShrinkToFit(string inputName, int maxLength)
-    {
-        string name;
-        if (inputName.Length > maxLength)
-        {
-            string hashed;
-            using (var hasher = SHA1.Create())
-            {
-                var buffer = Encoding.UTF8.GetBytes(inputName);
-                var hash = hasher.ComputeHash(buffer);
-                hashed = ZBase32Formatter.LowerCase.Format(hash).Substring(0, 6);
-            }
-
-            name = $"{inputName.Substring(0, maxLength - 7)}-{hashed}";
-        }
-        else
-            name = inputName;
-
-        return name;
     }
 
     /// <summary>

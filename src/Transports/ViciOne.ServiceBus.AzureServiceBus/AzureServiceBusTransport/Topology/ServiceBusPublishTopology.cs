@@ -1,9 +1,6 @@
 using System;
-using System.Security.Cryptography;
-using System.Text;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Topology;
-using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
@@ -32,41 +29,26 @@ public class ServiceBusPublishTopology :
     }
 
     /// <summary>
-    /// Performs the format subscription name operation.
+    /// Fits a subscription name within the Azure Service Bus limit using a stable hash suffix when shortening is required.
     /// </summary>
-    /// <param name="subscriptionName">The subscription name value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="subscriptionName">The non-empty subscription name.</param>
+    /// <returns>The original name when it fits; otherwise, a deterministic 50-character name.</returns>
     public string FormatSubscriptionName(string subscriptionName)
     {
-        string name;
-        if (subscriptionName.Length > 50)
-        {
-            string hashed;
-            using (var hasher = SHA1.Create())
-            {
-                var buffer = Encoding.UTF8.GetBytes(subscriptionName);
-                var hash = hasher.ComputeHash(buffer);
-                hashed = FormatUtil.Formatter.Format(hash).Substring(0, 6);
-            }
+        ArgumentException.ThrowIfNullOrWhiteSpace(subscriptionName);
 
-            name = $"{subscriptionName.Substring(0, 43)}-{hashed}";
-        }
-        else
-            name = subscriptionName;
-
-        return name;
+        return EntityNameShortener.Shorten(subscriptionName, 50);
     }
 
     /// <summary>
-    /// Performs the generate subscription name operation.
+    /// Creates a subscription name from an entity and optional host scope.
     /// </summary>
-    /// <param name="entityName">The entity name value.</param>
-    /// <param name="hostScope">The host scope value.</param>
-    /// <returns>The result of the operation.</returns>
+    /// <param name="entityName">The non-empty entity name.</param>
+    /// <param name="hostScope">An optional scope appended to the entity name.</param>
+    /// <returns>A deterministic name within the Azure Service Bus subscription limit.</returns>
     public string GenerateSubscriptionName(string entityName, string? hostScope = null)
     {
-        if (entityName == null)
-            throw new ArgumentNullException(nameof(entityName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityName);
 
         return FormatSubscriptionName(string.IsNullOrWhiteSpace(hostScope) ? entityName : $"{entityName}-{hostScope}");
     }
