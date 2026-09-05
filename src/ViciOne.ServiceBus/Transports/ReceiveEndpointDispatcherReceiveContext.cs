@@ -8,6 +8,8 @@ namespace ViciOne.ServiceBus.Transports;
 public sealed class ReceiveEndpointDispatcherReceiveContext :
     BaseReceiveContext
 {
+    readonly MessageBody _body;
+
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
@@ -19,7 +21,7 @@ public sealed class ReceiveEndpointDispatcherReceiveContext :
         params object[] payloads)
         : base(IsRedelivered(headers), receiveEndpointContext, payloads)
     {
-        Body = new BytesMessageBody(body);
+        _body = new BytesMessageBody(body);
 
         HeaderProvider = new ReadOnlyDictionaryHeaderProvider(headers);
     }
@@ -32,7 +34,7 @@ public sealed class ReceiveEndpointDispatcherReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     static bool IsRedelivered(IReadOnlyDictionary<string, object> headers)
     {

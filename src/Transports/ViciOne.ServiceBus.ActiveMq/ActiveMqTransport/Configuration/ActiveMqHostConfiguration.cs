@@ -61,7 +61,7 @@ public class ActiveMqHostConfiguration :
     /// </summary>
     public ActiveMqHostSettings Settings
     {
-        get => _hostSettings ?? throw new ConfigurationException("The ActiveMQ host was not configured.");
+        get => _hostSettings ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("ActiveMQ", "unknown", "The ActiveMQ host was not configured.", "Correct the named configuration before starting the host"));
         set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
     }
 

@@ -50,9 +50,9 @@ public static class DurableSenderServiceCollectionExtensions
         var options = services.AddOptions<DurableSenderOptions<TBus>>();
         if (configure is not null)
             options.Configure(configure);
-        options
-            .Validate(IsValidPolicy, "Durable Sender options contain an invalid bounded-delivery policy.")
-            .ValidateOnStart();
+        options.ValidateOnStart();
+        services.TryAddEnumerable(
+            ServiceDescriptor.Singleton<IValidateOptions<DurableSenderOptions<TBus>>, DurableSenderOptionsValidator<TBus>>());
 
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<V5ServiceBusInstrumentation<TBus>>();
@@ -65,7 +65,6 @@ public static class DurableSenderServiceCollectionExtensions
             provider.GetRequiredService<IDurableSendAdmission<TBus>>(),
             provider.GetService<PayloadAdmissionRuntime<TBus>>()));
         services.TryAddSingleton<IDurableSenderOperations<TBus>, DurableSenderOperations<TBus>>();
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, DurableSenderStartupValidator<TBus>>());
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, DurableSenderDeliveryService<TBus>>());
 
         return services;
@@ -80,25 +79,34 @@ public static class DurableSenderServiceCollectionExtensions
         if (services.Any(static descriptor => descriptor.ServiceType == typeof(DurableSenderRegistration<TBus>)))
         {
             throw new ConfigurationException(
-                $"Durable Sender was already configured for bus '{typeof(TBus)}'. Configure it exactly once in the owning bus block.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"Durable Sender was already configured for bus '{typeof(TBus)}'. Configure it exactly once in the owning bus block.", "Correct the named configuration before starting the host"));
         }
 
         services.AddSingleton<DurableSenderRegistration<TBus>>();
+        BusCompositionRegistrations.AddFeature<TBus>(services, "Reliable messaging");
         services.AddViciOneDurableSender<TBus>();
         configure(new DurableSenderConfigurator<TBus>(services));
     }
 
-    private static bool IsValidPolicy<TBus>(DurableSenderOptions<TBus> options)
-        where TBus : class, IBus
+}
+
+internal sealed class DurableSenderOptionsValidator<TBus> : IValidateOptions<DurableSenderOptions<TBus>>
+    where TBus : class, IBus
+{
+    public ValidateOptionsResult Validate(string? name, DurableSenderOptions<TBus> options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         try
         {
             _ = options.ValidateAndFreeze();
-            return true;
+            return ValidateOptionsResult.Success;
         }
-        catch (ConfigurationException)
+        catch (ConfigurationException exception)
         {
-            return false;
+            string bus = ViciOne.ServiceBus.Configuration.BusRegistrationIdentity.GetKey(typeof(TBus));
+            return ValidateOptionsResult.Fail(
+                $"Reliable messaging for bus '{bus}': {exception.Message} Correct the named value before starting the host.");
         }
     }
 }

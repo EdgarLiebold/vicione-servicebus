@@ -5,7 +5,8 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public class MediatorConfiguration :
     ReceivePipeDispatcherConfiguration,
-    IMediatorConfigurator
+    IMediatorConfigurator,
+    IMessageLimitsConfigurator
 {
     readonly IHostConfiguration _hostConfiguration;
 
@@ -55,5 +56,16 @@ public class MediatorConfiguration :
     public ConnectHandle ConnectPublishObserver(IPublishObserver observer)
     {
         return _hostConfiguration.ConnectPublishObserver(observer);
+    }
+
+    void IMessageLimitsConfigurator.SetMessageLimits(MessageLimits limits)
+    {
+        if (_hostConfiguration is not IMessageLimitsHostConfiguration target)
+        {
+            throw new ConfigurationException(
+                "Message limits for bus 'mediator': The host cannot enforce receive limits. Use the built-in mediator host.");
+        }
+
+        target.SetMessageLimits(limits);
     }
 }

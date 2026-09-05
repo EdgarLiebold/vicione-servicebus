@@ -33,6 +33,7 @@ public sealed class MultiBusRequestTests
             })
             .AddViciOneServiceBus<IBusB>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<SharedConsumer>()
                     .Endpoint(endpoint => endpoint.Name = "other-bus-queue-name");
                 configuration.AddConfigureEndpointsCallback((_, _, _) =>
@@ -77,6 +78,7 @@ public sealed class MultiBusRequestTests
                 configuration.AddConsumer<DefaultDefinitionConsumer, DefaultConsumerDefinition>())
             .AddViciOneServiceBus<IBusB>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<SecondaryDefinitionConsumer, SecondaryConsumerDefinition>();
                 configuration.UsingInMemory((context, configurator) =>
                 {
@@ -127,6 +129,7 @@ public sealed class MultiBusRequestTests
             })
             .AddViciOneServiceBus<IBusB>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddRequestClient<SecondaryRequest>(RequestTimeout.After(s: 1));
                 configuration.AddConsumer<SecondaryRequestConsumer>();
                 configuration.UsingInMemory((context, configurator) =>
@@ -191,6 +194,7 @@ public sealed class MultiBusRequestTests
             })
             .AddViciOneServiceBus<IBusB, CustomBusB>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<BusBOwnedRequestConsumer>();
                 configuration.AddConsumer<CrossBusOriginConsumer>();
                 configuration.AddRequestClient<BusBOwnedRequest>();
@@ -202,6 +206,7 @@ public sealed class MultiBusRequestTests
             })
             .AddViciOneServiceBus<IBusC>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<BusCOwnedRequestConsumer>();
                 configuration.AddConsumer<CrossBusDeliveredConsumer>();
                 configuration.AddRequestClient<BusCOwnedRequest>();
@@ -275,6 +280,7 @@ public sealed class MultiBusRequestTests
                 configuration.AddRequestClient<SharedOwnedRequest>())
             .AddViciOneServiceBus<IBusB>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddRequestClient<SharedOwnedRequest>();
                 configuration.UsingInMemory((_, _) => { });
             });

@@ -20,7 +20,7 @@ public class FutureRequestConsumerDefinition<TConsumer, TRequest> :
     /// </summary>
     public Uri RequestAddress =>
         _requestAddress?.Value ??
-        throw new ConfigurationException($"The future consumer definition was not configured: {TypeCache<TConsumer>.ShortName}");
+        throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Future Request Consumer Definition", "unknown", $"The future consumer definition was not configured: {TypeCache<TConsumer>.ShortName}", "Correct the named configuration before starting the host"));
 
     /// <summary>
     /// Configures consumer.

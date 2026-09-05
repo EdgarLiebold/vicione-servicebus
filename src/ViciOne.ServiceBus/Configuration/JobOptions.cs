@@ -10,7 +10,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// JobOptions contains the options used to configure the job consumer and related components
 /// </summary>
 /// <typeparam name="TJob">The Job Type</typeparam>
-public class JobOptions<TJob> :
+public sealed class JobOptions<TJob> :
     IOptions,
     ISpecification
     where TJob : class
@@ -90,6 +90,14 @@ public class JobOptions<TJob> :
             yield return this.Failure("JobOptions", "JobTimeout", "Must be > TimeSpan.Zero");
         if (JobCancellationTimeout <= TimeSpan.Zero)
             yield return this.Failure("JobOptions", "JobCancellationTimeout", "Must be > TimeSpan.Zero");
+        if (GlobalConcurrentJobLimit is <= 0)
+            yield return this.Failure("JobOptions", "GlobalConcurrentJobLimit", "Must be > 0 when specified");
+        if (JobTypeName is not null && string.IsNullOrWhiteSpace(JobTypeName))
+            yield return this.Failure("JobOptions", "JobTypeName", "Must not be empty when specified");
+        if (ProgressBuffer.UpdateLimit <= 0)
+            yield return this.Failure("JobOptions", "ProgressBuffer.UpdateLimit", "Must be > 0");
+        if (ProgressBuffer.TimeLimit <= TimeSpan.Zero)
+            yield return this.Failure("JobOptions", "ProgressBuffer.TimeLimit", "Must be > TimeSpan.Zero");
     }
 
     /// <summary>
@@ -246,7 +254,7 @@ public class JobOptions<TJob> :
         public IRetryPolicy Build()
         {
             if (_policyFactory == null)
-                throw new ConfigurationException($"The retry policy was not properly configured: JobOptions<{TypeCache<TJob>.ShortName}");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Retry", "unknown", $"The retry policy was not properly configured: JobOptions<{TypeCache<TJob>.ShortName}", "Correct the named configuration before starting the host"));
 
             return _policyFactory(Filter);
         }

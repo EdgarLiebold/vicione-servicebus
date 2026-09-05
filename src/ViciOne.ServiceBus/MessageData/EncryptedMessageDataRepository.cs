@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Serialization;
@@ -14,20 +13,29 @@ public class EncryptedMessageDataRepository :
     IMessageDataRepository
 {
     readonly IMessageDataRepository _repository;
-    readonly ICryptoStreamProvider _streamProvider;
+    readonly IEncryptionKeyProvider _keyProvider;
+    readonly int _maximumObjectBytes;
 
     /// <summary>
     /// Provides encrypted stream support to ensure that message data is encrypted at rest.
     /// </summary>
     /// <param name="repository">The original message data repository where message data is stored.</param>
-    /// <param name="streamProvider">The encrypted stream provider</param>
-    public EncryptedMessageDataRepository(IMessageDataRepository repository, ICryptoStreamProvider streamProvider)
+    /// <param name="keyProvider">The provider that selects current and historical encryption keys.</param>
+    /// <param name="maximumObjectBytes">The hard upper bound for one plaintext message-data object.</param>
+    public EncryptedMessageDataRepository(
+        IMessageDataRepository repository,
+        IEncryptionKeyProvider keyProvider,
+        int maximumObjectBytes)
     {
         ArgumentNullException.ThrowIfNull(repository);
-        ArgumentNullException.ThrowIfNull(streamProvider);
+        ArgumentNullException.ThrowIfNull(keyProvider);
+        ArgumentOutOfRangeException.ThrowIfLessThan(maximumObjectBytes, 1);
+        if (maximumObjectBytes > int.MaxValue - ushort.MaxValue - 64)
+            throw new ArgumentOutOfRangeException(nameof(maximumObjectBytes), "The encrypted-object limit is too large for a bounded envelope.");
 
         _repository = repository;
-        _streamProvider = streamProvider;
+        _keyProvider = keyProvider;
+        _maximumObjectBytes = maximumObjectBytes;
     }
 
     /// <summary>
@@ -40,17 +48,10 @@ public class EncryptedMessageDataRepository :
     {
         ArgumentNullException.ThrowIfNull(address);
 
-        var stream = await _repository.GetAsync(address, cancellationToken).ConfigureAwait(false);
-
-        try
-        {
-            return _streamProvider.GetDecryptStream(stream, null, CryptoStreamMode.Read);
-        }
-        catch
-        {
-            await stream.DisposeAsync().ConfigureAwait(false);
-            throw;
-        }
+        await using Stream stream = await _repository.GetAsync(address, cancellationToken).ConfigureAwait(false);
+        return await AesGcmMessageDataEncryption
+            .DecryptAsync(stream, _keyProvider, _maximumObjectBytes, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -64,8 +65,9 @@ public class EncryptedMessageDataRepository :
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        using var cryptoStream = _streamProvider.GetEncryptStream(stream, null, CryptoStreamMode.Read);
-
-        return await _repository.PutAsync(cryptoStream, timeToLive, cancellationToken).ConfigureAwait(false);
+        await using Stream encrypted = await AesGcmMessageDataEncryption
+            .EncryptAsync(stream, _keyProvider, _maximumObjectBytes, cancellationToken)
+            .ConfigureAwait(false);
+        return await _repository.PutAsync(encrypted, timeToLive, cancellationToken).ConfigureAwait(false);
     }
 }

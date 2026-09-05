@@ -31,6 +31,7 @@ public sealed class QuartzContainerIntegrationTests
         services.AddQuartz();
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddPublishMessageScheduler();
             configuration.AddQuartzConsumers();
             configuration.AddConsumer<ContainerPayloadConsumer>();

@@ -57,7 +57,7 @@ public class JobConsumerMessageConnector<TConsumer, TJob> :
         if (!specification.TryGetOptions(out JobServiceSettings settings) || settings.JobService == null || settings.InstanceEndpointConfigurator == null)
         {
             throw new ConfigurationException(
-                "The job service must be configured when adding job consumers. See https://github.com/EdgarLiebold/vicione-servicebus/documentation/patterns/job-consumers");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job Consumer Message Connector", "unknown", "The job service must be configured when adding job consumers. See https://github.com/EdgarLiebold/vicione-servicebus/documentation/patterns/job-consumers", "Correct the named configuration before starting the host"));
         }
 
         var options = specification.Options<JobOptions<TJob>>();

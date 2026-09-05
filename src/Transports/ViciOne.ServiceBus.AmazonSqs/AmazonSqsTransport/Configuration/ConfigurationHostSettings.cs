@@ -125,7 +125,7 @@ internal sealed class ConfigurationHostSettings
     Uri FormatHostAddress()
     {
         if (Region?.SystemName == null)
-            throw new ConfigurationException("The Region must be specified");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Amazon SQS", "unknown", "The Region must be specified", "Correct the named configuration before starting the host"));
 
         return new AmazonSqsHostAddress(Region.SystemName, Scope);
     }
@@ -133,7 +133,7 @@ internal sealed class ConfigurationHostSettings
     public override string ToString()
     {
         if (Region?.SystemName == null)
-            throw new ConfigurationException("The Region must be specified");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Amazon SQS", "unknown", "The Region must be specified", "Correct the named configuration before starting the host"));
 
         return new UriBuilder
         {

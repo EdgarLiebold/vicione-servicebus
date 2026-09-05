@@ -53,7 +53,7 @@ public class ScopedConsumePipeSpecificationObserver :
         where TMessage : class
     {
         if (!(configurator is IConsumerMessageConfigurator<TMessage> messageConfigurator))
-            throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TConsumer>.ShortName} - {TypeCache<TMessage>.ShortName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Consume Pipe Specification Observer", "unknown", $"The scoped filter could not be added: {TypeCache<TConsumer>.ShortName} - {TypeCache<TMessage>.ShortName}", "Correct the named configuration before starting the host"));
 
         AddScopedFilter(messageConfigurator);
     }
@@ -90,7 +90,7 @@ public class ScopedConsumePipeSpecificationObserver :
         where TMessage : class
     {
         if (!(configurator is ISagaMessageConfigurator<TMessage> messageConfigurator))
-            throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TSaga>.ShortName} - {TypeCache<TMessage>.ShortName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Consume Pipe Specification Observer", "unknown", $"The scoped filter could not be added: {TypeCache<TSaga>.ShortName} - {TypeCache<TMessage>.ShortName}", "Correct the named configuration before starting the host"));
 
         AddScopedFilter(messageConfigurator);
     }
@@ -106,7 +106,7 @@ public class ScopedConsumePipeSpecificationObserver :
             : _filterType.MakeGenericType(typeof(TMessage));
 
         if (!filterType.ImplementsInterface(typeof(IFilter<ConsumeContext<TMessage>>)))
-            throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<ConsumeContext<TMessage>>>.ShortName} ");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Consume Pipe Specification Observer", "unknown", $"The scoped filter must implement {TypeCache<IFilter<ConsumeContext<TMessage>>>.ShortName} ", "Correct the named configuration before starting the host"));
 
         var scopeProvider = new ConsumeScopeProvider(_context);
 

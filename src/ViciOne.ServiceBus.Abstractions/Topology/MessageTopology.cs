@@ -138,7 +138,7 @@ public class MessageTopology<TMessage> :
                 return;
 
             throw new ConfigurationException(
-                $"The message type {TypeCache<TMessage>.ShortName} entity name was already evaluated: {_entityName}");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Topology", "unknown", $"The message type {TypeCache<TMessage>.ShortName} entity name was already evaluated: {_entityName}", "Correct the named configuration before starting the host"));
         }
 
         EntityNameFormatter = entityNameFormatter;

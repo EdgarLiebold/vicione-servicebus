@@ -56,9 +56,9 @@ public class EventHubConnectionContext :
         else
         {
             string fullyQualifiedNamespace = HostSettings.FullyQualifiedNamespace
-                ?? throw new ConfigurationException("The Event Hubs namespace is not configured.");
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Event Hub Connection Context", "unknown", "The Event Hubs namespace is not configured.", "Correct the named configuration before starting the host"));
             TokenCredential credential = HostSettings.TokenCredential
-                ?? throw new ConfigurationException("The Event Hubs token credential is not configured.");
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Event Hub Connection Context", "unknown", "The Event Hubs token credential is not configured.", "Correct the named configuration before starting the host"));
             client = new EventHubProducerClient(fullyQualifiedNamespace, eventHubName, credential, options);
         }
         return client;

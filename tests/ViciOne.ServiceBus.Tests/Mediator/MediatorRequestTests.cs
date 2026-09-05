@@ -17,7 +17,11 @@ public sealed class MediatorRequestTests
     public async Task SendRequest_ServesTwoTypedRequestContractsWithExactResponsesAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
-            .AddMediator(configurator => configurator.AddConsumer<UserRequestConsumer>())
+            .AddMediator(configurator =>
+            {
+                configurator.Limits(MessageLimits.Conservative);
+                configurator.AddConsumer<UserRequestConsumer>();
+            })
             .BuildServiceProvider(validateScopes: true);
         IMediator mediator = provider.GetRequiredService<IMediator>();
 
@@ -37,7 +41,11 @@ public sealed class MediatorRequestTests
     public async Task SendRequest_UnwrapsTheOriginalConsumerExceptionExactlyAsync()
     {
         await using ServiceProvider provider = new ServiceCollection()
-            .AddMediator(configurator => configurator.AddConsumer<UserRequestConsumer>())
+            .AddMediator(configurator =>
+            {
+                configurator.Limits(MessageLimits.Conservative);
+                configurator.AddConsumer<UserRequestConsumer>();
+            })
             .BuildServiceProvider(validateScopes: true);
         IMediator mediator = provider.GetRequiredService<IMediator>();
 
@@ -56,7 +64,11 @@ public sealed class MediatorRequestTests
         var timeProvider = new ObservableTimeProvider(StartTime);
         IMediator mediator = Bus.Factory.CreateMediator(
             null,
-            configurator => configurator.Handler<PendingRequest>(_ => Task.CompletedTask),
+            configurator =>
+            {
+                configurator.Limits(MessageLimits.Conservative);
+                configurator.Handler<PendingRequest>(_ => Task.CompletedTask);
+            },
             timeProvider);
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(RequestTimeout.After(m: 1));
@@ -93,7 +105,11 @@ public sealed class MediatorRequestTests
         var timeProvider = new ObservableTimeProvider(StartTime);
         await using ServiceProvider provider = new ServiceCollection()
             .AddSingleton<TimeProvider>(timeProvider)
-            .AddMediator(configurator => configurator.AddConsumer<PendingRequestConsumer>())
+            .AddMediator(configurator =>
+            {
+                configurator.Limits(MessageLimits.Conservative);
+                configurator.AddConsumer<PendingRequestConsumer>();
+            })
             .BuildServiceProvider(new ServiceProviderOptions
             {
                 ValidateOnBuild = true,
@@ -130,7 +146,7 @@ public sealed class MediatorRequestTests
     [RequirementCoverage("REQ-VSB-MEDIATOR-REQUEST", "missing-handler-owned-task-failures")]
     public async Task MissingMediatorHandler_FaultsEveryPublicRequestTaskWithItsOwnedFailureAsync()
     {
-        IMediator mediator = Bus.Factory.CreateMediator(_ => { });
+        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         IRequestClient<PendingRequest> client = mediator.CreateRequestClient<PendingRequest>(OperationTimeout());
         using RequestHandle<PendingRequest> request = client.Create(

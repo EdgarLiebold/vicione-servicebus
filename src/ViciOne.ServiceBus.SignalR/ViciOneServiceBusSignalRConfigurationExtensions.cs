@@ -26,6 +26,7 @@ public static class ViciOneServiceBusSignalRConfigurationExtensions
     {
         var options = new HubLifetimeManagerOptions<THub>();
         configureHubLifetimeOptions?.Invoke(options);
+        options.Validate();
 
         busConfigurator.Services.TryAddSingleton<IHubLifetimeScopeProvider, DependencyInjectionHubLifetimeScopeProvider>();
 

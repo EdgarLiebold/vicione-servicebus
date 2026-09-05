@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Defines configuration options for job service.
 /// </summary>
-public class JobServiceOptions :
+public sealed class JobServiceOptions :
     JobSagaSettings,
     IOptions,
     ISpecification
@@ -104,6 +104,16 @@ public class JobServiceOptions :
             yield return this.Failure(nameof(SlotWaitTime), "must be >= 1 second");
         if (StatusCheckInterval < TimeSpan.FromSeconds(30))
             yield return this.Failure(nameof(StatusCheckInterval), "must be >= 30 seconds");
+        if (HeartbeatInterval <= TimeSpan.Zero)
+            yield return this.Failure(nameof(HeartbeatInterval), "must be > TimeSpan.Zero");
+        if (HeartbeatTimeout <= TimeSpan.Zero)
+            yield return this.Failure(nameof(HeartbeatTimeout), "must be > TimeSpan.Zero");
+        if (SagaPartitionCount is <= 0)
+            yield return this.Failure(nameof(SagaPartitionCount), "must be > 0 when specified");
+        if (SuspectJobRetryCount < 0)
+            yield return this.Failure(nameof(SuspectJobRetryCount), "must not be negative");
+        if (SuspectJobRetryDelay.HasValue && SuspectJobRetryDelay.Value <= TimeSpan.Zero)
+            yield return this.Failure(nameof(SuspectJobRetryDelay), "must be > TimeSpan.Zero when specified");
 
         if (string.IsNullOrWhiteSpace(JobTypeSagaEndpointName))
             yield return this.Failure(nameof(JobTypeSagaEndpointName), "must not be null or empty");

@@ -283,6 +283,10 @@ public static class LogContextActivityExtensions
         System.Diagnostics.Activity? parentActivity, params (string Key, object? Value)[] tags)
         where T : class
     {
+        if (!string.IsNullOrWhiteSpace(parentActivity?.TraceStateString)
+            && string.IsNullOrWhiteSpace(activity.TraceStateString))
+            ActivityObservation.TrySetTraceState(activity, parentActivity.TraceStateString);
+
         var conversationId = context.ConversationId?.ToString("D");
 
         if (context.CorrelationId.HasValue)

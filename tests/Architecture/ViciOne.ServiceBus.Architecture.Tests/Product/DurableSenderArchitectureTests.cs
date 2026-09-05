@@ -112,7 +112,7 @@ public sealed class DurableSenderArchitectureTests
             "ViciOne.ServiceBus.Operations.DurableSenderOperations`1",
             "ViciOne.ServiceBus.Providers.Persistence.DurableSendConsumerCompletion`1",
             "ViciOne.ServiceBus.Configuration.DurableSenderConfigurator`1",
-            "ViciOne.ServiceBus.Configuration.DurableSenderStartupValidator`1",
+            "ViciOne.ServiceBus.Configuration.BusCompositionStartupValidator`1",
             "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendDispatcher`1",
             "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendCompletionFilter",
             "ViciOne.ServiceBus.Providers.Transports.InMemoryDurableSendContext",

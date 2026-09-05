@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// If present in the container, these options will be used by the ViciOne.ServiceBus hosted service.
 /// </summary>
-public class ViciOneServiceBusHostOptions
+public sealed class ViciOneServiceBusHostOptions
 {
     /// <summary>
     /// If True, the hosted service will not return from StartAsync until the bus has started.

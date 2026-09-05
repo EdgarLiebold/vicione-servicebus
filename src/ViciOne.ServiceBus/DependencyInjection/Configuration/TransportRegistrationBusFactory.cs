@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ViciOne.ServiceBus.Providers.Configuration;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
@@ -59,10 +60,18 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
         _hostConfiguration.ConsumerStopTimeout = hostOptions?.ConsumerStopTimeout;
         _hostConfiguration.StopTimeout = hostOptions?.StopTimeout;
 
+        MessageLimits limits = ConfigureMessageLimits(context, _hostConfiguration);
         ConfigurePayloadAdmission(context, _hostConfiguration);
         ConnectBusObservers(context, configurator);
+        ConnectMessageJournal(context, configurator);
 
         configure?.Invoke(context, configurator);
+
+        _hostConfiguration.BusConfiguration.Serialization.ConfigureSystemTextJsonSerializerOptions(options =>
+        {
+            options.MaxDepth = limits.MaxJsonDepth;
+            return options;
+        });
 
         IBusInstanceSpecification[] busInstanceSpecifications = specifications?.ToArray() ?? [];
 
@@ -70,7 +79,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             .Concat(busInstanceSpecifications.SelectMany(x => x.Validate()));
 
         if (_hostConfiguration.BusConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
-            throw new ConfigurationException("The bus must own a MessageRouteTable instance.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "The bus must own a MessageRouteTable instance.", "Correct the named configuration before starting the host"));
 
         messageRoutes.Freeze();
 
@@ -87,7 +96,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             });
 
             var host = _hostConfiguration.Build() as IHost<TEndpointConfigurator>
-                ?? throw new ConfigurationException($"The configured host does not implement {typeof(IHost<TEndpointConfigurator>)}.");
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", $"The configured host does not implement {typeof(IHost<TEndpointConfigurator>)}.", "Correct the named configuration before starting the host"));
 
             var bus = new ViciOneServiceBusBus(host, _hostConfiguration.BusConfiguration.BusObservers, busReceiveEndpointConfiguration,
                 context.GetService<TimeProvider>() ?? TimeProvider.System);
@@ -111,7 +120,7 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
         {
             _hostConfiguration.BusConfiguration.BusObservers.CreateFaulted(ex);
 
-            throw new ConfigurationException(result, "An exception occurred during bus creation", ex);
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
         }
     }
 
@@ -119,6 +128,63 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
     {
         foreach (var observer in context.GetServices<IBusObserver>())
             connector.ConnectBusObserver(observer);
+    }
+
+    static void ConnectMessageJournal(IBusRegistrationContext context, IBusFactoryConfigurator configurator)
+    {
+        if (context is not IBusRegistrationIdentity identity)
+            return;
+
+        IMessageJournalRegistration[] registrations = context.GetServices<IMessageJournalRegistration>()
+            .Where(registration => string.Equals(registration.BusKey, identity.BusKey, StringComparison.Ordinal))
+            .ToArray();
+        if (registrations.Length > 1)
+        {
+            throw new ConfigurationException(ConfigurationMessages.Create(
+                "Message journal",
+                identity.BusKey,
+                "multiple journal owners are registered",
+                "Configure exactly one bus.UseMessageJournal(...) block"));
+        }
+
+        if (registrations.Length == 1)
+            registrations[0].Connect(configurator);
+    }
+
+    static MessageLimits ConfigureMessageLimits(IBusRegistrationContext context, IHostConfiguration hostConfiguration)
+    {
+        if (context is not IBusRegistrationIdentity identity)
+        {
+            throw new ConfigurationException(
+                "Message limits for bus 'unknown': Bus identity is unavailable. Register the bus through AddViciOneServiceBus and call bus.Limits(...).");
+        }
+
+        IMessageLimitsRegistration[] registrations = context
+            .GetServices<IMessageLimitsRegistration>()
+            .Where(x => string.Equals(x.BusKey, identity.BusKey, StringComparison.Ordinal))
+            .ToArray();
+
+        if (registrations.Length == 0)
+        {
+            throw new ConfigurationException(
+                $"Message limits for bus '{identity.BusKey}': MaxBodyBytes is not declared. Call bus.Limits(...) with explicit byte limits.");
+        }
+
+        if (registrations.Length > 1)
+        {
+            throw new ConfigurationException(
+                $"Message limits for bus '{identity.BusKey}': Limits has multiple owners. Configure exactly one Limits policy inside the bus block.");
+        }
+
+        if (hostConfiguration is not IMessageLimitsHostConfiguration target)
+        {
+            throw new ConfigurationException(
+                $"Message limits for bus '{identity.BusKey}': The selected transport cannot enforce receive limits. Choose a transport with message-limit support.");
+        }
+
+        MessageLimits limits = registrations[0].Limits.Validate(identity.BusKey);
+        target.SetMessageLimits(limits);
+        return limits;
     }
 
     static void ConfigurePayloadAdmission(IBusRegistrationContext context, IHostConfiguration hostConfiguration)
@@ -132,12 +198,12 @@ public abstract class TransportRegistrationBusFactory<TEndpointConfigurator> :
             .ToArray();
 
         if (registrations.Length > 1)
-            throw new ConfigurationException($"Multiple payload-admission owners are registered for bus '{identity.BusKey}'.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", $"Multiple payload-admission owners are registered for bus '{identity.BusKey}'.", "Correct the named configuration before starting the host"));
 
         if (registrations.Length == 1)
         {
             if (hostConfiguration is not IPayloadAdmissionHostConfiguration target)
-                throw new ConfigurationException($"Bus '{identity.BusKey}' does not support payload admission.");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Transport Registration Bus", "unknown", $"Bus '{identity.BusKey}' does not support payload admission.", "Correct the named configuration before starting the host"));
 
             target.SetPayloadAdmissionRuntime(registrations[0].Runtime);
         }

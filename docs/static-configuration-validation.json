@@ -1,7 +1,380 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "scope": "All public application and provider configuration families whose invalidity is knowable before runtime messaging begins.",
   "rule": "Reject at registration when possible; otherwise reject during host startup before provider I/O or background delivery.",
+  "reviewBaseline": {
+    "measuredPublicOptionsClasses": 44,
+    "measurement": "The external review used a lexical class-name grep on its pre-program snapshot.",
+    "currentConcreteOptionsModels": 40,
+    "explanation": "The source inventory is authoritative. The current lexical grep finds 42 concrete class declarations: two suffix matches are validators/configurers rather than option models, while one additional declaration is an abstract inheritance base. Application-operation records are immutable invocation values rather than startup configuration."
+  },
+  "excludedDeclarations": [
+    {
+      "type": "ConfigureBusHealthCheckServiceOptions",
+      "source": "src/ViciOne.ServiceBus/Monitoring/ConfigureBusHealthCheckServiceOptions.cs",
+      "reason": "IConfigureOptions implementation, not an options model"
+    },
+    {
+      "type": "InboxCleanupServiceOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/InboxCleanupServiceOptions.cs",
+      "reason": "abstract inheritance base; the concrete InboxCleanupServiceOptions<T> is inventoried"
+    },
+    {
+      "type": "ValidateViciOneServiceBusHostOptions",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "reason": "IValidateOptions implementation, not an options model"
+    }
+  ],
+  "invocationValueRecords": [
+    "DurableSendOptions",
+    "PublishOptions",
+    "RequestOptions",
+    "ScheduleOptions",
+    "SendOptions"
+  ],
+  "options": [
+    {
+      "type": "ActiveMqTransportOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqTransportOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.ActiveMq/Configuration/ActiveMqBusFactoryConfiguratorExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Configuration/ActiveMqTransportOptionsStartupTests.cs", "method": "PartialTransportOptions_FailAtStartup" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.ActiveMq.Tests/Configuration/ActiveMqTransportOptionsStartupTests.cs", "method": "EmptyOrCompleteTransportOptions_PassStartupValidation" }
+    },
+    {
+      "type": "AmazonS3MessageDataRepositoryOptions",
+      "source": "src/Persistence/ViciOne.ServiceBus.AmazonS3/AmazonS3/MessageData/AmazonS3MessageDataRepositoryOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 2,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs", "method": "Options_EnforceBucketAndRetentionBoundaries" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.AmazonS3.Tests/AmazonS3/MessageData/AmazonS3MessageDataConfigurationTests.cs", "method": "Options_EnforceBucketAndRetentionBoundaries" }
+    },
+    {
+      "type": "AmazonSqsClientContextCacheOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContextCacheOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsHostConfigurationTests.cs", "method": "ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProviderAsync" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsHostConfigurationTests.cs", "method": "ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProviderAsync" }
+    },
+    {
+      "type": "AmazonSqsTransportOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs", "method": "InvalidOptions_FailBeforeAwsClientCreation" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs", "method": "EmptyAndCoherentOptions_PassStartupValidation" }
+    },
+    {
+      "type": "AzureServiceBusTestHarnessOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/Configuration/AzureServiceBusTestHarnessOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/Configuration/ServiceBusDependencyInjectionTestingExtensions.cs",
+      "invariantCount": 0,
+      "negativeTest": null,
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTestHarnessOptionsStartupTests.cs", "method": "HarnessOptions_AreBoundToTheStartupValidator" }
+    },
+    {
+      "type": "AzureServiceBusTransportOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+      "invariantCount": 1,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs", "method": "EmptyConnectionString_FailsAtStartupBeforeClientCreation" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs", "method": "UnsetOrCompleteConnectionString_PassesStartupValidation" }
+    },
+    {
+      "type": "AzureTableMessageJournalStoreOptions",
+      "source": "src/Persistence/ViciOne.ServiceBus.Azure.Table/AzureTable/MessageJournal/AzureTableMessageJournalStoreOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs", "method": "PartitionKey_RejectsEveryAzureUnsafeCharacter" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.Azure.Table.Tests/MessageJournal/AzureTableMessageJournalOptionsTests.cs", "method": "StoreConstruction_PreservesLimitsWithoutPerformingNetworkIo" }
+    },
+    {
+      "type": "BatchOptions",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/Consumers/BatchOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 4,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "BatchOptions_RejectEveryInvalidInvariant" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "BatchOptions_DefaultsAreCoherent" }
+    },
+    {
+      "type": "CircuitBreakerOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/CircuitBreakerOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 6,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs", "method": "ThresholdConfiguration_AcceptsExactBoundsAndRejectsEveryInvalidValue" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs", "method": "Defaults_AreBoundedExplicitAndUseStandardTime" }
+    },
+    {
+      "type": "DurableSenderOptions<TBus>",
+      "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus/DurableSend/DurableSenderServiceCollectionExtensions.cs",
+      "invariantCount": 12,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs", "method": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs", "method": "Admission_RegisteredIdentityUsesTheConfiguredLimitsAndApplicationClockAsync" }
+    },
+    {
+      "type": "DynamoDbSagaRepositoryOptions<TSaga>",
+      "source": "src/Persistence/ViciOne.ServiceBus.DynamoDb/DynamoDbSagaRepositoryOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs", "method": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.DynamoDb.Tests/DynamoDbIntegration/Saga/DynamoDbSagaRepositoryConfigurationTests.cs", "method": "InvalidAndMutableInput_IsRejectedOrFrozenBeforeRegistration" }
+    },
+    {
+      "type": "EntityFrameworkOutboxOptions<TDbContext>",
+      "source": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/EntityFrameworkOutboxOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurator.cs",
+      "invariantCount": 2,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "ExternalOptionsOverride_CannotBypassStartupValidation" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "CoherentOutboxInboxAndDeliveryOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "HubLifetimeManagerOptions<THub>",
+      "source": "src/ViciOne.ServiceBus.SignalR/Configuration/HubLifetimeManagerOptions.cs",
+      "boundary": "registration",
+      "invariantCount": 1,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerOptionsValidationTests.cs", "method": "Registration_RejectsAnEmptyServerNameBeforeAddingHubServices" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.SignalR.Tests/HubLifetimeManagerOptionsValidationTests.cs", "method": "Registration_AcceptsTheCoherentDefaultOptions" }
+    },
+    {
+      "type": "InboxCleanupServiceOptions<T>",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/InboxCleanupServiceOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurator.cs",
+      "invariantCount": 4,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "ExternalOptionsOverride_CannotBypassStartupValidation" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "CoherentOutboxInboxAndDeliveryOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "JobConsumerOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/JobConsumerOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/DependencyInjectionJobServiceRegistrationExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "JobOptions<TJob>",
+      "source": "src/ViciOne.ServiceBus/Configuration/JobOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 7,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobOptions_RejectEveryInvalidInvariant" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobOptions_DefaultsAreCoherent" }
+    },
+    {
+      "type": "JobSagaOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/JobSagaOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus/DependencyInjection/Registration/Consumers/JobSagaRegistrationConfigurator.cs",
+      "invariantCount": 6,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "JobServiceOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/JobServiceOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 10,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobServiceOptions_RejectEveryInvalidInvariant" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs", "method": "JobServiceOptions_CoherentMaterializedValuesPass" }
+    },
+    {
+      "type": "KillSwitchOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/KillSwitchOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 6,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs", "method": "ThresholdConfiguration_RejectsEveryInvalidBoundary" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs", "method": "Defaults_AreOperationallySafeAndUseStandardTime" }
+    },
+    {
+      "type": "MessageJournalOptions",
+      "source": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 2,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs", "method": "Options_RejectNonPositiveWriteTimeout" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs", "method": "Options_PreserveTheExplicitFiniteTimeoutAndClock" }
+    },
+    {
+      "type": "OutboxConsumeOptions",
+      "source": "src/ViciOne.ServiceBus/Middleware/OutboxConsumeOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 4,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "OutboxConsume_RejectsEveryInvalidInvariant" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "OutboxConsume_AcceptsCoherentGeneratedValues" }
+    },
+    {
+      "type": "OutboxDeliveryServiceOptions<TScope>",
+      "source": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/OutboxDeliveryServiceOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkBusOutboxConfigurator.cs",
+      "invariantCount": 8,
+      "negativeTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "ExternalOptionsOverride_CannotBypassStartupValidation" },
+      "positiveTest": { "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs", "method": "CoherentOutboxInboxAndDeliveryOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "OutputTimelineOptions",
+      "source": "src/ViciOne.ServiceBus.Testing/TimelineExtensions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 0,
+      "negativeTest": null,
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/DiagnosticOutputTests.cs", "method": "Timeline_RendersTheProducedAndConsumedMessageFlowWithItsAddressAsync" }
+    },
+    {
+      "type": "PayloadAdmissionOptions<TBus>",
+      "source": "src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionServiceCollectionExtensions.cs",
+      "invariantCount": 7,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs", "method": "Registration_ValidatesRequiredHardLimitsWhenOptionsAreMaterialized" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/MessageLimitsConfigurationTests.cs", "method": "ExplicitLimits_CreateOneBusOwnedPayloadPolicy" }
+    },
+    {
+      "type": "QuartzEndpointOptions",
+      "source": "src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/QuartzEndpointOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Scheduling/ViciOne.ServiceBus.Quartz/Configuration/QuartzRegistrationExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsStartupValidationTests.cs", "method": "InvalidEndpointOption_FailsAtStartup" },
+      "positiveTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzOptionsStartupValidationTests.cs", "method": "CoherentEndpointOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "QuartzSchedulerOptions",
+      "source": "src/Scheduling/ViciOne.ServiceBus.Quartz/QuartzSchedulerOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs", "method": "CreateSettings_RejectsMissingSchedulerFactory" },
+      "positiveTest": { "path": "tests/Scheduling/ViciOne.ServiceBus.Quartz.Tests/Configuration/QuartzSchedulerOptionsTests.cs", "method": "CreateSettings_SnapshotsEveryRuntimeValue" }
+    },
+    {
+      "type": "RabbitMqSslOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs", "method": "InvalidOption_FailsBeforeAnyBrokerConnection" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs", "method": "CoherentDefaults_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "RabbitMqTestHarnessOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/Configuration/RabbitMqTestHarnessOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/Configuration/RabbitMqDependencyInjectionTestingExtensions.cs",
+      "invariantCount": 1,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTestHarnessOptionsStartupTests.cs", "method": "ForceCleaningRootWithoutCleaning_FailsAtStartup" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTestHarnessOptionsStartupTests.cs", "method": "CoherentHarnessOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "RabbitMqTransportOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "invariantCount": 5,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs", "method": "InvalidOption_FailsBeforeAnyBrokerConnection" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs", "method": "CoherentDefaults_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "RequestRateAlgorithmOptions",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Util/RequestRateAlgorithmOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 8,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs", "method": "Constructor_RejectsEveryInvalidStaticOption" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Abstractions.Tests/Util/RequestRateAlgorithmTests.cs", "method": "Run_RequestsConfiguredLimitAndProcessesEveryResultAsync" }
+    },
+    {
+      "type": "ResourceCacheOptions",
+      "source": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "boundary": "construction",
+      "invariantCount": 5,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs", "method": "Options_RejectInvalidCapacityAndTimeBounds" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs", "method": "AddAsync_PublishesTheExactInstanceAndBypassesTheFallbackFactoryAsync" }
+    },
+    {
+      "type": "ServiceBusSessionBatchOptions",
+      "source": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusSessionBatchOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 5,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/ServiceBusSessionBatchOptionsTests.cs", "method": "SessionBatching_RejectsEveryInvalidInvariantBeforeEndpointMaterialization" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/ServiceBusSessionBatchOptionsTests.cs", "method": "SessionBatching_AcceptsCoherentDefaults" }
+    },
+    {
+      "type": "ServiceInstanceOptions",
+      "source": "src/ViciOne.ServiceBus/Configuration/ServiceInstanceOptions.cs",
+      "boundary": "configuration-materialization",
+      "invariantCount": 1,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "ServiceInstance_RejectsMissingFormatterAtConfigurationBoundary" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "ServiceInstance_DefaultIsCoherent" }
+    },
+    {
+      "type": "SqlTransportMigrationOptions",
+      "source": "src/ViciOne.ServiceBus/SqlTransport/Configuration/SqlTransportMigrationOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresSqlTransportConfigurationExtensions.cs",
+      "invariantCount": 1,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "InvalidMigrationOptions_FailAtStartupBeforeDatabaseIo" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "CoherentMigrationOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "SqlTransportOptions",
+      "source": "src/ViciOne.ServiceBus/SqlTransport/Configuration/SqlTransportOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/Configuration/PostgresSqlTransportConfigurationExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "InvalidMigrationOptions_FailAtStartupBeforeDatabaseIo" },
+      "positiveTest": { "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/Configuration/SqlTransportOptionsStartupTests.cs", "method": "CoherentMigrationOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "TestHarnessOptions",
+      "source": "src/ViciOne.ServiceBus.Testing/Configuration/DependencyInjection/TestHarnessOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus.Testing/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+      "invariantCount": 4,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "InvalidHarnessOrLoggerOption_FailsBeforeTheHarnessStarts" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "CoherentHarnessAndLoggerOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "TextTableOptions",
+      "source": "src/ViciOne.ServiceBus/Util/TextTable.cs",
+      "boundary": "construction",
+      "invariantCount": 4,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "TextTable_RejectsEveryInvalidInvariant" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "TextTable_AcceptsCoherentOptions" }
+    },
+    {
+      "type": "TextWriterLoggerOptions",
+      "source": "src/ViciOne.ServiceBus/Logging/TextWriterLoggerOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus.Testing/Configuration/DependencyInjection/DependencyInjectionTestingExtensions.cs",
+      "invariantCount": 2,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "InvalidHarnessOrLoggerOption_FailsBeforeTheHarnessStarts" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs", "method": "CoherentHarnessAndLoggerOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "ViciOneServiceBusHealthCheckOptions<TBus>",
+      "source": "src/ViciOne.ServiceBus/DependencyInjection/Configuration/ViciOneServiceBusHealthCheckOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ViciOneServiceBusHealthCheckOptionsExtensions.cs",
+      "invariantCount": 3,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "InvalidStaticFeatureOption_FailsTheStartupValidatorWithItsOwnCause" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs", "method": "PositiveCoherentFeatureOptions_PassTheSameStartupBoundary" }
+    },
+    {
+      "type": "ViciOneServiceBusHostOptions",
+      "source": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "boundary": "host-start",
+      "registrationSource": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "invariantCount": 8,
+      "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs", "method": "StartupValidator_RejectsEveryInvalidStaticLifecyclePolicy" },
+      "positiveTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs", "method": "StartupValidator_AcceptsPositiveCoherentLifecyclePolicy" }
+    }
+  ],
   "families": [
     {
       "id": "host-lifecycle",
@@ -37,14 +410,14 @@
       "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs",
       "testMethod": "Registration_InvalidRuntimePoliciesFailClosedWhenTheTypedSenderMaterializes",
       "exception": "OptionsValidationException",
-      "actionableFragment": "bounded-delivery policy"
+      "actionableFragment": "MaximumStoredCount"
     },
     {
       "id": "durable-sender-composition",
       "boundary": "host-start",
       "source": "src/ViciOne.ServiceBus/DurableSend/DurableSenderComposition.cs",
       "test": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderRegistrationAndAdmissionTests.cs",
-      "testMethod": "StartupValidation_RejectsEveryIncompleteOrAmbiguousComposition",
+      "testMethod": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
       "exception": "ConfigurationException",
       "actionableFragment": "Configure exactly one"
     },

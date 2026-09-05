@@ -165,32 +165,36 @@ public sealed class InMemoryDurableSendIntegrationTests
         services.AddViciOneMessageContracts(builder => builder.Register<DurablePayload>(
             ContractIdentity.Name,
             ContractIdentity.MajorVersion));
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            bus.Host(new Uri("loopback://durable-host/"));
-            bus.ReceiveEndpoint("durable-input", endpoint =>
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory((_, bus) =>
             {
-                if (!includeConsumer)
-                    return;
-
-                endpoint.Handler<DurablePayload>(context =>
+                bus.Host(new Uri("loopback://durable-host/"));
+                bus.ReceiveEndpoint("durable-input", endpoint =>
                 {
-                    var snapshot = new ConsumerSnapshot(
-                        context.Message.Value,
-                        context.Advanced().ReceiveContext.Body.GetBytes(),
-                        context.Headers.GetAll().ToArray());
-                    observation.Entered.TrySetResult(snapshot);
-                    if (shouldFail)
-                    {
-                        observation.Failed.TrySetResult();
-                        return Task.FromException(new ExpectedConsumerException());
-                    }
+                    if (!includeConsumer)
+                        return;
 
-                    context.Advanced().AddConsumeTask(observation.Release.Task);
-                    return Task.CompletedTask;
+                    endpoint.Handler<DurablePayload>(context =>
+                    {
+                        var snapshot = new ConsumerSnapshot(
+                            context.Message.Value,
+                            context.Advanced().ReceiveContext.Body.GetBytes(),
+                            context.Headers.GetAll().ToArray());
+                        observation.Entered.TrySetResult(snapshot);
+                        if (shouldFail)
+                        {
+                            observation.Failed.TrySetResult();
+                            return Task.FromException(new ExpectedConsumerException());
+                        }
+
+                        context.Advanced().AddConsumeTask(observation.Release.Task);
+                        return Task.CompletedTask;
+                    });
                 });
             });
-        }));
+        });
         return services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,

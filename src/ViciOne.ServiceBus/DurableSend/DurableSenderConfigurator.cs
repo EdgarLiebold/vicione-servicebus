@@ -29,11 +29,13 @@ internal sealed class DurableSenderConfigurator<TBus> :
 
     public void AddMessageContract<TMessage>(string name, int majorVersion = 1)
         where TMessage : class
-        => Services.AddViciOneMessageContracts(catalog => catalog.Register<TMessage>(name, majorVersion));
+        => BusFeatureConfigurationExtensions.RegisterContracts<TBus>(
+            Services,
+            catalog => catalog.Register<TMessage>(name, majorVersion));
 
     public void AddMessageContract<TMessage>()
         where TMessage : class
-        => Services.AddViciOneMessageContracts(catalog => catalog.Register<TMessage>());
+        => BusFeatureConfigurationExtensions.RegisterContracts<TBus>(Services, catalog => catalog.Register<TMessage>());
 
     public void UseStore(Type implementationType)
     {
@@ -62,7 +64,7 @@ internal sealed class DurableSenderConfigurator<TBus> :
         if (Services.Any(static descriptor => descriptor.ServiceType == typeof(TService)))
         {
             throw new ConfigurationException(
-                $"Durable Sender for bus '{typeof(TBus)}' already has a {component}. Exactly one owner is allowed.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"Durable Sender for bus '{typeof(TBus)}' already has a {component}. Exactly one owner is allowed.", "Correct the named configuration before starting the host"));
         }
     }
 }

@@ -114,11 +114,14 @@ public sealed class BusHealthLifecycleTests
             .AddViciOneServiceBusTestHarness(configuration =>
                 configuration.UsingInMemory((_, bus) => bus.ReceiveEndpoint("health-primary", _ => { })))
             .AddViciOneServiceBus<IHealthBus>(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory((_, bus) =>
                 {
                     bus.Host(new Uri("loopback://health-secondary/"));
                     bus.ReceiveEndpoint("health-secondary-endpoint", _ => { });
-                }))
+                });
+            })
             .BuildServiceProvider(new ServiceProviderOptions
             {
                 ValidateOnBuild = true,

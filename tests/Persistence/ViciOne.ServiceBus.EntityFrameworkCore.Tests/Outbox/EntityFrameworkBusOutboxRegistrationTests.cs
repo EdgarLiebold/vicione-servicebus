@@ -49,6 +49,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
             new ServiceCollection().AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 AddOutbox<FirstDbContext>(configuration, isDefault: true);
                 AddOutbox<SecondDbContext>(configuration, isDefault: true);
             }));
@@ -63,6 +64,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         ConfigurationException failure = Assert.Throws<ConfigurationException>(() =>
             new ServiceCollection().AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 AddOutbox<FirstDbContext>(configuration, isDefault: false);
                 AddOutbox<FirstDbContext>(configuration, isDefault: false);
             }));
@@ -82,6 +84,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         services.AddDbContext<SharedDbContext>(options => options.UseSqlite(connection));
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddEntityFrameworkOutbox<SharedDbContext>(outbox =>
             {
                 outbox.UseSqlite();
@@ -92,6 +95,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         });
         services.AddViciOneServiceBus<ISecondaryBus>("secondary-v1", configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddEntityFrameworkOutbox<ISecondaryBus, SharedDbContext>(outbox =>
             {
                 outbox.UseSqlite();
@@ -160,6 +164,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
             services.AddViciOneMessageContracts(catalog => catalog.Register<RegistrationProbe>("registration-probe"));
             services.AddViciOneServiceBus<ISecondaryBus>("orders-v1", configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddEntityFrameworkOutbox<ISecondaryBus, CombinedPersistenceDbContext>(outbox =>
                 {
                     outbox.UseSqlite();
@@ -224,6 +229,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         services.AddDbContext<FirstDbContext>(options => options.UseSqlite(connection));
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             AddOutbox<FirstDbContext>(configuration, isDefault: false);
             configuration.UsingInMemory((_, _) => { });
         });
@@ -246,6 +252,7 @@ public sealed class EntityFrameworkBusOutboxRegistrationTests
         services.AddDbContext<SecondDbContext>(options => options.UseSqlite(connection));
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             if (reverse)
             {
                 AddOutbox<SecondDbContext>(configuration, selectDefault);

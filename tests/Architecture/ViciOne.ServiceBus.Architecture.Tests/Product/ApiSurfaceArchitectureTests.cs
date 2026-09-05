@@ -243,8 +243,75 @@ public sealed class ApiSurfaceArchitectureTests
     {
         using JsonDocument manifest = JsonDocument.Parse(Source("docs/static-configuration-validation.json"));
         JsonElement root = manifest.RootElement;
-        Assert.Equal(1, root.GetProperty("schemaVersion").GetInt32());
+        Assert.Equal(2, root.GetProperty("schemaVersion").GetInt32());
         Assert.Contains("before runtime messaging begins", root.GetProperty("scope").GetString(), StringComparison.Ordinal);
+
+        JsonElement[] optionEntries = root.GetProperty("options").EnumerateArray().ToArray();
+        int declaredModelCount = root.GetProperty("reviewBaseline").GetProperty("currentConcreteOptionsModels").GetInt32();
+        Assert.Equal(declaredModelCount, optionEntries.Length);
+        Assert.Equal(40, declaredModelCount);
+
+        Regex optionDeclaration = new(
+            @"public\s+(?<modifiers>(?:(?:sealed|abstract)\s+)*)class\s+(?<name>[A-Za-z0-9_]+Options)(?<generic><[^>{\r\n]+>)?(?=\s|:)",
+            RegexOptions.CultureInvariant);
+        string sourceRoot = Path.Combine(RepositoryLayout.Root, "src");
+        var declarations = Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+            .SelectMany(path => optionDeclaration.Matches(File.ReadAllText(path)).Select(match => new
+            {
+                Type = match.Groups["name"].Value + match.Groups["generic"].Value.Replace(" ", string.Empty, StringComparison.Ordinal),
+                Source = Path.GetRelativePath(RepositoryLayout.Root, path).Replace(Path.DirectorySeparatorChar, '/'),
+                Modifiers = match.Groups["modifiers"].Value,
+            }))
+            .ToArray();
+
+        string[] excluded = root.GetProperty("excludedDeclarations").EnumerateArray()
+            .Select(static entry => $"{entry.GetProperty("type").GetString()}|{entry.GetProperty("source").GetString()}")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        string[] discoveredExcluded = declarations
+            .Where(declaration => declaration.Modifiers.Contains("abstract", StringComparison.Ordinal)
+                || declaration.Type is "ConfigureBusHealthCheckServiceOptions" or "ValidateViciOneServiceBusHostOptions")
+            .Select(static declaration => $"{declaration.Type}|{declaration.Source}")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        Assert.Equal(excluded, discoveredExcluded);
+
+        var concreteDeclarations = declarations
+            .Where(declaration => !discoveredExcluded.Contains($"{declaration.Type}|{declaration.Source}", StringComparer.Ordinal))
+            .ToDictionary(static declaration => $"{declaration.Type}|{declaration.Source}", StringComparer.Ordinal);
+        string[] inventoried = optionEntries
+            .Select(static entry => $"{entry.GetProperty("type").GetString()}|{entry.GetProperty("source").GetString()}")
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        Assert.Equal(concreteDeclarations.Keys.Order(StringComparer.Ordinal), inventoried);
+
+        Assert.All(optionEntries, entry =>
+        {
+            string key = $"{entry.GetProperty("type").GetString()}|{entry.GetProperty("source").GetString()}";
+            Assert.Contains("sealed", concreteDeclarations[key].Modifiers, StringComparison.Ordinal);
+
+            string boundary = entry.GetProperty("boundary").GetString()!;
+            Assert.Contains(boundary, new[] { "construction", "configuration-materialization", "host-start", "registration" });
+            AssertEvidence(entry.GetProperty("positiveTest"));
+
+            int invariantCount = entry.GetProperty("invariantCount").GetInt32();
+            JsonElement negativeTest = entry.GetProperty("negativeTest");
+            if (invariantCount == 0)
+                Assert.Equal(JsonValueKind.Null, negativeTest.ValueKind);
+            else
+                AssertEvidence(negativeTest);
+
+            if (boundary == "host-start")
+            {
+                string registration = Source(entry.GetProperty("registrationSource").GetString()!);
+                Assert.Contains("ValidateOnStart", registration, StringComparison.Ordinal);
+            }
+        });
+
+        string invocationSource = string.Join('\n', Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+            .Select(File.ReadAllText));
+        Assert.All(root.GetProperty("invocationValueRecords").EnumerateArray(), record =>
+            Assert.Matches($@"public\s+sealed\s+record\s+{Regex.Escape(record.GetString()!)}\b", invocationSource));
 
         JsonElement[] families = root.GetProperty("families").EnumerateArray().ToArray();
         Assert.Equal(ExpectedConfigurationFamilies, families
@@ -270,6 +337,14 @@ public sealed class ApiSurfaceArchitectureTests
             Assert.DoesNotContain("TODO", family.ToString(), StringComparison.OrdinalIgnoreCase);
             Assert.False(string.IsNullOrWhiteSpace(id));
         });
+
+        static void AssertEvidence(JsonElement evidence)
+        {
+            string path = evidence.GetProperty("path").GetString()!;
+            string method = evidence.GetProperty("method").GetString()!;
+            string test = Source(path);
+            Assert.Contains($"{method}(", test, StringComparison.Ordinal);
+        }
     }
 
     [Fact]

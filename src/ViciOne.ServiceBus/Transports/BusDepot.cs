@@ -35,7 +35,7 @@ public class BusDepot :
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (_instances.Count == 0)
-            throw new ConfigurationException("No bus instances were found. Ensure that AddViciOneServiceBus() is used to configure the transport.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Depot", "unknown", "No bus instances were found. Ensure that AddViciOneServiceBus() is used to configure the transport.", "Correct the named configuration before starting the host"));
 
         _logger.LogDebug("Starting bus instances: {Instances}", string.Join(", ", _instances.Keys.Select(x => x.Name)));
 

@@ -47,6 +47,7 @@ public sealed class ServiceInstanceEndpointTests
         await using ServiceProvider provider = services
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<ServiceInstanceConsumer>();
                 configuration.UsingInMemory((context, bus) =>
                 {

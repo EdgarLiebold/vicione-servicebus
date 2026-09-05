@@ -20,15 +20,17 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     internal const string InstrumentationName = "ViciOne.ServiceBus";
 
     readonly ActivitySource _activitySource;
-    readonly Counter<long> _durableAdmission;
-    readonly Histogram<long> _durableAdmissionStorageSize;
-    readonly Counter<long> _durableDelivery;
-    readonly Histogram<double> _durableDeliveryDuration;
-    readonly Counter<long> _durableConsumerCompletion;
-    readonly Histogram<double> _durableConsumerCompletionDuration;
-    readonly Counter<long> _payloadAdmission;
-    readonly Histogram<long> _payloadBodySize;
-    readonly Histogram<long> _payloadEnvelopeSize;
+    readonly object _metricInitializationLock = new();
+    readonly Lazy<Meter?> _meter;
+    Counter<long>? _durableAdmission;
+    Histogram<long>? _durableAdmissionStorageSize;
+    Counter<long>? _durableDelivery;
+    Histogram<double>? _durableDeliveryDuration;
+    Counter<long>? _durableConsumerCompletion;
+    Histogram<double>? _durableConsumerCompletionDuration;
+    Counter<long>? _payloadAdmission;
+    Histogram<long>? _payloadBodySize;
+    Histogram<long>? _payloadEnvelopeSize;
     long _durableStoredCount;
     long _durableStoredBytes;
     long _durablePendingCount;
@@ -36,6 +38,8 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     long _durableAwaitingConsumerCompletionCount;
     long _durableQuarantinedCount;
     long _durableOldestPendingAgeSeconds;
+    int _durableMetricsInitialized;
+    int _payloadMetricsInitialized;
     int _disposed;
 
     public V5ServiceBusInstrumentation(IMeterFactory meterFactory)
@@ -50,73 +54,8 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             new("vicione.servicebus.bus", typeof(TBus).FullName ?? typeof(TBus).Name),
         ];
 
-        Meter meter = meterFactory.Create(InstrumentationName, version, meterTags);
         _activitySource = new ActivitySource(InstrumentationName, version);
-
-        _durableAdmission = meter.CreateCounter<long>(
-            "vicione.servicebus.durable_sender.admission",
-            description: "Durable sender admission outcomes.");
-        _durableAdmissionStorageSize = meter.CreateHistogram<long>(
-            "vicione.servicebus.durable_sender.admission.size",
-            unit: "By",
-            description: "Logical retained content bytes of one durable-send admission request (serialized body + ServiceBus metadata).");
-        _durableDelivery = meter.CreateCounter<long>(
-            "vicione.servicebus.durable_sender.delivery",
-            description: "Durable sender delivery-attempt outcomes.");
-        _durableDeliveryDuration = meter.CreateHistogram<double>(
-            "vicione.servicebus.durable_sender.delivery.duration",
-            unit: "s",
-            description: "Duration of one durable sender delivery attempt.");
-        _durableConsumerCompletion = meter.CreateCounter<long>(
-            "vicione.servicebus.durable_sender.consumer_completion",
-            description: "Process-local consumer-completion outcomes for volatile durable sends.");
-        _durableConsumerCompletionDuration = meter.CreateHistogram<double>(
-            "vicione.servicebus.durable_sender.consumer_completion.duration",
-            unit: "s",
-            description: "Elapsed time from volatile durable dispatch attempt start to logical consumer completion.");
-
-        _payloadAdmission = meter.CreateCounter<long>(
-            "vicione.servicebus.payload.admission",
-            description: "Serialized payload admission decisions.");
-        _payloadBodySize = meter.CreateHistogram<long>(
-            "vicione.servicebus.payload.body.size",
-            unit: "By",
-            description: "Exact serialized application-body size evaluated by admission policy.");
-        _payloadEnvelopeSize = meter.CreateHistogram<long>(
-            "vicione.servicebus.payload.envelope.size",
-            unit: "By",
-            description: "Exact final transport-envelope size evaluated by admission policy.");
-
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.stored",
-            () => Volatile.Read(ref _durableStoredCount),
-            description: "Last observed retained durable-send record count.");
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.stored.content.size",
-            () => Volatile.Read(ref _durableStoredBytes),
-            unit: "By",
-            description: "Last observed logical retained durable-send content bytes (serialized body + ServiceBus metadata).");
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.pending",
-            () => Volatile.Read(ref _durablePendingCount),
-            description: "Last observed durable-send pending count.");
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.retry_scheduled",
-            () => Volatile.Read(ref _durableRetryScheduledCount),
-            description: "Last observed durable-send retry-scheduled count.");
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.awaiting_consumer_completion",
-            () => Volatile.Read(ref _durableAwaitingConsumerCompletionCount),
-            description: "Last observed durable-send count awaiting logical consumer completion.");
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.quarantined",
-            () => Volatile.Read(ref _durableQuarantinedCount),
-            description: "Last observed durable-send quarantine count.");
-        meter.CreateObservableGauge(
-            "vicione.servicebus.durable_sender.oldest_pending.age",
-            () => Volatile.Read(ref _durableOldestPendingAgeSeconds),
-            unit: "s",
-            description: "Age of the oldest pending durable-send intent at the last store snapshot.");
+        _meter = new Lazy<Meter?>(() => TryCreateMeter(meterFactory, version, meterTags), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     public SafeActivityScope StartDurableAdmission(SerializedDurableSend message)
@@ -183,6 +122,9 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     {
         try
         {
+            if (!EnsureDurableMetrics())
+                return;
+
             TagList tags = new()
             {
                 { "outcome", outcome },
@@ -190,8 +132,8 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             if (errorType is not null)
                 tags.Add("error.type", errorType);
 
-            _durableAdmission.Add(1, in tags);
-            _durableAdmissionStorageSize.Record(storageSize, in tags);
+            _durableAdmission?.Add(1, in tags);
+            _durableAdmissionStorageSize?.Record(storageSize, in tags);
         }
         catch
         {
@@ -206,6 +148,9 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     {
         try
         {
+            if (!EnsureDurableMetrics())
+                return;
+
             TagList tags = new()
             {
                 { "outcome", DeliveryOutcome(outcome) },
@@ -215,8 +160,8 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             else if (outcome == DurableSendDeliveryOutcome.StatePersistenceFailed)
                 tags.Add("error.type", "durable-state-persistence-failure");
 
-            _durableDelivery.Add(1, in tags);
-            _durableDeliveryDuration.Record(elapsedSeconds, in tags);
+            _durableDelivery?.Add(1, in tags);
+            _durableDeliveryDuration?.Record(elapsedSeconds, in tags);
         }
         catch
         {
@@ -228,12 +173,15 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     {
         try
         {
+            if (!EnsureDurableMetrics())
+                return;
+
             TagList tags = new()
             {
                 { "outcome", retired ? "retired" : "not-retired" },
             };
-            _durableConsumerCompletion.Add(1, in tags);
-            _durableConsumerCompletionDuration.Record(elapsedSeconds, in tags);
+            _durableConsumerCompletion?.Add(1, in tags);
+            _durableConsumerCompletionDuration?.Record(elapsedSeconds, in tags);
         }
         catch
         {
@@ -245,13 +193,16 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     {
         try
         {
+            if (!EnsurePayloadMetrics())
+                return;
+
             TagList tags = new()
             {
                 { "outcome", disposition == PayloadAdmissionDisposition.Inline ? "inline" : "message-data" },
                 { "warning", warningThresholdExceeded ? "true" : "false" },
             };
-            _payloadBodySize.Record(bytes, in tags);
-            _payloadAdmission.Add(1, in tags);
+            _payloadBodySize?.Record(bytes, in tags);
+            _payloadAdmission?.Add(1, in tags);
         }
         catch
         {
@@ -263,16 +214,19 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     {
         try
         {
+            if (!EnsurePayloadMetrics())
+                return;
+
             TagList tags = new()
             {
                 { "outcome", "rejected" },
                 { "error.type", PayloadErrorType(stage) },
             };
             if (stage == PayloadAdmissionStage.TransportEnvelope)
-                _payloadEnvelopeSize.Record(bytes, in tags);
+                _payloadEnvelopeSize?.Record(bytes, in tags);
             else
-                _payloadBodySize.Record(bytes, in tags);
-            _payloadAdmission.Add(1, in tags);
+                _payloadBodySize?.Record(bytes, in tags);
+            _payloadAdmission?.Add(1, in tags);
         }
         catch
         {
@@ -284,11 +238,14 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
     {
         try
         {
+            if (!EnsurePayloadMetrics())
+                return;
+
             TagList tags = new()
             {
                 { "outcome", rejected ? "rejected" : "accepted" },
             };
-            _payloadEnvelopeSize.Record(bytes, in tags);
+            _payloadEnvelopeSize?.Record(bytes, in tags);
         }
         catch
         {
@@ -298,6 +255,8 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
 
     public void PublishDurableSnapshot(DurableSendStoreSnapshot snapshot, DateTimeOffset observedAt)
     {
+        EnsureDurableMetrics();
+
         // Observable callbacks read these atomics only; they never call storage or block.
         Volatile.Write(ref _durableStoredCount, snapshot.StoredCount);
         Volatile.Write(ref _durableStoredBytes, snapshot.StoredBytes);
@@ -310,6 +269,155 @@ internal sealed class V5ServiceBusInstrumentation<TBus> : IDisposable
             ? Math.Max(0, (long)(observedAt - oldest).TotalSeconds)
             : 0;
         Volatile.Write(ref _durableOldestPendingAgeSeconds, age);
+    }
+
+    bool EnsurePayloadMetrics()
+    {
+        if (Volatile.Read(ref _payloadMetricsInitialized) != 0)
+            return _payloadAdmission is not null;
+
+        lock (_metricInitializationLock)
+        {
+            if (_payloadMetricsInitialized != 0)
+                return _payloadAdmission is not null;
+
+            try
+            {
+                Meter? meter = _meter.Value;
+                if (meter is null)
+                    return false;
+
+                var admission = meter.CreateCounter<long>(
+                    "vicione.servicebus.payload.admission",
+                    description: "Serialized payload admission decisions.");
+                var bodySize = meter.CreateHistogram<long>(
+                    "vicione.servicebus.payload.body.size",
+                    unit: "By",
+                    description: "Exact serialized application-body size evaluated by admission policy.");
+                var envelopeSize = meter.CreateHistogram<long>(
+                    "vicione.servicebus.payload.envelope.size",
+                    unit: "By",
+                    description: "Exact final transport-envelope size evaluated by admission policy.");
+
+                _payloadAdmission = admission;
+                _payloadBodySize = bodySize;
+                _payloadEnvelopeSize = envelopeSize;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                Volatile.Write(ref _payloadMetricsInitialized, 1);
+            }
+        }
+    }
+
+    bool EnsureDurableMetrics()
+    {
+        if (Volatile.Read(ref _durableMetricsInitialized) != 0)
+            return _durableAdmission is not null;
+
+        lock (_metricInitializationLock)
+        {
+            if (_durableMetricsInitialized != 0)
+                return _durableAdmission is not null;
+
+            try
+            {
+                Meter? meter = _meter.Value;
+                if (meter is null)
+                    return false;
+
+                var admission = meter.CreateCounter<long>(
+                    "vicione.servicebus.durable_sender.admission",
+                    description: "Durable sender admission outcomes.");
+                var admissionStorageSize = meter.CreateHistogram<long>(
+                    "vicione.servicebus.durable_sender.admission.size",
+                    unit: "By",
+                    description: "Logical retained content bytes of one durable-send admission request (serialized body + ServiceBus metadata).");
+                var delivery = meter.CreateCounter<long>(
+                    "vicione.servicebus.durable_sender.delivery",
+                    description: "Durable sender delivery-attempt outcomes.");
+                var deliveryDuration = meter.CreateHistogram<double>(
+                    "vicione.servicebus.durable_sender.delivery.duration",
+                    unit: "s",
+                    description: "Duration of one durable sender delivery attempt.");
+                var consumerCompletion = meter.CreateCounter<long>(
+                    "vicione.servicebus.durable_sender.consumer_completion",
+                    description: "Process-local consumer-completion outcomes for volatile durable sends.");
+                var consumerCompletionDuration = meter.CreateHistogram<double>(
+                    "vicione.servicebus.durable_sender.consumer_completion.duration",
+                    unit: "s",
+                    description: "Elapsed time from volatile durable dispatch attempt start to logical consumer completion.");
+
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.stored",
+                    () => Volatile.Read(ref _durableStoredCount),
+                    description: "Last observed retained durable-send record count.");
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.stored.content.size",
+                    () => Volatile.Read(ref _durableStoredBytes),
+                    unit: "By",
+                    description: "Last observed logical retained durable-send content bytes (serialized body + ServiceBus metadata).");
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.pending",
+                    () => Volatile.Read(ref _durablePendingCount),
+                    description: "Last observed durable-send pending count.");
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.retry_scheduled",
+                    () => Volatile.Read(ref _durableRetryScheduledCount),
+                    description: "Last observed durable-send retry-scheduled count.");
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.awaiting_consumer_completion",
+                    () => Volatile.Read(ref _durableAwaitingConsumerCompletionCount),
+                    description: "Last observed durable-send count awaiting logical consumer completion.");
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.quarantined",
+                    () => Volatile.Read(ref _durableQuarantinedCount),
+                    description: "Last observed durable-send quarantine count.");
+                meter.CreateObservableGauge(
+                    "vicione.servicebus.durable_sender.oldest_pending.age",
+                    () => Volatile.Read(ref _durableOldestPendingAgeSeconds),
+                    unit: "s",
+                    description: "Age of the oldest pending durable-send intent at the last store snapshot.");
+
+                _durableAdmission = admission;
+                _durableAdmissionStorageSize = admissionStorageSize;
+                _durableDelivery = delivery;
+                _durableDeliveryDuration = deliveryDuration;
+                _durableConsumerCompletion = consumerCompletion;
+                _durableConsumerCompletionDuration = consumerCompletionDuration;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                Volatile.Write(ref _durableMetricsInitialized, 1);
+            }
+        }
+    }
+
+    static Meter? TryCreateMeter(
+        IMeterFactory meterFactory,
+        string? version,
+        IEnumerable<KeyValuePair<string, object?>> meterTags)
+    {
+        try
+        {
+            return meterFactory.Create(InstrumentationName, version, meterTags);
+        }
+        catch
+        {
+            // A host-owned meter factory is an observation boundary. A broken factory leaves this
+            // typed instrumentation instance inert and must never rewrite a messaging outcome.
+            return null;
+        }
     }
 
     public void Dispose()

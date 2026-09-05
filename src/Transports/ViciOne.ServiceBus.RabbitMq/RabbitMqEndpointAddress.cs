@@ -78,7 +78,7 @@ public readonly struct RabbitMqEndpointAddress
                 break;
 
             default:
-                throw new RabbitMqAddressException($"The address scheme is not supported: {address.Scheme}");
+                throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The address scheme is not supported: {address.Scheme}", "Correct the named configuration before starting the host"));
         }
 
         if (Name == "*")
@@ -167,12 +167,12 @@ public readonly struct RabbitMqEndpointAddress
                     if (!containsHostSettings)
                     {
                         throw new RabbitMqAddressException(
-                            $"The RabbitMQ host option '{key}' is not valid on a short endpoint address.");
+                            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ host option '{key}' is not valid on a short endpoint address.", "Correct the named configuration before starting the host"));
                     }
                     break;
 
                 default:
-                    throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' is not supported.");
+                    throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' is not supported.", "Correct the named configuration before starting the host"));
             }
         }
 
@@ -386,11 +386,11 @@ public readonly struct RabbitMqEndpointAddress
     static string DecodeRequiredValue(string key, string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' requires a value.");
+            throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' requires a value.", "Correct the named configuration before starting the host"));
 
         var decoded = Uri.UnescapeDataString(value);
         if (string.IsNullOrWhiteSpace(decoded))
-            throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' requires a non-empty value.");
+            throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' requires a non-empty value.", "Correct the named configuration before starting the host"));
 
         return decoded;
     }
@@ -398,7 +398,7 @@ public readonly struct RabbitMqEndpointAddress
     static void EnsureSingleValue(ISet<string> seenOptions, string key)
     {
         if (!seenOptions.Add(key))
-            throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' must occur at most once.");
+            throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' must occur at most once.", "Correct the named configuration before starting the host"));
     }
 
     static bool ParseBoolean(string key, string? value)
@@ -406,7 +406,7 @@ public readonly struct RabbitMqEndpointAddress
         if (bool.TryParse(value, out var result))
             return result;
 
-        throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' must be either true or false.");
+        throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' must be either true or false.", "Correct the named configuration before starting the host"));
     }
 
     static void RejectTemporaryConflict(bool conflict)
@@ -414,7 +414,7 @@ public readonly struct RabbitMqEndpointAddress
         if (conflict)
         {
             throw new RabbitMqAddressException(
-                "The RabbitMQ address option 'temporary' must not be combined with 'durable' or 'autodelete'.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "The RabbitMQ address option 'temporary' must not be combined with 'durable' or 'autodelete'.", "Correct the named configuration before starting the host"));
         }
     }
 

@@ -47,7 +47,7 @@ public class CombinedEndpointDefinition :
         else
         {
             throw new ConfigurationException(
-                $"Endpoints are not aligned on ConfigureConsumeTopology: {string.Join(", ", _definitions.Select(x => TypeCache.GetShortName(x.GetType())))}");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Combined Endpoint Definition", "unknown", $"Endpoints are not aligned on ConfigureConsumeTopology: {string.Join(", ", _definitions.Select(x => TypeCache.GetShortName(x.GetType())))}", "Correct the named configuration before starting the host"));
         }
     }
 

@@ -16,7 +16,7 @@ public static class InMemoryDurableSendServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
         if (configurator is not IDurableSenderProviderConfigurator provider)
-            throw new ConfigurationException("The Durable Sender configurator does not expose the provider registration contract.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "The Durable Sender configurator does not expose the provider registration contract.", "Correct the named configuration before starting the host"));
 
         provider.UseStore(typeof(InMemoryDurableSendStore<>).MakeGenericType(provider.BusType));
         return configurator;
@@ -31,10 +31,11 @@ public static class InMemoryDurableSendServiceCollectionExtensions
         if (services.Any(static descriptor => descriptor.ServiceType == typeof(IDurableSendDispatcher<TBus>)))
         {
             throw new ConfigurationException(
-                $"A durable-send dispatcher is already registered for bus '{typeof(TBus)}'. Exactly one provider adapter is allowed.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"A durable-send dispatcher is already registered for bus '{typeof(TBus)}'. Exactly one provider adapter is allowed.", "Correct the named configuration before starting the host"));
         }
 
         services.AddSingleton<IDurableSendDispatcher<TBus>, InMemoryDurableSendDispatcher<TBus>>();
+        ViciOne.ServiceBus.Configuration.BusCompositionRegistrations.AddFeature<TBus>(services, "Durable sender dispatcher");
         return services;
     }
 }

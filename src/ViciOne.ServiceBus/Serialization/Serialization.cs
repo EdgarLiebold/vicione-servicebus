@@ -40,7 +40,7 @@ public class Serialization :
             _serializers[serializer.ContentType.MediaType] = serializer;
 
         if (!_serializers.TryGetValue(serializerContentType.MediaType, out var defaultSerializer))
-            throw new ConfigurationException($"The serializer content type was not found: {serializerContentType}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", $"The serializer content type was not found: {serializerContentType}", "Correct the named configuration before starting the host"));
 
         _defaultSerializer = defaultSerializer;
 
@@ -50,7 +50,7 @@ public class Serialization :
             _deserializers[deserializer.ContentType.MediaType] = deserializer;
 
         if (!_deserializers.TryGetValue(defaultContentType.MediaType, out var defaultDeserializer))
-            throw new ConfigurationException($"The default content type deserializer was not found: {defaultContentType}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", $"The default content type deserializer was not found: {defaultContentType}", "Correct the named configuration before starting the host"));
 
         _defaultDeserializer = defaultDeserializer;
     }

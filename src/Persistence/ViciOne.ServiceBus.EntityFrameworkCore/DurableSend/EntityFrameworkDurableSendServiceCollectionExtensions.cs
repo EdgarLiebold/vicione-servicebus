@@ -19,7 +19,7 @@ public static class EntityFrameworkDurableSendServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(configurator);
         if (configurator is not IDurableSenderProviderConfigurator provider)
-            throw new ConfigurationException("The Durable Sender configurator does not expose the provider registration contract.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "The Durable Sender configurator does not expose the provider registration contract.", "Correct the named configuration before starting the host"));
 
         Type validatorService = typeof(IEntityFrameworkDurableSendCommitDurabilityValidator<>).MakeGenericType(provider.BusType);
         Type validatorImplementation = typeof(EntityFrameworkDurableSendCommitDurabilityValidator<>).MakeGenericType(provider.BusType);
@@ -38,7 +38,7 @@ public static class EntityFrameworkDurableSendServiceCollectionExtensions
 
         if (services.Any(static descriptor => descriptor.ServiceType == typeof(IDurableSendStore<TBus>)))
             throw new ConfigurationException(
-                $"A durable-send store is already registered for bus '{typeof(TBus)}'. Exactly one store owner is allowed per typed durable sender.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"A durable-send store is already registered for bus '{typeof(TBus)}'. Exactly one store owner is allowed per typed durable sender.", "Correct the named configuration before starting the host"));
 
         services.TryAddSingleton<IEntityFrameworkDurableSendCommitDurabilityValidator<TBus>,
             EntityFrameworkDurableSendCommitDurabilityValidator<TBus>>();

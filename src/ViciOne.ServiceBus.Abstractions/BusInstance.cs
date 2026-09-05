@@ -338,7 +338,7 @@ public abstract class BusInstance<TBus> :
     IMessageRouteTable IMessageRouteProvider.MessageRoutes => _busControl is IMessageRouteProvider routeProvider
         ? routeProvider.MessageRoutes
         : throw new ConfigurationException(
-            $"The wrapped bus control {_busControl.GetType().Name} does not expose its message routes.");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Instance", "unknown", $"The wrapped bus control {_busControl.GetType().Name} does not expose its message routes.", "Correct the named configuration before starting the host"));
 
     /// <summary>
     /// Starts the configured component.

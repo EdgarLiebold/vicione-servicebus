@@ -18,6 +18,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <typeparam name="TConfigurator">The t configurator type.</typeparam>
 public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     IHostConfiguration,
+    IMessageLimitsHostConfiguration,
     IPayloadAdmissionHostConfiguration,
     IReceiveConfigurator<TConfigurator>
     where TConfiguration : IReceiveEndpointConfiguration
@@ -30,6 +31,7 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     readonly SendObservable _sendObservers;
     List<TConfiguration> _endpoints;
     ILogContext? _logContext;
+    MessageLimits? _messageLimits;
     IPayloadAdmissionRuntime? _payloadAdmissionRuntime;
 
     /// <summary>
@@ -161,6 +163,16 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
     /// </summary>
     public TimeSpan? StopTimeout { get; set; }
 
+    MessageLimits? IMessageLimitsHostConfiguration.MessageLimits => Volatile.Read(ref _messageLimits);
+
+    void IMessageLimitsHostConfiguration.SetMessageLimits(MessageLimits limits)
+    {
+        ArgumentNullException.ThrowIfNull(limits);
+        MessageLimits? existing = Interlocked.CompareExchange(ref _messageLimits, limits, null);
+        if (existing is not null && existing != limits)
+            throw new ConfigurationException("Message limits for bus 'unknown': Limits is already assigned. Configure exactly one limits owner per bus.");
+    }
+
     IPayloadAdmissionRuntime? IPayloadAdmissionHostConfiguration.PayloadAdmissionRuntime
         => Volatile.Read(ref _payloadAdmissionRuntime);
 
@@ -171,7 +183,7 @@ public abstract class BaseHostConfiguration<TConfiguration, TConfigurator> :
 
         IPayloadAdmissionRuntime? existing = Interlocked.CompareExchange(ref _payloadAdmissionRuntime, runtime, null);
         if (existing != null && !ReferenceEquals(existing, runtime))
-            throw new ConfigurationException("Payload admission is already configured for this bus owner.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Base Host", "unknown", "Payload admission is already configured for this bus owner.", "Correct the named configuration before starting the host"));
 
     }
 

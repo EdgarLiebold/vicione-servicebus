@@ -59,7 +59,7 @@ public class ScopedExecuteActivityPipeSpecificationObserver :
         var filterType = _filterType.MakeGenericType(typeof(TArguments));
 
         if (!filterType.ImplementsInterface(typeof(IFilter<ExecuteContext<TArguments>>)))
-            throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<ExecuteContext<TArguments>>>.ShortName} ");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Execute Activity Pipe Specification Observer", "unknown", $"The scoped filter must implement {TypeCache<IFilter<ExecuteContext<TArguments>>>.ShortName} ", "Correct the named configuration before starting the host"));
 
         var scopeProvider = new ExecuteActivityScopeProvider<TActivity, TArguments>(_context);
 

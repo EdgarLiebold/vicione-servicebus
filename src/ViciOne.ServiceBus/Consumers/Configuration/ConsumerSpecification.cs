@@ -138,13 +138,13 @@ public class ConsumerSpecification<TConsumer> :
         if (_concurrencyPolicy is not null)
         {
             throw new ConfigurationException(
-                $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine a consumer-wide concurrency policy with partitioned message concurrency.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consumer", "unknown", $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine a consumer-wide concurrency policy with partitioned message concurrency.", "Correct the named configuration before starting the host"));
         }
 
         if (!_partitionedMessageTypes.Add(typeof(TMessage)))
         {
             throw new ConfigurationException(
-                $"Consumer '{TypeCache<TConsumer>.ShortName}' already has a concurrency policy for message '{TypeCache<TMessage>.ShortName}'.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consumer", "unknown", $"Consumer '{TypeCache<TConsumer>.ShortName}' already has a concurrency policy for message '{TypeCache<TMessage>.ShortName}'.", "Correct the named configuration before starting the host"));
         }
 
         var gate = new PartitionedConsumerConcurrencyGate<TMessage, TKey>(partitionCount, selector, comparer);
@@ -198,13 +198,13 @@ public class ConsumerSpecification<TConsumer> :
         if (_partitionedMessageTypes.Count > 0)
         {
             throw new ConfigurationException(
-                $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine partitioned message concurrency with a consumer-wide concurrency policy.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consumer", "unknown", $"Consumer '{TypeCache<TConsumer>.ShortName}' cannot combine partitioned message concurrency with a consumer-wide concurrency policy.", "Correct the named configuration before starting the host"));
         }
 
         if (_concurrencyPolicy is not null && _concurrencyPolicy != policy)
         {
             throw new ConfigurationException(
-                $"Consumer '{TypeCache<TConsumer>.ShortName}' has conflicting consumer concurrency policies '{_concurrencyPolicy}' and '{policy}'.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consumer", "unknown", $"Consumer '{TypeCache<TConsumer>.ShortName}' has conflicting consumer concurrency policies '{_concurrencyPolicy}' and '{policy}'.", "Correct the named configuration before starting the host"));
         }
 
         _concurrencyPolicy = policy;

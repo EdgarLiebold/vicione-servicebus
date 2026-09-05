@@ -59,18 +59,18 @@ public class RegistrationBusFactory :
         public IBusControl BusControl { get; }
 
         public IHostConfiguration HostConfiguration => throw new ConfigurationException(
-            "Host configuration is unavailable for the default registration bus instance.");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Bus Instance", "unknown", "Host configuration is unavailable for the default registration bus instance.", "Correct the named configuration before starting the host"));
 
         public void Connect<TRider>(IRiderControl riderControl)
             where TRider : IRider
         {
-            throw new ConfigurationException(RiderExceptionMessage);
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Bus Instance", "unknown", RiderExceptionMessage, "Correct the named configuration before starting the host"));
         }
 
         public TRider GetRider<TRider>()
             where TRider : IRider
         {
-            throw new ConfigurationException(RiderExceptionMessage);
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Bus Instance", "unknown", RiderExceptionMessage, "Correct the named configuration before starting the host"));
         }
 
         public HostReceiveEndpointHandle ConnectReceiveEndpoint(IEndpointDefinition definition, IEndpointNameFormatter endpointNameFormatter,

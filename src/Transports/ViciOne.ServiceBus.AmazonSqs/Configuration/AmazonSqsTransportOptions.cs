@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.AmazonSqs;
 /// <summary>
 /// Defines configuration options for amazon sqs transport.
 /// </summary>
-public class AmazonSqsTransportOptions
+public sealed class AmazonSqsTransportOptions
 {
     /// <summary>
     /// Gets or sets the region value.

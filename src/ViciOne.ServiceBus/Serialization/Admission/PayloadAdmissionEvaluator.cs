@@ -32,7 +32,7 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
         => new BoundedPayloadSerializationBuffer(
             _policy.MaximumSerializedBodyBytes
                 ?? throw new ConfigurationException(
-                    $"{nameof(PayloadAdmissionPolicy.MaximumSerializedBodyBytes)} must be configured for bounded payload serialization."),
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", $"{nameof(PayloadAdmissionPolicy.MaximumSerializedBodyBytes)} must be configured for bounded payload serialization.", "Correct the named configuration before starting the host")),
             PayloadAdmissionStage.SerializedBody,
             rejectionObserver);
 
@@ -84,7 +84,7 @@ public sealed class PayloadAdmissionEvaluator<TBus> : IPayloadAdmissionEvaluator
         => new BoundedPayloadSerializationBuffer(
             _policy.MaximumTransportEnvelopeBytes
                 ?? throw new ConfigurationException(
-                    $"{nameof(PayloadAdmissionPolicy.MaximumTransportEnvelopeBytes)} must be configured for bounded transport-envelope serialization."),
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", $"{nameof(PayloadAdmissionPolicy.MaximumTransportEnvelopeBytes)} must be configured for bounded transport-envelope serialization.", "Correct the named configuration before starting the host")),
             PayloadAdmissionStage.TransportEnvelope,
             rejectionObserver);
 

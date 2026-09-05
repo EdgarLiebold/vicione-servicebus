@@ -204,12 +204,12 @@ public class SerializationConfiguration :
         var messageSerializers = serializers.Values.Select(x => Bind(x).CreateSerializer()).ToArray();
         var serializerContentType = ResolveSerializerContentType()
             ?? (messageSerializers.Length == 1 ? messageSerializers[0].ContentType : null)
-            ?? throw new ConfigurationException("No serializer content type specified and more than one serializer was configured");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "No serializer content type specified and more than one serializer was configured", "Correct the named configuration before starting the host"));
 
         var messageDeserializers = deserializers.Values.Select(x => Bind(x).CreateDeserializer()).ToArray();
         var defaultContentType = ResolveDefaultContentType()
             ?? (messageDeserializers.Length == 1 ? messageDeserializers[0].ContentType : null)
-            ?? throw new ConfigurationException("No default content type specified and more than one deserializer was configured");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "No default content type specified and more than one deserializer was configured", "Correct the named configuration before starting the host"));
 
         return new ViciOne.ServiceBus.Serialization.Serialization(messageSerializers, serializerContentType, messageDeserializers, defaultContentType);
     }
@@ -223,7 +223,7 @@ public class SerializationConfiguration :
         {
             var candidate = configure(new JsonSerializerOptions(options))
                 ?? throw new ConfigurationException(
-                    "The ConfigureJsonSerializerOptions callback returned null. It must return the options to use.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "The ConfigureJsonSerializerOptions callback returned null. It must return the options to use.", "Correct the named configuration before starting the host"));
 
             options = SystemTextJsonSerializerOptions.Freeze(candidate);
         }
@@ -256,7 +256,7 @@ public class SerializationConfiguration :
     void EnsureMutable()
     {
         if (_collection.IsValueCreated)
-            throw new ConfigurationException("The serializer collection was already created.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "The serializer collection was already created.", "Correct the named configuration before starting the host"));
     }
 
     void AddSystemTextJson()

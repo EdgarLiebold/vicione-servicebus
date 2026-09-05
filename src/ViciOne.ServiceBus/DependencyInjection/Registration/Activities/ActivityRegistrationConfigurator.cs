@@ -37,7 +37,7 @@ public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
     public IActivityRegistrationConfigurator ExecuteEndpoint(Action<IEndpointRegistrationConfigurator> configureExecute)
     {
         if (!_registration.IncludeInConfigureEndpoints)
-            throw new ConfigurationException("Activity is excluded from ConfigureEndpoints");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Activity Registration", "unknown", "Activity is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
         var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
 
@@ -57,7 +57,7 @@ public class ActivityRegistrationConfigurator<TActivity, TArguments, TLog> :
     public IActivityRegistrationConfigurator CompensateEndpoint(Action<IEndpointRegistrationConfigurator> configureCompensate)
     {
         if (!_registration.IncludeInConfigureEndpoints)
-            throw new ConfigurationException("Activity is excluded from ConfigureEndpoints");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Activity Registration", "unknown", "Activity is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
         var compensateConfigurator = new EndpointRegistrationConfigurator<ICompensateActivity<TLog>> { ConfigureConsumeTopology = false };
 

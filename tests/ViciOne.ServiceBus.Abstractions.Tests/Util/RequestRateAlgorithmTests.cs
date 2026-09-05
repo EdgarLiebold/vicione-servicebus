@@ -259,27 +259,54 @@ public sealed class RequestRateAlgorithmTests
     }
 
     [Theory]
-    [InlineData(RequiredOption.PrefetchCount, "PrefetchCount")]
-    [InlineData(RequiredOption.RequestResultLimit, "RequestResultLimit")]
-    [RequirementCoverage("REQ-VSB-REQUEST-RATE-VALIDATION", "zero-required-option-rejected")]
-    public void Constructor_RejectsZeroRequiredOptions(RequiredOption option, string optionName)
+    [InlineData(InvalidOption.PrefetchCount, "PrefetchCount")]
+    [InlineData(InvalidOption.RequestResultLimit, "RequestResultLimit")]
+    [InlineData(InvalidOption.ConcurrentResultLimit, "ConcurrentResultLimit")]
+    [InlineData(InvalidOption.RequestRateLimit, "RequestRateLimit")]
+    [InlineData(InvalidOption.RequestRateInterval, "RequestRateInterval")]
+    [InlineData(InvalidOption.UnpairedRequestRateLimit, "RequestRateLimit and RequestRateInterval")]
+    [InlineData(InvalidOption.UnpairedRequestRateInterval, "RequestRateLimit and RequestRateInterval")]
+    [InlineData(InvalidOption.RequestCancellationTimeout, "RequestCancellationTimeout")]
+    [RequirementCoverage("REQ-VSB-REQUEST-RATE-VALIDATION", "every-static-invariant-rejected")]
+    public void Constructor_RejectsEveryInvalidStaticOption(InvalidOption option, string optionName)
     {
         var options = new RequestRateAlgorithmOptions
         {
-            PrefetchCount = option == RequiredOption.PrefetchCount ? 0 : 1,
-            RequestResultLimit = option == RequiredOption.RequestResultLimit ? 0 : 1,
+            PrefetchCount = option == InvalidOption.PrefetchCount ? -1 : 1,
+            RequestResultLimit = option == InvalidOption.RequestResultLimit ? -1 : 1,
+            ConcurrentResultLimit = option == InvalidOption.ConcurrentResultLimit ? 0 : null,
+            RequestRateLimit = option switch
+            {
+                InvalidOption.RequestRateLimit => 0,
+                InvalidOption.UnpairedRequestRateLimit => 1,
+                InvalidOption.RequestRateInterval => 1,
+                _ => null,
+            },
+            RequestRateInterval = option switch
+            {
+                InvalidOption.RequestRateInterval => TimeSpan.Zero,
+                InvalidOption.UnpairedRequestRateInterval => TimeSpan.FromSeconds(1),
+                _ => null,
+            },
+            RequestCancellationTimeout = option == InvalidOption.RequestCancellationTimeout ? TimeSpan.Zero : null,
         };
 
         var exception = Assert.Throws<ArgumentException>(() => new RequestRateAlgorithm(options));
 
         Assert.Equal("options", exception.ParamName);
-        Assert.Contains($"{optionName} must be > 0", exception.Message, StringComparison.Ordinal);
+        Assert.Contains(optionName, exception.Message, StringComparison.Ordinal);
     }
 
-    public enum RequiredOption
+    public enum InvalidOption
     {
         PrefetchCount,
         RequestResultLimit,
+        ConcurrentResultLimit,
+        RequestRateLimit,
+        RequestRateInterval,
+        UnpairedRequestRateLimit,
+        UnpairedRequestRateInterval,
+        RequestCancellationTimeout,
     }
 
     private static RequestRateAlgorithm CreateAlgorithm(int prefetchCount, int requestResultLimit, int? concurrentResultLimit = null)

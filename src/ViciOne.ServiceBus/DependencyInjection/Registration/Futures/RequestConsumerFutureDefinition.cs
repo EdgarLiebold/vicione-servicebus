@@ -38,7 +38,7 @@ public class RequestConsumerFutureDefinition<TFuture, TConsumer, TRequest, TResp
     /// </summary>
     public Uri RequestAddress =>
         _requestDefinition?.RequestAddress ??
-        throw new ConfigurationException($"The consumer definition was not a FutureConsumerDefinition: {TypeCache<TConsumer>.ShortName}");
+        throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Request Consumer Future Definition", "unknown", $"The consumer definition was not a FutureConsumerDefinition: {TypeCache<TConsumer>.ShortName}", "Correct the named configuration before starting the host"));
 
     /// <summary>
     /// Configures saga.

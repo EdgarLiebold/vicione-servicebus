@@ -18,6 +18,7 @@ public sealed class MediatorSendObserverTests
             TaskCreationOptions.RunContinuationsAsynchronously);
         ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
         {
+            configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<OneWayMessage>(context =>
             {
                 oneWayConsumed.TrySetResult(context);
@@ -69,7 +70,10 @@ public sealed class MediatorSendObserverTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new InvalidOperationException("mediator handler failed");
         ServiceBusMediator mediator = Bus.Factory.CreateMediator(configurator =>
-            configurator.Handler<FaultingMediatorMessage>(_ => Task.FromException(expected)));
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.Handler<FaultingMediatorMessage>(_ => Task.FromException(expected));
+        });
         var observer = new RecordingSendObserver();
         using ConnectHandle observerHandle = mediator.ConnectSendObserver(observer);
         var message = new FaultingMediatorMessage(NewId.NextGuid());

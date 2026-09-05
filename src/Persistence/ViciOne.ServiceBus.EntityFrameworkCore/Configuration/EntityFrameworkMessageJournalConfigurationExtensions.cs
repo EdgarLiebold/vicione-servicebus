@@ -12,6 +12,25 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 public static class EntityFrameworkMessageJournalConfigurationExtensions
 {
     /// <summary>
+    /// Selects the Entity Framework journal store inside <c>bus.UseMessageJournal(...)</c> without opening a database connection.
+    /// </summary>
+    public static IMessageJournalConfigurator UseEntityFramework<TDbContext>(
+        this IMessageJournalConfigurator configurator,
+        DbContextOptions<TDbContext> contextOptions,
+        string tableName,
+        MessageJournalStoreLimits storeLimits,
+        string? schemaName = null)
+        where TDbContext : DbContext
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        return configurator.UseStore(new EntityFrameworkMessageJournalStore(
+            contextOptions,
+            tableName,
+            storeLimits,
+            schemaName));
+    }
+
+    /// <summary>
     /// Explicitly enables the bounded relational MessageJournal provider. Database schema creation
     /// remains an application/deployment responsibility and never occurs as a configuration side effect.
     /// </summary>

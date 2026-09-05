@@ -27,12 +27,12 @@ internal sealed class EntityFrameworkDurableSendCommitDurabilityValidator<TBus>
         {
             providerName = dbContext.Database.ProviderName
                 ?? throw new ConfigurationException(
-                    "The EF Core provider name is unavailable; Durable Sender commit durability cannot be verified.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "The EF Core provider name is unavailable; Durable Sender commit durability cannot be verified.", "Correct the named configuration before starting the host"));
         }
         catch (InvalidOperationException exception)
         {
             throw new ConfigurationException(
-                "The EF Core provider name is unavailable; Durable Sender commit durability cannot be verified.",
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "The EF Core provider name is unavailable; Durable Sender commit durability cannot be verified.", "Correct the named configuration before starting the host"),
                 exception);
         }
 
@@ -59,8 +59,8 @@ internal sealed class EntityFrameworkDurableSendCommitDurabilityValidator<TBus>
 
                 default:
                     throw new ConfigurationException(
-                        $"EF provider '{providerName}' has no built-in Durable Sender synchronous-commit validator. "
-                        + $"Register a provider-certified {nameof(IEntityFrameworkDurableSendCommitDurabilityValidator<TBus>)} before using the durable store.");
+                        global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"EF provider '{providerName}' has no built-in Durable Sender synchronous-commit validator. "
+                        + $"Register a provider-certified {nameof(IEntityFrameworkDurableSendCommitDurabilityValidator<TBus>)} before using the durable store.", "Correct the named configuration before starting the host"));
             }
         }
         finally
@@ -87,9 +87,9 @@ internal sealed class EntityFrameworkDurableSendCommitDurabilityValidator<TBus>
         if (!fullyDurableByDefault)
         {
             throw new ConfigurationException(
-                "Durable Sender requires SQL Server commits to remain fully durable. "
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Durable Sender requires SQL Server commits to remain fully durable. "
                 + "Database DELAYED_DURABILITY may be DISABLED or ALLOWED, but must not be FORCED. "
-                + $"Actual mode is '{delayedDurability ?? "<unknown>"}'.");
+                + $"Actual mode is '{delayedDurability ?? "<unknown>"}'.", "Correct the named configuration before starting the host"));
         }
     }
 
@@ -111,9 +111,9 @@ internal sealed class EntityFrameworkDurableSendCommitDurabilityValidator<TBus>
         if (!localWalFlush || !string.Equals(fsync, "on", StringComparison.OrdinalIgnoreCase))
         {
             throw new ConfigurationException(
-                "Durable Sender requires PostgreSQL fsync=on and a synchronous_commit mode that waits for local WAL flush. "
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Durable Sender requires PostgreSQL fsync=on and a synchronous_commit mode that waits for local WAL flush. "
                 + "synchronous_commit=off is not restart-safe for a returned admission. "
-                + $"Actual: synchronous_commit='{synchronousCommit ?? "<unknown>"}', fsync='{fsync ?? "<unknown>"}'.");
+                + $"Actual: synchronous_commit='{synchronousCommit ?? "<unknown>"}', fsync='{fsync ?? "<unknown>"}'.", "Correct the named configuration before starting the host"));
         }
     }
 
@@ -141,9 +141,9 @@ internal sealed class EntityFrameworkDurableSendCommitDurabilityValidator<TBus>
         if (!durable)
         {
             throw new ConfigurationException(
-                "Durable Sender requires SQLite WAL with synchronous=FULL/EXTRA, or a persistent rollback journal "
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", "Durable Sender requires SQLite WAL with synchronous=FULL/EXTRA, or a persistent rollback journal "
                 + "with synchronous=EXTRA for strict power-loss durability. "
-                + $"Actual: synchronous={synchronous}, journal_mode='{journalMode ?? "<unknown>"}'.");
+                + $"Actual: synchronous={synchronous}, journal_mode='{journalMode ?? "<unknown>"}'.", "Correct the named configuration before starting the host"));
         }
     }
 

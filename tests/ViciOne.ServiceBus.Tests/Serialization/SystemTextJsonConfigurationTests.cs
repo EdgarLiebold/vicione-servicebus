@@ -194,7 +194,9 @@ public sealed class SystemTextJsonIsolationTests
         ConfigurationException serializer = Assert.Throws<ConfigurationException>(() =>
             configuration.AddSerializer(new SystemTextJsonMessageSerializerFactory()));
 
-        Assert.Equal("The serializer collection was already created.", configure.Message);
+        Assert.Equal(
+            "Serialization for bus 'unknown': The serializer collection was already created. Correct the named configuration before starting the host.",
+            configure.Message);
         Assert.Equal(configure.Message, clear.Message);
         Assert.Equal(configure.Message, serializer.Message);
     }

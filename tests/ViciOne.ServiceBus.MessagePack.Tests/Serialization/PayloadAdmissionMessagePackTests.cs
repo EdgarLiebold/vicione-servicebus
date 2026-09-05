@@ -155,7 +155,7 @@ public sealed class PayloadAdmissionMessagePackTests
             observer,
             options =>
             {
-                options.MaximumSerializedBodyBytes = 1_000_000;
+                options.MaximumSerializedBodyBytes = envelopeLength;
                 options.MaximumTransportEnvelopeBytes = envelopeLength;
             },
             _ => throw new InvalidOperationException("A capacity probe must not reach the provider."));
@@ -186,7 +186,7 @@ public sealed class PayloadAdmissionMessagePackTests
             observer,
             options =>
             {
-                options.MaximumSerializedBodyBytes = 1_000_000;
+                options.MaximumSerializedBodyBytes = maximumEnvelopeBytes;
                 options.MaximumTransportEnvelopeBytes = maximumEnvelopeBytes;
             },
             context => received.TrySetResult(context.Message.GetDataLength()));
@@ -230,19 +230,31 @@ public sealed class PayloadAdmissionMessagePackTests
         var services = new ServiceCollection();
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
-        services.AddViciOnePayloadAdmission(configureAdmission);
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
+        var admission = new PayloadAdmissionOptions<IBus>();
+        configureAdmission(admission);
+        services.AddViciOneServiceBus(configuration =>
         {
-            bus.Host(new Uri("loopback://payload-messagepack/"));
-            bus.ClearSerialization();
-            bus.UseMessagePackSerializer();
-            bus.ConnectSendObserver(observer);
-            bus.ReceiveEndpoint("payload-messagepack-input", endpoint => endpoint.Handler<BoundaryPayload>(context =>
+            configuration.Limits(new MessageLimits
             {
-                consume(context);
-                return Task.CompletedTask;
-            }));
-        }));
+                MaxBodyBytes = admission.MaximumSerializedBodyBytes!.Value,
+                MaxEnvelopeBytes = admission.MaximumTransportEnvelopeBytes!.Value,
+                MaxJsonDepth = 32,
+                WarnAboveBytes = admission.WarningBodyBytes,
+                OffloadToMessageDataAboveBytes = admission.MessageDataOffloadThresholdBytes,
+            });
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://payload-messagepack/"));
+                bus.ClearSerialization();
+                bus.UseMessagePackSerializer();
+                bus.ConnectSendObserver(observer);
+                bus.ReceiveEndpoint("payload-messagepack-input", endpoint => endpoint.Handler<BoundaryPayload>(context =>
+                {
+                    consume(context);
+                    return Task.CompletedTask;
+                }));
+            });
+        });
         return services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }

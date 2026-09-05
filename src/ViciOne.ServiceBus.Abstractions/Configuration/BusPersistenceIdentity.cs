@@ -50,8 +50,8 @@ public sealed class BusPersistenceIdentity<TBus>
             return _value;
 
         throw new ConfigurationException(
-            $"Bus '{typeof(TBus)}' uses persistent feature '{feature}' but has no stable persistence identity. "
-            + $"Configure AddViciOneServiceBus<{typeof(TBus).Name}>(persistenceIdentity: \"...\", bus => ...).");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Persistence Identity", "unknown", $"Bus '{typeof(TBus)}' uses persistent feature '{feature}' but has no stable persistence identity. "
+            + $"Configure AddViciOneServiceBus<{typeof(TBus).Name}>(persistenceIdentity: \"...\", bus => ...).", "Correct the named configuration before starting the host"));
     }
 
     internal static string Validate(string value)

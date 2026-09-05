@@ -69,6 +69,10 @@ public static class MediatorConfigurationExtensions
 
         configure(configurator);
 
+        MessageLimits limits = (busConfiguration.HostConfiguration as IMessageLimitsHostConfiguration)?.MessageLimits
+            ?? throw new ConfigurationException(
+                "Message limits for bus 'mediator': MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.");
+
         var mediatorDispatcher = configurator.Build();
 
         var responseEndpointConfiguration = busConfiguration.HostConfiguration.CreateReceiveEndpointConfiguration("response");
@@ -86,6 +90,7 @@ public static class MediatorConfigurationExtensions
             mediatorDispatcher,
             responseEndpointConfiguration,
             responseDispatcher,
+            limits,
             timeProvider);
     }
 }

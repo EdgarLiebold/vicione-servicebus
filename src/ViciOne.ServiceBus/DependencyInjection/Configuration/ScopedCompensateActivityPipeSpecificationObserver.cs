@@ -70,7 +70,7 @@ public class ScopedCompensateActivityPipeSpecificationObserver :
         var filterType = _filterType.MakeGenericType(typeof(TLog));
 
         if (!filterType.ImplementsInterface(typeof(IFilter<CompensateContext<TLog>>)))
-            throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<CompensateContext<TLog>>>.ShortName} ");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Compensate Activity Pipe Specification Observer", "unknown", $"The scoped filter must implement {TypeCache<IFilter<CompensateContext<TLog>>>.ShortName} ", "Correct the named configuration before starting the host"));
 
         var scopeProvider = new CompensateActivityScopeProvider<TActivity, TLog>(_context);
 

@@ -74,7 +74,7 @@ public class JobService :
     /// Gets the instance address value.
     /// </summary>
     public Uri InstanceAddress => Settings.InstanceAddress
-        ?? throw new ConfigurationException("The job service instance address must be configured before the service is used.");
+        ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job service", "unknown", "The job service instance address must be configured before the service is used.", "Correct the named configuration before starting the host"));
 
     /// <summary>
     /// Attempts to get job.
@@ -265,7 +265,7 @@ public class JobService :
         where T : class
     {
         if (_jobTypes.ContainsKey(typeof(T)))
-            throw new ConfigurationException($"A job type can only be registered once per service instance: {TypeCache<T>.ShortName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job service", "unknown", $"A job type can only be registered once per service instance: {TypeCache<T>.ShortName}", "Correct the named configuration before starting the host"));
 
         _jobTypes.Add(typeof(T), new JobTypeRegistration<T>(options, InstanceAddress, jobTypeId, jobTypeName));
     }
@@ -329,7 +329,7 @@ public class JobService :
         if (_jobTypes.TryGetValue(typeof(T), out var registration))
             return registration.JobTypeId;
 
-        throw new ConfigurationException($"The job type was not registered: {TypeCache<T>.ShortName}");
+        throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job service", "unknown", $"The job type was not registered: {TypeCache<T>.ShortName}", "Correct the named configuration before starting the host"));
     }
 
     /// <summary>

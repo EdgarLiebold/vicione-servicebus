@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Configuration;
@@ -24,6 +25,8 @@ public class MediatorSendEndpoint :
     readonly IReceivePipeDispatcher _dispatcher;
     readonly ILogContext? _logContext = null!;
     readonly IObjectDeserializer _objectDeserializer;
+    readonly JsonSerializerOptions _bodySerializerOptions;
+    readonly MessageLimits _messageLimits;
     readonly MediatorPublishSendEndpoint _publishSendEndpoint;
     readonly IPublishTopologyConfigurator _publishTopology;
     readonly ReceiveObservable _receiveObservers;
@@ -32,8 +35,12 @@ public class MediatorSendEndpoint :
     readonly Uri _sourceAddress = null!;
     readonly MediatorSendEndpoint _sourceEndpoint = null!;
 
-    MediatorSendEndpoint(IReceiveEndpointConfiguration configuration, IReceivePipeDispatcher dispatcher, ILogContext? logContext,
-        SendObservable sendObservers)
+    MediatorSendEndpoint(
+        IReceiveEndpointConfiguration configuration,
+        IReceivePipeDispatcher dispatcher,
+        ILogContext? logContext,
+        SendObservable sendObservers,
+        MessageLimits messageLimits)
     {
         _dispatcher = dispatcher;
         _logContext = logContext;
@@ -44,6 +51,11 @@ public class MediatorSendEndpoint :
         _receiveObservers = configuration.ReceiveObservers;
 
         _objectDeserializer = ServiceBusMetadataJson.ObjectDeserializer;
+        _messageLimits = messageLimits ?? throw new ArgumentNullException(nameof(messageLimits));
+        _bodySerializerOptions = new JsonSerializerOptions(ServiceBusMetadataJson.Options)
+        {
+            MaxDepth = messageLimits.MaxJsonDepth,
+        };
 
         _sendPipe = configuration.Send.CreatePipe();
         _publishSendEndpoint = new MediatorPublishSendEndpoint(this, configuration.Publish.CreatePipe());
@@ -58,12 +70,14 @@ public class MediatorSendEndpoint :
     /// <param name="sendObservers">The send observers value.</param>
     /// <param name="sourceConfiguration">The source configuration value.</param>
     /// <param name="sourceDispatcher">The source dispatcher value.</param>
+    /// <param name="messageLimits">The mandatory mediator message limits.</param>
     public MediatorSendEndpoint(IReceiveEndpointConfiguration configuration, IReceivePipeDispatcher dispatcher, ILogContext? logContext,
-        SendObservable sendObservers, IReceiveEndpointConfiguration sourceConfiguration, IReceivePipeDispatcher sourceDispatcher)
-        : this(configuration, dispatcher, logContext, sendObservers)
+        SendObservable sendObservers, IReceiveEndpointConfiguration sourceConfiguration, IReceivePipeDispatcher sourceDispatcher,
+        MessageLimits messageLimits)
+        : this(configuration, dispatcher, logContext, sendObservers, messageLimits)
     {
         _sourceAddress = sourceConfiguration.InputAddress;
-        _sourceEndpoint = new MediatorSendEndpoint(sourceConfiguration, sourceDispatcher, logContext, sendObservers);
+        _sourceEndpoint = new MediatorSendEndpoint(sourceConfiguration, sourceDispatcher, logContext, sendObservers, messageLimits);
     }
 
     /// <summary>
@@ -330,7 +344,21 @@ public class MediatorSendEndpoint :
         if (ForwardingExpiration.TryDiscard(context))
             return;
 
-        var receiveContext = new MediatorReceiveContext<T>(context, this, this, _publishTopology, _receiveObservers, _objectDeserializer)
+        long serializedBodyBytes = await MediatorMessageBodySizer.MeasureAsync(
+            context.Message,
+            _bodySerializerOptions,
+            _messageLimits,
+            _destinationAddress,
+            cancellationToken).ConfigureAwait(false);
+
+        var receiveContext = new MediatorReceiveContext<T>(
+            context,
+            this,
+            this,
+            _publishTopology,
+            _receiveObservers,
+            _objectDeserializer,
+            serializedBodyBytes)
         {
             IsDelivered = context.IsPublish && !context.Mandatory
         };

@@ -15,6 +15,7 @@ public sealed class AmazonSqsReceiveContext :
     AmazonSqsMessageContext,
     TransportReceiveContext
 {
+    readonly MessageBody _body;
     readonly AmazonSqsHeaderProvider _headerProvider;
 
     /// <summary>
@@ -36,7 +37,7 @@ public sealed class AmazonSqsReceiveContext :
 
         var messageBody = new SqsMessageBody(message);
 
-        Body = messageBody;
+        _body = messageBody;
 
         _headerProvider = new AmazonSqsHeaderProvider(TransportMessage, messageBody);
     }
@@ -49,7 +50,7 @@ public sealed class AmazonSqsReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     /// <summary>
     /// Gets the transport message value.

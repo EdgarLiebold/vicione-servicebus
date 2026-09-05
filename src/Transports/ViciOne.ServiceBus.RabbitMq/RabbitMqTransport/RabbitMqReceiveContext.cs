@@ -18,6 +18,8 @@ public sealed class RabbitMqReceiveContext :
     TransportReceiveContext,
     ITransportSequenceNumber
 {
+    readonly MessageBody _body;
+
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
@@ -40,7 +42,7 @@ public sealed class RabbitMqReceiveContext :
         DeliveryTag = deliveryTag;
         Properties = properties;
 
-        Body = new MemoryMessageBody(body);
+        _body = new MemoryMessageBody(body);
     }
 
     /// <summary>
@@ -51,7 +53,7 @@ public sealed class RabbitMqReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     /// <summary>
     /// Gets the sequence number value.

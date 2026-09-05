@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Runtime.Serialization;
 using System.Text;
 using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.MessageData;
@@ -145,7 +146,8 @@ public sealed class MessageDataRepositoryTests
         var inner = new RecordingRepository();
         var repository = new EncryptedMessageDataRepository(
             inner,
-            new AesCryptoStreamProvider(new FixedSymmetricKeyProvider(), "default"));
+            new TestEncryptionKeyProvider(),
+            1024 * 1024);
         string text = $"encrypted-{NewId.NextGuid():N}";
         byte[] bytes = Enumerable.Range(0, 129).Select(index => (byte)(index % 127)).ToArray();
         byte[] streamBytes = Enumerable.Range(0, 65).Select(index => (byte)(255 - index)).ToArray();
@@ -178,14 +180,17 @@ public sealed class MessageDataRepositoryTests
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var repository = new InMemoryMessageDataRepository();
-        var streamProvider = new AesCryptoStreamProvider(new FixedSymmetricKeyProvider(), "default");
+        var keyProvider = new TestEncryptionKeyProvider();
 
         Assert.Equal("repository", Assert.Throws<ArgumentNullException>(() =>
-            new EncryptedMessageDataRepository(null!, streamProvider)).ParamName);
-        Assert.Equal("streamProvider", Assert.Throws<ArgumentNullException>(() =>
-            new EncryptedMessageDataRepository(repository, null!)).ParamName);
+            new EncryptedMessageDataRepository(null!, keyProvider, 1024)).ParamName);
+        Assert.Equal("keyProvider", Assert.Throws<ArgumentNullException>(() =>
+            new EncryptedMessageDataRepository(repository, null!, 1024)).ParamName);
 
-        var encrypted = new EncryptedMessageDataRepository(repository, streamProvider);
+        Assert.Equal("maximumObjectBytes", Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new EncryptedMessageDataRepository(repository, keyProvider, 0)).ParamName);
+
+        var encrypted = new EncryptedMessageDataRepository(repository, keyProvider, 1024);
         Assert.Equal("address", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
             encrypted.GetAsync(null!, cancellationToken))).ParamName);
         Assert.Equal("stream", (await Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -193,19 +198,18 @@ public sealed class MessageDataRepositoryTests
     }
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-ENCRYPTION", "decrypt-construction-failure-releases-owned-stream")]
-    public async Task DecryptStreamConstructionFailure_DisposesTheInnerStreamAndPreservesTheOriginalFailureAsync()
+    [RequirementCoverage("REQ-VSB-MESSAGE-DATA-ENCRYPTION", "invalid-envelope-releases-owned-stream")]
+    public async Task InvalidEnvelope_DisposesTheOwnedInnerStreamAndFailsClosedAsync()
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var innerStream = new TrackingStream([1, 2, 3]);
         var repository = new SingleStreamRepository(innerStream);
-        var expected = new InvalidOperationException("decrypt stream construction failed");
-        var encrypted = new EncryptedMessageDataRepository(repository, new ThrowingCryptoStreamProvider(expected));
+        var encrypted = new EncryptedMessageDataRepository(repository, new TestEncryptionKeyProvider(), 1024);
 
-        InvalidOperationException actual = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        SerializationException actual = await Assert.ThrowsAsync<SerializationException>(() =>
             encrypted.GetAsync(new Uri("urn:encrypted:test"), cancellationToken));
 
-        Assert.Same(expected, actual);
+        Assert.Equal("Encrypted message data envelope is invalid. The envelope is truncated.", actual.Message);
         Assert.True(innerStream.IsDisposed);
         Assert.Equal(1, repository.GetCalls);
     }
@@ -242,24 +246,6 @@ public sealed class MessageDataRepositoryTests
         public byte[] StoredBytes(Uri address) => _values[address];
     }
 
-    private sealed class FixedSymmetricKeyProvider : ISymmetricKeyProvider
-    {
-        private readonly SymmetricKey _key = new FixedSymmetricKey();
-
-        public bool TryGetKey(string id, out SymmetricKey key)
-        {
-            key = _key;
-            return id == "default";
-        }
-    }
-
-    private sealed class FixedSymmetricKey : SymmetricKey
-    {
-        public byte[] Key { get; } = Enumerable.Range(1, 32).Select(value => (byte)value).ToArray();
-
-        public byte[] IV { get; } = Enumerable.Range(101, 16).Select(value => (byte)value).ToArray();
-    }
-
     private sealed class SingleStreamRepository(TrackingStream stream) : IMessageDataRepository
     {
         private int _getCalls;
@@ -274,19 +260,6 @@ public sealed class MessageDataRepositoryTests
         }
 
         public Task<Uri> PutAsync(Stream value, TimeSpan? timeToLive = null, CancellationToken cancellationToken = default) { if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::System.Uri>(cancellationToken); throw new NotSupportedException(); }
-    }
-
-    private sealed class ThrowingCryptoStreamProvider(Exception failure) : ICryptoStreamProvider
-    {
-        public Stream GetEncryptStream(Stream stream, string? keyId, System.Security.Cryptography.CryptoStreamMode streamMode) =>
-            stream;
-
-        public Stream GetDecryptStream(Stream stream, string? keyId, System.Security.Cryptography.CryptoStreamMode streamMode) =>
-            throw failure;
-
-        public void Probe(ProbeContext context)
-        {
-        }
     }
 
     private sealed class TrackingStream(byte[] bytes) : MemoryStream(bytes, writable: false)

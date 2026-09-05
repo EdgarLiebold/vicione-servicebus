@@ -15,6 +15,7 @@ public sealed class SqlReceiveContext :
     TransportReceiveContext,
     ITransportSequenceNumber
 {
+    readonly MessageBody _body;
     IHeaderProvider? _headerProvider;
 
     /// <summary>
@@ -32,7 +33,7 @@ public sealed class SqlReceiveContext :
     {
         TransportMessage = message;
 
-        Body = message.Body != null
+        _body = message.Body != null
             ? new StringMessageBody(message.Body)
             : new BytesMessageBody(message.BinaryBody);
     }
@@ -40,7 +41,7 @@ public sealed class SqlReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     /// <summary>
     /// Gets the header provider value.

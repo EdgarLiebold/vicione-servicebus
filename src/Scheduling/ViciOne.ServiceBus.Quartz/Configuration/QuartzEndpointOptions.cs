@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Quartz;
 /// <summary>
 /// Defines configuration options for quartz endpoint.
 /// </summary>
-public class QuartzEndpointOptions
+public sealed class QuartzEndpointOptions
 {
     /// <summary>
     /// Gets or sets the prefetch count value.

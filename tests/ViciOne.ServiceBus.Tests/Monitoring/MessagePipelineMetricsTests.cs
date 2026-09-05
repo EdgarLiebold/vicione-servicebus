@@ -583,8 +583,12 @@ public sealed class MessagePipelineMetricsTests
         TimeSpan timeout = OperationTimeout();
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration => configuration.SetTestTimeouts(timeout, timeout))
-            .AddViciOneServiceBus<IObservedBus>(configuration => configuration.UsingInMemory((_, bus) =>
-                bus.Host(new Uri("loopback://localhost/observability-secondary"))))
+            .AddViciOneServiceBus<IObservedBus>(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.UsingInMemory((_, bus) =>
+                    bus.Host(new Uri("loopback://localhost/observability-secondary")));
+            })
             .BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         using var observations = new MetricObservationSession(provider.GetRequiredService<IMeterFactory>());
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, TestCancellationToken);

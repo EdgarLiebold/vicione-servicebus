@@ -112,8 +112,6 @@ internal readonly struct EnvelopeMetadataProjection
     {
         ArgumentNullException.ThrowIfNull(envelope);
 
-        DateTimeOffset sentTime = envelope.SentTime ?? TimeProvider.System.GetUtcNow();
-
         return new EnvelopeMetadataProjection(
             envelope.MessageId,
             envelope.RequestId,
@@ -126,7 +124,7 @@ internal readonly struct EnvelopeMetadataProjection
             envelope.FaultAddress,
             envelope.MessageType,
             envelope.ExpirationTime,
-            sentTime,
+            envelope.SentTime,
             CopyHeaders(envelope.Headers),
             envelope.Host ?? HostMetadataCache.Host);
     }
@@ -138,8 +136,9 @@ internal readonly struct EnvelopeMetadataProjection
         ArgumentNullException.ThrowIfNull(envelope);
         ArgumentNullException.ThrowIfNull(context);
 
+        bool durableAdmission = context.TryGetPayload(out DurableSendEnvelopeMetadata? _);
         bool needsUtcNow = context.TimeToLive.HasValue
-            || (!envelope.SentTime.HasValue && !context.SentTime.HasValue);
+            || (!durableAdmission && !envelope.SentTime.HasValue && !context.SentTime.HasValue);
         DateTimeOffset utcNow = needsUtcNow ? GetUtcNow(context) : default;
 
         return new EnvelopeMetadataProjection(
@@ -154,7 +153,7 @@ internal readonly struct EnvelopeMetadataProjection
             context.FaultAddress?.ToString() ?? envelope.FaultAddress,
             envelope.MessageType,
             context.TimeToLive.HasValue ? utcNow + context.TimeToLive.Value : envelope.ExpirationTime,
-            envelope.SentTime ?? context.SentTime ?? utcNow,
+            durableAdmission ? context.SentTime : envelope.SentTime ?? context.SentTime ?? utcNow,
             MergeHeaders(envelope.Headers, context.Headers),
             envelope.Host ?? HostMetadataCache.Host);
     }

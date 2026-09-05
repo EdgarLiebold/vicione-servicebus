@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Processor;
+using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
 namespace ViciOne.ServiceBus.EventHubs;
@@ -14,6 +15,7 @@ public sealed class EventHubReceiveContext :
     BaseReceiveContext,
     EventHubConsumeContext
 {
+    readonly MessageBody _body;
     readonly ProcessEventArgs _eventArgs;
     readonly EventData _eventData;
 
@@ -28,7 +30,7 @@ public sealed class EventHubReceiveContext :
         _eventArgs = eventArgs;
         _eventData = eventArgs.Data;
 
-        Body = new BytesMessageBody(eventArgs.Data.Body.ToArray());
+        _body = new MemoryMessageBody(eventArgs.Data.Body);
     }
 
     /// <summary>
@@ -39,7 +41,7 @@ public sealed class EventHubReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     /// <summary>
     /// Gets the enqueued time value.

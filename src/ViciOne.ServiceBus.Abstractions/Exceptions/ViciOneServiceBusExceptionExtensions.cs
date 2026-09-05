@@ -26,7 +26,7 @@ public static class ViciOneServiceBusExceptionExtensions
             + Environment.NewLine
             + string.Join(Environment.NewLine, resultList.Select(x => x.ToString()).ToArray());
 
-        throw new ConfigurationException(resultList, message);
+        throw new ConfigurationException(resultList, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Vici One Service Bus Exception Extensions", "unknown", message, "Correct the named configuration before starting the host"));
     }
 
     /// <summary>

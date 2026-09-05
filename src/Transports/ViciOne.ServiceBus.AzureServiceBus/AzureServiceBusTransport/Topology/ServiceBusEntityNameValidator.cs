@@ -24,13 +24,13 @@ public class ServiceBusEntityNameValidator :
     public void ThrowIfInvalidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ConfigurationException("The Azure Service Bus entity name must not be null or empty.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "The Azure Service Bus entity name must not be null or empty.", "Correct the named configuration before starting the host"));
 
         var success = IsValidEntityName(name);
         if (!success)
         {
             throw new ConfigurationException(
-                $"The Azure Service Bus entity name '{name}' must be at most {MaxLength} characters and contain only letters, digits, hyphens, underscores, periods, colons, slashes, or dollar signs.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", $"The Azure Service Bus entity name '{name}' must be at most {MaxLength} characters and contain only letters, digits, hyphens, underscores, periods, colons, slashes, or dollar signs.", "Correct the named configuration before starting the host"));
         }
     }
 

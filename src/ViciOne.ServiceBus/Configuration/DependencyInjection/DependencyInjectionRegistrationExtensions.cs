@@ -31,10 +31,10 @@ public static class DependencyInjectionRegistrationExtensions
         if (collection.Any(d => d.ServiceType == typeof(IBus)))
         {
             throw new ConfigurationException(
-                "AddViciOneServiceBus() was already called and may only be called once per container. To configure additional bus instances, refer to the documentation: https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Registration Extensions", "unknown", "AddViciOneServiceBus() was already called and may only be called once per container. To configure additional bus instances, refer to the documentation: https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html", "Correct the named configuration before starting the host"));
         }
 
-        AddHostedService(collection);
+        AddHostedService<IBus>(collection);
         AddInstrumentation(collection);
         collection.AddSingleton(BusPersistenceIdentity<IBus>.Default);
 
@@ -58,7 +58,7 @@ public static class DependencyInjectionRegistrationExtensions
         Action<IMediatorRegistrationConfigurator>? configure = null)
     {
         if (collection.Any(d => d.ServiceType == typeof(IMediator)))
-            throw new ConfigurationException("AddMediator() was already called and may only be called once per container.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Registration Extensions", "unknown", "AddMediator() was already called and may only be called once per container.", "Correct the named configuration before starting the host"));
 
         var configurator = new ServiceCollectionMediatorConfigurator(collection, baseAddress);
 
@@ -99,10 +99,10 @@ public static class DependencyInjectionRegistrationExtensions
         if (collection.Any(d => d.ServiceType == typeof(TBus)))
         {
             throw new ConfigurationException(
-                $"AddViciOneServiceBus<{typeof(TBus).Name},{typeof(TBusInstance).Name}>() was already called and may only be called once per container. To configure additional bus instances, refer to the documentation: https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Registration Extensions", "unknown", $"AddViciOneServiceBus<{typeof(TBus).Name},{typeof(TBusInstance).Name}>() was already called and may only be called once per container. To configure additional bus instances, refer to the documentation: https://github.com/EdgarLiebold/vicione-servicebus/usage/containers/multibus.html", "Correct the named configuration before starting the host"));
         }
 
-        AddHostedService(collection);
+        AddHostedService<TBus>(collection);
         AddInstrumentation(collection);
         collection.AddSingleton(BusPersistenceIdentity<TBus>.Unspecified);
 
@@ -220,8 +220,10 @@ public static class DependencyInjectionRegistrationExtensions
         collection.AddMetrics();
     }
 
-    static void AddHostedService(IServiceCollection collection)
+    static void AddHostedService<TBus>(IServiceCollection collection)
+        where TBus : class, IBus
     {
+        BusCompositionRegistrations.AddBus<TBus>(collection);
         collection.AddOptions();
         collection.AddHealthChecks();
         collection.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<HealthCheckServiceOptions>, ConfigureBusHealthCheckServiceOptions>());
@@ -229,6 +231,20 @@ public static class DependencyInjectionRegistrationExtensions
         collection.AddOptions<ViciOneServiceBusHostOptions>()
             .ValidateOnStart();
         collection.TryAddSingleton<IValidateOptions<ViciOneServiceBusHostOptions>, ValidateViciOneServiceBusHostOptions>();
+
+        Type validatorType = typeof(BusCompositionStartupValidator<>).MakeGenericType(typeof(TBus));
+        if (!collection.Any(descriptor => descriptor.ServiceType == typeof(IHostedService)
+                && descriptor.ImplementationType == validatorType))
+        {
+            int runtimeIndex = collection.ToList().FindIndex(descriptor => descriptor.ServiceType == typeof(IHostedService)
+                && descriptor.ImplementationType == typeof(ViciOneServiceBusHostedService));
+            var validator = ServiceDescriptor.Singleton(typeof(IHostedService), validatorType);
+            if (runtimeIndex < 0)
+                collection.Add(validator);
+            else
+                collection.Insert(runtimeIndex, validator);
+        }
+
         collection.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ViciOneServiceBusHostedService>());
     }
 

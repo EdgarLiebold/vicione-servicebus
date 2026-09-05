@@ -113,7 +113,7 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
 
         return configurator as IAdvancedRegistrationConfigurator
-            ?? throw new ConfigurationException($"The registration configurator '{configurator.GetType().FullName}' does not support advanced registration.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Advanced Bus Registration Configurator Extensions", "unknown", $"The registration configurator '{configurator.GetType().FullName}' does not support advanced registration.", "Correct the named configuration before starting the host"));
     }
 
     /// <summary>
@@ -128,7 +128,7 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
 
         return configurator as IAdvancedBusRegistrationConfigurator
-            ?? throw new ConfigurationException($"The registration configurator '{configurator.GetType().FullName}' does not support advanced registration.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Advanced Bus Registration Configurator Extensions", "unknown", $"The registration configurator '{configurator.GetType().FullName}' does not support advanced registration.", "Correct the named configuration before starting the host"));
     }
 
     /// <summary>
@@ -145,7 +145,7 @@ public static class AdvancedBusRegistrationConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
 
         return configurator as IAdvancedBusRegistrationConfigurator<TBus>
-            ?? throw new ConfigurationException($"The registration configurator '{configurator.GetType().FullName}' does not support advanced registration.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Advanced Bus Registration Configurator Extensions", "unknown", $"The registration configurator '{configurator.GetType().FullName}' does not support advanced registration.", "Correct the named configuration before starting the host"));
     }
 
     /// <inheritdoc cref="IAdvancedBusRegistrationConfigurator.SetBusFactory{T}(T)" />

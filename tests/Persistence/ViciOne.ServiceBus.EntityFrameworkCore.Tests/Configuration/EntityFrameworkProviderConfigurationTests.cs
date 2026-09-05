@@ -177,7 +177,9 @@ public sealed class EntityFrameworkProviderConfigurationTests
         ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
             strategy.ApplyQueryCustomization(source));
 
-        Assert.Equal("The saga query customization returned null.", exception.Message);
+        Assert.Equal(
+            "Saga for bus 'unknown': The saga query customization returned null. Correct the named configuration before starting the host.",
+            exception.Message);
     }
 
     [Fact]

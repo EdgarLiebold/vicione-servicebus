@@ -18,7 +18,7 @@ internal static class EndpointConvention
             return GetMessageRoutes(consumeContext.ReceiveContext.SendEndpointProvider);
 
         throw new ConfigurationException(
-            $"The send endpoint provider {provider.GetType().Name} does not expose its owning bus message routes.");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Convention", "unknown", $"The send endpoint provider {provider.GetType().Name} does not expose its owning bus message routes.", "Correct the named configuration before starting the host"));
     }
 
     internal static bool TryGetDestinationAddress<T>(ISendEndpointProvider provider, out Uri destinationAddress)
@@ -37,6 +37,6 @@ internal static class EndpointConvention
     {
         return TryGetDestinationAddress<T>(provider, out Uri destinationAddress)
             ? destinationAddress
-            : throw new ConfigurationException($"A message route for {TypeCache<T>.ShortName} is not configured on this bus.");
+            : throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Convention", "unknown", $"A message route for {TypeCache<T>.ShortName} is not configured on this bus.", "Correct the named configuration before starting the host"));
     }
 }

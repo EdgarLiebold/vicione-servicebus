@@ -318,13 +318,16 @@ public sealed class ResponseMatchingTests
 
     private static IMediator CreateMediator(string responseValue) =>
         Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<MatchingRequest>(context =>
             {
                 if (!context.Advanced().IsResponseAccepted<AcceptedResponse>(false))
                     throw new InvalidOperationException(UnsupportedMessage);
 
                 return context.RespondAsync(new AcceptedResponse(context.Message.CorrelationId, responseValue));
-            }));
+            });
+        });
 
     private static InMemoryTestHarness CreateHarness(TimeSpan timeout) =>
         new($"response-matching-{NewId.NextGuid():N}")

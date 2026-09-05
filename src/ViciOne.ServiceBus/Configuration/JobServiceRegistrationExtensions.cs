@@ -24,6 +24,8 @@ public static class JobServiceRegistrationExtensions
         var registration = configurator.Services.RegisterJobService(configurator.Advanced().Registrar);
 
         registration.AddConfigureAction(configure);
+        if (configure is not null)
+            configurator.Services.Configure(configure);
 
         var registrationConfigurator = new JobServiceRegistrationConfigurator(configurator, registration);
 

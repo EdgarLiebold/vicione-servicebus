@@ -43,7 +43,7 @@ public class SqlServerDbConnectionContext :
         _hostConfiguration = hostConfiguration;
 
         _hostSettings = hostConfiguration.Settings as SqlServerSqlHostSettings
-            ?? throw new ConfigurationException("The host settings were not of the expected type");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host settings were not of the expected type", "Correct the named configuration before starting the host"));
 
         _retryPolicy = Retry.CreatePolicy(x => x.Immediate(10).Handle<SqlException>(ex => IsTransient(ex)));
 

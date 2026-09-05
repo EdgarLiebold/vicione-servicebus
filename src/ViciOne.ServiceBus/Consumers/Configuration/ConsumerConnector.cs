@@ -22,7 +22,7 @@ public class ConsumerConnector<T> :
     public ConsumerConnector()
     {
         if (RegistrationMetadata.IsSaga(typeof(T)))
-            throw new ConfigurationException("A saga cannot be registered as a consumer");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consumer Connector", "unknown", "A saga cannot be registered as a consumer", "Correct the named configuration before starting the host"));
 
         _connectors = Consumes().ToList();
     }

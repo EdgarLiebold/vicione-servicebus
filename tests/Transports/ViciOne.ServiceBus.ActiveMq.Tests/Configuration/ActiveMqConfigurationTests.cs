@@ -27,7 +27,11 @@ public sealed class ActiveMqConfigurationTests
             options.Protocol = protocol;
             options.Port = port;
         });
-        services.AddViciOneServiceBus(configurator => configurator.UsingActiveMq());
+        services.AddViciOneServiceBus(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.UsingActiveMq();
+        });
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,

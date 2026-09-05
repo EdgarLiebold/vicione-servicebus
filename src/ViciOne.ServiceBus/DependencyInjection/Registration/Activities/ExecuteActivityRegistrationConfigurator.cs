@@ -34,7 +34,7 @@ public class ExecuteActivityRegistrationConfigurator<TActivity, TArguments> :
     public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         if (!_registration.IncludeInConfigureEndpoints)
-            throw new ConfigurationException("ExecuteActivity is excluded from ConfigureEndpoints");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Execute Activity Registration", "unknown", "ExecuteActivity is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
         var configurator = new EndpointRegistrationConfigurator<IExecuteActivity<TArguments>> { ConfigureConsumeTopology = false };
 

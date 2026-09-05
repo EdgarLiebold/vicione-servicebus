@@ -56,7 +56,7 @@ public class ReceivePipeDispatcherConfiguration :
         }
         catch (Exception ex)
         {
-            throw new ConfigurationException(result, "An exception occurred during mediator creation", ex);
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive Pipe Dispatcher", "unknown", "An exception occurred during mediator creation", "Correct the named configuration before starting the host"), ex);
         }
     }
 }

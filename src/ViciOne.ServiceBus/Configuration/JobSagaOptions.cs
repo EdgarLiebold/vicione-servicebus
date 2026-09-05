@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Defines configuration options for job saga.
 /// </summary>
-public class JobSagaOptions :
+public sealed class JobSagaOptions :
     JobSagaSettingsConfigurator,
     ISpecification
 {

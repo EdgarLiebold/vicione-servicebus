@@ -60,7 +60,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         if (endpoint is not ITransportSendEndpoint transportEndpoint)
         {
             throw new ConfigurationException(
-                $"The send endpoint for bus '{typeof(TBus)}' does not expose the canonical transport send-context required by Durable Sender.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The send endpoint for bus '{typeof(TBus)}' does not expose the canonical transport send-context required by Durable Sender.", "Correct the named configuration before starting the host"));
         }
 
         SendContext<TMessage> context = await transportEndpoint
@@ -70,7 +70,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         if (context is not MessageSendContext<TMessage> messageContext)
         {
             throw new ConfigurationException(
-                $"The send context for bus '{typeof(TBus)}' cannot fix deterministic durable-admission metadata before serialization.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The send context for bus '{typeof(TBus)}' cannot fix deterministic durable-admission metadata before serialization.", "Correct the named configuration before starting the host"));
         }
         messageContext.SetDurableAdmissionMetadata(options.IdempotencyKey.Value, options.CorrelationId);
         context.GetOrAddPayload(() => DurableSendEnvelopeMetadata.Instance);
@@ -78,7 +78,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         if (context is not TransportSendContext transportContext)
         {
             throw new ConfigurationException(
-                $"The send context for bus '{typeof(TBus)}' is not a transport context and cannot be admitted by Durable Sender.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The send context for bus '{typeof(TBus)}' is not a transport context and cannot be admitted by Durable Sender.", "Correct the named configuration before starting the host"));
         }
 
         if (_payloadAdmission is not null)
@@ -93,7 +93,7 @@ internal sealed class TypedDurableSender<TBus> : IDurableSender<TBus>
         byte[] body = transportContext.Body.GetBytes();
         string contentType = context.ContentType?.ToString()
             ?? throw new ConfigurationException(
-                $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Reliable messaging", "unknown", $"The configured serializer for bus '{typeof(TBus)}' did not assign a content type.", "Correct the named configuration before starting the host"));
         var serialized = new SerializedDurableSend
         {
             Id = options.IdempotencyKey,

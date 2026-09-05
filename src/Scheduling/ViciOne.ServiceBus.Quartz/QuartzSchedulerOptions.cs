@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Quartz;
 /// <summary>
 /// Defines configuration options for quartz scheduler.
 /// </summary>
-public class QuartzSchedulerOptions
+public sealed class QuartzSchedulerOptions
 {
     /// <summary>
     /// Used to create the scheduler at bus start. The default is an isolated Quartz 4 standalone in-memory scheduler.

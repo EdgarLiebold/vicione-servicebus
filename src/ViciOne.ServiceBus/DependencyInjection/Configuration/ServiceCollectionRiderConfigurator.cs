@@ -82,7 +82,7 @@ public class ServiceCollectionRiderConfigurator :
     {
         ThrowIfAlreadyConfigured(nameof(SetRiderFactory));
         if (Services.Any(d => d.ServiceType == serviceType))
-            throw new ConfigurationException($"'{serviceType.Name}' has been already registered.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Service Collection Rider", "unknown", $"'{serviceType.Name}' has been already registered.", "Correct the named configuration before starting the host"));
     }
 }
 

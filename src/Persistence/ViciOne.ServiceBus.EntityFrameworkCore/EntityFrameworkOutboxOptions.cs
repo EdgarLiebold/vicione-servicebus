@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// Defines configuration options for entity framework outbox.
 /// </summary>
 /// <typeparam name="TDbContext">The t db context type.</typeparam>
-public class EntityFrameworkOutboxOptions<TDbContext>
+public sealed class EntityFrameworkOutboxOptions<TDbContext>
     where TDbContext : DbContext
 {
     /// <summary>

@@ -30,6 +30,17 @@ public static class AmazonSqsBusFactoryConfiguratorExtensions
     public static void UsingAmazonSqs(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)
     {
+        configurator.Services.AddOptions<AmazonSqsTransportOptions>(string.Empty)
+            .Validate(
+                static options => options.Region is null || !string.IsNullOrWhiteSpace(options.Region),
+                "Amazon SQS transport for bus 'default': Region must not be empty when specified. Set an AWS region system name or leave it unset.")
+            .Validate(
+                static options => options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope),
+                "Amazon SQS transport for bus 'default': Scope must not be empty when specified. Set a non-empty scope or leave it unset.")
+            .Validate(
+                static options => string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region),
+                "Amazon SQS transport for bus 'default': Scope requires Region. Set Region whenever a scope is configured.")
+            .ValidateOnStart();
         configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());
         configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));
     }

@@ -46,6 +46,13 @@ public class DeserializeFilter :
     [DebuggerNonUserCode]
     public async Task SendAsync(ReceiveContext context, IPipe<ReceiveContext> next)
     {
+        if (context.TryGetPayload(out MessageLimits? limits)
+            && context.Body.Length is { } actualBytes
+            && actualBytes > limits.MaxEnvelopeBytes)
+        {
+            throw new MessageTooLargeException(actualBytes, limits.MaxEnvelopeBytes, context.InputAddress);
+        }
+
         if (!context.TryGetPayload(out ConsumeContext? consumeContext))
             consumeContext = _serializers.GetMessageDeserializer(context.ContentType).Deserialize(context);
 

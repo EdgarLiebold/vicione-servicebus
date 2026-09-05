@@ -29,7 +29,7 @@ public partial class ViciOneServiceBusStateMachine<TInstance>
             }
             catch (Exception ex)
             {
-                throw new ConfigurationException($"Failed to create the state machine connector for {TypeCache<TInstance>.ShortName}", ex);
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"Failed to create the state machine connector for {TypeCache<TInstance>.ShortName}", "Correct the named configuration before starting the host"), ex);
             }
         }
 

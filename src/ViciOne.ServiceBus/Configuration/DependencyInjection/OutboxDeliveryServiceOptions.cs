@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Defines configuration options for outbox delivery service.
 /// </summary>
 /// <typeparam name="TScope">The t scope type.</typeparam>
-public class OutboxDeliveryServiceOptions<TScope>
+public sealed class OutboxDeliveryServiceOptions<TScope>
     where TScope : class
 {
     /// <summary>

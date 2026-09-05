@@ -73,7 +73,7 @@ public class DependencyInjectionContainerRegistrar :
         if (Collection.Any(descriptor => descriptor.ServiceType == serviceType))
         {
             throw new ConfigurationException(
-                $"A request client for {TypeCache<T>.ShortName} is already configured for this bus owner.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Container Registrar", "unknown", $"A request client for {TypeCache<T>.ShortName} is already configured for this bus owner.", "Correct the named configuration before starting the host"));
         }
     }
 

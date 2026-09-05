@@ -23,7 +23,9 @@ public class OutboxConsumeFilter<TContext, TMessage> :
     /// <param name="options">The options value.</param>
     public OutboxConsumeFilter(IConsumeScopeProvider scopeProvider, OutboxConsumeOptions options)
     {
-        _scopeProvider = scopeProvider;
+        _scopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
+        ArgumentNullException.ThrowIfNull(options);
+        options.Validate();
         _options = options;
     }
 

@@ -31,6 +31,7 @@ public static class ServiceBusConfigurationExtensions
     public static void UsingAzureServiceBus(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure = null)
     {
+        AddTransportOptions(configurator.Services, string.Empty, "default");
         configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ServiceBusSendFailureClassifier>());
         configurator.SetBusFactory(new ServiceBusRegistrationBusFactory(configure));
 
@@ -38,7 +39,7 @@ public static class ServiceBusConfigurationExtensions
         {
             var subscriptionEndpointConnector = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value as ISubscriptionEndpointConnector;
 
-            return subscriptionEndpointConnector ?? throw new ConfigurationException("The default bus instance is not an Azure Service Bus Instance");
+            return subscriptionEndpointConnector ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "The default bus instance is not an Azure Service Bus Instance", "Correct the named configuration before starting the host"));
         });
     }
 
@@ -51,10 +52,20 @@ public static class ServiceBusConfigurationExtensions
         Action<IBusRegistrationContext, IServiceBusBusFactoryConfigurator>? configure = null)
         where TBus : class, IBus
     {
+        AddTransportOptions(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);
         configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, ServiceBusSendFailureClassifier>());
         configurator.SetBusFactory(new ServiceBusRegistrationBusFactory(configure));
 
         AddSubscriptionEndpointConnector<TBus>(configurator.Services);
+    }
+
+    static void AddTransportOptions(IServiceCollection services, string optionsName, string bus)
+    {
+        services.AddOptions<AzureServiceBusTransportOptions>(optionsName)
+            .Validate(
+                static options => options.ConnectionString is null || !string.IsNullOrWhiteSpace(options.ConnectionString),
+                $"Azure Service Bus transport for bus '{bus}': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.")
+            .ValidateOnStart();
     }
 
     static void AddSubscriptionEndpointConnector<TBus>(IServiceCollection services)
@@ -64,7 +75,7 @@ public static class ServiceBusConfigurationExtensions
         {
             var subscriptionEndpointConnector = provider.GetRequiredService<IBusInstance<TBus>>().BusInstance as ISubscriptionEndpointConnector;
 
-            return subscriptionEndpointConnector ?? throw new ConfigurationException("The default bus instance is not an Azure Service Bus Instance");
+            return subscriptionEndpointConnector ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "The default bus instance is not an Azure Service Bus Instance", "Correct the named configuration before starting the host"));
         });
 
         services.TryAddSingleton(provider =>
@@ -72,7 +83,7 @@ public static class ServiceBusConfigurationExtensions
             var subscriptionEndpointConnector = provider.GetRequiredService<IBusInstance<TBus>>().BusInstance as ISubscriptionEndpointConnector;
 
             return Bind<TBus>.Create(subscriptionEndpointConnector
-                ?? throw new ConfigurationException("The default bus instance is not an Azure Service Bus Instance"));
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "The default bus instance is not an Azure Service Bus Instance", "Correct the named configuration before starting the host")));
         });
     }
 }

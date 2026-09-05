@@ -28,7 +28,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
             : base(consumeFilter)
         {
             ConfigureConsumeTopology = configureConsumeTopology;
-            _policy = policy ?? throw new ConfigurationException("The saga event correlation did not provide a repository policy.");
+            _policy = policy ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "The saga event correlation did not provide a repository policy.", "Correct the named configuration before starting the host"));
             _sagaFilterFactory = sagaFilterFactory;
             _messageFilter = messageFilter;
         }
@@ -51,7 +51,7 @@ public partial class StateMachineInterfaceType<TInstance, TData>
                 configurator.UseFilter(_messageFilter);
 
             if (_sagaFilterFactory == null)
-                throw new ConfigurationException($"The event was not properly correlated: {TypeCache<TInstance>.ShortName} - {TypeCache<TData>.ShortName}");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"The event was not properly correlated: {TypeCache<TInstance>.ShortName} - {TypeCache<TData>.ShortName}", "Correct the named configuration before starting the host"));
 
             configurator.UseFilter(_sagaFilterFactory(repository, _policy, sagaPipe));
         }

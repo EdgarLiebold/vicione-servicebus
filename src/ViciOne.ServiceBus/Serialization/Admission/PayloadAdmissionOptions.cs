@@ -9,9 +9,6 @@ namespace ViciOne.ServiceBus.Configuration;
 public sealed class PayloadAdmissionOptions<TBus>
     where TBus : class, IBus
 {
-    internal const string ValidationFailureMessage =
-        "Payload admission requires valid positive MaximumSerializedBodyBytes and MaximumTransportEnvelopeBytes values; optional thresholds must not exceed the body maximum.";
-
     /// <summary>Gets or sets the observation-only body warning threshold.</summary>
     public int? WarningBodyBytes { get; set; }
 

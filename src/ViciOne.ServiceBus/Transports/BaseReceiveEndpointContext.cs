@@ -40,6 +40,9 @@ public abstract class BaseReceiveEndpointContext :
     {
         _hostConfiguration = hostConfiguration;
 
+        if (hostConfiguration is IMessageLimitsHostConfiguration { MessageLimits: { } limits })
+            GetOrAddPayload(() => limits);
+
         InputAddress = configuration.InputAddress;
         HostAddress = configuration.HostAddress;
         PublishFaults = configuration.PublishFaults;

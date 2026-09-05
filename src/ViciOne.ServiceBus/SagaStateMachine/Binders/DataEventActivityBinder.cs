@@ -99,7 +99,7 @@ public class DataEventActivityBinder<TInstance, TData> :
         configure(configurator);
 
         if (configurator.PolicyFactory == null)
-            throw new ConfigurationException("A retry policy must be specified");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A retry policy must be specified", "Correct the named configuration before starting the host"));
 
         EventActivityBinder<TInstance, TData> activityBinder = GetBinder(activityCallback);
 

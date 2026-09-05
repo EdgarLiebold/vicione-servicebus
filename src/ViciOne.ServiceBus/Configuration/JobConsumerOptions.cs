@@ -7,7 +7,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Defines configuration options for job consumer.
 /// </summary>
-public class JobConsumerOptions :
+public sealed class JobConsumerOptions :
     IOptions,
     ISpecification
 {

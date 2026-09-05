@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Logging;
 /// <summary>
 /// Defines configuration options for text writer logger.
 /// </summary>
-public class TextWriterLoggerOptions
+public sealed class TextWriterLoggerOptions
 {
     readonly List<string> _disabled;
 
@@ -32,6 +32,7 @@ public class TextWriterLoggerOptions
     /// <returns>The result of the operation.</returns>
     public TextWriterLoggerOptions Disable(string name)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
         _disabled.Add(name);
 
         return this;

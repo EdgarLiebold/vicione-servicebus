@@ -19,7 +19,7 @@ internal sealed class EntityFrameworkScopedBusContextProvider<TBus> : IScopedBus
 
         var registrations = factories.ToArray();
         if (registrations.Length == 0)
-            throw new ConfigurationException($"No Entity Framework bus outbox is registered for {TypeCache<TBus>.ShortName}.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Scoped Bus Context Provider", "unknown", $"No Entity Framework bus outbox is registered for {TypeCache<TBus>.ShortName}.", "Correct the named configuration before starting the host"));
 
         IEntityFrameworkScopedBusContextFactory<TBus> selected;
         if (registrations.Length == 1)
@@ -31,10 +31,10 @@ internal sealed class EntityFrameworkScopedBusContextProvider<TBus> : IScopedBus
             {
                 1 => defaults[0],
                 0 => throw new ConfigurationException(
-                    $"Multiple Entity Framework bus outboxes are configured for {TypeCache<TBus>.ShortName}. "
-                    + "An explicit default DbContext is required for untyped scoped publish/send endpoints."),
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Scoped Bus Context Provider", "unknown", $"Multiple Entity Framework bus outboxes are configured for {TypeCache<TBus>.ShortName}. "
+                    + "An explicit default DbContext is required for untyped scoped publish/send endpoints.", "Correct the named configuration before starting the host")),
                 _ => throw new ConfigurationException(
-                    $"Multiple default Entity Framework bus outboxes are configured for {TypeCache<TBus>.ShortName}. Exactly one default is allowed.")
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Scoped Bus Context Provider", "unknown", $"Multiple default Entity Framework bus outboxes are configured for {TypeCache<TBus>.ShortName}. Exactly one default is allowed.", "Correct the named configuration before starting the host"))
             };
         }
 

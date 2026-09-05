@@ -24,6 +24,7 @@ public abstract class BaseReceiveContext :
     readonly long _receiveStartedAt;
     readonly Lazy<ISendEndpointProvider> _sendEndpointProvider;
     readonly TimeProvider _timeProvider;
+    MessageBody? _validatedBody;
 
     /// <summary>
     /// Initializes a new instance of the containing type.
@@ -56,6 +57,28 @@ public abstract class BaseReceiveContext :
     /// Gets the header provider value.
     /// </summary>
     protected abstract IHeaderProvider HeaderProvider { get; }
+
+    /// <summary>
+    /// Applies the bus-owned receive limit before a transport body can be read by a deserializer.
+    /// </summary>
+    /// <param name="body">The transport body to expose.</param>
+    /// <returns>The same body after successful admission.</returns>
+    protected MessageBody EnforceMessageLimits(MessageBody body)
+    {
+        ArgumentNullException.ThrowIfNull(body);
+        if (ReferenceEquals(Volatile.Read(ref _validatedBody), body))
+            return body;
+
+        if (TryGetPayload(out MessageLimits? limits)
+            && body.Length is { } actualBytes
+            && actualBytes > limits.MaxEnvelopeBytes)
+        {
+            throw new MessageTooLargeException(actualBytes, limits.MaxEnvelopeBytes, InputAddress);
+        }
+
+        Interlocked.CompareExchange(ref _validatedBody, body, null);
+        return body;
+    }
 
     /// <summary>
     /// Releases the resources owned by this instance.

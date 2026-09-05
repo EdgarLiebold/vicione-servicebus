@@ -56,7 +56,7 @@ public class ReceivePipeConfiguration :
     public IReceivePipe CreatePipe(IConsumePipe consumePipe, ISerialization serializers)
     {
         if (_created)
-            throw new ConfigurationException("The ReceivePipeConfiguration can only be used once.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive Pipe", "unknown", "The ReceivePipeConfiguration can only be used once.", "Correct the named configuration before starting the host"));
 
         _configurator.UseDeadLetter(CreateDeadLetterPipe());
         _configurator.UseRescue(CreateErrorPipe(), x =>

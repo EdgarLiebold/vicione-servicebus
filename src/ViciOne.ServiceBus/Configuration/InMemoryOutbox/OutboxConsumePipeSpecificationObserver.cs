@@ -108,7 +108,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         where TMessage : class
     {
         if (!(configurator is IConsumerMessageConfigurator<TMessage> messageConfigurator))
-            throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TConsumer>.ShortName} - {TypeCache<TMessage>.ShortName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Outbox Consume Pipe Specification Observer", "unknown", $"The scoped filter could not be added: {TypeCache<TConsumer>.ShortName} - {TypeCache<TMessage>.ShortName}", "Correct the named configuration before starting the host"));
 
         AddScopedFilter<TConsumer, TMessage>(messageConfigurator);
     }
@@ -154,7 +154,7 @@ public class OutboxConsumePipeSpecificationObserver<TContext> :
         where TMessage : class
     {
         if (!(configurator is ISagaMessageConfigurator<TMessage> messageConfigurator))
-            throw new ConfigurationException($"The scoped filter could not be added: {TypeCache<TSaga>.ShortName} - {TypeCache<TMessage>.ShortName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Outbox Consume Pipe Specification Observer", "unknown", $"The scoped filter could not be added: {TypeCache<TSaga>.ShortName} - {TypeCache<TMessage>.ShortName}", "Correct the named configuration before starting the host"));
 
         AddScopedFilter<TSaga, TMessage>(messageConfigurator);
     }

@@ -135,7 +135,7 @@ public static class TimelineExtensions
     /// <summary>
     /// Defines configuration options for output timeline.
     /// </summary>
-    public class OutputTimelineOptions
+    public sealed class OutputTimelineOptions
     {
         bool _includeAddress;
         bool _now;

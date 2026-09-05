@@ -52,6 +52,7 @@ public sealed class ServiceBusEndpointConfigurationTests
         services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(NullLogger<>)));
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<PingConsumer, TDefinition>();
             configuration.UsingAzureServiceBus((context, bus) =>
             {

@@ -347,7 +347,7 @@ public static class Retry
             }
             catch (Exception ex)
             {
-                throw new ConfigurationException(result, "An exception occurred during retry policy creation", ex);
+                throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Retry", "unknown", "An exception occurred during retry policy creation", "Correct the named configuration before starting the host"), ex);
             }
         }
     }

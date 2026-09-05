@@ -90,6 +90,14 @@ public class SystemTextJsonSerializerContext :
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public override bool TryGetMessage(Type messageType, [NotNullWhen(true)] out object? message)
     {
+        ArgumentNullException.ThrowIfNull(messageType);
+
+        if (!IsSupportedMessageType(messageType))
+        {
+            message = null;
+            return false;
+        }
+
         var jsonElement = GetJsonElement(Message);
 
         message = jsonElement.Deserialize(messageType, Options);

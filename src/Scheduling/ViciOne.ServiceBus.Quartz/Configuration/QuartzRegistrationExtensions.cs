@@ -28,6 +28,17 @@ public static class QuartzRegistrationExtensions
         OptionsBuilder<QuartzEndpointOptions> options = configurator.Services.AddOptions<QuartzEndpointOptions>();
         if (configure != null)
             options.Configure(configure);
+        options
+            .Validate(
+                static value => value.PrefetchCount is null or > 0,
+                "Quartz endpoint for bus 'default': PrefetchCount must be greater than zero when specified. Set it to a positive value or leave it unset.")
+            .Validate(
+                static value => value.ConcurrentMessageLimit is null or > 0,
+                "Quartz endpoint for bus 'default': ConcurrentMessageLimit must be greater than zero when specified. Set it to a positive value or leave it unset.")
+            .Validate(
+                static value => !string.IsNullOrWhiteSpace(value.QueueName),
+                "Quartz endpoint for bus 'default': QueueName must not be empty. Set a non-empty queue name.")
+            .ValidateOnStart();
 
         configurator.Services.AddBusObserver<QuartzBusObserver>();
 

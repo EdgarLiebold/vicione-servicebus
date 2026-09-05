@@ -18,7 +18,17 @@ public static class DependencyInjectionJobServiceRegistrationExtensions
     /// <returns>The result of the operation.</returns>
     public static IJobServiceRegistration RegisterJobService(this IServiceCollection collection, IContainerRegistrar registrar)
     {
-        collection.AddOptions<JobConsumerOptions>();
+        collection.AddOptions<JobConsumerOptions>()
+            .Validate(
+                static options => options.HeartbeatInterval > TimeSpan.Zero,
+                "Job service for bus 'default': HeartbeatInterval must be greater than zero. Set HeartbeatInterval to a positive duration.")
+            .Validate(
+                static options => options.RejectedJobDelay > TimeSpan.Zero,
+                "Job service for bus 'default': RejectedJobDelay must be greater than zero. Set RejectedJobDelay to a positive duration.")
+            .Validate(
+                static options => options.TimeProvider is not null,
+                "Job service for bus 'default': TimeProvider must not be null. Set TimeProvider to an application-owned clock.")
+            .ValidateOnStart();
         return registrar.GetOrAddRegistration<IJobServiceRegistration>(typeof(JobServiceState), _ => new JobServiceRegistration());
     }
 }

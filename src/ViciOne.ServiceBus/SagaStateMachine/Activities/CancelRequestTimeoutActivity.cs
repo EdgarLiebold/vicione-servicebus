@@ -66,7 +66,7 @@ public class CancelRequestTimeoutActivity<TSaga, TMessage, TRequest, TResponse> 
                     .ConfigureAwait(false);
             }
             else
-                throw new ConfigurationException("A scheduler was not available to cancel the scheduled request timeout");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A scheduler was not available to cancel the scheduled request timeout", "Correct the named configuration before starting the host"));
         }
 
         if (_request.Settings.ClearRequestIdOnFaulted || _completed)

@@ -52,7 +52,7 @@ public class ContainerTestHarness :
         ContextSaveMode = options.Value.ContextSaveMode;
         MaximumSavedContexts = options.Value.MaximumSavedContexts > 0
             ? options.Value.MaximumSavedContexts
-            : throw new ConfigurationException("Test harness maximum saved contexts must be greater than zero.");
+            : throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Test harness", "unknown", "Test harness maximum saved contexts must be greater than zero.", "Correct the named configuration before starting the host"));
 
         _inactivityObserver = new Lazy<AsyncInactivityObserver>(
             () => new AsyncInactivityObserver(TestInactivityTimeout, CancellationToken, TimeProvider));
@@ -360,7 +360,7 @@ public class ContainerTestHarness :
     {
         cancellationToken.ThrowIfCancellationRequested(); _hostedServices = _provider.GetServices<IHostedService>().ToArray();
         if (!_hostedServices.Any())
-            throw new ConfigurationException("The ViciOne.ServiceBus hosted service was not found.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Test harness", "unknown", "The ViciOne.ServiceBus hosted service was not found.", "Correct the named configuration before starting the host"));
 
         foreach (var service in _hostedServices)
             await service.StartAsync(CancellationToken).ConfigureAwait(false);

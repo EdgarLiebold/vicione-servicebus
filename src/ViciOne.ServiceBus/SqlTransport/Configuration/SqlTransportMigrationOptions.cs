@@ -3,7 +3,7 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 /// <summary>
 /// Defines configuration options for sql transport migration.
 /// </summary>
-public class SqlTransportMigrationOptions
+public sealed class SqlTransportMigrationOptions
 {
     /// <summary>
     /// If true, the database and all transport components will be created/updated on startup

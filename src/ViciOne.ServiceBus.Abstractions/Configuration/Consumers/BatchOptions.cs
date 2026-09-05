@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Batch options are applied to a <see cref="Batch{T}" /> consumer to configure
 /// the size and time limits for each batch.
 /// </summary>
-public class BatchOptions :
+public sealed class BatchOptions :
     IOptions,
     IConfigureReceiveEndpoint,
     ISpecification
@@ -81,6 +81,8 @@ public class BatchOptions :
             yield return this.Failure("Batch", "MessageLimit", "Must be > 0");
         if (ConcurrencyLimit <= 0)
             yield return this.Failure("Batch", "ConcurrencyLimit", "Must be > 0");
+        if (!Enum.IsDefined(TimeLimitStart))
+            yield return this.Failure("Batch", "TimeLimitStart", "Must be a defined BatchTimeLimitStart value");
     }
 
     /// <summary>

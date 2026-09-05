@@ -80,7 +80,8 @@ public sealed class EndpointQosTopologyValidator
         }
 
         if (failures.Count > 0)
-            throw new EndpointQosConfigurationException(string.Join(Environment.NewLine, failures));
+            throw new EndpointQosConfigurationException(
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Aggregate(failures));
 
         return result.ToFrozenDictionary(StringComparer.Ordinal);
     }

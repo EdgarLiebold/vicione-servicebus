@@ -40,7 +40,18 @@ public static class PostgresSqlTransportConfigurationExtensions
     {
         services.AddTransient<ISqlTransportDatabaseMigrator, PostgresDatabaseMigrator>();
 
-        services.AddOptions<SqlTransportOptions>();
+        services.AddOptions<SqlTransportOptions>()
+            .Validate(
+                static options => !string.IsNullOrWhiteSpace(options.ConnectionString)
+                    || (!string.IsNullOrWhiteSpace(options.Host) && !string.IsNullOrWhiteSpace(options.Database)),
+                "PostgreSQL migration for bus 'default': ConnectionString or both Host and Database must be declared. Configure a complete database address.")
+            .Validate(
+                static options => options.Port is null or > 0 and <= 65535,
+                "PostgreSQL migration for bus 'default': Port must be between 1 and 65535 when specified. Set a valid TCP port or leave it unset.")
+            .Validate(
+                static options => options.ConnectionLimit is null or > 0,
+                "PostgreSQL migration for bus 'default': ConnectionLimit must be greater than zero when specified. Set a positive limit or leave it unset.")
+            .ValidateOnStart();
         services.AddOptions<SqlTransportMigrationOptions>()
             .Configure(options =>
             {
@@ -50,7 +61,11 @@ public static class PostgresSqlTransportConfigurationExtensions
                 options.DeleteDatabase = false;
 
                 configure?.Invoke(options);
-            });
+            })
+            .Validate(
+                static options => options.CreateDatabase || options.CreateSchema || options.CreateInfrastructure || options.DeleteDatabase,
+                "PostgreSQL migration for bus 'default': no migration operation is selected. Select at least one create or delete operation, or do not register the migration service.")
+            .ValidateOnStart();
         services.AddHostedService<SqlTransportMigrationHostedService>();
 
         return services;

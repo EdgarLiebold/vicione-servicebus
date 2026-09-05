@@ -15,6 +15,8 @@ public sealed class ActiveMqReceiveContext :
     ActiveMqMessageContext,
     TransportReceiveContext
 {
+    readonly MessageBody _body;
+
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
@@ -26,7 +28,7 @@ public sealed class ActiveMqReceiveContext :
     {
         TransportMessage = transportMessage;
 
-        Body = new ActiveMqMessageBody(transportMessage);
+        _body = new ActiveMqMessageBody(transportMessage);
     }
 
     /// <summary>
@@ -37,7 +39,7 @@ public sealed class ActiveMqReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     /// <summary>
     /// Gets the transport message value.

@@ -28,6 +28,7 @@ public sealed class MediatorReceiveContext<TMessage> :
     readonly MediatorConsumeContext<TMessage> _consumeContext;
     readonly MessageIdMessageHeader _headers;
     readonly Uri _inputAddress;
+    readonly MessageBody _messageBody;
     readonly IReceiveObserver _observers;
     readonly PendingTaskCollection _receiveTasks;
     readonly long _receiveStartedAt;
@@ -42,9 +43,10 @@ public sealed class MediatorReceiveContext<TMessage> :
     /// <param name="publishTopology">The publish topology value.</param>
     /// <param name="observers">The observers value.</param>
     /// <param name="objectDeserializer">The object deserializer value.</param>
+    /// <param name="serializedBodyBytes">The measured serialized application-body length.</param>
     public MediatorReceiveContext(SendContext<TMessage> sendContext, ISendEndpointProvider sendEndpointProvider,
         IPublishEndpointProvider publishEndpointProvider, IPublishTopology publishTopology, IReceiveObserver observers,
-        IObjectDeserializer objectDeserializer)
+        IObjectDeserializer objectDeserializer, long serializedBodyBytes)
         : base(sendContext)
     {
         _observers = observers;
@@ -63,6 +65,7 @@ public sealed class MediatorReceiveContext<TMessage> :
         _headers = new MessageIdMessageHeader(messageId);
 
         _receiveTasks = new PendingTaskCollection(4);
+        _messageBody = new MeasuredMediatorMessageBody(serializedBodyBytes);
 
         var messageContext = new MediatorSendMessageContext<TMessage>(sendContext);
 
@@ -95,7 +98,7 @@ public sealed class MediatorReceiveContext<TMessage> :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public MessageBody Body => new NotSupportedMessageBody();
+    public MessageBody Body => _messageBody;
 
     /// <summary>
     /// Gets the receive completed value.
@@ -211,4 +214,21 @@ public sealed class MediatorReceiveContext<TMessage> :
         public string MessageType { get; }
         public string ConsumerType { get; }
     }
+}
+
+sealed class MeasuredMediatorMessageBody : MessageBody
+{
+    public MeasuredMediatorMessageBody(long length)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(length);
+        Length = length;
+    }
+
+    public long? Length { get; }
+
+    public Stream GetStream() => throw new NotImplementedByDesignException();
+
+    public byte[] GetBytes() => throw new NotImplementedByDesignException();
+
+    public string GetString() => throw new NotImplementedByDesignException();
 }

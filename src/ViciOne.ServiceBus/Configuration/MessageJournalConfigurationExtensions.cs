@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal.Observers;
+using ViciOne.ServiceBus.Providers.Configuration;
 using ViciOne.ServiceBus.Util;
 
 #nullable enable
@@ -11,6 +14,27 @@ namespace ViciOne.ServiceBus.Configuration;
 /// </summary>
 public static class MessageJournalConfigurationExtensions
 {
+    /// <summary>Enables one bounded journal owned by the default bus registration.</summary>
+    public static IBusRegistrationConfigurator UseMessageJournal(
+        this IBusRegistrationConfigurator configurator,
+        Action<IMessageJournalConfigurator> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        Register<IBus>(configurator.Services, configure);
+        return configurator;
+    }
+
+    /// <summary>Enables one bounded journal owned by a typed bus registration.</summary>
+    public static IBusRegistrationConfigurator<TBus> UseMessageJournal<TBus>(
+        this IBusRegistrationConfigurator<TBus> configurator,
+        Action<IMessageJournalConfigurator> configure)
+        where TBus : class, IBus
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        Register<TBus>(configurator.Services, configure);
+        return configurator;
+    }
+
     /// <summary>
     /// Explicitly connects send, publish and consume journal observers. Without this call the
     /// MessageJournal capability has no runtime object and no resource cost.
@@ -97,5 +121,129 @@ public static class MessageJournalConfigurationExtensions
 
             throw;
         }
+    }
+
+    static void Register<TBus>(IServiceCollection services, Action<IMessageJournalConfigurator> configure)
+        where TBus : class, IBus
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        string bus = BusRegistrationIdentity.GetKey(typeof(TBus));
+        if (services.Any(descriptor => descriptor.ServiceType == typeof(IMessageJournalRegistration)
+                && descriptor.ImplementationInstance is IMessageJournalRegistration registration
+                && registration.BusType == typeof(TBus)))
+        {
+            throw new ConfigurationException(ConfigurationMessages.Create(
+                "Message journal",
+                bus,
+                "multiple journal owners are configured",
+                "Configure exactly one bus.UseMessageJournal(...) block"));
+        }
+
+        var builder = new MessageJournalConfigurator(bus);
+        configure(builder);
+        IMessageJournalRegistration registration = builder.Build<TBus>();
+        services.AddSingleton(registration);
+        BusCompositionRegistrations.AddFeature<TBus>(services, "Message journal");
+    }
+}
+
+/// <summary>Builds one bounded message journal within its owning bus registration.</summary>
+public interface IMessageJournalConfigurator
+{
+    /// <summary>Selects the persistence store.</summary>
+    IMessageJournalConfigurator UseStore(IMessageJournalStore store);
+
+    /// <summary>Selects the mandatory sanitization and inclusion policy.</summary>
+    IMessageJournalConfigurator Policy(IMessageJournalPolicy policy);
+
+    /// <summary>Selects finite runtime and timeout options.</summary>
+    IMessageJournalConfigurator Options(MessageJournalOptions options);
+}
+
+internal interface IMessageJournalRegistration
+{
+    Type BusType { get; }
+
+    string BusKey { get; }
+
+    void Connect(IBusFactoryConfigurator configurator);
+}
+
+internal sealed class MessageJournalRegistration<TBus>(
+    IMessageJournalStore store,
+    IMessageJournalPolicy policy,
+    MessageJournalOptions options) : IMessageJournalRegistration
+    where TBus : class, IBus
+{
+    public Type BusType => typeof(TBus);
+
+    public string BusKey { get; } = BusRegistrationIdentity.GetKey(typeof(TBus));
+
+    public void Connect(IBusFactoryConfigurator configurator)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        _ = configurator.ConnectMessageJournal(store, policy, options);
+    }
+}
+
+internal sealed class MessageJournalConfigurator(string bus) : IMessageJournalConfigurator
+{
+    IMessageJournalStore? _store;
+    IMessageJournalPolicy? _policy;
+    MessageJournalOptions? _options;
+
+    public IMessageJournalConfigurator UseStore(IMessageJournalStore store)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        if (_store is not null)
+        {
+            throw new ConfigurationException(ConfigurationMessages.Create(
+                "Message journal", bus, "multiple persistence stores are selected", "Select exactly one journal store"));
+        }
+
+        _store = store;
+        return this;
+    }
+
+    public IMessageJournalConfigurator Policy(IMessageJournalPolicy policy)
+    {
+        ArgumentNullException.ThrowIfNull(policy);
+        if (_policy is not null)
+        {
+            throw new ConfigurationException(ConfigurationMessages.Create(
+                "Message journal", bus, "multiple policies are selected", "Select exactly one journal policy"));
+        }
+
+        _policy = policy;
+        return this;
+    }
+
+    public IMessageJournalConfigurator Options(MessageJournalOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        if (_options is not null)
+        {
+            throw new ConfigurationException(ConfigurationMessages.Create(
+                "Message journal", bus, "multiple option owners are selected", "Select exactly one MessageJournalOptions instance"));
+        }
+
+        _options = options;
+        return this;
+    }
+
+    public IMessageJournalRegistration Build<TBus>()
+        where TBus : class, IBus
+    {
+        List<string> failures = [];
+        if (_store is null)
+            failures.Add(ConfigurationMessages.Create("Message journal", bus, "no persistence store is selected", "Call UseStore(...)"));
+        if (_policy is null)
+            failures.Add(ConfigurationMessages.Create("Message journal", bus, "no policy is selected", "Call Policy(...)"));
+        if (_options is null)
+            failures.Add(ConfigurationMessages.Create("Message journal", bus, "no runtime options are selected", "Call Options(...)"));
+        if (failures.Count > 0)
+            throw new ConfigurationException(ConfigurationMessages.Aggregate(failures));
+
+        return new MessageJournalRegistration<TBus>(_store!, _policy!, _options!);
     }
 }

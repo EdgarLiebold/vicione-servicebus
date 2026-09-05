@@ -120,7 +120,32 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
                 options.MaximumDeliveryAttempts = maximumDeliveryAttempts;
                 options.InitialDeliveryRetryDelay = initialDeliveryRetryDelay;
                 options.MaximumDeliveryRetryDelay = maximumDeliveryRetryDelay;
-            });
+            })
+            .Validate(
+                static options => options.QueryDelay > TimeSpan.Zero,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': QueryDelay must be greater than zero. Set a positive delay.")
+            .Validate(
+                static options => options.QueryMessageLimit > 0,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': QueryMessageLimit must be greater than zero. Set a positive bounded batch size.")
+            .Validate(
+                static options => options.QueryTimeout > TimeSpan.Zero,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': QueryTimeout must be greater than zero. Set a positive timeout.")
+            .Validate(
+                static options => options.MessageDeliveryLimit > 0,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': MessageDeliveryLimit must be greater than zero. Set a positive bounded delivery size.")
+            .Validate(
+                static options => options.MessageDeliveryTimeout > TimeSpan.Zero,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': MessageDeliveryTimeout must be greater than zero. Set a positive timeout.")
+            .Validate(
+                static options => options.MaximumDeliveryAttempts > 0,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': MaximumDeliveryAttempts must be greater than zero. Set a positive attempt count.")
+            .Validate(
+                static options => options.InitialDeliveryRetryDelay > TimeSpan.Zero,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': InitialDeliveryRetryDelay must be greater than zero. Set a positive delay.")
+            .Validate(
+                static options => options.MaximumDeliveryRetryDelay >= options.InitialDeliveryRetryDelay,
+                $"Outbox delivery for bus '{typeof(TBus).FullName}': MaximumDeliveryRetryDelay must not be less than InitialDeliveryRetryDelay. Raise the maximum or lower the initial delay.")
+            .ValidateOnStart();
 
         if (_registerOutboxDeliveryService)
             _configurator.Services.AddHostedService<BusOutboxDeliveryService<TBus, TDbContext>>();
@@ -142,7 +167,7 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
 
         string owner = conflict.ImplementationType?.Name ?? conflict.ServiceType.Name;
         throw new ConfigurationException(
-            $"The Entity Framework bus outbox cannot replace scoped context owner {owner} for {TypeCache<TBus>.ShortName}.");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", $"The Entity Framework bus outbox cannot replace scoped context owner {owner} for {TypeCache<TBus>.ShortName}.", "Correct the named configuration before starting the host"));
     }
 
     void EnsureUniqueRegistration()
@@ -150,14 +175,14 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
         Type marker = typeof(EntityFrameworkBusOutboxRegistration<TBus, TDbContext>);
         if (_configurator.Services.Any(x => x.ServiceType == marker))
             throw new ConfigurationException(
-                $"The Entity Framework bus outbox for {TypeCache<TBus>.ShortName} and {TypeCache<TDbContext>.ShortName} is already configured.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", $"The Entity Framework bus outbox for {TypeCache<TBus>.ShortName} and {TypeCache<TDbContext>.ShortName} is already configured.", "Correct the named configuration before starting the host"));
 
         if (_isDefault && _configurator.Services.Any(x =>
                 x.ServiceType == typeof(IEntityFrameworkScopedBusContextFactory<TBus>)
                 && x.ImplementationInstance is IEntityFrameworkScopedBusContextFactory<TBus> { IsDefault: true }))
         {
             throw new ConfigurationException(
-                $"A default Entity Framework bus outbox is already configured for {TypeCache<TBus>.ShortName}. Exactly one default is allowed.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", $"A default Entity Framework bus outbox is already configured for {TypeCache<TBus>.ShortName}. Exactly one default is allowed.", "Correct the named configuration before starting the host"));
         }
 
         _configurator.Services.AddSingleton(new EntityFrameworkBusOutboxRegistration<TBus, TDbContext>());
@@ -166,14 +191,14 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
     void Validate()
     {
         if (MessageDeliveryLimit <= 0)
-            throw new ConfigurationException("MessageDeliveryLimit must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", "MessageDeliveryLimit must be greater than zero.", "Correct the named configuration before starting the host"));
         if (MessageDeliveryTimeout <= TimeSpan.Zero)
-            throw new ConfigurationException("MessageDeliveryTimeout must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", "MessageDeliveryTimeout must be greater than zero.", "Correct the named configuration before starting the host"));
         if (MaximumDeliveryAttempts <= 0)
-            throw new ConfigurationException("MaximumDeliveryAttempts must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", "MaximumDeliveryAttempts must be greater than zero.", "Correct the named configuration before starting the host"));
         if (InitialDeliveryRetryDelay <= TimeSpan.Zero)
-            throw new ConfigurationException("InitialDeliveryRetryDelay must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", "InitialDeliveryRetryDelay must be greater than zero.", "Correct the named configuration before starting the host"));
         if (MaximumDeliveryRetryDelay < InitialDeliveryRetryDelay)
-            throw new ConfigurationException("MaximumDeliveryRetryDelay must be greater than or equal to InitialDeliveryRetryDelay.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Bus Outbox", "unknown", "MaximumDeliveryRetryDelay must be greater than or equal to InitialDeliveryRetryDelay.", "Correct the named configuration before starting the host"));
     }
 }

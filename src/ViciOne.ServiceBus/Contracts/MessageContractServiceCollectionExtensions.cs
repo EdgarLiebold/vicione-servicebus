@@ -23,7 +23,7 @@ public static class MessageContractServiceCollectionExtensions
         if (!owned && services.Any(static descriptor => descriptor.ServiceType == typeof(IMessageContractCatalog)))
         {
             throw new ConfigurationException(
-                "An application-owned message-contract catalog is already registered. ViciOne cannot compose a second catalog owner.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Service Collection Extensions", "unknown", "An application-owned message-contract catalog is already registered. ViciOne cannot compose a second catalog owner.", "Correct the named configuration before starting the host"));
         }
 
         if (!owned)

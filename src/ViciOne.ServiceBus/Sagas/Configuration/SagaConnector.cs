@@ -36,7 +36,7 @@ public sealed class SagaConnector<TSaga> :
             if (_connectors.Count == 0)
             {
                 throw new ConfigurationException(
-                    $"The saga {TypeCache<TSaga>.ShortName} does not declare a supported saga message contract.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"The saga {TypeCache<TSaga>.ShortName} does not declare a supported saga message contract.", "Correct the named configuration before starting the host"));
             }
         }
         catch (ConfigurationException)
@@ -45,7 +45,7 @@ public sealed class SagaConnector<TSaga> :
         }
         catch (Exception ex)
         {
-            throw new ConfigurationException($"Failed to create the saga connector for {TypeCache<TSaga>.ShortName}.", ex);
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"Failed to create the saga connector for {TypeCache<TSaga>.ShortName}.", "Correct the named configuration before starting the host"), ex);
         }
     }
 

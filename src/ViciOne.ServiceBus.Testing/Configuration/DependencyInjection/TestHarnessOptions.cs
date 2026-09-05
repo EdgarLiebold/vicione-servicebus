@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.Testing;
 /// <summary>
 /// Defines configuration options for test harness.
 /// </summary>
-public class TestHarnessOptions
+public sealed class TestHarnessOptions
 {
     /// <summary>
     /// Gets or sets the test timeout value.

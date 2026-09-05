@@ -189,6 +189,7 @@ public sealed class RepositoryGraphTests
                 "src/Scheduling/ViciOne.ServiceBus.Quartz/ViciOne.ServiceBus.Quartz.csproj",
                 "src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj",
                 "src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+                "src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
                 "src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj",
                 "src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj",
                 "src/Transports/ViciOne.ServiceBus.RabbitMq/ViciOne.ServiceBus.RabbitMq.csproj",

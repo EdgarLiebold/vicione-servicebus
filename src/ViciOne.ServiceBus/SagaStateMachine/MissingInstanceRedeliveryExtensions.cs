@@ -36,7 +36,7 @@ public static class MissingInstanceRedeliveryExtensions
         }
         catch (Exception ex)
         {
-            throw new ConfigurationException(result, "The missing instance redelivery configuration was invalid", ex);
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "The missing instance redelivery configuration was invalid", "Correct the named configuration before starting the host"), ex);
         }
     }
 }

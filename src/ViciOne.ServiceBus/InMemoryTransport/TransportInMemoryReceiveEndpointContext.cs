@@ -78,7 +78,7 @@ public class TransportInMemoryReceiveEndpointContext :
             MessageFabric);
 
         var name = _configuration.InputAddress.GetEndpointName()
-            ?? throw new ConfigurationException("The in-memory input address must contain an endpoint name.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The in-memory input address must contain an endpoint name.", "Correct the named configuration before starting the host"));
 
         builder.Exchange = name;
         builder.ExchangeDeclare(name, ExchangeType.FanOut);

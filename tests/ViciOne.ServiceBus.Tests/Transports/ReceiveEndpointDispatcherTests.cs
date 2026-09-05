@@ -27,7 +27,8 @@ public sealed class ReceiveEndpointDispatcherTests
             {
                 configuration.SetTestTimeouts(timeout, timeout);
                 configuration.AddConsumer<DispatchCommandConsumer>();
-                configuration.AddConfigureEndpointsCallback((_, endpoint) => endpoint.UseRawJsonSerializer());
+                configuration.AddConfigureEndpointsCallback((_, endpoint) =>
+                    endpoint.UseRawJsonSerializer(RawSerializerOptions.AnyMessageType));
             })
             .BuildServiceProvider(new ServiceProviderOptions
             {

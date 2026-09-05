@@ -24,15 +24,15 @@ public sealed partial class RabbitMqEntityNameValidator :
     public void ThrowIfInvalidEntityName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new RabbitMqAddressException("The entity name must not be null, empty, or whitespace.");
+            throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "The entity name must not be null, empty, or whitespace.", "Correct the named configuration before starting the host"));
 
         if (Encoding.UTF8.GetByteCount(name) > MaxEntityNameBytes)
-            throw new RabbitMqAddressException($"The UTF-8 encoded entity name must not exceed {MaxEntityNameBytes} bytes.");
+            throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The UTF-8 encoded entity name must not exceed {MaxEntityNameBytes} bytes.", "Correct the named configuration before starting the host"));
 
         if (!EntityNamePattern().IsMatch(name))
         {
             throw new RabbitMqAddressException(
-                "The entity name may contain only Unicode letters and decimal digits, hyphen, underscore, period, or colon.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "The entity name may contain only Unicode letters and decimal digits, hyphen, underscore, period, or colon.", "Correct the named configuration before starting the host"));
         }
     }
 

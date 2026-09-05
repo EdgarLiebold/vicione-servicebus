@@ -25,9 +25,9 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
         if (!IsRabbitMqScheme(bus.Address.Scheme))
         {
             throw new ConfigurationException(
-                $"Durable Sender for bus '{typeof(TBus)}' selected the RabbitMQ transport adapter, but the owning " +
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"Durable Sender for bus '{typeof(TBus)}' selected the RabbitMQ transport adapter, but the owning " +
                 $"bus address '{bus.Address}' is not a RabbitMQ address. Configure UsingRabbitMq(...) and " +
-                "UseDurableSender(...) on the same bus.");
+                "UseDurableSender(...) on the same bus.", "Correct the named configuration before starting the host"));
         }
     }
 
@@ -86,7 +86,7 @@ internal sealed class RabbitMqDurableSendDispatcher<TBus> : IDurableSendDispatch
             if (!context.TryGetPayload(out RabbitMqSendContext? rabbitMqContext))
             {
                 throw new ConfigurationException(
-                    "The RabbitMQ Durable Sender adapter did not receive a RabbitMqSendContext from its owning transport.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "The RabbitMQ Durable Sender adapter did not receive a RabbitMqSendContext from its owning transport.", "Correct the named configuration before starting the host"));
             }
             rabbitMqContext.Mandatory = true;
             rabbitMqContext.AwaitAck = true;

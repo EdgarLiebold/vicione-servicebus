@@ -11,6 +11,31 @@ namespace ViciOne.ServiceBus.Azure.Table;
 /// </summary>
 public static class AzureTableMessageJournalConfigurationExtensions
 {
+    /// <summary>Selects an existing Azure Table journal store inside <c>bus.UseMessageJournal(...)</c>.</summary>
+    public static IMessageJournalConfigurator UseAzureTable(
+        this IMessageJournalConfigurator configurator,
+        TableClient table,
+        AzureTableMessageJournalStoreOptions storeOptions)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        return configurator.UseStore(new AzureTableMessageJournalStore(table, storeOptions));
+    }
+
+    /// <summary>
+    /// Selects an Azure Table journal store inside <c>bus.UseMessageJournal(...)</c> without provisioning the table.
+    /// </summary>
+    public static IMessageJournalConfigurator UseAzureTable(
+        this IMessageJournalConfigurator configurator,
+        TableServiceClient tableServiceClient,
+        string tableName,
+        AzureTableMessageJournalStoreOptions storeOptions)
+    {
+        ArgumentNullException.ThrowIfNull(configurator);
+        ArgumentNullException.ThrowIfNull(tableServiceClient);
+        ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
+        return configurator.UseAzureTable(tableServiceClient.GetTableClient(tableName), storeOptions);
+    }
+
     /// <summary>
     /// Explicitly enables MessageJournal using an existing TableClient. Table provisioning remains
     /// a deployment responsibility and is never a hidden synchronous configuration side effect.

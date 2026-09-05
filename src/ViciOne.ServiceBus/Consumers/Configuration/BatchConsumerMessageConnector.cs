@@ -68,7 +68,7 @@ public class BatchConsumerMessageConnector<TConsumer, TMessage> :
                     options, batchMessagePipe, options.GroupKeyProvider) ?? throw new System.InvalidOperationException("The requested runtime type could not be activated."));
             }
             else
-                throw new ConfigurationException("The GroupKeyProvider does not implement IGroupKeyProvider<TMessage,TKey>");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Batch Consumer Message Connector", "unknown", "The GroupKeyProvider does not implement IGroupKeyProvider<TMessage,TKey>", "Correct the named configuration before starting the host"));
         }
 
         var factory = new BatchConsumerFactory<TMessage>(options, collector);

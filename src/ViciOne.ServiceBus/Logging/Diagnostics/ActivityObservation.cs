@@ -27,6 +27,8 @@ internal static class ActivityObservation
 
     public static bool TryStart(Activity activity)
     {
+        Activity? previousActivity = Activity.Current;
+
         try
         {
             activity.Start();
@@ -36,7 +38,20 @@ internal static class ActivityObservation
         {
             TryLog(exception, "Activity listener faulted while starting an activity");
             TryDispose(activity);
+            Activity.Current = previousActivity;
             return false;
+        }
+    }
+
+    public static void TrySetTraceState(Activity activity, string? traceState)
+    {
+        try
+        {
+            activity.TraceStateString = traceState;
+        }
+        catch (Exception exception)
+        {
+            TryLog(exception, "Activity listener faulted while propagating trace state");
         }
     }
 

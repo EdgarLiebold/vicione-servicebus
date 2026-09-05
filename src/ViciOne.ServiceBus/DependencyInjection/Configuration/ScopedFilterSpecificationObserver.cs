@@ -68,7 +68,7 @@ public class ScopedFilterSpecificationObserver :
             : _filterType.MakeGenericType(typeof(T));
 
         if (!filterType.ImplementsInterface(typeof(IFilter<TContext>)))
-            throw new ConfigurationException($"The scoped filter must implement {TypeCache<IFilter<TContext>>.ShortName} ");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Scoped Filter Specification Observer", "unknown", $"The scoped filter must implement {TypeCache<IFilter<TContext>>.ShortName} ", "Correct the named configuration before starting the host"));
 
         var scopeProviderType = typeof(FilterScopeProvider<,>).MakeGenericType(filterType, typeof(TContext));
 

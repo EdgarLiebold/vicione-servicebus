@@ -67,7 +67,7 @@ public class JobServiceRegistration :
     public void AddConfigureAction(Action<JobConsumerOptions>? configure)
     {
         if (_settings.IsValueCreated)
-            throw new ConfigurationException("The settings were already computed");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Job service", "unknown", "The settings were already computed", "Correct the named configuration before starting the host"));
 
         if (configure != null)
             _configureActions.Add(configure);

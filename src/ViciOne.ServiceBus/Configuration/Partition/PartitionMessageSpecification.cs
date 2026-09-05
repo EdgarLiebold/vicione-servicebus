@@ -31,7 +31,7 @@ public class PartitionMessageSpecification<T> :
     public void Apply(IPipeBuilder<ConsumeContext<T>> builder)
     {
         if (_keyProvider == null)
-            throw new ConfigurationException($"The partition key provider was not found for message type: {TypeCache<T>.ShortName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Partition Message", "unknown", $"The partition key provider was not found for message type: {TypeCache<T>.ShortName}", "Correct the named configuration before starting the host"));
 
         builder.AddFilter(new PartitionFilter<ConsumeContext<T>>(_keyProvider, _partitioner));
     }

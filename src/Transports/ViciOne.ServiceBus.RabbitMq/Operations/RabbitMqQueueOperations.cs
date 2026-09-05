@@ -60,7 +60,7 @@ internal static class RabbitMqFaultRedriveExecutor
         RabbitMqFaultRedriveLoop.Validate(request);
 
         if (busInstance.HostConfiguration is not IRabbitMqHostConfiguration hostConfiguration)
-            throw new ConfigurationException($"The bus '{busInstance.InstanceType.Name}' is not configured with the RabbitMQ transport.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The bus '{busInstance.InstanceType.Name}' is not configured with the RabbitMQ transport.", "Correct the named configuration before starting the host"));
 
         var sourceQueueName = GetValidatedSourceQueueName(
             request,

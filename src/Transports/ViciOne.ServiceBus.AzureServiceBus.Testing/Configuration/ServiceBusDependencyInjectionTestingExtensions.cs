@@ -22,13 +22,14 @@ public static class ServiceBusDependencyInjectionTestingExtensions
     {
         var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IBus));
         if (descriptor != null)
-            throw new ConfigurationException("Azure Service Bus Test Options must be configured before calling AddViciOneServiceBus");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "Azure Service Bus Test Options must be configured before calling AddViciOneServiceBus", "Correct the named configuration before starting the host"));
 
         services.AddOptions<AzureServiceBusTestHarnessOptions>()
             .Configure(options =>
             {
                 configure?.Invoke(options);
-            });
+            })
+            .ValidateOnStart();
 
         services.AddHostedService<AzureServiceBusTestHarnessHostedService>();
 

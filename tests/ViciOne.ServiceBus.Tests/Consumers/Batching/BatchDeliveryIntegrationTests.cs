@@ -11,6 +11,8 @@ namespace ViciOne.ServiceBus.Tests.Consumers.Batching;
 
 public sealed class BatchDeliveryIntegrationTests
 {
+    private static readonly TimeSpan SizeTailTimeLimit = TimeSpan.FromSeconds(1);
+
     [Theory]
     [InlineData(SuccessMode.DefaultTimeLimit)]
     [InlineData(SuccessMode.InlineFiveAndTail)]
@@ -41,7 +43,19 @@ public sealed class BatchDeliveryIntegrationTests
                 .Select(index => new BatchItem(NewId.NextGuid(), index))
                 .ToArray();
 
-            await harness.Bus.PublishBatchAsync(items, cancellationToken);
+            if (expectedResults == 1)
+                await harness.Bus.PublishBatchAsync(items, cancellationToken);
+            else
+            {
+                await harness.Bus.PublishBatchAsync(items[..5], cancellationToken);
+                IPublishedMessage<BatchResult> sizeBatch = await harness.Published
+                    .SelectAsync<BatchResult>(cancellationToken)
+                    .FirstObservedAsync(cancellationToken: cancellationToken);
+                Assert.Equal((5, BatchCompletionMode.Size), (sizeBatch.Context.Message.Count, sizeBatch.Context.Message.Mode));
+
+                await harness.Bus.PublishAsync(items[5], cancellationToken);
+            }
+
             Assert.Equal(expectedResults, await harness.Published
                 .SelectAsync<BatchResult>(cancellationToken)
                 .Take(expectedResults)
@@ -266,7 +280,11 @@ public sealed class BatchDeliveryIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var delivered = NewSignal<Batch<MediatorBatchItem>>();
         var consumer = new MediatorBatchConsumer(delivered);
-        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Consumer(() => consumer));
+        IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.Consumer(() => consumer);
+        });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         MediatorBatchItem[] items = Enumerable.Range(0, 4)
             .Select(index => new MediatorBatchItem(NewId.NextGuid(), index))
@@ -343,7 +361,7 @@ public sealed class BatchDeliveryIntegrationTests
                 break;
             case SuccessMode.InlineFiveAndTail:
                 configuration.AddConsumer<BatchResultConsumer>(consumer => consumer.Options<BatchOptions>(options =>
-                    options.SetMessageLimit(5).SetTimeLimit(TimeSpan.FromMilliseconds(50))));
+                    options.SetMessageLimit(5).SetTimeLimit(SizeTailTimeLimit).SetTimeLimitStart(BatchTimeLimitStart.FromLast)));
                 break;
             case SuccessMode.DefinitionFiveAndTail:
                 configuration.AddConsumer<BatchResultConsumer, BatchResultConsumerDefinition>();
@@ -578,7 +596,7 @@ public sealed class BatchDeliveryIntegrationTests
         {
             endpointConfigurator.UseInMemoryOutbox(context);
             consumerConfigurator.Options<BatchOptions>(options =>
-                options.SetMessageLimit(5).SetTimeLimit(TimeSpan.FromMilliseconds(50)));
+                options.SetMessageLimit(5).SetTimeLimit(SizeTailTimeLimit).SetTimeLimitStart(BatchTimeLimitStart.FromLast));
         }
     }
 

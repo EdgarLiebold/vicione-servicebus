@@ -54,7 +54,7 @@ public sealed class MessageContractCatalogBuilder
         if (attribute is null)
         {
             throw new ConfigurationException(
-                $"Message type '{messageType}' has no {nameof(MessageContractAttribute)}. Durable contracts require an explicit stable identity.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Catalog", "unknown", $"Message type '{messageType}' has no {nameof(MessageContractAttribute)}. Durable contracts require an explicit stable identity.", "Correct the named configuration before starting the host"));
         }
 
         return Register(messageType, new MessageContractIdentity(attribute.Name, attribute.MajorVersion));
@@ -94,13 +94,13 @@ public sealed class MessageContractCatalogBuilder
                 return this;
 
             throw new ConfigurationException(
-                $"Message type '{messageType}' is already registered as '{existingIdentity}' and cannot also be '{identity}'.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Catalog", "unknown", $"Message type '{messageType}' is already registered as '{existingIdentity}' and cannot also be '{identity}'.", "Correct the named configuration before starting the host"));
         }
 
         if (_byIdentity.TryGetValue(identity, out Type? existingType))
         {
             throw new ConfigurationException(
-                $"Message contract identity '{identity}' is already registered for '{existingType}' and cannot also map to '{messageType}'.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Contract Catalog", "unknown", $"Message contract identity '{identity}' is already registered for '{existingType}' and cannot also map to '{messageType}'.", "Correct the named configuration before starting the host"));
         }
 
         _byType.Add(messageType, identity);

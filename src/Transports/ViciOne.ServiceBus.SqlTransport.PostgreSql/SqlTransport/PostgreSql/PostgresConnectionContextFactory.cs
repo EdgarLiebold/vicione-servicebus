@@ -20,7 +20,7 @@ public class PostgresConnectionContextFactory :
     {
         _hostConfiguration = hostConfiguration;
         _hostSettings = hostConfiguration.Settings as PostgresSqlHostSettings
-            ?? throw new ConfigurationException("The host settings were not of the expected type");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host settings were not of the expected type", "Correct the named configuration before starting the host"));
     }
 
     /// <summary>

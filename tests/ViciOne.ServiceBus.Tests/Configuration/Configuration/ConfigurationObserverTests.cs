@@ -154,7 +154,9 @@ public sealed class ConfigurationObserverTests
         reentrantObserver.Validate = reentrant.Validate;
 
         ConfigurationException exception = Assert.Throws<ConfigurationException>(() => reentrant.Validate().ToArray());
-        Assert.Equal("A configuration observer re-entered notification for the same configuration object.", exception.Message);
+        Assert.Equal(
+            "Configuration Observer Notification for bus 'unknown': A configuration observer re-entered notification for the same configuration object. Correct the named configuration before starting the host.",
+            exception.Message);
     }
 
     private static void AssertStableObserverValidation(

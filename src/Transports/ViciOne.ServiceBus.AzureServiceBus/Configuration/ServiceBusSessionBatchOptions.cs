@@ -6,8 +6,22 @@ namespace ViciOne.ServiceBus.AzureServiceBus;
 /// <summary>
 /// Defines configuration options for service bus session batch.
 /// </summary>
-public class ServiceBusSessionBatchOptions
+public sealed class ServiceBusSessionBatchOptions
 {
+    internal void Validate()
+    {
+        if (MessageLimitPerSession <= 0)
+            throw Invalid(nameof(MessageLimitPerSession), "must be greater than zero", "Set a positive per-session message limit");
+        if (MaxConcurrentSessions <= 0)
+            throw Invalid(nameof(MaxConcurrentSessions), "must be greater than zero", "Set a positive session concurrency limit");
+        if (SessionIdleTimeout.HasValue && SessionIdleTimeout.Value <= TimeSpan.Zero)
+            throw Invalid(nameof(SessionIdleTimeout), "must be greater than zero when specified", "Set a positive timeout or null");
+        if (TimeLimit <= TimeSpan.Zero)
+            throw Invalid(nameof(TimeLimit), "must be greater than zero", "Set a positive batch time limit");
+        if (!Enum.IsDefined(TimeLimitStart))
+            throw Invalid(nameof(TimeLimitStart), $"has the undefined value '{TimeLimitStart}'", "Select a defined BatchTimeLimitStart value");
+    }
+
     /// <summary>
     /// The maximum number of messages in a single batch
     /// </summary>
@@ -82,4 +96,7 @@ public class ServiceBusSessionBatchOptions
         TimeLimitStart = timeLimitStart;
         return this;
     }
+
+    static ConfigurationException Invalid(string property, string problem, string fix) =>
+        new($"Azure Service Bus session batching for bus 'default': {property} {problem}. {fix}.");
 }

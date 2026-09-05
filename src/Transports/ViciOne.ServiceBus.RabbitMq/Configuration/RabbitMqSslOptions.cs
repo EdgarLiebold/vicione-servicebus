@@ -6,7 +6,7 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Defines configuration options for rabbit mq ssl.
 /// </summary>
-public class RabbitMqSslOptions
+public sealed class RabbitMqSslOptions
 {
     /// <summary>
     /// Gets or sets the server name value.

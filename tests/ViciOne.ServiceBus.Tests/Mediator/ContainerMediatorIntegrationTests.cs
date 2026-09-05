@@ -76,7 +76,11 @@ public sealed class ContainerMediatorIntegrationTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBusTestHarness(configuration => configuration.SetTestTimeouts(timeout, timeout))
-            .AddMediator(configuration => configuration.AddConsumer<BusPublishingMediatorConsumer>())
+            .AddMediator(configuration =>
+            {
+                configuration.Limits(MessageLimits.Conservative);
+                configuration.AddConsumer<BusPublishingMediatorConsumer>();
+            })
             .BuildServiceProvider(validateScopes: true);
         ITestHarness harness = await provider.StartTestHarnessAsync(cancellationToken: TestContext.Current.CancellationToken).WaitAsync(timeout, cancellationToken);
 
@@ -109,6 +113,7 @@ public sealed class ContainerMediatorIntegrationTests
         await using ServiceProvider provider = new ServiceCollection()
             .AddMediator(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<OuterMediatorRequestConsumer>();
                 configuration.AddConsumer<InnerMediatorRequestConsumer>();
                 configuration.AddRequestClient<OuterMediatorRequest>();
@@ -141,6 +146,7 @@ public sealed class ContainerMediatorIntegrationTests
         await using ServiceProvider provider = new ServiceCollection()
             .AddMediator(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<SagaStartingMediatorConsumer>();
                 configuration.AddSaga<MediatorOrderSaga>().InMemoryRepository();
             })
@@ -162,6 +168,7 @@ public sealed class ContainerMediatorIntegrationTests
 
     private static void AddMediatorRoute(IMediatorRegistrationConfigurator configuration, MediatorBusRoute route)
     {
+        configuration.Limits(MessageLimits.Conservative);
         if (route == MediatorBusRoute.Publish)
             configuration.AddConsumer<MediatorPublishingBridgeConsumer>();
         else

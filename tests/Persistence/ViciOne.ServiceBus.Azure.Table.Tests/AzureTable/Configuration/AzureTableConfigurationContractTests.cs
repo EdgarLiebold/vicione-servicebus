@@ -1,10 +1,13 @@
 using System.Reflection;
 using global::Azure.Data.Tables;
 using Microsoft.Extensions.DependencyInjection;
+using ViciOne.ServiceBus.Azure.Table;
 using ViciOne.ServiceBus.AzureTable;
+using ViciOne.ServiceBus.AzureTable.MessageJournal;
 using ViciOne.ServiceBus.AzureTable.Saga;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
+using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Saga;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;
@@ -164,6 +167,21 @@ public sealed class AzureTableConfigurationContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-AZURE-TABLE-CONFIGURATION", "bus-block-journal-provider-selection-does-no-network-io")]
+    public void BusBlockJournalProviderSelection_CreatesTheBoundedStoreWithoutNetworkIo()
+    {
+        var limits = new MessageJournalStoreLimits(4096, 25, TimeSpan.FromDays(2));
+        var options = new AzureTableMessageJournalStoreOptions("journal", limits);
+        var configurator = new RecordingJournalConfigurator();
+
+        IMessageJournalConfigurator result = configurator.UseAzureTable(CreateTableClient(), options);
+
+        Assert.Same(configurator, result);
+        var store = Assert.IsType<AzureTableMessageJournalStore>(configurator.Store);
+        Assert.Same(limits, store.Limits);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-AZURE-TABLE-CONFIGURATION", "registration-resolves-internal-table-client-provider")]
     public void Registration_ResolvesBothRepositoryContractsThroughTheInternalTableClientProvider()
     {
@@ -212,5 +230,20 @@ public sealed class AzureTableConfigurationContractTests
         public int? SagaPartitionCount { set { } }
         public bool FinalizeCompleted { set { } }
         public Func<string, TimeZoneInfo> TimeZoneResolver { set { } }
+    }
+
+    private sealed class RecordingJournalConfigurator : IMessageJournalConfigurator
+    {
+        public IMessageJournalStore? Store { get; private set; }
+
+        public IMessageJournalConfigurator UseStore(IMessageJournalStore store)
+        {
+            Store = store;
+            return this;
+        }
+
+        public IMessageJournalConfigurator Policy(IMessageJournalPolicy policy) => this;
+
+        public IMessageJournalConfigurator Options(MessageJournalOptions options) => this;
     }
 }

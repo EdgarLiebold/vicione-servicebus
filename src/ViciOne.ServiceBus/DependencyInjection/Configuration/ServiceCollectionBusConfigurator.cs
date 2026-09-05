@@ -97,6 +97,7 @@ public class ServiceCollectionBusConfigurator :
             throw new ArgumentNullException(nameof(busFactory));
 
         ThrowIfAlreadyConfigured(nameof(SetBusFactory));
+        BusCompositionRegistrations.AddTransport<IBus>(Services, busFactory.GetType());
 
         Services.AddSingleton(provider => Bind<IBus>.Create(CreateBus(busFactory, provider)));
 
@@ -254,6 +255,7 @@ public class ServiceCollectionBusConfigurator<TBus, TBusInstance> :
             throw new ArgumentNullException(nameof(busFactory));
 
         ThrowIfAlreadyConfigured(nameof(SetBusFactory));
+        BusCompositionRegistrations.AddTransport<TBus>(Services, busFactory.GetType());
 
         Services.AddSingleton(provider => CreateBus(busFactory, provider));
 

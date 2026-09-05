@@ -102,7 +102,7 @@ internal static class PayloadAdmissionTransportBoundary
         if (context is not TransportSendContext transportContext)
         {
             throw new ConfigurationException(
-                "Payload admission requires a transport send context at the provider boundary.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "Payload admission requires a transport send context at the provider boundary.", "Correct the named configuration before starting the host"));
         }
 
         _ = transportContext.Body.GetBytes();

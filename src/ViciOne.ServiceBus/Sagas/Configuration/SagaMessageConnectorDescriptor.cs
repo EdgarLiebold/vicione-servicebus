@@ -57,7 +57,7 @@ internal sealed class SagaMessageConnectorDescriptor
             Type factoryType = openFactoryType.MakeGenericType(sagaType, messageType);
 
             return (ISagaConnectorFactory)(Activator.CreateInstance(factoryType)
-                ?? throw new ConfigurationException($"Unable to create saga connector factory {TypeCache.GetShortName(factoryType)}."));
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"Unable to create saga connector factory {TypeCache.GetShortName(factoryType)}.", "Correct the named configuration before starting the host")));
         });
     }
 }

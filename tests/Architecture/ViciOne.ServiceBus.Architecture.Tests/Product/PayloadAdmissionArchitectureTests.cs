@@ -14,12 +14,13 @@ public sealed class PayloadAdmissionArchitectureTests
         int admission = source.IndexOf("transportContext.ApplyPayloadAdmission(sendContext)", StringComparison.Ordinal);
         Assert.True(admission >= 0, "The common physical send boundary must apply payload admission.");
 
-        int activity = source.IndexOf("StartSendActivity", admission, StringComparison.Ordinal);
+        int activity = source.IndexOf("StartSendActivity", StringComparison.Ordinal);
         int observer = source.IndexOf("SendObservers.PreSendAsync(sendContext)", admission, StringComparison.Ordinal);
         int provider = source.IndexOf("_sendTransportContext.SendAsync(context, sendContext)", admission, StringComparison.Ordinal);
 
-        Assert.True(activity > admission);
-        Assert.True(observer > activity);
+        Assert.True(activity >= 0);
+        Assert.True(admission > activity);
+        Assert.True(observer > admission);
         Assert.True(provider > observer);
     }
 

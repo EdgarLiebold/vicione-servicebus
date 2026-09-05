@@ -46,7 +46,7 @@ public class FutureRegistrationConfigurator<TFuture> :
     public IFutureRegistrationConfigurator<TFuture> Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         if (!_registration.IncludeInConfigureEndpoints)
-            throw new ConfigurationException("Feature is excluded from ConfigureEndpoints");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Future Registration", "unknown", "Feature is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
         var configurator = new EndpointRegistrationConfigurator<TFuture>();
 

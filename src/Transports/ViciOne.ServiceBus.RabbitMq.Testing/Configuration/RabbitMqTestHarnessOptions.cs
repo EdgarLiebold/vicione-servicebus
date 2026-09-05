@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.RabbitMq.Testing;
 /// <summary>
 /// Defines configuration options for rabbit mq test harness.
 /// </summary>
-public class RabbitMqTestHarnessOptions
+public sealed class RabbitMqTestHarnessOptions
 {
     /// <summary>
     /// Attempts to create the virtual host on the RabbitMQ broker using the management API. The <see cref="RabbitMqTransportOptions" /> will be

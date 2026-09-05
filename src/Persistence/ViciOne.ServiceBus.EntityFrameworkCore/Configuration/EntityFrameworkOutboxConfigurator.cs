@@ -56,7 +56,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     /// </summary>
     public ILockStatementProvider LockStatementProvider
     {
-        set => _lockStatementProvider = value ?? throw new ConfigurationException("LockStatementProvider must not be null");
+        set => _lockStatementProvider = value ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "LockStatementProvider must not be null", "Correct the named configuration before starting the host"));
     }
 
     /// <summary>
@@ -89,7 +89,7 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     public virtual void UseBusOutbox(Action<IEntityFrameworkBusOutboxConfigurator>? configure = null)
     {
         if (_useBusOutbox)
-            throw new ConfigurationException("The Entity Framework bus outbox may only be configured once.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "The Entity Framework bus outbox may only be configured once.", "Correct the named configuration before starting the host"));
 
         _useBusOutbox = true;
         _configureBusOutbox = configure;
@@ -119,7 +119,14 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
         {
             options.IsolationLevel = isolationLevel;
             options.LockStatementProvider = lockStatementProvider;
-        });
+        })
+            .Validate(
+                static options => Enum.IsDefined(options.IsolationLevel),
+                $"Entity Framework outbox for bus '{typeof(TBus).FullName}': IsolationLevel is not defined. Select a valid isolation level.")
+            .Validate(
+                static options => options.LockStatementProvider is not null,
+                $"Entity Framework outbox for bus '{typeof(TBus).FullName}': LockStatementProvider is not declared. Select exactly one relational provider.")
+            .ValidateOnStart();
 
         if (_registerInboxCleanupService)
         {
@@ -130,7 +137,20 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
                 options.QueryMessageLimit = queryMessageLimit;
                 options.QueryDelay = queryDelay;
                 options.QueryTimeout = queryTimeout;
-            });
+            })
+                .Validate(
+                    static options => options.DuplicateDetectionWindow > TimeSpan.Zero,
+                    $"Inbox cleanup for bus '{typeof(TBus).FullName}': DuplicateDetectionWindow must be greater than zero. Set a positive duration.")
+                .Validate(
+                    static options => options.QueryMessageLimit > 0,
+                    $"Inbox cleanup for bus '{typeof(TBus).FullName}': QueryMessageLimit must be greater than zero. Set a positive bounded batch size.")
+                .Validate(
+                    static options => options.QueryDelay > TimeSpan.Zero,
+                    $"Inbox cleanup for bus '{typeof(TBus).FullName}': QueryDelay must be greater than zero. Set a positive delay.")
+                .Validate(
+                    static options => options.QueryTimeout > TimeSpan.Zero,
+                    $"Inbox cleanup for bus '{typeof(TBus).FullName}': QueryTimeout must be greater than zero. Set a positive timeout.")
+                .ValidateOnStart();
         }
 
         if (_useBusOutbox)
@@ -143,14 +163,14 @@ public class EntityFrameworkOutboxConfigurator<TBus, TDbContext> :
     void ValidateSettings()
     {
         if (_lockStatementProvider == null)
-            throw new ConfigurationException("A relational provider must be selected explicitly for the Entity Framework outbox.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "A relational provider must be selected explicitly for the Entity Framework outbox.", "Correct the named configuration before starting the host"));
         if (DuplicateDetectionWindow <= TimeSpan.Zero)
-            throw new ConfigurationException("DuplicateDetectionWindow must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "DuplicateDetectionWindow must be greater than zero.", "Correct the named configuration before starting the host"));
         if (QueryDelay <= TimeSpan.Zero)
-            throw new ConfigurationException("QueryDelay must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "QueryDelay must be greater than zero.", "Correct the named configuration before starting the host"));
         if (QueryMessageLimit <= 0)
-            throw new ConfigurationException("QueryMessageLimit must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "QueryMessageLimit must be greater than zero.", "Correct the named configuration before starting the host"));
         if (QueryTimeout <= TimeSpan.Zero)
-            throw new ConfigurationException("QueryTimeout must be greater than zero.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Entity Framework Outbox", "unknown", "QueryTimeout must be greater than zero.", "Correct the named configuration before starting the host"));
     }
 }

@@ -23,7 +23,17 @@ public static class ViciOneServiceBusHealthCheckOptionsExtensions
             .Configure(options =>
             {
                 callback?.Invoke(options);
-            });
+            })
+            .Validate(
+                static options => options.Name is null || !string.IsNullOrWhiteSpace(options.Name),
+                "Health check for bus 'default': Name must not be empty when specified. Set a non-empty name or leave it unset.")
+            .Validate(
+                static options => options.MinimalFailureStatus is null || Enum.IsDefined(options.MinimalFailureStatus.Value),
+                "Health check for bus 'default': MinimalFailureStatus is not defined. Select a valid HealthStatus value or leave it unset.")
+            .Validate(
+                static options => options.Tags.All(static tag => !string.IsNullOrWhiteSpace(tag)),
+                "Health check for bus 'default': Tags contains an empty value. Remove empty tags before starting the host.")
+            .ValidateOnStart();
 
         return configurator;
     }
@@ -42,7 +52,17 @@ public static class ViciOneServiceBusHealthCheckOptionsExtensions
             .Configure(options =>
             {
                 callback?.Invoke(options);
-            });
+            })
+            .Validate(
+                static options => options.Name is null || !string.IsNullOrWhiteSpace(options.Name),
+                $"Health check for bus '{typeof(T).FullName}': Name must not be empty when specified. Set a non-empty name or leave it unset.")
+            .Validate(
+                static options => options.MinimalFailureStatus is null || Enum.IsDefined(options.MinimalFailureStatus.Value),
+                $"Health check for bus '{typeof(T).FullName}': MinimalFailureStatus is not defined. Select a valid HealthStatus value or leave it unset.")
+            .Validate(
+                static options => options.Tags.All(static tag => !string.IsNullOrWhiteSpace(tag)),
+                $"Health check for bus '{typeof(T).FullName}': Tags contains an empty value. Remove empty tags before starting the host.")
+            .ValidateOnStart();
 
         return configurator;
     }

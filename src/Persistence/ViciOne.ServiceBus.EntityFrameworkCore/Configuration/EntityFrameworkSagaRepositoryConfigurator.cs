@@ -207,7 +207,7 @@ public class EntityFrameworkSagaRepositoryConfigurator<TSaga> :
     ISagaRepositoryLockStrategy<TSaga> CreatePessimisticLockStrategy()
     {
         var statementProvider = _lockStatementProvider
-            ?? throw new ConfigurationException("A lock statement provider must be selected explicitly for pessimistic concurrency.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A lock statement provider must be selected explicitly for pessimistic concurrency.", "Correct the named configuration before starting the host"));
 
         var queryExecutor = new PessimisticLoadQueryExecutor<TSaga>(statementProvider, _queryCustomization);
 

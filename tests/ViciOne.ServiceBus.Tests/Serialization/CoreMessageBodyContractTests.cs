@@ -12,6 +12,7 @@ public sealed class CoreMessageBodyContractTests
     {
         string[] expected =
         [
+            "ViciOne.ServiceBus.Mediator.Contexts.MeasuredMediatorMessageBody",
             IdentityOf(typeof(MemoryMessageBody)),
             IdentityOf(typeof(NotSupportedMessageBody)),
             IdentityOf(typeof(SystemTextJsonMessageBody<>)),

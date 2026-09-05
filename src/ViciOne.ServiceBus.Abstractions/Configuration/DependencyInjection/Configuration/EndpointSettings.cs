@@ -95,7 +95,7 @@ public class EndpointSettings<TConsumer> :
         _callbacks.Add((context, cfg) =>
         {
             if (context is null)
-                throw new ConfigurationException("The bus registration context cannot be null (via AddConfigureEndpointCallback).");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Settings", "unknown", "The bus registration context cannot be null (via AddConfigureEndpointCallback).", "Correct the named configuration before starting the host"));
 
             callback(context, cfg);
         });

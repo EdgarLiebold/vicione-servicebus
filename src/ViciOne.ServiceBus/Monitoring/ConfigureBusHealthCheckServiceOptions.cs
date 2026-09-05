@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Configuration;
@@ -12,22 +13,19 @@ namespace ViciOne.ServiceBus.Monitoring;
 /// <summary>
 /// Defines configuration options for configure bus health check service.
 /// </summary>
-public class ConfigureBusHealthCheckServiceOptions :
+public sealed class ConfigureBusHealthCheckServiceOptions :
     IConfigureOptions<HealthCheckServiceOptions>
 {
-    readonly IEnumerable<IBusInstance> _busInstances;
     readonly IServiceProvider _provider;
     readonly string[] _tags;
 
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>
-    /// <param name="busInstances">The bus instances value.</param>
     /// <param name="provider">The service provider.</param>
-    public ConfigureBusHealthCheckServiceOptions(IEnumerable<IBusInstance> busInstances, IServiceProvider provider)
+    public ConfigureBusHealthCheckServiceOptions(IServiceProvider provider)
     {
-        _busInstances = busInstances;
-        _provider = provider;
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _tags = new[] { "ready", "vicione-servicebus" };
     }
 
@@ -37,12 +35,13 @@ public class ConfigureBusHealthCheckServiceOptions :
     /// <param name="options">The options value.</param>
     public void Configure(HealthCheckServiceOptions options)
     {
-        foreach (var busInstance in _busInstances)
+        foreach (IBusCompositionRegistration busRegistration in _provider.GetServices<IBusCompositionRegistration>())
         {
-            var type = typeof(ViciOneServiceBusHealthCheckOptions<>).MakeGenericType(busInstance.InstanceType);
+            Type busType = busRegistration.BusType;
+            var type = typeof(ViciOneServiceBusHealthCheckOptions<>).MakeGenericType(busType);
             var optionsType = typeof(IOptions<>).MakeGenericType(type);
 
-            var name = busInstance.Name;
+            string name = HealthCheckName(busType);
             HealthStatus? minimalFailureStatus = HealthStatus.Unhealthy;
             var tags = new HashSet<string>(_tags, StringComparer.OrdinalIgnoreCase);
 
@@ -51,7 +50,7 @@ public class ConfigureBusHealthCheckServiceOptions :
             {
                 var healthCheckOptions = optionsType.GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)?.GetValue(busOptions, null)
                     as IHealthCheckOptions
-                    ?? throw new InvalidOperationException($"Could not read health check options for bus instance '{busInstance.Name}'.");
+                    ?? throw new InvalidOperationException($"Could not read health check options for bus instance '{name}'.");
 
                 if (!string.IsNullOrWhiteSpace(healthCheckOptions.Name))
                     name = healthCheckOptions.Name;
@@ -63,7 +62,23 @@ public class ConfigureBusHealthCheckServiceOptions :
                     tags = healthCheckOptions.Tags;
             }
 
-            options.Registrations.Add(new HealthCheckRegistration(name, new BusHealthCheck(busInstance), minimalFailureStatus, tags));
+            options.Registrations.Add(new HealthCheckRegistration(
+                name,
+                provider => new BusHealthCheck(provider.GetServices<IBusInstance>()
+                    .Single(instance => instance.InstanceType == busType)),
+                minimalFailureStatus,
+                tags));
         }
+    }
+
+    static string HealthCheckName(Type busType)
+    {
+        if (busType == typeof(IBus))
+            return "vicione-servicebus-bus";
+
+        string name = busType.Name;
+        if (name.Length >= 2 && name[0] == 'I' && char.IsUpper(name[1]))
+            name = name[1..];
+        return $"vicione-servicebus-{KebabCaseEndpointNameFormatter.Instance.SanitizeName(name)}";
     }
 }

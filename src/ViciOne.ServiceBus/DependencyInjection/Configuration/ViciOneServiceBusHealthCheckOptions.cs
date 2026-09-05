@@ -9,7 +9,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// Defines configuration options for vici one service bus health check.
 /// </summary>
 /// <typeparam name="TBus">The t bus type.</typeparam>
-public class ViciOneServiceBusHealthCheckOptions<TBus> :
+public sealed class ViciOneServiceBusHealthCheckOptions<TBus> :
     IHealthCheckOptionsConfigurator,
     IHealthCheckOptions
     where TBus : IBus

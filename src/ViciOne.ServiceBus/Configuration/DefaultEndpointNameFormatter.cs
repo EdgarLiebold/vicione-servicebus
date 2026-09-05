@@ -255,7 +255,7 @@ public class DefaultEndpointNameFormatter :
             consumerName = consumerName.Substring(0, consumerName.Length - consumer.Length);
 
             if (string.IsNullOrWhiteSpace(consumerName))
-                throw new ConfigurationException($"A consumer may not be named \"{consumer}\". Add a meaningful prefix when using ConfigureEndpoints.");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Endpoint Name Formatter", "unknown", $"A consumer may not be named \"{consumer}\". Add a meaningful prefix when using ConfigureEndpoints.", "Correct the named configuration before starting the host"));
         }
 
         return SanitizeName(consumerName);
@@ -291,7 +291,7 @@ public class DefaultEndpointNameFormatter :
         {
             sagaName = sagaName.Substring(0, sagaName.Length - saga.Length);
             if (string.IsNullOrWhiteSpace(sagaName))
-                throw new ConfigurationException($"A saga may not be named \"{saga}\". Add a meaningful prefix when using ConfigureEndpoints.");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Endpoint Name Formatter", "unknown", $"A saga may not be named \"{saga}\". Add a meaningful prefix when using ConfigureEndpoints.", "Correct the named configuration before starting the host"));
         }
 
         return SanitizeName(sagaName);
@@ -318,7 +318,7 @@ public class DefaultEndpointNameFormatter :
         {
             activityName = activityName.Substring(0, activityName.Length - activity.Length);
             if (string.IsNullOrWhiteSpace(activityName))
-                throw new ConfigurationException($"An activity may not be named \"{activity}\". Add a meaningful prefix when using ConfigureEndpoints.");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Default Endpoint Name Formatter", "unknown", $"An activity may not be named \"{activity}\". Add a meaningful prefix when using ConfigureEndpoints.", "Correct the named configuration before starting the host"));
         }
 
         return SanitizeName(activityName);

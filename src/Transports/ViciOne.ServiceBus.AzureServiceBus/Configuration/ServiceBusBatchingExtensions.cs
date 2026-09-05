@@ -19,8 +19,11 @@ public static class ServiceBusBatchingExtensions
         Action<ServiceBusSessionBatchOptions> configure)
         where TConsumer : class
     {
+        ArgumentNullException.ThrowIfNull(consumerConfigurator);
+        ArgumentNullException.ThrowIfNull(configure);
         ServiceBusSessionBatchOptions sessionOptions = new();
         configure(sessionOptions);
+        sessionOptions.Validate();
 
         consumerConfigurator.Options<BatchOptions>(o =>
         {

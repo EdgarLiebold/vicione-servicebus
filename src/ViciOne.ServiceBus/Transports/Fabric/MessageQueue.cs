@@ -84,7 +84,7 @@ public class MessageQueue<TContext, T> :
         }
         catch (Exception exception)
         {
-            throw new ConfigurationException($"Only a single consumer can be connected to a queue: {Name}", exception);
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Queue", "unknown", $"Only a single consumer can be connected to a queue: {Name}", "Correct the named configuration before starting the host"), exception);
         }
     }
 

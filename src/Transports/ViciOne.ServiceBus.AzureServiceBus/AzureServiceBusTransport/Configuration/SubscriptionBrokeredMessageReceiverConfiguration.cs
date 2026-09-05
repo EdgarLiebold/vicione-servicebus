@@ -45,7 +45,7 @@ public class SubscriptionBrokeredMessageReceiverConfiguration :
         }
         catch (Exception ex)
         {
-            throw new ConfigurationException(result, "An exception occurred creating the BrokeredMessageReceiver", ex);
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "An exception occurred creating the BrokeredMessageReceiver", "Correct the named configuration before starting the host"), ex);
         }
     }
 }

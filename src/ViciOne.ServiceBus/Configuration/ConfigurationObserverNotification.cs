@@ -33,7 +33,7 @@ internal sealed class ConfigurationObserverNotification
             if (_state == NotificationState.Notifying)
             {
                 throw new ConfigurationException(
-                    "A configuration observer re-entered notification for the same configuration object.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Configuration Observer Notification", "unknown", "A configuration observer re-entered notification for the same configuration object.", "Correct the named configuration before starting the host"));
             }
 
             _state = NotificationState.Notifying;

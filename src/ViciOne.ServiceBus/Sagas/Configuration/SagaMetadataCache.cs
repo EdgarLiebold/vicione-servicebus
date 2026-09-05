@@ -43,8 +43,8 @@ internal sealed class SagaMetadataCache<TSaga>
         }
 
         throw new ConfigurationException(
-            $"The saga {TypeCache<TSaga>.ShortName} must have either a public constructor with one Guid parameter, "
-            + "or a public parameterless constructor and a writable CorrelationId property.");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", $"The saga {TypeCache<TSaga>.ShortName} must have either a public constructor with one Guid parameter, "
+            + "or a public parameterless constructor and a writable CorrelationId property.", "Correct the named configuration before starting the host"));
     }
 
     static SagaMessageConnectorDescriptor[] GetMessageContracts(Type contractTypeDefinition)

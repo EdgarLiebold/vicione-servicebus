@@ -107,8 +107,8 @@ public static class JsonSerializerConfigurationExtensions
         {
             messageSerializerOptions = configure(messageSerializerOptions)
                 ?? throw new ConfigurationException(
-                    "The SetMessageSerializerOptions callback returned null. It has to return the options "
-                    + "to use, either the instance it was given or another one.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Json Serializer", "unknown", "The SetMessageSerializerOptions callback returned null. It has to return the options "
+                    + "to use, either the instance it was given or another one.", "Correct the named configuration before starting the host"));
         }
 
         options.Converters.Insert(0, new CustomMessageTypeJsonConverter<T>(messageSerializerOptions));

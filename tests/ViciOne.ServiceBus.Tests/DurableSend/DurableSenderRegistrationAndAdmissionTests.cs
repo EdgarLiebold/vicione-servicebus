@@ -1,6 +1,6 @@
-using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,6 +33,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.UsingInMemory((_, bus) =>
             {
                 bus.Host(new Uri("loopback://typed-durable/"));
@@ -100,6 +101,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.UsingInMemory((_, bus) =>
             {
                 bus.Host(new Uri("loopback://typed-primary/"));
@@ -113,6 +115,7 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         });
         services.AddViciOneServiceBus<IOtherBus>("secondary-v1", configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.UsingInMemory((_, bus) =>
             {
                 bus.Host(new Uri("loopback://typed-secondary/"));
@@ -168,14 +171,15 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         var services = new ServiceCollection();
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
-        services.AddViciOnePayloadAdmission<IBus>(options =>
-        {
-            options.MessageDataOffloadThresholdBytes = 1;
-            options.MaximumSerializedBodyBytes = 64 * 1024;
-            options.MaximumTransportEnvelopeBytes = 64 * 1024;
-        });
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(new MessageLimits
+            {
+                MaxBodyBytes = 64 * 1024,
+                MaxEnvelopeBytes = 64 * 1024,
+                MaxJsonDepth = 32,
+                OffloadToMessageDataAboveBytes = 1,
+            });
             configuration.UsingInMemory((_, bus) =>
             {
                 bus.Host(new Uri("loopback://typed-message-data/"));
@@ -218,13 +222,14 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
         var services = new ServiceCollection();
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
-        services.AddViciOnePayloadAdmission<IBus>(options =>
-        {
-            options.MaximumSerializedBodyBytes = 128;
-            options.MaximumTransportEnvelopeBytes = 1024;
-        });
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(new MessageLimits
+            {
+                MaxBodyBytes = 128,
+                MaxEnvelopeBytes = 1024,
+                MaxJsonDepth = 32,
+            });
             configuration.UsingInMemory((_, bus) =>
             {
                 bus.Host(new Uri("loopback://typed-admission/"));
@@ -399,39 +404,55 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
     [InlineData(InvalidComposition.MissingCatalog, "no message-contract catalog")]
     [InlineData(InvalidComposition.DuplicateStore, "multiple persistence store")]
     [InlineData(InvalidComposition.DuplicateDispatcher, "multiple transport dispatcher")]
-    [InlineData(InvalidComposition.InvalidOptions, "invalid bounded-delivery policy")]
+    [InlineData(InvalidComposition.InvalidOptions, "MaximumStoredCount")]
     [RequirementCoverage("REQ-VSB-DURABLE-STARTUP", "invalid-static-composition-fails-before-background-delivery")]
-    public void StartupValidation_RejectsEveryIncompleteOrAmbiguousComposition(
+    public async Task StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(
         InvalidComposition invalid,
         string expectedMessage)
     {
         var services = new ServiceCollection();
-        services.AddSingleton<ITestBus>(DispatchProxy.Create<ITestBus, ThrowingBusProxy>());
-        services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
-        services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
-        if (invalid != InvalidComposition.MissingCatalog)
+        services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
+        services.AddViciOneServiceBus<ITestBus>(bus =>
         {
-            services.AddViciOneMessageContracts(builder => builder.Register<KnownMessage>(
-                KnownIdentity.Name,
-                KnownIdentity.MajorVersion));
-        }
-        if (invalid != InvalidComposition.MissingStore)
-            services.AddSingleton(DurableSenderTestFactory.CreateInMemoryStore<ITestBus>());
+            bus.Limits(MessageLimits.Conservative);
+            bus.UsingInMemory();
+            bus.UseDurableSender(durable =>
+            {
+                if (invalid != InvalidComposition.MissingCatalog)
+                {
+                    durable.AddMessageContract<KnownMessage>(
+                        KnownIdentity.Name,
+                        KnownIdentity.MajorVersion);
+                }
+                if (invalid != InvalidComposition.MissingStore)
+                    durable.UseInMemoryStore();
+                if (invalid == InvalidComposition.InvalidOptions)
+                    durable.Configure(options => options.MaximumStoredCount = 0);
+            });
+        });
+
         if (invalid == InvalidComposition.DuplicateStore)
             services.AddSingleton(DurableSenderTestFactory.CreateInMemoryStore<ITestBus>());
-        if (invalid != InvalidComposition.MissingDispatcher)
-            services.AddSingleton<IDurableSendDispatcher<ITestBus>>(new NoOpDispatcher());
+        if (invalid == InvalidComposition.MissingDispatcher)
+            services.RemoveAll<IDurableSendDispatcher<ITestBus>>();
         if (invalid == InvalidComposition.DuplicateDispatcher)
             services.AddSingleton<IDurableSendDispatcher<ITestBus>>(new NoOpDispatcher());
-        services.AddViciOneDurableSender<ITestBus>(options =>
-        {
-            if (invalid == InvalidComposition.InvalidOptions)
-                options.MaximumStoredCount = 0;
-        });
-        using ServiceProvider provider = services.BuildServiceProvider();
+        await using ServiceProvider provider = services.BuildServiceProvider();
 
-        Exception failure = Assert.ThrowsAny<Exception>(() =>
-            provider.GetServices<IHostedService>().ToArray());
+        Exception failure;
+        try
+        {
+            IHostedService validator = provider.GetServices<IHostedService>().Single(service =>
+                service.GetType().IsGenericType
+                && service.GetType().GetGenericTypeDefinition().Name == "BusCompositionStartupValidator`1"
+                && service.GetType().GetGenericArguments()[0] == typeof(ITestBus));
+            failure = await Assert.ThrowsAnyAsync<Exception>(() =>
+                validator.StartAsync(TestContext.Current.CancellationToken));
+        }
+        catch (Exception exception)
+        {
+            failure = exception;
+        }
 
         Assert.Contains(expectedMessage, failure.ToString(), StringComparison.OrdinalIgnoreCase);
     }
@@ -568,12 +589,6 @@ public sealed class DurableSenderRegistrationAndAdmissionTests
     public sealed class DurableDataMessage
     {
         public required MessageData<string> Value { get; init; }
-    }
-
-    public class ThrowingBusProxy : DispatchProxy
-    {
-        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args) =>
-            throw new InvalidOperationException("Startup validation must not invoke the bus proxy.");
     }
 
     public enum InvalidComposition

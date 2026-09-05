@@ -26,7 +26,26 @@ public class JobSagaRegistrationConfigurator :
         _configurator = configurator;
 
         configurator.Services.AddOptions<JobSagaOptions>()
-            .Configure(options => configure?.Invoke(options));
+            .Configure(options => configure?.Invoke(options))
+            .Validate(
+                static options => options.SlotWaitTime >= TimeSpan.FromSeconds(1),
+                "Job saga for bus 'default': SlotWaitTime must be at least one second. Set SlotWaitTime to one second or longer.")
+            .Validate(
+                static options => options.StatusCheckInterval >= TimeSpan.FromSeconds(30),
+                "Job saga for bus 'default': StatusCheckInterval must be at least 30 seconds. Set StatusCheckInterval to 30 seconds or longer.")
+            .Validate(
+                static options => options.HeartbeatTimeout > TimeSpan.Zero,
+                "Job saga for bus 'default': HeartbeatTimeout must be greater than zero. Set HeartbeatTimeout to a positive duration.")
+            .Validate(
+                static options => options.ConcurrentMessageLimit is null or > 0,
+                "Job saga for bus 'default': ConcurrentMessageLimit must be greater than zero when specified. Set it to a positive value or leave it unset.")
+            .Validate(
+                static options => options.SuspectJobRetryCount >= 0,
+                "Job saga for bus 'default': SuspectJobRetryCount must not be negative. Set it to zero or a positive value.")
+            .Validate(
+                static options => options.SuspectJobRetryDelay is null || options.SuspectJobRetryDelay > TimeSpan.Zero,
+                "Job saga for bus 'default': SuspectJobRetryDelay must be greater than zero when specified. Set it to a positive duration or leave it unset.")
+            .ValidateOnStart();
 
         _jobTypeConfigurator = configurator.AddSagaStateMachine<JobTypeStateMachine, JobTypeSaga, JobTypeSagaDefinition>();
         _jobConfigurator = configurator.AddSagaStateMachine<JobStateMachine, JobSaga, JobSagaDefinition>();

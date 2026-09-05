@@ -40,7 +40,7 @@ public static class SystemTextJsonSerializerOptions
     internal static JsonSerializerOptions Freeze(JsonSerializerOptions options)
     {
         if (options == null)
-            throw new ConfigurationException("System.Text.Json serializer options cannot be null.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Serialization", "unknown", "System.Text.Json serializer options cannot be null.", "Correct the named configuration before starting the host"));
 
         var snapshot = new JsonSerializerOptions(options);
         snapshot.MakeReadOnly();

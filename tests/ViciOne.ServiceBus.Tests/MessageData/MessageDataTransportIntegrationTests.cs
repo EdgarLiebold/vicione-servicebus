@@ -24,7 +24,9 @@ public sealed class MessageDataTransportIntegrationTests
                 configurator.UseMessageData(second, new MessageDataPolicy(alwaysWriteToRepository: true));
             }));
 
-        Assert.Equal("Message data is already configured for this bus owner.", exception.Message);
+        Assert.Equal(
+            "Message data for bus 'unknown': Message data is already configured for this bus owner. Correct the named configuration before starting the host.",
+            exception.Message);
     }
 
     [Fact]
@@ -192,7 +194,8 @@ public sealed class MessageDataTransportIntegrationTests
         DirectoryInfo directory = RunDirectory("encrypted");
         var repository = new EncryptedMessageDataRepository(
             new FileSystemMessageDataRepository(directory),
-            new AesCryptoStreamProvider(new FixedSymmetricKeyProvider(), "default"));
+            new TestEncryptionKeyProvider(),
+            1024 * 1024);
         var observed = new TaskCompletionSource<TransportSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
         using var harness = CreateHarness("message-data-encrypted", timeout, repository, policy);
         harness.OnConfigureInMemoryReceiveEndpoint += endpoint => endpoint.Handler<TransportEnvelope>(context =>
@@ -412,21 +415,4 @@ public sealed class MessageDataTransportIntegrationTests
 
     private sealed record PlainChild(int Number);
 
-    private sealed class FixedSymmetricKeyProvider : ISymmetricKeyProvider
-    {
-        private readonly SymmetricKey _key = new FixedSymmetricKey();
-
-        public bool TryGetKey(string id, out SymmetricKey key)
-        {
-            key = _key;
-            return true;
-        }
-    }
-
-    private sealed class FixedSymmetricKey : SymmetricKey
-    {
-        public byte[] Key { get; } = Enumerable.Range(1, 32).Select(value => (byte)value).ToArray();
-
-        public byte[] IV { get; } = Enumerable.Range(101, 16).Select(value => (byte)value).ToArray();
-    }
 }

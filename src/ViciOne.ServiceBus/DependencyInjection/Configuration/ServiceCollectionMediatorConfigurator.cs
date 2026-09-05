@@ -77,11 +77,15 @@ public class ServiceCollectionMediatorConfigurator :
         ConfigureLogContext(provider);
 
         var context = provider.GetRequiredService<IMediatorRegistrationContext>();
+        MessageLimits limits = provider.GetService<MediatorMessageLimitsRegistration>()?.Limits
+            ?? throw new ConfigurationException(
+                "Message limits for bus 'mediator': MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.");
 
         return Bus.Factory.CreateMediator(
             baseAddress,
             cfg =>
             {
+                cfg.Limits(limits);
                 _configure?.Invoke(context, cfg);
 
                 cfg.ConfigureConsumers(context);

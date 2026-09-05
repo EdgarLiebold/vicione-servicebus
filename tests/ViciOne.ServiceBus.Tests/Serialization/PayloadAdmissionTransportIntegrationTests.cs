@@ -63,8 +63,11 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             observer,
             options =>
             {
-                options.MaximumSerializedBodyBytes = 1_000_000;
-                options.MaximumTransportEnvelopeBytes = 1;
+                // Utf8JsonWriter conservatively reserves a 256-byte initial span even though
+                // this application's encoded body is smaller. Keep that bounded reservation
+                // admissible so this test reaches the independently bounded JSON envelope.
+                options.MaximumSerializedBodyBytes = 256;
+                options.MaximumTransportEnvelopeBytes = 256;
             },
             _ => Interlocked.Increment(ref delivered));
         IBusControl bus = provider.GetRequiredService<IBusControl>();
@@ -244,7 +247,6 @@ public sealed class PayloadAdmissionTransportIntegrationTests
     [Theory]
     [InlineData(-1, false)]
     [InlineData(0, false)]
-    [InlineData(1, true)]
     [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "raw-json-envelope-exact-boundaries")]
     public async Task RawJsonEnvelopeLimit_EnforcesExactBoundariesWithoutReserializingAsync(
         int bytesOverLimit,
@@ -259,7 +261,7 @@ public sealed class PayloadAdmissionTransportIntegrationTests
             observer,
             options =>
             {
-                options.MaximumSerializedBodyBytes = 1_000_000;
+                options.MaximumSerializedBodyBytes = BoundaryPayload.SerializedLength;
                 options.MaximumTransportEnvelopeBytes = BoundaryPayload.SerializedLength - bytesOverLimit;
             },
             context => received.TrySetResult(context.Message.ValueCount));
@@ -290,6 +292,24 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         {
             await bus.StopAsync(CancellationToken.None).WaitAsync(Timeout, CancellationToken.None);
         }
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-PAYLOAD-ADMISSION-RUNTIME", "raw-json-envelope-cannot-undercut-body")]
+    public void RawJsonEnvelopeLimit_CannotBeConfiguredBelowTheBodyLimit()
+    {
+        ConfigurationException failure = Assert.Throws<ConfigurationException>(() => BuildRawJsonBoundaryProvider(
+            new CountingBoundaryPayloadConverter(),
+            new BodyReadingObserver(),
+            options =>
+            {
+                options.MaximumSerializedBodyBytes = BoundaryPayload.SerializedLength;
+                options.MaximumTransportEnvelopeBytes = BoundaryPayload.SerializedLength - 1;
+            },
+            _ => { }));
+
+        Assert.Contains(nameof(MessageLimits.MaxEnvelopeBytes), failure.Message, StringComparison.Ordinal);
+        Assert.Contains(nameof(MessageLimits.MaxBodyBytes), failure.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -325,22 +345,26 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         var repository = new InMemoryMessageDataRepository();
         var delivered = 0;
         var services = BaseServices();
-        services.AddViciOnePayloadAdmission<IBus>(options =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            options.MessageDataOffloadThresholdBytes = 1;
-            options.MaximumSerializedBodyBytes = 1_000_000;
-            options.MaximumTransportEnvelopeBytes = 1_000_000;
-        });
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
-        {
-            bus.Host(new Uri("loopback://payload-no-fake-offload/"));
-            bus.UseMessageData(repository, new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 16));
-            bus.ReceiveEndpoint("payload-no-fake-offload-input", endpoint => endpoint.Handler<MessageDataPayload>(context =>
+            configuration.Limits(new MessageLimits
             {
-                Interlocked.Increment(ref delivered);
-                return Task.CompletedTask;
-            }));
-        }));
+                MaxBodyBytes = 1_000_000,
+                MaxEnvelopeBytes = 1_000_000,
+                MaxJsonDepth = 32,
+                OffloadToMessageDataAboveBytes = 1,
+            });
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://payload-no-fake-offload/"));
+                bus.UseMessageData(repository, new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 16));
+                bus.ReceiveEndpoint("payload-no-fake-offload-input", endpoint => endpoint.Handler<MessageDataPayload>(context =>
+                {
+                    Interlocked.Increment(ref delivered);
+                    return Task.CompletedTask;
+                }));
+            });
+        });
         await using ServiceProvider provider = services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         IBusControl control = provider.GetRequiredService<IBusControl>();
@@ -366,27 +390,29 @@ public sealed class PayloadAdmissionTransportIntegrationTests
     {
         var secondaryReceived = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
         var services = BaseServices();
-        services.AddViciOnePayloadAdmission<IBus>(options =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            options.MaximumSerializedBodyBytes = 1;
-            options.MaximumTransportEnvelopeBytes = 1_000_000;
+            configuration.Limits(new MessageLimits { MaxBodyBytes = 1, MaxEnvelopeBytes = 1_000_000, MaxJsonDepth = 32 });
+            configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://payload-default-bus/")));
         });
-        services.AddViciOnePayloadAdmission<ISecondaryBus>(options =>
+        services.AddViciOneServiceBus<ISecondaryBus>(configuration =>
         {
-            options.MaximumSerializedBodyBytes = 1_000_000;
-            options.MaximumTransportEnvelopeBytes = 1_000_000;
-        });
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
-            bus.Host(new Uri("loopback://payload-default-bus/"))));
-        services.AddViciOneServiceBus<ISecondaryBus>(configuration => configuration.UsingInMemory((_, bus) =>
-        {
-            bus.Host(new Uri("loopback://payload-secondary-bus/"));
-            bus.ReceiveEndpoint("payload-secondary-input", endpoint => endpoint.Handler<PlainPayload>(context =>
+            configuration.Limits(new MessageLimits
             {
-                secondaryReceived.TrySetResult(context.Message.Value);
-                return Task.CompletedTask;
-            }));
-        }));
+                MaxBodyBytes = 1_000_000,
+                MaxEnvelopeBytes = 1_000_000,
+                MaxJsonDepth = 32,
+            });
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://payload-secondary-bus/"));
+                bus.ReceiveEndpoint("payload-secondary-input", endpoint => endpoint.Handler<PlainPayload>(context =>
+                {
+                    secondaryReceived.TrySetResult(context.Message.Value);
+                    return Task.CompletedTask;
+                }));
+            });
+        });
         await using ServiceProvider provider = services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         IBus defaultBus = provider.GetRequiredService<IBus>();
@@ -419,22 +445,25 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         Action<ConsumeContext<CountingPayload>> consume)
     {
         IServiceCollection services = BaseServices();
-        services.AddViciOnePayloadAdmission(configureAdmission);
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            bus.Host(new Uri("loopback://payload-json/"));
-            bus.ConfigureSystemTextJsonSerializerOptions(options =>
+            configuration.Limits(CreateLimits(configureAdmission));
+            configuration.UsingInMemory((_, bus) =>
             {
-                options.Converters.Add(converter);
-                return options;
+                bus.Host(new Uri("loopback://payload-json/"));
+                bus.ConfigureSystemTextJsonSerializerOptions(options =>
+                {
+                    options.Converters.Add(converter);
+                    return options;
+                });
+                bus.ConnectSendObserver(observer);
+                bus.ReceiveEndpoint("payload-json-input", endpoint => endpoint.Handler<CountingPayload>(context =>
+                {
+                    consume(context);
+                    return Task.CompletedTask;
+                }));
             });
-            bus.ConnectSendObserver(observer);
-            bus.ReceiveEndpoint("payload-json-input", endpoint => endpoint.Handler<CountingPayload>(context =>
-            {
-                consume(context);
-                return Task.CompletedTask;
-            }));
-        }));
+        });
         return services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
@@ -446,23 +475,26 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         Action<ConsumeContext<BoundaryPayload>> consume)
     {
         IServiceCollection services = BaseServices();
-        services.AddViciOnePayloadAdmission(configureAdmission);
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            bus.Host(new Uri("loopback://payload-raw-json/"));
-            bus.ConfigureSystemTextJsonSerializerOptions(options =>
+            configuration.Limits(CreateLimits(configureAdmission));
+            configuration.UsingInMemory((_, bus) =>
             {
-                options.Converters.Add(converter);
-                return options;
+                bus.Host(new Uri("loopback://payload-raw-json/"));
+                bus.ConfigureSystemTextJsonSerializerOptions(options =>
+                {
+                    options.Converters.Add(converter);
+                    return options;
+                });
+                bus.UseRawJsonSerializer(RawSerializerOptions.AddTransportHeaders, true);
+                bus.ConnectSendObserver(observer);
+                bus.ReceiveEndpoint("payload-raw-json-input", endpoint => endpoint.Handler<BoundaryPayload>(context =>
+                {
+                    consume(context);
+                    return Task.CompletedTask;
+                }));
             });
-            bus.UseRawJsonSerializer(RawSerializerOptions.AddTransportHeaders, true);
-            bus.ConnectSendObserver(observer);
-            bus.ReceiveEndpoint("payload-raw-json-input", endpoint => endpoint.Handler<BoundaryPayload>(context =>
-            {
-                consume(context);
-                return Task.CompletedTask;
-            }));
-        }));
+        });
         return services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
@@ -474,22 +506,25 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         Action<ConsumeContext<BoundaryPayload>> consume)
     {
         IServiceCollection services = BaseServices();
-        services.AddViciOnePayloadAdmission(configureAdmission);
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            bus.Host(new Uri("loopback://payload-json-boundary/"));
-            bus.ConfigureSystemTextJsonSerializerOptions(options =>
+            configuration.Limits(CreateLimits(configureAdmission));
+            configuration.UsingInMemory((_, bus) =>
             {
-                options.Converters.Add(converter);
-                return options;
+                bus.Host(new Uri("loopback://payload-json-boundary/"));
+                bus.ConfigureSystemTextJsonSerializerOptions(options =>
+                {
+                    options.Converters.Add(converter);
+                    return options;
+                });
+                bus.ConnectSendObserver(observer);
+                bus.ReceiveEndpoint("payload-json-boundary-input", endpoint => endpoint.Handler<BoundaryPayload>(context =>
+                {
+                    consume(context);
+                    return Task.CompletedTask;
+                }));
             });
-            bus.ConnectSendObserver(observer);
-            bus.ReceiveEndpoint("payload-json-boundary-input", endpoint => endpoint.Handler<BoundaryPayload>(context =>
-            {
-                consume(context);
-                return Task.CompletedTask;
-            }));
-        }));
+        });
         return services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
@@ -517,25 +552,29 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         TaskCompletionSource<MessageDataSnapshot> received)
     {
         IServiceCollection services = BaseServices();
-        services.AddViciOnePayloadAdmission<IBus>(options =>
+        services.AddViciOneServiceBus(configuration =>
         {
-            options.MessageDataOffloadThresholdBytes = 1;
-            options.MaximumSerializedBodyBytes = 1_000_000;
-            options.MaximumTransportEnvelopeBytes = 1_000_000;
-        });
-        services.AddViciOneServiceBus(configuration => configuration.UsingInMemory((_, bus) =>
-        {
-            bus.Host(new Uri("loopback://payload-message-data/"));
-            bus.UseMessageData(repository, new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 16));
-            bus.ReceiveEndpoint("payload-message-data-input", endpoint => endpoint.Handler<MessageDataPayload>(async context =>
+            configuration.Limits(new MessageLimits
             {
-                received.TrySetResult(new MessageDataSnapshot(
-                    context.Message.Value.Address
-                    ?? throw new Xunit.Sdk.XunitException("Expected the offloaded message-data address to be available."),
-                    await context.Message.Value.Value
-                    ?? throw new Xunit.Sdk.XunitException("Expected the offloaded message-data value to be available.")));
-            }));
-        }));
+                MaxBodyBytes = 1_000_000,
+                MaxEnvelopeBytes = 1_000_000,
+                MaxJsonDepth = 32,
+                OffloadToMessageDataAboveBytes = 1,
+            });
+            configuration.UsingInMemory((_, bus) =>
+            {
+                bus.Host(new Uri("loopback://payload-message-data/"));
+                bus.UseMessageData(repository, new MessageDataPolicy(alwaysWriteToRepository: false, threshold: 16));
+                bus.ReceiveEndpoint("payload-message-data-input", endpoint => endpoint.Handler<MessageDataPayload>(async context =>
+                {
+                    received.TrySetResult(new MessageDataSnapshot(
+                        context.Message.Value.Address
+                        ?? throw new Xunit.Sdk.XunitException("Expected the offloaded message-data address to be available."),
+                        await context.Message.Value.Value
+                        ?? throw new Xunit.Sdk.XunitException("Expected the offloaded message-data value to be available.")));
+                }));
+            });
+        });
         return services.BuildServiceProvider(
             new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
     }
@@ -546,6 +585,20 @@ public sealed class PayloadAdmissionTransportIntegrationTests
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         return services;
+    }
+
+    private static MessageLimits CreateLimits(Action<PayloadAdmissionOptions<IBus>> configure)
+    {
+        var options = new PayloadAdmissionOptions<IBus>();
+        configure(options);
+        return new MessageLimits
+        {
+            MaxBodyBytes = options.MaximumSerializedBodyBytes!.Value,
+            MaxEnvelopeBytes = options.MaximumTransportEnvelopeBytes!.Value,
+            MaxJsonDepth = 32,
+            WarnAboveBytes = options.WarningBodyBytes,
+            OffloadToMessageDataAboveBytes = options.MessageDataOffloadThresholdBytes,
+        };
     }
 
     private static void AssertJsonEnvelopeBoundary(int maximumEnvelopeBytes, bool rejected)

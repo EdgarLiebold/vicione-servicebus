@@ -141,6 +141,7 @@ public sealed class ContainerScopedEndpointTests
             .AddScoped<SecondaryScopeMarker>()
             .AddMediator(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<CascadeConsumer>();
                 configuration.AddConsumer<CascadeLeafConsumer>();
             })
@@ -190,6 +191,7 @@ public sealed class ContainerScopedEndpointTests
             .AddScoped<ScopeMarker>()
             .AddMediator(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<MediatorScopeConsumer>();
                 configuration.ConfigureMediator((context, mediator) =>
                 {

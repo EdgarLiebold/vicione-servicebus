@@ -40,10 +40,10 @@ public class RiderCollection :
         lock (_mutateLock)
         {
             if (!_riders.ContainsKey(name))
-                throw new ConfigurationException($"A rider with the key was not found: {name}");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Rider Collection", "unknown", $"A rider with the key was not found: {name}", "Correct the named configuration before starting the host"));
 
             if (!_handles.TryGetValue(name, out var handle))
-                throw new ConfigurationException($"A rider has not yet been started: {name}");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Rider Collection", "unknown", $"A rider has not yet been started: {name}", "Correct the named configuration before starting the host"));
 
             return handle.Rider;
         }
@@ -65,7 +65,7 @@ public class RiderCollection :
         lock (_mutateLock)
         {
             if (_riders.ContainsKey(name))
-                throw new ConfigurationException($"A rider with the same key was already added: {name}");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Rider Collection", "unknown", $"A rider with the same key was already added: {name}", "Correct the named configuration before starting the host"));
 
             _riders.Add(name, rider);
         }
@@ -100,7 +100,7 @@ public class RiderCollection :
         lock (_mutateLock)
         {
             if (!_riders.TryGetValue(name, out rider) || rider == null)
-                throw new ConfigurationException($"A rider with the key was not found: {name}");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Rider Collection", "unknown", $"A rider with the key was not found: {name}", "Correct the named configuration before starting the host"));
 
             if (_handles.ContainsKey(name))
                 throw new ArgumentException($"The specified rider has already been started: {name}", nameof(name));

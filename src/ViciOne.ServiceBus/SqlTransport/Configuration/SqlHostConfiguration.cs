@@ -53,7 +53,7 @@ public class SqlHostConfiguration :
     /// <summary>
     /// Gets the host address value.
     /// </summary>
-    public override Uri HostAddress => _hostSettings?.HostAddress ?? throw new ConfigurationException("The host was not configured.");
+    public override Uri HostAddress => _hostSettings?.HostAddress ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host was not configured.", "Correct the named configuration before starting the host"));
 
     ISqlBusTopology ISqlHostConfiguration.Topology => _topology;
 
@@ -72,7 +72,7 @@ public class SqlHostConfiguration :
     /// </summary>
     public SqlHostSettings Settings
     {
-        get => _hostSettings ?? throw new ConfigurationException("The host was not configured.");
+        get => _hostSettings ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "The host was not configured.", "Correct the named configuration before starting the host"));
         set => _hostSettings = value ?? throw new ArgumentNullException(nameof(value));
     }
 

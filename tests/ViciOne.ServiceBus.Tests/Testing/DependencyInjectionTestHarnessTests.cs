@@ -16,6 +16,25 @@ public sealed class DependencyInjectionTestHarnessTests
         new(2026, 8, 24, 12, 0, 0, TimeSpan.Zero);
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "existing-default-bus-fails-without-mutation")]
+    public void ExistingDefaultBus_IsRejectedWithoutMutatingItsRegistrations()
+    {
+        var services = new ServiceCollection();
+        services.AddViciOneServiceBus(configuration =>
+            configuration.UsingInMemory(static (_, _) => { }));
+        ServiceDescriptor[] before = services.ToArray();
+
+        ConfigurationException exception = Assert.Throws<ConfigurationException>(() =>
+            services.AddViciOneServiceBusTestHarness());
+
+        Assert.Equal(
+            "Test harness for bus 'default': IBus is already registered. Configure AddViciOneServiceBusTestHarness as the only default-bus registration.",
+            exception.Message);
+        Assert.Equal(before, services);
+        Assert.Single(services, static descriptor => descriptor.ServiceType == typeof(IBus));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-TEST-HARNESS-DI", "scoped-service-publishes-through-started-bus")]
     public async Task ScopedApplicationService_PublishesThroughTheStartedHarnessBusAsync()
     {
@@ -101,7 +120,9 @@ public sealed class DependencyInjectionTestHarnessTests
 
         ConfigurationException exception = await Assert.ThrowsAsync<ConfigurationException>(() => harness.StartAsync(TestContext.Current.CancellationToken));
 
-        Assert.Equal("The ViciOne.ServiceBus hosted service was not found.", exception.Message);
+        Assert.Equal(
+            "Test harness for bus 'unknown': The ViciOne.ServiceBus hosted service was not found. Correct the named configuration before starting the host.",
+            exception.Message);
     }
 
     [Fact]

@@ -10,6 +10,7 @@ public sealed class InMemoryReceiveContext :
     BaseReceiveContext,
     RoutingKeyConsumeContext
 {
+    readonly MessageBody _body;
     readonly InMemoryTransportMessage _message;
 
     /// <summary>
@@ -22,7 +23,7 @@ public sealed class InMemoryReceiveContext :
     {
         _message = message;
 
-        Body = new BytesMessageBody(message.Body);
+        _body = new BytesMessageBody(message.Body);
     }
 
     /// <summary>
@@ -33,7 +34,7 @@ public sealed class InMemoryReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
     /// <summary>
     /// Gets the routing key value.
     /// </summary>

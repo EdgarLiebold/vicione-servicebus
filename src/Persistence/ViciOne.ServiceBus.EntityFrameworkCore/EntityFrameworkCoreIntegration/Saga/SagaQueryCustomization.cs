@@ -16,6 +16,6 @@ internal static class SagaQueryCustomization
             return query;
 
         return customization(query)
-            ?? throw new ConfigurationException("The saga query customization returned null.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "The saga query customization returned null.", "Correct the named configuration before starting the host"));
     }
 }

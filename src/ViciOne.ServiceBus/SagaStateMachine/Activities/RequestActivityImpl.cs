@@ -58,7 +58,7 @@ public abstract class RequestActivityImpl<TInstance, TRequest, TResponse>
             if (context.TryGetPayload(out MessageSchedulerContext? schedulerContext))
                 await schedulerContext.ScheduleSendAsync(expirationTime, message, context.CancellationToken).ConfigureAwait(false);
             else
-                throw new ConfigurationException("A request timeout was specified but no message scheduler was specified or available");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "A request timeout was specified but no message scheduler was specified or available", "Correct the named configuration before starting the host"));
         }
     }
 

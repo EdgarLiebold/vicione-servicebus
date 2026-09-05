@@ -118,7 +118,7 @@ public class ReceiveEndpointDispatcherFactory :
             var endpointConfiguration = _hostConfiguration.CreateReceiveEndpointConfiguration(queueName);
 
             var configurator = endpointConfiguration as IReceiveEndpointConfigurator ??
-                throw new ConfigurationException("The receive endpoint configuration was not valid");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The receive endpoint configuration was not valid", "Correct the named configuration before starting the host"));
 
             configurator.ThrowOnSkippedMessages();
             configurator.RethrowFaultedMessages();
@@ -142,7 +142,7 @@ public class ReceiveEndpointDispatcherFactory :
             }
             catch (Exception ex)
             {
-                throw new ConfigurationException(result, "An exception occurred during dispatcher creation", ex);
+                throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "An exception occurred during dispatcher creation", "Correct the named configuration before starting the host"), ex);
             }
         })).Value;
     }

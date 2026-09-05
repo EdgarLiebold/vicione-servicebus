@@ -203,7 +203,7 @@ public class EventHubReceiveEndpointConfigurator :
             return new BlobContainerClient(_storageSettings.ConnectionString, containerName, blobClientOptions);
 
         Uri containerUri = _storageSettings.ContainerUri
-            ?? throw new ConfigurationException("The Event Hub checkpoint storage container URI is not configured.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The Event Hub checkpoint storage container URI is not configured.", "Correct the named configuration before starting the host"));
         var uri = new Uri(containerUri, containerName);
         if (_storageSettings.TokenCredential != null)
             return new BlobContainerClient(uri, _storageSettings.TokenCredential, blobClientOptions);
@@ -224,9 +224,9 @@ public class EventHubReceiveEndpointConfigurator :
         else
         {
             string fullyQualifiedNamespace = _hostSettings.FullyQualifiedNamespace
-                ?? throw new ConfigurationException("The Event Hubs namespace is not configured.");
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The Event Hubs namespace is not configured.", "Correct the named configuration before starting the host"));
             Azure.Core.TokenCredential credential = _hostSettings.TokenCredential
-                ?? throw new ConfigurationException("The Event Hubs token credential is not configured.");
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "The Event Hubs token credential is not configured.", "Correct the named configuration before starting the host"));
             client = new EventProcessorClient(_blobClient.Value, ConsumerGroup, fullyQualifiedNamespace, EventHubName, credential, options);
         }
 

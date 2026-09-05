@@ -9,6 +9,72 @@ namespace ViciOne.ServiceBus.Tests.Mediator;
 public sealed class MediatorDispatchTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "missing-policy-fails-before-materialization")]
+    public void MissingLimits_FailsBeforeDirectAndContainerMediatorMaterialization()
+    {
+        ConfigurationException direct = Assert.Throws<ConfigurationException>(() =>
+            Bus.Factory.CreateMediator(_ => { }));
+        using ServiceProvider provider = new ServiceCollection()
+            .AddMediator(_ => { })
+            .BuildServiceProvider();
+        ConfigurationException container = Assert.Throws<ConfigurationException>(() =>
+            provider.GetRequiredService<IMediator>());
+
+        Assert.Equal(
+            "Message limits for bus 'mediator': MaxBodyBytes is not declared. Call mediator.Limits(...) with explicit byte limits.",
+            direct.Message);
+        Assert.Equal(direct.Message, container.Message);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "serialized-body-rejected-before-handler")]
+    public async Task OversizedSerializedBody_IsRejectedBeforeMediatorDispatchAsync()
+    {
+        var handled = 0;
+        IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            configuration.Limits(new MessageLimits { MaxBodyBytes = 64, MaxEnvelopeBytes = 64, MaxJsonDepth = 32 });
+            configuration.Handler<DispatchMessage>(_ =>
+            {
+                Interlocked.Increment(ref handled);
+                return Task.CompletedTask;
+            });
+        });
+        await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
+
+        MessageTooLargeException failure = await Assert.ThrowsAsync<MessageTooLargeException>(() =>
+            mediator.SendAsync(new DispatchMessage(new string('x', 256)), TestContext.Current.CancellationToken));
+
+        Assert.True(failure.ActualBytes > failure.MaximumBytes);
+        Assert.Equal(64, failure.MaximumBytes);
+        Assert.Equal(new Uri("loopback://localhost/mediator"), failure.InputAddress);
+        Assert.Equal(0, Volatile.Read(ref handled));
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-MESSAGE-LIMITS-MEDIATOR", "json-depth-exact-boundary")]
+    public async Task JsonDepth_AllowsTheConfiguredDepthAndRejectsTheNextLevelAsync()
+    {
+        var handled = 0;
+        IMediator mediator = Bus.Factory.CreateMediator(configuration =>
+        {
+            configuration.Limits(new MessageLimits { MaxBodyBytes = 4096, MaxEnvelopeBytes = 4096, MaxJsonDepth = 3 });
+            configuration.Handler<DepthMessage>(_ =>
+            {
+                Interlocked.Increment(ref handled);
+                return Task.CompletedTask;
+            });
+        });
+        await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
+
+        await mediator.SendAsync(Depth(3), TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<System.Text.Json.JsonException>(() =>
+            mediator.SendAsync(Depth(4), TestContext.Current.CancellationToken));
+
+        Assert.Equal(1, Volatile.Read(ref handled));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-MEDIATOR-DISPATCH", "short-circuit-filter-responds-and-notifies-consumed")]
     public async Task ShortCircuitFilter_RespondsWithoutInvokingConsumerAndStillNotifiesConsumedAsync()
     {
@@ -19,6 +85,7 @@ public sealed class MediatorDispatchTests
             .AddSingleton(observation)
             .AddMediator(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<ShortCircuitConsumer>();
                 configuration.ConfigureMediator((context, mediator) =>
                     mediator.UseConsumeFilter(typeof(ShortCircuitFilter<>), context));
@@ -53,7 +120,7 @@ public sealed class MediatorDispatchTests
     {
         TimeSpan timeout = OperationTimeout();
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        IMediator mediator = Bus.Factory.CreateMediator(_ => { });
+        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         var received = 0;
         var first = new DispatchMessage("first");
@@ -87,6 +154,7 @@ public sealed class MediatorDispatchTests
         var published = new PublishedMessage(NewId.NextGuid());
         IMediator mediator = Bus.Factory.CreateMediator(configurator =>
         {
+            configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<SentMessage>(context =>
             {
                 Assert.Same(sent, context.Message);
@@ -116,7 +184,10 @@ public sealed class MediatorDispatchTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         var expected = new MediatorDispatchException("handler failed");
         IMediator mediator = Bus.Factory.CreateMediator(configurator =>
-            configurator.Handler<DispatchMessage>(_ => throw expected));
+        {
+            configurator.Limits(MessageLimits.Conservative);
+            configurator.Handler<DispatchMessage>(_ => throw expected);
+        });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
         MediatorDispatchException actual = await Assert.ThrowsAsync<MediatorDispatchException>(() =>
@@ -134,11 +205,14 @@ public sealed class MediatorDispatchTests
         var entered = NewSignal();
         var never = NewSignal();
         IMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<DispatchMessage>(async context =>
             {
                 entered.TrySetResult();
                 await never.Task.WaitAsync(context.CancellationToken);
-            }));
+            });
+        });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
         Task send = mediator.SendAsync(new DispatchMessage("cancel"), source.Token);
@@ -158,12 +232,15 @@ public sealed class MediatorDispatchTests
         var entered = NewSignal();
         var never = NewSignal();
         IMediator mediator = Bus.Factory.CreateMediator(configurator =>
+        {
+            configurator.Limits(MessageLimits.Conservative);
             configurator.Handler<RequestMessage>(async context =>
             {
                 entered.TrySetResult();
                 await never.Task.WaitAsync(context.CancellationToken);
                 await context.RespondAsync(new ResponseMessage(context.Message.CorrelationId));
-            }));
+            });
+        });
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
         IRequestClient<RequestMessage> client = mediator.CreateRequestClient<RequestMessage>(RequestTimeout.After(m: 1));
         var request = new RequestMessage(NewId.NextGuid());
@@ -185,7 +262,7 @@ public sealed class MediatorDispatchTests
     public async Task PublishWithoutConsumer_UsesTheMandatoryBoundaryAsync(bool mandatory)
     {
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
-        IMediator mediator = Bus.Factory.CreateMediator(_ => { });
+        IMediator mediator = Bus.Factory.CreateMediator(configuration => configuration.Limits(MessageLimits.Conservative));
         await using IAsyncDisposable lifetime = Assert.IsAssignableFrom<IAsyncDisposable>(mediator);
 
         Task publish = mediator.PublishAsync(
@@ -209,11 +286,25 @@ public sealed class MediatorDispatchTests
     private static TaskCompletionSource NewSignal() =>
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+    private static DepthMessage Depth(int levels)
+    {
+        DepthMessage? current = null;
+        for (var index = 0; index < levels; index++)
+            current = new DepthMessage { Child = current };
+
+        return current!;
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
 
     private sealed record DispatchMessage(string Value);
+
+    private sealed class DepthMessage
+    {
+        public DepthMessage? Child { get; init; }
+    }
 
     private sealed record SentMessage(Guid CorrelationId) : CorrelatedBy<Guid>;
 

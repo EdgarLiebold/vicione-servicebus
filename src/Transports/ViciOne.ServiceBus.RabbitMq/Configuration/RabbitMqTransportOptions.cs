@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Defines configuration options for rabbit mq transport.
 /// </summary>
-public class RabbitMqTransportOptions
+public sealed class RabbitMqTransportOptions
 {
     const int DefaultPort = 5672;
     const int DefaultSslPort = 5671;

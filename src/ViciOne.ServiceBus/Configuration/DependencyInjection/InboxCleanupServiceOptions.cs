@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Defines configuration options for inbox cleanup service.
 /// </summary>
-public class InboxCleanupServiceOptions
+public abstract class InboxCleanupServiceOptions
 {
     /// <summary>
     /// The amount of time a message remaining in the Inbox
@@ -33,7 +33,7 @@ public class InboxCleanupServiceOptions
 /// Defines configuration options for inbox cleanup service.
 /// </summary>
 /// <typeparam name="T">The t type.</typeparam>
-public class InboxCleanupServiceOptions<T> :
+public sealed class InboxCleanupServiceOptions<T> :
     InboxCleanupServiceOptions
     where T : class
 {

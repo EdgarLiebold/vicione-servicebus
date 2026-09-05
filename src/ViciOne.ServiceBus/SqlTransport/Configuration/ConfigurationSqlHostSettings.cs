@@ -161,9 +161,9 @@ public abstract class ConfigurationSqlHostSettings :
     Uri FormatHostAddress()
     {
         if (string.IsNullOrWhiteSpace(Host))
-            throw new ConfigurationException("Host cannot be empty");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "Host cannot be empty", "Correct the named configuration before starting the host"));
         if (string.IsNullOrWhiteSpace(VirtualHost))
-            throw new ConfigurationException("Domain cannot be empty");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("SQL transport", "unknown", "Domain cannot be empty", "Correct the named configuration before starting the host"));
 
         return new SqlHostAddress(Host!, InstanceName, Port, VirtualHost!, Area);
     }

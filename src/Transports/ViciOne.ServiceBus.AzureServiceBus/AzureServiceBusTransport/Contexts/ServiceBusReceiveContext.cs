@@ -16,6 +16,7 @@ public sealed class ServiceBusReceiveContext :
     TransportReceiveContext,
     ITransportSequenceNumber
 {
+    readonly MessageBody _body;
     readonly ServiceBusReceivedMessage _message;
 
     /// <summary>
@@ -29,7 +30,7 @@ public sealed class ServiceBusReceiveContext :
     {
         _message = message;
 
-        Body = new ServiceBusMessageBody(message.Body);
+        _body = new ServiceBusMessageBody(message.Body);
     }
 
     /// <summary>
@@ -40,7 +41,7 @@ public sealed class ServiceBusReceiveContext :
     /// <summary>
     /// Gets the body value.
     /// </summary>
-    public override MessageBody Body { get; }
+    public override MessageBody Body => EnforceMessageLimits(_body);
 
     ulong? ITransportSequenceNumber.SequenceNumber => (ulong)SequenceNumber;
 

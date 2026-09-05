@@ -47,6 +47,6 @@ public class EndpointRegistration<T> :
     public IEndpointDefinition GetDefinition(IServiceProvider provider)
     {
         return _selector.GetEndpointDefinition<T>(provider)
-            ?? throw new ConfigurationException($"Endpoint definition not found: {TypeCache<T>.ShortName}");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Endpoint Registration", "unknown", $"Endpoint definition not found: {TypeCache<T>.ShortName}", "Correct the named configuration before starting the host"));
     }
 }

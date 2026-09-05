@@ -31,6 +31,8 @@ public class ViciOneServiceBusHubLifetimeManager<THub> :
     /// <param name="resolver">The resolver value.</param>
     public ViciOneServiceBusHubLifetimeManager(HubLifetimeManagerOptions<THub> options, IHubLifetimeScopeProvider scopeProvider, IHubProtocolResolver resolver)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        options.Validate();
         _options = options;
         _scopeProvider = scopeProvider;
         _resolver = resolver;

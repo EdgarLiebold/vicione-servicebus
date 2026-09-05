@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Defines configuration options for service instance.
 /// </summary>
-public class ServiceInstanceOptions :
+public sealed class ServiceInstanceOptions :
     OptionsSet
 {
     /// <summary>
@@ -39,7 +39,8 @@ public class ServiceInstanceOptions :
     /// <returns>The result of the operation.</returns>
     public ServiceInstanceOptions SetEndpointNameFormatter(IEndpointNameFormatter endpointNameFormatter)
     {
-        EndpointNameFormatter = endpointNameFormatter;
+        EndpointNameFormatter = endpointNameFormatter ?? throw new ConfigurationException(
+            "Service instance for bus 'default': EndpointNameFormatter must not be null. Supply an endpoint name formatter.");
 
         return this;
     }

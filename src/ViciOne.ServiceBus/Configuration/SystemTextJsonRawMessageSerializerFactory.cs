@@ -62,6 +62,6 @@ public class SystemTextJsonRawMessageSerializerFactory :
     SystemTextJsonRawMessageSerializer GetSerializer()
     {
         return _serializer?.Value
-            ?? throw new ConfigurationException("The raw System.Text.Json serializer factory must be bound to a serialization configuration before use.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("System Text Json Raw Message Serializer", "unknown", "The raw System.Text.Json serializer factory must be bound to a serialization configuration before use.", "Correct the named configuration before starting the host"));
     }
 }

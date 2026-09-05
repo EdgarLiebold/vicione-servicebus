@@ -44,14 +44,14 @@ public class SagaRegistrationConfigurator<TSaga> :
     public ISagaRegistrationConfigurator<TSaga> Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         if (_registration is { IncludeInConfigureEndpoints: false })
-            throw new ConfigurationException("Saga is excluded from ConfigureEndpoints");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "Saga is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
         var configurator = new EndpointRegistrationConfigurator<TSaga>();
 
         configure?.Invoke(configurator);
 
         var registration = _registration
-            ?? throw new ConfigurationException("An endpoint cannot be configured for a repository-only saga registration.");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Saga", "unknown", "An endpoint cannot be configured for a repository-only saga registration.", "Correct the named configuration before starting the host"));
         _configurator.AddEndpoint<SagaEndpointDefinition<TSaga>, TSaga>(registration, configurator.Settings);
 
         return this;

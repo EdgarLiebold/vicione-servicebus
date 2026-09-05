@@ -20,7 +20,7 @@ public enum ActiveMqTransportProtocol
 /// <summary>
 /// Defines configuration options for active mq transport.
 /// </summary>
-public class ActiveMqTransportOptions
+public sealed class ActiveMqTransportOptions
 {
     /// <summary>
     /// Gets or sets the host value.

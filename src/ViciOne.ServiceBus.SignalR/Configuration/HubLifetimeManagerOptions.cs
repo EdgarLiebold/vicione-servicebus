@@ -8,10 +8,19 @@ namespace ViciOne.ServiceBus.SignalR;
 /// Defines configuration options for hub lifetime manager.
 /// </summary>
 /// <typeparam name="THub">The t hub type.</typeparam>
-public class HubLifetimeManagerOptions<THub> :
+public sealed class HubLifetimeManagerOptions<THub> :
     IHubLifetimeManagerOptions<THub>
     where THub : Hub
 {
+    internal void Validate()
+    {
+        if (string.IsNullOrWhiteSpace(ServerName))
+        {
+            throw new ConfigurationException(
+                "SignalR hub lifetime for bus 'default': ServerName must not be empty. Set a stable non-empty server name.");
+        }
+    }
+
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>

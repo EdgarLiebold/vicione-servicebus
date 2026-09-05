@@ -42,7 +42,7 @@ public static class BusFactoryExtensions
         busConfiguration.HostConfiguration.LogContext = LogContext.Current;
 
         if (busConfiguration.MessageRoutes is not MessageRouteTable messageRoutes)
-            throw new ConfigurationException("The bus must own a MessageRouteTable instance.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Factory Extensions", "unknown", "The bus must own a MessageRouteTable instance.", "Correct the named configuration before starting the host"));
 
         messageRoutes.Freeze();
 
@@ -64,7 +64,7 @@ public static class BusFactoryExtensions
         {
             busConfiguration.BusObservers.CreateFaulted(ex);
 
-            throw new ConfigurationException(result, "An exception occurred during bus creation", ex);
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Bus Factory Extensions", "unknown", "An exception occurred during bus creation", "Correct the named configuration before starting the host"), ex);
         }
     }
 }

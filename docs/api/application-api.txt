@@ -63,10 +63,12 @@ ViciOne.ServiceBus.MessageDataNotFoundException
 ViciOne.ServiceBus.MessageException
 ViciOne.ServiceBus.MessageHeaders
 ViciOne.ServiceBus.MessageInitializerException
+ViciOne.ServiceBus.MessageLimits
 ViciOne.ServiceBus.MessageNotConsumedException
 ViciOne.ServiceBus.MessagePayloadSensitivity
 ViciOne.ServiceBus.MessageRetryLimitExceededException
 ViciOne.ServiceBus.MessageSensitivityDescriptor
+ViciOne.ServiceBus.MessageTooLargeException
 ViciOne.ServiceBus.MessageUrnAttribute
 ViciOne.ServiceBus.NotAcceptedStateMachineException
 ViciOne.ServiceBus.NotImplementedByDesignException

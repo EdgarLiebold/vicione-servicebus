@@ -576,9 +576,9 @@
    {
       "requirementId" : "REQ-VSB-REQUEST-RATE-VALIDATION",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
-      "testMethod" : "Constructor_RejectsZeroRequiredOptions",
+      "testMethod" : "Constructor_RejectsEveryInvalidStaticOption",
       "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Util.RequestRateAlgorithmTests",
-      "variantKey" : "zero-required-option-rejected"
+      "variantKey" : "every-static-invariant-rejected"
    },
    {
       "requirementId" : "REQ-VSB-FAULT-MESSAGE-TYPE-METADATA",

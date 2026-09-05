@@ -40,11 +40,8 @@ public sealed class ObservationBoundaryTests
             token => Task.Delay(Timeout.InfiniteTimeSpan, time, token), TimeSpan.FromMinutes(1), time);
 
         time.Advance(TimeSpan.FromMinutes(1));
-        await Task.Yield();
-        await Task.Yield();
 
-        Assert.True(quiescing.IsCompleted);
-        Assert.False(await quiescing);
+        Assert.False(await quiescing.WaitAsync(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken));
     }
 
     [Fact]

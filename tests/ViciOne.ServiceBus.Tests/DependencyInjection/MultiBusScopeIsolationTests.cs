@@ -80,6 +80,7 @@ public sealed class MultiBusScopeIsolationTests
         .AddSingleton(reports)
         .AddViciOneServiceBus<IBusAlpha>(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<AlphaConsumer>();
             configuration.UsingInMemory((context, bus) =>
             {
@@ -89,6 +90,7 @@ public sealed class MultiBusScopeIsolationTests
         })
         .AddViciOneServiceBus<IBusBeta>(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<BetaConsumer>();
             configuration.UsingInMemory((context, bus) =>
             {

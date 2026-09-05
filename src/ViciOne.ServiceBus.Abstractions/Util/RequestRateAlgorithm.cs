@@ -92,10 +92,21 @@ public class RequestRateAlgorithm :
     /// <param name="timeProvider">The time provider value.</param>
     public RequestRateAlgorithm(RequestRateAlgorithmOptions options, TimeProvider? timeProvider = null)
     {
-        if (options.PrefetchCount == 0)
+        ArgumentNullException.ThrowIfNull(options);
+        if (options.PrefetchCount <= 0)
             throw new ArgumentException("PrefetchCount must be > 0", nameof(options));
-        if (options.RequestResultLimit == 0)
+        if (options.RequestResultLimit <= 0)
             throw new ArgumentException("RequestResultLimit must be > 0", nameof(options));
+        if (options.ConcurrentResultLimit is <= 0)
+            throw new ArgumentException("ConcurrentResultLimit must be > 0 when specified", nameof(options));
+        if (options.RequestRateLimit.HasValue != options.RequestRateInterval.HasValue)
+            throw new ArgumentException("RequestRateLimit and RequestRateInterval must either both be specified or both be omitted", nameof(options));
+        if (options.RequestRateLimit is <= 0)
+            throw new ArgumentException("RequestRateLimit must be > 0 when specified", nameof(options));
+        if (options.RequestRateInterval.HasValue && options.RequestRateInterval.Value <= TimeSpan.Zero)
+            throw new ArgumentException("RequestRateInterval must be > TimeSpan.Zero when specified", nameof(options));
+        if (options.RequestCancellationTimeout.HasValue && options.RequestCancellationTimeout.Value <= TimeSpan.Zero)
+            throw new ArgumentException("RequestCancellationTimeout must be > TimeSpan.Zero when specified", nameof(options));
 
         _options = options;
         _timeProvider = timeProvider ?? TimeProvider.System;

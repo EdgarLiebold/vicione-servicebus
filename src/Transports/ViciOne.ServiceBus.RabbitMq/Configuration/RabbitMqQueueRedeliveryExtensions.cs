@@ -36,7 +36,7 @@ public static class RabbitMqQueueRedeliveryExtensions
         ArgumentNullException.ThrowIfNull(intervals);
 
         if (configurator is not RabbitMqReceiveEndpointConfiguration endpointConfiguration)
-            throw new ConfigurationException("RabbitMQ queue redelivery requires the native RabbitMQ receive-endpoint configuration.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ queue redelivery requires the native RabbitMQ receive-endpoint configuration.", "Correct the named configuration before starting the host"));
 
         var snapshot = intervals.ToArray();
         var plan = endpointConfiguration.CreateQueueRedeliveryPlan(snapshot);
@@ -55,7 +55,7 @@ public static class RabbitMqQueueRedeliveryExtensions
         ArgumentNullException.ThrowIfNull(configure);
 
         if (configurator is not RabbitMqReceiveEndpointConfiguration endpointConfiguration)
-            throw new ConfigurationException("RabbitMQ queue redelivery requires the native RabbitMQ receive-endpoint configuration.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ queue redelivery requires the native RabbitMQ receive-endpoint configuration.", "Correct the named configuration before starting the host"));
 
         var snapshot = intervals.ToArray();
         var plan = endpointConfiguration.CreateQueueRedeliveryPlan(snapshot);

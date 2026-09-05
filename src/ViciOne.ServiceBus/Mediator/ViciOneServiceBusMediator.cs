@@ -34,9 +34,10 @@ public class ViciOneServiceBusMediator :
     /// <param name="dispatcher">The dispatcher value.</param>
     /// <param name="responseConfiguration">The response configuration value.</param>
     /// <param name="responseDispatcher">The response dispatcher value.</param>
+    /// <param name="limits">The mandatory mediator message limits.</param>
     public ViciOneServiceBusMediator(ILogContext logContext, IReceiveEndpointConfiguration configuration, IReceivePipeDispatcher dispatcher,
-        IReceiveEndpointConfiguration responseConfiguration, IReceivePipeDispatcher responseDispatcher)
-        : this(logContext, configuration, dispatcher, responseConfiguration, responseDispatcher, TimeProvider.System)
+        IReceiveEndpointConfiguration responseConfiguration, IReceivePipeDispatcher responseDispatcher, MessageLimits limits)
+        : this(logContext, configuration, dispatcher, responseConfiguration, responseDispatcher, limits, TimeProvider.System)
     {
     }
 
@@ -48,6 +49,7 @@ public class ViciOneServiceBusMediator :
     /// <param name="dispatcher">The dispatcher value.</param>
     /// <param name="responseConfiguration">The response configuration value.</param>
     /// <param name="responseDispatcher">The response dispatcher value.</param>
+    /// <param name="limits">The mandatory mediator message limits.</param>
     /// <param name="timeProvider">The time provider value.</param>
     public ViciOneServiceBusMediator(
         ILogContext? logContext,
@@ -55,8 +57,10 @@ public class ViciOneServiceBusMediator :
         IReceivePipeDispatcher dispatcher,
         IReceiveEndpointConfiguration responseConfiguration,
         IReceivePipeDispatcher responseDispatcher,
+        MessageLimits limits,
         TimeProvider timeProvider)
     {
+        ArgumentNullException.ThrowIfNull(limits);
         if (timeProvider == null)
             throw new ArgumentNullException(nameof(timeProvider));
 
@@ -64,7 +68,14 @@ public class ViciOneServiceBusMediator :
         _dispatcher = dispatcher;
         var sendObservable = new SendObservable();
 
-        _endpoint = new MediatorSendEndpoint(configuration, dispatcher, logContext, sendObservable, responseConfiguration, responseDispatcher);
+        _endpoint = new MediatorSendEndpoint(
+            configuration,
+            dispatcher,
+            logContext,
+            sendObservable,
+            responseConfiguration,
+            responseDispatcher,
+            limits);
 
         var clientFactoryContext = new MediatorClientFactoryContext(
             _endpoint,

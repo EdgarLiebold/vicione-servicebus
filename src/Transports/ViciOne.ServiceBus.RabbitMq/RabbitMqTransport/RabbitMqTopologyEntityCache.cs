@@ -138,7 +138,7 @@ public sealed class RabbitMqTopologyEntityCache
             var entry = _entries.GetOrAdd(key, candidate);
 
             if (!entry.Definition.Equals(definition))
-                throw new ConfigurationException($"RabbitMQ topology entity '{key}' was configured with conflicting definitions.");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"RabbitMQ topology entity '{key}' was configured with conflicting definitions.", "Correct the named configuration before starting the host"));
 
             if (entry.Generation != Volatile.Read(ref _generation))
             {

@@ -53,7 +53,7 @@ public class ReceiveEndpointCollection :
         });
 
         if (!added)
-            throw new ConfigurationException($"A receive endpoint with the same key was already added: {endpointName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", $"A receive endpoint with the same key was already added: {endpointName}", "Correct the named configuration before starting the host"));
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public class ReceiveEndpointCollection :
             throw new ArgumentException($"The {nameof(endpointName)} must not be null or empty", nameof(endpointName));
 
         if (!_endpoints.TryGetValue(endpointName, out var endpoint))
-            throw new ConfigurationException($"A receive endpoint with the key was not found: {endpointName}");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", $"A receive endpoint with the key was not found: {endpointName}", "Correct the named configuration before starting the host"));
 
         if (endpoint.IsStarted())
             throw new ArgumentException($"The specified endpoint has already been started: {endpointName}", nameof(endpointName));

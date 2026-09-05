@@ -143,6 +143,9 @@ public class MediatorTestHarness :
     {
         return Bus.Factory.CreateMediator(configurator =>
         {
+            // The harness deliberately declares a real policy on behalf of its isolated test bus;
+            // production mediator creation remains fail-closed when the application omits Limits.
+            configurator.Limits(MessageLimits.Conservative);
             ConfigureMediator(configurator);
         });
     }

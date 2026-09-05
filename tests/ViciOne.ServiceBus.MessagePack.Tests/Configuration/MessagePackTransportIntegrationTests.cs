@@ -35,6 +35,7 @@ public sealed class MessagePackTransportIntegrationTests
         services.AddViciOneServiceBusTextWriterLogger(TextWriter.Null);
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.UsingInMemory((_, transport) =>
             {
                 transport.Host(new Uri("loopback://messagepack-durable/"));

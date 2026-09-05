@@ -11,7 +11,7 @@ public sealed class ViciOneServiceBusHostOptionsValidationTests
     [InlineData(InvalidHostOptions.StartTimeout, "StartTimeout")]
     [InlineData(InvalidHostOptions.StopTimeout, "StopTimeout")]
     [InlineData(InvalidHostOptions.ConsumerStopTimeout, "ConsumerStopTimeout")]
-    [InlineData(InvalidHostOptions.ConsumerExceedsStop, "ConsumerStopTimeout must be less than or equal to StopTimeout")]
+    [InlineData(InvalidHostOptions.ConsumerExceedsStop, "ConsumerStopTimeout")]
     [RequirementCoverage("REQ-VSB-HOST-OPTIONS-STARTUP", "every-invalid-static-lifecycle-policy")]
     public void StartupValidator_RejectsEveryInvalidStaticLifecyclePolicy(
         InvalidHostOptions invalid,
@@ -42,7 +42,13 @@ public sealed class ViciOneServiceBusHostOptionsValidationTests
         OptionsValidationException exception = Assert.Throws<OptionsValidationException>(
             () => provider.GetRequiredService<IStartupValidator>().Validate());
 
-        Assert.Contains(expectedReason, string.Join(" | ", exception.Failures), StringComparison.Ordinal);
+        string failures = string.Join(" | ", exception.Failures);
+        Assert.StartsWith("Host lifecycle for bus 'all':", failures, StringComparison.Ordinal);
+        Assert.Contains(expectedReason, failures, StringComparison.Ordinal);
+        Assert.Contains(". Set ", failures, StringComparison.Ordinal);
+        Assert.EndsWith(".", failures, StringComparison.Ordinal);
+        if (invalid == InvalidHostOptions.ConsumerExceedsStop)
+            Assert.Contains("must be less than or equal to StopTimeout", failures, StringComparison.Ordinal);
     }
 
     [Fact]

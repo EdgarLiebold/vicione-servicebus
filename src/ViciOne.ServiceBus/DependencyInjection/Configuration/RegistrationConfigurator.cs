@@ -407,7 +407,7 @@ public abstract class RegistrationConfigurator :
     protected void ThrowIfAlreadyConfigured(string methodName)
     {
         if (_configured)
-            throw new ConfigurationException($"'{methodName}' can be called only once.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Registration", "unknown", $"'{methodName}' can be called only once.", "Correct the named configuration before starting the host"));
 
         _configured = true;
     }

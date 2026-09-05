@@ -35,9 +35,9 @@ public sealed class RabbitMqQueueRedeliveryPlan
         ArgumentNullException.ThrowIfNull(intervals);
 
         if (string.IsNullOrWhiteSpace(settings.QueueName))
-            throw new ConfigurationException("RabbitMQ queue redelivery requires a named receive queue.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ queue redelivery requires a named receive queue.", "Correct the named configuration before starting the host"));
         if (!settings.BindQueue)
-            throw new ConfigurationException("RabbitMQ queue redelivery requires a receive queue; exchange-only endpoints are not supported.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ queue redelivery requires a receive queue; exchange-only endpoints are not supported.", "Correct the named configuration before starting the host"));
 
         RabbitMqEntityNameValidator.Validator.ThrowIfInvalidEntityName(settings.QueueName);
 
@@ -48,11 +48,11 @@ public sealed class RabbitMqQueueRedeliveryPlan
 
         if (_sourceQueueArguments.TryGetValue(QueueTypeArgument, out var queueType)
             && string.Equals(Convert.ToString(queueType, CultureInfo.InvariantCulture), "stream", StringComparison.OrdinalIgnoreCase))
-            throw new ConfigurationException("RabbitMQ stream queues do not support TTL/DLX technical redelivery.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ stream queues do not support TTL/DLX technical redelivery.", "Correct the named configuration before starting the host"));
 
         var delayValues = intervals.Select(ValidateInterval).Distinct().OrderBy(value => value).ToArray();
         if (delayValues.Length == 0)
-            throw new ConfigurationException("RabbitMQ queue redelivery requires at least one positive interval.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ queue redelivery requires at least one positive interval.", "Correct the named configuration before starting the host"));
 
         DelayExchangeName = $"{QueueName}.redelivery";
         ReturnExchangeName = $"{QueueName}.redelivery.return";
@@ -103,7 +103,7 @@ public sealed class RabbitMqQueueRedeliveryPlan
         if (!_routingKeys.TryGetValue(milliseconds, out var routingKey))
         {
             throw new ConfigurationException(
-                $"RabbitMQ queue redelivery delay '{delay}' was not declared at endpoint startup. Configure every technical-redelivery interval explicitly.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"RabbitMQ queue redelivery delay '{delay}' was not declared at endpoint startup. Configure every technical-redelivery interval explicitly.", "Correct the named configuration before starting the host"));
         }
 
         return routingKey;

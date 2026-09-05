@@ -1,6 +1,8 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using ViciOne.ServiceBus.Configuration;
+using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
@@ -64,6 +66,27 @@ public sealed class EntityFrameworkMessageJournalModelTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-MAPPING", "bus-block-provider-selection-is-side-effect-free")]
+    public void BusBlockProviderSelection_CreatesTheBoundedStoreWithoutDatabaseIo()
+    {
+        var limits = new MessageJournalStoreLimits(4096, 25, TimeSpan.FromDays(2));
+        DbContextOptions<JournalProbeContext> options = new DbContextOptionsBuilder<JournalProbeContext>()
+            .UseSqlite("Data Source=:memory:")
+            .Options;
+        var configurator = new RecordingJournalConfigurator();
+
+        IMessageJournalConfigurator result = configurator.UseEntityFramework<JournalProbeContext>(
+            options,
+            "MessageJournal",
+            limits,
+            "journal");
+
+        Assert.Same(configurator, result);
+        var store = Assert.IsType<EntityFrameworkMessageJournalStore>(configurator.Store);
+        Assert.Same(limits, store.Limits);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-MESSAGE-JOURNAL-MAPPING", "record-serialization-is-runtime-ready")]
     public void RecordConversion_SerializesTheSanitizedCollectionsWithoutAmbientJsonConfiguration()
     {
@@ -79,6 +102,23 @@ public sealed class EntityFrameworkMessageJournalModelTests
         Assert.Equal(2, JsonDocument.Parse(record.MessageTypesJson).RootElement.GetArrayLength());
         Assert.Equal("abc", JsonDocument.Parse(record.MetadataJson).RootElement.GetProperty("correlationId").GetString());
         Assert.Equal("north", JsonDocument.Parse(record.HeadersJson).RootElement.GetProperty("tenant").GetString());
+    }
+
+    sealed class JournalProbeContext(DbContextOptions<JournalProbeContext> options) : DbContext(options);
+
+    sealed class RecordingJournalConfigurator : IMessageJournalConfigurator
+    {
+        public IMessageJournalStore? Store { get; private set; }
+
+        public IMessageJournalConfigurator UseStore(IMessageJournalStore store)
+        {
+            Store = store;
+            return this;
+        }
+
+        public IMessageJournalConfigurator Policy(IMessageJournalPolicy policy) => this;
+
+        public IMessageJournalConfigurator Options(MessageJournalOptions options) => this;
     }
 
     private static DbContextOptions CreateOptions(string provider)

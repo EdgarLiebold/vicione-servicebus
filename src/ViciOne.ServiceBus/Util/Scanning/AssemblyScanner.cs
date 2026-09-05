@@ -249,7 +249,7 @@ public class AssemblyScanner :
         if (callingAssembly != null)
             Assembly(callingAssembly);
         else
-            throw new ConfigurationException("Could not determine the calling assembly, you may need to explicitly call IAssemblyScanner.Assembly()");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Assembly Scanner", "unknown", "Could not determine the calling assembly, you may need to explicitly call IAssemblyScanner.Assembly()", "Correct the named configuration before starting the host"));
     }
 
     static void OnAssemblyLoadFailure(string assemblyName, Exception exception)

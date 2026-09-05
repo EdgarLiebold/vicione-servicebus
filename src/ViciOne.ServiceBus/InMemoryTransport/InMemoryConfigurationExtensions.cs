@@ -63,7 +63,7 @@ public static class InMemoryConfigurationExtensions
         {
             var delayProvider = provider.GetRequiredService<Bind<IBus, IBusInstance>>().Value as IInMemoryDelayProvider;
 
-            return delayProvider ?? throw new ConfigurationException("The default bus instance is not an InMemory Bus Instance");
+            return delayProvider ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("In Memory", "unknown", "The default bus instance is not an InMemory Bus Instance", "Correct the named configuration before starting the host"));
         });
     }
 
@@ -102,7 +102,7 @@ public static class InMemoryConfigurationExtensions
         {
             var delayProvider = provider.GetRequiredService<IBusInstance<TBus>>().BusInstance as IInMemoryDelayProvider;
 
-            return delayProvider ?? throw new ConfigurationException("The bus instance is not an InMemory Bus Instance");
+            return delayProvider ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("In Memory", "unknown", "The bus instance is not an InMemory Bus Instance", "Correct the named configuration before starting the host"));
         });
 
         services.TryAddSingleton(provider =>
@@ -110,7 +110,7 @@ public static class InMemoryConfigurationExtensions
             var delayProvider = provider.GetRequiredService<IBusInstance<TBus>>().BusInstance as IInMemoryDelayProvider;
 
             return Bind<TBus>.Create(delayProvider
-                ?? throw new ConfigurationException("The bus instance is not an InMemory Bus Instance"));
+                ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("In Memory", "unknown", "The bus instance is not an InMemory Bus Instance", "Correct the named configuration before starting the host")));
         });
     }
 }

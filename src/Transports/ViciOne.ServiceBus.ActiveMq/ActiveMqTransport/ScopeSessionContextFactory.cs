@@ -27,8 +27,6 @@ public class ScopeSessionContextFactory :
     {
         IAsyncPipeContextAgent<SessionContext> asyncContext = supervisor.AddAsyncContext<SessionContext>();
 
-        Task<SessionContext> context = CreateSessionAsync(asyncContext, supervisor.Stopped);
-
         var faultStopLock = new object();
         Task? faultStopTask = null;
 
@@ -59,17 +57,23 @@ public class ScopeSessionContextFactory :
             }
         }
 
-        context.GetAwaiter().OnCompleted(() =>
+        Task<SessionContext> CreateSharedSessionContextAsync(SessionContext sessionContext,
+            CancellationToken createCancellationToken)
         {
-            if (!context.IsCompletedSuccessfully)
-                return;
+            var sharedSessionContext = new SharedSessionContext(sessionContext, createCancellationToken);
 
-            var sessionContext = context.Result;
             sessionContext.ConnectionContext.Connection.ExceptionListener += HandleConnectionException;
 
             asyncContext.Completed.GetAwaiter().OnCompleted(() =>
                 sessionContext.ConnectionContext.Connection.ExceptionListener -= HandleConnectionException);
-        });
+
+            return Task.FromResult<SessionContext>(sharedSessionContext);
+        }
+
+        // Install the connection-fault listener inside the agent factory. CreateAgent publishes the
+        // shared context only after this factory returns, so no caller can observe a cached session
+        // during the former listener-registration race.
+        _supervisor.StartAgent(asyncContext, CreateSharedSessionContextAsync, supervisor.Stopped);
 
         return asyncContext;
     }
@@ -87,13 +91,4 @@ public class ScopeSessionContextFactory :
             : new SharedSessionContext(await context.OrCanceledAsync(cancellationToken).ConfigureAwait(false), cancellationToken);
     }
 
-    Task<SessionContext> CreateSessionAsync(IAsyncPipeContextAgent<SessionContext> asyncContext, CancellationToken cancellationToken)
-    {
-        static Task<SessionContext> CreateSessionContextAsync(SessionContext context, CancellationToken createCancellationToken)
-        {
-            return Task.FromResult<SessionContext>(new SharedSessionContext(context, createCancellationToken));
-        }
-
-        return _supervisor.CreateAgentAsync(asyncContext, CreateSessionContextAsync, cancellationToken);
-    }
 }

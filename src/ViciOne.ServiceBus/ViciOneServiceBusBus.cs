@@ -56,7 +56,7 @@ internal sealed class ViciOneServiceBusBus :
         Topology = host.Topology;
 
         if (LogContext.Current == null)
-            throw new ConfigurationException("The LogContext was not set.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Vici One Service Bus Bus", "unknown", "The LogContext was not set.", "Correct the named configuration before starting the host"));
 
         _logContext = LogContext.Current;
 

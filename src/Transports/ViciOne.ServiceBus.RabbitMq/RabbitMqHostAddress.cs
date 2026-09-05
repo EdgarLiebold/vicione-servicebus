@@ -32,7 +32,7 @@ public readonly struct RabbitMqHostAddress
 
         Scheme = NormalizeScheme(address.Scheme);
         Host = string.IsNullOrWhiteSpace(address.Host)
-            ? throw new RabbitMqAddressException("The RabbitMQ host must not be empty.")
+            ? throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "The RabbitMQ host must not be empty.", "Correct the named configuration before starting the host"))
             : address.Host;
         Port = address.IsDefaultPort || address.Port <= 0
             ? GetDefaultPort(Scheme)
@@ -65,7 +65,7 @@ public readonly struct RabbitMqHostAddress
 
                 default:
                     if (!RabbitMqAddressOptionNames.IsEndpointOption(key))
-                        throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' is not supported.");
+                        throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' is not supported.", "Correct the named configuration before starting the host"));
                     break;
             }
         }
@@ -153,7 +153,7 @@ public readonly struct RabbitMqHostAddress
     {
         RabbitMqSecureScheme or "amqps" => 5671,
         RabbitMqScheme or "amqp" => 5672,
-        _ => throw new RabbitMqAddressException($"The address scheme is not supported: {scheme}")
+        _ => throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The address scheme is not supported: {scheme}", "Correct the named configuration before starting the host"))
     };
 
     internal static string NormalizeScheme(string scheme)
@@ -162,7 +162,7 @@ public readonly struct RabbitMqHostAddress
         return normalized switch
         {
             RabbitMqScheme or RabbitMqSecureScheme or "amqp" or "amqps" => normalized,
-            _ => throw new RabbitMqAddressException($"The address scheme is not supported: {scheme}")
+            _ => throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The address scheme is not supported: {scheme}", "Correct the named configuration before starting the host"))
         };
     }
 
@@ -171,7 +171,7 @@ public readonly struct RabbitMqHostAddress
     static void EnsureSingleValue(ISet<string> seenOptions, string key)
     {
         if (!seenOptions.Add(key))
-            throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' must occur at most once.");
+            throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' must occur at most once.", "Correct the named configuration before starting the host"));
     }
 
     static ushort ParseUInt16(string key, string? value)
@@ -179,7 +179,7 @@ public readonly struct RabbitMqHostAddress
         if (ushort.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var result))
             return result;
 
-        throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' must be an unsigned 16-bit integer.");
+        throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' must be an unsigned 16-bit integer.", "Correct the named configuration before starting the host"));
     }
 
     static int ParseNonNegativeInt32(string key, string? value)
@@ -187,7 +187,7 @@ public readonly struct RabbitMqHostAddress
         if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var result) && result >= 0)
             return result;
 
-        throw new RabbitMqAddressException($"The RabbitMQ address option '{key}' must be a non-negative 32-bit integer.");
+        throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", $"The RabbitMQ address option '{key}' must be a non-negative 32-bit integer.", "Correct the named configuration before starting the host"));
     }
 
     static int ValidatePort(int port)
@@ -195,7 +195,7 @@ public readonly struct RabbitMqHostAddress
         if (port is > 0 and <= 65535)
             return port;
 
-        throw new RabbitMqAddressException("The RabbitMQ port must be between 1 and 65535.");
+        throw new RabbitMqAddressException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "The RabbitMQ port must be between 1 and 65535.", "Correct the named configuration before starting the host"));
     }
 
     IEnumerable<string> GetQueryStringOptions()

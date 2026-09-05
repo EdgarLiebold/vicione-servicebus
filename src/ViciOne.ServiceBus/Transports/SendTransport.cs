@@ -125,13 +125,13 @@ public class SendTransport<TContext> :
             if (ForwardingExpiration.TryDiscard(sendContext))
                 return;
 
-            if (_sendTransportContext is BaseSendTransportContext transportContext)
-                transportContext.ApplyPayloadAdmission(sendContext);
-
             StartedActivity? activity = LogContext.Current?.StartSendActivity(_sendTransportContext, sendContext);
             var instrument = LogContext.Current?.StartSendInstrument(_sendTransportContext, sendContext);
             try
             {
+                if (_sendTransportContext is BaseSendTransportContext transportContext)
+                    transportContext.ApplyPayloadAdmission(sendContext);
+
                 if (_sendTransportContext.SendObservers.Count > 0)
                     await _sendTransportContext.SendObservers.PreSendAsync(sendContext).ConfigureAwait(false);
 

@@ -23,14 +23,15 @@ public static class PayloadAdmissionServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         services.AddMetrics();
+        ViciOne.ServiceBus.Configuration.BusCompositionRegistrations.AddFeature<TBus>(services, "Payload admission");
 
         OptionsBuilder<PayloadAdmissionOptions<TBus>> options = services.AddOptions<PayloadAdmissionOptions<TBus>>();
         if (configure is not null)
             options.Configure(configure);
 
-        options
-            .Validate(IsValidRuntimePolicy, PayloadAdmissionOptions<TBus>.ValidationFailureMessage)
-            .ValidateOnStart();
+        options.ValidateOnStart();
+        services.TryAddEnumerable(
+            ServiceDescriptor.Singleton<IValidateOptions<PayloadAdmissionOptions<TBus>>, PayloadAdmissionOptionsValidator<TBus>>());
 
         services.TryAddSingleton<V5ServiceBusInstrumentation<TBus>>();
         services.TryAddSingleton<PayloadAdmissionPolicyProvider<TBus>>();
@@ -44,18 +45,43 @@ public static class PayloadAdmissionServiceCollectionExtensions
         return services;
     }
 
-    static bool IsValidRuntimePolicy<TBus>(PayloadAdmissionOptions<TBus> options)
-        where TBus : class, IBus
+}
+
+internal sealed class PayloadAdmissionOptionsValidator<TBus> : IValidateOptions<PayloadAdmissionOptions<TBus>>
+    where TBus : class, IBus
+{
+    public ValidateOptionsResult Validate(string? name, PayloadAdmissionOptions<TBus> options)
     {
-        try
+        ArgumentNullException.ThrowIfNull(options);
+
+        string bus = ViciOne.ServiceBus.Configuration.BusRegistrationIdentity.GetKey(typeof(TBus));
+        List<string> failures = [];
+        if (options.MaximumSerializedBodyBytes is null)
         {
-            PayloadAdmissionPolicy policy = options.Freeze();
-            return policy.MaximumSerializedBodyBytes.HasValue
-                && policy.MaximumTransportEnvelopeBytes.HasValue;
+            failures.Add(
+                $"Payload admission for bus '{bus}': MaximumSerializedBodyBytes is not declared. Call bus.Limits(...) with an explicit MaxBodyBytes value.");
         }
-        catch (ArgumentException)
+        if (options.MaximumTransportEnvelopeBytes is null)
         {
-            return false;
+            failures.Add(
+                $"Payload admission for bus '{bus}': MaximumTransportEnvelopeBytes is not declared. Call bus.Limits(...) with an explicit MaxEnvelopeBytes value.");
         }
+
+        if (failures.Count == 0)
+        {
+            try
+            {
+                _ = options.Freeze();
+            }
+            catch (ArgumentException exception)
+            {
+                failures.Add(
+                    $"Payload admission for bus '{bus}': {exception.Message} Correct the named threshold before starting the host.");
+            }
+        }
+
+        return failures.Count == 0
+            ? ValidateOptionsResult.Success
+            : ValidateOptionsResult.Fail(failures);
     }
 }

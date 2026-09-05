@@ -61,7 +61,7 @@ public class AmazonSqsHostConfiguration :
     /// </summary>
     public AmazonSqsHostSettings Settings
     {
-        get => _hostSettings ?? throw new ConfigurationException("The Amazon SQS host must be configured.");
+        get => _hostSettings ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Amazon SQS", "unknown", "The Amazon SQS host must be configured.", "Correct the named configuration before starting the host"));
         set
         {
             ArgumentNullException.ThrowIfNull(value);

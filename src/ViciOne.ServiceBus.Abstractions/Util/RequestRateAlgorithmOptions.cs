@@ -5,7 +5,7 @@ namespace ViciOne.ServiceBus.Util;
 /// <summary>
 /// Defines configuration options for request rate algorithm.
 /// </summary>
-public class RequestRateAlgorithmOptions
+public sealed class RequestRateAlgorithmOptions
 {
     /// <summary>
     /// The number of messages to keep in the pipeline at any given time
@@ -20,7 +20,7 @@ public class RequestRateAlgorithmOptions
     /// <summary>
     /// The maximum number of results that can be retrieved per request
     /// </summary>
-    public int RequestResultLimit { get; set; }
+    public required int RequestResultLimit { get; set; }
 
     /// <summary>
     /// The maximum number of requests within the given request rate interval

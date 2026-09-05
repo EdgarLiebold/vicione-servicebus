@@ -36,6 +36,7 @@ public sealed class JobServiceEndpointConfigurationTests
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.SetInMemorySagaRepositoryProvider();
                 configuration.AddJobSagaStateMachines();
                 configuration.UsingInMemory((context, bus) =>

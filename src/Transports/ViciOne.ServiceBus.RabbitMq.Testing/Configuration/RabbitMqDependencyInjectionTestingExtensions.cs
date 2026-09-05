@@ -22,13 +22,17 @@ public static class RabbitMqDependencyInjectionTestingExtensions
     {
         var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IBus));
         if (descriptor != null)
-            throw new ConfigurationException("RabbitMQ Test Options must be configured before calling AddViciOneServiceBus");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ Test Options must be configured before calling AddViciOneServiceBus", "Correct the named configuration before starting the host"));
 
         services.AddOptions<RabbitMqTestHarnessOptions>()
             .Configure(options =>
             {
                 configure?.Invoke(options);
-            });
+            })
+            .Validate(
+                static options => !options.ForceCleanRootVirtualHost || options.CleanVirtualHost,
+                "RabbitMQ test harness for bus 'default': ForceCleanRootVirtualHost requires CleanVirtualHost. Enable CleanVirtualHost or disable the force flag.")
+            .ValidateOnStart();
 
         services.AddHostedService<RabbitMqTestHarnessHostedService>();
 

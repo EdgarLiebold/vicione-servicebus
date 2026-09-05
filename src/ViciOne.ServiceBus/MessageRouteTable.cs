@@ -96,7 +96,7 @@ public sealed class MessageRouteTable :
                 if (existing.HasSameFixedAddress(route))
                     return;
 
-                throw new ConfigurationException($"A message route is already configured for {TypeCache.GetShortName(messageType)}.");
+                throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Route Table", "unknown", $"A message route is already configured for {TypeCache.GetShortName(messageType)}.", "Correct the named configuration before starting the host"));
             }
 
             _routes.Add(messageType, route);
@@ -121,8 +121,8 @@ public sealed class MessageRouteTable :
             if (candidate is not null)
             {
                 throw new ConfigurationException(
-                    $"Message route for {TypeCache.GetShortName(messageType)} is ambiguous between "
-                    + $"{TypeCache.GetShortName(candidateType!)} and {TypeCache.GetShortName(type)}.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message Route Table", "unknown", $"Message route for {TypeCache.GetShortName(messageType)} is ambiguous between "
+                    + $"{TypeCache.GetShortName(candidateType!)} and {TypeCache.GetShortName(type)}.", "Correct the named configuration before starting the host"));
             }
 
             candidate = route;

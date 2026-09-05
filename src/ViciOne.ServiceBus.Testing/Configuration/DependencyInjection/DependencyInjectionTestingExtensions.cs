@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,9 +29,8 @@ public static class DependencyInjectionTestingExtensions
     /// AddViciOneServiceBus, including the test harness, to the container.
     /// To specify a transport, add the appropriate UsingXxx method. If no transport is specified, the
     /// default in-memory transport will be used, and ConfigureEndpoints will be called.
-    /// If ViciOne.ServiceBus has already been configured, the existing bus configuration will be replaced with an in-memory
-    /// configuration (by default, unless another UsingXxx transport method is specified), and saga repositories are
-    /// replaced with in-memory as well.
+    /// The registration fails when a bus has already been configured, because silently replacing production registrations
+    /// would make the test container exercise a different topology.
     /// </summary>
     public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, Action<IBusRegistrationConfigurator>? configure = null)
     {
@@ -43,16 +41,37 @@ public static class DependencyInjectionTestingExtensions
     /// AddViciOneServiceBus, including the test harness, to the container.
     /// To specify a transport, add the appropriate UsingXxx method. If no transport is specified, the
     /// default in-memory transport will be used, and ConfigureEndpoints will be called.
-    /// If ViciOne.ServiceBus has already been configured, the existing bus configuration will be replaced with an in-memory
-    /// configuration (by default, unless another UsingXxx transport method is specified), and saga repositories are
-    /// replaced with in-memory as well.
+    /// The registration fails when a bus has already been configured, because silently replacing production registrations
+    /// would make the test container exercise a different topology.
     /// </summary>
     public static IServiceCollection AddViciOneServiceBusTestHarness(this IServiceCollection services, TextWriter textWriter,
         Action<IBusRegistrationConfigurator>? configure = null)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(textWriter);
+
+        if (services.Any(static descriptor => descriptor.ServiceType == typeof(IBus)))
+        {
+            throw new ConfigurationException(
+                "Test harness for bus 'default': IBus is already registered. Configure AddViciOneServiceBusTestHarness as the only default-bus registration.");
+        }
+
         AddViciOneServiceBusTextWriterLogger(services, textWriter);
 
-        services.AddOptions<TestHarnessOptions>();
+        services.AddOptions<TestHarnessOptions>()
+            .Validate(
+                static options => options.TestTimeout > TimeSpan.Zero,
+                "Test harness for bus 'default': TestTimeout must be greater than zero. Set TestTimeout to a positive duration.")
+            .Validate(
+                static options => options.TestInactivityTimeout > TimeSpan.Zero,
+                "Test harness for bus 'default': TestInactivityTimeout must be greater than zero. Set TestInactivityTimeout to a positive duration.")
+            .Validate(
+                static options => Enum.IsDefined(options.ContextSaveMode),
+                "Test harness for bus 'default': ContextSaveMode is not defined. Select a valid TestContextSaveMode value.")
+            .Validate(
+                static options => options.MaximumSavedContexts > 0,
+                "Test harness for bus 'default': MaximumSavedContexts must be greater than zero. Set a positive bounded retention count.")
+            .ValidateOnStart();
         services.TryAddSingleton<TimeProvider>(_ => TimeProvider.System);
         services.AddBusObserver<ContainerTestHarnessBusObserver>();
         services.TryAddSingleton<ITestHarness>(provider => provider.GetRequiredService<ContainerTestHarness>());
@@ -63,18 +82,6 @@ public static class DependencyInjectionTestingExtensions
             options.WaitUntilStarted = true;
         });
 
-        services.TryAddSingleton<IValidateOptions<ViciOneServiceBusHostOptions>, ValidateViciOneServiceBusHostOptions>();
-
-        // If the bus was already configured, well, let's use it and any existing registrations
-        if (services.Any(d => d.ServiceType == typeof(IBus)))
-        {
-            RegisterConsumerTestHarnesses(services);
-            RegisterSagaTestHarnesses(services);
-
-            services.RemoveViciOneServiceBus();
-            services.RemoveSagaRepositories();
-        }
-
         return services.AddViciOneServiceBus(x =>
         {
             var harnessConfigurator = new TestHarnessRegistrationConfigurator(x);
@@ -82,6 +89,9 @@ public static class DependencyInjectionTestingExtensions
             harnessConfigurator.SetInMemorySagaRepositoryProvider();
 
             configure?.Invoke(harnessConfigurator);
+
+            if (!MessageLimitsConfigurationExtensions.HasLimits<IBus>(services))
+                x.Limits(MessageLimits.Conservative);
 
             var addScheduler = false;
             if (services.All(d => d.ServiceType != typeof(IMessageScheduler)))
@@ -111,7 +121,11 @@ public static class DependencyInjectionTestingExtensions
     /// <param name="textWriter"></param>
     public static IServiceCollection AddViciOneServiceBusTextWriterLogger(this IServiceCollection services, TextWriter? textWriter = null)
     {
-        services.AddOptions<TextWriterLoggerOptions>();
+        services.AddOptions<TextWriterLoggerOptions>()
+            .Validate(
+                static options => Enum.IsDefined(options.LogLevel),
+                "Test logger for bus 'default': LogLevel is not defined. Select a valid LogLevel value.")
+            .ValidateOnStart();
         services.TryAddSingleton<ILoggerFactory>(provider =>
             new TextWriterLoggerFactory(textWriter ?? Console.Out, provider.GetRequiredService<IOptions<TextWriterLoggerOptions>>(),
                 provider.GetService<TimeProvider>()));
@@ -186,53 +200,6 @@ public static class DependencyInjectionTestingExtensions
         return configurator;
     }
 
-    static void RegisterConsumerTestHarnesses(IServiceCollection services)
-    {
-        List<ServiceDescriptor> consumerRegistrations = services
-            .Where(x => x.ServiceType == typeof(IConsumerRegistration))
-            .ToList();
-
-        foreach (var registration in consumerRegistrations)
-        {
-            if (registration.ImplementationInstance == null
-                || !registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumerRegistration<>), out Type[] types))
-                continue;
-
-            var type = typeof(RegistrationForConsumer<>).MakeGenericType(types[0]);
-            var register = Activator.CreateInstance(type) as IRegisterTestHarness
-                ?? throw new InvalidOperationException("Could not create consumer registration");
-            register.RegisterTestHarness(services);
-        }
-    }
-
-    static void RegisterSagaTestHarnesses(IServiceCollection services)
-    {
-        List<ServiceDescriptor> sagaStateMachines = services
-            .Where(x => x.ServiceType == typeof(ISagaRegistration))
-            .ToList();
-
-        foreach (var registration in sagaStateMachines)
-        {
-            if (registration.ImplementationInstance == null)
-                continue;
-
-            if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaStateMachineRegistration<,>), out Type[] types))
-            {
-                var type = typeof(RegistrationForSagaStateMachine<,>).MakeGenericType(types);
-                var register = Activator.CreateInstance(type) as IRegisterTestHarness
-                    ?? throw new InvalidOperationException("Could not create consumer registration");
-                register.RegisterTestHarness(services);
-            }
-            else if (registration.ImplementationInstance.GetType().TryGetSingleClosedGenericArguments(typeof(SagaRegistration<>), out types))
-            {
-                var type = typeof(RegistrationForSaga<>).MakeGenericType(types);
-                var register = Activator.CreateInstance(type) as IRegisterTestHarness
-                    ?? throw new InvalidOperationException("Could not create consumer registration");
-                register.RegisterTestHarness(services);
-            }
-        }
-    }
-
     /// <summary>
     /// Add the In-Memory test harness to the container, and configure it using the callback specified.
     /// </summary>
@@ -253,7 +220,7 @@ public static class DependencyInjectionTestingExtensions
             {
                 var busInstance = provider.GetService<IBusInstance>();
                 if (busInstance == null)
-                    throw new ConfigurationException("No bus instances found");
+                    throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Test harness", "unknown", "No bus instances found", "Correct the named configuration before starting the host"));
 
                 busInstances = [busInstance];
             }
@@ -262,7 +229,7 @@ public static class DependencyInjectionTestingExtensions
             if (testHarnessBusInstance is InMemoryTestHarnessBusInstance testInstance)
                 return testInstance.Harness;
 
-            throw new ConfigurationException("Test Harness configuration is invalid");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Test harness", "unknown", "Test Harness configuration is invalid", "Correct the named configuration before starting the host"));
         });
         services.AddSingleton<BusTestHarness>(provider => provider.GetRequiredService<InMemoryTestHarness>());
 
@@ -336,45 +303,4 @@ public static class DependencyInjectionTestingExtensions
             provider.GetRequiredService<RegistrationSagaStateMachineTestHarness<TStateMachine, T>>());
     }
 
-
-    interface IRegisterTestHarness
-    {
-        void RegisterTestHarness(IServiceCollection services);
-    }
-
-
-    class RegistrationForConsumer<T> :
-        IRegisterTestHarness
-        where T : class, IConsumer
-    {
-        public void RegisterTestHarness(IServiceCollection services)
-        {
-            services.AddConsumerContainerTestHarness<T>();
-        }
-    }
-
-
-    class RegistrationForSagaStateMachine<TStateMachine, TInstance> :
-        IRegisterTestHarness
-        where TStateMachine : class, SagaStateMachine<TInstance>
-        where TInstance : class, SagaStateMachineInstance
-    {
-        public void RegisterTestHarness(IServiceCollection services)
-        {
-            services.RegisterInMemorySagaRepository<TInstance>();
-            services.AddSagaStateMachineContainerTestHarness<TStateMachine, TInstance>();
-        }
-    }
-
-
-    class RegistrationForSaga<TSaga> :
-        IRegisterTestHarness
-        where TSaga : class, ISaga
-    {
-        public void RegisterTestHarness(IServiceCollection services)
-        {
-            services.RegisterInMemorySagaRepository<TSaga>();
-            services.AddSagaContainerTestHarness<TSaga>();
-        }
-    }
 }

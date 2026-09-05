@@ -25,7 +25,7 @@ internal sealed class MessageDataAdmissionEvidence
     public void Observe(IMessageDataRepository repository, MessageDataPolicy policy)
     {
         if (!ReferenceEquals(_repository, repository) || !ReferenceEquals(_policy, policy))
-            throw new ConfigurationException("A send cannot combine multiple MessageData owners.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Message data", "unknown", "A send cannot combine multiple MessageData owners.", "Correct the named configuration before starting the host"));
 
         Interlocked.Increment(ref _storedReferenceCount);
     }

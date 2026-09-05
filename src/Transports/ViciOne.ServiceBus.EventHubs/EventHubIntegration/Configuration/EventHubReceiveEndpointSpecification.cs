@@ -104,7 +104,7 @@ public class EventHubReceiveEndpointSpecification :
         }
         catch (Exception ex)
         {
-            throw new ConfigurationException(result, "An exception occurred creating EventHub receive endpoint", ex);
+            throw new ConfigurationException(result, global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Receive endpoint", "unknown", "An exception occurred creating EventHub receive endpoint", "Correct the named configuration before starting the host"), ex);
         }
     }
 }

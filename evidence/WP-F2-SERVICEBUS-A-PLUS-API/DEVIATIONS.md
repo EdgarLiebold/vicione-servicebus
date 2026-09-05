@@ -100,3 +100,53 @@ Separate regressions preserve the intent after consumer failure and after an unc
 message. The hardened class failed six of six times before the correction and passed three of three in
 six repeated executions after it, followed by all three complete UnitArchitecture runs. The test uses
 a causal receive-terminal barrier; no polling delay or timeout increase is involved.
+
+## Payload admission and trace-envelope ordering
+
+The existing architecture oracle required payload admission to run before creation of the send
+activity. Admission materializes the serialized body, while send-activity creation writes the W3C
+trace parent, trace state, and baggage headers that must be included in that body. Reversing the order
+therefore removed propagation data and also prevented failed serialization attempts from producing
+their required failure metric. Four independent telemetry regressions exposed the contradiction.
+
+The enforced order is now: activity/header creation, payload admission, send observers, provider I/O.
+This retains the security boundary required by the review—no observer or provider sees an unadmitted
+message—while preserving trace propagation and fault observation. The architecture test asserts all
+four boundaries in this causal order.
+
+## Batching partition oracle under scheduler load
+
+The batch integration matrix published six messages concurrently and assumed a 50-millisecond
+from-first timer could not run until five had reached the collector. That is not a batching contract:
+if only two messages arrive before the configured boundary, closing a two-message time batch is
+correct. A complete-profile run exposed the permitted `2 + 4` partition while preserving every
+message exactly once.
+
+The size-and-tail cases now publish five messages, observe the exact five-message size completion,
+then publish the tail. Their timer is reset from the latest arrival and uses a one-second semantic
+limit; the general test timeout is unchanged. Direct fake-time tests continue to prove the exact
+from-first and from-last timer boundaries without wall-clock assumptions. The revised seven-case
+theory passed ten consecutive focused runs before the complete profile was repeated.
+
+## Diagnostics cancellation continuation oracle
+
+The diagnostics test for a stop that raises its budget cancellation assumed two `Task.Yield()` calls
+were sufficient for the `Task.Delay` cancellation continuation to run. That scheduler assumption
+failed both under full-profile load and in isolation, while `QuiesceAsync` still returned the required
+`false` once awaited. The test now awaits that result through a one-second hang guard and propagates
+the xUnit cancellation token. This preserves both assertions—budget cancellation is not quiescence,
+and the operation must terminate—without weakening the product contract.
+
+## Related defect: ActiveMQ shared session published before fault-listener registration
+
+`ScopeSessionContextFactory` completed and exposed a shared send session before a separately scheduled
+continuation registered the underlying connection's exception listener. A connection failure in that
+window could leave a retained send endpoint holding a stale session after the receive-side connection
+had already faulted. Repeated complete-profile runs exposed the ordering defect as a null listener at
+the first usable-session boundary.
+
+The listener and its completion cleanup are now installed inside the agent factory, before
+`CreatedAsync` publishes the context. The lifecycle test therefore proves both cache reuse and the
+precondition that fault observation exists before first use, then proves listener removal and recovery
+to a different shared session. The corrected regression passed 50 consecutive isolated process runs
+before the complete profile was restarted.

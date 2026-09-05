@@ -54,7 +54,7 @@ sealed class ConsumeContextOutgoingMessages(ConsumeContext context) :
         if (provider is not IMessageRouteProvider routeProvider ||
             !routeProvider.MessageRoutes.TryGetDestinationAddress<T>(out Uri destination))
         {
-            throw new ConfigurationException($"A message route for {typeof(T).FullName} is not configured on this bus.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consume Context Outgoing Messages", "unknown", $"A message route for {typeof(T).FullName} is not configured on this bus.", "Correct the named configuration before starting the host"));
         }
 
         ISendEndpoint endpoint = await context.GetSendEndpointAsync(destination, cancellationToken).ConfigureAwait(false);
@@ -96,7 +96,7 @@ sealed class ConsumeContextOutgoingMessages(ConsumeContext context) :
         ArgumentNullException.ThrowIfNull(message);
 
         if (!context.TryGetPayload(out MessageSchedulerContext? scheduler))
-            throw new ConfigurationException("No message scheduler is available in the active consume context.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consume Context Outgoing Messages", "unknown", "No message scheduler is available in the active consume context.", "Correct the named configuration before starting the host"));
 
         return scheduler.ScheduleSendAsync(destination, dueAt, message, cancellationToken);
     }

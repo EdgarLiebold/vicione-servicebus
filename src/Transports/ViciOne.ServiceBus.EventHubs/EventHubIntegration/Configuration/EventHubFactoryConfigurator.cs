@@ -187,7 +187,7 @@ public class EventHubFactoryConfigurator :
     public void ConfigureProducerOptions(Action<EventHubProducerClientOptions> configure)
     {
         if (_producerSpecification.ConfigureOptions != null)
-            throw new ConfigurationException("ProducerOptions configurator may not be specified more than once.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Event Hub Factory", "unknown", "ProducerOptions configurator may not be specified more than once.", "Correct the named configuration before starting the host"));
         _producerSpecification.ConfigureOptions = configure;
     }
 
@@ -296,14 +296,14 @@ public class EventHubFactoryConfigurator :
     void ThrowIfHostIsAlreadyConfigured()
     {
         if (_isHostSettingsConfigured)
-            throw new ConfigurationException("Host settings may not be specified more than once.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Event Hub Factory", "unknown", "Host settings may not be specified more than once.", "Correct the named configuration before starting the host"));
         _isHostSettingsConfigured = true;
     }
 
     void ThrowIfStorageIsAlreadyConfigured()
     {
         if (_isStorageSettingsConfigured)
-            throw new ConfigurationException("Storage settings may not be specified more than once.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Event Hub Factory", "unknown", "Storage settings may not be specified more than once.", "Correct the named configuration before starting the host"));
         _isStorageSettingsConfigured = true;
     }
 }

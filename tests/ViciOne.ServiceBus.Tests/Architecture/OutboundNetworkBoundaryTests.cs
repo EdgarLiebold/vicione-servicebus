@@ -22,6 +22,7 @@ public sealed class OutboundNetworkBoundaryTests
         await using ServiceProvider provider = new ServiceCollection()
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<QuietConsumer>();
                 configuration.UsingInMemory((context, transport) => transport.ConfigureEndpoints(context));
             })

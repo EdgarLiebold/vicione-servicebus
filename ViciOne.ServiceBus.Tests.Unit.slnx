@@ -63,6 +63,7 @@
     <Project Path="src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj" />
+    <Project Path="src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/ViciOne.ServiceBus.SqlTransport.PostgreSql.csproj" />
     <Project Path="src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ViciOne.ServiceBus.SqlTransport.SqlServer.csproj" />
   </Folder>

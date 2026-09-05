@@ -1,0 +1,12 @@
+{
+  "mode": "analyze",
+  "creationCount": 276,
+  "compliantCount": 276,
+  "changeCount": 0,
+  "unresolvedCount": 0,
+  "changes": [],
+  "unresolved": [],
+  "workspaceDiagnostics": [
+    "Warning: Found project reference without a matching metadata reference: /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Analyzers/ViciOne.ServiceBus.Analyzers.csproj"
+  ]
+}

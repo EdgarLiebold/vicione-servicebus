@@ -35,7 +35,7 @@ public static class DependencyInjectionFilterExtensions
             throw new ArgumentNullException(nameof(context));
 
         if (!filterType.IsGenericType || !filterType.IsGenericTypeDefinition)
-            throw new ConfigurationException("The scoped filter must be a generic type definition");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Filter Extensions", "unknown", "The scoped filter must be a generic type definition", "Correct the named configuration before starting the host"));
 
         var messageTypeFilterConfigurator = new MessageTypeFilterConfigurator();
         configureMessageTypeFilter?.Invoke(messageTypeFilterConfigurator);
@@ -98,7 +98,7 @@ public static class DependencyInjectionFilterExtensions
             throw new ArgumentNullException(nameof(context));
 
         if (!filterType.IsGenericType || !filterType.IsGenericTypeDefinition)
-            throw new ConfigurationException("The scoped filter must be a generic type definition");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Filter Extensions", "unknown", "The scoped filter must be a generic type definition", "Correct the named configuration before starting the host"));
 
         var messageTypeFilterConfigurator = new MessageTypeFilterConfigurator();
         configureMessageTypeFilter?.Invoke(messageTypeFilterConfigurator);
@@ -157,7 +157,7 @@ public static class DependencyInjectionFilterExtensions
             throw new ArgumentNullException(nameof(context));
 
         if (!filterType.IsGenericType || !filterType.IsGenericTypeDefinition)
-            throw new ConfigurationException("The scoped filter must be a generic type definition");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Filter Extensions", "unknown", "The scoped filter must be a generic type definition", "Correct the named configuration before starting the host"));
 
         var messageTypeFilterConfigurator = new MessageTypeFilterConfigurator();
         configureMessageTypeFilter?.Invoke(messageTypeFilterConfigurator);
@@ -216,7 +216,7 @@ public static class DependencyInjectionFilterExtensions
             throw new ArgumentNullException(nameof(context));
 
         if (!filterType.IsGenericType || !filterType.IsGenericTypeDefinition)
-            throw new ConfigurationException("The scoped filter must be a generic type definition");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Filter Extensions", "unknown", "The scoped filter must be a generic type definition", "Correct the named configuration before starting the host"));
 
         var messageTypeFilterConfigurator = new MessageTypeFilterConfigurator();
         configureMessageTypeFilter?.Invoke(messageTypeFilterConfigurator);
@@ -275,7 +275,7 @@ public static class DependencyInjectionFilterExtensions
             throw new ArgumentNullException(nameof(context));
 
         if (!filterType.IsGenericType || !filterType.IsGenericTypeDefinition)
-            throw new ConfigurationException("The scoped filter must be a generic type definition");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Filter Extensions", "unknown", "The scoped filter must be a generic type definition", "Correct the named configuration before starting the host"));
 
         var messageTypeFilterConfigurator = new MessageTypeFilterConfigurator();
         configureMessageTypeFilter?.Invoke(messageTypeFilterConfigurator);

@@ -112,7 +112,7 @@ public static class DependencyInjectionTransactionExtensions
             if (configured.Value != capacity)
             {
                 throw new ConfigurationException(
-                    $"AddBufferedBus for {TypeCache<TBus>.ShortName} was already configured with capacity {configured.Value} and cannot be changed to {capacity}.");
+                    global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Transaction Extensions", "unknown", $"AddBufferedBus for {TypeCache<TBus>.ShortName} was already configured with capacity {configured.Value} and cannot be changed to {capacity}.", "Correct the named configuration before starting the host"));
             }
 
             return;
@@ -128,7 +128,7 @@ public static class DependencyInjectionTransactionExtensions
         if (services.Any(descriptor => descriptor.ServiceType == typeof(Bind<TBus, TConflictingCapability>)))
         {
             throw new ConfigurationException(
-                $"{registration} cannot be combined with {TypeCache<TConflictingCapability>.ShortName} for {TypeCache<TBus>.ShortName}.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Transaction Extensions", "unknown", $"{registration} cannot be combined with {TypeCache<TConflictingCapability>.ShortName} for {TypeCache<TBus>.ShortName}.", "Correct the named configuration before starting the host"));
         }
     }
 
@@ -149,7 +149,7 @@ public static class DependencyInjectionTransactionExtensions
 
         string owner = conflicting.ImplementationType?.Name ?? conflicting.ServiceType.Name;
         throw new ConfigurationException(
-            $"{registration} cannot replace the scoped bus context owner {owner} for {TypeCache<TBus>.ShortName}.");
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Dependency Injection Transaction Extensions", "unknown", $"{registration} cannot replace the scoped bus context owner {owner} for {TypeCache<TBus>.ShortName}.", "Correct the named configuration before starting the host"));
     }
 
     sealed class BufferedCapacity<TBus>

@@ -49,8 +49,7 @@ public class TextTable
     public TextTable(TextTableOptions options)
     {
         Options = options ?? throw new ArgumentNullException(nameof(options));
-
-        options.Out ??= TextWriter.Null;
+        options.Validate();
 
         _rows = new List<object?[]>();
         _columns = new List<object?>(options.Columns);
@@ -283,8 +282,18 @@ public class TextTable
 /// <summary>
 /// Defines configuration options for text table.
 /// </summary>
-public class TextTableOptions
+public sealed class TextTableOptions
 {
+    internal void Validate()
+    {
+        ArgumentNullException.ThrowIfNull(Columns);
+        ArgumentNullException.ThrowIfNull(Out);
+        if (!Enum.IsDefined(NumberAlignment))
+            throw new ArgumentOutOfRangeException(nameof(NumberAlignment), NumberAlignment, "Select a defined number-alignment value.");
+        if (Columns.Any(string.IsNullOrWhiteSpace))
+            throw new ArgumentException("Column names must not be empty.", nameof(Columns));
+    }
+
     /// <summary>
     /// The column names
     /// </summary>

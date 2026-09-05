@@ -150,6 +150,7 @@ public sealed class DeferredBusRegistrationTests
             })
             .AddViciOneServiceBus<ISecondaryBus>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddBufferedBus();
                 configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://localhost/secondary-buffered")));
             });
@@ -195,12 +196,14 @@ public sealed class DeferredBusRegistrationTests
             .AddViciOneServiceBusTestHarness(configuration => configuration.AddBufferedBus())
             .AddViciOneServiceBus<ISecondaryBus>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddAmbientTransactionBus();
                 configuration.AddAmbientTransactionBus();
                 configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://localhost/secondary")));
             })
             .AddViciOneServiceBus<ITertiaryBus>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddBufferedBus();
                 configuration.AddBufferedBus();
                 configuration.UsingInMemory((_, bus) => bus.Host(new Uri("loopback://localhost/tertiary")));

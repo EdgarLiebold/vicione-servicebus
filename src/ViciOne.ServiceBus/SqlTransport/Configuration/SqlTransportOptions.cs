@@ -4,7 +4,7 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 /// <summary>
 /// Defines configuration options for sql transport.
 /// </summary>
-public class SqlTransportOptions
+public sealed class SqlTransportOptions
 {
     /// <summary>
     /// Gets or sets the host value.

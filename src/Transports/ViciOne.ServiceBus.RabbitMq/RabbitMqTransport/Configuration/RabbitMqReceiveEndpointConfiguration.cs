@@ -129,7 +129,7 @@ public class RabbitMqReceiveEndpointConfiguration :
     internal RabbitMqQueueRedeliveryPlan CreateQueueRedeliveryPlan(IEnumerable<TimeSpan> intervals)
     {
         if (_queueRedeliveryPlans.Count > 0)
-            throw new ConfigurationException("RabbitMQ queue redelivery may only be configured once per receive endpoint.");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "RabbitMQ queue redelivery may only be configured once per receive endpoint.", "Correct the named configuration before starting the host"));
 
         var plan = new RabbitMqQueueRedeliveryPlan(_settings, intervals);
         _queueRedeliveryPlans.Add(plan);

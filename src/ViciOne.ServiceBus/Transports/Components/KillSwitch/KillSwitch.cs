@@ -137,7 +137,7 @@ internal sealed class KillSwitch :
         if (ready.ReceiveEndpoint is not IRestartableReceiveEndpoint endpoint)
         {
             throw new ConfigurationException(
-                $"The kill switch requires a restartable receive endpoint, but {ready.ReceiveEndpoint.GetType().Name} does not support policy pauses.");
+                global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Kill Switch", "unknown", $"The kill switch requires a restartable receive endpoint, but {ready.ReceiveEndpoint.GetType().Name} does not support policy pauses.", "Correct the named configuration before starting the host"));
         }
 
         Attach(new RestartableReceiveEndpointKillSwitchEndpoint(endpoint));

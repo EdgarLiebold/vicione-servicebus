@@ -6,6 +6,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.Agents;
+using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.Transports;
@@ -29,7 +30,14 @@ public class ConnectionContextFactory :
     {
         _hostConfiguration = hostConfiguration;
 
-        _connectionFactory = new Lazy<ConnectionFactory>(() => _hostConfiguration.Settings.GetConnectionFactory());
+        _connectionFactory = new Lazy<ConnectionFactory>(() =>
+        {
+            ConnectionFactory factory = _hostConfiguration.Settings.GetConnectionFactory();
+            if (_hostConfiguration is IMessageLimitsHostConfiguration { MessageLimits: { } limits })
+                factory.MaxInboundMessageBodySize = checked((uint)limits.MaxEnvelopeBytes);
+
+            return factory;
+        });
     }
 
     /// <summary>
@@ -137,7 +145,7 @@ public class ConnectionContextFactory :
             else
             {
                 var hostName = _hostConfiguration.Settings.Host
-                    ?? throw new ConfigurationException("A RabbitMQ host name is required when no endpoint resolver is configured.");
+                    ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("RabbitMQ", "unknown", "A RabbitMQ host name is required when no endpoint resolver is configured.", "Correct the named configuration before starting the host"));
                 List<string> hostNames = [hostName];
 
                 connection = await _connectionFactory.Value.CreateConnectionAsync(hostNames, _hostConfiguration.Settings.ClientProvidedName)

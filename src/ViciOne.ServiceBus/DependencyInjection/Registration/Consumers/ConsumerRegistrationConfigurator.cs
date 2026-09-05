@@ -32,7 +32,7 @@ public class ConsumerRegistrationConfigurator<TConsumer> :
     public void Endpoint(Action<IEndpointRegistrationConfigurator> configure)
     {
         if (!_registration.IncludeInConfigureEndpoints)
-            throw new ConfigurationException("Consumer is excluded from ConfigureEndpoints");
+            throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Consumer Registration", "unknown", "Consumer is excluded from ConfigureEndpoints", "Correct the named configuration before starting the host"));
 
         var configurator = new EndpointRegistrationConfigurator<TConsumer>();
 

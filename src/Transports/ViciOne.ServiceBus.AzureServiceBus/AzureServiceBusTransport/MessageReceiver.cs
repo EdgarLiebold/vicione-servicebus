@@ -31,7 +31,7 @@ public class MessageReceiver :
     public MessageReceiver(IBusRegistrationContext registration, IAsyncBusHandle busHandle, IBusInstance busInstance)
     {
         _hostConfiguration = busInstance.HostConfiguration as IServiceBusHostConfiguration
-            ?? throw new ConfigurationException("The hostConfiguration was not properly configured for Azure Service Bus");
+            ?? throw new ConfigurationException(global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create("Azure Service Bus", "unknown", "The hostConfiguration was not properly configured for Azure Service Bus", "Correct the named configuration before starting the host"));
 
         _registration = registration;
         _busHandle = busHandle;

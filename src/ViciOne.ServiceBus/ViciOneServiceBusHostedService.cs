@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Transports;
@@ -11,14 +12,15 @@ internal sealed class ViciOneServiceBusHostedService :
     IHostedService,
     IAsyncDisposable
 {
-    readonly IBusDepot _depot;
+    readonly IServiceProvider _provider;
     readonly IOptions<ViciOneServiceBusHostOptions> _options;
+    IBusDepot? _depot;
     Task _startTask = null!;
     bool _stopped;
 
-    public ViciOneServiceBusHostedService(IBusDepot depot, IOptions<ViciOneServiceBusHostOptions> options)
+    public ViciOneServiceBusHostedService(IServiceProvider provider, IOptions<ViciOneServiceBusHostOptions> options)
     {
-        _depot = depot;
+        _provider = provider;
         _options = options;
     }
 
@@ -31,9 +33,10 @@ internal sealed class ViciOneServiceBusHostedService :
         {
             using var tokenSource = new CancellationTokenSource(_options.Value.StopTimeout.Value);
 
-            await _depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
+            if (_depot is not null)
+                await _depot.StopAsync(tokenSource.Token).ConfigureAwait(false);
         }
-        else
+        else if (_depot is not null)
             await _depot.StopAsync(CancellationToken.None).ConfigureAwait(false);
 
         _stopped = true;
@@ -41,6 +44,7 @@ internal sealed class ViciOneServiceBusHostedService :
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        _depot = _provider.GetRequiredService<IBusDepot>();
         _startTask = _options.Value.StartTimeout.HasValue
             ? _depot.StartAsync(_options.Value.StartTimeout.Value, cancellationToken)
             : _depot.StartAsync(cancellationToken);
@@ -56,7 +60,8 @@ internal sealed class ViciOneServiceBusHostedService :
         {
             _stopped = true;
 
-            await (_options.Value.StopTimeout.HasValue
+            if (_depot is not null)
+                await (_options.Value.StopTimeout.HasValue
                 ? _depot.StopAsync(_options.Value.StopTimeout.Value, cancellationToken)
                 : _depot.StopAsync(cancellationToken)).ConfigureAwait(false);
         }
