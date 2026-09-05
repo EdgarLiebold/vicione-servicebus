@@ -28,10 +28,10 @@ public class ScopedFilterSpecificationObserver :
         _filterType = filterType;
         _provider = provider;
         _messageTypeFilter = messageTypeFilter;
-        _messageTypeFilter.Excludes += type => type.ImplementsInterface<Fault>();
-        _messageTypeFilter.Excludes += type => type.ImplementsInterface<ReceiveFault>();
+        _messageTypeFilter.Excludes.Add(type => type.ImplementsInterface<Fault>());
+        _messageTypeFilter.Excludes.Add(type => type.ImplementsInterface<ReceiveFault>());
         // do not create filters for scheduled/outbox messages
-        _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
+        _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedMessageBody));
     }
 
     /// <summary>

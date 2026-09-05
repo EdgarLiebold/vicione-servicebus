@@ -29,7 +29,7 @@ public class ScopedConsumePipeSpecificationObserver :
         _context = context;
         _messageTypeFilter = messageTypeFilter;
         // do not create filters for scheduled/outbox messages
-        _messageTypeFilter.Excludes += type => type == typeof(SerializedMessageBody);
+        _messageTypeFilter.Excludes.Add(type => type == typeof(SerializedMessageBody));
     }
 
     /// <summary>

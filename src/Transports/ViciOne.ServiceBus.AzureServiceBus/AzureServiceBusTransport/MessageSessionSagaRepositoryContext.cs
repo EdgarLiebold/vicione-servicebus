@@ -85,7 +85,7 @@ public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
     /// <returns>The result of the operation.</returns>
     public async Task<SagaConsumeContext<TSaga, TMessage>?> LoadAsync(Guid correlationId, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); var instance = await ReadSagaStateAsync(_sessionContext).ConfigureAwait(false);
+        TSaga? instance = await ReadSagaStateAsync(_sessionContext, cancellationToken).ConfigureAwait(false);
         if (instance == null)
             return default;
 
@@ -100,7 +100,9 @@ public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
     /// <returns>The result of the operation.</returns>
     public Task SaveAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return WriteSagaStateAsync(_sessionContext, context.Saga);
+        ArgumentNullException.ThrowIfNull(context);
+
+        return WriteSagaStateAsync(_sessionContext, context.Saga, cancellationToken);
     }
 
     /// <summary>
@@ -111,7 +113,9 @@ public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
     /// <returns>The result of the operation.</returns>
     public Task UpdateAsync(SagaConsumeContext<TSaga> context, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return WriteSagaStateAsync(_sessionContext, context.Saga);
+        ArgumentNullException.ThrowIfNull(context);
+
+        return WriteSagaStateAsync(_sessionContext, context.Saga, cancellationToken);
     }
 
     /// <summary>
@@ -147,14 +151,17 @@ public class MessageSessionSagaRepositoryContext<TSaga, TMessage> :
         if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return Task.CompletedTask;
     }
 
-    static Task WriteSagaStateAsync(MessageSessionContext context, TSaga saga)
+    internal Task<TSaga?> ReadCurrentAsync(CancellationToken cancellationToken) =>
+        ReadSagaStateAsync(_sessionContext, cancellationToken);
+
+    static Task WriteSagaStateAsync(MessageSessionContext context, TSaga saga, CancellationToken cancellationToken)
     {
-        return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, ServiceBusMetadataJson.Options));
+        return context.SetStateAsync(BinaryData.FromObjectAsJson(saga, ServiceBusMetadataJson.Options), cancellationToken);
     }
 
-    static async Task<TSaga?> ReadSagaStateAsync(MessageSessionContext context)
+    static async Task<TSaga?> ReadSagaStateAsync(MessageSessionContext context, CancellationToken cancellationToken)
     {
-        var state = await context.GetStateAsync().ConfigureAwait(false);
+        var state = await context.GetStateAsync(cancellationToken).ConfigureAwait(false);
 
         return state?.ToObjectFromJson<TSaga>(ServiceBusMetadataJson.Options);
     }

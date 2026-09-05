@@ -130,7 +130,7 @@ public class ConsumeJobContext<TJob> :
             AttemptId = AttemptId,
             Timestamp = UtcNow,
             Reason = string.IsNullOrWhiteSpace(_cancellationReason) ? JobCancellationReasons.ConsumerInitiated : _cancellationReason!
-        }).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -151,7 +151,7 @@ public class ConsumeJobContext<TJob> :
             RetryAttempt = RetryAttempt,
             Timestamp = timestamp,
             InstanceAddress = _instanceAddress
-        }).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
 
         var endpoint = await _context.Advanced().ReceiveContext.PublishEndpointProvider.GetPublishSendEndpointAsync<JobStarted<TJob>>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -161,7 +161,7 @@ public class ConsumeJobContext<TJob> :
             AttemptId = AttemptId,
             RetryAttempt = RetryAttempt,
             Timestamp = timestamp
-        }, CancellationToken.None).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -185,7 +185,7 @@ public class ConsumeJobContext<TJob> :
             Duration = ElapsedTime,
             InstanceProperties = _jobOptions.InstanceProperties,
             JobTypeProperties = _jobOptions.JobTypeProperties
-        }).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -196,7 +196,7 @@ public class ConsumeJobContext<TJob> :
     /// <returns>The result of the operation.</returns>
     public Task NotifyJobProgressAsync(SetJobProgress progress, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return NotifyAsync(progress);
+        return NotifyAsync(progress, cancellationToken);
     }
 
     /// <summary>
@@ -221,7 +221,7 @@ public class ConsumeJobContext<TJob> :
             RetryDelay = delay,
             Timestamp = UtcNow,
             Exceptions = new FaultExceptionInfo(exception)
-        }).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -263,9 +263,9 @@ public class ConsumeJobContext<TJob> :
     /// <returns>The result of the operation.</returns>
     public Task SetJobProgressAsync(long value, long? limit, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
+        _updateBuffer ??= new JobProgressBuffer(this, _timeProvider, _jobOptions.ProgressBuffer);
 
-        return _updateBuffer.UpdateAsync(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), CancellationToken.None);
+        return _updateBuffer.UpdateAsync(new JobProgressBuffer.ProgressUpdate(JobId, AttemptId, value, limit), cancellationToken);
     }
 
     /// <summary>
@@ -278,12 +278,12 @@ public class ConsumeJobContext<TJob> :
     public Task SaveJobStateAsync<T>(T? jobState, CancellationToken cancellationToken = default)
         where T : class
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); return NotifyAsync<SaveJobState>(new SaveJobStateCommand
+        return NotifyAsync<SaveJobState>(new SaveJobStateCommand
         {
             JobId = JobId,
             AttemptId = AttemptId,
             JobState = jobState != null ? _context.Advanced().ToDictionary(jobState) : null
-        });
+        }, cancellationToken);
     }
 
     /// <summary>
@@ -320,12 +320,14 @@ public class ConsumeJobContext<TJob> :
 
     DateTime UtcNow => _timeProvider.GetUtcNow().UtcDateTime;
 
-    async Task NotifyAsync<T>(T message)
+    async Task NotifyAsync<T>(T message, CancellationToken cancellationToken)
         where T : class
     {
-        var endpoint = await _context.Advanced().ReceiveContext.PublishEndpointProvider.GetPublishSendEndpointAsync<T>().ConfigureAwait(false);
+        var endpoint = await _context.Advanced().ReceiveContext.PublishEndpointProvider
+            .GetPublishSendEndpointAsync<T>(cancellationToken)
+            .ConfigureAwait(false);
 
-        await endpoint.SendAsync(message, CancellationToken.None).ConfigureAwait(false);
+        await endpoint.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public class ReceiverConfiguration :
     /// </summary>
     public bool ConfigureConsumeTopology
     {
-        set { }
+        set => _configuration.ConfigureConsumeTopology = value;
     }
 
     /// <summary>
@@ -51,16 +51,14 @@ public class ReceiverConfiguration :
     /// </summary>
     public bool PublishFaults
     {
-        set { }
+        set => _configuration.PublishFaults = value;
     }
 
     /// <summary>
     /// Adds dependency to the configuration.
     /// </summary>
     /// <param name="dependent">The dependent value.</param>
-    public void AddDependency(IReceiveEndpointDependency dependent)
-    {
-    }
+    public void AddDependency(IReceiveEndpointDependency dependent) => _configuration.AddDependency(dependent);
 
     ConnectHandle IReceiveEndpointObserverConnector.ConnectReceiveEndpointObserver(IReceiveEndpointObserver observer)
     {
@@ -71,9 +69,7 @@ public class ReceiverConfiguration :
     /// Adds dependent to the configuration.
     /// </summary>
     /// <param name="dependent">The dependent value.</param>
-    public void AddDependent(IReceiveEndpointDependent dependent)
-    {
-    }
+    public void AddDependent(IReceiveEndpointDependent dependent) => _configuration.AddDependent(dependent);
 
     /// <summary>
     /// Configures message topology.
@@ -82,17 +78,15 @@ public class ReceiverConfiguration :
     /// <param name="enabled">The enabled value.</param>
     public void ConfigureMessageTopology<T>(bool enabled = true)
         where T : class
-    {
-    }
+        => _configuration.ConfigureMessageTopology<T>(enabled);
 
     /// <summary>
     /// Configures message topology.
     /// </summary>
     /// <param name="messageType">The message type value.</param>
     /// <param name="enabled">The enabled value.</param>
-    public void ConfigureMessageTopology(Type messageType, bool enabled = true)
-    {
-    }
+    public void ConfigureMessageTopology(Type messageType, bool enabled = true) =>
+        _configuration.ConfigureMessageTopology(messageType, enabled);
 
     /// <summary>
     /// Adds endpoint specification to the configuration.

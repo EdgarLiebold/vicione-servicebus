@@ -677,6 +677,7 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
             key,
             ReliableInboxStatus.RetryScheduled,
             dueAt,
+            completedAt: null,
             remove: false,
             cancellationToken);
 
@@ -687,6 +688,7 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
             key,
             ReliableInboxStatus.Quarantined,
             dueAt: null,
+            completedAt: null,
             remove: true,
             cancellationToken);
 
@@ -694,20 +696,19 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
         ReliableInboxKey key,
         DateTimeOffset abandonedAt,
         CancellationToken cancellationToken = default)
-    {
-        _ = abandonedAt;
-        return MutateInboxQuarantineAsync(
+        => MutateInboxQuarantineAsync(
             key,
             ReliableInboxStatus.Abandoned,
             dueAt: null,
+            abandonedAt,
             remove: false,
             cancellationToken);
-    }
 
     async Task<ReliableMessagingOperationResult> MutateInboxQuarantineAsync(
         ReliableInboxKey key,
         ReliableInboxStatus target,
         DateTimeOffset? dueAt,
+        DateTimeOffset? completedAt,
         bool remove,
         CancellationToken cancellationToken)
     {
@@ -730,6 +731,7 @@ internal sealed class EntityFrameworkReliableStore<TBus, TDbContext> :
             row.Status = target;
             row.DueAt = dueAt?.UtcDateTime;
             row.QuarantinedAt = target == ReliableInboxStatus.Abandoned ? row.QuarantinedAt : null;
+            row.CompletedAt = completedAt?.UtcDateTime;
             row.LeaseToken = null;
             row.LeaseExpiresAt = null;
         }

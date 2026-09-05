@@ -71,7 +71,7 @@ public class AssemblyScanner :
     /// <param name="exclude">The exclude value.</param>
     public void Exclude(Func<Type, bool> exclude)
     {
-        _filter.Excludes += exclude;
+        _filter.Excludes.Add(exclude);
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class AssemblyScanner :
     /// <param name="predicate">The predicate value.</param>
     public void Include(Func<Type, bool> predicate)
     {
-        _filter.Includes += predicate;
+        _filter.Includes.Add(predicate);
     }
 
     /// <summary>
@@ -201,7 +201,7 @@ public class AssemblyScanner :
         {
             var value = startsWith[i];
 
-            _assemblyFilter.Excludes += name => name.StartsWith(value, StringComparison.OrdinalIgnoreCase);
+            _assemblyFilter.Excludes.Add(name => name.StartsWith(value, StringComparison.OrdinalIgnoreCase));
         }
     }
 
@@ -215,7 +215,7 @@ public class AssemblyScanner :
         {
             var value = startsWith[i];
 
-            _assemblyFilter.Includes += name => name.StartsWith(value, StringComparison.OrdinalIgnoreCase);
+            _assemblyFilter.Includes.Add(name => name.StartsWith(value, StringComparison.OrdinalIgnoreCase));
         }
     }
 

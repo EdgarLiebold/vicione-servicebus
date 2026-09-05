@@ -10,22 +10,14 @@ public class CompositeFilter<T>
     readonly CompositePredicate<T> _includes = new CompositePredicate<T>();
 
     /// <summary>
-    /// Gets or sets the includes value.
+    /// Gets the predicates that select values for evaluation.
     /// </summary>
-    public CompositePredicate<T> Includes
-    {
-        get => _includes;
-        set { }
-    }
+    public CompositePredicate<T> Includes => _includes;
 
     /// <summary>
-    /// Gets or sets the excludes value.
+    /// Gets the predicates that reject selected values.
     /// </summary>
-    public CompositePredicate<T> Excludes
-    {
-        get => _excludes;
-        set { }
-    }
+    public CompositePredicate<T> Excludes => _excludes;
 
     /// <summary>
     /// Performs the matches operation.
@@ -34,6 +26,6 @@ public class CompositeFilter<T>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
     public bool Matches(T target)
     {
-        return Includes.MatchesAny(target) && Excludes.DoesNotMatcheAny(target);
+        return Includes.MatchesAny(target) && Excludes.DoesNotMatchAny(target);
     }
 }

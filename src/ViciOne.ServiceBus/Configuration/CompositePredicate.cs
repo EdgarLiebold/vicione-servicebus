@@ -71,11 +71,11 @@ public class CompositePredicate<T>
     }
 
     /// <summary>
-    /// Performs the does not matche any operation.
+    /// Determines whether none of the predicates match the target.
     /// </summary>
     /// <param name="target">The target value.</param>
     /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public bool DoesNotMatcheAny(T target)
+    public bool DoesNotMatchAny(T target)
     {
         return _list.Count == 0 || !MatchesAny(target);
     }

@@ -11,6 +11,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public interface IReceiveEndpointConfiguration :
     IEndpointConfiguration,
     IReceiveEndpointObserverConnector,
+    IReceiveEndpointDependencyConnector,
     IReceiveEndpointDependentConnector
 {
     /// <summary>
@@ -31,12 +32,12 @@ public interface IReceiveEndpointConfiguration :
     /// <summary>
     /// Gets the configure consume topology value.
     /// </summary>
-    bool ConfigureConsumeTopology { get; }
+    bool ConfigureConsumeTopology { get; set; }
 
     /// <summary>
     /// Gets the publish faults value.
     /// </summary>
-    bool PublishFaults { get; }
+    bool PublishFaults { get; set; }
 
     /// <summary>
     /// Gets the prefetch count value.
@@ -64,6 +65,21 @@ public interface IReceiveEndpointConfiguration :
     /// Gets the receive endpoint value.
     /// </summary>
     IReceiveEndpoint ReceiveEndpoint { get; }
+
+    /// <summary>
+    /// Configures whether consume topology is created for a message type.
+    /// </summary>
+    /// <typeparam name="T">The message type.</typeparam>
+    /// <param name="enabled">Whether topology creation is enabled.</param>
+    void ConfigureMessageTopology<T>(bool enabled = true)
+        where T : class;
+
+    /// <summary>
+    /// Configures whether consume topology is created for a message type.
+    /// </summary>
+    /// <param name="messageType">The message type.</param>
+    /// <param name="enabled">Whether topology creation is enabled.</param>
+    void ConfigureMessageTopology(Type messageType, bool enabled = true);
 
     /// <summary>
     /// Completed once the receive endpoint dependencies are ready

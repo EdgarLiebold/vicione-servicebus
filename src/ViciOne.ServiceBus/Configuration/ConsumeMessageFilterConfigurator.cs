@@ -29,7 +29,7 @@ public class ConsumeMessageFilterConfigurator :
     /// <param name="messageTypes">The message types value.</param>
     public void Include(params Type[] messageTypes)
     {
-        Filter.Includes += message => Match(message, messageTypes);
+        Filter.Includes.Add(message => Match(message, messageTypes));
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class ConsumeMessageFilterConfigurator :
     /// <param name="filter">The filter value.</param>
     public void Include(Func<Type, bool> filter)
     {
-        Filter.Includes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]);
+        Filter.Includes.Add(context => context.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]));
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class ConsumeMessageFilterConfigurator :
     public void Include<T>()
         where T : class
     {
-        Filter.Includes += message => Match<T>(message);
+        Filter.Includes.Add(message => Match<T>(message));
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class ConsumeMessageFilterConfigurator :
     public void Include<T>(Func<T, bool> filter)
         where T : class
     {
-        Filter.Includes += message => Match(message, filter);
+        Filter.Includes.Add(message => Match(message, filter));
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class ConsumeMessageFilterConfigurator :
     /// <param name="messageTypes">The message types value.</param>
     public void Exclude(params Type[] messageTypes)
     {
-        Filter.Excludes += message => Match(message, messageTypes);
+        Filter.Excludes.Add(message => Match(message, messageTypes));
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public class ConsumeMessageFilterConfigurator :
     /// <param name="filter">The filter value.</param>
     public void Exclude(Func<Type, bool> filter)
     {
-        Filter.Excludes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]);
+        Filter.Excludes.Add(context => context.GetType().TryGetSingleClosedGenericArguments(typeof(ConsumeContext<>), out Type[] types) && filter(types[0]));
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class ConsumeMessageFilterConfigurator :
     public void Exclude<T>()
         where T : class
     {
-        Filter.Excludes += message => Match<T>(message);
+        Filter.Excludes.Add(message => Match<T>(message));
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class ConsumeMessageFilterConfigurator :
     public void Exclude<T>(Func<T, bool> filter)
         where T : class
     {
-        Filter.Excludes += message => Match(message, filter);
+        Filter.Excludes.Add(message => Match(message, filter));
     }
 
     static bool Match(ConsumeContext context, params Type[] messageTypes)

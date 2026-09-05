@@ -36,7 +36,7 @@ public class EndpointRegistration<T> :
     public bool IncludeInConfigureEndpoints
     {
         get => _registration.IncludeInConfigureEndpoints;
-        set { }
+        set => _registration.IncludeInConfigureEndpoints = value;
     }
 
     /// <summary>

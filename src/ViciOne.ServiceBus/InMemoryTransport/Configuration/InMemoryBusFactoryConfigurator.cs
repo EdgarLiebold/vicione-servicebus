@@ -41,14 +41,6 @@ public class InMemoryBusFactoryConfigurator :
     }
 
     /// <summary>
-    /// Gets or sets the auto start value.
-    /// </summary>
-    public override bool AutoStart
-    {
-        set { }
-    }
-
-    /// <summary>
     /// Publishes a message to its configured consumers.
     /// </summary>
     /// <typeparam name="T">The t type.</typeparam>

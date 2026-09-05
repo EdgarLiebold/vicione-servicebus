@@ -30,9 +30,12 @@ public readonly struct NewId :
     static readonly HexFormatter HexFormatter = new HexFormatter();
     static readonly DashedHexFormatter ParenFormatter = new DashedHexFormatter('(', ')');
 
-    static INewIdGenerator? _generator;
-    static ITickProvider? _tickProvider;
-    static IWorkerIdProvider? _workerIdProvider;
+    static readonly Lazy<INewIdGenerator> DefaultGenerator = new(
+        () => new NewIdGenerator(
+            new DateTimeTickProvider(),
+            new BestPossibleWorkerIdProvider(),
+            new CurrentProcessIdProvider()),
+        LazyThreadSafetyMode.ExecutionAndPublication);
 
     readonly int _a;
     readonly int _b;
@@ -101,12 +104,6 @@ public readonly struct NewId :
         _c = (c << 16) | (ushort)b;
         _d = (int)(a & 0xFFFF0000) | ((a >> 8) & 0x00FF) | ((a << 8) & 0xFF00);
     }
-
-    static IWorkerIdProvider WorkerIdProvider => _workerIdProvider ??= new BestPossibleWorkerIdProvider();
-
-    static IProcessIdProvider? ProcessIdProvider { get; set; } = new CurrentProcessIdProvider();
-
-    static ITickProvider TickProvider => _tickProvider ??= new DateTimeTickProvider();
 
     /// <summary>
     /// Gets the timestamp value.
@@ -491,64 +488,7 @@ public readonly struct NewId :
         return left.CompareTo(right) > 0;
     }
 
-    /// <summary>
-    /// Sets generator.
-    /// </summary>
-    /// <param name="generator">The generator value.</param>
-    public static void SetGenerator(INewIdGenerator generator)
-    {
-        _generator = generator;
-    }
-
-    /// <summary>
-    /// Sets worker id provider.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    public static void SetWorkerIdProvider(IWorkerIdProvider provider)
-    {
-        _workerIdProvider = provider;
-    }
-
-    /// <summary>
-    /// Sets process id provider.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    public static void SetProcessIdProvider(IProcessIdProvider? provider)
-    {
-        ProcessIdProvider = provider;
-    }
-
-    /// <summary>
-    /// Sets tick provider.
-    /// </summary>
-    /// <param name="provider">The service provider.</param>
-    public static void SetTickProvider(ITickProvider provider)
-    {
-        _tickProvider = provider;
-    }
-
-    static SpinLock _spinLock = new SpinLock(false);
-
-    static INewIdGenerator _getGenerator()
-    {
-        if (_generator != null)
-            return _generator;
-
-        var lockTaken = false;
-        try
-        {
-            _spinLock.Enter(ref lockTaken);
-
-            _generator ??= new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider);
-        }
-        finally
-        {
-            if (lockTaken)
-                _spinLock.Exit();
-        }
-
-        return _generator;
-    }
+    static INewIdGenerator GetGenerator() => DefaultGenerator.Value;
 
     /// <summary>
     /// Generate a NewId
@@ -557,7 +497,7 @@ public readonly struct NewId :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static NewId Next()
     {
-        return _getGenerator().Next();
+        return GetGenerator().Next();
     }
 
     /// <summary>
@@ -570,7 +510,7 @@ public readonly struct NewId :
     {
         var ids = new NewId[count];
 
-        _getGenerator().Next(ids, 0, count);
+        GetGenerator().Next(ids, 0, count);
 
         return ids;
     }
@@ -584,7 +524,7 @@ public readonly struct NewId :
     /// <returns></returns>
     public static ArraySegment<NewId> Next(NewId[] ids, int index, int count)
     {
-        return _getGenerator().Next(ids, index, count);
+        return GetGenerator().Next(ids, index, count);
     }
 
     /// <summary>
@@ -597,7 +537,7 @@ public readonly struct NewId :
     {
         var ids = new Guid[count];
 
-        _getGenerator().NextGuid(ids, 0, count);
+        GetGenerator().NextGuid(ids, 0, count);
 
         return ids;
     }
@@ -611,7 +551,7 @@ public readonly struct NewId :
     /// <returns></returns>
     public static ArraySegment<Guid> NextGuid(Guid[] ids, int index, int count)
     {
-        return _getGenerator().NextGuid(ids, index, count);
+        return GetGenerator().NextGuid(ids, index, count);
     }
 
     /// <summary>
@@ -620,7 +560,7 @@ public readonly struct NewId :
     /// <returns></returns>
     public static Guid NextGuid()
     {
-        return _getGenerator().NextGuid();
+        return GetGenerator().NextGuid();
     }
 
     /// <summary>
@@ -629,7 +569,7 @@ public readonly struct NewId :
     /// <returns></returns>
     public static Guid NextSequentialGuid()
     {
-        return _getGenerator().NextSequentialGuid();
+        return GetGenerator().NextSequentialGuid();
     }
 
     /// <summary>
@@ -642,7 +582,7 @@ public readonly struct NewId :
     {
         var ids = new Guid[count];
 
-        _getGenerator().NextSequentialGuid(ids, 0, count);
+        GetGenerator().NextSequentialGuid(ids, 0, count);
 
         return ids;
     }
@@ -653,7 +593,7 @@ public readonly struct NewId :
     /// <returns></returns>
     public static ArraySegment<Guid> NextSequentialGuid(Guid[] ids, int index, int count)
     {
-        return _getGenerator().NextSequentialGuid(ids, index, count);
+        return GetGenerator().NextSequentialGuid(ids, index, count);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

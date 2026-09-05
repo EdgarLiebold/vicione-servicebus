@@ -1,0 +1,62 @@
+# A+ remediation research
+
+## Baseline
+
+- Product commit: `c26f7cafcba4cc6828ad46ffa0985828c01b8074`
+- Product tree: `ede39ccab9fc8dfed674362accb408180555ac22`
+- Protected remote tag: `servicebus-a-plus-api-program-complete-2026-09-05`
+- Architecture commit: `94da260cbe66ea49abe61459218cb576cb47f27e`
+- Protected architecture tag: `architecture-servicebus-a-plus-program-baseline-2026-09-05`
+- Review input: immutable files below `review/**`; they are never changed or staged.
+
+## Test platform and repository conventions
+
+- Target framework: .NET 10.
+- Test runner: Microsoft Testing Platform v2.
+- Test framework: xUnit 4.
+- Existing tests use `Fact`, `Theory`, `Assert`, and `RequirementCoverage` mappings.
+- Focused project builds and tests precede a clean full Release validation.
+- Any behavior change requires a causal test that fails under a one-cause mutation.
+
+## Existing test architecture
+
+- Core behavior: `tests/ViciOne.ServiceBus.Tests`.
+- Public abstractions: `tests/ViciOne.ServiceBus.Abstractions.Tests`.
+- EF reliable storage: `tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests`.
+- Azure Service Bus: `tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests` and its local-integration project.
+- Architecture/API rules: `tests/Architecture/ViciOne.ServiceBus.Architecture.Tests`.
+- Requirement mappings are stored in each owner project's `Requirements/*.json` files.
+
+## Static source-to-test pairing scan
+
+The mandatory Roslyn-based repository scan inspected 4,190 source files and 859 test files. It classified 1,030 source files as name-paired and 3,160 as not name-paired. This is a discovery heuristic only: generic dispatch, integration tests, architecture tests, and differently named behavior owners make a direct filename pair neither necessary nor sufficient.
+
+High-value findings from the scan and the semantic reviews:
+
+- `OutgoingOptionsPipe.cs` has no name-paired behavior test; all public options branches need direct tests.
+- `ConsumeTopology.cs` has no name-paired behavior test; its shortened hash needs deterministic collision-resistance tests.
+- Several composition and configuration types lack direct tests even where setters currently discard caller intent.
+- The broad count cannot be used as evidence that 3,160 files are behaviorally untested.
+
+## Confirmed iteration-1 defects
+
+1. EF reliable inbox abandonment discards the supplied `abandonedAt` and does not persist `CompletedAt`, unlike the in-memory provider.
+2. `ReceiverConfiguration` silently discards six operations even though the wrapped `IReceiveEndpointConfiguration` implements their semantics.
+3. `InMemoryBusFactoryConfigurator.AutoStart` silently discards the configured value.
+4. `EndpointRegistration<T>.IncludeInConfigureEndpoints` silently discards the configured value.
+5. Both composite filter implementations expose replaceable-looking setters that discard assigned values; the public variant also contains the typo `DoesNotMatcheAny`.
+6. The Azure Service Bus message-session saga repository exposes query correlation but throws `NotImplementedException` only when a message is consumed. The supported capability boundary must be explicit and fail before processing.
+
+## Related risks queued for later iterations
+
+- `NewId` has mutable process-global providers with ambiguous post-initialization semantics.
+- Job notifications may discard caller cancellation.
+- Public options and outgoing-message application APIs lack complete parameter-level behavior coverage.
+- Public API layering, member-level baselines, XML documentation, filenames, folders, namespaces, directives, and comments need repository-wide remediation.
+- Topology hash suffixes provide only 30 bits of disambiguation.
+- SQL URI handlers expose incorrect nullability.
+- Test polling and fixed-delay negative assertions should become deterministic.
+
+## Reference API direction
+
+The greenfield reference model is a small application surface, explicit capability packages, validated immutable options, provider contracts outside application IntelliSense, standard .NET naming and cancellation conventions, and no historical compatibility aliases. Feature preservation means retaining behavior through the correct layer; it does not require retaining accidental public exposure or silently ignored members.

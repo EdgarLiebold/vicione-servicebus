@@ -33,7 +33,7 @@ public class RegistrationFilterConfigurator :
     /// <param name="types">The types value.</param>
     public void Include(params Type[] types)
     {
-        _filter.Includes += type => types.Any(x => x == type);
+        _filter.Includes.Add(type => types.Any(x => x == type));
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class RegistrationFilterConfigurator :
     /// <typeparam name="T">The t type.</typeparam>
     public void Include<T>()
     {
-        _filter.Includes += type => type == typeof(T);
+        _filter.Includes.Add(type => type == typeof(T));
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class RegistrationFilterConfigurator :
     /// <param name="types">The types value.</param>
     public void Exclude(params Type[] types)
     {
-        _filter.Excludes += type => types.Any(x => x == type);
+        _filter.Excludes.Add(type => types.Any(x => x == type));
     }
 
     /// <summary>
@@ -60,6 +60,6 @@ public class RegistrationFilterConfigurator :
     /// <typeparam name="T">The t type.</typeparam>
     public void Exclude<T>()
     {
-        _filter.Excludes += type => type == typeof(T);
+        _filter.Excludes.Add(type => type == typeof(T));
     }
 }

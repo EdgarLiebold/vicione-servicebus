@@ -41,7 +41,7 @@ public abstract class ExceptionSpecification :
     public void Handle(params Type[] exceptionTypes)
     {
         var snapshot = SnapshotTypes(exceptionTypes);
-        _exceptionFilter.Includes += exception => Match(exception, snapshot);
+        _exceptionFilter.Includes.Add(exception => Match(exception, snapshot));
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public abstract class ExceptionSpecification :
     public void Handle<T>()
         where T : Exception
     {
-        _exceptionFilter.Includes += exception => Match(exception, typeof(T));
+        _exceptionFilter.Includes.Add(exception => Match(exception, typeof(T)));
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public abstract class ExceptionSpecification :
         where T : Exception
     {
         ArgumentNullException.ThrowIfNull(filter);
-        _exceptionFilter.Includes += exception => Match(exception, filter);
+        _exceptionFilter.Includes.Add(exception => Match(exception, filter));
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public abstract class ExceptionSpecification :
     public void Ignore(params Type[] exceptionTypes)
     {
         var snapshot = SnapshotTypes(exceptionTypes);
-        _exceptionFilter.Excludes += exception => Match(exception, snapshot);
+        _exceptionFilter.Excludes.Add(exception => Match(exception, snapshot));
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public abstract class ExceptionSpecification :
     public void Ignore<T>()
         where T : Exception
     {
-        _exceptionFilter.Excludes += exception => Match(exception, typeof(T));
+        _exceptionFilter.Excludes.Add(exception => Match(exception, typeof(T)));
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ public abstract class ExceptionSpecification :
         where T : Exception
     {
         ArgumentNullException.ThrowIfNull(filter);
-        _exceptionFilter.Excludes += exception => Match(exception, filter);
+        _exceptionFilter.Excludes.Add(exception => Match(exception, filter));
     }
 
     static Type[] SnapshotTypes(Type[] exceptionTypes)

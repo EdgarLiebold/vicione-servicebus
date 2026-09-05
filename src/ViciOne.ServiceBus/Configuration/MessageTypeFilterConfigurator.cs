@@ -28,7 +28,7 @@ public class MessageTypeFilterConfigurator :
     /// <param name="messageTypes">The message types value.</param>
     public void Include(params Type[] messageTypes)
     {
-        Filter.Includes += type => Match(type, messageTypes);
+        Filter.Includes.Add(type => Match(type, messageTypes));
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class MessageTypeFilterConfigurator :
     /// <param name="filter">The filter value.</param>
     public void Include(Func<Type, bool> filter)
     {
-        Filter.Includes += type => filter(type);
+        Filter.Includes.Add(type => filter(type));
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class MessageTypeFilterConfigurator :
     public void Include<T>()
         where T : class
     {
-        Filter.Includes += type => Match<T>(type);
+        Filter.Includes.Add(type => Match<T>(type));
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class MessageTypeFilterConfigurator :
     /// <param name="messageTypes">The message types value.</param>
     public void Exclude(params Type[] messageTypes)
     {
-        Filter.Excludes += type => Match(type, messageTypes);
+        Filter.Excludes.Add(type => Match(type, messageTypes));
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class MessageTypeFilterConfigurator :
     /// <param name="filter">The filter value.</param>
     public void Exclude(Func<Type, bool> filter)
     {
-        Filter.Excludes += type => filter(type);
+        Filter.Excludes.Add(type => filter(type));
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class MessageTypeFilterConfigurator :
     public void Exclude<T>()
         where T : class
     {
-        Filter.Excludes += type => Match<T>(type);
+        Filter.Excludes.Add(type => Match<T>(type));
     }
 
     static bool Match(Type type, params Type[] messageTypes)

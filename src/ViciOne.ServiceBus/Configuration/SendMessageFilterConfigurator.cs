@@ -25,42 +25,42 @@ public class SendMessageFilterConfigurator :
 
     void IMessageTypeFilterConfigurator.Include(params Type[] messageTypes)
     {
-        Filter.Includes += message => Match(message, messageTypes);
+        Filter.Includes.Add(message => Match(message, messageTypes));
     }
 
     void IMessageTypeFilterConfigurator.Include(Func<Type, bool> filter)
     {
-        Filter.Includes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(SendContext<>), out Type[] types) && filter(types[0]);
+        Filter.Includes.Add(context => context.GetType().TryGetSingleClosedGenericArguments(typeof(SendContext<>), out Type[] types) && filter(types[0]));
     }
 
     void IMessageTypeFilterConfigurator.Include<T>()
     {
-        Filter.Includes += message => Match<T>(message);
+        Filter.Includes.Add(message => Match<T>(message));
     }
 
     void IMessageFilterConfigurator.Include<T>(Func<T, bool> filter)
     {
-        Filter.Includes += message => Match(message, filter);
+        Filter.Includes.Add(message => Match(message, filter));
     }
 
     void IMessageTypeFilterConfigurator.Exclude(params Type[] messageTypes)
     {
-        Filter.Excludes += message => Match(message, messageTypes);
+        Filter.Excludes.Add(message => Match(message, messageTypes));
     }
 
     void IMessageTypeFilterConfigurator.Exclude(Func<Type, bool> filter)
     {
-        Filter.Excludes += context => context.GetType().TryGetSingleClosedGenericArguments(typeof(SendContext<>), out Type[] types) && filter(types[0]);
+        Filter.Excludes.Add(context => context.GetType().TryGetSingleClosedGenericArguments(typeof(SendContext<>), out Type[] types) && filter(types[0]));
     }
 
     void IMessageTypeFilterConfigurator.Exclude<T>()
     {
-        Filter.Excludes += message => Match<T>(message);
+        Filter.Excludes.Add(message => Match<T>(message));
     }
 
     void IMessageFilterConfigurator.Exclude<T>(Func<T, bool> filter)
     {
-        Filter.Excludes += message => Match(message, filter);
+        Filter.Excludes.Add(message => Match(message, filter));
     }
 
     static bool Match(SendContext context, params Type[] messageTypes)

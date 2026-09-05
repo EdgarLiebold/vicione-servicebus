@@ -316,12 +316,23 @@ public sealed class EntityFrameworkReliableStoreTests
             cancellationToken)).Entries);
         Assert.Equal(retryKey, entry.Key);
         Assert.Equal(2, entry.Attempts);
+        DateTimeOffset abandonedAt = retryAt.AddMinutes(1).ToOffset(TimeSpan.FromHours(5));
         Assert.Equal(
             ReliableMessagingOperationDisposition.Applied,
-            (await secondRestart.AbandonAsync(retryKey, retryAt.AddMinutes(1), cancellationToken)).Disposition);
+            (await secondRestart.AbandonAsync(retryKey, abandonedAt, cancellationToken)).Disposition);
         Assert.Empty((await secondRestart.GetQuarantineAsync(
             new ReliableInboxQuarantineQuery { PageSize = 1 },
             cancellationToken)).Entries);
+        await using (DurableDbContext persisted = database.Factory.CreateDbContext())
+        {
+            ReliableInboxRecord abandoned = await persisted.Set<ReliableInboxRecord>().AsNoTracking().SingleAsync(
+                row => row.StoreKey == "inbox-restart"
+                    && row.MessageId == retryKey.MessageId
+                    && row.ConsumerId == retryKey.ConsumerId,
+                cancellationToken);
+            Assert.Equal(ReliableInboxStatus.Abandoned, abandoned.Status);
+            Assert.Equal(abandonedAt.UtcDateTime, abandoned.CompletedAt);
+        }
         Assert.Equal(
             ReliableInboxAcquireDisposition.Unavailable,
             (await secondRestart.AcquireAsync(

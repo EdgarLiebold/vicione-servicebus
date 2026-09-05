@@ -58,7 +58,15 @@ public class MessageSessionSagaRepositoryContextFactory<TSaga> :
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
-        throw new NotImplementedException(
-            $"Query-based saga correlation is not available when using the MessageSession-based saga repository: {TypeCache<TSaga>.ShortName}");
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(next);
+
+        var repositoryContext = new MessageSessionSagaRepositoryContext<TSaga, T>(context, _factory);
+        TSaga? current = await repositoryContext.ReadCurrentAsync(context.CancellationToken).ConfigureAwait(false);
+        TSaga[] matches = current is not null && query.GetFilter()(current) ? [current] : [];
+        var queryContext = new LoadedSagaRepositoryQueryContext<TSaga, T>(repositoryContext, matches);
+
+        await next.SendAsync(queryContext).ConfigureAwait(false);
     }
 }
