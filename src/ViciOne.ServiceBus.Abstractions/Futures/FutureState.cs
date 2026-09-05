@@ -11,11 +11,11 @@ public class FutureState :
     IConsumerKindOwnedState,
     ISagaVersion
 {
-    Dictionary<Guid, FutureMessage>? _faults;
-    HashSet<Guid>? _pending;
-    Dictionary<Guid, FutureMessage>? _results;
-    HashSet<FutureSubscription>? _subscriptions;
-    Dictionary<string, object>? _variables;
+    Dictionary<Guid, FutureMessage>? _faults = [];
+    HashSet<Guid>? _pending = [];
+    Dictionary<Guid, FutureMessage>? _results = [];
+    HashSet<FutureSubscription>? _subscriptions = new(FutureSubscription.Comparer);
+    Dictionary<string, object>? _variables = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Gets or sets the current state value.

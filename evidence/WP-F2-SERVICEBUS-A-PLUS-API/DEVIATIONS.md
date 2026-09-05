@@ -169,3 +169,78 @@ mandatory `MessageLimits` contract. They failed during composition, before reach
 test was meant to verify. The shared setup now declares `MessageLimits.Conservative`, matching every
 other current bus composition. The behavior assertions and time budgets are unchanged; the complete
 real profile passed 27/27 after the correction.
+
+## Legally required README provenance
+
+The identity gate requires the exact Apache-2.0 provenance paragraph in the README and validates its
+content separately from product guidance. The product-documentation vocabulary test therefore masks
+only that exact, policy-bound paragraph before scanning the remaining README. No other product-facing
+document contains the former project name or internal migration-process terminology.
+
+## Related defect: Entity Framework transactional delivery activation
+
+The repository-wide provider matrix exposed that the Entity Framework transactional outbox source
+could be registered without the common reliable-delivery hosted service. Persisted rows were valid,
+but no owner was active to dispatch them. The Entity Framework configurator now registers the one
+common delivery service together with its source and instrumentation. The source participates in the
+same bounded loop through `IReliableDeliverySource<TBus>.WaitForWorkAsync`; the new method is the only
+public API delta in work package G and is an Advanced provider SPI, not an application API shape.
+
+The transactional scoped context is separated from the explicit reliable scope so registrations do
+not alias incompatible lifecycles. A successful `SaveChanges` now signals delivery immediately, while
+disposal detaches and reports uncommitted rows even if the application disposes its `DbContext` first.
+Provider-real PostgreSQL and SQLite tests cover commit, abort, disposal, restart, and dispatch.
+
+## Related defect: tracked inbox state after a failed concurrent insert
+
+The Entity Framework inbox retry path queried the database after a unique-key race while the losing
+`InboxState` instance was still tracked by the current `DbContext`. Entity Framework could therefore
+return stale local state instead of the winning persisted row. The bounded transaction now detaches
+only entries with the exact message and consumer identities before it reloads. The concurrent inbox
+integration tests pass against PostgreSQL without changing their timing budget.
+
+## Related defect: deserialized collection invariants
+
+`FutureState`, `JobSaga`, and `JobTypeSaga` exposed non-null collection properties but initialized
+them with null-forgiving placeholders. Fresh instances could violate their public contract before a
+serializer populated them. They now construct comparer-correct empty collections immediately.
+Focused tests verify usable empty state and preserve case-insensitive future variables and subscription
+identity semantics.
+
+## Related defect: scheduler token correlation
+
+Renaming the scheduled command contract's historical correlation member to `TokenId` correctly
+removed a compatibility-shaped payload field, but it also removed the transport metadata default
+that correlated a scheduler command with its token. The schedule context pipe now assigns the
+scheduler token as correlation only when the caller did not supply a business correlation. Quartz
+tests against PostgreSQL and the complete Quartz unit suite cover the restored behavior.
+
+## Test-host globalization versus product globalization
+
+The central build target applied invariant globalization to every executable, including Microsoft
+Testing Platform hosts. `Microsoft.Data.SqlClient` rejects invariant mode before opening a connection,
+so the real SQL Server profile could not reach product behavior. Product executables remain invariant;
+test executables retain full globalization so provider SDKs can run. An evaluated-build-graph test
+enforces both halves of that boundary.
+
+## Related defect: SQL Server UTC timestamps lost their offset at receive
+
+SQL Server stores transport timestamps as UTC `datetime2`, but both fetch procedures returned those
+columns as `datetime2` to a `DateTimeOffset` model. On a non-UTC host, the client attached the local
+offset and shifted the represented instant, causing request TTLs to appear expired immediately. Both
+normal and partitioned result tables now project enqueue, expiration, and sent timestamps as
+`datetimeoffset`, which assigns the stored UTC values an explicit zero offset.
+
+`FetchProcedures_ProjectTransportTimestampsAsUtcDateTimeOffsetsAsync` executes both procedures against
+real SQL Server, requires the provider field type to be `DateTimeOffset`, and checks the exact values
+and zero offsets. The complete combined SQL Server/PostgreSQL profile passed 63/63; the seven request
+and job-service timeouts observed before the correction no longer occur.
+
+## Azure Functions raw-message type admission
+
+The Azure Functions receiver acceptance test creates the same raw JSON shape as a Functions binding:
+there is no ViciOne message-type transport header. It originally selected the secure default raw
+deserializer, which intentionally rejects headerless types, so the consumer was correctly reported as
+not consumed. The test now opts into `RawSerializerOptions.AnyMessageType` explicitly for its named
+consumer path. The separate type-admission tests continue to prove that headerless admission never
+happens implicitly. The focused test and the complete emulator profile passed 1/1 and 24/24.

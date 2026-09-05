@@ -24,6 +24,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -108,6 +109,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
         services
             .AddViciOneServiceBus<IFirstEventHubBus>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -126,6 +128,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             })
             .AddViciOneServiceBus<ISecondEventHubBus>(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -190,6 +193,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
         services.AddInMemoryInboxOutbox();
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<OutboxBusConsumer>();
             configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
             configuration.AddRider(rider =>
@@ -261,6 +265,7 @@ public sealed class EventHubEndpointAndBusBoundaryTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {

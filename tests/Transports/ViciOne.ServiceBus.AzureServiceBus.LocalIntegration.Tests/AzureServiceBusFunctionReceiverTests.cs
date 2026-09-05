@@ -28,7 +28,7 @@ public sealed class AzureServiceBusFunctionReceiverTests
                 bus.Host(new Uri("sb://localhost/"), client, admin);
                 bus.DefaultMessageTimeToLive = TimeSpan.FromHours(1);
                 bus.OverrideDefaultBusEndpointQueueName(fixture.Name("bus"));
-                bus.UseRawJsonDeserializer(isDefault: true);
+                bus.UseRawJsonDeserializer(RawSerializerOptions.AnyMessageType, isDefault: true);
                 bus.Publish<Fault>(topology => topology.DefaultMessageTimeToLive = TimeSpan.FromHours(1));
                 bus.Publish<Fault<FunctionMessage>>(topology => topology.DefaultMessageTimeToLive = TimeSpan.FromHours(1));
             });

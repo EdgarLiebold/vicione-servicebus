@@ -23,6 +23,7 @@ public sealed class EventHubInteropAndContextTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddConsumer<RawBusPingConsumer>();
                 configuration.UsingInMemory((context, bus) => bus.ConfigureEndpoints(context));
                 configuration.AddRider(rider =>
@@ -96,6 +97,7 @@ public sealed class EventHubInteropAndContextTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -186,6 +188,7 @@ public sealed class EventHubInteropAndContextTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {

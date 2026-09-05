@@ -11,9 +11,11 @@
        errors is the same thing with a longer path, and a warning in one that does not is a note
        nobody reads. -->
 
-  <!-- Globalization is a runtime-host choice. It is enabled only after a project has declared
-       itself executable, so library packages never impose that choice on their consumers. -->
-  <PropertyGroup Condition=" '$(OutputType)' == 'Exe' ">
+  <!-- Globalization is a runtime-host choice. Product executables use invariant mode, while test
+       executables retain full globalization because provider SDKs such as Microsoft.Data.SqlClient
+       reject invariant mode before opening a connection. Library packages never impose either
+       choice on their consumers. -->
+  <PropertyGroup Condition=" '$(OutputType)' == 'Exe' AND '$(IsTestProject)' != 'true' ">
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 

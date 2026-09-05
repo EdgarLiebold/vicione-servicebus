@@ -113,6 +113,21 @@ public sealed class EntityFrameworkOutboxWriteCoordinatorTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-EF-TRANSACTIONAL-OUTBOX", "externally-saved-session-survives-context-disposal-order")]
+    public async Task Dispose_AfterExternalSaveDoesNotAccessAnAlreadyDisposedDbContextAsync()
+    {
+        await using OutboxFixture fixture = await OutboxFixture.CreateAsync();
+        EntityFrameworkScopedBusContext<IBus, OutboxDbContext> context = fixture.CreateBusContext();
+        await context.AddSendAsync(CreateSendContext(Guid.NewGuid(), 1), TestContext.Current.CancellationToken);
+        await fixture.DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await fixture.DbContext.DisposeAsync();
+
+        Exception? failure = Record.Exception(context.Dispose);
+
+        Assert.Null(failure);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-EF-BUS-OUTBOX-WRITE", "concurrent-writes-share-one-state")]
     public async Task ConcurrentWrites_CreateOneStateAndRetainEveryDistinctMessageAsync()
     {

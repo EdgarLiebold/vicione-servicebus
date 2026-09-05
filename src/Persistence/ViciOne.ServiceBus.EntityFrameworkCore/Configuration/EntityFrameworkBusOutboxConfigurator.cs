@@ -3,7 +3,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.DependencyInjection;
+using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Transactions;
@@ -97,13 +99,13 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
         TimeSpan maximumDeliveryRetryDelay = MaximumDeliveryRetryDelay;
 
         _services.TryAddScoped<EntityFrameworkBusOutboxSessionRegistry<TBus>>();
-        _services.AddScoped<EntityFrameworkScopedBusContext<TBus, TDbContext>>(provider =>
-            provider.GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<TBus>>().GetOrCreate<TDbContext>(provider));
+        _services.AddScoped<EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext>>(provider =>
+            provider.GetRequiredService<EntityFrameworkBusOutboxSessionRegistry<TBus>>().GetOrCreateTransactional<TDbContext>(provider));
         _services.AddSingleton<IEntityFrameworkScopedBusContextFactory<TBus>>(
-            new EntityFrameworkScopedBusContextFactory<TBus, TDbContext>(_isDefault));
+            new EntityFrameworkTransactionalScopedBusContextFactory<TBus, TDbContext>(_isDefault));
         _services.ReplaceScoped<IScopedBusContextProvider<TBus>, EntityFrameworkScopedBusContextProvider<TBus>>();
         _services.AddScoped<IEntityFrameworkTransactionalOutbox<TBus, TDbContext>>(provider =>
-            provider.GetRequiredService<EntityFrameworkScopedBusContext<TBus, TDbContext>>());
+            provider.GetRequiredService<EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext>>());
         _services.AddScoped<IEntityFrameworkOutboxOperations<TBus, TDbContext>, EntityFrameworkOutboxOperations<TBus, TDbContext>>();
 
         _services.AddSingleton<IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>>,
@@ -151,6 +153,10 @@ public class EntityFrameworkBusOutboxConfigurator<TBus, TDbContext> :
         {
             _services.AddSingleton<IReliableDeliverySource<TBus>,
                 EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>>();
+            _services.AddMetrics();
+            _services.TryAddSingleton<V5ServiceBusInstrumentation<TBus>>();
+            _services.TryAddEnumerable(
+                ServiceDescriptor.Singleton<IHostedService, ReliableMessagingDeliveryService<TBus>>());
         }
     }
 

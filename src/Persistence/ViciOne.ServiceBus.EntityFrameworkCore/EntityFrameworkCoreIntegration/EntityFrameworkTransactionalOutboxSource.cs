@@ -33,6 +33,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
     readonly IsolationLevel _isolationLevel;
     readonly ILockStatementProvider _lockStatementProvider;
     readonly ILogger _logger;
+    readonly IBusOutboxNotification<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _notification;
     readonly OutboxDeliveryServiceOptions<EntityFrameworkBusOutboxScope<TBus, TDbContext>> _options;
     readonly Func<TDbContext, Guid, long, int, IAsyncEnumerable<OutboxMessage>> _outboxMessagesQuery;
     readonly IServiceProvider _provider;
@@ -61,6 +62,7 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
         _busControl = ResolveBusControl(provider);
         _busKey = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
             .Require("Entity Framework bus outbox");
+        _notification = notification;
         _logger = logger;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _failureClassifiers = failureClassifiers.ToArray();
@@ -103,6 +105,11 @@ internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext>
             _logger.LogError(exception, "EF transactional outbox source faulted for {BusKey}/{DbContext}", _busKey, typeof(TDbContext).Name);
             return false;
         }
+    }
+
+    public Task WaitForWorkAsync(CancellationToken cancellationToken = default)
+    {
+        return _notification.WaitForDeliveryAsync(cancellationToken);
     }
 
     async Task<int> DeliverOutboxAsync(int resultLimit, CancellationToken cancellationToken)

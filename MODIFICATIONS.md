@@ -64,3 +64,44 @@ useful capture capability now has an intentionally incompatible greenfield `Mess
 The retained provider capability is implemented for EF Core and Azure Table under source-mirrored
 namespaces. The generated [CHANGELIST.md](CHANGELIST.md) records every added, modified and removed
 path, including removed inherited files that can no longer carry an inline modification notice.
+
+## ViciOne modification: A+ public API program, 2026-09-05
+
+**A — Code policy.** ViciOne applied nullable analysis, implicit imports, deterministic builds,
+documentation generation, warnings-as-errors, and build-time style enforcement across product,
+test, sample, benchmark, and tool projects; normalized C# layout; removed obsolete suppression and
+temporary test-tool state; and aligned the documented build and test commands with the enforced
+repository contract.
+
+**B — Application conventions.** ViciOne renamed public asynchronous operations with the `Async`
+suffix, added causal cancellation tokens where the operation contract permits them, changed public
+scheduler instants to `DateTimeOffset`, replaced ambiguous application overloads with typed option
+records, reduced consumer context to its application responsibilities, and replaced direct process
+clock access with injectable `TimeProvider` ownership.
+
+**C — API layers and identity.** ViciOne organized public contracts into Application, Configuration,
+Advanced, Provider, Operations, and Testing namespaces; aligned transport project, package, assembly,
+and namespace names; moved service-registration methods to the standard dependency-injection
+namespace; removed hidden and obsolete public symbols; documented the public surface; and added a
+generated application-API inventory enforced by architecture tests.
+
+**D — Startup safety and message boundaries.** ViciOne added aggregate per-bus startup validation,
+mandatory send-and-receive message size and JSON-depth limits, fail-closed raw JSON type admission,
+validated feature ownership, explicit message-journal registration, and authenticated versioned
+AES-GCM protection in place of unauthenticated encryption paths.
+
+**E — Reliable messaging.** ViciOne unified durable send, transactional outgoing messages,
+duplicate-safe inbox handling, retry, stored scheduling, quarantine, health, telemetry, and operator
+actions behind one application-owned store and one delivery service. Entity Framework Core and
+in-memory providers implement the unified contracts; durable provider acceptance is explicit and
+unsupported transport combinations fail during startup.
+
+**F — Capability packages.** ViciOne extracted Sagas, Courier, Futures, JobService, Mediator, and
+Initializers into independently selectable packages; split EF Core reliable messaging and journal
+support from EF Core Saga support; introduced the `IConsumerKind` extension contract; updated package
+graphs and provider metadata; and added an executable minimal Suite composition.
+
+**G — Product documentation and examples.** ViciOne expanded the package-only developer examples to
+eighteen scenarios, added product-focused API, reliability, observability, build, deployment, and
+database documentation, and recorded the intentional application call-form, namespace, and package
+changes in the product changelog.

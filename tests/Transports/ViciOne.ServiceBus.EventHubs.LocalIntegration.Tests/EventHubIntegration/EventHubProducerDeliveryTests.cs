@@ -22,6 +22,7 @@ public sealed class EventHubProducerDeliveryTests
             .AddSingleton(allReceived)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -106,6 +107,7 @@ public sealed class EventHubProducerDeliveryTests
             .AddSingleton(new ExpectedEnvelope(marker, received))
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -187,6 +189,7 @@ public sealed class EventHubProducerDeliveryTests
             .AddSingleton(consumed)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory((_, bus) => bus.ConnectSendObserver(observer));
                 configuration.AddRider(rider =>
                 {

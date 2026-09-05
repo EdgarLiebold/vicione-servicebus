@@ -19,6 +19,7 @@ public class JobTypeSaga :
 
         Instances = new Dictionary<Uri, JobTypeInstance>();
         ActiveJobs = [];
+        Properties = [];
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ public class JobTypeSaga :
     /// <summary>
     /// Job properties passed by the <see cref="JobOptions{TJob}" /> configuration
     /// </summary>
-    public Dictionary<string, object> Properties { get; set; } = null!;
+    public Dictionary<string, object> Properties { get; set; }
     /// <summary>
     /// Gets or sets the row version value.
     /// </summary>

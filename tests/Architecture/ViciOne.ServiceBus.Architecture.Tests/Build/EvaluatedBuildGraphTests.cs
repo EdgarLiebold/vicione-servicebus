@@ -97,13 +97,16 @@ public sealed class EvaluatedBuildGraphTests
     }
 
     [Fact]
-    public void InvariantGlobalization_IsEnabledOnlyForExecutableProjects()
+    public void InvariantGlobalization_IsEnabledOnlyForProductExecutables()
     {
         Assert.NotEmpty(RepositoryLayout.GovernedProjects);
 
         foreach (var project in RepositoryLayout.GovernedProjects)
         {
-            var expected = MsBuildEvaluation.PropertyOf(project, "OutputType") == "Exe" ? "true" : string.Empty;
+            var expected = MsBuildEvaluation.PropertyOf(project, "OutputType") == "Exe"
+                && MsBuildEvaluation.PropertyOf(project, "IsTestProject") != "true"
+                    ? "true"
+                    : string.Empty;
 
             Assert.Equal(expected, MsBuildEvaluation.PropertyOf(project, "InvariantGlobalization"));
         }

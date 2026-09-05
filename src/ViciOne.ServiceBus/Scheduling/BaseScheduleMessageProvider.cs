@@ -116,6 +116,7 @@ class ScheduleMessageContextPipe<T> :
         _context = context;
 
         _context.ScheduledMessageId = _scheduledMessageId;
+        _context.CorrelationId ??= _scheduledMessageId;
 
         if (_pipe.IsNotEmpty())
         {

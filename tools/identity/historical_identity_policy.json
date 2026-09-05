@@ -5,8 +5,8 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 3,
-      "authorizedLinesSha256": "1052cb4bb3e7afdaccc3194ea6d6bb18101e7f5dd6d623693c1e89090f9de2fa",
+      "authorizedLineCount": 4,
+      "authorizedLinesSha256": "c2fab394193c94409354a8b9c0aecde792cd0d1f7c84f5e966711103d2856efe",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/native-tests/obligation-maps/plan.md"
     },
@@ -45,8 +45,18 @@
         "binary-scan",
         "text-scan"
       ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "a067c7079fd85f26a94ec548277e576c359099cc50a357d07eda9e0eb5252211",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
       "authorizedLineCount": 5632,
-      "authorizedLinesSha256": "b53963372af44c1082609d8b11571c240a598ad66a646469892a109ec53ae36a",
+      "authorizedLinesSha256": "183479fe1890d438b9306bb138b92c86cf4227aac21749563e405728c1c18b35",
       "category": "LEGAL_PROVENANCE",
       "path": "CHANGELIST.md"
     },
@@ -65,10 +75,10 @@
         "binary-scan",
         "text-scan"
       ],
-      "authorizedLineCount": 2,
-      "authorizedLinesSha256": "2a034af12f6152f62ba54df67317ad912145a2d1ff7e6d496ac5b493655f086b",
-      "category": "LEGAL_PROVENANCE",
-      "path": "README.md"
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "b025dfb4e33b8685d79189e4cabb1c6b56644f4c995a07d2cb8606c45f95e8cf",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-API/C/red-team-async-bidirectional-after-rename.md"
     },
     {
       "allowedGates": [
@@ -76,9 +86,39 @@
         "text-scan"
       ],
       "authorizedLineCount": 1,
-      "authorizedLinesSha256": "a3cd933779582a34483da26e2131a1013702cda137c2e2262b6bc68d8fa52ac1",
+      "authorizedLinesSha256": "e2c959547c8db25d5f3af4af2d490225f43df0ba7126e0502be74a85b01e4a13",
       "category": "HISTORICAL_EVIDENCE",
-      "path": "docs/build.md"
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01/ASSERTION_AND_GAP_REVIEW.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "8226878080abebdb38ff79679be2ca153868336d1241935e8d3b929b87615b32",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01/MUTATION_VALIDATION.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 1,
+      "authorizedLinesSha256": "73a88e60ba9f7c20431025dab96d681cf61c6415e681143998528df095c57dc5",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01/REVIEW_GATE_DISPOSITION.md"
+    },
+    {
+      "allowedGates": [
+        "binary-scan",
+        "text-scan"
+      ],
+      "authorizedLineCount": 3,
+      "authorizedLinesSha256": "66e41bb183b80d0decbb19b3739cdd6b6344704b6321ca48a70a04bf66c5775b",
+      "category": "HISTORICAL_EVIDENCE",
+      "path": "evidence/WP-F2-SERVICEBUS-A-PLUS-FINAL-CLOSURE-01/VALIDATION.md"
     },
     {
       "allowedGates": [
@@ -653,16 +693,6 @@
       "authorizedLinesSha256": "d404eb9b96d81c7db98fe67825176d23cb338ef2ebcfad6ece5d3d24e3f1c89a",
       "category": "HISTORICAL_EVIDENCE",
       "path": "evidence/native-tests/type-relationships-and-properties/PRODUCT_PATH_ANALYSIS.md"
-    },
-    {
-      "allowedGates": [
-        "binary-scan",
-        "text-scan"
-      ],
-      "authorizedLineCount": 1,
-      "authorizedLinesSha256": "9bead7103338d2eb39b18846a2aa5e4fbf005f1cdb5df76e13a9467f3e807588",
-      "category": "HISTORICAL_EVIDENCE",
-      "path": "src/ViciOne.ServiceBus.Analyzers/AnalyzerReleases.Shipped.md"
     },
     {
       "allowedGates": [

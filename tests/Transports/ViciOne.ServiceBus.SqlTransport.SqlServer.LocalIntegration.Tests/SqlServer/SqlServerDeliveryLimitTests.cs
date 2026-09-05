@@ -62,6 +62,44 @@ public sealed class SqlServerDeliveryLimitTests
         Assert.Equal(1, await connection.DeliveryCountAsync(fixture.Schema, queueName, 3, cancellationToken));
     }
 
+    [Fact]
+    [RequirementCoverage("OBL-R0-SQL-0130", "sqlserver-native-owner")]
+    public async Task FetchProcedures_ProjectTransportTimestampsAsUtcDateTimeOffsetsAsync()
+    {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        await using SqlServerTestDatabase fixture = await SqlServerTestDatabase.CreateAsync(
+            "utc-timestamps",
+            cancellationToken);
+        string normalQueue = fixture.Name("normal-input");
+        string partitionedQueue = fixture.Name("partitioned-input");
+        await DeclareQueueAsync(fixture, normalQueue, maxDeliveryCount: null, cancellationToken);
+        await DeclareQueueAsync(fixture, partitionedQueue, maxDeliveryCount: null, cancellationToken);
+
+        await using SqlConnection connection = fixture.CreateConnection();
+        await connection.OpenWithinAsync(fixture.OperationTimeout, cancellationToken);
+        DateTimeOffset sentTime = new(2026, 9, 5, 8, 15, 30, TimeSpan.Zero);
+        DateTimeOffset expirationTime = sentTime.AddHours(4);
+
+        await InsertDeliveryAsync(connection, fixture.Schema, normalQueue, sentTime, expirationTime, cancellationToken);
+        await InsertDeliveryAsync(connection, fixture.Schema, partitionedQueue, sentTime, expirationTime, cancellationToken);
+
+        TransportTimestamps normal = await FetchTransportTimestampsAsync(
+            connection,
+            fixture.Schema,
+            "FetchMessages",
+            normalQueue,
+            cancellationToken);
+        TransportTimestamps partitioned = await FetchTransportTimestampsAsync(
+            connection,
+            fixture.Schema,
+            "FetchMessagesPartitioned",
+            partitionedQueue,
+            cancellationToken);
+
+        AssertUtcTransportTimestamps(normal, sentTime, expirationTime);
+        AssertUtcTransportTimestamps(partitioned, sentTime, expirationTime);
+    }
+
     private static async Task DeclareQueueAsync(
         SqlServerTestDatabase fixture,
         string queueName,
@@ -123,6 +161,71 @@ public sealed class SqlServerDeliveryLimitTests
             connection);
         command.Parameters.AddWithValue("queueName", queueName);
         return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken));
+    }
+
+    private static async Task InsertDeliveryAsync(
+        SqlConnection connection,
+        string schema,
+        string queueName,
+        DateTimeOffset sentTime,
+        DateTimeOffset expirationTime,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new SqlCommand($"[{schema}].[SendMessageV2]", connection)
+        {
+            CommandType = CommandType.StoredProcedure,
+        };
+        command.Parameters.AddWithValue("entityName", queueName);
+        command.Parameters.AddWithValue("transportMessageId", Guid.NewGuid());
+        command.Parameters.AddWithValue("messageId", Guid.NewGuid());
+        command.Parameters.AddWithValue("sentTime", sentTime);
+        command.Parameters.AddWithValue("expirationTime", expirationTime);
+
+        Assert.True(Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken)) > 0);
+    }
+
+    private static async Task<TransportTimestamps> FetchTransportTimestampsAsync(
+        SqlConnection connection,
+        string schema,
+        string procedure,
+        string queueName,
+        CancellationToken cancellationToken)
+    {
+        await using var command = new SqlCommand($"[{schema}].[{procedure}]", connection)
+        {
+            CommandType = CommandType.StoredProcedure,
+        };
+        command.Parameters.AddWithValue("queueName", queueName);
+        command.Parameters.AddWithValue("consumerId", Guid.NewGuid());
+        command.Parameters.AddWithValue("lockId", Guid.NewGuid());
+        command.Parameters.AddWithValue("lockDuration", 60);
+        command.Parameters.AddWithValue("fetchCount", 1);
+        await using SqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        Assert.True(await reader.ReadAsync(cancellationToken));
+
+        int enqueueOrdinal = reader.GetOrdinal("EnqueueTime");
+        int expirationOrdinal = reader.GetOrdinal("ExpirationTime");
+        int sentOrdinal = reader.GetOrdinal("SentTime");
+        Assert.Equal(typeof(DateTimeOffset), reader.GetFieldType(enqueueOrdinal));
+        Assert.Equal(typeof(DateTimeOffset), reader.GetFieldType(expirationOrdinal));
+        Assert.Equal(typeof(DateTimeOffset), reader.GetFieldType(sentOrdinal));
+
+        return new TransportTimestamps(
+            reader.GetFieldValue<DateTimeOffset>(enqueueOrdinal),
+            reader.GetFieldValue<DateTimeOffset>(expirationOrdinal),
+            reader.GetFieldValue<DateTimeOffset>(sentOrdinal));
+    }
+
+    private static void AssertUtcTransportTimestamps(
+        TransportTimestamps actual,
+        DateTimeOffset expectedSentTime,
+        DateTimeOffset expectedExpirationTime)
+    {
+        Assert.Equal(TimeSpan.Zero, actual.EnqueueTime.Offset);
+        Assert.Equal(TimeSpan.Zero, actual.ExpirationTime.Offset);
+        Assert.Equal(TimeSpan.Zero, actual.SentTime.Offset);
+        Assert.Equal(expectedExpirationTime, actual.ExpirationTime);
+        Assert.Equal(expectedSentTime, actual.SentTime);
     }
 
     private static async Task<int> ExhaustDeliveryAsync(
@@ -199,4 +302,8 @@ public sealed class SqlServerDeliveryLimitTests
 
     private sealed record LimitedMessage(Guid Id, string Value);
     private sealed record FetchedDelivery(Guid MessageId, long DeliveryId, Guid LockId);
+    private sealed record TransportTimestamps(
+        DateTimeOffset EnqueueTime,
+        DateTimeOffset ExpirationTime,
+        DateTimeOffset SentTime);
 }

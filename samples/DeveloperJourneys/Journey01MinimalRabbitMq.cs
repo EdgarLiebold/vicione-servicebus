@@ -9,6 +9,7 @@ public static class Journey01MinimalRabbitMq
     public static IServiceCollection Configure(IServiceCollection services, string host, string user, string password) =>
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<SubmitOrderConsumer>();
             configuration.UsingRabbitMq((context, rabbit) =>
             {

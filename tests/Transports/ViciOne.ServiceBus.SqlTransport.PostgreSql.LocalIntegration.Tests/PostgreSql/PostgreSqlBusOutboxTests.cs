@@ -28,6 +28,7 @@ public sealed class PostgreSqlBusOutboxTests
         services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(database.OperationTimeout, database.OperationTimeout);
+            configuration.Contracts(contracts => contracts.Register<OutboxProbe>("vicione.tests.postgres.outbox-probe"));
             configuration.ConfigureEntityFrameworkTransactionalStore<OutboxDbContext>(outbox =>
             {
                 outbox.UsePostgres();

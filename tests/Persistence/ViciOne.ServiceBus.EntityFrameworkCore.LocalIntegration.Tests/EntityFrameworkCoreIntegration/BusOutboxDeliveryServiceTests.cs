@@ -587,6 +587,7 @@ public sealed class EntityFrameworkTransactionalOutboxSourceTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+                configuration.Contracts(contracts => contracts.Register<OutboxProbe>("vicione.tests.ef.outbox-probe"));
                 configuration.ConfigureEntityFrameworkTransactionalStore<BusOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();

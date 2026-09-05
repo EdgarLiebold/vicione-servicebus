@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.Advanced.Serialization;
@@ -58,6 +59,7 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _persistenceIdentity = (persistenceIdentity ?? throw new ArgumentNullException(nameof(persistenceIdentity)))
             .Require("Entity Framework transactional outbox");
+        _dbContext.SavedChanges += OnSavedChanges;
     }
 
     public ISendEndpointProvider SendEndpointProvider => _sendEndpointProvider ??= new OutboxSendEndpointProvider(this, GetSendEndpointProvider());
@@ -163,17 +165,24 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
         Exception? uncommitted = null;
         _writeCoordinator.ExecuteSynchronous(() =>
         {
-            if (HasPendingOutboxChanges())
+            if (_stagedIds.Count > 0)
             {
                 Guid[] abandonedIds = _stagedIds.ToArray();
-                DetachPendingOutbox();
+                try
+                {
+                    DetachPendingOutbox();
+                }
+                catch (ObjectDisposedException)
+                {
+                    _stagedIds.Clear();
+                }
+
                 uncommitted = new InvalidOperationException(
                     $"The transactional outbox for {TypeCache<TBus>.ShortName}/{TypeCache<TDbContext>.ShortName} was disposed without commit. "
-                    + $"{abandonedIds.Length} staged outbox records were detached to prevent accidental later persistence.");
+                    + $"{abandonedIds.Length} staged outbox records were discarded to prevent accidental later persistence.");
             }
-            else if (WasCommitted())
-                CompleteCommittedOutbox();
 
+            _dbContext.SavedChanges -= OnSavedChanges;
             _disposed = true;
         });
 
@@ -201,6 +210,11 @@ internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :
         && _dbContext.ChangeTracker.Entries<DurableSendRecord>()
             .Where(entry => _stagedIds.Contains(entry.Entity.Id))
             .All(entry => entry.State is EntityState.Unchanged or EntityState.Detached);
+
+    void OnSavedChanges(object? sender, SavedChangesEventArgs eventArgs)
+    {
+        CompleteCommittedOutbox();
+    }
 
     void CompleteCommittedOutbox()
     {

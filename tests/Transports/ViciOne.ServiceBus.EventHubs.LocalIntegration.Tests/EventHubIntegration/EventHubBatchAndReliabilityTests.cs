@@ -29,6 +29,7 @@ public sealed class EventHubBatchAndReliabilityTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -103,6 +104,7 @@ public sealed class EventHubBatchAndReliabilityTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory((_, bus) => bus.ConnectConsumeObserver(observer));
                 configuration.AddRider(rider =>
                 {
@@ -169,6 +171,7 @@ public sealed class EventHubBatchAndReliabilityTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -227,6 +230,7 @@ public sealed class EventHubBatchAndReliabilityTests
             .AddSingleton(typeof(ILogger<>), typeof(NullLogger<>))
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider => rider.UsingEventHub((_, eventHubs) =>
                 {
@@ -277,6 +281,7 @@ public sealed class EventHubBatchAndReliabilityTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {
@@ -352,6 +357,7 @@ public sealed class EventHubBatchAndReliabilityTests
             .AddSingleton(new MarkerDelivery(marker, received))
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {

@@ -907,8 +907,8 @@ BEGIN
         MessageDeliveryId bigint,
         ConsumerId uniqueidentifier,
         LockId uniqueidentifier,
-        EnqueueTime datetime2,
-        ExpirationTime datetime2,
+        EnqueueTime datetimeoffset,
+        ExpirationTime datetimeoffset,
         DeliveryCount int,
         PartitionKey text,
         RoutingKey text,
@@ -926,7 +926,7 @@ BEGIN
         DestinationAddress text,
         ResponseAddress text,
         FaultAddress text,
-        SentTime datetime2,
+        SentTime datetimeoffset,
         Headers nvarchar(max),
         Host nvarchar(max)
     );
@@ -1063,8 +1063,8 @@ BEGIN
         MessageDeliveryId bigint,
         ConsumerId uniqueidentifier,
         LockId uniqueidentifier,
-        EnqueueTime datetime2,
-        ExpirationTime datetime2,
+        EnqueueTime datetimeoffset,
+        ExpirationTime datetimeoffset,
         DeliveryCount int,
         PartitionKey text,
         RoutingKey text,
@@ -1082,7 +1082,7 @@ BEGIN
         DestinationAddress text,
         ResponseAddress text,
         FaultAddress text,
-        SentTime datetime2,
+        SentTime datetimeoffset,
         Headers nvarchar(max),
         Host nvarchar(max)
     );

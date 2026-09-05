@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <OutputType>Exe</OutputType>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>

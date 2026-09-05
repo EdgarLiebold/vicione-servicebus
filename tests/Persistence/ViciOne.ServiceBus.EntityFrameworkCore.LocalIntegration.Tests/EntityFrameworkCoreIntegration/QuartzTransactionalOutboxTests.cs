@@ -270,6 +270,10 @@ public sealed class QuartzTransactionalOutboxTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+                configuration.Contracts(contracts => contracts
+                    .Register<ScheduleThroughOutbox>("vicione.tests.ef.schedule-through-outbox")
+                    .Register<ScheduleMessage>("vicione.scheduler.schedule")
+                    .Register<ScheduledOutboxPayload>("vicione.tests.ef.scheduled-outbox-payload"));
                 configuration.AddPublishMessageScheduler();
                 configuration.AddQuartzConsumers();
                 configuration.ConfigureEntityFrameworkTransactionalStore<QuartzOutboxDbContext>(outbox =>

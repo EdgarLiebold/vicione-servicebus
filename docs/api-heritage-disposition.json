@@ -57,10 +57,10 @@
       "rationale": "Request-client construction retains transport and scope lifecycle capability; applications consume IRequestClient<T> through dependency injection."
     },
     {
-      "id": "masstransit-product-identity",
+      "id": "former-product-identity",
       "disposition": "REMOVE_COMPATIBILITY_ONLY",
       "evidence": "src",
-      "rationale": "No MassTransit package, namespace, assembly identity, or source identifier remains in production or preferred sample artifacts."
+      "rationale": "No former package, namespace, assembly identity, or source identifier remains in production or preferred sample artifacts."
     },
     {
       "id": "legacy-test-framework",

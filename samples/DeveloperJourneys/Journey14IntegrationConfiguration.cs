@@ -11,6 +11,7 @@ public static class Journey14IntegrationConfiguration
         string connectionString) =>
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<GetOrderConsumer>();
             configuration.UsingAzureServiceBus((context, azure) =>
             {

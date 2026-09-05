@@ -1,11 +1,12 @@
 # ViciOne.ServiceBus
 
-ViciOne.ServiceBus is the messaging and saga building block of the ViciOne Suite. It provides
-projects, assemblies, packages, namespaces, public types, configuration, wire identities,
-diagnostics and tests under a single technical product identity.
+ViciOne.ServiceBus is a modular .NET 10 messaging platform for typed send, publish,
+request/response, scheduling, durable delivery, duplicate-safe consumption, sagas, activities,
+jobs, mediation, transport providers, persistence providers, diagnostics, and test harnesses.
 
-This is a private development state. It is intended for publication only after the functional,
-security, provenance and publication gates have passed.
+Applications install only the capability packages they use. The core application API remains
+independent of provider SDKs, while provider and advanced extension contracts live in explicit
+namespaces and packages.
 
 ## Origin and license
 
@@ -14,103 +15,79 @@ This repository was created from a complete, pinned fork of **MassTransit 8.5.10
 [MassTransit](https://github.com/MassTransit/MassTransit) project, and carries the deliberately
 retained and modernised ViciOne capability scope today. The retained and modified code is licensed
 under the **Apache License 2.0**; see [LICENSE.txt](LICENSE.txt), [NOTICE](NOTICE),
-[COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md). The generated
-[CHANGELIST.md](CHANGELIST.md) is the section 4(b) record of what changed.
+[COPYRIGHT](COPYRIGHT) and [MODIFICATIONS.md](MODIFICATIONS.md).
 
-ViciOne changed the technical product identity throughout the repository to `ViciOne.ServiceBus`.
-This includes paths, projects, assemblies, package IDs, namespaces and types, configuration keys,
-wire headers, MIME types, topology names, telemetry, logs, generators, analyzers, tests, fixtures
-and build automation. The rename changes neither the origin nor any Apache-2.0 obligation.
+The generated [CHANGELIST.md](CHANGELIST.md) lists path-level changes required by Apache License
+2.0 section 4(b). [CHANGELOG.md](CHANGELOG.md) describes product-facing changes.
 
-## Migration and API policy
+## Install and configure
 
-ViciOne.ServiceBus preserves useful messaging capabilities, not the historical MassTransit API.
-Source, binary, overload, naming, namespace, and call-shape compatibility with MassTransit are not
-product requirements. Public APIs may change whenever a clearer, safer, more coherent greenfield
-design provides the retained capability better. Compatibility shims are not introduced merely to
-keep an inherited call site compiling.
+Add the core package and one transport package. The example below uses RabbitMQ:
 
-Inherited source, tests, documentation, and history remain valuable evidence for capabilities,
-failure modes, and design intent. They are inputs to analysis, never an API specification. Each
-migration cohort derives its behavior contract from the complete connected product path, preserves
-all useful features unless an explicit product decision removes one, corrects product defects at
-their source, and protects the resulting A+ API with native behavior tests.
+```csharp
+services.AddViciOneServiceBus(bus =>
+{
+    bus.Limits(MessageLimits.Conservative);
+    bus.AddConsumer<SubmitOrderConsumer>();
+    bus.UsingRabbitMq((context, rabbit) =>
+    {
+        rabbit.Host("localhost", credentials =>
+        {
+            credentials.Username("guest");
+            credentials.Password("guest");
+        });
+        rabbit.ConfigureEndpoints(context);
+    });
+});
+```
 
-## Build
+Every bus must declare message limits and exactly one transport. Optional capabilities such as
+reliable messaging, a message journal, sagas, jobs, or Quartz scheduling are enabled explicitly.
+Invalid or incomplete composition fails during host startup with an actionable configuration error.
 
-- the current stable, supported .NET 10 SDK (`10.0.x`); `global.json` selects only Microsoft Testing
-  Platform and deliberately does not pin an SDK or runtime patch
-- exactly one package source, nuget.org, named in `NuGet.config`; the machine's own configuration
-  does not participate
+The eighteen files in [samples/DeveloperJourneys](samples/DeveloperJourneys) are compile-tested
+against freshly packed NuGet packages. [samples/SuiteComposition](samples/SuiteComposition) is an
+executable composition using the core, RabbitMQ, and Entity Framework Core packages.
+
+## Build and test
+
+Use a current stable .NET 10 SDK. Package resolution is locked by the tracked lock files and
+`NuGet.config`.
 
 ```bash
 dotnet restore ViciOne.ServiceBus.slnx --locked-mode
-dotnet build   ViciOne.ServiceBus.slnx -c Release --no-restore
-dotnet pack    ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
-```
+dotnet build ViciOne.ServiceBus.slnx -c Release --no-restore -warnaserror
+dotnet pack ViciOne.ServiceBus.slnx -c Release --no-build --no-restore
 
-The repository has separate product, engineering, and materialized native-test profile targets, so
-every command names the one it means. Every project resolves against a tracked `packages.lock.json`;
-updating a package is the single documented exception.
-
-The native test estate uses xUnit 4 on Microsoft Testing Platform 2. Its hermetic profile runs
-directly through the .NET 10 CLI:
-
-```bash
 dotnet restore ViciOne.ServiceBus.Tests.Unit.slnx --locked-mode
-dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore
+dotnet build ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-restore -warnaserror
 dotnet test --solution ViciOne.ServiceBus.Tests.Unit.slnx -c Release --no-build --no-restore \
-  --results-directory artifacts/test-results/unit --minimum-expected-tests 3496 \
+  --results-directory artifacts/test-results/unit --minimum-expected-tests 3709 \
   --max-parallel-test-modules 1
 ```
 
-Local-integration profiles run through the same native test architecture against pinned, run-scoped
-providers. Real-cloud-only obligations remain explicitly External Pending and are not counted as
-local green. Provider lifecycle orchestration is a non-verdict engineering utility; discovery,
-assertions and the test exit code remain owned by xUnit and MTP. The retired takeover runners and
-their test frameworks must not be recreated. Independently valid invariants belong in MSBuild or
-native xUnit/MTP architecture tests.
-The native test executable uses only the Microsoft Testing Platform entry point. Its single central
-`tests/testconfig.json` makes skips and warnings fail and is copied into each artifact under MTP's
-assembly-specific configuration name.
+See [docs/build.md](docs/build.md) for all build targets, formatting checks, package verification,
+and provider-backed test commands.
 
-[docs/build.md](docs/build.md) carries the complete current build, native-test, profile, configuration,
-and migration contract. Bounded work deliberately deferred from the active slice is visible in
-[TODO.md](TODO.md); it is not a second architecture or feature catalog.
+## Reliability and operations
 
-## API surface
+Reliable messaging uses one application-owned store for outbox, inbox, and scheduled records; one
+delivery service; one quarantine model; and one typed operations API. Delivery acknowledgements
+distinguish storage commit, carrier acceptance, and consumer application. Unsupported durable
+transport combinations fail during startup.
 
-The preferred application, provider, operations and testing paths — and the intentionally hidden
-advanced extension surface — are defined in [docs/api-surface.md](docs/api-surface.md). The 14
-package-only Developer Journeys are the normative compile-tested examples. Provider capabilities,
-including the exact Durable Sender acceptance boundary, are published in
-[docs/provider-capabilities.json](docs/provider-capabilities.json).
+- [Reliability model](docs/reliability.md)
+- [Provider capabilities](docs/provider-capabilities.json)
+- [Observability](docs/observability.md)
+- [API layers and packages](docs/api-surface.md)
+- [Database deployment](docs/migrations/README.md)
 
-## Observability
+## Deployment
 
-ViciOne.ServiceBus emits one bounded OpenTelemetry schema through the built-in .NET `Meter` and
-`ActivitySource` APIs. Dependency-injection registrations activate metrics automatically without
-replacing an application-owned `IMeterFactory`; non-DI configurations opt in with
-`UseInstrumentation()`. The application remains the sole owner of exporters and sampling.
+Deploy the application together with the exact package graph restored from its lock files. Apply
+the selected reliable-messaging database schema before starting writers, provide the chosen broker
+and credentials through the host configuration, and let startup validation reject incomplete
+composition. Export OpenTelemetry signals and expose the registered health checks from the host.
 
-[docs/observability.md](docs/observability.md) defines the stable source names, instruments,
-attributes, activation paths and isolation guarantees. StatsD, Windows performance counters and
-freely extensible metric-tag dictionaries are deliberately not parallel telemetry surfaces.
-
-## Scope
-
-The fork keeps in-memory messaging, the RabbitMQ, ActiveMQ, Azure Service Bus, Amazon SQS and SQL
-transports, the Azure Event Hubs rider, saga persistence on EF Core, Azure Table and DynamoDB,
-message body storage on Amazon S3 and Azure Blob Storage, Quartz scheduling, the job service,
-SignalR, MessagePack serialization, the state machine visualizer, the analyzer and the benchmarks.
-
-It also provides an optional, default-off `MessageJournal` for policy-selected and sanitized
-diagnostic snapshots of terminal send, publish and consume outcomes. EF Core and Azure Table stores
-apply finite size, count and age limits on every append. This capability is not a queue, retry path,
-queryable audit history, or owner of ViciOne Suite operational and security audit data.
-
-The inherited TestFramework source has been retired after path-complete disposition of its behavior
-and support capabilities into the native test estate. It is not part of the package surface.
-
-Capabilities removed by an explicit product decision are recorded in
-[MODIFICATIONS.md](MODIFICATIONS.md) and are not part of this source scope.
+RabbitMQ and the in-memory transport provide verified durable-send acceptance boundaries. Other
+transport combinations are fail-closed as listed in `docs/provider-capabilities.json`.

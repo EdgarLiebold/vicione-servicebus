@@ -37,6 +37,9 @@ public sealed class InboxOutboxConcurrencyTests
         services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
         {
             configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+            configuration.Contracts(contracts => contracts
+                .Register<InboxCommand>("vicione.tests.ef.inbox-command")
+                .Register<InboxEffect>("vicione.tests.ef.inbox-effect"));
             configuration.ConfigureEntityFrameworkTransactionalStore<InboxOutboxDbContext>(outbox =>
             {
                 outbox.UsePostgres();

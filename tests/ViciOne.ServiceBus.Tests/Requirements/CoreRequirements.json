@@ -3278,6 +3278,27 @@
       "variantKey" : "registration-context-outbox-on-all-job-sagas"
    },
    {
+      "requirementId" : "REQ-VSB-JOB-SAGA-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NewJobTypeSaga_InitializesEveryPersistedCollection",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "new-state-has-non-null-persisted-collections"
+   },
+   {
+      "requirementId" : "REQ-VSB-FUTURE-STATE-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NewState_InitializesEveryPersistedCollection",
+      "testType" : "ViciOne.ServiceBus.Tests.Futures.FutureStateTests",
+      "variantKey" : "new-state-has-non-null-persisted-collections"
+   },
+   {
+      "requirementId" : "REQ-VSB-JOB-SAGA-PERSISTENCE",
+      "testAssembly" : "ViciOne.ServiceBus.Tests",
+      "testMethod" : "NewJobSaga_InitializesRequiredPersistedDictionaries",
+      "testType" : "ViciOne.ServiceBus.Tests.JobService.JobService.JobServiceLifecycleTests",
+      "variantKey" : "new-job-has-non-null-persisted-dictionaries"
+   },
+   {
       "requirementId" : "REQ-VSB-JOB-SERVICE-LIFECYCLE",
       "testAssembly" : "ViciOne.ServiceBus.Tests",
       "testMethod" : "StartAndStopTransitions_AreSerializedInBothDirectionsAsync",

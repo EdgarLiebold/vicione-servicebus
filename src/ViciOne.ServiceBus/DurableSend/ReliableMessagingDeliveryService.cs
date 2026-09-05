@@ -23,7 +23,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     readonly IReadOnlyList<IReliableDeliverySource<TBus>> _additionalSources;
     readonly V5ServiceBusInstrumentation<TBus> _instrumentation;
     readonly ILogger<ReliableMessagingDeliveryService<TBus>> _logger;
-    readonly ReliableMessagingPolicy<TBus> _policy;
+    readonly ReliableMessagingPolicy<TBus>? _policy;
     readonly IServiceProvider? _provider;
     readonly IReadOnlyList<IOutboxStore<TBus>>? _stores;
     readonly TimeProvider _timeProvider;
@@ -36,17 +36,17 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         IServiceProvider provider,
         IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
         IEnumerable<IReliableDeliverySource<TBus>> additionalSources,
-        ReliableMessagingPolicy<TBus> policy,
         TimeProvider timeProvider,
         ILogger<ReliableMessagingDeliveryService<TBus>> logger,
-        V5ServiceBusInstrumentation<TBus> instrumentation)
+        V5ServiceBusInstrumentation<TBus> instrumentation,
+        ReliableMessagingPolicy<TBus>? policy = null)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         ArgumentNullException.ThrowIfNull(failureClassifiers);
         ArgumentNullException.ThrowIfNull(additionalSources);
         _failureClassifiers = failureClassifiers.ToArray();
         _additionalSources = additionalSources.ToArray();
-        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        _policy = policy;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));
@@ -81,19 +81,51 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         {
             bool didWork = await DeliverDueBatchAsync(stoppingToken).ConfigureAwait(false);
             if (!didWork)
-                await Task.Delay(_policy.PollInterval, _timeProvider, stoppingToken).ConfigureAwait(false);
+                await WaitForWorkAsync(stoppingToken).ConfigureAwait(false);
+        }
+    }
+
+    async Task WaitForWorkAsync(CancellationToken stoppingToken)
+    {
+        if (_additionalSources.Count == 0)
+        {
+            await Task.Delay(RequirePolicy().PollInterval, _timeProvider, stoppingToken).ConfigureAwait(false);
+            return;
+        }
+
+        using var wakeTokenSource = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+        var waits = new List<Task>(_additionalSources.Count + (_store == null ? 0 : 1));
+        foreach (IReliableDeliverySource<TBus> source in _additionalSources)
+            waits.Add(source.WaitForWorkAsync(wakeTokenSource.Token));
+
+        if (_store != null)
+            waits.Add(Task.Delay(RequirePolicy().PollInterval, _timeProvider, wakeTokenSource.Token));
+
+        _ = await Task.WhenAny(waits).ConfigureAwait(false);
+        await wakeTokenSource.CancelAsync().ConfigureAwait(false);
+        try
+        {
+            await Task.WhenAll(waits).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (!stoppingToken.IsCancellationRequested)
+        {
         }
     }
 
     internal async Task<bool> DeliverDueBatchAsync(CancellationToken cancellationToken)
     {
         EnsureCompositionResolved();
-        DateTimeOffset now = _timeProvider.GetUtcNow();
-        // Claim no more work than can begin immediately. A durable lease is ownership, not a local work buffer:
-        // pre-claiming a larger batch would leave later records leased-but-idle behind a slow provider send.
-        IReadOnlyList<DurableSendDelivery> batch = await _store
-            .ClaimDueAsync(now, _policy.MaximumConcurrentDeliveries, _policy.LeaseDuration, cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<DurableSendDelivery> batch = [];
+        if (_store != null)
+        {
+            DateTimeOffset now = _timeProvider.GetUtcNow();
+            ReliableMessagingPolicy<TBus> policy = RequirePolicy();
+            // Claim no more work than can begin immediately. A durable lease is ownership, not a local work buffer:
+            // pre-claiming a larger batch would leave later records leased-but-idle behind a slow provider send.
+            batch = await _store
+                .ClaimDueAsync(now, policy.MaximumConcurrentDeliveries, policy.LeaseDuration, cancellationToken)
+                .ConfigureAwait(false);
+        }
 
         if (batch.Count == 1)
         {
@@ -118,7 +150,8 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             additionalWork |= await source.DeliverDueBatchAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        await RefreshTelemetrySnapshotIfDueAsync(_timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+        if (_store != null)
+            await RefreshTelemetrySnapshotIfDueAsync(_timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
         return batch.Count > 0 || additionalWork;
     }
 
@@ -132,15 +165,28 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             if (_compositionResolved)
                 return;
 
-            IEnumerable<IOutboxStore<TBus>> stores = _stores ?? _provider!.GetServices<IOutboxStore<TBus>>();
-            IEnumerable<IDurableSendDispatcher<TBus>> dispatchers = _dispatchers ?? _provider!.GetServices<IDurableSendDispatcher<TBus>>();
+            IOutboxStore<TBus>[] stores = (_stores ?? _provider!.GetServices<IOutboxStore<TBus>>()).ToArray();
+            IDurableSendDispatcher<TBus>[] dispatchers = (_dispatchers ?? _provider!.GetServices<IDurableSendDispatcher<TBus>>()).ToArray();
+            if (stores.Length == 0 && _additionalSources.Count > 0)
+            {
+                Volatile.Write(ref _compositionResolved, true);
+                return;
+            }
+
+            _ = RequirePolicy();
             _store = ReliableMessagingComposition.RequireExactlyOne<IOutboxStore<TBus>, TBus>(stores, "persistence store");
-            _dispatcher = ReliableMessagingComposition.RequireExactlyOne<IDurableSendDispatcher<TBus>, TBus>(
-                dispatchers,
-                "transport dispatcher");
+            _dispatcher = ReliableMessagingComposition.RequireExactlyOne<IDurableSendDispatcher<TBus>, TBus>(dispatchers, "transport dispatcher");
             Volatile.Write(ref _compositionResolved, true);
         }
     }
+
+    ReliableMessagingPolicy<TBus> RequirePolicy() =>
+        _policy ?? throw new ConfigurationException(
+            global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
+                "Reliable messaging",
+                "unknown",
+                $"A persistence store or transport dispatcher was registered for bus '{typeof(TBus)}' without a delivery policy.",
+                "Configure the component inside UseReliableMessaging"));
 
     async Task DeliverAsync(DurableSendDelivery delivery, CancellationToken cancellationToken)
     {
@@ -148,7 +194,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         using SafeActivityScope activity = _instrumentation.StartDurableDelivery(delivery);
 
         if (delivery.Status == DurableSendStatus.AwaitingConsumerCompletion
-            && delivery.DeliveryAttempts >= _policy.MaximumDeliveryAttempts)
+            && delivery.DeliveryAttempts >= RequirePolicy().MaximumDeliveryAttempts)
         {
             await QuarantineConsumerCompletionTimeoutAsync(delivery, activity, started, cancellationToken)
                 .ConfigureAwait(false);
@@ -207,7 +253,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
                                 delivery.Message.Id,
                                 delivery.Lease,
                                 attempt,
-                                dispatchedAt + _policy.ConsumerCompletionTimeout,
+                                dispatchedAt + RequirePolicy().ConsumerCompletionTimeout,
                                 cancellationToken)
                             .ConfigureAwait(false);
 
@@ -310,7 +356,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         TryLogConsumerCompletionTimeout(
             delivery.Message.Id.Value,
             delivery.DeliveryAttempts,
-            _policy.MaximumDeliveryAttempts);
+            RequirePolicy().MaximumDeliveryAttempts);
         RecordOutcome(
             activity,
             DurableSendDeliveryOutcome.Quarantined,
@@ -424,7 +470,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             return new PersistedFailureOutcome(DurableSendDeliveryOutcome.Quarantined, DurableSendFailureKind.NonRetryable);
         }
 
-        if (failure == DurableSendFailureKind.Transient && attempt < _policy.MaximumDeliveryAttempts)
+        if (failure == DurableSendFailureKind.Transient && attempt < RequirePolicy().MaximumDeliveryAttempts)
         {
             TimeSpan delay = CalculateRetryDelay(delivery.Message.Id, attempt);
             bool scheduled = await _store.ScheduleRetryAsync(
@@ -443,7 +489,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             TryLogRetryScheduled(
                 delivery.Message.Id.Value,
                 attempt,
-                _policy.MaximumDeliveryAttempts,
+                RequirePolicy().MaximumDeliveryAttempts,
                 delay.TotalSeconds,
                 failureType);
             return new PersistedFailureOutcome(DurableSendDeliveryOutcome.RetryScheduled, DurableSendFailureKind.Transient);
@@ -476,7 +522,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             return;
 
         // Advance first. If an observation read fails we try again at the configured cadence rather than hot-looping.
-        Volatile.Write(ref _nextTelemetrySnapshotUtcTicks, (now + _policy.TelemetrySnapshotInterval).UtcTicks);
+        Volatile.Write(ref _nextTelemetrySnapshotUtcTicks, (now + RequirePolicy().TelemetrySnapshotInterval).UtcTicks);
 
         try
         {
@@ -531,8 +577,9 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
 
     internal TimeSpan CalculateRetryDelay(DurableSendId id, int attempt)
     {
-        long ticks = _policy.InitialRetryDelay.Ticks;
-        long maximumTicks = _policy.MaximumRetryDelay.Ticks;
+        ReliableMessagingPolicy<TBus> policy = RequirePolicy();
+        long ticks = policy.InitialRetryDelay.Ticks;
+        long maximumTicks = policy.MaximumRetryDelay.Ticks;
 
         for (int index = 1; index < attempt && ticks < maximumTicks; index++)
         {
@@ -546,7 +593,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
         }
 
         ticks = Math.Min(ticks, maximumTicks);
-        if (_policy.RetryJitterFraction == 0)
+        if (policy.RetryJitterFraction == 0)
             return TimeSpan.FromTicks(ticks);
 
         Span<byte> bytes = stackalloc byte[16];
@@ -560,8 +607,8 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
 
         // Keep jitter even after exponential backoff reaches the configured ceiling. Returning the exact maximum for
         // every sender would re-synchronize a fleet during a long outage and create a retry storm at each interval.
-        long lowerTicks = Math.Max(1, (long)Math.Floor(ticks * (1d - _policy.RetryJitterFraction)));
-        long upperTicks = Math.Min(maximumTicks, (long)Math.Ceiling(ticks * (1d + _policy.RetryJitterFraction)));
+        long lowerTicks = Math.Max(1, (long)Math.Floor(ticks * (1d - policy.RetryJitterFraction)));
+        long upperTicks = Math.Min(maximumTicks, (long)Math.Ceiling(ticks * (1d + policy.RetryJitterFraction)));
         long jitteredTicks = lowerTicks == upperTicks
             ? lowerTicks
             : lowerTicks + (long)Math.Floor(normalized * (upperTicks - lowerTicks + 1d));

@@ -61,6 +61,13 @@ public class EntityFrameworkOutboxContextFactory<TDbContext> :
 
         async Task<bool> ExecuteAsync()
         {
+            foreach (var tracked in _dbContext.ChangeTracker.Entries<InboxState>()
+                         .Where(entry => entry.Entity.MessageId == messageId && entry.Entity.ConsumerId == options.ConsumerId)
+                         .ToArray())
+            {
+                tracked.State = EntityState.Detached;
+            }
+
             var lockId = NewId.NextGuid();
 
             long startedAt = _timeProvider.GetTimestamp();

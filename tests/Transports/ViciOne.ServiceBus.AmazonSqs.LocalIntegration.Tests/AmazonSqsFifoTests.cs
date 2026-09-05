@@ -114,6 +114,7 @@ public sealed class AmazonSqsFifoTests
         services.AddSingleton(received);
         services.AddViciOneServiceBus(registration =>
         {
+            registration.Limits(MessageLimits.Conservative);
             registration.SetEndpointNameFormatter(endpointFormatter);
             registration.AddConsumer<FormatterMessageConsumer>();
             registration.AddConfigureEndpointsCallback((_, endpoint) =>

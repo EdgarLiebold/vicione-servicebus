@@ -9,6 +9,7 @@ public static class Journey05ConsumerAndRetry
     public static IServiceCollection Configure(IServiceCollection services) =>
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<SubmitOrderConsumer>(consumer =>
                 consumer.UseMessageRetry(retry => retry.Exponential(
                     5,

@@ -302,6 +302,10 @@ public sealed class ScopedOutboxFilterTests
             services.AddViciOneServiceBusTestHarness(TextWriter.Null, configuration =>
             {
                 configuration.SetTestTimeouts(operationTimeout, operationTimeout);
+                configuration.Contracts(contracts => contracts
+                    .Register<PublishFromConsumeScope>("vicione.tests.ef.publish-from-scope")
+                    .Register<ScopedPublishedEvent>("vicione.tests.ef.scoped-published-event")
+                    .Register<ScopedSendCommand>("vicione.tests.ef.scoped-send-command"));
                 configuration.ConfigureEntityFrameworkTransactionalStore<ScopedOutboxDbContext>(outbox =>
                 {
                     outbox.UsePostgres();

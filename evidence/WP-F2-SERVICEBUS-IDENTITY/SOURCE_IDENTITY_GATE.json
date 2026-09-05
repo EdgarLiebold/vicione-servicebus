@@ -2,12 +2,12 @@
   "baselineCommit": "1de4bf6eb45c406da3cd6f26bdab6ed6d5aeefbc",
   "counts": {
     "baselinePaths": 5654,
-    "changedBaselineFiles": 5650,
-    "currentAddedPublicDeclarations": 1714,
-    "currentProductPublicDeclarations": 24280,
+    "changedBaselineFiles": 5651,
+    "currentAddedPublicDeclarations": 19860,
+    "currentProductPublicDeclarations": 25468,
     "findings": 0,
-    "liveBaselineTargetsWithGitIdentity": 3763,
-    "publicDeclarationRecords": 44093
+    "liveBaselineTargetsWithGitIdentity": 2068,
+    "publicDeclarationRecords": 62239
   },
   "findings": [],
   "licenseByteIdentical": true,

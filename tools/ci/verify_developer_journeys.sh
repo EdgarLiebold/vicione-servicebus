@@ -14,6 +14,12 @@ nuget_config="$temporary_root/NuGet.config"
 sample_project="$repository_root/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj"
 public_api_baseline="${PUBLIC_API_BASELINE_OUTPUT:-$repository_root/artifacts/verification/public-api-baseline.txt}"
 
+journey_count="$(find "$repository_root/samples/DeveloperJourneys" -maxdepth 1 -type f -name 'Journey*.cs' | wc -l | tr -d '[:space:]')"
+if [[ "$journey_count" != "18" ]]; then
+  printf 'Expected 18 developer journeys, found %s.\n' "$journey_count" >&2
+  exit 1
+fi
+
 cleanup() {
   rm -rf "$temporary_root"
 }
@@ -114,4 +120,4 @@ fi
   "$package_feed" \
   "$public_api_baseline"
 
-printf 'Developer journey package-consumer gate passed: 14 scenarios, 15 freshly packed ViciOne packages, packed public API baseline generated.\n'
+printf 'Developer journey package-consumer gate passed: 18 scenarios, 15 freshly packed ViciOne packages, packed public API baseline generated.\n'

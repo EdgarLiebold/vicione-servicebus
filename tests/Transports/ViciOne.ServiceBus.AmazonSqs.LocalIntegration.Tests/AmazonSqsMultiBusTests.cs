@@ -30,26 +30,34 @@ public sealed class AmazonSqsMultiBusTests
             options.StopTimeout = fixture.OperationTimeout;
         });
         services
-            .AddViciOneServiceBus(registration => registration.UsingAmazonSqs((_, configurator) =>
+            .AddViciOneServiceBus(registration =>
             {
-                configurator.MessageTopology.SetEntityNameFormatter(new BusEntityNameFormatter("server1"));
-                fixture.ConfigureHost(configurator);
-                configurator.ReceiveEndpoint(firstQueueName, endpoint =>
+                registration.Limits(MessageLimits.Conservative);
+                registration.UsingAmazonSqs((_, configurator) =>
                 {
-                    endpoint.Handler<EndpointProbe>(firstDeliveries.ObserveProbeAsync);
-                    endpoint.Handler<MultiBusMessage>(firstDeliveries.ObserveAsync);
+                    configurator.MessageTopology.SetEntityNameFormatter(new BusEntityNameFormatter("server1"));
+                    fixture.ConfigureHost(configurator);
+                    configurator.ReceiveEndpoint(firstQueueName, endpoint =>
+                    {
+                        endpoint.Handler<EndpointProbe>(firstDeliveries.ObserveProbeAsync);
+                        endpoint.Handler<MultiBusMessage>(firstDeliveries.ObserveAsync);
+                    });
                 });
-            }))
-            .AddViciOneServiceBus<ISecondBus>(registration => registration.UsingAmazonSqs((_, configurator) =>
+            })
+            .AddViciOneServiceBus<ISecondBus>(registration =>
             {
-                configurator.MessageTopology.SetEntityNameFormatter(new BusEntityNameFormatter("server2"));
-                fixture.ConfigureHost(configurator);
-                configurator.ReceiveEndpoint(secondQueueName, endpoint =>
+                registration.Limits(MessageLimits.Conservative);
+                registration.UsingAmazonSqs((_, configurator) =>
                 {
-                    endpoint.Handler<EndpointProbe>(secondDeliveries.ObserveProbeAsync);
-                    endpoint.Handler<MultiBusMessage>(secondDeliveries.ObserveAsync);
+                    configurator.MessageTopology.SetEntityNameFormatter(new BusEntityNameFormatter("server2"));
+                    fixture.ConfigureHost(configurator);
+                    configurator.ReceiveEndpoint(secondQueueName, endpoint =>
+                    {
+                        endpoint.Handler<EndpointProbe>(secondDeliveries.ObserveProbeAsync);
+                        endpoint.Handler<MultiBusMessage>(secondDeliveries.ObserveAsync);
+                    });
                 });
-            }));
+            });
         await using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,

@@ -8,7 +8,7 @@ namespace ViciOne.ServiceBus.Architecture.Tests.Product;
 
 public sealed class DeveloperJourneyArchitectureTests
 {
-    private static readonly string[] ExpectedJourneys = Enumerable.Range(1, 14)
+    private static readonly string[] ExpectedJourneys = Enumerable.Range(1, 18)
         .Select(static value => $"Journey{value:00}")
         .ToArray();
 
@@ -24,8 +24,8 @@ public sealed class DeveloperJourneyArchitectureTests
     ];
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-DEVELOPER-JOURNEYS", "fourteen-locked-package-only-consumer-scenarios")]
-    public void FourteenJourneys_AreLockedPackageConsumersWithoutSourceReferences()
+    [RequirementCoverage("REQ-VSB-DEVELOPER-JOURNEYS", "eighteen-locked-package-only-consumer-scenarios")]
+    public void EighteenJourneys_AreLockedPackageConsumersWithoutSourceReferences()
     {
         string directory = Path.Combine(RepositoryLayout.Root, "samples", "DeveloperJourneys");
         string projectPath = Path.Combine(directory, "ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj");

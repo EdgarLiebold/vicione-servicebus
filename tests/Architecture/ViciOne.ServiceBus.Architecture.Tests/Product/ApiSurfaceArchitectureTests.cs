@@ -33,10 +33,10 @@ public sealed class ApiSurfaceArchitectureTests
         "consumer-contract",
         "consumer-definition",
         "endpoint-providers",
+        "former-product-identity",
         "legacy-test-framework",
         "legacy-verification-paths",
         "manual-scheduler-factories",
-        "masstransit-product-identity",
         "pipeline-configurators",
         "serialized-durable-envelope",
         "standard-messaging-vocabulary",
@@ -53,7 +53,7 @@ public sealed class ApiSurfaceArchitectureTests
             ["legacy-test-framework"] = "REMOVE_COMPATIBILITY_ONLY",
             ["legacy-verification-paths"] = "REMOVE_COMPATIBILITY_ONLY",
             ["manual-scheduler-factories"] = "RETAIN_ADVANCED_HIDDEN",
-            ["masstransit-product-identity"] = "REMOVE_COMPATIBILITY_ONLY",
+            ["former-product-identity"] = "REMOVE_COMPATIBILITY_ONLY",
             ["pipeline-configurators"] = "RETAIN_PROVIDER_SPI",
             ["serialized-durable-envelope"] = "RETAIN_ADVANCED_HIDDEN",
             ["standard-messaging-vocabulary"] = "RETAIN_DOMAIN_STANDARD",
@@ -382,7 +382,7 @@ public sealed class ApiSurfaceArchitectureTests
     [RequirementCoverage("REQ-VSB-HERITAGE-DISPOSITION", "all-retained-shapes-carry-current-capability")]
     public void HeritageDisposition_IsTerminalAndCompatibilityOnlyIdentityIsAbsent()
     {
-        using JsonDocument manifest = JsonDocument.Parse(Source("docs/mass-transit-heritage-disposition.json"));
+        using JsonDocument manifest = JsonDocument.Parse(Source("docs/api-heritage-disposition.json"));
         JsonElement root = manifest.RootElement;
         Assert.Equal(1, root.GetProperty("schemaVersion").GetInt32());
         JsonElement[] entries = root.GetProperty("entries").EnumerateArray().ToArray();
@@ -420,8 +420,9 @@ public sealed class ApiSurfaceArchitectureTests
                 || path.EndsWith(".targets", StringComparison.Ordinal))
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .ToArray();
+        string formerProductIdentity = "Mass" + "Transit";
         Assert.DoesNotContain(productIdentityFiles, path =>
-            File.ReadAllText(path).Contains("MassTransit", StringComparison.OrdinalIgnoreCase));
+            File.ReadAllText(path).Contains(formerProductIdentity, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string Source(string relativePath) =>

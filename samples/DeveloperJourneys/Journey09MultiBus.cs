@@ -6,8 +6,16 @@ namespace ViciOne.ServiceBus.Samples.DeveloperJourneys;
 public static class Journey09MultiBus
 {
     public static IServiceCollection Configure(IServiceCollection services) => services
-        .AddViciOneServiceBus<IOrdersBus>("orders-v1", configuration => configuration.UsingInMemory())
-        .AddViciOneServiceBus<IBillingBus>("billing-v1", configuration => configuration.UsingInMemory());
+        .AddViciOneServiceBus<IOrdersBus>("orders-v1", configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory();
+        })
+        .AddViciOneServiceBus<IBillingBus>("billing-v1", configuration =>
+        {
+            configuration.Limits(MessageLimits.Conservative);
+            configuration.UsingInMemory();
+        });
 
     public static Task PublishOnOrdersBusAsync(
         IOrdersBus bus,

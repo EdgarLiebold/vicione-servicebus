@@ -224,6 +224,7 @@ public sealed class EventHubSagaAndLifecycleTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.AddSagaStateMachine<ProducingSagaMachine, ProducingSagaState>().InMemoryRepository();
                 if (includeFaultMachines)
                 {
@@ -256,6 +257,7 @@ public sealed class EventHubSagaAndLifecycleTests
             .AddSingleton(state)
             .AddViciOneServiceBus(configuration =>
             {
+                configuration.Limits(MessageLimits.Conservative);
                 configuration.UsingInMemory();
                 configuration.AddRider(rider =>
                 {

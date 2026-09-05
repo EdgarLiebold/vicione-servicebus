@@ -13,6 +13,27 @@ namespace ViciOne.ServiceBus.Tests.JobService.JobService;
 public sealed class JobServiceLifecycleTests
 {
     [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SAGA-PERSISTENCE", "new-state-has-non-null-persisted-collections")]
+    public void NewJobTypeSaga_InitializesEveryPersistedCollection()
+    {
+        var saga = new JobTypeSaga();
+
+        Assert.Empty(saga.ActiveJobs);
+        Assert.Empty(saga.Instances);
+        Assert.Empty(saga.Properties);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-SAGA-PERSISTENCE", "new-job-has-non-null-persisted-dictionaries")]
+    public void NewJobSaga_InitializesRequiredPersistedDictionaries()
+    {
+        var saga = new JobSaga();
+
+        Assert.Empty(saga.Job);
+        Assert.Empty(saga.JobProperties);
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-JOB-SERVICE-LIFECYCLE", "bidirectional-transition-serialization")]
     public async Task StartAndStopTransitions_AreSerializedInBothDirectionsAsync()
     {

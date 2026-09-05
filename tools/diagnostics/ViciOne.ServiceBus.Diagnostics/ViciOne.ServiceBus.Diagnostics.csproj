@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Documentation is completed in work package C; until then CS1591 stays a warning here. -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <!-- Nullable warnings are completed in work package B; annotations remain active in the interim. -->
     <Nullable>annotations</Nullable>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>

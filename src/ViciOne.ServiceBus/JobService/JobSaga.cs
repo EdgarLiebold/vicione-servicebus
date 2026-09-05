@@ -30,7 +30,7 @@ public class JobSaga :
     /// <summary>
     /// Gets or sets the job value.
     /// </summary>
-    public Dictionary<string, object> Job { get; set; } = null!;
+    public Dictionary<string, object> Job { get; set; } = [];
     /// <summary>
     /// Gets or sets the job type id value.
     /// </summary>
@@ -102,7 +102,7 @@ public class JobSaga :
     /// <summary>
     /// The job properties, supplied by the submitted job
     /// </summary>
-    public Dictionary<string, object> JobProperties { get; set; } = null!;
+    public Dictionary<string, object> JobProperties { get; set; } = [];
     /// <summary>
     /// For recurring jobs, the cron expression used to determine the next start date after the job has completed.
     /// </summary>

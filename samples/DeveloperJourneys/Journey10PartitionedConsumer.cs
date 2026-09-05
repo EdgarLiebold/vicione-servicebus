@@ -9,6 +9,7 @@ public static class Journey10PartitionedConsumer
     public static IServiceCollection Configure(IServiceCollection services) =>
         services.AddViciOneServiceBus(configuration =>
         {
+            configuration.Limits(MessageLimits.Conservative);
             configuration.AddConsumer<SubmitOrderConsumer>(consumer =>
                 consumer.UsePartitionedConcurrency<SubmitOrder, Guid>(
                     partitionCount: 16,

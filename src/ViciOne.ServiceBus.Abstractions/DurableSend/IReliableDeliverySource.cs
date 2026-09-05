@@ -12,4 +12,7 @@ public interface IReliableDeliverySource<TBus>
 {
     /// <summary>Attempts one bounded unit of due work and reports whether progress was made.</summary>
     Task<bool> DeliverDueBatchAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Waits until work may be available or the source's bounded polling interval elapses.</summary>
+    Task WaitForWorkAsync(CancellationToken cancellationToken = default);
 }
