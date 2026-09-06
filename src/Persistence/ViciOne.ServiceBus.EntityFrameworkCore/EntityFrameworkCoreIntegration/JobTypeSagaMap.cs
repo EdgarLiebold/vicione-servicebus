@@ -35,18 +35,18 @@ public class JobTypeSagaMap :
         else
             entity.Ignore(x => x.RowVersion);
 
-        entity.Property(x => x.ActiveJobCount);
+        entity.Property(x => x.ActiveAllocationCount);
         entity.Property(x => x.ConcurrentJobLimit);
         entity.Property(x => x.GlobalConcurrentJobLimit);
         entity.Property(x => x.Name);
 
-        entity.Property(x => x.OverrideJobLimit);
-        entity.Property(x => x.OverrideLimitExpiration);
+        entity.Property(x => x.OverrideConcurrentJobLimit);
+        entity.Property(x => x.OverrideExpiresAt);
 
-        entity.Property(x => x.ActiveJobs)
+        entity.Property(x => x.ActiveAllocations)
             .HasJsonConversion();
 
-        entity.Property(x => x.Instances)
+        entity.Property(x => x.ServiceInstances)
             .HasJsonConversion();
 
         entity.Property(x => x.JobTypeProperties)

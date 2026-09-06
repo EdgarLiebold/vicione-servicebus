@@ -39,6 +39,46 @@ public sealed class CronExpressionContractTests
     }
 
     [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-IDENTITY", "default-and-explicit-local-zone-are-equivalent")]
+    public void DefaultAndExplicitLocalTimeZones_HaveTheSameIdentity()
+    {
+        var defaultTimeZone = new CronExpression("0 15 10 ? * MON-FRI");
+        var explicitLocalTimeZone = new CronExpression("0 15 10 ? * MON-FRI") { TimeZone = TimeZoneInfo.Local };
+
+        Assert.Equal(defaultTimeZone, explicitLocalTimeZone);
+        Assert.Equal(defaultTimeZone.GetHashCode(), explicitLocalTimeZone.GetHashCode());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-IDENTITY", "whitespace-is-canonicalized")]
+    public void EquivalentWhitespace_IsCanonicalizedForIdentity()
+    {
+        var compact = new CronExpression("0 15 10 ? * MON-FRI") { TimeZone = TimeZoneInfo.Utc };
+        var padded = new CronExpression("  0\t15   10 ?  *\tMON-FRI  ") { TimeZone = TimeZoneInfo.Utc };
+
+        Assert.Equal("0 15 10 ? * MON-FRI", padded.ToString());
+        Assert.Equal(compact, padded);
+        Assert.Equal(compact.GetHashCode(), padded.GetHashCode());
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-CONSTRUCTION", "null-time-zone-rejected")]
+    public void NullTimeZone_IsRejected()
+    {
+        var exception = Assert.Throws<ArgumentNullException>(
+            () => new CronExpression("0 15 10 ? * MON-FRI") { TimeZone = null! });
+
+        Assert.Equal("value", exception.ParamName);
+    }
+
+    [Fact]
+    [RequirementCoverage("REQ-VSB-CRON-VALIDATION", "null-validation-input")]
+    public void NullExpression_IsReportedAsInvalidByTheNonThrowingApi()
+    {
+        Assert.False(CronExpression.IsValidExpression(null));
+    }
+
+    [Fact]
     [RequirementCoverage("REQ-VSB-CRON-SUMMARY", "all-fields")]
     public void ExpressionSummary_ReportsEveryParsedField()
     {
@@ -52,10 +92,10 @@ public sealed class CronExpressionContractTests
             daysOfMonth: 5
             months: 11
             daysOfWeek: ?
-            lastdayOfWeek: False
+            lastDayOfWeek: False
             nearestWeekday: False
-            NthDayOfWeek: 0
-            lastdayOfMonth: False
+            nthDayOfWeek: 0
+            lastDayOfMonth: False
             years: *
 
             """,

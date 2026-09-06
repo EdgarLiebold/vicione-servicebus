@@ -1,5 +1,5 @@
-using Npgsql;
 using System.Text;
+using Npgsql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql;
 using ViciOne.ServiceBus.SqlTransport.PostgreSql.Helpers;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;

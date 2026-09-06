@@ -12,13 +12,13 @@ internal sealed class CronField :
     int? _singleValue;
     SortedSet<int>? _values;
 
-    /// <summary>Initializes a new instance.</summary>
+    /// <summary>Initializes an empty parsed field.</summary>
     public CronField()
     {
         Clear();
     }
 
-    /// <summary>Gets the count.</summary>
+    /// <summary>Gets the number of explicitly stored values or special markers.</summary>
     public int Count
     {
         get
@@ -44,8 +44,8 @@ internal sealed class CronField :
         }
     }
 
-    /// <summary>Gets enumerator.</summary>
-    /// <returns>The enumerator.</returns>
+    /// <summary>Enumerates the stored values or special markers in ascending order.</summary>
+    /// <returns>An enumerator over the stored field values.</returns>
     public IEnumerator<int> GetEnumerator()
     {
         if (_singleValue is not null)
@@ -100,6 +100,9 @@ internal sealed class CronField :
         if (set is null)
             return false;
 
+        if (set.Count == 0)
+            return false;
+
         min = set.Min;
 
         if (set.Contains(start))
@@ -108,7 +111,7 @@ internal sealed class CronField :
             return true;
         }
 
-        if (set.Count == 0 || set.Max < start)
+        if (set.Max < start)
             return false;
 
         if (set.Min >= start)
@@ -124,11 +127,11 @@ internal sealed class CronField :
         return false;
     }
 
-    /// <summary>Adds the supplied value to the current collection.</summary>
-    /// <param name="value">The value to process.</param>
+    /// <summary>Adds a parsed value or special field marker.</summary>
+    /// <param name="value">The value or marker to add.</param>
     public void Add(int value)
     {
-        _hasAllOrNoSpec = value is CronExpressionConstants.AllSpec or CronExpressionConstants.NoSpec;
+        _hasAllOrNoSpec |= value is CronExpressionConstants.AllSpec or CronExpressionConstants.NoSpec;
 
         if (_singleValue is null)
         {
@@ -148,9 +151,9 @@ internal sealed class CronField :
         }
     }
 
-    /// <summary>Determines whether the current collection contains the supplied value.</summary>
-    /// <param name="value">The value to process.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether an explicit value or wildcard covers the supplied value.</summary>
+    /// <param name="value">The value to find.</param>
+    /// <returns><see langword="true" /> when the value is present or covered by a wildcard; otherwise, <see langword="false" />.</returns>
     public bool Contains(int value)
     {
         if (_singleValue == value

@@ -15,15 +15,19 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "least-loaded-eligible-instance-is-selected")]
     public async Task SelectInstanceAsync_SelectsTheLeastLoadedEligibleInstance()
     {
-        ConsumeContext<AllocateJobSlot> context = CreateContext(NewId.NextGuid());
-        var info = new TestJobTypeInfo(concurrentJobLimit: 2);
-        info.Instances.Add(FirstInstance, new JobTypeInstance { Used = DateTimeOffset.UnixEpoch });
-        info.Instances.Add(SecondInstance, new JobTypeInstance { Used = DateTimeOffset.UnixEpoch.AddMinutes(1) });
-        info.ActiveJobs.Add(new ActiveJob { JobId = NewId.NextGuid(), InstanceAddress = FirstInstance });
+        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        JobDistributionContext distributionContext = CreateDistributionContext(
+            concurrentJobLimit: 2,
+            new Dictionary<Uri, JobServiceInstanceState>
+            {
+                [FirstInstance] = new() { LastAllocationAt = DateTimeOffset.UnixEpoch },
+                [SecondInstance] = new() { LastAllocationAt = DateTimeOffset.UnixEpoch.AddMinutes(1) },
+            },
+            new JobAllocationState { JobId = NewId.NextGuid(), InstanceAddress = FirstInstance });
 
         Uri? actual = await DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(
-            context,
-            info,
+            requestContext,
+            distributionContext,
             TestContext.Current.CancellationToken);
 
         Assert.Equal(SecondInstance, actual);
@@ -33,14 +37,18 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "least-recently-used-breaks-equal-load")]
     public async Task SelectInstanceAsync_PrefersTheLeastRecentlyUsedInstanceWhenLoadsMatch()
     {
-        ConsumeContext<AllocateJobSlot> context = CreateContext(NewId.NextGuid());
-        var info = new TestJobTypeInfo(concurrentJobLimit: 1);
-        info.Instances.Add(FirstInstance, new JobTypeInstance { Used = DateTimeOffset.UnixEpoch.AddMinutes(2) });
-        info.Instances.Add(SecondInstance, new JobTypeInstance { Used = DateTimeOffset.UnixEpoch });
+        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        JobDistributionContext distributionContext = CreateDistributionContext(
+            concurrentJobLimit: 1,
+            new Dictionary<Uri, JobServiceInstanceState>
+            {
+                [FirstInstance] = new() { LastAllocationAt = DateTimeOffset.UnixEpoch.AddMinutes(2) },
+                [SecondInstance] = new() { LastAllocationAt = DateTimeOffset.UnixEpoch },
+            });
 
         Uri? actual = await DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(
-            context,
-            info,
+            requestContext,
+            distributionContext,
             TestContext.Current.CancellationToken);
 
         Assert.Equal(SecondInstance, actual);
@@ -50,16 +58,20 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "fully-allocated-instances-are-ineligible")]
     public async Task SelectInstanceAsync_ReturnsNullWhenEveryInstanceIsAtItsLimit()
     {
-        ConsumeContext<AllocateJobSlot> context = CreateContext(NewId.NextGuid());
-        var info = new TestJobTypeInfo(concurrentJobLimit: 1);
-        info.Instances.Add(FirstInstance, new JobTypeInstance());
-        info.Instances.Add(SecondInstance, new JobTypeInstance());
-        info.ActiveJobs.Add(new ActiveJob { JobId = NewId.NextGuid(), InstanceAddress = FirstInstance });
-        info.ActiveJobs.Add(new ActiveJob { JobId = NewId.NextGuid(), InstanceAddress = SecondInstance });
+        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        JobDistributionContext distributionContext = CreateDistributionContext(
+            concurrentJobLimit: 1,
+            new Dictionary<Uri, JobServiceInstanceState>
+            {
+                [FirstInstance] = new(),
+                [SecondInstance] = new(),
+            },
+            new JobAllocationState { JobId = NewId.NextGuid(), InstanceAddress = FirstInstance },
+            new JobAllocationState { JobId = NewId.NextGuid(), InstanceAddress = SecondInstance });
 
         Uri? actual = await DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(
-            context,
-            info,
+            requestContext,
+            distributionContext,
             TestContext.Current.CancellationToken);
 
         Assert.Null(actual);
@@ -69,36 +81,52 @@ public sealed class JobDistributionStrategyTests
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "required-inputs-and-cancellation-are-honored")]
     public async Task SelectInstanceAsync_RejectsMissingInputsAndCancellation()
     {
-        ConsumeContext<AllocateJobSlot> context = CreateContext(NewId.NextGuid());
-        var info = new TestJobTypeInfo(concurrentJobLimit: 1);
+        ConsumeContext<AllocateJobSlot> requestContext = CreateRequestContext(NewId.NextGuid());
+        JobDistributionContext distributionContext = CreateDistributionContext(
+            concurrentJobLimit: 1,
+            new Dictionary<Uri, JobServiceInstanceState>());
 
         Assert.Equal(
-            "context",
+            "requestContext",
             (await Assert.ThrowsAsync<ArgumentNullException>(
                 () => DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(
                     null!,
-                    info,
+                    distributionContext,
                     TestContext.Current.CancellationToken))).ParamName);
         Assert.Equal(
-            "jobTypeInfo",
+            "distributionContext",
             (await Assert.ThrowsAsync<ArgumentNullException>(
                 () => DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(
-                    context,
+                    requestContext,
                     null!,
                     TestContext.Current.CancellationToken))).ParamName);
 
         using var canceled = new CancellationTokenSource();
         canceled.Cancel();
         OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(
-            () => DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(context, info, canceled.Token));
+            () => DefaultJobDistributionStrategy.Instance.SelectInstanceAsync(requestContext, distributionContext, canceled.Token));
         Assert.Equal(canceled.Token, exception.CancellationToken);
     }
 
-    private static ConsumeContext<AllocateJobSlot> CreateContext(Guid jobId)
+    private static ConsumeContext<AllocateJobSlot> CreateRequestContext(Guid jobId)
     {
         TestConsumeContext context = DispatchProxy.Create<TestConsumeContext, ConsumeContextProxy>();
         ((ConsumeContextProxy)(object)context).Message = new AllocateJobSlotMessage(jobId);
         return context;
+    }
+
+    private static JobDistributionContext CreateDistributionContext(
+        int concurrentJobLimit,
+        Dictionary<Uri, JobServiceInstanceState> serviceInstances,
+        params JobAllocationState[] activeAllocations)
+    {
+        return new JobDistributionContext(new JobTypeSaga
+        {
+            Name = "test-job",
+            ConcurrentJobLimit = concurrentJobLimit,
+            ServiceInstances = serviceInstances,
+            ActiveAllocations = [.. activeAllocations],
+        });
     }
 
     private interface TestConsumeContext : ConsumeContext<AllocateJobSlot>, ConsumeContext;
@@ -122,14 +150,4 @@ public sealed class JobDistributionStrategyTests
         public IReadOnlyDictionary<string, object>? JobProperties { get; init; }
     }
 
-    private sealed class TestJobTypeInfo(int concurrentJobLimit) : JobTypeInfo
-    {
-        public string Name => "test-job";
-        public int ConcurrentJobLimit { get; } = concurrentJobLimit;
-        public IReadOnlyDictionary<string, object> JobTypeProperties { get; } = new Dictionary<string, object>();
-        public List<ActiveJob> ActiveJobs { get; } = [];
-        IReadOnlyList<ActiveJob> JobTypeInfo.ActiveJobs => ActiveJobs;
-        public Dictionary<Uri, JobTypeInstance> Instances { get; } = [];
-        IReadOnlyDictionary<Uri, JobTypeInstance> JobTypeInfo.Instances => Instances;
-    }
 }

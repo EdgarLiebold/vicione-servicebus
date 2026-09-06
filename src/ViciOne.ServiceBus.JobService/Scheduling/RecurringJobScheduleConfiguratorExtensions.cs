@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace ViciOne.ServiceBus.JobService;
@@ -23,7 +24,7 @@ public static class RecurringJobScheduleConfiguratorExtensions
         ArgumentNullException.ThrowIfNull(configurator);
         ValidateTime(hour, minute, second);
 
-        configurator.CronExpression = $"{second} {minute} {hour} ? * *";
+        configurator.CronExpression = string.Create(CultureInfo.InvariantCulture, $"{second} {minute} {hour} ? * *");
         return configurator;
     }
 
@@ -50,7 +51,7 @@ public static class RecurringJobScheduleConfiguratorExtensions
         if (days is null || days.Length == 0)
             throw new ArgumentException("At least one day of the week must be specified.", nameof(days));
 
-        configurator.CronExpression = $"{second} {minute} {hour} ? * {FormatDays(days)}";
+        configurator.CronExpression = string.Create(CultureInfo.InvariantCulture, $"{second} {minute} {hour} ? * {FormatDays(days)}");
         return configurator;
     }
 
@@ -76,7 +77,9 @@ public static class RecurringJobScheduleConfiguratorExtensions
         ValidateInterval(interval, 23);
         ValidateTime(startingHour, minute, second);
 
-        configurator.CronExpression = $"{second} {minute} {startingHour}/{interval} * * {FormatDays(days)}";
+        configurator.CronExpression = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{second} {minute} {startingHour}/{interval} * * {FormatDays(days)}");
         return configurator;
     }
 
@@ -105,7 +108,10 @@ public static class RecurringJobScheduleConfiguratorExtensions
         if (hour.HasValue)
             ValidateHour(hour.Value);
 
-        configurator.CronExpression = $"{second} {startingMinute}/{interval} {hour?.ToString() ?? "*"} * * {FormatDays(days)}";
+        string hourField = hour?.ToString(CultureInfo.InvariantCulture) ?? "*";
+        configurator.CronExpression = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{second} {startingMinute}/{interval} {hourField} * * {FormatDays(days)}");
         return configurator;
     }
 
@@ -135,7 +141,11 @@ public static class RecurringJobScheduleConfiguratorExtensions
         if (hour.HasValue)
             ValidateHour(hour.Value);
 
-        configurator.CronExpression = $"{startingSecond}/{interval} {minute?.ToString() ?? "*"} {hour?.ToString() ?? "*"} * * {FormatDays(days)}";
+        string minuteField = minute?.ToString(CultureInfo.InvariantCulture) ?? "*";
+        string hourField = hour?.ToString(CultureInfo.InvariantCulture) ?? "*";
+        configurator.CronExpression = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{startingSecond}/{interval} {minuteField} {hourField} * * {FormatDays(days)}");
         return configurator;
     }
 
@@ -159,7 +169,7 @@ public static class RecurringJobScheduleConfiguratorExtensions
         ValidateTime(hour, minute, second);
         ValidateDay(dayOfWeek, nameof(dayOfWeek));
 
-        configurator.CronExpression = $"{second} {minute} {hour} ? * {(int)dayOfWeek + 1}";
+        configurator.CronExpression = string.Create(CultureInfo.InvariantCulture, $"{second} {minute} {hour} ? * {(int)dayOfWeek + 1}");
         return configurator;
     }
 
@@ -183,7 +193,7 @@ public static class RecurringJobScheduleConfiguratorExtensions
         ValidateDayOfMonth(dayOfMonth);
         ValidateTime(hour, minute, second);
 
-        configurator.CronExpression = $"{second} {minute} {hour} {dayOfMonth} * ?";
+        configurator.CronExpression = string.Create(CultureInfo.InvariantCulture, $"{second} {minute} {hour} {dayOfMonth} * ?");
         return configurator;
     }
 
@@ -210,7 +220,7 @@ public static class RecurringJobScheduleConfiguratorExtensions
         ValidateDayOfMonth(month, dayOfMonth);
         ValidateTime(hour, minute, second);
 
-        configurator.CronExpression = $"{second} {minute} {hour} {dayOfMonth} {month} ?";
+        configurator.CronExpression = string.Create(CultureInfo.InvariantCulture, $"{second} {minute} {hour} {dayOfMonth} {month} ?");
         return configurator;
     }
 
@@ -238,7 +248,7 @@ public static class RecurringJobScheduleConfiguratorExtensions
         foreach (DayOfWeek day in days)
             ValidateDay(day, nameof(days));
 
-        return string.Join(',', days.Distinct().Select(static day => (int)day + 1));
+        return string.Join(',', days.Distinct().Select(static day => ((int)day + 1).ToString(CultureInfo.InvariantCulture)));
     }
 
     static void ValidateTime(int hour, int minute, int second)

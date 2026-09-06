@@ -418,8 +418,8 @@ public static class RecurringJobExtensions
     /// <param name="publishEndpoint">The endpoint used to publish the run command.</param>
     /// <param name="jobName">The stable application name of the recurring job.</param>
     /// <param name="cancellationToken">The token that cancels publication.</param>
-    /// <returns>A task that completes when the command has been published.</returns>
-    public static Task RunRecurringJobAsync<TJob>(
+    /// <returns>The deterministic identifier of the recurring job.</returns>
+    public static async Task<Guid> RunRecurringJobAsync<TJob>(
         this IPublishEndpoint publishEndpoint,
         string jobName,
         CancellationToken cancellationToken = default)
@@ -429,9 +429,11 @@ public static class RecurringJobExtensions
         ValidateJobName(jobName);
 
         Guid jobId = RecurringJobIdentity<TJob>.CreateId(jobName);
-        return publishEndpoint.PublishAsync<RunJob>(
-            new RunJobCommand { JobId = jobId },
-            cancellationToken: cancellationToken);
+        await publishEndpoint
+            .PublishAsync<RunJob>(new RunJobCommand { JobId = jobId }, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        return jobId;
     }
 
     static SubmitJobCommand<TJob> CreateCommand<TJob>(

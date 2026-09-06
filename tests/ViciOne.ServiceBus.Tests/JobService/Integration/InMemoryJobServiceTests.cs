@@ -590,13 +590,13 @@ public sealed class InMemoryJobServiceTests
         public Task Entered => _entered.Task;
 
         public async Task<Uri?> SelectInstanceAsync(
-            ConsumeContext<AllocateJobSlot> context,
-            JobTypeInfo jobTypeInfo,
+            ConsumeContext<AllocateJobSlot> requestContext,
+            JobDistributionContext distributionContext,
             CancellationToken cancellationToken = default)
         {
             _entered.TrySetResult();
             await _release.Task.WaitAsync(cancellationToken);
-            return jobTypeInfo.Instances.Keys.FirstOrDefault();
+            return distributionContext.ServiceInstances.Keys.FirstOrDefault();
         }
 
         public void Release() => _release.TrySetResult();

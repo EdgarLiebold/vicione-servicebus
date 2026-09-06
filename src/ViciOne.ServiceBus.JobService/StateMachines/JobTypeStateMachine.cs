@@ -43,27 +43,27 @@ internal sealed class JobTypeStateMachine :
 
         During(Active,
             When(JobSlotReleased)
-                .If(context => context.Saga.ActiveJobs.Any(x => x.JobId == context.Message.JobId),
+                .If(context => context.Saga.ActiveAllocations.Any(x => x.JobId == context.Message.JobId),
                     release => release
                         .Then(context =>
                         {
-                            var activeJob = context.Saga.ActiveJobs.FirstOrDefault(x => x.JobId == context.Message.JobId);
-                            if (activeJob != null)
+                            var allocation = context.Saga.ActiveAllocations.FirstOrDefault(x => x.JobId == context.Message.JobId);
+                            if (allocation != null)
                             {
-                                context.Saga.ActiveJobs.Remove(activeJob);
-                                context.Saga.ActiveJobCount = context.Saga.ActiveJobs.Count;
+                                context.Saga.ActiveAllocations.Remove(allocation);
+                                context.Saga.ActiveAllocationCount = context.Saga.ActiveAllocations.Count;
 
-                                LogContext.Debug?.Log("Released Job Slot: {JobId} ({JobCount}): {InstanceAddress}", activeJob.JobId,
-                                    context.Saga.ActiveJobCount, activeJob.InstanceAddress);
+                                LogContext.Debug?.Log("Released Job Slot: {JobId} ({JobCount}): {InstanceAddress}", allocation.JobId,
+                                    context.Saga.ActiveAllocationCount, allocation.InstanceAddress);
 
                                 if (context.Message.Disposition == JobSlotDisposition.Suspect)
                                 {
-                                    if (context.Saga.Instances.Remove(activeJob.InstanceAddress))
-                                        LogContext.Warning?.Log("Removed Suspect Job Service Instance: {InstanceAddress}", activeJob.InstanceAddress);
+                                    if (context.Saga.ServiceInstances.Remove(allocation.InstanceAddress))
+                                        LogContext.Warning?.Log("Removed Suspect Job Service Instance: {InstanceAddress}", allocation.InstanceAddress);
                                 }
                             }
                         }))
-                .If(context => context.Saga.ActiveJobCount == 0,
+                .If(context => context.Saga.ActiveAllocationCount == 0,
                     empty => empty.TransitionTo(Idle)));
 
         During(Idle,
@@ -97,12 +97,12 @@ static class JobTypeStateMachineBehaviorExtensions
 {
     public static async Task<bool> IsSlotAvailableAsync(this BehaviorContext<JobTypeSaga, AllocateJobSlot> context, TimeSpan heartbeatTimeout)
     {
-        if (context.Saga.OverrideLimitExpiration.HasValue)
+        if (context.Saga.OverrideExpiresAt.HasValue)
         {
-            if (context.Saga.OverrideLimitExpiration.Value <= context.GetUtcDateTime())
+            if (context.Saga.OverrideExpiresAt.Value <= context.GetUtcDateTime())
             {
-                context.Saga.OverrideLimitExpiration = null;
-                context.Saga.OverrideJobLimit = null;
+                context.Saga.OverrideExpiresAt = null;
+                context.Saga.OverrideConcurrentJobLimit = null;
             }
         }
 
@@ -110,56 +110,57 @@ static class JobTypeStateMachineBehaviorExtensions
         JobTypeCapacity.RemoveExpiredAllocations(context.Saga, timestamp, heartbeatTimeout);
 
         var jobId = context.Message.JobId;
-        var activeJob = context.Saga.ActiveJobs.FirstOrDefault(x => x.JobId == jobId);
-        if (activeJob != null)
+        var allocation = context.Saga.ActiveAllocations.FirstOrDefault(x => x.JobId == jobId);
+        if (allocation != null)
         {
             await ((ConsumeContext<AllocateJobSlot>)context).RespondAsync<JobSlotAllocated>(new JobSlotAllocatedResponse
             {
                 JobId = jobId,
-                InstanceAddress = activeJob.InstanceAddress,
+                InstanceAddress = allocation.InstanceAddress,
             });
 
             return true;
         }
 
-        if (context.Saga.GlobalConcurrentJobLimit.HasValue && context.Saga.ActiveJobCount >= context.Saga.GlobalConcurrentJobLimit)
+        if (context.Saga.GlobalConcurrentJobLimit.HasValue && context.Saga.ActiveAllocationCount >= context.Saga.GlobalConcurrentJobLimit)
             return false;
 
         var strategy = context.GetJobDistributionStrategyOrUseDefault();
 
         Uri? selectedInstanceAddress = await strategy
-            .SelectInstanceAsync(context, new JobTypeInfoSnapshot(context.Saga), context.CancellationToken)
+            .SelectInstanceAsync(context, new JobDistributionContext(context.Saga), context.CancellationToken)
             .ConfigureAwait(false);
         if (selectedInstanceAddress == null)
             return false;
 
-        var activeInstance = context.Saga.Instances.TryGetValue(selectedInstanceAddress, out var value) ? value : null;
+        var activeInstance = context.Saga.ServiceInstances.TryGetValue(selectedInstanceAddress, out var value) ? value : null;
         if (activeInstance == null)
         {
             LogContext.Warning?.Log("Job Distribution Strategy returned unknown instance address: {InstanceAddress}", selectedInstanceAddress);
             return false;
         }
 
-        activeInstance.Used = timestamp;
+        activeInstance.LastAllocationAt = timestamp;
 
-        activeJob = new ActiveJob
+        allocation = new JobAllocationState
         {
             JobId = jobId,
             InstanceAddress = selectedInstanceAddress,
-            Deadline = timestamp + context.Message.JobTimeout,
-            JobProperties = JobTypeCapacity.CopyProperties(context.Message.JobProperties),
+            ExpiresAt = timestamp + context.Message.JobTimeout,
+            Properties = JobTypeCapacity.CopyProperties(context.Message.JobProperties),
         };
 
-        context.Saga.ActiveJobs.Add(activeJob);
-        context.Saga.ActiveJobCount = context.Saga.ActiveJobs.Count;
+        context.Saga.ActiveAllocations.Add(allocation);
+        context.Saga.ActiveAllocationCount = context.Saga.ActiveAllocations.Count;
 
-        LogContext.Debug?.Log("Allocated Job Slot: {JobId} ({JobCount}): {InstanceAddress} ({InstanceCount})", jobId, context.Saga.ActiveJobCount,
-            activeJob.InstanceAddress, context.Saga.ActiveJobs.Count(x => x.InstanceAddress == activeJob.InstanceAddress));
+        LogContext.Debug?.Log("Allocated Job Slot: {JobId} ({JobCount}): {InstanceAddress} ({InstanceCount})", jobId,
+            context.Saga.ActiveAllocationCount, allocation.InstanceAddress,
+            context.Saga.ActiveAllocations.Count(x => x.InstanceAddress == allocation.InstanceAddress));
 
         await ((ConsumeContext<AllocateJobSlot>)context).RespondAsync<JobSlotAllocated>(new JobSlotAllocatedResponse
         {
             JobId = jobId,
-            InstanceAddress = activeJob.InstanceAddress,
+            InstanceAddress = allocation.InstanceAddress,
         });
 
         return true;
@@ -187,25 +188,25 @@ static class JobTypeStateMachineBehaviorExtensions
             var instanceAddress = context.Message.InstanceAddress;
             DateTimeOffset instanceUpdated = context.GetUtcDateTime();
 
-            if (context.Saga.Instances.TryGetValue(instanceAddress, out var instance))
+            if (context.Saga.ServiceInstances.TryGetValue(instanceAddress, out var instance))
             {
                 if (context.Message.UpdateKind == JobConcurrencyUpdateKind.InstanceStopped)
                 {
                     LogContext.Debug?.Log("Job Service Instance Stopped: {InstanceAddress}", instanceAddress);
-                    context.Saga.Instances.Remove(instanceAddress);
+                    context.Saga.ServiceInstances.Remove(instanceAddress);
                 }
-                else if (instance.Updated is not DateTimeOffset lastUpdated || instanceUpdated > lastUpdated)
-                    instance.Updated = instanceUpdated;
+                else if (instance.LastHeartbeatAt is not DateTimeOffset lastHeartbeatAt || instanceUpdated > lastHeartbeatAt)
+                    instance.LastHeartbeatAt = instanceUpdated;
             }
             else if (context.Message.UpdateKind != JobConcurrencyUpdateKind.InstanceStopped)
             {
-                instance = new JobTypeInstance { Updated = instanceUpdated };
-                context.Saga.Instances.Add(instanceAddress, instance);
+                instance = new JobServiceInstanceState { LastHeartbeatAt = instanceUpdated };
+                context.Saga.ServiceInstances.Add(instanceAddress, instance);
                 LogContext.Debug?.Log("Job Service Instance Started: {InstanceAddress}", instanceAddress);
             }
 
             if (context.Message.UpdateKind != JobConcurrencyUpdateKind.InstanceStopped && instance != null)
-                instance.InstanceProperties = JobTypeCapacity.CopyProperties(context.Message.InstanceProperties);
+                instance.Properties = JobTypeCapacity.CopyProperties(context.Message.InstanceProperties);
 
             if (context.Message.UpdateKind == JobConcurrencyUpdateKind.Configuration)
             {
@@ -219,10 +220,10 @@ static class JobTypeStateMachineBehaviorExtensions
             }
             else if (context.Message.UpdateKind == JobConcurrencyUpdateKind.TemporaryOverride)
             {
-                context.Saga.OverrideJobLimit = context.Message.ConcurrentJobLimit;
-                context.Saga.OverrideLimitExpiration = instanceUpdated + (context.Message.Duration ?? TimeSpan.FromMinutes(30));
+                context.Saga.OverrideConcurrentJobLimit = context.Message.ConcurrentJobLimit;
+                context.Saga.OverrideExpiresAt = instanceUpdated + (context.Message.Duration ?? TimeSpan.FromMinutes(30));
 
-                LogContext.Debug?.Log("Override Concurrent Job Limit: {ConcurrencyLimit}", context.Saga.OverrideJobLimit);
+                LogContext.Debug?.Log("Override Concurrent Job Limit: {ConcurrencyLimit}", context.Saga.OverrideConcurrentJobLimit);
             }
         });
     }

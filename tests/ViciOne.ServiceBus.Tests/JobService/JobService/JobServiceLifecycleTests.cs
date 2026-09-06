@@ -18,8 +18,8 @@ public sealed class JobServiceLifecycleTests
     {
         var saga = new JobTypeSaga();
 
-        Assert.Empty(saga.ActiveJobs);
-        Assert.Empty(saga.Instances);
+        Assert.Empty(saga.ActiveAllocations);
+        Assert.Empty(saga.ServiceInstances);
         Assert.Empty(saga.JobTypeProperties);
     }
 

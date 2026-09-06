@@ -198,18 +198,19 @@ public sealed class RecurringJobExtensionsTests
         Guid canceled = await cancelEndpoint.CancelRecurringJobAsync<ApiJob>(
             JobName,
             cancellationToken: TestContext.Current.CancellationToken);
-        await runEndpoint.RunRecurringJobAsync<ApiJob>(JobName, TestContext.Current.CancellationToken);
+        Guid runJobId = await runEndpoint.RunRecurringJobAsync<ApiJob>(JobName, TestContext.Current.CancellationToken);
         Guid finalized = await finalizeEndpoint.FinalizeRecurringJobAsync<ApiJob>(
             JobName,
             TestContext.Current.CancellationToken);
 
         CancelJob cancel = Assert.IsAssignableFrom<CancelJob>(cancelEndpoint.Message);
-        RunJob run = Assert.IsAssignableFrom<RunJob>(runEndpoint.Message);
+        RunJob runCommand = Assert.IsAssignableFrom<RunJob>(runEndpoint.Message);
         FinalizeJob finalize = Assert.IsAssignableFrom<FinalizeJob>(finalizeEndpoint.Message);
         Assert.Equal(expected, canceled);
+        Assert.Equal(expected, runJobId);
         Assert.Equal(expected, finalized);
         Assert.Equal(expected, cancel.JobId);
-        Assert.Equal(expected, run.JobId);
+        Assert.Equal(expected, runCommand.JobId);
         Assert.Equal(expected, finalize.JobId);
         Assert.Equal(JobCancellationReasons.CancellationRequested, cancel.Reason);
     }

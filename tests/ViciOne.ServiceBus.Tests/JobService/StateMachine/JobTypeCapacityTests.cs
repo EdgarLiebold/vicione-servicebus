@@ -19,13 +19,13 @@ public sealed class JobTypeCapacityTests
         Guid liveJobId = NewId.NextGuid();
         var saga = new JobTypeSaga
         {
-            ActiveJobCount = 99,
-            Instances = new Dictionary<Uri, JobTypeInstance>
+            ActiveAllocationCount = 99,
+            ServiceInstances = new Dictionary<Uri, JobServiceInstanceState>
             {
-                [LiveInstance] = new() { Updated = Now - TimeSpan.FromMinutes(1) },
-                [ExpiredInstance] = new() { Updated = Now - TimeSpan.FromMinutes(6) },
+                [LiveInstance] = new() { LastHeartbeatAt = Now - TimeSpan.FromMinutes(1) },
+                [ExpiredInstance] = new() { LastHeartbeatAt = Now - TimeSpan.FromMinutes(6) },
             },
-            ActiveJobs =
+            ActiveAllocations =
             [
                 Allocation(liveJobId, LiveInstance, Now + TimeSpan.FromMinutes(1)),
                 Allocation(NewId.NextGuid(), LiveInstance, Now),
@@ -36,12 +36,12 @@ public sealed class JobTypeCapacityTests
 
         JobTypeCapacity.RemoveExpiredAllocations(saga, Now, TimeSpan.FromMinutes(5));
 
-        ActiveJob remaining = Assert.Single(saga.ActiveJobs);
+        JobAllocationState remaining = Assert.Single(saga.ActiveAllocations);
         Assert.Equal(liveJobId, remaining.JobId);
         Assert.Equal(LiveInstance, remaining.InstanceAddress);
-        Assert.Equal(1, saga.ActiveJobCount);
-        Assert.Single(saga.Instances);
-        Assert.Contains(LiveInstance, saga.Instances);
+        Assert.Equal(1, saga.ActiveAllocationCount);
+        Assert.Single(saga.ServiceInstances);
+        Assert.Contains(LiveInstance, saga.ServiceInstances);
     }
 
     [Fact]
@@ -69,44 +69,50 @@ public sealed class JobTypeCapacityTests
 
     [Fact]
     [RequirementCoverage("REQ-VSB-JOB-DISTRIBUTION", "custom-strategy-view-cannot-mutate-persisted-state")]
-    public void JobTypeInfoSnapshot_IsolatesPersistedStateFromStrategyMutation()
+    public void JobDistributionContext_IsImmutableAndIsolatedFromPersistedState()
     {
         Guid jobId = NewId.NextGuid();
         var saga = new JobTypeSaga
         {
             Name = "invoice-job",
             JobTypeProperties = new Dictionary<string, object> { ["Tier"] = "gold" },
-            Instances = new Dictionary<Uri, JobTypeInstance>
+            ServiceInstances = new Dictionary<Uri, JobServiceInstanceState>
             {
                 [LiveInstance] = new()
                 {
-                    Used = Now,
-                    InstanceProperties = new Dictionary<string, object> { ["Region"] = "west" },
+                    LastAllocationAt = Now,
+                    Properties = new Dictionary<string, object> { ["Region"] = "west" },
                 },
             },
-            ActiveJobs =
+            ActiveAllocations =
             [
-                new ActiveJob
+                new JobAllocationState
                 {
                     JobId = jobId,
                     InstanceAddress = LiveInstance,
-                    JobProperties = new Dictionary<string, object> { ["Tenant"] = "one" },
+                    Properties = new Dictionary<string, object> { ["Tenant"] = "one" },
                 },
             ],
         };
-        var snapshot = new JobTypeInfoSnapshot(saga);
+        var context = new JobDistributionContext(saga);
 
-        snapshot.ActiveJobs[0].JobId = NewId.NextGuid();
-        snapshot.ActiveJobs[0].JobProperties!["Tenant"] = "two";
-        snapshot.Instances[LiveInstance].Used = Now.AddDays(1);
-        snapshot.Instances[LiveInstance].InstanceProperties!["Region"] = "east";
-        ((Dictionary<string, object>)snapshot.JobTypeProperties)["Tier"] = "silver";
+        saga.ActiveAllocations[0].JobId = NewId.NextGuid();
+        saga.ActiveAllocations[0].Properties!["Tenant"] = "two";
+        saga.ServiceInstances[LiveInstance].LastAllocationAt = Now.AddDays(1);
+        saga.ServiceInstances[LiveInstance].Properties!["Region"] = "east";
+        saga.JobTypeProperties["Tier"] = "silver";
+        saga.ActiveAllocations.Clear();
+        saga.ServiceInstances.Clear();
 
-        Assert.Equal(jobId, saga.ActiveJobs[0].JobId);
-        Assert.Equal("one", saga.ActiveJobs[0].JobProperties!["Tenant"]);
-        Assert.Equal(Now, saga.Instances[LiveInstance].Used);
-        Assert.Equal("west", saga.Instances[LiveInstance].InstanceProperties!["Region"]);
-        Assert.Equal("gold", saga.JobTypeProperties["Tier"]);
+        JobAllocationInfo allocation = Assert.Single(context.ActiveAllocations);
+        Assert.Equal(jobId, allocation.JobId);
+        Assert.Equal("one", allocation.JobProperties["Tenant"]);
+        Assert.Equal(Now, context.ServiceInstances[LiveInstance].LastAllocationAt);
+        Assert.Equal("west", context.ServiceInstances[LiveInstance].InstanceProperties["Region"]);
+        Assert.Equal("gold", context.JobTypeProperties["Tier"]);
+        Assert.Throws<NotSupportedException>(() => ((IDictionary<string, object>)context.JobTypeProperties)["Tier"] = "bronze");
+        Assert.Throws<NotSupportedException>(() => ((IList<JobAllocationInfo>)context.ActiveAllocations).Clear());
+        Assert.Throws<NotSupportedException>(() => ((IDictionary<Uri, JobServiceInstanceInfo>)context.ServiceInstances).Clear());
     }
 
     [Theory]
@@ -160,11 +166,11 @@ public sealed class JobTypeCapacityTests
         JobTypeStateMachineBehaviorExtensions.ValidateConcurrencyUpdate(stopped);
     }
 
-    private static ActiveJob Allocation(Guid jobId, Uri instanceAddress, DateTimeOffset deadline) => new()
+    private static JobAllocationState Allocation(Guid jobId, Uri instanceAddress, DateTimeOffset deadline) => new()
     {
         JobId = jobId,
         InstanceAddress = instanceAddress,
-        Deadline = deadline,
+        ExpiresAt = deadline,
     };
 
     private static SetConcurrentJobLimitMessage ValidConfigurationUpdate() => new()

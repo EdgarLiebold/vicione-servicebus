@@ -135,6 +135,25 @@ public sealed class CronExpressionParsingTests
         Assert.Equal(isValid, CronExpression.IsValidExpression(text));
     }
 
+    public static TheoryData<string, string> AmbiguousListCases => new()
+    {
+        { "*,5 0 8 ? * 2-6", "'*' and '?' must be the only value in a cron field." },
+        { "0 0 8 ?,5 * 2-6", "'*' and '?' must be the only value in a cron field." },
+        { "0,,5 0 8 ? * 2-6", "Cron field lists cannot contain empty values." },
+        { "0 0 8 1W,15 * ?", "A numeric 'W' value cannot be combined with other days of the month." },
+        { "0 0 8 ? * MON#1,TUE", "An nth day-of-week value using '#' must be the only value in its field." },
+    };
+
+    [Theory]
+    [MemberData(nameof(AmbiguousListCases))]
+    [RequirementCoverage("REQ-VSB-CRON-VALIDATION", "ambiguous-lists-rejected")]
+    public void AmbiguousFieldLists_AreRejectedWithTheirExactReason(string text, string expectedMessage)
+    {
+        var exception = Assert.Throws<FormatException>(() => new CronExpression(text));
+
+        Assert.Equal(expectedMessage, exception.Message);
+    }
+
     [Theory]
     [InlineData("58-4 5 21 ? * MON-FRI", 0, new[] { 0, 1, 2, 3, 4, 58, 59 })]
     [InlineData("0 58-4 21 ? * MON-FRI", 1, new[] { 0, 1, 2, 3, 4, 58, 59 })]
@@ -145,6 +164,15 @@ public sealed class CronExpressionParsingTests
     [InlineData("58 5 21 ? * FRI-TUE", 5, new[] { 1, 2, 3, 6, 7 })]
     [RequirementCoverage("REQ-VSB-CRON-PARSING", "wraparound-ranges")]
     public void WraparoundRange_ContainsExactlyTheExpectedValues(string text, int fieldIndex, int[] expected)
+    {
+        Assert.Equal(expected, new CronExpression(text).GetSet(fieldIndex));
+    }
+
+    [Theory]
+    [InlineData("0 5 21 ? JAN-MAY/2 FRI", 4, new[] { 1, 3, 5 })]
+    [InlineData("0 5 21 ? * MON-FRI/2", 5, new[] { 2, 4, 6 })]
+    [RequirementCoverage("REQ-VSB-CRON-PARSING", "named-range-steps")]
+    public void NamedRangeSteps_ContainExactlyTheExpectedValues(string text, int fieldIndex, int[] expected)
     {
         Assert.Equal(expected, new CronExpression(text).GetSet(fieldIndex));
     }
@@ -181,6 +209,10 @@ public sealed class CronExpressionParsingTests
         { "0 0 0 ? * 0/120", "Increment > 7 : 120" },
         { "0 0 0 ? * /", "'/' must be followed by an integer." },
         { "0 0 0 ? * 0/", "'/' must be followed by an integer." },
+        { "0 0 8-18/0 ? * 2-6", "Increment must be greater than zero: 0" },
+        { "0 0 8-18/24 ? * 2-6", "Increment > 23 : 24" },
+        { "0-10/2X 0 8 ? * 2-6", "Unexpected character 'X' after '/'" },
+        { "0-10/999999999999 0 8 ? * 2-6", "The increment is too large." },
     };
 
     [Theory]
@@ -200,6 +232,21 @@ public sealed class CronExpressionParsingTests
         var exception = Assert.Throws<FormatException>(() => new CronExpression("0 0 8 ? * MON 2026 unexpected"));
 
         Assert.Equal("Cron expressions contain six required fields and at most one optional year field.", exception.Message);
+    }
+
+    [Theory]
+    [InlineData("0 0 8 ? * 1-")]
+    [InlineData("0 0 8 ? * 1-2X")]
+    [InlineData("0 0 8 ? * M")]
+    [InlineData("0 0 8 ? JAN-")]
+    [InlineData("0 0 8 ? JAN-MAYX FRI")]
+    [InlineData("0 0 8 ? * MON-FRIX")]
+    [InlineData("0 0 8 ? * 999999999999999999999")]
+    [RequirementCoverage("REQ-VSB-CRON-VALIDATION", "malformed-fields-are-format-errors")]
+    public void MalformedFields_AreRejectedAsFormatErrors(string text)
+    {
+        Assert.Throws<FormatException>(() => new CronExpression(text));
+        Assert.False(CronExpression.IsValidExpression(text));
     }
 
     [Theory]

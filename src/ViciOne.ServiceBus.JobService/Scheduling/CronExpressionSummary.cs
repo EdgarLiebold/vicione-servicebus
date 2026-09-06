@@ -34,9 +34,9 @@ readonly struct CronExpressionSummary
     public bool LastDayOfMonth { get; }
     public CronField Years { get; }
 
-    /// <summary>Gets expression set summary.</summary>
-    /// <param name="data">The data.</param>
-    /// <returns>The expression set summary.</returns>
+    /// <summary>Formats one parsed cron field using its numeric values or special marker.</summary>
+    /// <param name="data">The parsed field.</param>
+    /// <returns>The diagnostic representation of the field.</returns>
     static string GetExpressionSetSummary(CronField data)
     {
         if (data.Contains(CronExpressionConstants.NoSpec))
@@ -77,13 +77,13 @@ readonly struct CronExpressionSummary
         b.AppendLine(GetExpressionSetSummary(Months));
         b.Append("daysOfWeek: ");
         b.AppendLine(GetExpressionSetSummary(DaysOfWeek));
-        b.Append("lastdayOfWeek: ");
+        b.Append("lastDayOfWeek: ");
         b.AppendLine(LastDayOfWeek.ToString());
         b.Append("nearestWeekday: ");
         b.AppendLine(NearestWeekday.ToString());
-        b.Append("NthDayOfWeek: ");
+        b.Append("nthDayOfWeek: ");
         b.AppendLine(NthDayOfWeek.ToString());
-        b.Append("lastdayOfMonth: ");
+        b.Append("lastDayOfMonth: ");
         b.AppendLine(LastDayOfMonth.ToString());
         b.Append("years: ");
         b.AppendLine(GetExpressionSetSummary(Years));

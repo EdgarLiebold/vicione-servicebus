@@ -7,18 +7,18 @@ namespace ViciOne.ServiceBus.JobService.Scheduling;
 internal static class TimeZoneResolver
 {
     /// <summary>Converts an instant into the target time zone.</summary>
-    /// <param name="dateTimeOffset">The date time offset.</param>
-    /// <param name="timeZoneInfo">The time zone info.</param>
-    /// <returns>The converted time.</returns>
+    /// <param name="dateTimeOffset">The instant to convert.</param>
+    /// <param name="timeZoneInfo">The destination time zone.</param>
+    /// <returns>The same instant expressed in the destination time zone.</returns>
     public static DateTimeOffset ConvertTime(DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
     {
         return TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo);
     }
 
     /// <summary>Returns the target time zone's UTC offset at the supplied instant.</summary>
-    /// <param name="dateTimeOffset">The date time offset.</param>
-    /// <param name="timeZoneInfo">The time zone info.</param>
-    /// <returns>The utc offset.</returns>
+    /// <param name="dateTimeOffset">The instant whose offset is required.</param>
+    /// <param name="timeZoneInfo">The time zone whose rules are applied.</param>
+    /// <returns>The UTC offset in effect at the supplied instant.</returns>
     public static TimeSpan GetUtcOffset(DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
     {
         return timeZoneInfo.GetUtcOffset(dateTimeOffset);

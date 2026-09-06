@@ -8,7 +8,7 @@ using ViciOne.ServiceBus.Internals;
 
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
-/// <summary>Represents the parsed cron expression.</summary>
+/// <summary>Parses and evaluates a six- or seven-field cron expression.</summary>
 internal sealed class CronExpression :
     IEquatable<CronExpression>
 {
@@ -32,78 +32,82 @@ internal sealed class CronExpression :
     int _nthDayOfWeek;
     TimeZoneInfo? _timeZone;
 
-    /// <summary>Initializes a new instance.</summary>
-    /// <param name="cronExpression">The cron expression.</param>
+    /// <summary>Parses and normalizes a cron expression.</summary>
+    /// <param name="cronExpression">The cron expression to parse.</param>
     public CronExpression(string? cronExpression)
     {
         if (cronExpression is null)
             throw new ArgumentNullException(nameof(cronExpression));
 
-        CronExpressionString = CultureInfo.InvariantCulture.TextInfo.ToUpper(cronExpression).Trim();
+        string normalizedSpacing = string.Join(
+            ' ',
+            cronExpression.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+        CronExpressionString = CultureInfo.InvariantCulture.TextInfo.ToUpper(normalizedSpacing);
 
         BuildExpression(CronExpressionString);
     }
 
-    /// <summary>Gets or sets the time zone.</summary>
+    /// <summary>Gets or initializes the time zone used to evaluate calendar fields; the local time zone is used by default.</summary>
     public TimeZoneInfo TimeZone
     {
-        set => _timeZone = value;
+        init => _timeZone = value ?? throw new ArgumentNullException(nameof(value));
         get => _timeZone ??= TimeZoneInfo.Local;
     }
 
     string CronExpressionString { get; }
 
-    /// <summary>Determines whether this instance equals the supplied value.</summary>
-    /// <param name="other">The other.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Compares the normalized expression and evaluation time zone.</summary>
+    /// <param name="other">The cron expression to compare.</param>
+    /// <returns><see langword="true" /> when both expressions and time zones are equal; otherwise, <see langword="false" />.</returns>
     public bool Equals(CronExpression? other)
     {
         if (other is null)
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return Equals(_timeZone, other._timeZone) && CronExpressionString == other.CronExpressionString;
+        return Equals(_timeZone ?? TimeZoneInfo.Local, other._timeZone ?? TimeZoneInfo.Local)
+            && CronExpressionString == other.CronExpressionString;
     }
 
-    /// <summary>Determines whether this instance equals the supplied value.</summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Compares an object with this parsed expression.</summary>
+    /// <param name="obj">The object to compare.</param>
+    /// <returns><see langword="true" /> when <paramref name="obj" /> is an equal cron expression; otherwise, <see langword="false" />.</returns>
     public override bool Equals(object? obj)
     {
         return ReferenceEquals(this, obj) || (obj is CronExpression other && Equals(other));
     }
 
-    /// <summary>Gets hash code.</summary>
-    /// <returns>The hash code for this instance.</returns>
+    /// <summary>Returns a hash code for the normalized expression and evaluation time zone.</summary>
+    /// <returns>The expression hash code.</returns>
     public override int GetHashCode()
     {
         unchecked
         {
-            return ((_timeZone != null ? _timeZone.GetHashCode() : 0) * 397) ^ CronExpressionString.GetHashCode();
+            return ((_timeZone ?? TimeZoneInfo.Local).GetHashCode() * 397) ^ CronExpressionString.GetHashCode();
         }
     }
 
-    /// <summary>Applies the <c>==</c> operator.</summary>
-    /// <param name="left">The left.</param>
-    /// <param name="right">The right.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether two parsed expressions are equal.</summary>
+    /// <param name="left">The first expression.</param>
+    /// <param name="right">The second expression.</param>
+    /// <returns><see langword="true" /> when the expressions are equal; otherwise, <see langword="false" />.</returns>
     public static bool operator ==(CronExpression? left, CronExpression? right)
     {
         return Equals(left, right);
     }
 
-    /// <summary>Applies the <c>!=</c> operator.</summary>
-    /// <param name="left">The left.</param>
-    /// <param name="right">The right.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether two parsed expressions differ.</summary>
+    /// <param name="left">The first expression.</param>
+    /// <param name="right">The second expression.</param>
+    /// <returns><see langword="true" /> when the expressions differ; otherwise, <see langword="false" />.</returns>
     public static bool operator !=(CronExpression? left, CronExpression? right)
     {
         return !Equals(left, right);
     }
 
-    /// <summary>Determines whether satisfied by.</summary>
-    /// <param name="date">The date.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
+    /// <summary>Determines whether the expression selects the supplied instant to second precision.</summary>
+    /// <param name="date">The instant to evaluate.</param>
+    /// <returns><see langword="true" /> when the instant matches the schedule; otherwise, <see langword="false" />.</returns>
     public bool IsSatisfiedBy(DateTimeOffset date)
     {
         var withoutMilliseconds = new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Offset);
@@ -113,31 +117,31 @@ internal sealed class CronExpression :
         return timeAfter.HasValue && timeAfter.Value.Equals(withoutMilliseconds);
     }
 
-    /// <summary>Gets next valid time after.</summary>
-    /// <param name="date">The date.</param>
-    /// <returns>The next valid time after.</returns>
+    /// <summary>Returns the first scheduled instant strictly after the supplied instant.</summary>
+    /// <param name="date">The exclusive lower bound.</param>
+    /// <returns>The next scheduled instant, or <see langword="null" /> when the configured year range is exhausted.</returns>
     public DateTimeOffset? GetNextValidTimeAfter(DateTimeOffset date)
     {
         return GetTimeAfter(date);
     }
 
-    /// <summary>Returns the string representation of this instance.</summary>
-    /// <returns>The converted string.</returns>
+    /// <summary>Returns the normalized, uppercase cron expression with canonical field spacing.</summary>
+    /// <returns>The normalized cron expression.</returns>
     public override string ToString()
     {
         return CronExpressionString;
     }
 
-    /// <summary>Determines whether valid expression.</summary>
-    /// <param name="cronExpression">The cron expression.</param>
-    /// <returns><see langword="true" /> when the condition is satisfied; otherwise, <see langword="false" />.</returns>
-    public static bool IsValidExpression(string cronExpression)
+    /// <summary>Determines whether a cron expression has a supported format.</summary>
+    /// <param name="cronExpression">The expression to parse.</param>
+    /// <returns><see langword="true" /> when parsing succeeds; otherwise, <see langword="false" />.</returns>
+    public static bool IsValidExpression(string? cronExpression)
     {
         try
         {
             _ = new CronExpression(cronExpression);
         }
-        catch (FormatException)
+        catch (Exception exception) when (exception is FormatException or ArgumentNullException)
         {
             return false;
         }
@@ -145,8 +149,8 @@ internal sealed class CronExpression :
         return true;
     }
 
-    /// <summary>Validates expression.</summary>
-    /// <param name="cronExpression">The cron expression.</param>
+    /// <summary>Validates a cron expression and throws when its format is unsupported.</summary>
+    /// <param name="cronExpression">The expression to validate.</param>
     public static void ValidateExpression(string cronExpression)
     {
         _ = new CronExpression(cronExpression);
@@ -154,59 +158,73 @@ internal sealed class CronExpression :
 
     void BuildExpression(string expression)
     {
-        try
+        ClearExpressionFields();
+
+        var index = CronExpressionConstants.Second;
+
+        foreach ((ReadOnlySpan<char> expr, ReadOnlySpan<char> _) in expression.SpanSplit(' ', '\t'))
         {
-            ClearExpressionFields();
+            if (expr.IsEmpty)
+                continue;
 
-            var index = CronExpressionConstants.Second;
+            if (index > CronExpressionConstants.Year)
+                throw new FormatException("Cron expressions contain six required fields and at most one optional year field.");
 
-            foreach ((ReadOnlySpan<char> expr, ReadOnlySpan<char> _) in expression.SpanSplit(' ', '\t'))
+            ValidateListSyntax(expr, index);
+
+            if (expr.IndexOf(',') != -1)
             {
-                // Consecutive separators delimit fields without creating empty cron fields, so an
-                // empty span does not advance the parser index.
-                if (expr.IsEmpty)
-                    continue;
+                foreach (var value in expr.SpanSplit(','))
+                    StoreExpressionValues(0, value, index);
+            }
+            else
+                StoreExpressionValues(0, expr, index);
 
-                if (index > CronExpressionConstants.Year)
-                    throw new FormatException("Cron expressions contain six required fields and at most one optional year field.");
+            index++;
+        }
 
-                if (index == CronExpressionConstants.DayOfMonth)
-                {
-                    if (expr.IndexOf('L') != -1 && expr.Length > 1 && expr.IndexOf(',') >= 0 && expr.Slice(expr.IndexOf('L') + 1).IndexOf('L') != -1)
-                        throw new FormatException("Support for specifying 'L' with other days of the month is limited to one instance of L");
-                }
+        if (index <= CronExpressionConstants.DayOfWeek)
+            throw new FormatException("Unexpected end of expression.");
 
-                if (index == CronExpressionConstants.DayOfWeek && expr.IndexOf('L') != -1 && expr.Length > 1 && expr.IndexOf(',') >= 0)
-                    throw new FormatException("Support for specifying 'L' with other days of the week is not implemented");
+        if (index <= CronExpressionConstants.Year)
+            StoreExpressionValues(0, "*".AsSpan(), CronExpressionConstants.Year);
+    }
 
-                if (index == CronExpressionConstants.DayOfWeek && expr.IndexOf('#') != -1 && expr.Slice(expr.IndexOf('#') + 1 + 1).IndexOf('#') != -1)
-                    throw new FormatException("Support for specifying multiple \"nth\" days is not implemented.");
+    static void ValidateListSyntax(ReadOnlySpan<char> field, int type)
+    {
+        if (field.IndexOf(',') < 0)
+            return;
 
-                if (expr.IndexOf(',') != -1)
-                {
-                    foreach (var v in expr.SpanSplit(','))
-                        StoreExpressionValues(0, v, index);
-                }
-                else
-                    StoreExpressionValues(0, expr, index);
+        foreach (ReadOnlySpan<char> value in field.SpanSplit(','))
+        {
+            if (value.IsEmpty)
+                throw new FormatException("Cron field lists cannot contain empty values.");
+        }
 
-                index++;
+        if (field.IndexOfAny('*', '?') >= 0)
+            throw new FormatException("'*' and '?' must be the only value in a cron field.");
+
+        if (type == CronExpressionConstants.DayOfMonth)
+        {
+            int lastDayTokenCount = 0;
+            foreach (ReadOnlySpan<char> value in field.SpanSplit(','))
+            {
+                if (value.IndexOf('L') >= 0)
+                    lastDayTokenCount++;
+
+                if (value[0] != 'L' && value.IndexOf('W') >= 0)
+                    throw new FormatException("A numeric 'W' value cannot be combined with other days of the month.");
             }
 
-            if (index <= CronExpressionConstants.DayOfWeek)
-                throw new FormatException("Unexpected end of expression.");
+            if (lastDayTokenCount > 1)
+                throw new FormatException("Support for specifying 'L' with other days of the month is limited to one instance of L");
+        }
 
-            if (index <= CronExpressionConstants.Year)
-                StoreExpressionValues(0, "*".AsSpan(), CronExpressionConstants.Year);
-        }
-        catch (FormatException)
-        {
-            throw;
-        }
-        catch (Exception e)
-        {
-            throw new FormatException($"Illegal cron expression format ({e.Message})", e);
-        }
+        if (type == CronExpressionConstants.DayOfWeek && field.IndexOf('L') >= 0)
+            throw new FormatException("A last day-of-week value using 'L' must be the only value in its field.");
+
+        if (type == CronExpressionConstants.DayOfWeek && field.IndexOf('#') >= 0)
+            throw new FormatException("An nth day-of-week value using '#' must be the only value in its field.");
     }
 
     void ClearExpressionFields()
@@ -223,7 +241,7 @@ internal sealed class CronExpression :
     void StoreExpressionQuestionMark(int type, ReadOnlySpan<char> span, int index)
     {
         index++;
-        if (index + 1 <= span.Length && !char.IsWhiteSpace(span[index]))
+        if (index < span.Length && !char.IsWhiteSpace(span[index]))
             throw new FormatException("Illegal character after '?': " + span[index]);
 
         if (type != CronExpressionConstants.DayOfWeek && type != CronExpressionConstants.DayOfMonth)
@@ -259,12 +277,7 @@ internal sealed class CronExpression :
         ch = span[index];
         if (ch == '/')
         {
-            index++;
-            if (index >= span.Length)
-                throw new FormatException("Unexpected end of string.");
-
-            incr = GetNumericValue(span, index);
-            CheckIncrementRange(incr, type);
+            incr = ParseIncrement(span, index, type);
         }
         else
         {
@@ -325,7 +338,7 @@ internal sealed class CronExpression :
 
     void StoreExpressionNumeric(int type, ReadOnlySpan<char> span, int index)
     {
-        if (int.TryParse(span, out var temp))
+        if (int.TryParse(span, NumberStyles.None, CultureInfo.InvariantCulture, out var temp))
         {
             AddToSet(temp, -1, -1, type);
             return;
@@ -349,6 +362,9 @@ internal sealed class CronExpression :
     void StoreExpressionGeneralValue(int type, ReadOnlySpan<char> span, int index)
     {
         var incr = 0;
+        if (span.Length - index < 3)
+            throw new FormatException($"Incomplete named cron value: '{span.ToString()}'.");
+
         ReadOnlySpan<char> sub = span.Slice(index, 3);
         int sval;
         var eval = -1;
@@ -358,15 +374,37 @@ internal sealed class CronExpression :
             if (sval <= 0)
                 throw new FormatException($"Invalid Month value: '{sub.ToString()}'");
 
-            if (span.Length > index + 3)
+            int suffixIndex = index + 3;
+            if (span.Length > suffixIndex)
             {
-                if (span[index + 3] == '-')
+                switch (span[suffixIndex])
                 {
-                    index += 4;
-                    sub = span.Slice(index, 3);
-                    eval = GetMonthNumber(sub) + 1;
-                    if (eval <= 0)
-                        throw new FormatException($"Invalid Month value: '{sub.ToString()}'");
+                    case '-':
+                        index = suffixIndex + 1;
+                        if (span.Length - index < 3)
+                            throw new FormatException($"Incomplete named cron range: '{span.ToString()}'.");
+
+                        sub = span.Slice(index, 3);
+                        eval = GetMonthNumber(sub) + 1;
+                        if (eval <= 0)
+                            throw new FormatException($"Invalid Month value: '{sub.ToString()}'");
+
+                        suffixIndex = index + 3;
+                        incr = 1;
+                        if (span.Length > suffixIndex)
+                        {
+                            if (span[suffixIndex] != '/')
+                                throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
+
+                            incr = ParseIncrement(span, suffixIndex, type);
+                        }
+
+                        break;
+                    case '/':
+                        incr = ParseIncrement(span, suffixIndex, type);
+                        break;
+                    default:
+                        throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
                 }
             }
         }
@@ -383,41 +421,42 @@ internal sealed class CronExpression :
                 {
                     case '-':
                         index += 4;
+                        if (span.Length - index < 3)
+                            throw new FormatException($"Incomplete named cron range: '{span.ToString()}'.");
+
                         sub = span.Slice(index, 3);
                         eval = GetDayOfWeekNumber(sub);
                         if (eval < 0)
                             throw new FormatException($"Invalid Day-of-Week value: '{sub.ToString()}'");
 
+                        int suffixIndex = index + 3;
+                        if (span.Length > suffixIndex)
+                        {
+                            if (span[suffixIndex] != '/')
+                                throw new FormatException($"Unexpected character '{span[suffixIndex]}'.");
+
+                            incr = ParseIncrement(span, suffixIndex, type);
+                        }
+
                         break;
                     case '#':
-                        try
-                        {
-                            index += 4;
-                            _nthDayOfWeek = ToInt32(span.Slice(index));
-                            if (_nthDayOfWeek is < 1 or > 5)
-                                throw new FormatException("nthDayOfWeek is < 1 or > 5");
-                        }
-                        catch (Exception)
-                        {
+                        index += 4;
+                        if (!TryParsePositiveInteger(span.Slice(index), out _nthDayOfWeek)
+                            || _nthDayOfWeek is < 1 or > 5)
                             throw new FormatException("A numeric value between 1 and 5 must follow the '#' option");
-                        }
 
                         break;
                     case '/':
-                        try
-                        {
-                            index += 4;
-                            _everyNthWeek = ToInt32(span.Slice(index));
-                            if (_everyNthWeek is < 1 or > 5)
-                                throw new FormatException("everyNthWeek is < 1 or > 5");
-                        }
-                        catch (Exception)
-                        {
+                        index += 4;
+                        if (!TryParsePositiveInteger(span.Slice(index), out _everyNthWeek)
+                            || _everyNthWeek is < 1 or > 5)
                             throw new FormatException("A numeric value between 1 and 5 must follow the '/' option");
-                        }
 
                         break;
                     case 'L':
+                        if (span.Length != index + 4)
+                            throw new FormatException($"Unexpected character '{span[index + 4]}'.");
+
                         _lastDayOfWeek = true;
                         break;
                     default:
@@ -428,7 +467,7 @@ internal sealed class CronExpression :
         else
             throw new FormatException($"Illegal characters for this position: '{sub.ToString()}'");
 
-        if (eval != -1)
+        if (eval != -1 && incr == 0)
             incr = 1;
 
         AddToSet(sval, eval, incr, type);
@@ -501,10 +540,16 @@ internal sealed class CronExpression :
         switch (span[position])
         {
             case 'L':
+                if (position + 1 != span.Length)
+                    throw new FormatException($"Unexpected character '{span[position + 1]}'.");
+
                 HandleLOption(value, type, position);
                 return;
 
             case 'W':
+                if (position + 1 != span.Length)
+                    throw new FormatException($"Unexpected character '{span[position + 1]}'.");
+
                 HandleWOption(value, type, position);
                 return;
 
@@ -527,35 +572,16 @@ internal sealed class CronExpression :
 
     void HandleSlashOption(ReadOnlySpan<char> span, int value, int type, int index, int end)
     {
-        if (index + 1 >= span.Length || char.IsWhiteSpace(span[index + 1]))
-            throw new FormatException("\'/\' must be followed by an integer.");
-
-        index++;
-        var ch = span[index];
-        var charValue = ToInt32(ch);
-        index++;
-        if (index >= span.Length)
-        {
-            CheckIncrementRange(charValue, type);
-            AddToSet(value, end, charValue, type);
-            return;
-        }
-
-        ch = span[index];
-        if (char.IsDigit(ch))
-        {
-            var (nextValue, _) = GetValue(charValue, span, index);
-            CheckIncrementRange(nextValue, type);
-            AddToSet(value, end, nextValue, type);
-            return;
-        }
-
-        throw new FormatException($"Unexpected character '{ch}' after '/'");
+        int increment = ParseIncrement(span, index, type);
+        AddToSet(value, end, increment, type);
     }
 
     void HandleDashOption(ReadOnlySpan<char> span, int value, int type, int index)
     {
         index++;
+        if (index >= span.Length || !char.IsAsciiDigit(span[index]))
+            throw new FormatException("'-' must be followed by an integer.");
+
         var ch = span[index];
         var charValue = ToInt32(ch);
         var end = charValue;
@@ -572,57 +598,64 @@ internal sealed class CronExpression :
 
         if (index < span.Length && span[index] == '/')
         {
-            index++;
-            ch = span[index];
-            var endValue = ToInt32(ch);
-            index++;
-            if (index >= span.Length)
-            {
-                AddToSet(value, end, endValue, type);
-                return;
-            }
-
-            ch = span[index];
-            if (char.IsDigit(ch))
-            {
-                var (nextEndValue, _) = GetValue(endValue, span, index);
-                AddToSet(value, end, nextEndValue, type);
-                return;
-            }
-
-            AddToSet(value, end, endValue, type);
+            int increment = ParseIncrement(span, index, type);
+            AddToSet(value, end, increment, type);
             return;
         }
+
+        if (index < span.Length)
+            throw new FormatException($"Unexpected character '{span[index]}'.");
 
         AddToSet(value, end, 1, type);
     }
 
+    static int ParseIncrement(ReadOnlySpan<char> span, int slashIndex, int type)
+    {
+        ReadOnlySpan<char> incrementText = span.Slice(slashIndex + 1);
+        if (incrementText.IsEmpty)
+            throw new FormatException("'/' must be followed by an integer.");
+
+        if (!int.TryParse(incrementText, NumberStyles.None, CultureInfo.InvariantCulture, out int increment))
+        {
+            foreach (char character in incrementText)
+            {
+                if (!char.IsAsciiDigit(character))
+                    throw new FormatException($"Unexpected character '{character}' after '/'");
+            }
+
+            throw new FormatException("The increment is too large.");
+        }
+
+        CheckIncrementRange(increment, type);
+        return increment;
+    }
+
     void HandleHashOption(ReadOnlySpan<char> span, int value, int type, int index)
     {
-        var pos = index;
         if (type != CronExpressionConstants.DayOfWeek)
             throw new FormatException($"'#' option is not valid here. (pos={index})");
 
         index++;
-        try
-        {
-            _nthDayOfWeek = ToInt32(span.Slice(index));
-            if (_nthDayOfWeek is < 1 or > 5)
-                throw new FormatException("nthDayOfWeek is < 1 or > 5");
-
-            if (int.TryParse(span.Slice(0, pos), out value))
-            {
-                if (value is < 1 or > 7)
-                    throw new FormatException("Day-of-Week values must be between 1 and 7");
-            }
-        }
-        catch (Exception)
-        {
+        if (index >= span.Length || !char.IsAsciiDigit(span[index]))
             throw new FormatException("A numeric value between 1 and 5 must follow the '#' option");
-        }
 
-        var set = GetSet(type);
-        set.Add(value);
+        if (!TryParsePositiveInteger(span.Slice(index), out _nthDayOfWeek)
+            || _nthDayOfWeek is < 1 or > 5)
+            throw new FormatException("A numeric value between 1 and 5 must follow the '#' option");
+
+        if (value is < 1 or > 7)
+            throw new FormatException("Day-of-Week values must be between 1 and 7");
+
+        GetSet(type).Add(value);
+    }
+
+    static bool TryParsePositiveInteger(ReadOnlySpan<char> value, out int result)
+    {
+        result = 0;
+
+        return !value.IsEmpty
+            && value.IndexOfAnyExceptInRange('0', '9') < 0
+            && int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out result);
     }
 
     void HandleWOption(int value, int type, int index)
@@ -655,8 +688,8 @@ internal sealed class CronExpression :
         data.Add(value);
     }
 
-    /// <summary>Gets expression summary.</summary>
-    /// <returns>The expression summary.</returns>
+    /// <summary>Formats the parsed values of every cron field for diagnostics.</summary>
+    /// <returns>A multi-line field summary.</returns>
     public string GetExpressionSummary()
     {
         return new CronExpressionSummary(
@@ -677,15 +710,6 @@ internal sealed class CronExpression :
     static int SkipWhiteSpace(int position, ReadOnlySpan<char> span)
     {
         for (; position < span.Length && char.IsWhiteSpace(span[position]); position++)
-        {
-        }
-
-        return position;
-    }
-
-    static int FindNextWhiteSpace(int position, ReadOnlySpan<char> span)
-    {
-        for (; position < span.Length && !char.IsWhiteSpace(span[position]); position++)
         {
         }
 
@@ -740,11 +764,11 @@ internal sealed class CronExpression :
         };
     }
 
-    /// <summary>Gets the max value for the cron expression type.</summary>
-    /// <param name="type">The type of the cron expression.</param>
-    /// <param name="startAt">The start value.</param>
-    /// <param name="stopAt">The stop value.</param>
-    /// <returns>Returns -1 if stopAt is less than startAt otherwise returns the max value for the type.</returns>
+    /// <summary>Returns the field width required to expand a wraparound range.</summary>
+    /// <param name="type">The cron field index.</param>
+    /// <param name="startAt">The inclusive range start.</param>
+    /// <param name="stopAt">The inclusive range end.</param>
+    /// <returns>The field width when the range wraps, or <c>-1</c> when it does not wrap.</returns>
     static int GetMaxValueForType(int type, int startAt, int stopAt)
     {
         if (stopAt >= startAt)
@@ -812,9 +836,9 @@ internal sealed class CronExpression :
         }
     }
 
-    /// <summary>Gets set.</summary>
-    /// <param name="type">The runtime type to inspect or use.</param>
-    /// <returns>The set.</returns>
+    /// <summary>Returns the parsed values for a cron field.</summary>
+    /// <param name="type">The zero-based cron field index.</param>
+    /// <returns>The parsed field values.</returns>
     public CronField GetSet(int type)
     {
         var field = type switch
@@ -835,7 +859,7 @@ internal sealed class CronExpression :
         return field;
     }
 
-    static ValueAndPosition GetValue(int value, ReadOnlySpan<char> span, int index)
+    static (int Value, int Position) GetValue(int value, ReadOnlySpan<char> span, int index)
     {
         var ch = span[index];
 
@@ -852,23 +876,15 @@ internal sealed class CronExpression :
             ch = span[index];
         }
 
-        return new ValueAndPosition(Convert.ToInt32(builder.ToString(), CultureInfo.InvariantCulture), index < span.Length ? index : index + 1);
+        if (!int.TryParse(builder.ToString(), NumberStyles.None, CultureInfo.InvariantCulture, out int parsedValue))
+            throw new FormatException("Numeric cron value is too large.");
+
+        return (parsedValue, index < span.Length ? index : index + 1);
     }
 
-    /// <summary>Gets numeric value.</summary>
-    /// <param name="span">The span.</param>
-    /// <param name="index">The index.</param>
-    /// <returns>The numeric value.</returns>
-    static int GetNumericValue(ReadOnlySpan<char> span, int index)
-    {
-        var end = FindNextWhiteSpace(index, span);
-
-        return ToInt32(span.Slice(index, end - index));
-    }
-
-    /// <summary>Gets month number.</summary>
-    /// <param name="span">The string to map with.</param>
-    /// <returns>The month number.</returns>
+    /// <summary>Maps a three-letter month abbreviation to its zero-based ordinal.</summary>
+    /// <param name="span">The uppercase abbreviation.</param>
+    /// <returns>The zero-based month ordinal, or <c>-1</c> when the abbreviation is unknown.</returns>
     static int GetMonthNumber(ReadOnlySpan<char> span)
     {
         return span switch
@@ -904,8 +920,8 @@ internal sealed class CronExpression :
         };
     }
 
-    /// <summary>Progress next fire time seconds.</summary>
-    /// <param name="date">The date.</param>
+    /// <summary>Advances a candidate to the next permitted second.</summary>
+    /// <param name="date">The candidate local time.</param>
     /// <returns>The next fire time cursor produced by the operation.</returns>
     NextFireTimeCursor ProgressNextFireTimeSecond(DateTimeOffset date)
     {
@@ -922,8 +938,8 @@ internal sealed class CronExpression :
             new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, date.Minute, second, date.Millisecond, date.Offset));
     }
 
-    /// <summary>Progress next Fire time Minutes.</summary>
-    /// <param name="date">NextFireTimeCheck.</param>
+    /// <summary>Advances a candidate to the next permitted minute.</summary>
+    /// <param name="date">The candidate local time.</param>
     /// <returns>The next fire time cursor produced by the operation.</returns>
     NextFireTimeCursor ProgressNextFireTimeMinute(DateTimeOffset date)
     {
@@ -953,8 +969,8 @@ internal sealed class CronExpression :
             new DateTimeOffset(date.Year, date.Month, date.Day, date.Hour, minute, date.Second, date.Millisecond, date.Offset));
     }
 
-    /// <summary>Progress next fire time Hour.</summary>
-    /// <param name="date">NextFireTimeCheck.</param>
+    /// <summary>Advances a candidate to the next permitted hour.</summary>
+    /// <param name="date">The candidate local time.</param>
     /// <returns>The next fire time cursor produced by the operation.</returns>
     NextFireTimeCursor ProgressNextFireTimeHour(DateTimeOffset date)
     {
@@ -1313,9 +1329,9 @@ internal sealed class CronExpression :
             : new NextFireTimeCursor(false, new DateTimeOffset(year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Offset));
     }
 
-    /// <summary>Gets time after.</summary>
-    /// <param name="afterTime">The after time.</param>
-    /// <returns>The time after.</returns>
+    /// <summary>Calculates the first scheduled instant strictly after a lower bound.</summary>
+    /// <param name="afterTime">The exclusive lower bound.</param>
+    /// <returns>The next scheduled UTC instant, or <see langword="null" /> when no supported year remains.</returns>
     public DateTimeOffset? GetTimeAfter(DateTimeOffset afterTime)
     {
         afterTime = afterTime.AddSeconds(1);
@@ -1394,6 +1410,6 @@ internal sealed class CronExpression :
 
     static int ToInt32(ReadOnlySpan<char> span)
     {
-        return int.Parse(span);
+        return int.Parse(span, CultureInfo.InvariantCulture);
     }
 }

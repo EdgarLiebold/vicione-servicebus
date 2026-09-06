@@ -7,6 +7,14 @@ internal static class SortedSetExtensions
 {
     internal static bool TryGetMinValueStartingFrom(this SortedSet<int> set, DateTimeOffset start, bool allowValueBeforeStartDay, out int minimumDay)
     {
+        ArgumentNullException.ThrowIfNull(set);
+
+        if (set.Count == 0)
+        {
+            minimumDay = 0;
+            return false;
+        }
+
         minimumDay = set.Min;
         var startDay = start.Day;
 
@@ -19,7 +27,7 @@ internal static class SortedSetExtensions
         if (allowValueBeforeStartDay && set.Min < startDay)
             return true;
 
-        if (set.Count == 0 || set.Max < startDay)
+        if (set.Max < startDay)
             return false;
 
         if (set.Min >= startDay)

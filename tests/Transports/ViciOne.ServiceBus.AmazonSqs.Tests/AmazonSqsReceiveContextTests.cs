@@ -1,6 +1,6 @@
+using System.Reflection;
 using Amazon.SQS;
 using Amazon.SQS.Model;
-using System.Reflection;
 using ViciOne.ServiceBus.AmazonSqs.Tests.TestDoubles;
 using ViciOne.ServiceBus.Tests.Infrastructure.Requirements;
 using Xunit;

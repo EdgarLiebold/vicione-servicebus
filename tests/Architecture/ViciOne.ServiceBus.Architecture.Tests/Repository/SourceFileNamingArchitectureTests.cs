@@ -188,6 +188,29 @@ public sealed class SourceFileNamingArchitectureTests
         Assert.Empty(violations);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-SOURCE-NAVIGATION", "job-service-root-contains-only-entry-points-and-infrastructure")]
+    public void JobServiceProjectRoot_ContainsOnlyEntryPointsAndInfrastructure()
+    {
+        string jobServiceRoot = Path.Combine(RepositoryLayout.Root, "src", "ViciOne.ServiceBus.JobService");
+        string[] allowedFiles =
+        [
+            "GlobalUsings.cs",
+            "JobServiceExtensions.cs",
+            "RecurringJobExtensions.cs",
+            "ViciOne.ServiceBus.JobService.csproj",
+            "packages.lock.json",
+        ];
+
+        string[] actualFiles = Directory.EnumerateFiles(jobServiceRoot, "*", SearchOption.TopDirectoryOnly)
+            .Select(static path => Path.GetFileName(path)
+                ?? throw new InvalidOperationException($"Source path '{path}' has no file name."))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(allowedFiles, actualFiles);
+    }
+
     private static SourceFileInspection Inspect(string source)
     {
         string path = RepositoryLayout.RelativeToRoot(source);

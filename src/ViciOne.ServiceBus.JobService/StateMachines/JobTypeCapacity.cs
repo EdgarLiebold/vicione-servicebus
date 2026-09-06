@@ -17,17 +17,17 @@ internal static class JobTypeCapacity
         if (heartbeatTimeout <= TimeSpan.Zero)
             throw new ArgumentOutOfRangeException(nameof(heartbeatTimeout), heartbeatTimeout, "The heartbeat timeout must be positive.");
 
-        HashSet<Uri> expiredInstances = saga.Instances
-            .Where(pair => pair.Value.Updated is not DateTimeOffset updated || timestamp - updated > heartbeatTimeout)
+        HashSet<Uri> expiredInstances = saga.ServiceInstances
+            .Where(pair => pair.Value.LastHeartbeatAt is not DateTimeOffset lastHeartbeatAt || timestamp - lastHeartbeatAt > heartbeatTimeout)
             .Select(static pair => pair.Key)
             .ToHashSet();
 
         foreach (Uri instanceAddress in expiredInstances)
-            saga.Instances.Remove(instanceAddress);
+            saga.ServiceInstances.Remove(instanceAddress);
 
-        saga.ActiveJobs.RemoveAll(allocation =>
-            allocation.Deadline <= timestamp || !saga.Instances.ContainsKey(allocation.InstanceAddress));
-        saga.ActiveJobCount = saga.ActiveJobs.Count;
+        saga.ActiveAllocations.RemoveAll(allocation =>
+            allocation.ExpiresAt <= timestamp || !saga.ServiceInstances.ContainsKey(allocation.InstanceAddress));
+        saga.ActiveAllocationCount = saga.ActiveAllocations.Count;
     }
 
     /// <summary>Creates a case-insensitive metadata snapshot and treats missing metadata as empty.</summary>

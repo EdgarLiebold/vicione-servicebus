@@ -13,19 +13,19 @@ internal sealed class DefaultJobDistributionStrategy :
 
     /// <inheritdoc />
     public Task<Uri?> SelectInstanceAsync(
-        ConsumeContext<AllocateJobSlot> context,
-        JobTypeInfo jobTypeInfo,
+        ConsumeContext<AllocateJobSlot> requestContext,
+        JobDistributionContext distributionContext,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(context);
-        ArgumentNullException.ThrowIfNull(jobTypeInfo);
+        ArgumentNullException.ThrowIfNull(requestContext);
+        ArgumentNullException.ThrowIfNull(distributionContext);
         cancellationToken.ThrowIfCancellationRequested();
 
-        var instances = from instance in jobTypeInfo.Instances
-                        join activeJob in jobTypeInfo.ActiveJobs on instance.Key equals activeJob.InstanceAddress into activeJobs
-                        let activeJobCount = activeJobs.Count()
-                        where activeJobCount < jobTypeInfo.ConcurrentJobLimit
-                        orderby activeJobCount, instance.Value.Used
+        var instances = from instance in distributionContext.ServiceInstances
+                        join allocation in distributionContext.ActiveAllocations on instance.Key equals allocation.InstanceAddress into allocations
+                        let allocationCount = allocations.Count()
+                        where allocationCount < distributionContext.ConcurrentJobLimit
+                        orderby allocationCount, instance.Value.LastAllocationAt
                         select instance.Key;
 
         return Task.FromResult(instances.FirstOrDefault());
