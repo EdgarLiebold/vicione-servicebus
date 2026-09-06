@@ -105,7 +105,7 @@ public class PrimitiveMapHeaders :
     public T Get<T>(string key, T? defaultValue)
         where T : class
     {
-        throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");
+        throw new NotSupportedException("Primitive ActiveMQ headers do not support object-based retrieval.");
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public class PrimitiveMapHeaders :
     public T? Get<T>(string key, T? defaultValue)
         where T : struct
     {
-        throw new NotImplementedByDesignException("PrimitiveMapHeaders does not support object-based header retrieval");
+        throw new NotSupportedException("Primitive ActiveMQ headers do not support object-based retrieval.");
     }
 
     /// <summary>

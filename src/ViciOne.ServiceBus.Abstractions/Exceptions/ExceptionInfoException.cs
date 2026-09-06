@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to exception info.
 /// </summary>
-[Serializable]
 public class ExceptionInfoException :
     ViciOneServiceBusException
 {

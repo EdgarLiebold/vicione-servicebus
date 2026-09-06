@@ -241,7 +241,10 @@ public class EventHubProducerSendTransportContext :
     /// <returns>The result of the operation.</returns>
     public override Task<SendContext<T>> CreateSendContextAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled<global::ViciOne.ServiceBus.Advanced.SendContext<T>>(cancellationToken); throw new NotImplementedByDesignException("Event Hub is a producer, not an outbox compatible transport");
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<SendContext<T>>(cancellationToken);
+
+        throw new NotSupportedException("Event Hubs is a producer-only transport and cannot create an outbox send context.");
     }
 
     /// <summary>

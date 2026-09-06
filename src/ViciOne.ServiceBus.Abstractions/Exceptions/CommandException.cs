@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to command.
 /// </summary>
-[Serializable]
 public class CommandException :
     ViciOneServiceBusException
 {

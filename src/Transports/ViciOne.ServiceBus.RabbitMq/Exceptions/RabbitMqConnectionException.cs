@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Represents an error related to rabbit mq connection.
 /// </summary>
-[Serializable]
 public class RabbitMqConnectionException :
     ConnectionException
 {

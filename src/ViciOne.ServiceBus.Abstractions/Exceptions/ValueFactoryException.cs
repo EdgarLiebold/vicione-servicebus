@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to value factory.
 /// </summary>
-[Serializable]
 public class ValueFactoryException :
     Exception
 {

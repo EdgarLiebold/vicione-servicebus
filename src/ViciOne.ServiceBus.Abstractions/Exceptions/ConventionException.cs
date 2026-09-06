@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to convention.
 /// </summary>
-[Serializable]
 public class ConventionException :
     ViciOneServiceBusException
 {

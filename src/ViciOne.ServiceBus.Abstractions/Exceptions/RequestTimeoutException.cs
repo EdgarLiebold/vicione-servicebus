@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to request timeout.
 /// </summary>
-[Serializable]
 public class RequestTimeoutException :
     RequestException
 {

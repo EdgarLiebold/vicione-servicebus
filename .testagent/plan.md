@@ -113,3 +113,23 @@ Make physical source navigation deterministic without changing runtime behavior:
 - Change an approved partial fragment so that its exact owner identity no longer matches: the source-navigation guard must fail.
 - Add a declaration to a `GlobalUsings` file or a secondary test class using a qualified xUnit attribute: infrastructure and test naming checks must fail.
 - Add an unnecessary exception for an already conforming file: stale-exception validation must fail.
+
+## Iteration 5 outcome
+
+Remove compatibility-era public metadata and identifier contracts that a .NET 10 greenfield API would not introduce: span-based `NewId` formatting and parsing with exact boundary validation, standard unsupported-capability exceptions, no legacy binary-serialization markers, and no former state-machine product identity in source or package metadata.
+
+## Iteration 5 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-NEWID-SPAN-API` | identifier bytes and text use read-only spans without by-reference managed objects | abstractions tests | exact reflection shape plus unchanged reference corpus |
+| `REQ-VSB-NEWID-SPAN-API` | every formatter accepts exactly 16 bytes and every parser accepts exactly 26 characters | abstractions tests | both adjacent invalid lengths, null constructor input, and invalid alphabet/input cases |
+| `REQ-VSB-GREENFIELD-CAPABILITIES` | unsupported behavior uses the BCL capability exception rather than an unfinished-code identity | architecture and behavior tests | no custom type or throw site plus stable failure classification |
+| `REQ-VSB-GREENFIELD-METADATA` | product declarations carry no legacy binary-serialization opt-in | architecture tests | complete evaluated product compile-item scan |
+| `REQ-VSB-GREENFIELD-IDENTITY` | source, documentation, and package metadata contain no former state-machine brand | architecture tests | complete product project and compile-item scan |
+
+## Iteration 5 mutation obligations
+
+- Reintroduce a by-reference `string` or `byte[]` parameter into the public `NewId` surface: the API-shape test must fail.
+- Bypass the exact 16-byte formatter boundary independently for short and long input: boundary tests must fail.
+- Reintroduce the custom unsupported-capability exception, a `[Serializable]` product declaration, or the former state-machine brand: the corresponding whole-product architecture test must fail.

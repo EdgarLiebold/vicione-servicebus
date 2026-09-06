@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.AzureServiceBus;
 /// <summary>
 /// Represents an error related to message time to live expired.
 /// </summary>
-[Serializable]
 public class MessageTimeToLiveExpiredException :
     TransportException
 {

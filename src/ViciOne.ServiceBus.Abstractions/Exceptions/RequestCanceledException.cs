@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to request canceled.
 /// </summary>
-[Serializable]
 public class RequestCanceledException :
     OperationCanceledException
 {

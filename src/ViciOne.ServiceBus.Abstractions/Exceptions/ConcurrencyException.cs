@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to concurrency.
 /// </summary>
-[Serializable]
 public class ConcurrencyException :
     SagaException
 {

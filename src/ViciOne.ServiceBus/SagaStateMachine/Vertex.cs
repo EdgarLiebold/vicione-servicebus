@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <summary>
 /// Provides a vertex implementation.
 /// </summary>
-[Serializable]
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public class Vertex :
     IEquatable<Vertex>

@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Events;
 /// Provides a fault event implementation.
 /// </summary>
 /// <typeparam name="T">The t type.</typeparam>
-[Serializable]
 public class FaultEvent<T> :
     Fault<T>
 {
@@ -104,7 +103,6 @@ public class FaultEvent<T> :
 /// <summary>
 /// Provides a fault event implementation.
 /// </summary>
-[Serializable]
 public class FaultEvent :
     Fault
 {

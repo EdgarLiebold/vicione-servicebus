@@ -123,18 +123,14 @@ public static class ValidationResultExtensions
     /// <returns>The result of the operation.</returns>
     public static ValidationResult WithParentKey(this ValidationResult result, string parentKey)
     {
-        //string key = result.Key.Contains(".") ? result.Key.Substring(result.Key.IndexOf('.')) : "";
-
         var key = parentKey + "." + result.Key;
 
         return new Result(result.Disposition, key, result.Value, result.Message);
     }
 
-
     /// <summary>
     /// Provides a result implementation.
     /// </summary>
-    [Serializable]
     public class Result :
         ValidationResult
     {

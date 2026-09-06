@@ -31,11 +31,14 @@ public class Base32Formatter :
     }
 
     /// <summary>
-    /// Initializes a new instance of the containing type.
+    /// Creates a formatter with a custom 32-character alphabet.
     /// </summary>
-    /// <param name="chars">The chars value.</param>
-    public Base32Formatter(in string chars)
+    /// <param name="chars">The alphabet ordered by encoded value.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="chars" /> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="chars" /> does not contain exactly 32 characters.</exception>
+    public Base32Formatter(string chars)
     {
+        ArgumentNullException.ThrowIfNull(chars);
         if (chars.Length != 32)
             throw new ArgumentException("The character string must be exactly 32 characters", nameof(chars));
 
@@ -54,29 +57,26 @@ public class Base32Formatter :
     }
 
     /// <summary>
-    /// Performs the format operation.
+    /// Formats a canonical identifier representation.
     /// </summary>
-    /// <param name="bytes">The bytes value.</param>
-    /// <returns>The result of the operation.</returns>
-    public unsafe string Format(in byte[] bytes)
+    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
+    /// <returns>The Base32-encoded identifier.</returns>
+    /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
+    public string Format(ReadOnlySpan<byte> bytes)
     {
+        if (bytes.Length != 16)
+            throw new ArgumentException("Exactly 16 bytes are required.", nameof(bytes));
+
+        Span<char> result = stackalloc char[26];
         if (Avx2.IsSupported)
         {
             if (_isCustom)
-            {
-                return string.Create(26, (bytes, _lower, _upper), (span, state) =>
-                {
-                    var (bytes, lower, upper) = state;
-                    IntrinsicsHelper.EncodeBase32(bytes, span, lower, upper);
-                });
-            }
-            return string.Create(26, (bytes, _isUpperCase), (span, state) =>
-            {
-                var (bytes, isUpperCase) = state;
-                EncodeKnown(bytes, span, isUpperCase);
-            });
+                IntrinsicsHelper.EncodeBase32(bytes, result, _lower, _upper);
+            else
+                EncodeKnown(bytes, result, _isUpperCase);
+
+            return new string(result);
         }
-        var result = stackalloc char[26];
 
         var offset = 0;
         for (var i = 0; i < 3; i++)
@@ -95,10 +95,10 @@ public class Base32Formatter :
 
         ConvertLongToBase32(result, offset, bytes[15], 2, _chars);
 
-        return new string(result, 0, 26);
+        return new string(result);
     }
 
-    static unsafe void ConvertLongToBase32(char* buffer, int offset, long value, int count, string chars)
+    static void ConvertLongToBase32(Span<char> buffer, int offset, long value, int count, string chars)
     {
         for (var i = count - 1; i >= 0; i--)
         {

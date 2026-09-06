@@ -9,7 +9,6 @@ namespace ViciOne.ServiceBus.Courier.Messages;
 /// <summary>
 /// Provides a routing slip compensate log implementation.
 /// </summary>
-[Serializable]
 public class RoutingSlipCompensateLog :
     CompensateLog
 {

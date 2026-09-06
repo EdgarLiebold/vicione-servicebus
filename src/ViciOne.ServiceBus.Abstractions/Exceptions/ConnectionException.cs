@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to connection.
 /// </summary>
-[Serializable]
 public class ConnectionException :
     ViciOneServiceBusException
 {

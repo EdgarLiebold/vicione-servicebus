@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 /// <summary>
 /// Represents an error related to sql topology.
 /// </summary>
-[Serializable]
 public class SqlTopologyException :
     ViciOneServiceBusException
 {

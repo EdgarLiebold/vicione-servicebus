@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Serialization;
 /// <summary>
 /// Provides a json message envelope implementation.
 /// </summary>
-[Serializable]
 public class JsonMessageEnvelope :
     MessageEnvelope
 {

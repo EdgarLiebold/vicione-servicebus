@@ -90,7 +90,6 @@ public sealed class DefaultTechnicalFailureClassifier : ITechnicalFailureClassif
             UnknownStateException => RetryFailureKind.NonRetryable,
             UnknownEventException => RetryFailureKind.NonRetryable,
             UnhandledEventException => RetryFailureKind.NonRetryable,
-            NotImplementedByDesignException => RetryFailureKind.NonRetryable,
             SerializationException => RetryFailureKind.NonRetryable,
             JsonException => RetryFailureKind.NonRetryable,
             SecurityException => RetryFailureKind.NonRetryable,

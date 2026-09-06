@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to message retry limit exceeded.
 /// </summary>
-[Serializable]
 public class MessageRetryLimitExceededException :
     TransportException
 {

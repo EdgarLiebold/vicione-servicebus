@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.Courier.Messages;
 /// <summary>
 /// Represents an error related to routing slip activity.
 /// </summary>
-[Serializable]
 public class RoutingSlipActivityException :
     ActivityException
 {

@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus.Scheduling;
 /// Provides a schedule message command implementation.
 /// </summary>
 /// <typeparam name="T">The t type.</typeparam>
-[Serializable]
 public class ScheduleMessageCommand<T> :
     ScheduleMessage
     where T : class
@@ -63,7 +62,6 @@ public class ScheduleMessageCommand<T> :
 /// <summary>
 /// Provides a schedule message command implementation.
 /// </summary>
-[Serializable]
 public class ScheduleMessageCommand :
     ScheduleMessage
 {

@@ -39,7 +39,6 @@ public sealed class DefaultTechnicalFailureClassifierTests
             new UnknownStateException(),
             new UnknownEventException(),
             new UnhandledEventException(),
-            new NotImplementedByDesignException(),
             new SerializationException(),
             new JsonException(),
             new SecurityException(),

@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to duplicate key pipe configuration.
 /// </summary>
-[Serializable]
 public class DuplicateKeyPipeConfigurationException :
     PipeConfigurationException
 {

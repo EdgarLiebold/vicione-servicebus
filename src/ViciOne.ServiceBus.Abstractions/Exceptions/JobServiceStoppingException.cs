@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to job service stopping.
 /// </summary>
-[Serializable]
 public class JobServiceStoppingException :
     ViciOneServiceBusException
 {

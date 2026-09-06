@@ -39,21 +39,23 @@ public class DashedHexFormatter :
     }
 
     /// <summary>
-    /// Performs the format operation.
+    /// Formats a canonical identifier representation.
     /// </summary>
-    /// <param name="bytes">The bytes value.</param>
-    /// <returns>The result of the operation.</returns>
-    public unsafe string Format(in byte[] bytes)
+    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
+    /// <returns>The dashed hexadecimal identifier.</returns>
+    /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
+    public string Format(ReadOnlySpan<byte> bytes)
     {
+        if (bytes.Length != 16)
+            throw new ArgumentException("Exactly 16 bytes are required.", nameof(bytes));
+
+        Span<char> result = stackalloc char[_length];
         if (Avx2.IsSupported && BitConverter.IsLittleEndian)
         {
             var isUpperCase = _alpha != LowerCaseUInt;
-            return string.Create(_length, (bytes, isUpperCase, _prefix, _suffix), (span, state) =>
-            {
-                EncodeVector256(span, state);
-            });
+            EncodeVector256(result, bytes, isUpperCase, _prefix, _suffix);
+            return new string(result);
         }
-        var result = stackalloc char[_length];
 
         var i = 0;
         var offset = 0;
@@ -101,13 +103,17 @@ public class DashedHexFormatter :
         if (_suffix != '\0')
             result[offset] = _suffix;
 
-        return new string(result, 0, _length);
+        return new string(result);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void EncodeVector256(Span<char> span, (byte[] bytes, bool, char _prefix, char _suffix) state)
+    private static void EncodeVector256(
+        Span<char> span,
+        ReadOnlySpan<byte> bytes,
+        bool isUpper,
+        char prefix,
+        char suffix)
     {
-        var (bytes, isUpper, prefix, suffix) = state;
         var swizzle = Vector256.Create((byte)
             0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
             0x80, 0x08, 0x09, 0x0a, 0x0b, 0x80, 0x0c, 0x0d,
@@ -145,7 +151,7 @@ public class DashedHexFormatter :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
+    static void HexToChar(byte value, Span<char> buffer, int startingIndex, uint casing)
     {
         uint difference = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU) - 0x8989U;
         uint packedResult = ((((uint)(-(int)difference) & 0x7070U) >> 4) + difference + 0xB9B9U) | (uint)casing;

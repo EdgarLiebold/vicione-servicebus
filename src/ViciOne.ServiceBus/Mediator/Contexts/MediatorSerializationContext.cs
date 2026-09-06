@@ -71,7 +71,7 @@ public class MediatorSerializationContext<TMessage> :
     /// <returns>The result of the operation.</returns>
     public override IMessageSerializer GetMessageSerializer()
     {
-        throw new NotImplementedByDesignException();
+        throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public class MediatorSerializationContext<TMessage> :
     /// <returns>The result of the operation.</returns>
     public override IMessageSerializer GetMessageSerializer<T>(MessageEnvelope envelope, T message)
     {
-        throw new NotImplementedByDesignException();
+        throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public class MediatorSerializationContext<TMessage> :
     /// <returns>The result of the operation.</returns>
     public override IMessageSerializer GetMessageSerializer(object message, string[] messageTypes)
     {
-        throw new NotImplementedByDesignException();
+        throw new NotSupportedException("The in-process mediator does not expose a transport message serializer.");
     }
 
     /// <summary>

@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.Metadata;
 /// <summary>
 /// Provides a bus host info implementation.
 /// </summary>
-[Serializable]
 public sealed class BusHostInfo : HostInfo
 {
     /// <summary>

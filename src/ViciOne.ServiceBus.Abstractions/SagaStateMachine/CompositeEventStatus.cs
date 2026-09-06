@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.Sagas;
 /// <summary>
 /// Represents a composite event status value.
 /// </summary>
-[Serializable]
 [DebuggerDisplay("{Status}")]
 public struct CompositeEventStatus :
     IComparable<CompositeEventStatus>

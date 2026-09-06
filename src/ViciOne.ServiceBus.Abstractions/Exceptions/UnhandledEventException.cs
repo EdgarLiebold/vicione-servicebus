@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to unhandled event.
 /// </summary>
-[Serializable]
 public class UnhandledEventException :
     SagaStateMachineException
 {

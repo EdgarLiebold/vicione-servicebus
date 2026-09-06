@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to activity execution faulted.
 /// </summary>
-[Serializable]
 public class ActivityExecutionFaultedException :
     ActivityExecutionException
 {

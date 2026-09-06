@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to payload not found.
 /// </summary>
-[Serializable]
 public class PayloadNotFoundException :
     PayloadException
 {

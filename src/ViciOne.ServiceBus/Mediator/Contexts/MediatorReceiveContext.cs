@@ -226,9 +226,9 @@ sealed class MeasuredMediatorMessageBody : MessageBody
 
     public long? Length { get; }
 
-    public Stream GetStream() => throw new NotImplementedByDesignException();
+    public Stream GetStream() => throw new NotSupportedException("The in-process mediator has no serialized receive stream.");
 
-    public byte[] GetBytes() => throw new NotImplementedByDesignException();
+    public byte[] GetBytes() => throw new NotSupportedException("The in-process mediator has no serialized receive body.");
 
-    public string GetString() => throw new NotImplementedByDesignException();
+    public string GetString() => throw new NotSupportedException("The in-process mediator has no serialized receive text.");
 }

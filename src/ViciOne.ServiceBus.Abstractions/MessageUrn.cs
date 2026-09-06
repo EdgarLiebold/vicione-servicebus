@@ -9,7 +9,6 @@ namespace ViciOne.ServiceBus.Advanced;
 /// <summary>
 /// Provides a message urn implementation.
 /// </summary>
-[Serializable]
 public class MessageUrn :
     Uri
 {

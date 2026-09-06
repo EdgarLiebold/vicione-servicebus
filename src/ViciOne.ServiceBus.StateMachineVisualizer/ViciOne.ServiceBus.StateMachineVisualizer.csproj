@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <Description>$(Description)</Description>
-    <PackageTags>ViciOne.ServiceBus;Automatonymous;Visualizer</PackageTags>
+    <PackageTags>ViciOne.ServiceBus;StateMachine;Visualizer</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

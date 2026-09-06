@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.ActiveMq;
 /// <summary>
 /// Represents an error related to active mq connection.
 /// </summary>
-[Serializable]
 public class ActiveMqConnectionException :
     ConnectionException
 {

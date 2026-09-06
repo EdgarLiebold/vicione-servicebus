@@ -9,7 +9,6 @@ namespace ViciOne.ServiceBus.Courier.Messages;
 /// <summary>
 /// Provides a routing slip activity implementation.
 /// </summary>
-[Serializable]
 public class RoutingSlipActivity :
     Activity
 {

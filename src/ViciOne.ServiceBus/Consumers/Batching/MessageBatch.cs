@@ -8,7 +8,6 @@ namespace ViciOne.ServiceBus.Batching;
 /// Provides a message batch implementation.
 /// </summary>
 /// <typeparam name="TMessage">The t message type.</typeparam>
-[Serializable]
 public class MessageBatch<TMessage> :
     Batch<TMessage>
     where TMessage : class

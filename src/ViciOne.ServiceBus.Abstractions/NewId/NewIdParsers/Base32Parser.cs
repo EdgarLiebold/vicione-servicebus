@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace ViciOne.ServiceBus.NewIdParsers;
 
@@ -14,7 +13,6 @@ public class Base32Parser :
     const string HexChars = "0123456789ABCDEF";
     const string InvalidInputString = "The input string contains invalid characters";
 
-    static readonly ThreadLocal<char[]> _buffer = new ThreadLocal<char[]>(() => new char[32]);
     readonly string _chars;
 
     /// <summary>
@@ -26,11 +24,14 @@ public class Base32Parser :
     }
 
     /// <summary>
-    /// Initializes a new instance of the containing type.
+    /// Creates a parser with one or more 32-character alphabets.
     /// </summary>
-    /// <param name="chars">The chars value.</param>
-    public Base32Parser(in string chars)
+    /// <param name="chars">The accepted alphabets, concatenated in 32-character groups.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="chars" /> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="chars" /> is not a multiple of 32 characters.</exception>
+    public Base32Parser(string chars)
     {
+        ArgumentNullException.ThrowIfNull(chars);
         if (chars.Length % 32 != 0)
             throw new ArgumentException("The characters must be a multiple of 32", nameof(chars));
 
@@ -38,16 +39,17 @@ public class Base32Parser :
     }
 
     /// <summary>
-    /// Parses the supplied representation.
+    /// Parses the supplied Base32 representation.
     /// </summary>
-    /// <param name="text">The text value.</param>
-    /// <returns>The result of the operation.</returns>
-    public NewId Parse(in string text)
+    /// <param name="text">The 26-character encoded identifier.</param>
+    /// <returns>The parsed identifier.</returns>
+    /// <exception cref="ArgumentException"><paramref name="text" /> is not a valid 26-character representation.</exception>
+    public NewId Parse(ReadOnlySpan<char> text)
     {
         if (text.Length != 26)
             throw new ArgumentException("The input string must be 26 characters", nameof(text));
 
-        var buffer = _buffer.Value!;
+        Span<char> buffer = stackalloc char[32];
 
         var bufferOffset = 0;
         var offset = 0;
@@ -82,11 +84,11 @@ public class Base32Parser :
 
         ConvertLongToBase16(buffer, bufferOffset, number, 2);
 
-        return new NewId(new string(buffer, 0, 32));
+        return new NewId(new string(buffer));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static void ConvertLongToBase16(in char[] buffer, int offset, long value, int count)
+    static void ConvertLongToBase16(Span<char> buffer, int offset, long value, int count)
     {
         for (var i = count - 1; i >= 0; i--)
         {

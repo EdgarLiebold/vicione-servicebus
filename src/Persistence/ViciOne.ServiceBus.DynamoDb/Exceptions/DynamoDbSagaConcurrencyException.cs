@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.DynamoDb;
 /// <summary>
 /// Represents an error related to dynamo db saga concurrency.
 /// </summary>
-[Serializable]
 public class DynamoDbSagaConcurrencyException :
     ConcurrencyException
 {

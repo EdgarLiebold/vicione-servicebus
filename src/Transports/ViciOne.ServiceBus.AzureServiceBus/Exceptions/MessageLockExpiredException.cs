@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.AzureServiceBus;
 /// <summary>
 /// Represents an error related to message lock expired.
 /// </summary>
-[Serializable]
 public class MessageLockExpiredException :
     TransportException
 {

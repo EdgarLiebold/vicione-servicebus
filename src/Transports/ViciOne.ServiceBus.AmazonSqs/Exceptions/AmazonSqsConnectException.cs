@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.AmazonSqs;
 /// <summary>
 /// Represents an error related to amazon sqs connect.
 /// </summary>
-[Serializable]
 public class AmazonSqsConnectException :
     AmazonSqsConnectionException
 {

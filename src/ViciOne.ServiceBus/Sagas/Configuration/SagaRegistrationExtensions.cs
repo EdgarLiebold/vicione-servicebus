@@ -15,8 +15,8 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class SagaRegistrationExtensions
 {
     /// <summary>
-    /// Adds the saga, allowing configuration when it is configured on the endpoint. This should not
-    /// be used for state machine (Automatonymous) sagas.
+    /// Adds a class-based saga and allows endpoint configuration. State-machine sagas are registered
+    /// through the dedicated <c>AddSagaStateMachine</c> family.
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure"></param>

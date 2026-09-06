@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to message initializer.
 /// </summary>
-[Serializable]
 public class MessageInitializerException :
     ViciOneServiceBusException
 {

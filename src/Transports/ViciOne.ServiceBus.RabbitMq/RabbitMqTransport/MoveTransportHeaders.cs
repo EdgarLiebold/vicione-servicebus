@@ -115,7 +115,7 @@ public class MoveTransportHeaders :
     public T Get<T>(string key, T? defaultValue)
         where T : class
     {
-        throw new NotImplementedByDesignException("Move transport does not support object-based header retrieval");
+        throw new NotSupportedException("RabbitMQ move-transport headers do not support object-based retrieval.");
     }
 
     /// <summary>
@@ -128,7 +128,7 @@ public class MoveTransportHeaders :
     public T? Get<T>(string key, T? defaultValue)
         where T : struct
     {
-        throw new NotImplementedByDesignException("Move transport does not support object-based header retrieval");
+        throw new NotSupportedException("RabbitMQ move-transport headers do not support object-based retrieval.");
     }
 
     /// <summary>

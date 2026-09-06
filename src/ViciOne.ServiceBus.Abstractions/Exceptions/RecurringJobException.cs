@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to recurring job.
 /// </summary>
-[Serializable]
 public class RecurringJobException :
     ViciOneServiceBusException
 {

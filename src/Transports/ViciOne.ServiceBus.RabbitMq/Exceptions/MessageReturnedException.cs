@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Published when a RabbitMQ channel is closed and the message was not confirmed by the broker.
 /// </summary>
-[Serializable]
 public class MessageReturnedException :
     ViciOneServiceBusException
 {

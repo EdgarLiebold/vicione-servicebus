@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to message data.
 /// </summary>
-[Serializable]
 public class MessageDataException :
     ViciOneServiceBusException
 {

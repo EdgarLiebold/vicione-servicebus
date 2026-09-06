@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to produce.
 /// </summary>
-[Serializable]
 public class ProduceException :
     ViciOneServiceBusException
 {

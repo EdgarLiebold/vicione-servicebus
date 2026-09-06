@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to routing slip.
 /// </summary>
-[Serializable]
 public class RoutingSlipException :
     CourierException
 {

@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.ActiveMq;
 /// <summary>
 /// Represents an error related to active mq transport.
 /// </summary>
-[Serializable]
 public class ActiveMqTransportException :
     ViciOneServiceBusException
 {

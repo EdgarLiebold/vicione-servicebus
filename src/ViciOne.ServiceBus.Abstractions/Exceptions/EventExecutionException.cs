@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to event execution.
 /// </summary>
-[Serializable]
 public class EventExecutionException :
     SagaStateMachineException
 {

@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <summary>
 /// Provides an edge implementation.
 /// </summary>
-[Serializable]
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
 public class Edge :
     IEquatable<Edge>

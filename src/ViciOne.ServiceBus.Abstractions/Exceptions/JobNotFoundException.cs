@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to job not found.
 /// </summary>
-[Serializable]
 public class JobNotFoundException :
     ViciOneServiceBusException
 {

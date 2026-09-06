@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to unknown event.
 /// </summary>
-[Serializable]
 public class UnknownEventException :
     SagaStateMachineException
 {

@@ -10,7 +10,6 @@ namespace ViciOne.ServiceBus.Events;
 /// <summary>
 /// Provides a fault exception info implementation.
 /// </summary>
-[Serializable]
 public sealed class FaultExceptionInfo : ExceptionInfo
 {
     const int MaximumDataCount = 32;

@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.Courier.Messages;
 /// <summary>
 /// Provides a routing slip activity compensated message implementation.
 /// </summary>
-[Serializable]
 public class RoutingSlipActivityCompensatedMessage :
     RoutingSlipActivityCompensated
 {

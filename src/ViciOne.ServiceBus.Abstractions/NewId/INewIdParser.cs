@@ -1,14 +1,14 @@
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>
-/// Defines the contract for new id parser.
+/// Parses a textual <see cref="NewId" /> representation.
 /// </summary>
 public interface INewIdParser
 {
     /// <summary>
     /// Parses the supplied representation.
     /// </summary>
-    /// <param name="text">The text value.</param>
-    /// <returns>The result of the operation.</returns>
-    NewId Parse(in string text);
+    /// <param name="text">The encoded identifier text.</param>
+    /// <returns>The parsed identifier.</returns>
+    NewId Parse(ReadOnlySpan<char> text);
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
@@ -26,40 +25,37 @@ public class HexFormatter :
     }
 
     /// <summary>
-    /// Performs the format operation.
+    /// Formats a canonical identifier representation.
     /// </summary>
-    /// <param name="bytes">The bytes value.</param>
-    /// <returns>The result of the operation.</returns>
-    public unsafe string Format(in byte[] bytes)
+    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
+    /// <returns>The hexadecimal identifier.</returns>
+    /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
+    public string Format(ReadOnlySpan<byte> bytes)
     {
-        Debug.Assert(bytes.Length == 16);
+        if (bytes.Length != 16)
+            throw new ArgumentException("Exactly 16 bytes are required.", nameof(bytes));
 
+        Span<char> result = stackalloc char[32];
         if (Avx2.IsSupported && BitConverter.IsLittleEndian)
         {
             var isUpperCase = _alpha != LowerCaseUInt;
-            return string.Create(32, (bytes, isUpperCase), (span, state) =>
-            {
-                var (bytes, isUpper) = state;
-
-                var inputVec = MemoryMarshal.Read<Vector128<byte>>(bytes);
-                var hexVec = IntrinsicsHelper.EncodeBytesHex(inputVec, isUpper);
-
-                var byteSpan = MemoryMarshal.Cast<char, byte>(span);
-                IntrinsicsHelper.Vector256ToCharUtf16(hexVec, byteSpan);
-            });
+            var inputVec = MemoryMarshal.Read<Vector128<byte>>(bytes);
+            var hexVec = IntrinsicsHelper.EncodeBytesHex(inputVec, isUpperCase);
+            var byteSpan = MemoryMarshal.Cast<char, byte>(result);
+            IntrinsicsHelper.Vector256ToCharUtf16(hexVec, byteSpan);
+            return new string(result);
         }
-        var result = stackalloc char[32];
 
         for (int pos = 0; pos < bytes.Length; pos++)
         {
             HexToChar(bytes[pos], result, pos * 2, _alpha);
         }
 
-        return new string(result, 0, 32);
+        return new string(result);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
+    static void HexToChar(byte value, Span<char> buffer, int startingIndex, uint casing)
     {
         uint difference = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU) - 0x8989U;
         uint packedResult = ((((uint)(-(int)difference) & 0x7070U) >> 4) + difference + 0xB9B9U) | (uint)casing;

@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to request fault.
 /// </summary>
-[Serializable]
 public class RequestFaultException :
     RequestException
 {

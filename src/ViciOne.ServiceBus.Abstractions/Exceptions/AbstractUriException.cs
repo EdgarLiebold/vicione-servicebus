@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to abstract uri.
 /// </summary>
-[Serializable]
 public abstract class AbstractUriException :
     ViciOneServiceBusException
 {

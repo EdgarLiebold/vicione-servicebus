@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to publish.
 /// </summary>
-[Serializable]
 public class PublishException :
     ViciOneServiceBusException
 {

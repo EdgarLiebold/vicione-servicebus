@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.Providers.Transports;
 /// <summary>
 /// Represents an error related to sql endpoint address.
 /// </summary>
-[Serializable]
 public sealed class SqlEndpointAddressException :
     AbstractUriException
 {

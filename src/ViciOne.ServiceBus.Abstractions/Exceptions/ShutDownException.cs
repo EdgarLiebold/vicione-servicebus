@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to shut down.
 /// </summary>
-[Serializable]
 public class ShutDownException :
     ViciOneServiceBusException
 {

@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to job already exists.
 /// </summary>
-[Serializable]
 public class JobAlreadyExistsException :
     ViciOneServiceBusException
 {

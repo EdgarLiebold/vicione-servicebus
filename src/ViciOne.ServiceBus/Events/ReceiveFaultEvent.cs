@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus.Events;
 /// <summary>
 /// Provides a receive fault event implementation.
 /// </summary>
-[Serializable]
 public class ReceiveFaultEvent :
     ReceiveFault
 {

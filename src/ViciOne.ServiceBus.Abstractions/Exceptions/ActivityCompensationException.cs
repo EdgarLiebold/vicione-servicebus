@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to activity compensation.
 /// </summary>
-[Serializable]
 public class ActivityCompensationException :
     CourierException
 {

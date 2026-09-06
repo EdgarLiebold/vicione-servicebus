@@ -111,3 +111,28 @@ Four isolated mutation groups were killed and restored: a wrong single-type file
 - Engineering style verification at warning severity: passed.
 
 The Red Team work in this iteration was an internal adversarial review. It found and caused the correction of overly broad manifest, infrastructure-file, generated-file, and qualified-test-attribute handling. It is engineering evidence, not independent acceptance.
+
+## Iteration 5
+
+Iteration 5 modernizes the `NewId` formatting/parsing boundary to read-only spans with exact input validation, removes the custom `NotImplementedByDesignException` contract, removes 105 obsolete binary-serialization attributes from 103 product files, and removes the former state-machine product identity. The entity-name shortener explicitly truncates its SHA-256 digest to the formatter's 128-bit contract while preserving its existing 65-bit public suffix policy.
+
+### Red/green evidence
+
+| Contract | Baseline result | Corrected result |
+|---|---:|---:|
+| Managed-object identifier signatures | `in string` / `in byte[]` exposed | exact `ReadOnlySpan<char>` / `ReadOnlySpan<byte>` surface |
+| Formatter byte boundary | inconsistent or unchecked | all four formatters reject 15 and 17 bytes |
+| Null custom alphabet | `NullReferenceException` | `ArgumentNullException` with exact parameter |
+| Unsupported capability identity | custom public exception at nine source sites | standard `NotSupportedException`; custom type removed |
+| Binary serialization metadata | 105 attributes in 103 current files | none in evaluated product sources |
+| Former state-machine identity | four product occurrences | none in source or package metadata |
+
+Five isolated mutations were killed and restored byte-for-byte: accepting a 17-byte formatter input, restoring an `in string` public parameter, restoring the custom unsupported-capability exception, adding a serialization attribute, and restoring the former package identity.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Repeated complete Unit/Architecture profile: 3,777 passed, 0 failed, 0 skipped.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace and warning-level style verification: passed.
+- One unrelated nested-request integration timeout from the first complete run passed 10/10 isolated repetitions and the repeated complete profile; it remains recorded for later load-sensitivity hardening.

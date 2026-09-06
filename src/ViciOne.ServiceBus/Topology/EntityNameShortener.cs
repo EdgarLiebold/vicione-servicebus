@@ -18,7 +18,7 @@ internal static class EntityNameShortener
             return value;
 
         byte[] digest = SHA256.HashData(Encoding.UTF8.GetBytes(value));
-        string hash = ZBase32Formatter.LowerCase.Format(digest)[..HashLength];
+        string hash = ZBase32Formatter.LowerCase.Format(digest.AsSpan(0, 16))[..HashLength];
         int prefixLength = maximumLength - HashLength - 1;
 
         return $"{value[..prefixLength]}-{hash}";

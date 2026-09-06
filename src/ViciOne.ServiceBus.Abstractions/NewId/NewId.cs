@@ -43,24 +43,24 @@ public readonly struct NewId :
     readonly int _d;
 
     /// <summary>
-    /// Creates a NewId using the specified byte array.
+    /// Creates a <see cref="NewId" /> from its canonical byte representation.
     /// </summary>
-    /// <param name="bytes"></param>
-    public NewId(in byte[] bytes)
+    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
+    /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
+    public NewId(ReadOnlySpan<byte> bytes)
     {
-        if (bytes == null)
-            throw new ArgumentNullException(nameof(bytes));
         if (bytes.Length != 16)
-            throw new ArgumentException("Exactly 16 bytes expected", nameof(bytes));
+            throw new ArgumentException("Exactly 16 bytes are required.", nameof(bytes));
 
         FromByteArray(bytes, out this);
     }
 
     /// <summary>
-    /// Initializes a new instance of the containing type.
+    /// Creates a <see cref="NewId" /> from its encoded representation.
     /// </summary>
-    /// <param name="value">The value.</param>
-    public NewId(in string value)
+    /// <param name="value">The encoded identifier text.</param>
+    /// <exception cref="ArgumentException"><paramref name="value" /> is null, empty, or invalid.</exception>
+    public NewId(string value)
     {
         if (string.IsNullOrEmpty(value))
             throw new ArgumentException("must not be null or empty", nameof(value));
@@ -185,7 +185,11 @@ public readonly struct NewId :
             throw new FormatException("The format string must be exactly one character or null");
 
         var formatCh = format[0];
-        var bytes = sequential ? GetSequentialFormatterArray() : GetFormatterArray();
+        Span<byte> bytes = stackalloc byte[16];
+        if (sequential)
+            WriteSequentialFormatterBytes(bytes);
+        else
+            WriteFormatterBytes(bytes);
 
         if (formatCh == 'B' || formatCh == 'b')
             return BraceFormatter.Format(bytes);
@@ -199,8 +203,6 @@ public readonly struct NewId :
         throw new FormatException("The format string was not valid");
     }
 
-    static readonly ThreadLocal<byte[]> _formatterArray = new ThreadLocal<byte[]>(() => new byte[16]);
-
     /// <summary>
     /// Returns the string representation of this instance.
     /// </summary>
@@ -209,22 +211,26 @@ public readonly struct NewId :
     /// <returns>The result of the operation.</returns>
     public string ToString(INewIdFormatter formatter, bool sequential = false)
     {
-        var bytes = sequential ? GetSequentialFormatterArray() : GetFormatterArray();
+        ArgumentNullException.ThrowIfNull(formatter);
+
+        Span<byte> bytes = stackalloc byte[16];
+        if (sequential)
+            WriteSequentialFormatterBytes(bytes);
+        else
+            WriteFormatterBytes(bytes);
 
         return formatter.Format(bytes);
     }
 
-    byte[] GetFormatterArray()
+    void WriteFormatterBytes(Span<byte> bytes)
     {
-        var bytes = _formatterArray.Value!;
-
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
         {
             Vector128<byte> vector = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
             var byteArrayShuffle = Vector128.Create((byte)15, 14, 12, 13, 9, 8, 11, 10, 5, 4, 3, 2, 1, 0, 7, 6);
             Vector128<byte> result = Ssse3.Shuffle(vector, byteArrayShuffle);
             MemoryMarshal.TryWrite(bytes, in result);
-            return bytes;
+            return;
         }
 
         bytes[15] = (byte)(_b >> 16);
@@ -244,20 +250,17 @@ public readonly struct NewId :
         bytes[1] = (byte)(_d >> 16);
         bytes[0] = (byte)(_d >> 24);
 
-        return bytes;
     }
 
-    byte[] GetSequentialFormatterArray()
+    void WriteSequentialFormatterBytes(Span<byte> bytes)
     {
-        var bytes = _formatterArray.Value!;
-
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
         {
             Vector128<byte> vector = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
             var byteArrayShuffle = Vector128.Create((byte)3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12);
             Vector128<byte> result = Ssse3.Shuffle(vector, byteArrayShuffle);
             MemoryMarshal.TryWrite(bytes, in result);
-            return bytes;
+            return;
         }
 
         bytes[15] = (byte)_d;
@@ -277,7 +280,6 @@ public readonly struct NewId :
         bytes[1] = (byte)(_a >> 16);
         bytes[0] = (byte)(_a >> 24);
 
-        return bytes;
     }
 
     /// <summary>
@@ -365,14 +367,21 @@ public readonly struct NewId :
     public byte[] ToByteArray()
     {
         var bytes = new byte[16];
+        WriteByteArray(bytes);
 
+        return bytes;
+    }
+
+    private void WriteByteArray(Span<byte> bytes)
+    {
         if (Ssse3.IsSupported && BitConverter.IsLittleEndian)
         {
             Vector128<byte> vector = Unsafe.As<NewId, Vector128<byte>>(ref Unsafe.AsRef(in this));
-            var byteArrayShuffle = Vector128.Create((byte)13, 12, 14, 15, 8, 9, 10, 11, 5, 4, 3, 2, 1, 0, 7, 6);
-            Vector128<byte> result = Ssse3.Shuffle(vector, byteArrayShuffle);
+            Vector128<byte> result = Ssse3.Shuffle(
+                vector,
+                Vector128.Create((byte)13, 12, 14, 15, 8, 9, 10, 11, 5, 4, 3, 2, 1, 0, 7, 6));
             MemoryMarshal.TryWrite(bytes, in result);
-            return bytes;
+            return;
         }
 
         bytes[15] = (byte)(_b >> 16);
@@ -391,8 +400,6 @@ public readonly struct NewId :
         bytes[2] = (byte)(_d >> 16);
         bytes[1] = (byte)_d;
         bytes[0] = (byte)(_d >> 8);
-
-        return bytes;
     }
 
     /// <summary>

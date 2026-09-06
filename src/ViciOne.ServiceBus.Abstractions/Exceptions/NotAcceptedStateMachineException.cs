@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to not accepted state machine.
 /// </summary>
-[Serializable]
 public class NotAcceptedStateMachineException :
     SagaException
 {

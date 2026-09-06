@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to consumer.
 /// </summary>
-[Serializable]
 public class ConsumerException :
     ViciOneServiceBusException
 {

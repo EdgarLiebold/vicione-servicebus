@@ -68,6 +68,6 @@ internal class DynamoDbSagaRepositoryContextFactory<TSaga> :
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
-        throw new NotImplementedByDesignException("DynamoDb saga repository does not support queries");
+        throw new NotSupportedException("DynamoDB saga persistence does not support query correlation.");
     }
 }

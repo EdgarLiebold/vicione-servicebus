@@ -7,7 +7,6 @@ namespace ViciOne.ServiceBus.SagaStateMachine;
 /// <summary>
 /// Provides a state machine graph implementation.
 /// </summary>
-[Serializable]
 public class StateMachineGraph
 {
     readonly Edge[] _edges;

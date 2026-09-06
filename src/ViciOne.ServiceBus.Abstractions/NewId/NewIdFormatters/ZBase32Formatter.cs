@@ -33,22 +33,22 @@ public class ZBase32Formatter : INewIdFormatter
     public static readonly INewIdFormatter LowerCase = new ZBase32Formatter();
 
     /// <summary>
-    /// Performs the format operation.
+    /// Formats a canonical identifier representation.
     /// </summary>
-    /// <param name="bytes">The bytes value.</param>
-    /// <returns>The result of the operation.</returns>
-    public unsafe string Format(in byte[] bytes)
+    /// <param name="bytes">The canonical 16-byte identifier representation.</param>
+    /// <returns>The z-base-32-encoded identifier.</returns>
+    /// <exception cref="ArgumentException"><paramref name="bytes" /> does not contain exactly 16 bytes.</exception>
+    public string Format(ReadOnlySpan<byte> bytes)
     {
+        if (bytes.Length != 16)
+            throw new ArgumentException("Exactly 16 bytes are required.", nameof(bytes));
+
+        Span<char> result = stackalloc char[26];
         if (Avx2.IsSupported)
         {
-            return string.Create(26, (bytes, _isUpper), (span, state) =>
-            {
-                var (bytes, isUpperCase) = state;
-
-                EncodeKnownCase(bytes, span, isUpperCase);
-            });
+            EncodeKnownCase(bytes, result, _isUpper);
+            return new string(result);
         }
-        var result = stackalloc char[26];
 
         var offset = 0;
         for (var i = 0; i < 3; i++)
@@ -66,10 +66,10 @@ public class ZBase32Formatter : INewIdFormatter
 
         ConvertLongToBase32(result, offset, bytes[15], 2, _chars);
 
-        return new string(result, 0, 26);
+        return new string(result);
     }
 
-    static unsafe void ConvertLongToBase32(char* buffer, int offset, long value, int count, string chars)
+    static void ConvertLongToBase32(Span<char> buffer, int offset, long value, int count, string chars)
     {
         for (var i = count - 1; i >= 0; i--)
         {
@@ -83,7 +83,6 @@ public class ZBase32Formatter : INewIdFormatter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void EncodeKnownCase(ReadOnlySpan<byte> source, Span<char> destination, bool isUpperCase)
     {
-        #region lut
         var upperCaseLow = Vector256.Create((byte)'Y', (byte)'B', (byte)'N', (byte)'D', (byte)'R', (byte)'F', (byte)'G', (byte)'8', (byte)'E', (byte)'J', (byte)'K', (byte)'M', (byte)'C', (byte)'P', (byte)'Q', (byte)'X', (byte)'Y', (byte)'B', (byte)'N', (byte)'D', (byte)'R', (byte)'F', (byte)'G', (byte)'8', (byte)'E', (byte)'J', (byte)'K', (byte)'M', (byte)'C', (byte)'P', (byte)'Q', (byte)'X');
 
         var upperCaseHigh = Vector256.Create((byte)'O', (byte)'T', (byte)'1', (byte)'U', (byte)'W', (byte)'I', (byte)'S', (byte)'Z', (byte)'A', (byte)'3', (byte)'4', (byte)'5', (byte)'H', (byte)'7', (byte)'6', (byte)'9', (byte)'O', (byte)'T', (byte)'1', (byte)'U', (byte)'W', (byte)'I', (byte)'S', (byte)'Z', (byte)'A', (byte)'3', (byte)'4', (byte)'5', (byte)'H', (byte)'7', (byte)'6', (byte)'9');
@@ -91,8 +90,6 @@ public class ZBase32Formatter : INewIdFormatter
         var lowerCaseLow = Vector256.Create((byte)'y', (byte)'b', (byte)'n', (byte)'d', (byte)'r', (byte)'f', (byte)'g', (byte)'8', (byte)'e', (byte)'j', (byte)'k', (byte)'m', (byte)'c', (byte)'p', (byte)'q', (byte)'x', (byte)'y', (byte)'b', (byte)'n', (byte)'d', (byte)'r', (byte)'f', (byte)'g', (byte)'8', (byte)'e', (byte)'j', (byte)'k', (byte)'m', (byte)'c', (byte)'p', (byte)'q', (byte)'x');
 
         var lowerCaseHigh = Vector256.Create((byte)'o', (byte)'t', (byte)'1', (byte)'u', (byte)'w', (byte)'i', (byte)'s', (byte)'z', (byte)'a', (byte)'3', (byte)'4', (byte)'5', (byte)'h', (byte)'7', (byte)'6', (byte)'9', (byte)'o', (byte)'t', (byte)'1', (byte)'u', (byte)'w', (byte)'i', (byte)'s', (byte)'z', (byte)'a', (byte)'3', (byte)'4', (byte)'5', (byte)'h', (byte)'7', (byte)'6', (byte)'9');
-        #endregion
-
         if (isUpperCase)
         {
             IntrinsicsHelper.EncodeBase32(source, destination, upperCaseLow, upperCaseHigh);

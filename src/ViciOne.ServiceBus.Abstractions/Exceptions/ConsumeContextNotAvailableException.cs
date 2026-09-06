@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to consume context not available.
 /// </summary>
-[Serializable]
 public class ConsumeContextNotAvailableException :
     ViciOneServiceBusException
 {

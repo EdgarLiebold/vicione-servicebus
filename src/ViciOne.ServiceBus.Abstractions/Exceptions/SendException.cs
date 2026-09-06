@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to send.
 /// </summary>
-[Serializable]
 public class SendException :
     AbstractUriException
 {

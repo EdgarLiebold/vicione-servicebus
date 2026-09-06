@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to payload factory.
 /// </summary>
-[Serializable]
 public class PayloadFactoryException :
     PayloadException
 {

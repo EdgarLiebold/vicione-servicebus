@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to message not consumed.
 /// </summary>
-[Serializable]
 public class MessageNotConsumedException :
     TransportException
 {

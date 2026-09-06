@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to courier.
 /// </summary>
-[Serializable]
 public class CourierException :
     ViciOneServiceBusException,
     IRetryFailureClassification

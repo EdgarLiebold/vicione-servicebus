@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Thrown when a message is not acknowledged by the broker
 /// </summary>
-[Serializable]
 public class MessageNotAcknowledgedException :
     TransportException
 {

@@ -108,6 +108,6 @@ public class AzureTableSagaRepositoryContextFactory<TSaga> :
     public async Task SendQueryAsync<T>(ConsumeContext<T> context, ISagaQuery<TSaga> query, IPipe<SagaRepositoryQueryContext<TSaga, T>> next)
         where T : class
     {
-        throw new NotImplementedByDesignException("Azure Table repository does not support queries");
+        throw new NotSupportedException("Azure Table saga persistence does not support query correlation.");
     }
 }

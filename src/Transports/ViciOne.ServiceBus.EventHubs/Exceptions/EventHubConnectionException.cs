@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.EventHubs;
 /// <summary>
 /// Represents an error related to event hub connection.
 /// </summary>
-[Serializable]
 public class EventHubConnectionException :
     ConnectionException
 {

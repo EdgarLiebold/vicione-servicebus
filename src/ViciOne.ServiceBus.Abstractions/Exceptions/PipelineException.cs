@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to pipeline.
 /// </summary>
-[Serializable]
 public class PipelineException :
     ViciOneServiceBusException
 {

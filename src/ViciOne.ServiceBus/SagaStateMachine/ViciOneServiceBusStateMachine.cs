@@ -13,9 +13,8 @@ using ViciOne.ServiceBus.Util;
 namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
-/// A ViciOne.ServiceBus state machine adds functionality on top of Automatonymous supporting
-/// things like request/response, and correlating events to the state machine, as well
-/// as retry and policy configuration.
+/// Defines a saga state machine with event correlation, request/response activities, retries, and
+/// transition policies.
 /// </summary>
 /// <typeparam name="TInstance">The state instance type</typeparam>
 public partial class ViciOneServiceBusStateMachine<TInstance> :

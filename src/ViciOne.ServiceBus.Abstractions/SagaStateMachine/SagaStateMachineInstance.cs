@@ -1,8 +1,7 @@
 namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>
-/// An Automatonymous state machine instance that is usable as a saga by ViciOne.ServiceBus must implement this interface.
-/// It indicates to the framework the available features of the state as being a state machine instance.
+/// Identifies a saga instance whose state transitions are owned by a ViciOne ServiceBus state machine.
 /// </summary>
 public interface SagaStateMachineInstance :
     ISaga

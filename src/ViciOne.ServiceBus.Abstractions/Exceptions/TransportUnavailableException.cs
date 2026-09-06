@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to transport unavailable.
 /// </summary>
-[Serializable]
 public class TransportUnavailableException :
     ViciOneServiceBusException
 {

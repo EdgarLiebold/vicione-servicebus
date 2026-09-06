@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to saga.
 /// </summary>
-[Serializable]
 public class SagaException :
     ViciOneServiceBusException
 {

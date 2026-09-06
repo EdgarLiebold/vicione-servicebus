@@ -71,7 +71,6 @@ ViciOne.ServiceBus.MessageSensitivityDescriptor
 ViciOne.ServiceBus.MessageTooLargeException
 ViciOne.ServiceBus.MessageUrnAttribute
 ViciOne.ServiceBus.NotAcceptedStateMachineException
-ViciOne.ServiceBus.NotImplementedByDesignException
 ViciOne.ServiceBus.PayloadAdmissionException
 ViciOne.ServiceBus.PayloadException
 ViciOne.ServiceBus.PayloadFactoryException

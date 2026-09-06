@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to pipe factory.
 /// </summary>
-[Serializable]
 public class PipeFactoryException :
     ViciOneServiceBusException
 {

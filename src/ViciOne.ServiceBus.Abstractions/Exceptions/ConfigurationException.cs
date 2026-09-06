@@ -6,7 +6,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to configuration.
 /// </summary>
-[Serializable]
 public class ConfigurationException :
     ViciOneServiceBusException
 {

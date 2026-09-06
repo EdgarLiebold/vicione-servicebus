@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus;
 /// <summary>
 /// Represents an error related to invalid compensation address.
 /// </summary>
-[Serializable]
 public class InvalidCompensationAddressException :
     ActivityExecutionException
 {

@@ -5,7 +5,6 @@ namespace ViciOne.ServiceBus.AmazonSqs;
 /// <summary>
 /// Represents an error related to amazon sqs transport.
 /// </summary>
-[Serializable]
 public class AmazonSqsTransportException :
     ViciOneServiceBusException
 {
