@@ -93,3 +93,21 @@ The new tests contain no sleeps, wall-clock polling, skipped cases, broad except
 - Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
 - Engineering whitespace verification: passed.
 - Engineering style verification at warning severity: passed.
+
+## Iteration 4
+
+Iteration 4 makes physical source navigation deterministic across every evaluated product and native-test compile item. Public production types and test classes now live in files named for their declared type. Multi-type declaration groups and partial implementation fragments are guarded by exact path-to-type manifests rather than permissive path exceptions.
+
+The architecture guard rejects stale manifest entries, unexpected type identities, declarations hidden in infrastructure files, secondary test classes including qualified xUnit attributes, and generated-file suffixes without an actual generated-code header. A repository-wide declaration comparison found no removed top-level types, public API symbols, or public parameters. Pure moves and renames were verified byte-for-byte.
+
+Four isolated mutation groups were killed and restored: a wrong single-type filename, a changed cohesive group, a changed partial-fragment owner, and misuse of both a global-usings file and a qualified `[Xunit.Fact]` secondary test class. The complete profile subsequently passed with the restored sources.
+
+### Full validation
+
+- Release unit/architecture solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,768 passed, 0 failed, 0 skipped.
+- Release engineering-solution build with warnings as errors: passed, 0 warnings and 0 errors.
+- Engineering whitespace verification: passed.
+- Engineering style verification at warning severity: passed.
+
+The Red Team work in this iteration was an internal adversarial review. It found and caused the correction of overly broad manifest, infrastructure-file, generated-file, and qualified-test-attribute handling. It is engineering evidence, not independent acceptance.

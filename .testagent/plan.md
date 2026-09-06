@@ -94,3 +94,22 @@ Prove every application-level outgoing-options field at the shared context bound
 - Remove public API pipe forwarding or replace its cancellation token: the recording boundary test must fail.
 - Remove either reliable query validation call or replace either forwarded query/token: the store-boundary test must fail.
 - Ignore `RequestOptions.Deadline` or use the process clock: the injected-clock boundary test must fail.
+
+## Iteration 4 outcome
+
+Make physical source navigation deterministic without changing runtime behavior: every ordinary C# file must be named for a top-level type it owns, multi-type files without a primary type must be explicitly classified as cohesive declarations, and the convention must cover every evaluated product and native-test compile item.
+
+## Iteration 4 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-SOURCE-NAVIGATION` | Single-type files match their declared type; multi-type files identify a primary type or a reviewed cohesive grouping | architecture tests | Roslyn inventory over all evaluated `src/**` and `tests/**` compile items |
+| `REQ-VSB-SOURCE-NAVIGATION` | Partial fragments and generated/global files remain valid without weakening ordinary source rules | architecture tests | Explicit syntactic classification and stale-exception rejection |
+
+## Iteration 4 mutation obligations
+
+- Rename a representative single-type file away from its declared type: the source-navigation guard must fail with the exact repository-relative path.
+- Change a reviewed cohesive group without updating its exact type manifest: the source-navigation guard must fail with the exact path and declarations.
+- Change an approved partial fragment so that its exact owner identity no longer matches: the source-navigation guard must fail.
+- Add a declaration to a `GlobalUsings` file or a secondary test class using a qualified xUnit attribute: infrastructure and test naming checks must fail.
+- Add an unnecessary exception for an already conforming file: stale-exception validation must fail.

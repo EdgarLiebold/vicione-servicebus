@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ViciOne.ServiceBus.Util;
 
@@ -62,39 +61,5 @@ public class LambdaEqualityComparer<T> :
     public int GetHashCode(T obj)
     {
         return _hash(obj);
-    }
-}
-
-
-/// <summary>
-/// Provides extension methods for lambda equality comparer.
-/// </summary>
-public static class LambdaEqualityComparerExtensions
-{
-    /// <summary>
-    /// Performs the distinct operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="source">The source value.</param>
-    /// <param name="comparer">The comparer value.</param>
-    /// <returns>The result of the operation.</returns>
-    public static IEnumerable<T> Distinct<T>(this IEnumerable<T> source, Func<T, T, bool> comparer)
-        where T : class
-    {
-        return source.Distinct(new LambdaEqualityComparer<T>(comparer));
-    }
-
-    /// <summary>
-    /// Performs the except operation.
-    /// </summary>
-    /// <typeparam name="T">The t type.</typeparam>
-    /// <param name="first">The first value.</param>
-    /// <param name="second">The second value.</param>
-    /// <param name="comparer">The comparer value.</param>
-    /// <returns>The result of the operation.</returns>
-    public static IEnumerable<T> Except<T>(this IEnumerable<T> first, IEnumerable<T> second, Func<T?, T?, bool> comparer)
-        where T : class
-    {
-        return first.Except(second, new LambdaEqualityComparer<T>(comparer));
     }
 }

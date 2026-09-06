@@ -29,15 +29,3 @@ public interface ITeeFilter<TContext, in TKey> :
     where TContext : class, PipeContext
 {
 }
-
-
-/// <summary>
-/// Defines the contract for request id tee filter.
-/// </summary>
-/// <typeparam name="TMessage">The t message type.</typeparam>
-public interface IRequestIdTeeFilter<TMessage> :
-    ITeeFilter<ConsumeContext<TMessage>>,
-    IKeyPipeConnector<TMessage, Guid>
-    where TMessage : class
-{
-}

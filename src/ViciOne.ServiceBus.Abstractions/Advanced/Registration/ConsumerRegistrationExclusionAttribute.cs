@@ -5,8 +5,3 @@ namespace ViciOne.ServiceBus.Advanced.Registration;
 /// </summary>
 [AttributeUsage(AttributeTargets.Interface, Inherited = false)]
 public sealed class ConsumerRegistrationExclusionAttribute : Attribute;
-
-/// <summary>
-/// Marks a saga-state type whose registration is owned by a more specialized consumer kind.
-/// </summary>
-public interface IConsumerKindOwnedState;

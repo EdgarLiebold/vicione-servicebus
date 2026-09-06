@@ -341,7 +341,7 @@
     },
     {
       "type": "TextTableOptions",
-      "source": "src/ViciOne.ServiceBus/Util/TextTable.cs",
+      "source": "src/ViciOne.ServiceBus/Util/TextTableOptions.cs",
       "boundary": "construction",
       "invariantCount": 4,
       "negativeTest": { "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs", "method": "TextTable_RejectsEveryInvalidInvariant" },

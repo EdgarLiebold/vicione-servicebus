@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.RetryPolicies;
 
 #nullable enable
@@ -69,34 +68,5 @@ public static class TechnicalRetryPolicy
         classifier ??= DefaultFailureClassifier;
         configurator.Handle<Exception>(exception => classifier.Classify(exception) == RetryFailureKind.Transient);
         configurator.Intervals((TimeSpan[])_redeliveryIntervals.Clone());
-    }
-}
-
-/// <summary>
-/// Configures canonical bounded technical retry and redelivery on consume pipelines.
-/// </summary>
-public static class TechnicalRetryConfigurationExtensions
-{
-    /// <summary>
-    /// Adds the canonical short in-process technical retry policy.
-    /// </summary>
-    /// <param name="configurator">The consume pipe configurator.</param>
-    /// <param name="classifier">An optional technical failure classifier.</param>
-    public static void UseTechnicalMessageRetry(this IConsumePipeConfigurator configurator, ITechnicalFailureClassifier? classifier = null)
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        configurator.UseMessageRetry(retry => TechnicalRetryPolicy.ConfigureImmediate(retry, classifier));
-    }
-
-    /// <summary>
-    /// Adds the canonical delayed technical redelivery policy. The transport must provide a message
-    /// redelivery context.
-    /// </summary>
-    /// <param name="configurator">The consume pipe configurator.</param>
-    /// <param name="classifier">An optional technical failure classifier.</param>
-    public static void UseTechnicalDelayedRedelivery(this IConsumePipeConfigurator configurator, ITechnicalFailureClassifier? classifier = null)
-    {
-        ArgumentNullException.ThrowIfNull(configurator);
-        configurator.UseDelayedRedelivery(redelivery => TechnicalRetryPolicy.ConfigureRedelivery(redelivery, classifier));
     }
 }

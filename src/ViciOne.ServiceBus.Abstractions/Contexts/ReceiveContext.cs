@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -106,29 +105,4 @@ public interface ReceiveContext :
     /// </summary>
     /// <param name="task"></param>
     void AddReceiveTask(Task task);
-}
-
-
-/// <summary>
-/// Provides extension methods for receive context body.
-/// </summary>
-public static class ReceiveContextBodyExtensions
-{
-    /// <summary>
-    /// Returns the message body as a stream that can be deserialized. The stream
-    /// must be disposed by the caller, a reference is not retained
-    /// </summary>
-    public static Stream GetBodyStream(this ReceiveContext context)
-    {
-        return context.Body.GetStream();
-    }
-
-    /// <summary>
-    /// Returns the body as a byte[]
-    /// </summary>
-    /// <returns></returns>
-    public static byte[] GetBody(this ReceiveContext context)
-    {
-        return context.Body.GetBytes();
-    }
 }

@@ -229,7 +229,7 @@ public sealed class DurableSenderArchitectureTests
     [RequirementCoverage("REQ-VSB-EF-DURABLE-ARCHITECTURE", "catalog-and-commit-preflights-precede-persistence")]
     public void AdmissionPreconditions_RunBeforeAnyPersistentMutation()
     {
-        string sender = Source("src/ViciOne.ServiceBus/DurableSend/DurableSender.cs");
+        string sender = Source("src/ViciOne.ServiceBus/DurableSend/DurableSendAdmission.cs");
         int catalogLookup = sender.IndexOf("_contractCatalog.TryGetMessageType", StringComparison.Ordinal);
         int storeAdmission = sender.IndexOf("_store\n                .AdmitAsync", StringComparison.Ordinal);
         Assert.True(catalogLookup >= 0);

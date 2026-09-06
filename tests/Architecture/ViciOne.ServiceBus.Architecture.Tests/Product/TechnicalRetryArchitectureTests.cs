@@ -39,7 +39,7 @@ public sealed class TechnicalRetryArchitectureTests
     {
         string source = File.ReadAllText(Path.Combine(
             RepositoryLayout.Root,
-            "src/ViciOne.ServiceBus/Configuration/TechnicalRetryPolicy.cs"));
+            "src/ViciOne.ServiceBus/Configuration/TechnicalRetryConfigurationExtensions.cs"));
 
         Assert.Equal(1, Count(source, "TechnicalRetryPolicy.ConfigureImmediate(retry, classifier)"));
         Assert.Equal(1, Count(source, "TechnicalRetryPolicy.ConfigureRedelivery(redelivery, classifier)"));

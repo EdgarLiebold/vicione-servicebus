@@ -35,17 +35,3 @@ public interface IEntityFrameworkOutboxOperations<TBus, TDbContext>
     /// <returns>The result of the operation.</returns>
     Task DiscardAsync(Guid outboxId, CancellationToken cancellationToken = default);
 }
-
-
-/// <summary>
-/// Represents an outbox quarantine entry value.
-/// </summary>
-public sealed record OutboxQuarantineEntry(
-    Guid OutboxId,
-    DateTimeOffset Created,
-    int DeliveryAttempts,
-    OutboxFailureKind FailureKind,
-    DateTimeOffset? FailureTime,
-    string? Failure,
-    long? FailedSequenceNumber,
-    Guid? FailedMessageId);
