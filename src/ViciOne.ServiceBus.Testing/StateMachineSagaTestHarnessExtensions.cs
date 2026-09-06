@@ -288,7 +288,7 @@ public static class StateMachineSagaTestHarnessExtensions
             if (saga != Guid.Empty)
                 return saga;
 
-            await Task.Delay(TimeSpan.FromMilliseconds(10), timeProvider, CancellationToken.None).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMilliseconds(10), timeProvider, cancellationToken).ConfigureAwait(false);
         }
 
         return default;

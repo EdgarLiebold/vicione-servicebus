@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.Extensions.Time.Testing;
 using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Contracts.JobService;
@@ -79,10 +80,36 @@ public sealed class ConsumeJobContextCancellationTests
         Assert.Equal(source.Token, exception.CancellationToken);
     }
 
-    private static ConsumeContext<StartJob> CreateContext(IPublishEndpointProvider publishEndpointProvider)
+    [Fact]
+    [RequirementCoverage("REQ-VSB-JOB-CANCELLATION", "job-handle-wait-observes-caller-token")]
+    public async Task CancelJobHandle_ObservesCallerCancellationWhileWaitingForTheJobAsync()
+    {
+        var clock = new FakeTimeProvider();
+        var provider = new RecordingPublishEndpointProvider(new RecordingSendEndpoint());
+        ConsumeContext<StartJob> consumeContext = CreateContext(provider, clock);
+        await using var context = new ConsumeJobContext<TestJob>(
+            consumeContext,
+            new Uri("loopback://localhost/job-instance"),
+            new TestJob(),
+            new JobOptions<TestJob>());
+        var job = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var handle = new ConsumerJobHandle<TestJob>(context, job.Task, TimeSpan.FromHours(1));
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+
+        Task cancellation = handle.CancelAsync("caller requested", source.Token);
+        Assert.False(cancellation.IsCompleted);
+        source.Cancel();
+        clock.Advance(TimeSpan.FromHours(1));
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => cancellation);
+        Assert.Equal(source.Token, exception.CancellationToken);
+        Assert.True(context.CancellationToken.IsCancellationRequested);
+    }
+
+    private static ConsumeContext<StartJob> CreateContext(IPublishEndpointProvider publishEndpointProvider, TimeProvider? timeProvider = null)
     {
         TestConsumeContext<StartJob> context = DispatchProxy.Create<TestConsumeContext<StartJob>, ConsumeContextProxy>();
-        ((ConsumeContextProxy)(object)context).Configure(new StartJobMessage(), publishEndpointProvider);
+        ((ConsumeContextProxy)(object)context).Configure(new StartJobMessage(), publishEndpointProvider, timeProvider);
         return context;
     }
 
@@ -94,10 +121,12 @@ public sealed class ConsumeJobContextCancellationTests
         private object _message = null!;
         private ReceiveContext _receiveContext = null!;
         private SerializerContext _serializerContext = null!;
+        private TimeProvider? _timeProvider;
 
-        public void Configure(object message, IPublishEndpointProvider publishEndpointProvider)
+        public void Configure(object message, IPublishEndpointProvider publishEndpointProvider, TimeProvider? timeProvider)
         {
             _message = message;
+            _timeProvider = timeProvider;
             _receiveContext = DispatchProxy.Create<ReceiveContext, ReceiveContextProxy>();
             ((ReceiveContextProxy)(object)_receiveContext).PublishEndpointProvider = publishEndpointProvider;
             _serializerContext = DispatchProxy.Create<SerializerContext, UnsupportedInvocationProxy>();
@@ -120,6 +149,12 @@ public sealed class ConsumeJobContextCancellationTests
                 case "HasPayloadType":
                     return false;
                 case "TryGetPayload":
+                    if (targetMethod.GetGenericArguments()[0] == typeof(TimeProvider) && _timeProvider is not null)
+                    {
+                        args![0] = _timeProvider;
+                        return true;
+                    }
+
                     args![0] = null;
                     return false;
                 default:

@@ -1603,6 +1603,20 @@
       "variantKey" : "null-clock-rejected"
    },
    {
+      "requirementId" : "REQ-VSB-TASK-TIMEOUT-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "AlreadyCanceledCallerToken_RemainsCancellationWithTheExactTokenAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.TaskTimeoutTimeProviderTests",
+      "variantKey" : "pre-canceled-generic-and-non-generic"
+   },
+   {
+      "requirementId" : "REQ-VSB-TASK-TIMEOUT-CANCELLATION",
+      "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
+      "testMethod" : "CallerCancellationWhileWaiting_RemainsCancellationWithTheExactTokenAsync",
+      "testType" : "ViciOne.ServiceBus.Abstractions.Tests.Internals.TaskTimeoutTimeProviderTests",
+      "variantKey" : "in-flight-generic-and-non-generic"
+   },
+   {
       "requirementId" : "REQ-VSB-COMMAND-EVENT-CLOCK",
       "testAssembly" : "ViciOne.ServiceBus.Abstractions.Tests",
       "testMethod" : "SentCommand_CarriesTheConfiguredClockAndItsExactUtcTimestampAsync",

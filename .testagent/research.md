@@ -76,3 +76,21 @@ change, default-value change, or signature change fails CI.
 ## Reference API direction
 
 The greenfield reference model is a small application surface, explicit capability packages, validated immutable options, provider contracts outside application IntelliSense, standard .NET naming and cancellation conventions, and no historical compatibility aliases. Feature preservation means retaining behavior through the correct layer; it does not require retaining accidental public exposure or silently ignored members.
+
+## Confirmed iteration-11 defects
+
+1. Both generic and non-generic `Task.OrTimeoutAsync` convert caller cancellation into a
+   `TimeoutException`, whether the token is canceled before entry or while the operation is
+   waiting. The caller's exact token and cancellation outcome are therefore lost.
+2. `ConsumerJobHandle.CancelAsync` checks the caller token only before canceling the job. It does
+   not pass that token to the subsequent job-completion wait, and its broad cancellation catch
+   would also hide caller cancellation if the token were forwarded.
+3. ActiveMQ session topic and queue deletion check cancellation only before enqueueing and then
+   submit the operation with `CancellationToken.None`, so cancellation cannot release a caller
+   waiting for bounded executor capacity.
+4. The state-machine test harness polling loop substitutes `CancellationToken.None` for its public
+   operation token, so an aborted observation can remain asleep until the polling interval ends.
+
+The iteration uses deterministic cancellation sources and virtual time. It distinguishes caller
+cancellation from a genuine timeout and from the job-owned cancellation that represents normal job
+shutdown.

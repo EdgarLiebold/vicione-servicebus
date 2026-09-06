@@ -55,6 +55,33 @@ public sealed class SagaPollingTests
         Assert.Contains("loading or querying sagas", exception.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    [RequirementCoverage("REQ-VSB-TEST-HARNESS-CANCELLATION", "state-poll-delay-observes-caller-token")]
+    public async Task StatePolling_CallerCancellationDisposesTheActiveDelayAndPreservesTheExactTokenAsync()
+    {
+        var timeProvider = new ObservableTimeProvider(StartTime);
+        var repository = new QuerySagaRepository();
+        var machine = new PollingStateMachine();
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+
+        Task<Guid?> observation = repository.ShouldContainSagaInStateAsync(
+            NewId.NextGuid(),
+            machine,
+            machine.Initial,
+            TimeSpan.FromMinutes(1),
+            timeProvider,
+            source.Token);
+        await timeProvider.WaitForTimerCountAsync(1).WaitAsync(OperationTimeout(), TestContext.Current.CancellationToken);
+        Assert.Equal(1, timeProvider.ActiveTimerCount);
+
+        source.Cancel();
+
+        Assert.Equal(0, timeProvider.ActiveTimerCount);
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => observation);
+        Assert.Equal(source.Token, exception.CancellationToken);
+        Assert.Equal(1, repository.QueryCount);
+    }
+
     private static TimeSpan OperationTimeout() => TestConfigurationProvider.ForCurrentTestRun()
         .GetValidatedOptions()
         .OperationTimeout!.Value;
@@ -92,6 +119,50 @@ public sealed class SagaPollingTests
             ISagaQuery<PollingSaga> query,
             ISagaPolicy<PollingSaga, T> policy,
             IPipe<SagaConsumeContext<PollingSaga, T>> next)
+            where T : class => Task.CompletedTask;
+
+        public void Probe(ProbeContext context)
+        {
+        }
+    }
+
+    private sealed class PollingState : SagaStateMachineInstance
+    {
+        public Guid CorrelationId { get; set; }
+
+        public string CurrentState { get; set; } = string.Empty;
+    }
+
+    private sealed class PollingStateMachine : ViciOneServiceBusStateMachine<PollingState>
+    {
+        public PollingStateMachine()
+        {
+            InstanceState(instance => instance.CurrentState);
+        }
+    }
+
+    private sealed class QuerySagaRepository : ISagaRepository<PollingState>, IQuerySagaRepository<PollingState>
+    {
+        public int QueryCount { get; private set; }
+
+        public Task<IEnumerable<Guid>> FindAsync(ISagaQuery<PollingState> query, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            QueryCount++;
+            return Task.FromResult<IEnumerable<Guid>>([]);
+        }
+
+        public Task SendAsync<T>(
+            ConsumeContext<T> context,
+            ISagaPolicy<PollingState, T> policy,
+            IPipe<SagaConsumeContext<PollingState, T>> next)
+            where T : class => Task.CompletedTask;
+
+        public Task SendQueryAsync<T>(
+            ConsumeContext<T> context,
+            ISagaQuery<PollingState> query,
+            ISagaPolicy<PollingState, T> policy,
+            IPipe<SagaConsumeContext<PollingState, T>> next)
             where T : class => Task.CompletedTask;
 
         public void Probe(ProbeContext context)

@@ -269,3 +269,30 @@ API changes require the explicit `--update-public-api-contract` operation.
 - Fresh-package comparison gate: 18 journeys, 30 packages, 3 executable provider consumers, and
   all 29 runtime package APIs passed.
 - Engineering whitespace, warning-level style, and Git whitespace: passed.
+
+## Iteration 11
+
+Iteration 11 preserves caller cancellation across timeout wrappers, job shutdown, ActiveMQ
+destination cleanup, and state-machine harness polling. Generic and non-generic timeout helpers now
+retain the exact caller token both before entry and while waiting. Job cancellation distinguishes a
+caller-aborted wait from expected job-owned cancellation. ActiveMQ propagates cancellation through
+bounded executor admission for queue and topic deletion, and the test harness no longer creates a
+non-cancelable polling delay.
+
+### Red/green and mutation evidence
+
+- The initial focused profiles failed in all eight new behavior partitions: four timeout cases, one
+  job-handle case, two ActiveMQ cases, and one state-polling case.
+- Five isolated mutations were killed: pre-cancellation translated to timeout, in-flight
+  cancellation translated to timeout, an omitted job wait token, an omitted ActiveMQ admission
+  token, and a non-cancelable state-poll delay.
+- Every mutation was restored before final validation.
+
+### Full validation
+
+- Release Unit/Architecture build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,826 passed, 0 failed, 0 skipped.
+- Release Engineering build with warnings as errors: passed, 0 warnings and 0 errors.
+- Fresh-package comparison gate: 18 journeys, 30 packages, 3 executable isolated consumers, and
+  all 29 runtime package APIs passed against the unchanged 24,000-line contract.
+- Engineering warning-level format verification and Git whitespace validation: passed.

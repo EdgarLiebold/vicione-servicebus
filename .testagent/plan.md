@@ -238,3 +238,28 @@ committed packed API baseline.
   assertions must fail.
 - Remove one expected package artifact from the gate catalog: the exact packable-project/package
   comparison must fail.
+
+## Iteration 11 outcome
+
+Preserve caller cancellation as cancellation across timeout wrappers, job shutdown, provider
+cleanup admission, and test-harness polling. Genuine elapsed deadlines must remain timeouts, while
+job-owned cancellation remains a successful shutdown condition.
+
+## Iteration 11 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-TASK-TIMEOUT-CANCELLATION` | generic and non-generic, pre-canceled and canceled while waiting | abstractions tests | exact caller token in `OperationCanceledException` for all four partitions |
+| `REQ-VSB-JOB-CANCELLATION` | caller cancellation during the completion wait | core job tests | exact caller token escapes while the job-owned token is canceled |
+| `REQ-VSB-ACTIVEMQ-CANCELLATION` | queue and topic deletion canceled during bounded admission | ActiveMQ tests | queued broker operation is not invoked and exact token escapes |
+| `REQ-VSB-TEST-HARNESS-CANCELLATION` | state observation canceled during polling | testing tests | polling returns caller cancellation without waiting for another interval |
+
+## Iteration 11 mutation obligations
+
+- Restore either timeout-wrapper cancellation branch to `TimeoutException`: its exact generic or
+  non-generic cancellation test must fail.
+- Omit the caller token from the job-completion wait or catch caller cancellation: the job-handle
+  test must fail.
+- Restore `CancellationToken.None` for either ActiveMQ deletion: the corresponding saturated-queue
+  test must fail.
+- Restore the non-cancelable state-machine polling delay: its in-flight cancellation test must fail.

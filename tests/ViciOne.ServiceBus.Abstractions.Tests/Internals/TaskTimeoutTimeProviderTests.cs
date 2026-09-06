@@ -46,6 +46,47 @@ public sealed class TaskTimeoutTimeProviderTests
         Assert.Equal(173, await observed);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CANCELLATION", "pre-canceled-generic-and-non-generic")]
+    public async Task AlreadyCanceledCallerToken_RemainsCancellationWithTheExactTokenAsync(bool generic)
+    {
+        var clock = new FakeTimeProvider(StartTime);
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        source.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            generic
+                ? new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously).Task
+                    .OrTimeoutAsync(TimeSpan.FromHours(1), clock, source.Token)
+                : new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously).Task
+                    .OrTimeoutAsync(TimeSpan.FromHours(1), clock, source.Token));
+
+        Assert.Equal(source.Token, exception.CancellationToken);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CANCELLATION", "in-flight-generic-and-non-generic")]
+    public async Task CallerCancellationWhileWaiting_RemainsCancellationWithTheExactTokenAsync(bool generic)
+    {
+        var clock = new FakeTimeProvider(StartTime);
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task observed = generic
+            ? new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously).Task
+                .OrTimeoutAsync(TimeSpan.FromHours(1), clock, source.Token)
+            : new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously).Task
+                .OrTimeoutAsync(TimeSpan.FromHours(1), clock, source.Token);
+        Assert.False(observed.IsCompleted);
+
+        source.Cancel();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => observed);
+        Assert.Equal(source.Token, exception.CancellationToken);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-TASK-TIMEOUT-CLOCK", "null-clock-rejected")]
     public void ExplicitNullClock_IsRejectedAtThePublicBoundary()

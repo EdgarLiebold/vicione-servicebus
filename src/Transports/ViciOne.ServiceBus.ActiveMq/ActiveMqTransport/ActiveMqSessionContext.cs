@@ -283,13 +283,16 @@ public class ActiveMqSessionContext :
     /// <returns>The result of the operation.</returns>
     public Task DeleteTopicAsync(string topicName, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); TransportLogMessages.DeleteTopic(topicName);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        TransportLogMessages.DeleteTopic(topicName);
 
         return _executor.ExecuteAsync(() =>
         {
             if (!ConnectionContext.TryRemoveTemporaryEntity(_session, topicName))
                 SessionUtil.DeleteTopic(_session, topicName);
-        }, CancellationToken.None);
+        }, cancellationToken);
     }
 
     /// <summary>
@@ -300,14 +303,16 @@ public class ActiveMqSessionContext :
     /// <returns>The result of the operation.</returns>
     public Task DeleteQueueAsync(string queueName, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken.IsCancellationRequested) return global::System.Threading.Tasks.Task.FromCanceled(cancellationToken); TransportLogMessages.DeleteQueue(queueName);
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        TransportLogMessages.DeleteQueue(queueName);
 
         return _executor.ExecuteAsync(() =>
-            {
-                if (!ConnectionContext.TryRemoveTemporaryEntity(_session, queueName))
-                    SessionUtil.DeleteQueue(_session, queueName);
-            }
-            , CancellationToken.None);
+        {
+            if (!ConnectionContext.TryRemoveTemporaryEntity(_session, queueName))
+                SessionUtil.DeleteQueue(_session, queueName);
+        }, cancellationToken);
     }
 
     /// <summary>

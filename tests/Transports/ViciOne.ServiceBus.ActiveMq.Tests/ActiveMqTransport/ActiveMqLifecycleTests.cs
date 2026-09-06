@@ -255,6 +255,58 @@ public sealed class ActiveMqLifecycleTests
             exception => Assert.Same(disposeFailure, exception));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [RequirementCoverage("REQ-VSB-ACTIVEMQ-CANCELLATION", "delete-admission-observes-caller-token")]
+    public async Task DestinationDelete_CancelsWhileWaitingForBoundedExecutorCapacityAsync(bool topic)
+    {
+        using var releaseWorker = new ManualResetEventSlim();
+        var workerStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var deleted = new ConcurrentBag<string>();
+        ISession session = InterfaceProxy<ISession>.Create((method, args) => method.Name switch
+        {
+            nameof(ISession.GetQueue) => QueueDestination(Assert.IsType<string>(args![0])),
+            nameof(ISession.GetTopic) => TopicDestination(Assert.IsType<string>(args![0])),
+            nameof(ISession.DeleteDestination) => DeleteDestinationForCancellation(
+                Assert.IsAssignableFrom<IDestination>(args![0]),
+                deleted,
+                workerStarted,
+                releaseWorker),
+            nameof(ISession.CloseAsync) => Task.CompletedTask,
+            _ => Default(method.ReturnType),
+        });
+        await using ActiveMqConnectionContext connectionContext = CreateConnectionContext(
+            InterfaceProxy<IConnection>.Create((method, _) => method.Name switch
+            {
+                nameof(IConnection.CloseAsync) => Task.CompletedTask,
+                _ => Default(method.ReturnType),
+            }));
+        await using var context = new ActiveMqSessionContext(connectionContext, session, TestContext.Current.CancellationToken);
+
+        Task blocker = DeleteAsync("blocker", TestContext.Current.CancellationToken);
+        await workerStarted.Task;
+        Task[] queued = Enumerable.Range(0, 32)
+            .Select(index => DeleteAsync($"queued-{index}", TestContext.Current.CancellationToken))
+            .ToArray();
+        using var source = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
+        Task canceled = DeleteAsync("canceled", source.Token);
+        Assert.False(canceled.IsCompleted);
+
+        source.Cancel();
+        releaseWorker.Set();
+
+        OperationCanceledException exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => canceled);
+        Assert.Equal(source.Token, exception.CancellationToken);
+        await Task.WhenAll(queued.Prepend(blocker));
+        Assert.DoesNotContain("canceled", deleted);
+
+        Task DeleteAsync(string name, CancellationToken cancellationToken = default) =>
+            topic
+                ? context.DeleteTopicAsync(name, cancellationToken)
+                : context.DeleteQueueAsync(name, cancellationToken);
+    }
+
     [Fact]
     [RequirementCoverage("REQ-VSB-ACTIVEMQ-LIFECYCLE", "auto-delete-cleanup-attempts-every-entity-after-failure")]
     public async Task AutoDeleteCleanup_AggregatesFailuresInStableOrderAndAttemptsEveryDistinctEntityAsync()
@@ -515,6 +567,29 @@ public sealed class ActiveMqLifecycleTests
         var topic = Assert.IsAssignableFrom<ITopic>(destination);
         attempted.Add($"topic:{topic.TopicName}");
         throw secondFailure;
+    }
+
+    private static object? DeleteDestinationForCancellation(
+        IDestination destination,
+        ConcurrentBag<string> deleted,
+        TaskCompletionSource workerStarted,
+        ManualResetEventSlim releaseWorker)
+    {
+        string name = destination switch
+        {
+            IQueue queue => queue.QueueName,
+            ITopic topic => topic.TopicName,
+            _ => throw new InvalidOperationException("Expected a queue or topic destination."),
+        };
+        deleted.Add(name);
+
+        if (name == "blocker")
+        {
+            workerStarted.TrySetResult();
+            releaseWorker.Wait(TestContext.Current.CancellationToken);
+        }
+
+        return null;
     }
 
     private static IQueue QueueDestination(string name) =>

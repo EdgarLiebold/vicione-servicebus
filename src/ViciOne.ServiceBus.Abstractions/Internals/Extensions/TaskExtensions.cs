@@ -102,7 +102,7 @@ internal static class TaskExtensions
         if (cancellationToken.IsCancellationRequested)
         {
             task.IgnoreUnobservedExceptions();
-            throw new TimeoutException(FormatTimeoutMessage(memberName, filePath, lineNumber));
+            return Task.FromCanceled(cancellationToken);
         }
 
         async Task WaitAsync()
@@ -114,6 +114,7 @@ internal static class TaskExtensions
             if (completed == delayTask)
             {
                 task.IgnoreUnobservedExceptions();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 throw new TimeoutException(FormatTimeoutMessage(memberName, filePath, lineNumber));
             }
@@ -161,7 +162,7 @@ internal static class TaskExtensions
         if (cancellationToken.IsCancellationRequested)
         {
             task.IgnoreUnobservedExceptions();
-            throw new TimeoutException(FormatTimeoutMessage(memberName, filePath, lineNumber));
+            return Task.FromCanceled<T>(cancellationToken);
         }
 
         async Task<T> WaitAsync()
@@ -173,6 +174,7 @@ internal static class TaskExtensions
             if (completed == delayTask)
             {
                 task.IgnoreUnobservedExceptions();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 throw new TimeoutException(FormatTimeoutMessage(memberName, filePath, lineNumber));
             }

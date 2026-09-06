@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>
@@ -39,23 +38,24 @@ public class ConsumerJobHandle<T> :
     public Task JobTask { get; }
 
     /// <summary>
-    /// Determines whether the current value can cel.
+    /// Cancels the running job and waits for it to observe cancellation.
     /// </summary>
     /// <param name="reason">The reason value.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The result of the operation.</returns>
     public async Task CancelAsync(string? reason, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested(); if (_context.CancellationToken.IsCancellationRequested)
+        cancellationToken.ThrowIfCancellationRequested();
+        if (_context.CancellationToken.IsCancellationRequested)
             return;
 
         _context.Cancel(reason);
 
         try
         {
-            await JobTask.OrTimeoutAsync(_jobCancellationTimeout, _context.GetTimeProvider()).ConfigureAwait(false);
+            await JobTask.OrTimeoutAsync(_jobCancellationTimeout, _context.GetTimeProvider(), cancellationToken).ConfigureAwait(false);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
         }
     }
