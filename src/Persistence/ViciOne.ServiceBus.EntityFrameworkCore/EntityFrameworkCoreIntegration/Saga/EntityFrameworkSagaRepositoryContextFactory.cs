@@ -156,7 +156,6 @@ public class EntityFrameworkSagaRepositoryContextFactory<TSaga> :
                     await SendQueryCallbackAsync(lockContext, repositoryContext).ConfigureAwait(false);
                 else
                 {
-                    // ReSharper disable once AccessToDisposedClosure
                     await WithinTransactionAsync(dbContext, context.CancellationToken, () => SendQueryCallbackAsync(lockContext, repositoryContext))
                         .ConfigureAwait(false);
                 }

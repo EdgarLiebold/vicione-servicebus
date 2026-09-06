@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Caching.Implementation;
 
 internal readonly struct PreparedResourceKeys<TValue>

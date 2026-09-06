@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.Providers.Configuration;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

@@ -11,10 +11,10 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class AzureBusFactory
 {
     /// <summary>
-    /// Configure and create a bus for Azure Service Bus (later, we'll use Event Hubs instead)
+    /// Creates an Azure Service Bus instance using the supplied transport configuration.
     /// </summary>
     /// <param name="configure">The configuration callback to configure the bus</param>
-    /// <returns></returns>
+    /// <returns>The configured bus.</returns>
     public static IBusControl CreateUsingServiceBus(Action<IServiceBusBusFactoryConfigurator> configure)
     {
         var topologyConfiguration = new ServiceBusTopologyConfiguration(CreateMessageTopology());

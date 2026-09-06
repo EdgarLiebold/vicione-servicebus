@@ -62,8 +62,6 @@ public class RequestStateMachine :
     }
 
     //
-    // ReSharper disable UnassignedGetOnlyAutoProperty
-    // ReSharper disable MemberCanBePrivate.Global
     /// <summary>
     /// Gets the pending value.
     /// </summary>

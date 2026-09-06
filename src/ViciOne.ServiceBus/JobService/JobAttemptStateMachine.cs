@@ -185,8 +185,6 @@ public sealed class JobAttemptStateMachine :
     }
 
     //
-    // ReSharper disable UnassignedGetOnlyAutoProperty
-    // ReSharper disable MemberCanBePrivate.Global
     /// <summary>
     /// Gets the starting value.
     /// </summary>

@@ -5,7 +5,6 @@ using System.Threading;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Monitoring;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 internal static class CircuitBreakerTelemetry

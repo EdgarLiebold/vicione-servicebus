@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastExpressionCompiler"/>
     <PackageReference Include="MessagePack"/>
   </ItemGroup>
 

@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.Saga;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
 /// <summary>

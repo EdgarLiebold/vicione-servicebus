@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastExpressionCompiler" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../ViciOne.ServiceBus/ViciOne.ServiceBus.csproj" />
   </ItemGroup>
 

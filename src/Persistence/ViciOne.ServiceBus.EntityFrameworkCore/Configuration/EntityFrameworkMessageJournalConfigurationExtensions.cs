@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

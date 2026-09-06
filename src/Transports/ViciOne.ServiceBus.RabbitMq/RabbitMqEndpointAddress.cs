@@ -7,7 +7,6 @@ using System.Text;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

@@ -3,7 +3,6 @@ using System.Net.Mime;
 using System.Text.Json;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

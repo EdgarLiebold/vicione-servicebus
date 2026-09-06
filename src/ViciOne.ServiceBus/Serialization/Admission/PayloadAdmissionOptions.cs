@@ -2,7 +2,6 @@ using System;
 
 using Microsoft.Extensions.Options;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 /// <summary>Mutable startup options frozen into one bus-owned payload-admission policy.</summary>

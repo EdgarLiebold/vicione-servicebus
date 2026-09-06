@@ -2,7 +2,6 @@ using Azure.Messaging.EventHubs.Processor;
 
 namespace ViciOne.ServiceBus.EventHubs.Checkpoints;
 
-// ReSharper disable NotAccessedField.Local
 /// <summary>
 /// Represents a partition offset value.
 /// </summary>

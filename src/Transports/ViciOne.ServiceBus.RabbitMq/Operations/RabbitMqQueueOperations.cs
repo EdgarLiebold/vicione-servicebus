@@ -7,7 +7,6 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq.Operations;
 
 internal sealed class RabbitMqQueueOperations : IRabbitMqQueueOperations

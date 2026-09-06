@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.Metadata;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq.Configuration;
 
 class ConfigurationHostSettings :

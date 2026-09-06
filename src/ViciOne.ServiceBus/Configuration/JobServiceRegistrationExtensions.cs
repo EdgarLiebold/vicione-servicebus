@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection.Registration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

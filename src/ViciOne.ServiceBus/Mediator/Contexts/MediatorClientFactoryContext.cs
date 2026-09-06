@@ -1,7 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Mediator.Contexts;
 
 /// <summary>

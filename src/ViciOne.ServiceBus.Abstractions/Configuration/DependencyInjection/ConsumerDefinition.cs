@@ -21,7 +21,6 @@ public class ConsumerDefinition<TConsumer> :
     /// </summary>
     protected ConsumerDefinition()
     {
-        // TODO if the partitionKey is specified, use a partition filter instead of a semaphore
     }
 
     /// <summary>

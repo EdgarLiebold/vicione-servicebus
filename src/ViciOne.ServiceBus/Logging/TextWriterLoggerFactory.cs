@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
 /// <summary>

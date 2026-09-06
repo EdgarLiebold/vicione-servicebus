@@ -3,7 +3,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.MessageData.Configuration;
 using ViciOne.ServiceBus.MessageData.Conventions;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

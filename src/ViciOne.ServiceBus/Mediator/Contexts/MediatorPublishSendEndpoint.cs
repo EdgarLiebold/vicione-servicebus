@@ -73,7 +73,6 @@ public class MediatorPublishSendEndpoint :
 
             publishContext.IsPublish = true;
 
-            // ReSharper disable once SuspiciousTypeConversion.Global
             if (_pipe is ISendContextPipe sendContextPipe)
                 await sendContextPipe.SendAsync(context).ConfigureAwait(false);
 

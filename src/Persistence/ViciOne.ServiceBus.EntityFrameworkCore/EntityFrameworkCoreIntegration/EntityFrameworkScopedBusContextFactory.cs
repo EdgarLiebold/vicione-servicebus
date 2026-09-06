@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal sealed class EntityFrameworkScopedBusContextFactory<TBus, TDbContext> :

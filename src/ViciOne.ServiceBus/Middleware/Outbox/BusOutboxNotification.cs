@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
 /// <summary>

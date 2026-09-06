@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

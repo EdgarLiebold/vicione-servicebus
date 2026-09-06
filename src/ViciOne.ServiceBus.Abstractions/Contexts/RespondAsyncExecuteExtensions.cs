@@ -17,7 +17,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="context">The context to send the message</param>
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync<T>(this ConsumeContext context, T message, Action<SendContext<T>> callback)
         where T : class
     {
@@ -33,7 +33,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="context">The context to send the message</param>
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync<T>(this ConsumeContext context, T message, Func<SendContext<T>, Task> callback)
         where T : class
     {
@@ -48,7 +48,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="context">The context to send the message</param>
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync(this ConsumeContext context, object message, Action<SendContext> callback)
     {
         return context.RespondAsync(message, callback.ToPipe());
@@ -62,7 +62,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="context">The context to send the message</param>
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync(this ConsumeContext context, object message, Func<SendContext, Task> callback)
     {
         return context.RespondAsync(message, callback.ToPipe());
@@ -77,7 +77,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="messageType">The message type to send the object as</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync(this ConsumeContext context, object message, Type messageType, Action<SendContext> callback)
     {
         return context.RespondAsync(message, messageType, callback.ToPipe());
@@ -92,7 +92,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="messageType">The message type to send the object as</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync(this ConsumeContext context, object message, Type messageType, Func<SendContext, Task> callback)
     {
         return context.RespondAsync(message, messageType, callback.ToPipe());
@@ -107,7 +107,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="context">The context to send the message</param>
     /// <param name="values">The values that map to the object</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync<T>(this ConsumeContext context, object values, Action<SendContext<T>> callback)
         where T : class
     {
@@ -123,7 +123,7 @@ public static class RespondAsyncExecuteExtensions
     /// <param name="context">The context to send the message</param>
     /// <param name="values">The values that map to the object</param>
     /// <param name="callback">The callback for the send context</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task RespondAsync<T>(this ConsumeContext context, object values, Func<SendContext<T>, Task> callback)
         where T : class
     {

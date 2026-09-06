@@ -1,7 +1,6 @@
 using System;
 using System.Data;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>

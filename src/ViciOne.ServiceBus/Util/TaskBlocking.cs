@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Util;
 /// <summary>
 /// Explicit synchronous boundary for synchronous host APIs. Product code should prefer async

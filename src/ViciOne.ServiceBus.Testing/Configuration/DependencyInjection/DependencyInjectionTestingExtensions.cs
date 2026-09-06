@@ -17,7 +17,6 @@ using ViciOne.ServiceBus.Testing;
 using ViciOne.ServiceBus.Testing.Implementations;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>

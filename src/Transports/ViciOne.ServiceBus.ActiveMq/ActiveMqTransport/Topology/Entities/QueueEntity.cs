@@ -88,7 +88,7 @@ public class QueueEntity :
             {
                 var hashCode = obj.EntityName.GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.AutoDelete.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.Durable.GetHashCode(); //TODO
+                hashCode = (hashCode * 397) ^ obj.Durable.GetHashCode();
                 return hashCode;
             }
         }

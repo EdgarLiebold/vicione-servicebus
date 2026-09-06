@@ -27,7 +27,7 @@ public sealed class AmazonSqsMessageReceiver :
     readonly ReceiveSettings _receiveSettings;
 
     /// <summary>
-    /// The basic consumer receives messages pushed from the broker.
+    /// Polls Amazon SQS for messages and dispatches them to the receive pipeline.
     /// </summary>
     /// <param name="client">The model context for the consumer</param>
     /// <param name="context">The topology</param>

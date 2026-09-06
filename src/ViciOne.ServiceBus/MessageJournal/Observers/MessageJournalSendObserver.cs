@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 
-#nullable enable
 namespace ViciOne.ServiceBus.MessageJournal.Observers;
 
 internal sealed class MessageJournalSendObserver : ISendObserver

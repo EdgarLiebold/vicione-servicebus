@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
 /// <summary>

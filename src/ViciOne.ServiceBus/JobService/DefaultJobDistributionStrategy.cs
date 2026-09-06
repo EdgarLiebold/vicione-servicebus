@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Contracts.JobService;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>

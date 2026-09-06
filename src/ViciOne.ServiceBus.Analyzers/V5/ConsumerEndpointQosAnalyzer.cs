@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Analyzers.V5;
 

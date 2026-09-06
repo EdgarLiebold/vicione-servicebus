@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Testing.Implementations;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
 /// <summary>

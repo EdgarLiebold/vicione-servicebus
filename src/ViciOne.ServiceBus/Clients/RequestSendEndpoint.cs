@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Clients;
 
 /// <summary>

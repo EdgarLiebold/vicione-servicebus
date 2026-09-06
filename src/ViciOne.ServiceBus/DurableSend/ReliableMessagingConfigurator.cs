@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

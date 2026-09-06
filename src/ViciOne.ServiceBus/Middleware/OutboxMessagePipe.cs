@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>

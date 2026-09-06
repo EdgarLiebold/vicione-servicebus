@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

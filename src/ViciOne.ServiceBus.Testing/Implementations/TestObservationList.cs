@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
 sealed class TestObservationList<T>

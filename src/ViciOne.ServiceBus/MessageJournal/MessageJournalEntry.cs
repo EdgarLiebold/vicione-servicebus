@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-#nullable enable
 namespace ViciOne.ServiceBus.MessageJournal;
 /// <summary>
 /// Immutable, sanitized message-journal entry delivered to a persistence provider.

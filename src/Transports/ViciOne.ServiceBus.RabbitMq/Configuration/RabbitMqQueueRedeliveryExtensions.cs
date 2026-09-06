@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

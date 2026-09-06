@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Transports.Components;
 /// <summary>
 /// Owns the complete pause-and-restart lifecycle for one receive endpoint. Configuration is immutable,

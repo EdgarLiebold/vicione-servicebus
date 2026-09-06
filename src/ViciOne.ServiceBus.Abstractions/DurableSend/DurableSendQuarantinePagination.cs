@@ -3,7 +3,6 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Canonical seek-token codec shared by durable persistence providers.</summary>

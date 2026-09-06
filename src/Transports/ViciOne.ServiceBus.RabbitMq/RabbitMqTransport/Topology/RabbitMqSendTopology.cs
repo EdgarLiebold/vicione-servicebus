@@ -56,7 +56,6 @@ public class RabbitMqSendTopology :
         return new RabbitMqSendSettings(address);
     }
 
-    // TODO this is a smell, send for error/dead-letter settings?
     /// <summary>
     /// Gets error settings.
     /// </summary>

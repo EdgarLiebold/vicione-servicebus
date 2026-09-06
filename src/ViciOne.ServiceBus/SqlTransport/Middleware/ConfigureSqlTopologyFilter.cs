@@ -4,7 +4,6 @@ using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.SqlTransport.Topology;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Middleware;
 /// <summary>
 /// Configures the broker with the supplied topology once the model is created, to ensure

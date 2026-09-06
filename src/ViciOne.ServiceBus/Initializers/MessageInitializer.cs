@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.Initializers.Contexts;
 using ViciOne.ServiceBus.Initializers.Conventions;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Initializers;
 
 /// <summary>

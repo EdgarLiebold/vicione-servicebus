@@ -51,10 +51,9 @@ public class ReceiveTransport<TContext> :
     }
 
     /// <summary>
-    /// Start the receive transport, returning a Task that can be awaited to signal the transport has
-    /// completely shutdown once the cancellation token is cancelled.
+    /// Starts the receive transport.
     /// </summary>
-    /// <returns>A task that is completed once the transport is shut down</returns>
+    /// <returns>A handle that exposes transport readiness and controls its lifetime.</returns>
     public ReceiveTransportHandle Start()
     {
         return new ReceiveTransportAgent(_hostConfiguration.ReceiveTransportRetryPolicy, _context, _supervisorFactory, _transportPipe, PreStartPipe);

@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 

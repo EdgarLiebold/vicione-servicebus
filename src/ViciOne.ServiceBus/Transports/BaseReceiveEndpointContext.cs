@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Observables;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Transports;
 
 /// <summary>

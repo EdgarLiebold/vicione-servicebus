@@ -3,7 +3,6 @@ using System.Net;
 using Amazon.Runtime;
 using Amazon.SQS.Model;
 
-#nullable enable
 namespace ViciOne.ServiceBus.AmazonSqs;
 /// <summary>
 /// Classifies Amazon SQS send failures from typed SDK exceptions and HTTP status codes.

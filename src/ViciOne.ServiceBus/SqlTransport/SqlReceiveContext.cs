@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport;
 
 /// <summary>

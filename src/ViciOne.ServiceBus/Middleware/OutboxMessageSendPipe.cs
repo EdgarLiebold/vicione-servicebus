@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>

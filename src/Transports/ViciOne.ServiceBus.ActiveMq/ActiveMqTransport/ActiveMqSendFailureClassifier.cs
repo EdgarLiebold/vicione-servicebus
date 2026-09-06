@@ -1,7 +1,6 @@
 using System;
 using Apache.NMS;
 
-#nullable enable
 namespace ViciOne.ServiceBus.ActiveMq;
 /// <summary>
 /// Classifies ActiveMQ send failures from typed NMS and transport data without inspecting exception text.

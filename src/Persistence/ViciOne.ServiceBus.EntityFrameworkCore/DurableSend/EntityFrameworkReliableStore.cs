@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// <summary>

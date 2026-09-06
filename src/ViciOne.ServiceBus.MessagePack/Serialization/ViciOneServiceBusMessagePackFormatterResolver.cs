@@ -1,5 +1,3 @@
-#define USE_CONCRETE_MAPPERS
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -38,7 +36,6 @@ class ViciOneServiceBusMessagePackFormatterResolver :
         _mappedNonGenericTypes = new Dictionary<Type, Type>
         {
             // May only contain non-open generic types.
-        #if USE_CONCRETE_MAPPERS
             { typeof(Fault), typeof(InterfaceConcreteMapFormatter<Fault, FaultEvent>) },
             { typeof(ReceiveFault), typeof(InterfaceConcreteMapFormatter<ReceiveFault, ReceiveFaultEvent>) },
             { typeof(ExceptionInfo), typeof(InterfaceConcreteMapFormatter<ExceptionInfo, FaultExceptionInfo>) },
@@ -116,7 +113,6 @@ class ViciOneServiceBusMessagePackFormatterResolver :
             { typeof(SetJobProgress), typeof(InterfaceConcreteMapFormatter<SetJobProgress, SetJobProgressCommand>) },
             { typeof(StartJob), typeof(InterfaceConcreteMapFormatter<StartJob, StartJobCommand>) },
             { typeof(StartJobAttempt), typeof(InterfaceConcreteMapFormatter<StartJobAttempt, StartJobAttemptCommand>) }
-        #endif
         };
 
         _cachedFormatters = new ConcurrentDictionary<Type, IMessagePackFormatter>();

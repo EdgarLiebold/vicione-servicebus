@@ -2,7 +2,6 @@ using System;
 using RabbitMQ.Client;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

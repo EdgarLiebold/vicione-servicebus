@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.InMemoryTransport;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Transports.Fabric;
 
 /// <summary>

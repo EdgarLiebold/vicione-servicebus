@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 using ViciOne.ServiceBus.Analyzers.Helpers;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Analyzers;
 
 /// <summary>

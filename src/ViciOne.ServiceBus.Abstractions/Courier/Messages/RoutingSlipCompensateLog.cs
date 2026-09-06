@@ -36,7 +36,6 @@ public class RoutingSlipCompensateLog :
     /// Initializes a new instance of the containing type.
     /// </summary>
     /// <param name="compensateLog">The compensate log value.</param>
-    [SuppressMessage("ReSharper", "ConstantNullCoalescingCondition")]
     public RoutingSlipCompensateLog(CompensateLog compensateLog)
     {
         if (compensateLog.Address == null)

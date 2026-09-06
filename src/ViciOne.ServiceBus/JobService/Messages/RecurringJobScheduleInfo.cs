@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService.Scheduling;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService.Messages;
 
 /// <summary>

@@ -24,17 +24,18 @@ public interface ChannelContext :
     ConnectionContext ConnectionContext { get; }
 
     /// <summary>
-    /// Publish a message to the broker, asynchronously
+    /// Publishes a message to RabbitMQ asynchronously.
     /// </summary>
     /// <param name="exchange">The destination exchange</param>
     /// <param name="routingKey">The exchange routing key</param>
     /// <param name="mandatory">true if the message must be delivered</param>
     /// <param name="basicProperties">The message properties</param>
     /// <param name="body">The message body</param>
-    /// <param name="awaitAck"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="awaitAck"><see langword="true"/> to await RabbitMQ publisher confirmation before completing; otherwise, the publish remains internally observed.</param>
+    /// <param name="cancellationToken">The token used to cancel the publish operation.</param>
     /// <returns>
-    /// An awaitable Task that is completed when the message is acknowledged by the broker
+    /// A task that completes after publisher confirmation when <paramref name="awaitAck"/> is <see langword="true"/>;
+    /// otherwise, it completes after the RabbitMQ client accepts the publish operation.
     /// </returns>
     Task BasicPublishAsync(string exchange, string routingKey, bool mandatory, BasicProperties basicProperties, byte[] body, bool awaitAck, CancellationToken cancellationToken);
 

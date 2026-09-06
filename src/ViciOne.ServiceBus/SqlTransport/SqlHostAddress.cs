@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Scheduling;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

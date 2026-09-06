@@ -10,7 +10,6 @@ using ViciOne.ServiceBus.EntityFrameworkCore;
 using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Transactions;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

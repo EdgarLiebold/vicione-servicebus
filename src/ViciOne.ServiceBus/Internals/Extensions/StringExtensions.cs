@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Internals;
 
 static class StringExtensions

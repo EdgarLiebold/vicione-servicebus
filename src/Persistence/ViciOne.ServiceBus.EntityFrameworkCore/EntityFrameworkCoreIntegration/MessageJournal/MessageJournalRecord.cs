@@ -2,7 +2,6 @@ using System;
 using System.Text.Json;
 using ViciOne.ServiceBus.MessageJournal;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
 /// <summary>
 /// Relational persistence representation of a sanitized message-journal entry.

@@ -15,7 +15,7 @@ public static class SendConsumeContextExtensions
     /// <param name="context"></param>
     /// <param name="destinationAddress"></param>
     /// <param name="message">The message</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync<T>(this ConsumeContext context, Uri destinationAddress, T message, CancellationToken cancellationToken = default)
         where T : class
@@ -33,7 +33,7 @@ public static class SendConsumeContextExtensions
     /// <param name="destinationAddress"></param>
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync<T>(this ConsumeContext context, Uri destinationAddress, T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -51,7 +51,7 @@ public static class SendConsumeContextExtensions
     /// <param name="destinationAddress"></param>
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync<T>(this ConsumeContext context, Uri destinationAddress, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -67,7 +67,7 @@ public static class SendConsumeContextExtensions
     /// <param name="context"></param>
     /// <param name="destinationAddress"></param>
     /// <param name="message">The message</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, CancellationToken cancellationToken = default)
     {
@@ -83,7 +83,7 @@ public static class SendConsumeContextExtensions
     /// <param name="destinationAddress"></param>
     /// <param name="message">The message</param>
     /// <param name="messageType"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, Type messageType, CancellationToken cancellationToken = default)
     {
@@ -100,7 +100,7 @@ public static class SendConsumeContextExtensions
     /// <param name="message">The message</param>
     /// <param name="messageType"></param>
     /// <param name="pipe"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -116,7 +116,7 @@ public static class SendConsumeContextExtensions
     /// <param name="destinationAddress"></param>
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync(this ConsumeContext context, Uri destinationAddress, object message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -132,7 +132,7 @@ public static class SendConsumeContextExtensions
     /// <param name="context"></param>
     /// <param name="destinationAddress"></param>
     /// <param name="values"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync<T>(this ConsumeContext context, Uri destinationAddress, object values, CancellationToken cancellationToken = default)
         where T : class
@@ -150,7 +150,7 @@ public static class SendConsumeContextExtensions
     /// <param name="destinationAddress"></param>
     /// <param name="values"></param>
     /// <param name="pipe"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync<T>(this ConsumeContext context, Uri destinationAddress, object values, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -168,7 +168,7 @@ public static class SendConsumeContextExtensions
     /// <param name="destinationAddress"></param>
     /// <param name="values"></param>
     /// <param name="pipe"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     public static async Task SendAsync<T>(this ConsumeContext context, Uri destinationAddress, object values, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class

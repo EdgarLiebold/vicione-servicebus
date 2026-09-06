@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.DependencyInjection;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// <summary>
 /// Caches exactly one transactional EF bus-outbox session per DbContext type for one bus and DI scope.

@@ -16,7 +16,6 @@ using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal class EntityFrameworkScopedBusContext<TBus, TDbContext> :

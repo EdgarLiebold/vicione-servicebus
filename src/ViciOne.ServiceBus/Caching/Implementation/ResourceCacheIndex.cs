@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Caching.Implementation;
 
 internal abstract class ResourceCacheIndexBase<TValue>

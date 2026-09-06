@@ -1,7 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Providers.Persistence;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

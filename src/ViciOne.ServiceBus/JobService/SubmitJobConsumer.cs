@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.Contracts.JobService;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.JobService.Scheduling;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>

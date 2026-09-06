@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Metadata;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

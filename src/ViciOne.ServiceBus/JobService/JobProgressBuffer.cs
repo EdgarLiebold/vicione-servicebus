@@ -4,7 +4,6 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.JobService.Messages;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>

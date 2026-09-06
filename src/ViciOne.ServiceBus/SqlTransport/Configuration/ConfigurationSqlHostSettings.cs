@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
 /// <summary>

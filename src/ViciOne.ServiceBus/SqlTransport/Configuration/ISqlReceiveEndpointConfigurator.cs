@@ -1,7 +1,6 @@
 using System;
 using ViciOne.ServiceBus.SqlTransport;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>

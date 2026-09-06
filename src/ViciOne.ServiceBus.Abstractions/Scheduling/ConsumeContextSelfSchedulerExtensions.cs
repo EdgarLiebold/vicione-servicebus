@@ -15,9 +15,9 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, T message,
         CancellationToken cancellationToken = default)
         where T : class
@@ -33,10 +33,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -52,10 +52,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -70,9 +70,9 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         CancellationToken cancellationToken = default)
     {
@@ -87,10 +87,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
@@ -104,10 +104,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -122,11 +122,11 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, DateTimeOffset dueAt, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -142,9 +142,9 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, object values,
         CancellationToken cancellationToken = default)
         where T : class
@@ -161,10 +161,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -181,10 +181,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="dueAt">The time at which the message should be delivered to the queue</param>
+    /// <param name="dueAt">The date and time at which the scheduler should make the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, DateTimeOffset dueAt, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -200,9 +200,9 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
         where T : class
@@ -218,10 +218,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, TimeSpan delay, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -237,10 +237,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -255,9 +255,9 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
@@ -272,10 +272,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
@@ -289,10 +289,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -308,9 +308,9 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
         where T : class
@@ -326,11 +326,11 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// </summary>
     /// <param name="context">The consume context</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> ScheduleSendAsync(this ConsumeContext context, TimeSpan delay, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -346,10 +346,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -366,10 +366,10 @@ public static class ConsumeContextSelfSchedulerExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="context">The consume context</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> ScheduleSendAsync<T>(this ConsumeContext context, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class

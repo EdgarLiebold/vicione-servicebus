@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using ViciOne.ServiceBus.Middleware;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 internal abstract class TimeoutPipeSpecification<TContext, TResult> :

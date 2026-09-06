@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Courier.Messages;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>
@@ -22,7 +21,6 @@ public class SanitizedRoutingSlip :
     /// Initializes a new instance of the containing type.
     /// </summary>
     /// <param name="context">The operation context.</param>
-    [SuppressMessage("ReSharper", "ConstantNullCoalescingCondition")]
     public SanitizedRoutingSlip(ConsumeContext<RoutingSlip> context)
     {
         _serializerContext = context.Advanced().SerializerContext;

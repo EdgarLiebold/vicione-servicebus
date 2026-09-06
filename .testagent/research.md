@@ -110,3 +110,23 @@ The bidirectional gate inspects every evaluated product and test source method, 
 functions. An `Async` name marker must correspond to `async`, `Task`, `ValueTask`,
 `IAsyncEnumerable`, or `IAsyncEnumerator`, and every such asynchronous contract must expose the
 marker. The public product API separately requires `CancellationToken` to be its final parameter.
+
+## Confirmed iteration-13 defects
+
+1. Product sources contained 471 redundant nullable directives, an always-enabled conditional
+   compilation branch, three region pairs, IDE suppressions, and maintenance markers.
+2. A 7,377-line embedded expression compiler duplicated an independently maintained dependency and
+   carried 277 additional compiler directives plus stale maintenance narrative.
+3. Transport-neutral API documentation falsely promised broker acknowledgement for 253 send and
+   publish operations. Relative schedule delays were described as absolute times in 96 parameter
+   contracts, while 40 genuinely absolute `dueAt` parameters shared the same ambiguous wording.
+4. Receive-start methods documented task returns although they return lifetime handles, RabbitMQ's
+   publish contract ignored the `awaitAck` partition, and Amazon SQS documentation attributed the
+   library's 60-second renewal floor to an AWS API minimum.
+5. A line-oriented comment check was insufficient because trailing comments and structured XML
+   trivia can evade it. Source hygiene requires syntax-aware Roslyn traversal.
+
+The current dependency reference is `FastExpressionCompiler` 5.4.1, centrally versioned and directly
+owned only by core, sagas, and MessagePack. Remaining generic and historical documentation findings
+are intentionally carried into iteration 14 rather than being hidden by the bounded iteration-13
+verdict.

@@ -53,7 +53,6 @@ public static class BusControlExtensions
     {
         using var cancellationTokenSource = new CancellationTokenSource(startTimeout);
 
-        // ReSharper disable once AccessToDisposedClosure
         TaskBlocking.Wait(() => bus.StartAsync(cancellationTokenSource.Token), cancellationTokenSource.Token);
     }
 

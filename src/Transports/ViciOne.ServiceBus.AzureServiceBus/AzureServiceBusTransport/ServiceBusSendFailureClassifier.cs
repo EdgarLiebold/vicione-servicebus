@@ -3,7 +3,6 @@ using System.Net.WebSockets;
 using Azure;
 using Azure.Messaging.ServiceBus;
 
-#nullable enable
 namespace ViciOne.ServiceBus.AzureServiceBus;
 /// <summary>
 /// Classifies Azure Service Bus send failures from typed SDK failure reasons and HTTP status codes.

@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Configures a circuit breaker. The values are captured as an immutable snapshot when the pipe is built.

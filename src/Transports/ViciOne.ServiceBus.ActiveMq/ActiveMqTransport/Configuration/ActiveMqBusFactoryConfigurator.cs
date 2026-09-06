@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.ActiveMq.Topology;
 using ViciOne.ServiceBus.Configuration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.ActiveMq.Configuration;
 
 /// <summary>

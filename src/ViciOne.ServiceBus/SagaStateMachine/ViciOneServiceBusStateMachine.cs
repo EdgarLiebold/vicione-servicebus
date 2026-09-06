@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using FastExpressionCompiler;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.SagaStateMachine;

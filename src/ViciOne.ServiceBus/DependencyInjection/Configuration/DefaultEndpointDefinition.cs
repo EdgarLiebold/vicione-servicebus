@@ -1,7 +1,7 @@
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>
-/// Base/Default endpoint definition, not used apparently
+/// Provides default endpoint settings that specialized endpoint definitions can override.
 /// </summary>
 public abstract class DefaultEndpointDefinition :
     IEndpointDefinition

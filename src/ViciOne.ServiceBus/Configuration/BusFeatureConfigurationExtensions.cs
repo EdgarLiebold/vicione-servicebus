@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

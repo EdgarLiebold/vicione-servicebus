@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>
-/// Uses a delayed exchange in ActiveMQ to delay a message retry
+/// Adds the transport-neutral delayed-redelivery context used to schedule a message retry.
 /// </summary>
 /// <typeparam name="TMessage"></typeparam>
 public class DelayedMessageRedeliveryFilter<TMessage> :

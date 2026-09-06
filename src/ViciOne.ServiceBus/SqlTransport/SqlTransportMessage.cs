@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport;
 
 /// <summary>

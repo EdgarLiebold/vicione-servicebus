@@ -2,7 +2,6 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-#nullable enable
 
 namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>Registers ServiceBus diagnostic sensitivity and redaction services.</summary>

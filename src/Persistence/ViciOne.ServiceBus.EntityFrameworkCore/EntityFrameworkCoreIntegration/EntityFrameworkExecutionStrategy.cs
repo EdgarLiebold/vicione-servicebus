@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal static class EntityFrameworkExecutionStrategy

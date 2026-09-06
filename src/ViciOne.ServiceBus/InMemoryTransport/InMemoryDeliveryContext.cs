@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using ViciOne.ServiceBus.Transports.Fabric;
 
-#nullable enable
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
 /// <summary>

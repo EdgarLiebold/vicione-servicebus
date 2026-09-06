@@ -1,7 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Configuration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.InMemoryTransport.Configuration;
 
 /// <summary>

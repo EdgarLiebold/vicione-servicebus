@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
 /// <summary>

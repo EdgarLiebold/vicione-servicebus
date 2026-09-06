@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 using ViciOne.ServiceBus.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
 /// <summary>

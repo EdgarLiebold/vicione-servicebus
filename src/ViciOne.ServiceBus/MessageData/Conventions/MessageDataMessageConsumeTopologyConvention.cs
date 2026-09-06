@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.MessageData.Configuration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.MessageData.Conventions;
 
 /// <summary>

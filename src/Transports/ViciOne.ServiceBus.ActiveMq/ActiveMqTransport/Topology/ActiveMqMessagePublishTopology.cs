@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using ViciOne.ServiceBus.ActiveMq.Configuration;
 using ViciOne.ServiceBus.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.ActiveMq.Topology;
 
 /// <summary>
@@ -73,9 +72,6 @@ public class ActiveMqMessagePublishTopology<TMessage> :
 
         builder.Topic = builder.CreateTopic(_topic.EntityName, _topic.Durable, _topic.AutoDelete);
 
-        // this was disabled previously, so not sure if it can be added
-        // foreach (IActiveMqMessagePublishTopology configurator in _implementedMessageTypes)
-        //     configurator.Apply(builder);
     }
 
     /// <summary>

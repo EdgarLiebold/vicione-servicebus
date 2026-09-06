@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// <summary>
 /// Operational API for a single bus/DbContext outbox. Authorization, audit and operator UI belong to the host.

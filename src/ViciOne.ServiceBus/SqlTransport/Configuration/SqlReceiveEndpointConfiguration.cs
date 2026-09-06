@@ -7,7 +7,6 @@ using ViciOne.ServiceBus.SqlTransport.Middleware;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
 /// <summary>

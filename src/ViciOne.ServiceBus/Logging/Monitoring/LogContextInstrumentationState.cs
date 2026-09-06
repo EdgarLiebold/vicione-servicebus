@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics.Metrics;
 using ViciOne.ServiceBus.Monitoring;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
 internal sealed class LogContextInstrumentationState

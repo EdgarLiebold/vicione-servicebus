@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
 /// <summary>

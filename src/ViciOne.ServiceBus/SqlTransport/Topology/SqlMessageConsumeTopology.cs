@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.SqlTransport.Configuration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
 /// <summary>

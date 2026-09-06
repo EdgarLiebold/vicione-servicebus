@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Middleware;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Util;
 
 /// <summary>

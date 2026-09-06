@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

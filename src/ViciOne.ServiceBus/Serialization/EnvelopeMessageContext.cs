@@ -1,7 +1,6 @@
 using System;
 using ViciOne.ServiceBus.Metadata;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

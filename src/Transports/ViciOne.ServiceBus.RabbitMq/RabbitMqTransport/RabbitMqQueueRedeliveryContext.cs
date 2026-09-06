@@ -4,7 +4,6 @@ using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq.Middleware;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

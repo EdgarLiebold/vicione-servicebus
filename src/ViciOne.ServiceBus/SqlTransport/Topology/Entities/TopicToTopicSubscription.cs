@@ -1,18 +1,17 @@
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
 /// <summary>
-/// The exchange to exchange binding details to declare the binding to RabbitMQ
+/// Describes a SQL transport subscription that routes one topic to another.
 /// </summary>
 public interface TopicToTopicSubscription
 {
     /// <summary>
-    /// The source exchange
+    /// Gets the source topic.
     /// </summary>
     Topic Source { get; }
 
     /// <summary>
-    /// The destination exchange
+    /// Gets the destination topic.
     /// </summary>
     Topic Destination { get; }
 
@@ -22,7 +21,7 @@ public interface TopicToTopicSubscription
     SqlSubscriptionType SubscriptionType { get; }
 
     /// <summary>
-    /// A routing key for the exchange binding
+    /// Gets the optional routing key used by the subscription.
     /// </summary>
     string? RoutingKey { get; }
 }

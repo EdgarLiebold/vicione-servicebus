@@ -4,7 +4,6 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

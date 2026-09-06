@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 /// <summary>

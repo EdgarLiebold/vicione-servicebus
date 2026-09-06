@@ -2,7 +2,6 @@ using System;
 using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.DependencyInjection;
 
 /// <summary>

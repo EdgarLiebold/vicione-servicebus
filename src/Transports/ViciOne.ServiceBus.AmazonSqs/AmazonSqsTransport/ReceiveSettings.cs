@@ -66,7 +66,7 @@ public interface ReceiveSettings :
 
     /// <summary>
     /// The number of seconds to extend the visibility timeout when renewing message visibility during processing.
-    /// Must be at least 60 seconds per AWS SQS API constraints.
+    /// Values below the library's 60-second renewal floor are raised to 60 seconds to avoid excessive renewal traffic.
     /// See <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ChangeMessageVisibility.html">ChangeMessageVisibility</see>.
     /// </summary>
     int MaxVisibilityTimeoutRenewal { get; set; }

@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Transports;
 
 /// <summary>

@@ -5,7 +5,6 @@ using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
 /// <summary>

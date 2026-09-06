@@ -52,8 +52,6 @@ public class ConcurrentHashSet<T> : IDisposable
         }
     }
 
-    #region Dispose
-
     /// <summary>
     /// Releases the resources owned by this instance.
     /// </summary>
@@ -62,8 +60,6 @@ public class ConcurrentHashSet<T> : IDisposable
         if (_lock != null)
             _lock.Dispose();
     }
-
-    #endregion
 
     /// <summary>
     /// Performs the add operation.

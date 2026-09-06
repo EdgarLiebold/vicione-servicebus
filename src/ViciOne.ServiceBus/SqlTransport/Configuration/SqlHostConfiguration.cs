@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.SqlTransport.Topology;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Configuration;
 
 /// <summary>

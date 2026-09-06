@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using FastExpressionCompiler;
 using ViciOne.ServiceBus.Internals;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Saga;

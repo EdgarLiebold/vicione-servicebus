@@ -287,3 +287,25 @@ atomic change.
   report the exact member and following parameter.
 - Swap or omit timeout/token forwarding at an implementation boundary: the existing request
   metadata and dependency-injection forwarding tests must fail.
+
+## Iteration 13 outcome
+
+Replace embedded compiler maintenance with an explicitly owned current package; remove redundant or
+convenience-only compiler directives and IDE/maintenance markers; and correct confirmed API comments
+whose stated timing, acknowledgement, provider, or return-value semantics disagree with the code.
+
+## Iteration 13 requirement-to-test map
+
+| Requirement | Behavior partition | Test owner | Required evidence |
+|---|---|---|---|
+| `REQ-VSB-SOURCE-DIRECTIVES` | every product directive is an exact reviewed feature-preserving exception | architecture tests | syntax-aware full product inventory equals the two-line Amazon S3 allowlist |
+| `REQ-VSB-SOURCE-COMMENTS` | maintenance markers and historical/speculative construction narrative | architecture tests | Roslyn comment-trivia scan including trailing comments |
+| `REQ-VSB-SOURCE-COMMENTS` | known false timing, acknowledgement, provider, and lifecycle contracts | architecture tests | zero complete-comment matches across all product sources |
+| `REQ-VSB-DEPENDENCY-OWNERSHIP` | expression compilation is centrally versioned, package-owned, explicitly imported, and never embedded | architecture and product builds | exact version, owner set, source absence, and import closure |
+
+## Iteration 13 mutation obligations
+
+- Insert a redundant nullable directive: the exact directive inventory must fail.
+- Add a trailing maintenance marker: the Roslyn comment scan must fail.
+- Restore a false broker-acknowledgement contract: the semantic documentation guard must fail.
+- Remove one expression-compiler import: the owning product build must fail at the call site.

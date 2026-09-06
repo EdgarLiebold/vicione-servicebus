@@ -148,6 +148,7 @@
       "vicione.servicebus": {
         "type": "Project",
         "dependencies": {
+          "FastExpressionCompiler": "[5.4.1, )",
           "ViciOne.ServiceBus.Abstractions": "[1.0.0, )"
         }
       },
@@ -183,6 +184,7 @@
       "vicione.servicebus.sagas": {
         "type": "Project",
         "dependencies": {
+          "FastExpressionCompiler": "[5.4.1, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -205,6 +207,12 @@
       },
       "vicione.servicebus.tests.infrastructure": {
         "type": "Project"
+      },
+      "FastExpressionCompiler": {
+        "type": "CentralTransitive",
+        "requested": "[5.4.1, )",
+        "resolved": "5.4.1",
+        "contentHash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ=="
       },
       "MessagePack": {
         "type": "CentralTransitive",

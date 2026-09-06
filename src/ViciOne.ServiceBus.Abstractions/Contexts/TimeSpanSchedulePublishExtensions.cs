@@ -15,9 +15,9 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         CancellationToken cancellationToken = default)
         where T : class
@@ -33,10 +33,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -52,10 +52,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -71,10 +71,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -90,10 +90,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -109,10 +109,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -128,10 +128,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The message type</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, T message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -146,9 +146,9 @@ public static class TimeSpanSchedulePublishExtensions
     /// </summary>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         CancellationToken cancellationToken = default)
     {
@@ -164,9 +164,9 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, CancellationToken cancellationToken = default)
     {
@@ -180,10 +180,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// </summary>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -197,10 +197,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// </summary>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
@@ -214,10 +214,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// </summary>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
@@ -233,10 +233,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
     {
@@ -252,10 +252,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
@@ -271,10 +271,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="message">The message object</param>
     /// <param name="messageType">The type of the message (use message.GetType() if desired)</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage> SchedulePublishAsync(this IMessageScheduler scheduler, TimeSpan delay, object message,
         Type messageType, Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
@@ -290,9 +290,9 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         CancellationToken cancellationToken = default)
         where T : class
@@ -309,10 +309,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         IPipe<SendContext<T>> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -329,10 +329,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -349,10 +349,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -369,10 +369,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
@@ -389,10 +389,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Action<SendContext> callback, CancellationToken cancellationToken = default)
         where T : class
@@ -409,10 +409,10 @@ public static class TimeSpanSchedulePublishExtensions
     /// <typeparam name="T">The interface type to send</typeparam>
     /// <param name="scheduler">The message scheduler</param>
     /// <param name="values">The property values to initialize on the interface</param>
-    /// <param name="delay">The time at which the message should be delivered to the queue</param>
+    /// <param name="delay">The relative delay before the scheduler makes the message eligible for delivery.</param>
     /// <param name="callback">The send callback</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Publish is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the publish operation; completion does not imply message consumption.</returns>
     public static Task<ScheduledMessage<T>> SchedulePublishAsync<T>(this IMessageScheduler scheduler, TimeSpan delay, object values,
         Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
         where T : class

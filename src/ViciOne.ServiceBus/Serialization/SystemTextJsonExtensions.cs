@@ -2,7 +2,6 @@ using System;
 using System.Text.Json;
 using ViciOne.ServiceBus.Metadata;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

@@ -4,7 +4,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.InMemoryTransport.Configuration;
 using ViciOne.ServiceBus.Transports.Fabric;
 
-#nullable enable
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
 /// <summary>

@@ -3,7 +3,6 @@ using Azure.Data.Tables;
 using ViciOne.ServiceBus.AzureTable.MessageJournal;
 using ViciOne.ServiceBus.MessageJournal;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Azure.Table;
 
 /// <summary>

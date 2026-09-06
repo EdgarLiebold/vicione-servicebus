@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ViciOne.ServiceBus.Testing;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq.Testing;
 
 /// <summary>

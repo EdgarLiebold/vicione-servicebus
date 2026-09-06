@@ -4,7 +4,6 @@ using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

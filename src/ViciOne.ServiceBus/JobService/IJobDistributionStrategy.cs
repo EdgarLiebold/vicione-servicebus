@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Contracts.JobService;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 /// <summary>
 /// Used by the <see cref="JobTypeStateMachine" /> to determine if a job slot should be allocated to a job

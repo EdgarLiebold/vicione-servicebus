@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

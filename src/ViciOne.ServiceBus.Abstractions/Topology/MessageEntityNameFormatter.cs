@@ -27,9 +27,9 @@ public class MessageEntityNameFormatter<TMessage> :
     }
 
     /// <summary>
-    /// Not sure it ever makes sense to pass the actual message, but many, someday.
+    /// Formats and caches the entity name for <typeparamref name="TMessage"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The configured entity name, or the name produced by the underlying formatter.</returns>
     public string FormatEntityName()
     {
         return _entityName ??= _entityNameFormatter.FormatEntityName<TMessage>();

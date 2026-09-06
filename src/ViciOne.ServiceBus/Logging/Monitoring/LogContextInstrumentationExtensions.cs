@@ -13,7 +13,6 @@ using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Monitoring;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
 /// <summary>

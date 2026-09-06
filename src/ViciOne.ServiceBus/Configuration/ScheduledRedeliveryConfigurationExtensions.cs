@@ -11,8 +11,7 @@ namespace ViciOne.ServiceBus.Configuration;
 public static class ScheduledRedeliveryConfigurationExtensions
 {
     /// <summary>
-    /// Use the message scheduler to schedule redelivery of a specific message type based upon the retry policy, via
-    /// the delayed exchange feature of ActiveMQ.
+    /// Uses the configured message scheduler to redeliver a message according to the retry policy.
     /// </summary>
     /// <param name="configurator"></param>
     /// <param name="configure"></param>

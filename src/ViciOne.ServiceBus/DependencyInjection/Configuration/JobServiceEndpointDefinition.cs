@@ -1,7 +1,6 @@
 using ViciOne.ServiceBus.JobService;
 using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

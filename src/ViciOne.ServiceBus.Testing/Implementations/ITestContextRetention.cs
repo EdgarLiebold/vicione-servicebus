@@ -1,4 +1,3 @@
-#nullable enable
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
 interface ITestContextRetention

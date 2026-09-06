@@ -1,7 +1,6 @@
 using ViciOne.ServiceBus.ActiveMq;
 using ViciOne.ServiceBus.ActiveMq.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.ActiveMq;
 
 /// <summary>

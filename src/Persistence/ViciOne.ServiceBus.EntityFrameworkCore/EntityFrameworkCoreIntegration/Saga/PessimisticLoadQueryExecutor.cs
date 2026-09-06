@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore.Saga;
 
 /// <summary>

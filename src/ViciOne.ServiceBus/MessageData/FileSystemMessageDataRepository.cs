@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.MessageData;
 
 /// <summary>

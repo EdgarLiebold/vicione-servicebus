@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
 /// <summary>

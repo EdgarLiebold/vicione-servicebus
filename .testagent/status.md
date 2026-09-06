@@ -331,3 +331,37 @@ forwarding through the generic DI wrapper.
   `36a9b02c2417bfe12abf7be4858236cc23604afffa0fadb7fe38972217f510ec`.
 - Requirement projections, architecture manifests, warning-level repository format verification,
   and Git whitespace validation: passed.
+
+## Iteration 13
+
+Iteration 13 removes redundant or convenience-only source directives and replaces the embedded
+7,377-line expression compiler with centrally versioned `FastExpressionCompiler` 5.4.1. Core,
+sagas, and MessagePack are its only direct owners, and the repository guard forbids the embedded
+source from returning.
+
+The iteration also corrects confirmed false API documentation: 253 transport-neutral send/publish
+contracts no longer promise broker acknowledgement, 96 relative delays and 40 absolute schedule
+times are distinguished, receive-start handle returns are accurate, RabbitMQ documents both
+publisher-confirmation branches, and the Amazon SQS renewal floor is identified as a library policy.
+
+### Red/green and mutation evidence
+
+- Baseline hygiene tests rejected the inherited directives, markers, and historical narrative.
+- The syntax-aware guard found two residual Azure Service Bus schedule summaries after the first
+  mechanical pass; both were corrected.
+- A controlled nullable/TODO/false-contract mutation caused exactly three owner-test failures.
+- Removing one compiler import caused the core build to fail at `CompileFast`.
+- Every mutation was restored before final validation.
+
+### Full validation
+
+- Release Engineering build with warnings as errors: passed, 0 warnings and 0 errors.
+- Complete Unit/Architecture profile: 3,835 passed, 0 failed, 0 skipped.
+- Fresh-package gate: 18 journeys, 30 packages, three isolated provider consumers, and all 29
+  runtime package APIs passed.
+- Packed API: unchanged at 24,000 lines and SHA-256
+  `36a9b02c2417bfe12abf7be4858236cc23604afffa0fadb7fe38972217f510ec`.
+- Warning-level format verification, requirement projections, and Git whitespace: passed.
+
+Generic XML documentation, empty elements, signature-order mismatches, and remaining historical
+narrative are still open and form the explicit next iteration; iteration 13 makes no final A+ claim.

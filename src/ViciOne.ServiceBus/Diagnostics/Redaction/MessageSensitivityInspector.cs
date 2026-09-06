@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>

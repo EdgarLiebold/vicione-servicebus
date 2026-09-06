@@ -25,7 +25,7 @@ public class RabbitMqBasicConsumer :
     string _consumerTag = "";
 
     /// <summary>
-    /// The basic consumer receives messages pushed from the broker.
+    /// Receives messages delivered by RabbitMQ and dispatches them to the receive pipeline.
     /// </summary>
     /// <param name="channel">The channel context for the consumer</param>
     /// <param name="context">The topology</param>

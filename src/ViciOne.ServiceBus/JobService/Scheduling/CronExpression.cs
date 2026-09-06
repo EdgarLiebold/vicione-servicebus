@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService.Scheduling;
 
 /// <summary>
@@ -651,7 +650,6 @@ public sealed class CronExpression :
         data.Add(value);
     }
 
-    // ReSharper disable once RedundantAssignment
     void HandleHashOption(ReadOnlySpan<char> span, int value, int type, int index)
     {
         var pos = index;

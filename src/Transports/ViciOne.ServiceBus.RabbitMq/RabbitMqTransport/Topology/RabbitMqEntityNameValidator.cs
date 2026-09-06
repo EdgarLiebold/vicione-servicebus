@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq.Topology;
 
 /// <summary>

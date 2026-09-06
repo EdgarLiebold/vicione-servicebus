@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.DependencyInjection;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// <summary>
 /// Selects the EF bus outbox for a scoped bus. Selection is deterministic: one registration is implicit, multiple

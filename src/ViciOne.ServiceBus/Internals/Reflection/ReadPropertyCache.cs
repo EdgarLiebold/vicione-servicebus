@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Internals;
 
 internal class ReadPropertyCache<T> :

@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading;
 using Apache.NMS;
 
-#nullable enable
 namespace ViciOne.ServiceBus.ActiveMq;
 
 /// <summary>

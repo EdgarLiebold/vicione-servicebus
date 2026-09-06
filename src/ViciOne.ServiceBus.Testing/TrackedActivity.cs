@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
 class TrackedActivity :

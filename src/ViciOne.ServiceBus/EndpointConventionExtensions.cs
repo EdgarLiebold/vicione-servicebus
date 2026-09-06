@@ -17,7 +17,7 @@ public static class EndpointConventionExtensions
     /// <param name="provider"></param>
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync<T>(this ISendEndpointProvider provider, T message, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -37,7 +37,7 @@ public static class EndpointConventionExtensions
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
@@ -58,7 +58,7 @@ public static class EndpointConventionExtensions
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpointProvider provider, T message, IPipe<SendContext> pipe, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -71,7 +71,7 @@ public static class EndpointConventionExtensions
     /// <param name="provider"></param>
     /// <param name="message">The message</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, CancellationToken cancellationToken = default)
     {
         if (message == null)
@@ -94,7 +94,7 @@ public static class EndpointConventionExtensions
     /// <param name="message">The message</param>
     /// <param name="messageType"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, Type messageType, CancellationToken cancellationToken = default)
     {
         if (!EndpointConvention.TryGetDestinationAddress(provider, messageType, out var destinationAddress))
@@ -112,7 +112,7 @@ public static class EndpointConventionExtensions
     /// <param name="message">The message</param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
@@ -137,7 +137,7 @@ public static class EndpointConventionExtensions
     /// <param name="messageType"></param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync(this ISendEndpointProvider provider, object message, Type messageType, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
     {
@@ -162,7 +162,7 @@ public static class EndpointConventionExtensions
     /// <param name="provider"></param>
     /// <param name="values"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpointProvider provider, object values, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -177,7 +177,7 @@ public static class EndpointConventionExtensions
     /// <param name="values"></param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static async Task SendAsync<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext<T>> pipe,
         CancellationToken cancellationToken = default)
         where T : class
@@ -205,7 +205,7 @@ public static class EndpointConventionExtensions
     /// <param name="values"></param>
     /// <param name="pipe"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpointProvider provider, object values, IPipe<SendContext> pipe,
         CancellationToken cancellationToken = default)
         where T : class

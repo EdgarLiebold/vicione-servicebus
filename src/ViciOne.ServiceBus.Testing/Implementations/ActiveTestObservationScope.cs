@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing.Implementations;
 
 sealed class ActiveTestObservationScope :

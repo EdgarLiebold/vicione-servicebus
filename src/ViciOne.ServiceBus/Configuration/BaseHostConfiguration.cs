@@ -8,7 +8,6 @@ using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

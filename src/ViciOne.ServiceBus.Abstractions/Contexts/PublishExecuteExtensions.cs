@@ -17,7 +17,7 @@ public static class PublishExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, T message, Action<PublishContext<T>> callback,
         CancellationToken cancellationToken = default)
         where T : class
@@ -33,7 +33,7 @@ public static class PublishExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, T message, Func<PublishContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
         where T : class
@@ -48,7 +48,7 @@ public static class PublishExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Action<PublishContext> callback,
         CancellationToken cancellationToken = default)
     {
@@ -62,7 +62,7 @@ public static class PublishExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Func<PublishContext, Task> callback,
         CancellationToken cancellationToken = default)
     {
@@ -77,7 +77,7 @@ public static class PublishExecuteExtensions
     /// <param name="messageType">The message type to send the object as</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Type messageType, Action<PublishContext> callback,
         CancellationToken cancellationToken = default)
     {
@@ -92,7 +92,7 @@ public static class PublishExecuteExtensions
     /// <param name="messageType">The message type to send the object as</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync(this IPublishEndpoint endpoint, object message, Type messageType, Func<PublishContext, Task> callback,
         CancellationToken cancellationToken = default)
     {
@@ -107,7 +107,7 @@ public static class PublishExecuteExtensions
     /// <param name="values">The values that map to the object</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, object values, Action<PublishContext<T>> callback,
         CancellationToken cancellationToken = default)
         where T : class
@@ -123,7 +123,7 @@ public static class PublishExecuteExtensions
     /// <param name="values">The values that map to the object</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task PublishAsync<T>(this IPublishEndpoint endpoint, object values, Func<PublishContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
         where T : class

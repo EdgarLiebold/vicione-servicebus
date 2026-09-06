@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Courier.Contracts;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Courier;
 
 /// <summary>

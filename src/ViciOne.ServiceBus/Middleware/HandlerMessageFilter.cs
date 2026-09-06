@@ -18,7 +18,6 @@ public class HandlerMessageFilter<TMessage> :
     long _completed;
     long _faulted;
 
-    // TODO this needs a pipe like instance and consumer, to handle things like retry, etc.
     /// <summary>
     /// Initializes a new instance of the containing type.
     /// </summary>

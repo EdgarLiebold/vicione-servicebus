@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
 /// <summary>

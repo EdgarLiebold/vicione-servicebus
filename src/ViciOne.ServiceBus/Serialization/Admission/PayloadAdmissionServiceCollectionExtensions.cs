@@ -6,7 +6,6 @@ using ViciOne.ServiceBus;
 using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 
 namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>Registers one validated payload-admission policy for a typed bus.</summary>

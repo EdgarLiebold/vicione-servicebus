@@ -5,7 +5,6 @@ using System.Text.Json;
 using ViciOne.ServiceBus.Initializers;
 using ViciOne.ServiceBus.Initializers.TypeConverters;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

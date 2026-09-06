@@ -8,7 +8,6 @@ using ViciOne.ServiceBus.Diagnostics;
 using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 
 namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>Registers the one reliable-messaging runtime owned by each bus.</summary>

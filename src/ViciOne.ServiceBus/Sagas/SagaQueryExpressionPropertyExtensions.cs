@@ -2,7 +2,6 @@ using System;
 using System.Linq.Expressions;
 using ViciOne.ServiceBus.Saga;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Sagas;
 
 /// <summary>

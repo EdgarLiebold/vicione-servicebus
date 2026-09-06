@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware;
 
 /// <summary>

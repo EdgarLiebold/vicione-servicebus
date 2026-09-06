@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware.Outbox;
 
 /// <summary>

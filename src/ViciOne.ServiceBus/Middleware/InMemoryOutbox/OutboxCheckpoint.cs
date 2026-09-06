@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware.InMemoryOutbox;
 /// <summary>
 /// An opaque boundary in an in-memory outbox. The outbox that created the checkpoint is the only

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Analyzers.V5;
 

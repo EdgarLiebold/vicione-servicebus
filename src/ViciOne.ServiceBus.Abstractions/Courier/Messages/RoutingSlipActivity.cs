@@ -36,7 +36,6 @@ public class RoutingSlipActivity :
     /// Initializes a new instance of the containing type.
     /// </summary>
     /// <param name="activity">The activity value.</param>
-    [SuppressMessage("ReSharper", "ConstantNullCoalescingCondition")]
     public RoutingSlipActivity(Activity activity)
     {
         if (string.IsNullOrEmpty(activity.Name))

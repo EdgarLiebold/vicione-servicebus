@@ -6,7 +6,6 @@ using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using ViciOne.ServiceBus.RabbitMq.Middleware;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

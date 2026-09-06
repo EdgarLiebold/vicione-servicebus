@@ -147,7 +147,7 @@ public static class SupervisorExtensions
             }
             catch
             {
-                // CreateAgent transfers cancellation/failure to asyncContext. This observer exists
+                // The creation task transfers cancellation or failure to asyncContext. This observer exists
                 // solely so the mirror task cannot become an unobserved exception.
             }
         });

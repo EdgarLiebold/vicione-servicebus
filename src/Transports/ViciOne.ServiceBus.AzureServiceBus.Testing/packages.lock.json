@@ -176,6 +176,7 @@
       "vicione.servicebus": {
         "type": "Project",
         "dependencies": {
+          "FastExpressionCompiler": "[5.4.1, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Diagnostics": "[10.0.11, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks": "[10.0.11, )",
@@ -220,6 +221,7 @@
       "vicione.servicebus.sagas": {
         "type": "Project",
         "dependencies": {
+          "FastExpressionCompiler": "[5.4.1, )",
           "ViciOne.ServiceBus": "[1.0.0, )"
         }
       },
@@ -244,6 +246,12 @@
         "dependencies": {
           "Azure.Core": "1.53.0"
         }
+      },
+      "FastExpressionCompiler": {
+        "type": "CentralTransitive",
+        "requested": "[5.4.1, )",
+        "resolved": "5.4.1",
+        "contentHash": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ=="
       },
       "Microsoft.Extensions.Diagnostics": {
         "type": "CentralTransitive",

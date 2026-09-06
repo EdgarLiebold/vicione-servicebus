@@ -1,4 +1,3 @@
-#nullable enable
 namespace ViciOne.ServiceBus.SqlTransport.Topology;
 
 /// <summary>

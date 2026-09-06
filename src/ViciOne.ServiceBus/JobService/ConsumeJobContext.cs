@@ -8,7 +8,6 @@ using ViciOne.ServiceBus.Events;
 using ViciOne.ServiceBus.JobService.Messages;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>

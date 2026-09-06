@@ -19,10 +19,10 @@ public interface IRabbitMqMessagePublishTopology<TMessage> :
     Exchange Exchange { get; }
 
     /// <summary>
-    /// Returns the send settings for a publish endpoint, which are mostly unused now with topology
+    /// Creates the RabbitMQ send settings for the specified host.
     /// </summary>
-    /// <param name="hostAddress"></param>
-    /// <returns></returns>
+    /// <param name="hostAddress">The RabbitMQ host address.</param>
+    /// <returns>The settings used to address and configure the publish exchange.</returns>
     SendSettings GetSendSettings(Uri hostAddress);
 
     /// <summary>

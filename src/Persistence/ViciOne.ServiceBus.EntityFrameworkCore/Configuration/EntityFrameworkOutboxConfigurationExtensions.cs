@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

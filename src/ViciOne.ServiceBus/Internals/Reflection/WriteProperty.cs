@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using FastExpressionCompiler;
 
 namespace ViciOne.ServiceBus.Internals;
 

@@ -2,7 +2,6 @@ using System;
 using Apache.NMS;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.ActiveMq;
 
 /// <summary>

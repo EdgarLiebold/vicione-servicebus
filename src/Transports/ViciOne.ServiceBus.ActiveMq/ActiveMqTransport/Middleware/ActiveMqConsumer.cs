@@ -19,7 +19,7 @@ public sealed class ActiveMqConsumer :
     readonly SessionContext _session;
 
     /// <summary>
-    /// The basic consumer receives messages pushed from the broker.
+    /// Receives messages delivered by ActiveMQ and dispatches them to the receive pipeline.
     /// </summary>
     /// <param name="session">The model context for the consumer</param>
     /// <param name="messageConsumer"></param>

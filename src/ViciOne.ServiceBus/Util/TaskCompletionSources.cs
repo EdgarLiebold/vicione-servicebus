@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Util;
 /// <summary>
 /// Creates completion sources with asynchronous continuations, which is the required default for

@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 /// <summary>Owns all state changes for one scoped EF outbox session.</summary>
 internal sealed class EntityFrameworkOutboxWriteCoordinator : IDisposable

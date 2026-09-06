@@ -4,7 +4,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Observables;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// JobOptions contains the options used to configure the job consumer and related components

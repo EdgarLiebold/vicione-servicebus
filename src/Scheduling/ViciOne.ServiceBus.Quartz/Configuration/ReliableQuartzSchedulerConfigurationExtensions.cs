@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.Providers.Persistence;
 using ViciOne.ServiceBus.Quartz;
 using ViciOne.ServiceBus.Scheduling;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Configuration;
 

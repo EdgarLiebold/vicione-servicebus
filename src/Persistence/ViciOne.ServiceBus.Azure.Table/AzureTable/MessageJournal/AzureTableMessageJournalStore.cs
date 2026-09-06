@@ -7,7 +7,6 @@ using Azure;
 using Azure.Data.Tables;
 using ViciOne.ServiceBus.MessageJournal;
 
-#nullable enable
 namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 /// <summary>
 /// Stores sanitized journal entries in one bounded Azure Table partition. A shared ETag lease makes

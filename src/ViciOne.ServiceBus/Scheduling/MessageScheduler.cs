@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Initializers;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>

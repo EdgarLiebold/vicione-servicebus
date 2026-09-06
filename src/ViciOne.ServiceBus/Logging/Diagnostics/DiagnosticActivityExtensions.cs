@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 
 /// <summary>

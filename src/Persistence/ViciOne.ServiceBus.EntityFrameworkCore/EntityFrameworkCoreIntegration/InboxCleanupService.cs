@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ViciOne.ServiceBus.RetryPolicies;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

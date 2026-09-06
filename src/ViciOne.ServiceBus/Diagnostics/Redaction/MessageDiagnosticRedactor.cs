@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 /// <summary>
 /// Active Jobs are allocated a concurrency slot, and are valid until the deadline is reached, after
@@ -66,7 +65,6 @@ public class ActiveJob :
     /// <returns>The result of the operation.</returns>
     public override int GetHashCode()
     {
-        // ReSharper disable once NonReadonlyMemberInGetHashCode
         return JobId.GetHashCode();
     }
 }

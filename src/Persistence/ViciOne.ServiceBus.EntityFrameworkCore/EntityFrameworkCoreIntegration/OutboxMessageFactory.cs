@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.Context;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal static class OutboxMessageFactory

@@ -28,10 +28,10 @@ public interface IReceiveEndpoint :
     Task<ReceiveEndpointReady> Started { get; }
 
     /// <summary>
-    /// Start the receive endpoint
+    /// Starts the receive endpoint.
     /// </summary>
     /// <param name="cancellationToken">Cancel the start operation in progress</param>
-    /// <returns>An awaitable task that is completed once everything is started</returns>
+    /// <returns>A handle that exposes endpoint readiness and controls its lifetime.</returns>
     ReceiveEndpointHandle Start(CancellationToken cancellationToken = default);
 
     /// <summary>

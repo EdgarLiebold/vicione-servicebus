@@ -1,6 +1,5 @@
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.InMemoryTransport;
 
 /// <summary>

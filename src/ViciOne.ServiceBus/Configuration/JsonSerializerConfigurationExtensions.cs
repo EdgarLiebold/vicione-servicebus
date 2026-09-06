@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Serialization.JsonConverters;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

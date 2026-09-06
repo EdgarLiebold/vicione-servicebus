@@ -290,7 +290,6 @@ public class SendEndpoint :
         {
             _endpoint = endpoint;
             _pipe = pipe;
-            // ReSharper disable once SuspiciousTypeConversion.Global
             _sendContextPipe = pipe as ISendContextPipe;
         }
 

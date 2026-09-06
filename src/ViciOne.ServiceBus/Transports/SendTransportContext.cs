@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Logging;
 using ViciOne.ServiceBus.Observables;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Transports;
 
 /// <summary>

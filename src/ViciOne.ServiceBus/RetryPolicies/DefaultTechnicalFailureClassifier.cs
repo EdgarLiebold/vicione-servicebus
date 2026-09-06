@@ -4,7 +4,6 @@ using System.Runtime.Serialization;
 using System.Security;
 using System.Text.Json;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RetryPolicies;
 /// <summary>
 /// Conservatively classifies technical failures. Only failures with an explicit transient contract are

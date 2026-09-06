@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Logging;
 /// <summary>
 /// Completes the metric observations associated with one message-flow operation. Telemetry

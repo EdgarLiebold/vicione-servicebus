@@ -5,7 +5,6 @@ using ViciOne.ServiceBus.JobService;
 using ViciOne.ServiceBus.NewIdFormatters;
 using JobServiceState = ViciOne.ServiceBus.JobService.JobService;
 
-#nullable enable
 namespace ViciOne.ServiceBus.DependencyInjection.Registration;
 
 /// <summary>

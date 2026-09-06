@@ -46,7 +46,6 @@ public class FactoryMethodExecuteActivityFactory<TActivity, TArguments> :
         {
             switch (activity)
             {
-                // ReSharper disable once SuspiciousTypeConversion.Global
                 case IAsyncDisposable asyncDisposable:
                     await asyncDisposable.DisposeAsync().ConfigureAwait(false);
                     break;

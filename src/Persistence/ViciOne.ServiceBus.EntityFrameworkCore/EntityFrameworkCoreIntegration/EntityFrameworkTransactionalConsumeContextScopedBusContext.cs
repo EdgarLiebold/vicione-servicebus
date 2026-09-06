@@ -4,7 +4,6 @@ using ViciOne.ServiceBus.Clients;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Middleware.Outbox;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal sealed class EntityFrameworkTransactionalConsumeContextScopedBusContext<TBus, TDbContext> :

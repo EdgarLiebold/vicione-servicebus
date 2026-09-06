@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Testing;
 
 static class AsyncPageableExtensions

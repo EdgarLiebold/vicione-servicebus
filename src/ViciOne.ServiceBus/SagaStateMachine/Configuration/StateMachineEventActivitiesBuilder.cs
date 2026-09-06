@@ -92,8 +92,6 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         CommitActivities().Apply();
     }
 
-    #region Pass-through Modifier
-
     public IStateMachineModifier<TInstance> AfterLeave(State state,
         Func<EventActivityBinder<TInstance, State>, EventActivityBinder<TInstance, State>> activityCallback)
     {
@@ -264,5 +262,4 @@ class StateMachineEventActivitiesBuilder<TInstance> :
         return CommitActivities().WhenLeaveAny(activityCallback);
     }
 
-    #endregion
 }

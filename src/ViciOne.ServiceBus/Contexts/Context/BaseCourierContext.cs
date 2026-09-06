@@ -41,7 +41,6 @@ public abstract class BaseCourierContext :
         RoutingSlip = new SanitizedRoutingSlip(consumeContext);
         _variables = new ReadOnlyDictionary<string, object>(RoutingSlip.Variables);
 
-        // ReSharper disable once VirtualMemberCallInConstructor
         Publisher = new RoutingSlipEventPublisher(this, RoutingSlip, CancellationToken);
     }
 

@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.Advanced.Registration;
 using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Scheduling;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 

@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Caching;
 
 /// <summary>

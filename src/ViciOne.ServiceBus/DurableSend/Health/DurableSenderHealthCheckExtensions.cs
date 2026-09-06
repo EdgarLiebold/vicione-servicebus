@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using ViciOne.ServiceBus;
 
-#nullable enable
 
 namespace Microsoft.Extensions.DependencyInjection;
 

@@ -1,6 +1,5 @@
 using System;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.Scheduling;
 
 /// <summary>

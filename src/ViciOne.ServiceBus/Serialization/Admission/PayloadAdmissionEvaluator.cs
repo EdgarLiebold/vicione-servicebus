@@ -1,6 +1,5 @@
 using System;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>Evaluates only exact bytes already produced by the configured serializer.</summary>

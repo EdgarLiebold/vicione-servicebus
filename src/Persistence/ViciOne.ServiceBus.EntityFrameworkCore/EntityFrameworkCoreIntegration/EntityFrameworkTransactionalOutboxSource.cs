@@ -18,7 +18,6 @@ using ViciOne.ServiceBus.RetryPolicies;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal sealed class EntityFrameworkTransactionalOutboxSource<TBus, TDbContext> :

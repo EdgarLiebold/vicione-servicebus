@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Middleware.Outbox;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

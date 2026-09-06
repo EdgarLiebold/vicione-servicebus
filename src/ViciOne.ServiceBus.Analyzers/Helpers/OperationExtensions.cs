@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Analyzers.Helpers;
 
 static class OperationExtensions

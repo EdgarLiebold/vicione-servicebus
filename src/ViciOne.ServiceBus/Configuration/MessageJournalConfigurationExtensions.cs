@@ -6,7 +6,6 @@ using ViciOne.ServiceBus.MessageJournal.Observers;
 using ViciOne.ServiceBus.Providers.Configuration;
 using ViciOne.ServiceBus.Util;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

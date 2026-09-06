@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using ViciOne.ServiceBus.Serialization.JsonConverters;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

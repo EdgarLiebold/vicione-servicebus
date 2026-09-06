@@ -47,7 +47,6 @@ public class ActiveMqMoveTransport<TSettings>
 
         var message = messageContext.TransportMessage switch
         {
-            // ReSharper disable MethodHasAsyncOverload
             IBytesMessage _ => sessionContext.CreateBytesMessage(context.Body.GetBytes()),
             ITextMessage _ => sessionContext.CreateTextMessage(context.Body.GetString()),
             _ => sessionContext.CreateMessage(),

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ViciOne.ServiceBus.Configuration;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Middleware.CircuitBreaker;
 
 internal sealed record CircuitBreakerSettings(

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViciOne.ServiceBus.DependencyInjection;
 using ViciOne.ServiceBus.Scheduling;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.AzureServiceBus;
 
 /// <summary>

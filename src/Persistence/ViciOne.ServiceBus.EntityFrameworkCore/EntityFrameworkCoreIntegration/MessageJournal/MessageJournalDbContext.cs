@@ -2,7 +2,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
 /// <summary>
 /// Dedicated bounded message-journal context. It is not a ViciOne Suite audit context.

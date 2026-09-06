@@ -8,7 +8,6 @@ using RabbitMQ.Client;
 using ViciOne.ServiceBus.RabbitMq.Configuration;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Immutable RabbitMQ-native technical redelivery topology for one receive queue.

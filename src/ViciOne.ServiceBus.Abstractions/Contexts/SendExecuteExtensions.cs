@@ -17,7 +17,7 @@ public static class SendExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, T message, Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -32,7 +32,7 @@ public static class SendExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, T message, Func<SendContext<T>, Task> callback, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -46,7 +46,7 @@ public static class SendExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Action<SendContext> callback, CancellationToken cancellationToken = default)
     {
         return endpoint.SendAsync(message, callback.ToPipe(), cancellationToken);
@@ -59,7 +59,7 @@ public static class SendExecuteExtensions
     /// <param name="message">The message</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Func<SendContext, Task> callback, CancellationToken cancellationToken = default)
     {
         return endpoint.SendAsync(message, callback.ToPipe(), cancellationToken);
@@ -73,7 +73,7 @@ public static class SendExecuteExtensions
     /// <param name="messageType">The message type to send the object as</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Type messageType, Action<SendContext> callback,
         CancellationToken cancellationToken = default)
     {
@@ -88,7 +88,7 @@ public static class SendExecuteExtensions
     /// <param name="messageType">The message type to send the object as</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync(this ISendEndpoint endpoint, object message, Type messageType, Func<SendContext, Task> callback,
         CancellationToken cancellationToken = default)
     {
@@ -103,7 +103,7 @@ public static class SendExecuteExtensions
     /// <param name="values">The values that map to the object</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, object values, Action<SendContext<T>> callback, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -118,7 +118,7 @@ public static class SendExecuteExtensions
     /// <param name="values">The values that map to the object</param>
     /// <param name="callback">The callback for the send context</param>
     /// <param name="cancellationToken">To cancel the send from happening</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     public static Task SendAsync<T>(this ISendEndpoint endpoint, object values, Func<SendContext<T>, Task> callback,
         CancellationToken cancellationToken = default)
         where T : class

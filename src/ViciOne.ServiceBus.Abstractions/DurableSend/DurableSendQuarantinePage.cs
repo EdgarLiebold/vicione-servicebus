@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Operations;
 /// <summary>One immutable bounded page of payload-free quarantine evidence.</summary>

@@ -413,7 +413,6 @@ public class MediatorSendEndpoint :
 
             context.SourceAddress ??= _endpoint._sourceAddress;
 
-            // ReSharper disable once SuspiciousTypeConversion.Global
             if (_pipe is ISendContextPipe sendContextPipe)
                 await sendContextPipe.SendAsync(context).ConfigureAwait(false);
 

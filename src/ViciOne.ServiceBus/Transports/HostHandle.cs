@@ -14,9 +14,9 @@ public interface HostHandle
     Task<HostReady> Ready { get; }
 
     /// <summary>
-    /// Close the Host, shutting it down for good.
+    /// Stops the host and releases its transport resources.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task that completes when the host has stopped.</returns>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     Task StopAsync(CancellationToken cancellationToken = default);
 }

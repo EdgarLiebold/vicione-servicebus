@@ -19,9 +19,9 @@ public interface IAmazonSqsMessagePublishTopology<TMessage> :
     Topic Topic { get; }
 
     /// <summary>
-    /// Returns the send settings for a publish endpoint, which are mostly unused now with topology
+    /// Creates the Amazon SNS publish settings for the specified host.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The settings used to address and configure the publish endpoint.</returns>
     PublishSettings GetPublishSettings(Uri hostAddress);
 
     /// <summary>

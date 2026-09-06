@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.Scheduling;
 
-#nullable enable annotations
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Contracts.JobService;
 
-#nullable enable
 namespace ViciOne.ServiceBus.JobService;
 
 /// <summary>

@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>

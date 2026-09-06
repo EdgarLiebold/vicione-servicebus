@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Advanced.Serialization;
 using ViciOne.ServiceBus.Serialization;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>

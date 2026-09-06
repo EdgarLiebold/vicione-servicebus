@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 
 /// <summary>

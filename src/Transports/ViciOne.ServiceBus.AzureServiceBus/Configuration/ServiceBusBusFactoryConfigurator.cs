@@ -3,7 +3,6 @@ using ViciOne.ServiceBus.AzureServiceBus;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 using ViciOne.ServiceBus.AzureServiceBus.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 
 /// <summary>

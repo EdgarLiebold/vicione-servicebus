@@ -400,8 +400,6 @@ public sealed class JobStateMachine :
     }
 
     //
-    // ReSharper disable UnassignedGetOnlyAutoProperty
-    // ReSharper disable MemberCanBePrivate.Global
     /// <summary>
     /// Gets the submitted value.
     /// </summary>

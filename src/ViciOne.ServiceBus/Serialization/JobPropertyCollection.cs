@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using ViciOne.ServiceBus.Internals;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Serialization;
 
 /// <summary>
@@ -117,13 +116,11 @@ public class JobPropertyCollection :
 
     IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
     {
-        // ReSharper disable once NotDisposedResourceIsReturned
         return _properties?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, object>>().GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        // ReSharper disable once NotDisposedResourceIsReturned
         return _properties?.GetEnumerator() ?? Enumerable.Empty<KeyValuePair<string, object>>().GetEnumerator();
     }
 

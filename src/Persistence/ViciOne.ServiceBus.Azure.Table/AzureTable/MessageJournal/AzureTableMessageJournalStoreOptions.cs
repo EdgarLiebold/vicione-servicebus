@@ -1,7 +1,6 @@
 using System;
 using ViciOne.ServiceBus.MessageJournal;
 
-#nullable enable
 namespace ViciOne.ServiceBus.AzureTable.MessageJournal;
 /// <summary>
 /// Binds one journal to one finite Azure Table partition so capacity and retention changes can be

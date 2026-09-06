@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ViciOne.ServiceBus.MessageJournal;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore.MessageJournal;
 /// <summary>
 /// Stores sanitized journal entries in a relational database while enforcing count and age bounds

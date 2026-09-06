@@ -28,7 +28,7 @@ public sealed class SqlMessageReceiver :
     DateTime? _lastTouched;
 
     /// <summary>
-    /// The basic consumer receives messages pushed from the broker.
+    /// Fetches messages from the SQL transport and dispatches them to the receive pipeline.
     /// </summary>
     /// <param name="client">The model context for the consumer</param>
     /// <param name="context">The topology</param>

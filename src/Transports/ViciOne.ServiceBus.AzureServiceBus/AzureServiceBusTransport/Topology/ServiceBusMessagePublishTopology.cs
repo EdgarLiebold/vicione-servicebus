@@ -5,7 +5,6 @@ using Azure.Messaging.ServiceBus.Administration;
 using ViciOne.ServiceBus.AzureServiceBus.Configuration;
 using ViciOne.ServiceBus.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 /// <summary>

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ViciOne.ServiceBus.RetryPolicies;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Configuration;
 /// <summary>
 /// Provides the canonical bounded policy for technical message retry and redelivery.

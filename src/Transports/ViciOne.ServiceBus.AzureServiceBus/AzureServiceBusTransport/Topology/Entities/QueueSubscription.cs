@@ -1,22 +1,22 @@
 namespace ViciOne.ServiceBus.AzureServiceBus.Topology;
 
 /// <summary>
-/// The exchange to queue binding details to declare the binding to RabbitMQ
+/// Describes an Azure Service Bus subscription that routes a topic to a queue.
 /// </summary>
 public interface QueueSubscription
 {
     /// <summary>
-    /// The source exchange
+    /// Gets the source topic.
     /// </summary>
     Topic Source { get; }
 
     /// <summary>
-    /// The destination exchange
+    /// Gets the destination queue.
     /// </summary>
     Queue Destination { get; }
 
     /// <summary>
-    /// The subscription that binds them
+    /// Gets the subscription that binds the source topic to the destination queue.
     /// </summary>
     Subscription Subscription { get; }
 }

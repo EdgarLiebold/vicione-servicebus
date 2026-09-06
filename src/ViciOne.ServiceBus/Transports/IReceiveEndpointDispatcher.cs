@@ -33,7 +33,6 @@ public interface IReceiveEndpointDispatcher :
     Task DispatchAsync(byte[] body, IReadOnlyDictionary<string, object> headers, object[] payloads,
         CancellationToken cancellationToken = default);
 
-    // TODO convert this to use the MessageBody type for nicer integration, also MessageContext
 }
 
 

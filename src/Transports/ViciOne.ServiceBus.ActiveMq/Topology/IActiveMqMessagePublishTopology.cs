@@ -19,10 +19,10 @@ public interface IActiveMqMessagePublishTopology<TMessage> :
     Topic Topic { get; }
 
     /// <summary>
-    /// Returns the send settings for a publish endpoint, which are mostly unused now with topology
+    /// Creates the ActiveMQ send settings for the specified host.
     /// </summary>
-    /// <param name="hostAddress"></param>
-    /// <returns></returns>
+    /// <param name="hostAddress">The ActiveMQ host address.</param>
+    /// <returns>The settings used to address and configure the publish topic.</returns>
     SendSettings GetSendSettings(Uri hostAddress);
 
     /// <summary>

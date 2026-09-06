@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 
-#nullable enable
 namespace ViciOne.ServiceBus.MessageJournal;
 /// <summary>
 /// Finite limits a message-journal store guarantees to enforce transactionally on every append.

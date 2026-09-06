@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ViciOne.ServiceBus.RabbitMq.Topology;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq;
 /// <summary>
 /// Owns stable RabbitMQ topology declarations for the lifetime of one connection.

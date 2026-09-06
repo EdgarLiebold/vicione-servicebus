@@ -32,24 +32,24 @@ public interface IAmazonSqsReceiveEndpointConfigurator :
 
     /// <summary>
     /// Sets the number of seconds to extend the visibility timeout when renewing message visibility during processing.
-    /// Values less than 60 will be set to 60 seconds (AWS SQS minimum for ChangeMessageVisibility).
+    /// Values less than 60 are raised to the library's 60-second renewal floor to avoid excessive renewal traffic.
     /// Defaults to 60 seconds.
     /// See <see href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ChangeMessageVisibility.html">ChangeMessageVisibility</see>.
     /// </summary>
     int MaxVisibilityTimeoutRenewal { set; }
 
     /// <summary>
-    /// Bind an existing exchange for the message type to the receive endpoint by name
+    /// Subscribes the receive endpoint queue to the topic for the specified message type.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The message type whose topic is subscribed.</typeparam>
     void Subscribe<T>(Action<IAmazonSqsTopicSubscriptionConfigurator>? callback = null)
         where T : class;
 
     /// <summary>
-    /// Bind an exchange to the receive endpoint exchange
+    /// Subscribes the receive endpoint queue to an Amazon SNS topic.
     /// </summary>
-    /// <param name="topicName">The exchange name</param>
-    /// <param name="callback">Configure the exchange and binding</param>
+    /// <param name="topicName">The topic name.</param>
+    /// <param name="callback">An optional callback that configures the topic subscription.</param>
     void Subscribe(string topicName, Action<IAmazonSqsTopicSubscriptionConfigurator>? callback = null);
 
     /// <summary>

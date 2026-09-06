@@ -1,6 +1,5 @@
 using System;
 
-#nullable enable
 namespace ViciOne.ServiceBus;
 /// <summary>
 /// The configured circuit breaker rejected an operation before it reached the protected pipe.

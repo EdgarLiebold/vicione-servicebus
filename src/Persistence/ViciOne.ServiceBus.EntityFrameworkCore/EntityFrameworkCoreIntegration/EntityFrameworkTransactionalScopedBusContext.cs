@@ -12,7 +12,6 @@ using ViciOne.ServiceBus.Middleware.Outbox;
 using ViciOne.ServiceBus.Serialization;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 internal class EntityFrameworkTransactionalScopedBusContext<TBus, TDbContext> :

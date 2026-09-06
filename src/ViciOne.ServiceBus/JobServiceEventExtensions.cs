@@ -1,6 +1,5 @@
 using ViciOne.ServiceBus.Contracts.JobService;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Advanced;
 
 /// <summary>

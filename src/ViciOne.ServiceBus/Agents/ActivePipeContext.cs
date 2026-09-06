@@ -15,8 +15,8 @@ public class ActivePipeContext<TContext> :
     readonly PipeContextHandle<TContext> _contextHandle;
 
     /// <summary>
-    /// Creates the active pipe context handle, which must have completed before this instance is created. Otherwise,
-    /// it would create a pretty nasty async mess that wouldn't handle faults very well (actually, it should, but I haven't tested it).
+    /// Creates an active handle backed by the supplied context task and managed by
+    /// <paramref name="contextHandle"/>.
     /// </summary>
     /// <param name="contextHandle">The context handle of the actual context which is being used</param>
     /// <param name="context">The actual context, which should be a completed Task</param>
@@ -27,8 +27,8 @@ public class ActivePipeContext<TContext> :
     }
 
     /// <summary>
-    /// Creates the active pipe context handle, which must have completed before this instance is created. Otherwise,
-    /// it would create a pretty nasty async mess that wouldn't handle faults very well (actually, it should, but I haven't tested it).
+    /// Creates an active handle for an already available context managed by
+    /// <paramref name="contextHandle"/>.
     /// </summary>
     /// <param name="contextHandle">The context handle of the actual context which is being used</param>
     /// <param name="context">The actual context</param>
@@ -44,7 +44,7 @@ public class ActivePipeContext<TContext> :
 
     async Task ActivePipeContextHandle<TContext>.FaultedAsync(Exception exception, CancellationToken cancellationToken)
     {
-        // However, a fault we should dispose of the context
+        // A fault terminates ownership of the underlying context.
         await _contextHandle.DisposeAsync().ConfigureAwait(false);
     }
 
@@ -54,7 +54,7 @@ public class ActivePipeContext<TContext> :
     /// <returns>The result of the operation.</returns>
     public ValueTask DisposeAsync()
     {
-        // An active usage doesn't actually dispose the actual context
+        // The owning context handle controls the underlying context lifetime.
         return default;
     }
 }

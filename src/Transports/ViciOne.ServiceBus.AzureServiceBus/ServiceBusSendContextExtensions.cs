@@ -8,10 +8,10 @@ namespace ViciOne.ServiceBus.AzureServiceBus;
 public static class ServiceBusSendContextExtensions
 {
     /// <summary>
-    /// Set the time at which the message should be delivered to the queue
+    /// Sets the absolute time at which Azure Service Bus should enqueue the message.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="dueAt">The scheduled time for the message</param>
+    /// <param name="context">The send context to configure.</param>
+    /// <param name="dueAt">The scheduled enqueue time.</param>
     public static void SetScheduledEnqueueTime(this SendContext context, DateTimeOffset dueAt)
     {
         if (context.TryGetPayload(out ServiceBusSendContext? sendContext))
@@ -21,10 +21,10 @@ public static class ServiceBusSendContextExtensions
     }
 
     /// <summary>
-    /// Set the time at which the message should be delivered to the queue
+    /// Sets the relative delay before Azure Service Bus should enqueue the message.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="delay">The time to wait before the message should be enqueued</param>
+    /// <param name="context">The send context to configure.</param>
+    /// <param name="delay">The duration to wait before enqueueing the message.</param>
     public static void SetScheduledEnqueueTime(this SendContext context, TimeSpan delay)
     {
         if (context.TryGetPayload(out ServiceBusSendContext? sendContext))

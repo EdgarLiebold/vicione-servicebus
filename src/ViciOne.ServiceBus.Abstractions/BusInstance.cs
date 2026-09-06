@@ -9,7 +9,6 @@ namespace ViciOne.ServiceBus.Advanced;
 /// as a the base for the additional bus instance type.
 /// </summary>
 /// <typeparam name="TBus">The specific bus interface type for this bus instance</typeparam>
-// ReSharper disable once UnusedTypeParameter
 public abstract class BusInstance<TBus> :
     IBusControl,
     Advanced.IAdvancedPublishEndpoint,

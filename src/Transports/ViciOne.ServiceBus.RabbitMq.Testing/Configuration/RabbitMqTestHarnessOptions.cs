@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 
-#nullable enable
 namespace ViciOne.ServiceBus.RabbitMq.Testing;
 
 /// <summary>

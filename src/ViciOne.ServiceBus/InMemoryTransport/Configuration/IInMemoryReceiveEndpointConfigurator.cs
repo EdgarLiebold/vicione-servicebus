@@ -1,6 +1,5 @@
 using ViciOne.ServiceBus.Transports.Fabric;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Providers.Transports;
 
 /// <summary>

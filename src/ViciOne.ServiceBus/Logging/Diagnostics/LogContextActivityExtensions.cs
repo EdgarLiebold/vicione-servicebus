@@ -5,8 +5,6 @@ using ViciOne.ServiceBus.Metadata;
 using ViciOne.ServiceBus.Middleware;
 using ViciOne.ServiceBus.Transports;
 
-#nullable enable
-// ReSharper disable once CheckNamespace
 namespace ViciOne.ServiceBus.Logging;
 
 /// <summary>

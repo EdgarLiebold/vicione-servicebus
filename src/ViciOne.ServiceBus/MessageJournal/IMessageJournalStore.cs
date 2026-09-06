@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-#nullable enable
 namespace ViciOne.ServiceBus.MessageJournal;
 /// <summary>
 /// Persists sanitized message-journal entries within declared finite limits.

@@ -94,8 +94,6 @@ public abstract class Future<TCommand, TResult, TFault> :
     }
 
     // States
-    // ReSharper disable MemberCanBePrivate.Global
-    // ReSharper disable UnusedAutoPropertyAccessor.Global
     /// <summary>
     /// Gets or sets the waiting for completion value.
     /// </summary>
@@ -109,7 +107,6 @@ public abstract class Future<TCommand, TResult, TFault> :
     /// </summary>
     public State Faulted { get; protected set; } = null!;
 
-    // ReSharper disable once MemberCanBeProtected.Global
     /// <summary>
     /// Initiates and correlates the command to the future. Subsequent commands received while waiting for completion
     /// are added as subscribers.

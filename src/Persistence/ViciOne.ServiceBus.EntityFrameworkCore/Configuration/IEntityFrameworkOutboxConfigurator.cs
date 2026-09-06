@@ -2,7 +2,6 @@ using System;
 using System.Data;
 using ViciOne.ServiceBus.EntityFrameworkCore;
 
-#nullable enable
 namespace ViciOne.ServiceBus.EntityFrameworkCore;
 
 /// <summary>

@@ -85,8 +85,6 @@ public sealed class JobTypeStateMachine :
     }
 
     //
-    // ReSharper disable UnassignedGetOnlyAutoProperty
-    // ReSharper disable MemberCanBePrivate.Global
     /// <summary>
     /// Gets the active value.
     /// </summary>

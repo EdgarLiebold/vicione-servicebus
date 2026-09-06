@@ -30,7 +30,7 @@ public interface ISendTransport :
     /// <param name="message"></param>
     /// <param name="pipe">The pipe invoked when sending a message, to do extra stuff</param>
     /// <param name="cancellationToken">Cancel the send operation (if possible)</param>
-    /// <returns>The task which is completed once the Send is acknowledged by the broker</returns>
+    /// <returns>A task that completes when the configured transport has accepted the send operation; completion does not imply message consumption.</returns>
     Task SendAsync<T>(T message, IPipe<SendContext<T>> pipe, CancellationToken cancellationToken)
         where T : class;
 }

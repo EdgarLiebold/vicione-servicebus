@@ -3,7 +3,6 @@ using ViciOne.ServiceBus.Configuration;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.MessageData;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Advanced.Serialization;
 /// <summary>

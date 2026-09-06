@@ -2,7 +2,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using ViciOne.ServiceBus.Configuration;
 
-#nullable enable
 
 namespace ViciOne.ServiceBus.Providers.Persistence;
 /// <summary>Extension surface used by persistence and transport provider packages.</summary>

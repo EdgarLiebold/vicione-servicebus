@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-#nullable enable
 namespace ViciOne.ServiceBus.Internals;
 
 internal interface IReadPropertyCache<T>
